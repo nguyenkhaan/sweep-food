@@ -16,6 +16,7 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - SQLAlchemy database models for every approved MVP table, with a common enum module and time-ordered UUIDv7 primary-key generation.
 - Custom JWT service plus authentication and role-authorization dependencies with OpenAPI Bearer-token support and injected access-token secret keys.
 - Redis lifecycle management plus backend-owned OTP challenge, verification-grant, rate-limit, and Argon2id helper services.
+- Provider-neutral OTP delivery contract, deterministic WireMock SMS adapter, and non-delivering local email adapter.
 
 ### Fixed
 

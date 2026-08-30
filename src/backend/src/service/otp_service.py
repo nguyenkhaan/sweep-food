@@ -1,5 +1,3 @@
-"""Redis-backed OTP challenges, verification grants, and rate limits."""
-
 import json
 from abc import abstractmethod
 from dataclasses import dataclass
@@ -9,13 +7,13 @@ from typing import ClassVar, Protocol
 from uuid import UUID, uuid4
 
 from src.core.setting import (
+    DEFAULT_OTP,
     OTP_CHALLENGE_TTL_SECONDS,
     OTP_DESTINATION_REQUEST_LIMIT,
     OTP_FAILED_ATTEMPT_COOLDOWN_SECONDS,
     OTP_GRANT_TTL_SECONDS,
     OTP_IP_REQUEST_LIMIT,
     OTP_MAX_VERIFICATION_ATTEMPTS,
-    OTP_MOCK_CODE,
     OTP_REQUEST_WINDOW_SECONDS,
     OTP_RESEND_COOLDOWN_SECONDS,
 )
@@ -191,7 +189,7 @@ class OTPService:
         self,
         store: OTPStore,
         policy: OTPPolicy = DEFAULT_OTP_POLICY,
-        fixed_otp_code: str | None = OTP_MOCK_CODE,
+        fixed_otp_code: str | None = DEFAULT_OTP,
     ) -> None:
         """Create an OTP service with a Redis-compatible store and policy."""
         self._store = store

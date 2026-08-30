@@ -5,6 +5,8 @@ from typing import cast
 import httpx
 import pytest
 
+from src.core.setting import DEFAULT_OTP
+
 
 @pytest.mark.wiremock
 def test_wiremock_sms_fixture(
@@ -15,8 +17,21 @@ def test_wiremock_sms_fixture(
     if not wiremock_is_available:
         pytest.skip("WireMock is not running at the configured WIREMOCK_URL.")
 
-    response = wiremock_http_client.get("/mock/sms")
+    response = wiremock_http_client.post(
+        "/mock/sms",
+        json={
+            "destination": "+84901234567",
+            "template_id": "register",
+            "otp": DEFAULT_OTP,
+            "expires_in_seconds": 300,
+            "correlation_id": "wiremock-contract-test",
+        },
+    )
+    assert response.status_code == 202
     response_body = cast(dict[str, str], response.json())
-
-    assert response.status_code == 200
-    assert response_body == {"provider": "mock-sms", "status": "ok"}
+    assert response_body == {
+        "provider": "mock-sms",
+        "status": "accepted",
+        "delivery_reference": "mock-sms-accepted",
+        "otp": "123456",
+    }

@@ -1,18 +1,17 @@
 {
   "request": {
     "method": "POST",
-    "urlPath": "/mock/sms"
+    "urlPath": "/mock/sms/timeout"
   },
   "response": {
     "status": 202,
+    "fixedDelayMilliseconds": 3000,
     "headers": {
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "provider": "mock-sms",
       "status": "accepted",
-      "delivery_reference": "mock-sms-accepted",
-      "otp": "123456"
+      "delivery_reference": "mock-sms-timeout"
     }
   }
 }

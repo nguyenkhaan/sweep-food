@@ -37,12 +37,21 @@ def get_positive_int_env(key: str, default: int) -> int:
     return value
 
 
+def get_six_digit_env(key: str) -> str:
+    """Return a required six-digit numeric environment value."""
+    value = get_env_var(key)
+    if len(value) != 6 or not value.isdigit():
+        raise ValueError(f"Environment variable {key} must be six numeric digits")
+    return value
+
+
 DATABASE_URL: Final[str] = get_env_var("DATABASE_URL")
 REDIS_URL: Final[str] = get_env_var("REDIS_URL")
 ENV: Final[str] = get_env_var("ENV", "dev")
 JWT_ACCESS_SECRET: Final[str] = get_env_var("JWT_ACCESS_SECRET")
 JWT_REFRESH_SECRET: Final[str] = get_env_var("JWT_REFRESH_SECRET")
 JWT_ALGORITHM: Final[str] = get_env_var("JWT_ALGORITHM", "HS256")
+DEFAULT_OTP: Final[str] = get_six_digit_env("DEFAULT_OTP")
 OTP_CHALLENGE_TTL_SECONDS: Final[int] = get_positive_int_env(
     "OTP_CHALLENGE_TTL_SECONDS",
     300,
@@ -69,6 +78,9 @@ OTP_FAILED_ATTEMPT_COOLDOWN_SECONDS: Final[int] = get_positive_int_env(
     "OTP_FAILED_ATTEMPT_COOLDOWN_SECONDS",
     900,
 )
-OTP_MOCK_CODE: Final[str | None] = (
-    "123456" if ENV.lower() in {"dev", "local", "test", "ci"} else None
+WIREMOCK_URL: Final[str] = get_env_var("WIREMOCK_URL")
+SMS_PROVIDER: Final[str] = get_env_var("SMS_PROVIDER", "wiremock")
+SMS_DELIVERY_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
+    "SMS_DELIVERY_TIMEOUT_SECONDS",
+    2,
 )
