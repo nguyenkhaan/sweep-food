@@ -103,6 +103,38 @@ async def test_register_route_returns_the_generated_otp(
 
 
 @pytest.mark.anyio
+async def test_register_rejects_an_invalid_email_with_a_clear_422_error(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """Invalid email input stops before the registration service or database."""
+    fake_service = FakeAuthService()
+
+    async def get_fake_auth_service() -> FakeAuthService:
+        """Prevent service dependencies from touching external resources."""
+        return fake_service
+
+    app.dependency_overrides[get_auth_service] = get_fake_auth_service
+    try:
+        response = await api_client.post(
+            "/api/auth/register",
+            json={
+                "phone": "+84901234567",
+                "password": "new-password",
+                "email": "cloudian123",
+            },
+        )
+    finally:
+        app.dependency_overrides.pop(get_auth_service, None)
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "status_code": 422,
+        "detail": "Email must be valid",
+        "path": "/api/auth/register",
+    }
+
+
+@pytest.mark.anyio
 async def test_resend_cooldown_returns_429_error_envelope(
     api_client: httpx.AsyncClient,
 ) -> None:

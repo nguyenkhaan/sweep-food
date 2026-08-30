@@ -94,6 +94,40 @@ async def test_contact_verification_routes_return_plain_text(
     assert phone_response.text == "Verify Change Phone succesfully"
 
 
+@pytest.mark.anyio
+async def test_email_request_rejects_an_invalid_email_with_a_clear_422_error(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """Invalid email stops before the user service reads or writes the database."""
+    fake_service = FakeUserService()
+
+    async def get_fake_user_service() -> FakeUserService:
+        """Override the runtime service without database, Redis, or delivery I/O."""
+        return fake_service
+
+    async def get_authenticated_user() -> AuthenticatedUser:
+        """Provide a valid user while the request body validation is exercised."""
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    app.dependency_overrides[get_user_service] = get_fake_user_service
+    app.dependency_overrides[require_authentication] = get_authenticated_user
+    try:
+        response = await api_client.post(
+            "/api/users/me/email/request-verification",
+            json={"email": "cloudian123"},
+        )
+    finally:
+        app.dependency_overrides.pop(get_user_service, None)
+        app.dependency_overrides.pop(require_authentication, None)
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "status_code": 422,
+        "detail": "Email must be valid",
+        "path": "/api/users/me/email/request-verification",
+    }
+
+
 def test_user_openapi_marks_bearer_routes_and_otp_only_email_verification() -> None:
     """Swagger exposes custom auth and the no-email confirmation request body."""
     schema = app.openapi()

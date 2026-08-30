@@ -79,7 +79,7 @@
 - [x] 2.3 Add SMS/email delivery adapters and WireMock contracts
 - [x] 2.4 Deliver registration, phone/password sign-in, and session APIs
 - [x] 2.5 Add profile, verified-email, and authorization policies
-- [ ] Phase 2 checkpoint
+- [x] Phase 2 checkpoint
 
 ### Phase 3 — Catalog and Seed Data
 
@@ -222,6 +222,8 @@
 | 2026-08-31 | Task 2.5 | `Ready` → `Done` | Implemented and documented the protected user module: `/users/me` returns only JWT identity, `/users/profile` owns profile reads/updates, and email/phone changes require purpose-scoped OTP verification. Full test suite passed (`57 passed, 1 skipped`); focused static quality checks passed. |
 | 2026-08-31 | Task 2.5 API contract revision | `Done` → `Done` | Email verification now accepts only OTP. The user-scoped pending email and purpose are stored in Redis with the OTP TTL, replaced by a subsequent request, and removed after successful verification; full suite passed (`59 passed, 1 skipped`). |
 | 2026-08-31 | Task 2.5 phone/contact revision | `Done` → `Done` | Phone confirmation now accepts only OTP and resolves the user-scoped pending phone from Redis. Successful email/phone verification returns the required plain text; phone-change OTP is also emailed when `user.email` exists using the new `CHANGE_PHONE` template. Full suite passed (`63 passed, 1 skipped`). |
+| 2026-08-31 | Task 2.4 registration validation revision | `Done` → `Done` | Registration now validates and normalizes optional email input before persistence, returns a clear 422 error for invalid email, checks duplicate email before insertion, and maps a concurrent unique-constraint failure to a 409 domain error. Full suite passed (`65 passed, 1 skipped`). |
+| 2026-08-31 | Auth/user DTO email validation audit | `Done` → `Done` | Confirmed all client-supplied email fields in `auth_dto.py` and `user_dto.py` validate and normalize email before service/database access. Added the user email-request route contract test; full suite passed (`66 passed, 1 skipped`). |
 
 ## Verification Evidence
 

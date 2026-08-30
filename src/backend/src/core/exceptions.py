@@ -97,12 +97,20 @@ async def http_exception_handler(
 
 async def validation_exception_handler(
     request: Request,
-    _exception: Exception,
+    exception: Exception,
 ) -> JSONResponse:
-    """Return a non-sensitive response for request validation failures."""
+    """Return a useful but non-sensitive response for request validation failures."""
+    detail = "Request validation failed."
+    if isinstance(exception, RequestValidationError):
+        is_email_error = any(
+            error.get("loc") == ("body", "email")
+            for error in exception.errors()
+        )
+        if is_email_error:
+            detail = "Email must be valid"
     return create_error_response(
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-        detail="Request validation failed.",
+        detail=detail,
         path=request.url.path,
     )
 
