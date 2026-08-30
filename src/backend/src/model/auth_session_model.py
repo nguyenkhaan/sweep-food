@@ -29,7 +29,6 @@ class AuthSessionModel(CreatedAtUUIDModel):
         PostgreSQLUUID(as_uuid=True),
         nullable=False,
     )
-    device_label: Mapped[str | None] = mapped_column(String, nullable=True)
     ip_address: Mapped[str | None] = mapped_column(String, nullable=True)
     user_agent: Mapped[str | None] = mapped_column(String, nullable=True)
     expires_at: Mapped[datetime] = mapped_column(

@@ -25,7 +25,6 @@ from src.module.auth.auth_dto import (
     LoginRequestDTO,
     OTPIssueResponseDTO,
     PasswordOTPRequestDTO,
-    RefreshTokenDTO,
     RegisterRequestDTO,
     TokenPairDTO,
     VerifyPasswordRequestDTO,
@@ -100,6 +99,7 @@ class AuthService:
                 raise DuplicateRegistrationError("Phone is already registered")
             user = UserModel(
                 name=request.name,
+                email = request.email, 
                 phone_e164=request.phone,
                 password_hash=hashing(request.password),
                 status=AccountStatus.UNVERIFIED,
@@ -237,22 +237,6 @@ class AuthService:
             print(f"Database error: {error}")
             raise
 
-    async def issue_refresh_token(
-        self,
-        user_id: UUID,
-        user_agent: str | None,
-    ) -> RefreshTokenDTO:
-        """Create an additional refresh JWT for an access-token owner."""
-        try:
-            user = await self.find_active_user(user_id)
-            refresh_token = await self.create_refresh_token(user, user_agent)
-            await self.db_session.commit()
-            return refresh_token
-        except SQLAlchemyError as error:
-            await self.db_session.rollback()
-            print(f"Database error: {error}")
-            raise
-
     async def refresh_access_token(self, refresh_token: str) -> AccessTokenDTO:
         """Create a new access JWT from one active refresh JWT session."""
         user_id = self.parse_refresh_token(refresh_token)
@@ -303,7 +287,6 @@ class AuthService:
             return [
                 AuthSessionDTO(
                     id=session.id,
-                    device_label=session.device_label,
                     ip_address=session.ip_address,
                     user_agent=session.user_agent,
                     expires_at=session.expires_at,
@@ -406,20 +389,20 @@ class AuthService:
     ) -> TokenPairDTO:
         """Create access/refresh JWTs and persist the refresh session."""
         access_token = self.create_access_token(user)
-        refresh_token = await self.create_refresh_token(user, user_agent)
+        refresh_token, session_id = await self._create_refresh_token(user, user_agent)
         return TokenPairDTO(
             access_token=access_token.access_token,
-            refresh_token=refresh_token.refresh_token,
+            refresh_token=refresh_token,
             access_expires_in_seconds=access_token.access_expires_in_seconds,
-            refresh_expires_in_seconds=refresh_token.refresh_expires_in_seconds,
-            session_id=refresh_token.session_id,
+            refresh_expires_in_seconds=JWT_REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60,
+            session_id=session_id,
         )
 
-    async def create_refresh_token(
+    async def _create_refresh_token(
         self,
         user: UserModel,
         user_agent: str | None,
-    ) -> RefreshTokenDTO:
+    ) -> tuple[str, UUID]:
         """Sign a refresh JWT with its own secret and persist its hash."""
         refresh_expires_at = datetime.now(UTC) + timedelta(
             days=JWT_REFRESH_TOKEN_TTL_DAYS,
@@ -437,18 +420,13 @@ class AuthService:
             user_id=user.id,
             refresh_token_hash=hashing(refresh_token),
             token_family_id=uuid4(),
-            device_label=None,
             ip_address=None,
             user_agent=user_agent,
             expires_at=refresh_expires_at,
         )
         self.db_session.add(session)
         await self.db_session.flush()
-        return RefreshTokenDTO(
-            refresh_token=refresh_token,
-            refresh_expires_in_seconds=JWT_REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60,
-            session_id=session.id,
-        )
+        return refresh_token, session.id
 
     def create_access_token(
         self,

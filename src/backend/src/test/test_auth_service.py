@@ -199,7 +199,7 @@ async def test_verify_register_activates_user_without_creating_tokens() -> None:
 
     assert user.status is AccountStatus.ACTIVE
     assert user.phone_verified_at is not None
-    assert database.added == []
+    assert not database.added
 
 
 @pytest.mark.anyio
@@ -266,21 +266,25 @@ async def test_login_and_refresh_use_purpose_specific_jwts() -> None:
 
 
 @pytest.mark.anyio
-async def test_access_identity_can_issue_an_additional_refresh_token() -> None:
-    """The access-token flow creates a refresh JWT signed by its own secret."""
+async def test_logout_revokes_session_and_blocks_refresh_access() -> None:
+    """Logout revokes the matching session so its refresh JWT cannot be reused."""
     user = _user()
     database = FakeDatabaseSession(query_values=[user])
     service = _service(database, FakeOTPDeliveryService())
-
-    issued_refresh = await service.issue_refresh_token(user.id, "pytest")
-
-    payload = JwtService.verify_jwt(
-        issued_refresh.refresh_token,
-        JWT_REFRESH_SECRET,
+    token_pair = await service.login(
+        LoginRequestDTO(phone="+84901234567", password="old-password"),
+        "pytest",
     )
-    assert payload["sub"] == str(user.id)
-    assert payload["roles"] == [UserRole.USER.value]
-    assert payload["purpose"] == "refresh"
+    session = database.added[0]
+    assert isinstance(session, AuthSessionModel)
+    database.query_values.append([session])
+
+    await service.logout(user.id, token_pair.refresh_token)
+
+    assert session.revoked_at is not None
+    database.query_values.extend([user, []])
+    with pytest.raises(SessionNotFoundError):
+        await service.refresh_access_token(token_pair.refresh_token)
 
 
 @pytest.mark.anyio
