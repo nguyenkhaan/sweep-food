@@ -12,6 +12,7 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - ADR-001 documenting the Neon PostgreSQL decision and safe migration/test workflow.
 - Agent-facing context and operating guidance in `COOKBOOK.md`.
 - Async SQLAlchemy database-session lifecycle and Alembic bootstrap revision for Neon PostgreSQL migrations.
+- Pytest smoke-test harness under `src/test` and a deterministic WireMock provider fixture.
 
 ### Changed
 

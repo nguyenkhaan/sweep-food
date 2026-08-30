@@ -22,3 +22,22 @@ build-backend = "uv_build"
 
 [tool.uv]
 package = false
+
+[tool.pytest.ini_options]
+testpaths = ["src/test"]
+python_files = ["test_*.py"]
+pythonpath = ["."]
+markers = [
+    "wiremock: requires the local WireMock service to be running",
+]
+
+[tool.pylint.main]
+init-hook = "import sys; sys.path.insert(0, '.')"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3.1",
+    "pylint>=4.0.8",
+    "pytest>=9.1.1",
+    "ruff>=0.16.5",
+]

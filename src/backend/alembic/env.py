@@ -3,14 +3,13 @@
 import asyncio
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
+from alembic import context
 from src.core.setting import DATABASE_URL
 from src.db import build_async_database_url
 from src.model.base import Base
-
 
 config = context.config
 
