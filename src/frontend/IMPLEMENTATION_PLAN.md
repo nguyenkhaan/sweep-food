@@ -13,9 +13,9 @@
 |---|---|
 | **M0 — Nền tảng + khung 5 tab** | ✅ Xong |
 | **M1 — Kho (vertical slice)** | ✅ Xong |
-| M2 — Trang chủ | ⬜ Chưa — làm tiếp |
+| **M2 — Trang chủ** | ✅ Xong |
 | M3 — Gợi ý + Món + Nấu (vòng lặp lõi) | ⬜ Chưa |
-| M4 — Nhập liệu đa phương thức | ⬜ Chưa |
+| M4 — Nhập liệu đa phương thức | ⬜ Chưa — đang làm |
 | M5 — Auth + Onboarding + phần còn lại | ⬜ Chưa |
 | M6 — Hoàn thiện, i18n, test, build | ⬜ Chưa |
 
