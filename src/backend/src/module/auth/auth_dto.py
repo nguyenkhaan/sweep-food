@@ -23,7 +23,7 @@ class RegisterRequestDTO(BaseModel):
     phone: str
     password: str = Field(min_length=8, max_length=128)
     name: str | None = Field(default=None, max_length=100)
-
+    email : str | None = Field(default = None, max_length = 50)
     @field_validator("phone")
     @classmethod
     def validate_phone(cls, value: str) -> str:
@@ -32,8 +32,6 @@ class RegisterRequestDTO(BaseModel):
         if not _PHONE_E164_PATTERN.fullmatch(phone):
             raise ValueError("Phone must use E.164 format")
         return phone
-
-
 class PasswordOTPRequestDTO(BaseModel):
     """Request a reset-password OTP for an E.164 phone number."""
 
@@ -137,20 +135,10 @@ class AccessTokenDTO(BaseModel):
     access_expires_in_seconds: int
 
 
-class RefreshTokenDTO(BaseModel):
-    """New refresh JWT created for an authenticated access-token owner."""
-
-    refresh_token: str
-    token_type: str = "bearer"
-    refresh_expires_in_seconds: int
-    session_id: UUID
-
-
 class AuthSessionDTO(BaseModel):
     """Safe active-session data returned to its owning user."""
 
     id: UUID
-    device_label: str | None
     ip_address: str | None
     user_agent: str | None
     expires_at: datetime

@@ -34,9 +34,9 @@
 | Field | Value |
 |---|---|
 | Active phase | Phase 2 — Identity, Authentication, and User Preferences |
-| Active task | Task 2.4 — Deliver registration, phone/password sign-in, and session APIs (`In progress`) |
-| Next task | Apply the `UNVERIFIED` migration, then verify the live auth flow locally |
-| Next required action | Run Alembic upgrade against the configured development database |
+| Active task | Task 2.5 — Add profile, verified-email, and authorization policies (`Ready`) |
+| Next task | Task 2.5 — Add profile, verified-email, and authorization policies |
+| Next required action | Review and confirm the Task 2.5 API contract before implementation |
 | Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
 | Current blocker | None |
 
@@ -77,7 +77,7 @@
 - [x] 2.1 Add user and session schema
 - [x] 2.2 Implement OTP challenge, hashing, and rate-limit services (`In progress`)
 - [x] 2.3 Add SMS/email delivery adapters and WireMock contracts
-- [ ] 2.4 Deliver registration, phone/password sign-in, and session APIs
+- [x] 2.4 Deliver registration, phone/password sign-in, and session APIs
 - [ ] 2.5 Add profile, verified-email, and authorization policies
 - [ ] Phase 2 checkpoint
 
@@ -165,7 +165,7 @@
 | 2.1 Add user and session schema | `Done` | Phase 1 checkpoint | User-confirmed migration creates user/session tables and constraints; JWT access authentication and role demonstration endpoints are verified. |
 | 2.2 Implement OTP challenge, hashing, and rate-limit services | `In progress` | Task 2.1 | Redis-backed OTP service, password/OTP helpers, configurable limits, and unit tests are implemented; Redis lifecycle requires user confirmation. |
 | 2.3 Add SMS/email delivery adapters and WireMock contracts | `Done` | Task 2.2 | WireMock SMS and Mailpit-backed, template-based email delivery are verified locally; delivery remains provider-adapter based. |
-| 2.4 Deliver registration, phone/password sign-in, and session APIs | `In progress` | Tasks 2.1–2.3 | Auth module, OTP fallback, migration, unit/API tests, and protected-account status checks are implemented; migration and live verification are pending. |
+| 2.4 Deliver registration, phone/password sign-in, and session APIs | `Done` | Tasks 2.1–2.3 | Database is at `20260830_0003 (head)`; auth/OTP/JWT/session tests pass, WireMock contract is verified against the healthy container, and logout revocation blocks refresh-token reuse. |
 
 ## Decision Baseline
 
@@ -217,6 +217,7 @@
 | 2026-08-30 | Task 2.4 JWT contract revision | `In progress` → `In progress` | Registration verification now returns plain text only. Login issues access/refresh JWTs, purpose claims and separate secrets are enforced, refresh can issue a new access JWT, and `device_label` was removed from login. |
 | 2026-08-30 | Task 2.4 OpenAPI security revision | `In progress` → `In progress` | Bearer security is now inferred recursively from `require_authentication` and `require_role(...)` dependencies, so protected routes receive Swagger lock icons without per-route `openapi_extra` declarations. |
 | 2026-08-30 | Task 2.4 token route revision | `In progress` → `In progress` | Removed the access-token-to-refresh-token route by user decision; login remains the refresh-token issuer and `/auth/token/refresh` exchanges a valid refresh JWT for a new access JWT. |
+| 2026-08-30 | Task 2.4 | `In progress` → `Done` | Removed obsolete refresh-issuance service/test code, confirmed database revision `20260830_0003 (head)`, passed the live WireMock contract, and verified logout revokes the matching session and blocks refresh reuse. |
 
 ## Verification Evidence
 

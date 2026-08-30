@@ -32,7 +32,12 @@ def get_user_agent(request: Request) -> str | None:
     return request.headers.get("User-Agent")
 
 
-@auth_router.post("/register", response_model=OTPIssueResponseDTO)
+@auth_router.post(
+    "/register",
+    response_model=OTPIssueResponseDTO,
+    summary="Register an account",
+    description="Create an unverified phone/password account and issue a registration OTP.",
+)
 async def post_register(
     body: RegisterRequestDTO,
     service: Annotated[AuthService, Depends(get_auth_service)],
@@ -41,7 +46,12 @@ async def post_register(
     return await service.register(body)
 
 
-@auth_router.post("/register/resend-otp", response_model=OTPIssueResponseDTO)
+@auth_router.post(
+    "/register/resend-otp",
+    response_model=OTPIssueResponseDTO,
+    summary="Resend registration OTP",
+    description="Issue a replacement registration OTP for an unverified account.",
+)
 async def post_resend_register_otp(
     body: PasswordOTPRequestDTO,
     service: Annotated[AuthService, Depends(get_auth_service)],
@@ -50,7 +60,12 @@ async def post_resend_register_otp(
     return await service.resend_register_otp(body.phone)
 
 
-@auth_router.post("/verify/register", response_class=PlainTextResponse)
+@auth_router.post(
+    "/verify/register",
+    response_class=PlainTextResponse,
+    summary="Verify registration OTP",
+    description="Activate the unverified account after a valid registration OTP.",
+)
 async def post_verify_register(
     body: VerifyRegisterRequestDTO,
     service: Annotated[AuthService, Depends(get_auth_service)],
@@ -60,7 +75,12 @@ async def post_verify_register(
     return "verify account successfully"
 
 
-@auth_router.post("/password/reset", response_model=OTPIssueResponseDTO)
+@auth_router.post(
+    "/password/reset",
+    response_model=OTPIssueResponseDTO,
+    summary="Request password reset OTP",
+    description="Issue the SMS OTP required to reset a password.",
+)
 async def post_password_reset(
     body: PasswordOTPRequestDTO,
     service: Annotated[AuthService, Depends(get_auth_service)],
@@ -72,6 +92,8 @@ async def post_password_reset(
 @auth_router.post(
     "/password/change",
     response_model=OTPIssueResponseDTO,
+    summary="Request password change OTP",
+    description="Issue a password-change OTP for the authenticated user's phone.",
 )
 async def post_password_change(
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
@@ -81,7 +103,12 @@ async def post_password_change(
     return await service.request_password_change(user.user_id)
 
 
-@auth_router.post("/verify/change-password", response_model=MessageResponseDTO)
+@auth_router.post(
+    "/verify/change-password",
+    response_model=MessageResponseDTO,
+    summary="Change password with OTP",
+    description="Verify a password OTP, replace the password, and revoke active sessions.",
+)
 async def post_verify_change_password(
     body: VerifyPasswordRequestDTO,
     service: Annotated[AuthService, Depends(get_auth_service)],
@@ -91,7 +118,12 @@ async def post_verify_change_password(
     return MessageResponseDTO(message="Password changed successfully")
 
 
-@auth_router.post("/login", response_model=TokenPairDTO)
+@auth_router.post(
+    "/login",
+    response_model=TokenPairDTO,
+    summary="Sign in",
+    description="Authenticate with phone and password to receive access and refresh JWTs.",
+)
 async def post_login(
     body: LoginRequestDTO,
     request: Request,
@@ -101,7 +133,12 @@ async def post_login(
     return await service.login(body, get_user_agent(request))
 
 
-@auth_router.post("/token/refresh", response_model=AccessTokenDTO)
+@auth_router.post(
+    "/token/refresh",
+    response_model=AccessTokenDTO,
+    summary="Refresh access token",
+    description="Use a valid refresh JWT to issue a new access JWT.",
+)
 async def post_token_refresh(
     body: RefreshTokenRequestDTO,
     service: Annotated[AuthService, Depends(get_auth_service)],
@@ -110,7 +147,12 @@ async def post_token_refresh(
     return await service.refresh_access_token(body.refresh_token)
 
 
-@auth_router.post("/logout", response_class=PlainTextResponse)
+@auth_router.post(
+    "/logout",
+    response_class=PlainTextResponse,
+    summary="Sign out",
+    description="Revoke the submitted refresh-token session for the authenticated user.",
+)
 async def post_logout(
     body: LogoutRequestDTO,
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
@@ -124,6 +166,8 @@ async def post_logout(
 @auth_router.get(
     "/sessions",
     response_model=list[AuthSessionDTO],
+    summary="List active sessions",
+    description="Return active sessions owned by the authenticated user.",
 )
 async def get_sessions(
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
@@ -136,6 +180,8 @@ async def get_sessions(
 @auth_router.delete(
     "/sessions/{session_id}",
     status_code=status.HTTP_204_NO_CONTENT,
+    summary="Revoke a session",
+    description="Revoke one active session owned by the authenticated user.",
 )
 async def delete_session(
     session_id: UUID,
