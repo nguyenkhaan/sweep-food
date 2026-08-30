@@ -1,29 +1,37 @@
 import 'package:frontend/core/error/error_mapper.dart';
 import 'package:frontend/core/utils/result.dart';
 
-/// Runs [call] (a data-source invocation), maps [json] → [T] with [parse], and
-/// wraps everything in a [Result] so repositories stay tiny:
+/// Runs [body] (which calls a typed data source + maps DTO → entity) and wraps
+/// the outcome in a [Result]. Keeps repositories to one line per method:
 ///
 /// ```dart
-/// Future<Result<PantrySummary>> summary() => guard(
-///   () => _api.get(ApiPaths.pantrySummary),
-///   (json) => PantrySummaryDto.fromJson(json as Map<String, dynamic>).toEntity(),
-/// );
+/// Future<Result<PantrySummary>> summary() => runGuarded(() async {
+///   final dto = await _remote.summary();
+///   return dto.toEntity();
+/// });
 /// ```
-Future<Result<T>> guard<T>(
-  Future<dynamic> Function() call,
-  T Function(dynamic json) parse,
-) async {
+Future<Result<T>> runGuarded<T>(Future<T> Function() body) async {
   try {
-    final json = await call();
-    return Right(parse(json));
+    return Right(await body());
   } catch (e, st) {
     return Left(mapError(e, st));
   }
 }
 
-/// Like [guard] but for calls whose response body is ignored.
-Future<Result<void>> guardVoid(Future<dynamic> Function() call) async {
+/// Lower-level variant for callers that already have raw JSON in hand.
+Future<Result<T>> guard<T>(
+  Future<dynamic> Function() call,
+  T Function(dynamic json) parse,
+) async {
+  try {
+    return Right(parse(await call()));
+  } catch (e, st) {
+    return Left(mapError(e, st));
+  }
+}
+
+/// [runGuarded] for a call whose result is discarded.
+Future<Result<void>> guardVoid(Future<void> Function() call) async {
   try {
     await call();
     return const Right(null);

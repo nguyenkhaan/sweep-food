@@ -50,7 +50,7 @@ class MockApiClient implements ApiClient {
     final key = entry.value;
     if (_cache.containsKey(key)) return _clone(_cache[key]);
     try {
-      final raw = await rootBundle.loadString('assets/mock/$key.json');
+      final raw = _fillDates(await rootBundle.loadString('assets/mock/$key.json'));
       final decoded = jsonDecode(raw);
       _cache[key] = decoded;
       return _clone(decoded);
@@ -60,6 +60,18 @@ class MockApiClient implements ApiClient {
   }
 
   dynamic _clone(dynamic v) => jsonDecode(jsonEncode(v));
+
+  /// Replaces `{{today}}` / `{{today+N}}` / `{{today-N}}` with an ISO date so
+  /// fixtures stay demo-stable regardless of run date.
+  static final _dateToken = RegExp(r'\{\{today([+-]\d+)?\}\}');
+  String _fillDates(String raw) {
+    final today = DateTime.now();
+    return raw.replaceAllMapped(_dateToken, (m) {
+      final offset = int.tryParse(m.group(1) ?? '0') ?? 0;
+      final d = DateTime(today.year, today.month, today.day + offset);
+      return d.toIso8601String();
+    });
+  }
 
   dynamic _echo(Object? body) {
     if (body is Map) {
