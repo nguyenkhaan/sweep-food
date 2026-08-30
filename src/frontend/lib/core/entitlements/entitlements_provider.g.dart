@@ -29,15 +29,15 @@ final class EntitlementsProvider
   /// While [kPremiumEnabled] is `false` this is always [Entitlements.allUnlocked].
   /// When gating goes live, back this with the `/subscription` response.
   EntitlementsProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'entitlementsProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'entitlementsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$entitlementsHash();
@@ -73,16 +73,16 @@ final featureAllowedProvider = FeatureAllowedFamily._();
 final class FeatureAllowedProvider extends $FunctionalProvider<bool, bool, bool>
     with $Provider<bool> {
   /// Whether [feature] is available right now.
-  FeatureAllowedProvider._(
-      {required FeatureAllowedFamily super.from,
-      required Feature super.argument})
-      : super(
-          retry: null,
-          name: r'featureAllowedProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+  FeatureAllowedProvider._({
+    required FeatureAllowedFamily super.from,
+    required Feature super.argument,
+  }) : super(
+         retry: null,
+         name: r'featureAllowedProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$featureAllowedHash();
@@ -102,10 +102,7 @@ final class FeatureAllowedProvider extends $FunctionalProvider<bool, bool, bool>
   @override
   bool create(Ref ref) {
     final argument = this.argument as Feature;
-    return featureAllowed(
-      ref,
-      argument,
-    );
+    return featureAllowed(ref, argument);
   }
 
   /// {@macro riverpod.override_with_value}
@@ -134,19 +131,17 @@ String _$featureAllowedHash() => r'de0642da8bec9b2701f7883c8ce3ab3f232e8c4d';
 final class FeatureAllowedFamily extends $Family
     with $FunctionalFamilyOverride<bool, Feature> {
   FeatureAllowedFamily._()
-      : super(
-          retry: null,
-          name: r'featureAllowedProvider',
-          dependencies: null,
-          $allTransitiveDependencies: null,
-          isAutoDispose: true,
-        );
+    : super(
+        retry: null,
+        name: r'featureAllowedProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
   /// Whether [feature] is available right now.
 
-  FeatureAllowedProvider call(
-    Feature feature,
-  ) =>
+  FeatureAllowedProvider call(Feature feature) =>
       FeatureAllowedProvider._(argument: feature, from: this);
 
   @override

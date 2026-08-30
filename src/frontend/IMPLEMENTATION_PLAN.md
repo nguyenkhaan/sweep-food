@@ -12,8 +12,8 @@
 | Milestone | Trạng thái |
 |---|---|
 | **M0 — Nền tảng + khung 5 tab** | ✅ Xong |
-| M1 — Kho (vertical slice) | ⬜ Chưa — làm tiếp |
-| M2 — Trang chủ | ⬜ Chưa |
+| **M1 — Kho (vertical slice)** | ✅ Xong |
+| M2 — Trang chủ | ⬜ Chưa — làm tiếp |
 | M3 — Gợi ý + Món + Nấu (vòng lặp lõi) | ⬜ Chưa |
 | M4 — Nhập liệu đa phương thức | ⬜ Chưa |
 | M5 — Auth + Onboarding + phần còn lại | ⬜ Chưa |
@@ -36,6 +36,21 @@
 - ✅ `flutter analyze` → **No issues**. ✅ `flutter build web --dart-define-from-file=config/dev.json` → build thành công.
 
 **Chạy thử:** `flutter run -d chrome --dart-define-from-file=config/dev.json` — khung 5 tab, đổi tab OK, vào tab Cá nhân đổi Sáng/Tối/Hệ thống thấy theme đổi.
+
+### M1 đã hoàn thành (2026-08-30)
+
+- **`features/pantry/domain/`** — `entities/pantry_item.dart` (freezed; computed `daysUntilExpiry` / `expiryLevel` / `isNearExpiry` / `priorityScore` / `quantityLabel` + enum `PantrySource` / `PantryItemStatus`), `entities/pantry_item_draft.dart` (write payload, `fromItem`, `isValid`), `entities/pantry_summary.dart`, `repositories/pantry_repository.dart` (+ enum `PantrySort`)
+- **`features/pantry/data/`** — `models/pantry_item_dto.dart` (freezed+json, snake_case, `toEntity()` + `PantrySummaryDto`), `datasources/pantry_remote_data_source.dart` (typed DTO, `draftToBody` snake_case), `repositories/pantry_repository_impl.dart` (`@Riverpod(keepAlive:true) pantryRepository`, `runGuarded` / `guardVoid` → `Result`)
+- **`features/catalog/`** — `domain/entities/ingredient.dart`, `domain/repositories/ingredient_repository.dart`, `data/models/ingredient_dto.dart`, `data/datasources/ingredient_remote_data_source.dart`, `data/repositories/ingredient_repository_impl.dart`, `presentation/controllers/ingredient_search_controller.dart` (`ingredientSearch` family, debounce 200ms — autocomplete K-03)
+- **`features/pantry/presentation/controllers/`** — `pantry_list_controller.dart` (`PantryListController` AsyncNotifier: `add` / `updateItem` / `delete` optimistic + rollback / `consume` / `refresh`; + `PantryFilter` + `PantryFilterController` + provider dẫn xuất `pantryListView` lọc/sort, `pantryTierCounts`, `pantrySummary`), `pantry_item_controller.dart` (`pantryItemById` family), `add_ingredient_controller.dart` (`AddIngredientController` family theo `editItemId`: form state + `applyIngredient` + `submit`)
+- **`features/pantry/presentation/screens/`** — `pantry_screen.dart` (K-01: search + `TierSegmentedControl` + sort menu + `RefreshIndicator` + section "Cần dùng sớm" / "Còn hạn" + empty/no-result state + FAB), `pantry_item_detail_screen.dart` (K-02: tier chip + expiry badge + 3 stat tile + card "Chi tiết" + action bar "Điều chỉnh" / "Đã dùng hết" + sửa/xóa ở AppBar), `add_ingredient_screen.dart` (K-03: add & edit; autocomplete chip từ catalog, stepper số lượng + đơn vị, chọn tầng, ngày đóng gói/HSD + gợi ý HSD từ `referenceShelfLifeDays`, giá tùy chọn)
+- **`features/pantry/presentation/widgets/`** — `tier_segmented_control.dart`, `adjust_quantity_sheet.dart` (K-04: `AdjustQuantitySheet.show`, chế độ dùng một phần / dùng hết, gọi `consume`), `pantry_item_tile.dart` (map `PantryItem` → `PantryItemCard` + `tierIcon`)
+- **Router** — nhánh Kho có child route `/pantry/add` (nhận `editItemId` qua `state.extra`) và `/pantry/item/:id`, cả hai `parentNavigatorKey: _rootKey` (che bottom nav). FAB đã nối.
+- **Fixture** — `assets/mock/pantry_items.json` (10 item đủ 4 tầng, token `{{today+N}}`), `pantry_summary.json`, `ingredients.json` (10 nguyên liệu). `MockApiClient._fillDates()` thay token ngày động.
+- **Test** — `test/unit/pantry/pantry_repository_impl_test.dart` (3 test, mocktail): map payload → entity, nhánh lỗi → `Left`, `add()` gửi body snake_case + map item echo về.
+- ✅ `dart run build_runner build` OK (16 output). ✅ `flutter analyze` → **No issues**. ✅ `flutter test` xanh (4 pass / 3 skip stub). ✅ `flutter build web --dart-define-from-file=config/dev.json` → build thành công.
+
+**Chạy thử:** `flutter run -d chrome --dart-define-from-file=config/dev.json` → tab Kho: xem theo tầng, sort, tìm, mở chi tiết, thêm/sửa/xoá/điều chỉnh (mock echo lại, list cập nhật lạc quan).
 
 > Cập nhật bảng này khi hoàn thành từng milestone.
 
