@@ -1,13 +1,20 @@
+"""Dependencies used by health-module endpoints."""
+
+from typing import Annotated
+
 from fastapi import Depends
 
-from src.service.email_service import EmailService
 from src.module.health.health_service import HealthService
+from src.service.email_service import EmailService
 
-def get_email_service() -> EmailService: 
-    return EmailService() 
-def get_health_service(
-        email_service = Depends(get_email_service)
+
+async def get_email_service() -> EmailService:
+    """Create the template-based email service used by the test endpoint."""
+    return EmailService()
+
+
+async def get_health_service(
+    email_service: Annotated[EmailService, Depends(get_email_service)],
 ) -> HealthService:
-    return HealthService(
-        email_service = email_service
-    )
+    """Create the health service with its email dependency."""
+    return HealthService(email_service=email_service)

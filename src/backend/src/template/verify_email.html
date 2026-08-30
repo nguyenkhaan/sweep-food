@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_email.html" %}
 {% block content %}
-<h1>Xác minh email</h1>
-<p>Chào {{ recipient_name | default("bạn") }}, hãy dùng mã dưới đây để xác minh email mới.</p>
+<h1>Verify your email</h1>
+<p>Hello {{ recipient_name | default("there") }}, use the code below to verify your new email address.</p>
 <div class="code">{{ otp }}</div>
-<p class="note">Mã có hiệu lực trong {{ expires_in_minutes }} phút.</p>
+<p class="note">This code expires in {{ expires_in_minutes }} minutes.</p>
 {% endblock %}

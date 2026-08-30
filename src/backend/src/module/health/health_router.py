@@ -5,7 +5,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import PlainTextResponse
 
-from src.module import health
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.middleware.role_middleware import require_role
 from src.model.enum_model import UserRole
@@ -73,9 +72,10 @@ async def get_test_role(
     """Return current identity only when it has the ADMIN role."""
     return _authenticated_user_response(user)
 
-@health_router.get("/test-email") 
-async def test_email(
-    service = Depends(get_health_service)
-): 
-    await service.send_email() 
-    return "Send email successfully" 
+@health_router.post("/test-email", status_code=status.HTTP_202_ACCEPTED)
+async def post_test_email(
+    service: Annotated[HealthService, Depends(get_health_service)],
+) -> dict[str, str]:
+    """Submit a basic base-email template to the local Mailpit inbox."""
+    message_id = await service.send_test_email()
+    return {"message": "Test email submitted", "message_id": message_id}

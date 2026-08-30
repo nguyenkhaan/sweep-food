@@ -208,6 +208,7 @@
 | 2026-08-30 | Task 2.3 | `Ready` → `In progress` | Added provider-neutral OTP delivery contract, WireMock SMS adapter/fixtures, and non-delivering local email adapter; WireMock accepted contract passed with `DEFAULT_OTP`. |
 | 2026-08-30 | Task 2.3 | `In progress` → `Done` | User accepted Task 2.3 with the local/mock provider scope and fixed `DEFAULT_OTP`; eSMS live integration remains a future provider configuration task. |
 | 2026-08-30 | Task 2.3 extension | `Done` → `Done` | Replaced the non-delivering email adapter with Mailpit SMTP delivery, five purpose-specific HTML templates, Docker networking, and local SMTP verification. |
+| 2026-08-30 | Task 2.3 extension | `Done` → `Done` | Converted all email templates to English, renamed the shared layout to `base_email.html`, and added the Mailpit test-email endpoint. |
 
 ## Verification Evidence
 
@@ -274,6 +275,7 @@
 - Acceptance evidence: one provider-neutral `send_otp` contract supports WireMock SMS and Mailpit email delivery. `EmailService.send_email` renders purpose-specific, autoescaped HTML templates for verified-email, email-change, password-reset, password-change, and step-up flows; WireMock maps accepted, rejected, timeout, and malformed SMS responses to stable domain errors.
 - Verification commands: `docker compose config --quiet`; focused email and OTP-adapter tests — 13 passed; ruff and mypy — passed; Pylint — 10.00/10.
 - Manual verification: restarted WireMock and verified its accepted SMS contract. Mailpit SMTP is healthy and accepted a rendered local verification email using the configured SMTP host and port.
+- Latest extension: `POST /api/health/test-email` uses `HealthService` and `EmailService` to submit `base_email.html` to the Mailpit-only test inbox. English templates and the isolated endpoint test are verified.
 - Follow-up / known limitation: eSMS implementation is intentionally deferred until its endpoint, request schema, template, and credential contract are supplied.
 
 ## Verification Evidence Template
