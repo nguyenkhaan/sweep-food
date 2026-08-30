@@ -34,9 +34,9 @@
 | Field | Value |
 |---|---|
 | Active phase | Phase 2 — Identity, Authentication, and User Preferences |
-| Active task | Task 2.5 — Add profile, verified-email, and authorization policies (`Ready`) |
-| Next task | Task 2.5 — Add profile, verified-email, and authorization policies |
-| Next required action | Review and confirm the Task 2.5 API contract before implementation |
+| Active task | Task 2.5 — Add profile, verified-email, and authorization policies (`Done`) |
+| Next task | Phase 2 checkpoint |
+| Next required action | Manually validate the Task 2.5 protected endpoints from Swagger or the frontend, then confirm the Phase 2 checkpoint. |
 | Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
 | Current blocker | None |
 
@@ -78,7 +78,7 @@
 - [x] 2.2 Implement OTP challenge, hashing, and rate-limit services (`In progress`)
 - [x] 2.3 Add SMS/email delivery adapters and WireMock contracts
 - [x] 2.4 Deliver registration, phone/password sign-in, and session APIs
-- [ ] 2.5 Add profile, verified-email, and authorization policies
+- [x] 2.5 Add profile, verified-email, and authorization policies
 - [ ] Phase 2 checkpoint
 
 ### Phase 3 — Catalog and Seed Data
@@ -158,7 +158,7 @@
 | 1.3 Bootstrap SQLAlchemy, Alembic, and database conventions | `Done` | 1.1–1.2 | Async SQLAlchemy session manager, lifespan lifecycle, UUID/timestamp ORM base, Alembic environment, and bootstrap revision are implemented; user verified `alembic upgrade head`. |
 | 1.4 Establish quality, test, and WireMock fixture harness | `Done` | 1.2–1.3 | `src/test` harness, health smoke tests, deterministic `/mock/sms` mapping, and test-folder quality checks passed. |
 
-### Phase 2 Ready Work
+### Phase 2 Work
 
 | Task | Status | Dependencies | Evidence / next action |
 |---|---|---|---|
@@ -166,6 +166,7 @@
 | 2.2 Implement OTP challenge, hashing, and rate-limit services | `In progress` | Task 2.1 | Redis-backed OTP service, password/OTP helpers, configurable limits, and unit tests are implemented; Redis lifecycle requires user confirmation. |
 | 2.3 Add SMS/email delivery adapters and WireMock contracts | `Done` | Task 2.2 | WireMock SMS and Mailpit-backed, template-based email delivery are verified locally; delivery remains provider-adapter based. |
 | 2.4 Deliver registration, phone/password sign-in, and session APIs | `Done` | Tasks 2.1–2.3 | Database is at `20260830_0003 (head)`; auth/OTP/JWT/session tests pass, WireMock contract is verified against the healthy container, and logout revocation blocks refresh-token reuse. |
+| 2.5 Add profile, verified-email, and authorization policies | `Done` | Task 2.4 | Added protected `users` module: minimal JWT identity, profile read/update, email verification/change, and phone change APIs. No migration was needed; all tests pass (`63 passed, 1 skipped`) and focused Ruff, mypy, and Pylint checks pass. |
 
 ## Decision Baseline
 
@@ -218,6 +219,9 @@
 | 2026-08-30 | Task 2.4 OpenAPI security revision | `In progress` → `In progress` | Bearer security is now inferred recursively from `require_authentication` and `require_role(...)` dependencies, so protected routes receive Swagger lock icons without per-route `openapi_extra` declarations. |
 | 2026-08-30 | Task 2.4 token route revision | `In progress` → `In progress` | Removed the access-token-to-refresh-token route by user decision; login remains the refresh-token issuer and `/auth/token/refresh` exchanges a valid refresh JWT for a new access JWT. |
 | 2026-08-30 | Task 2.4 | `In progress` → `Done` | Removed obsolete refresh-issuance service/test code, confirmed database revision `20260830_0003 (head)`, passed the live WireMock contract, and verified logout revokes the matching session and blocks refresh reuse. |
+| 2026-08-31 | Task 2.5 | `Ready` → `Done` | Implemented and documented the protected user module: `/users/me` returns only JWT identity, `/users/profile` owns profile reads/updates, and email/phone changes require purpose-scoped OTP verification. Full test suite passed (`57 passed, 1 skipped`); focused static quality checks passed. |
+| 2026-08-31 | Task 2.5 API contract revision | `Done` → `Done` | Email verification now accepts only OTP. The user-scoped pending email and purpose are stored in Redis with the OTP TTL, replaced by a subsequent request, and removed after successful verification; full suite passed (`59 passed, 1 skipped`). |
+| 2026-08-31 | Task 2.5 phone/contact revision | `Done` → `Done` | Phone confirmation now accepts only OTP and resolves the user-scoped pending phone from Redis. Successful email/phone verification returns the required plain text; phone-change OTP is also emailed when `user.email` exists using the new `CHANGE_PHONE` template. Full suite passed (`63 passed, 1 skipped`). |
 
 ## Verification Evidence
 

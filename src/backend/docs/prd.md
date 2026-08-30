@@ -648,12 +648,13 @@ Access and refresh tokens are JWTs with the same identity claims (`sub`, `roles`
 
 | Method | Path | Purpose |
 |---|---|---|
-| `GET` | `/users/me` | Read current profile |
-| `PATCH` | `/users/me` | Update profile/preferences |
+| `GET` | `/users/me` | Read the current JWT identity (`user_id` and `roles`) |
+| `GET` | `/users/profile` | Read the authenticated user's profile |
+| `PATCH` | `/users/profile` | Update profile/preferences |
 | `POST` | `/users/me/email/request-verification` | Start email verification |
-| `POST` | `/users/me/email/verify` | Verify and attach email |
-| `POST` | `/users/me/phone/request-change` | Start phone-number change verification for a new phone |
-| `POST` | `/users/me/phone/confirm-change` | Consume the verified phone-change grant |
+| `POST` | `/users/me/email/verify` | Verify the pending email OTP and return a plain-text acknowledgement |
+| `POST` | `/users/me/phone/request-change` | Start phone-number change verification for a new phone; also email the OTP when the account has an email |
+| `POST` | `/users/me/phone/confirm-change` | Verify the pending phone OTP and return a plain-text acknowledgement |
 | `POST` | `/users/me/devices` | Register/update an FCM device token |
 | `DELETE` | `/users/me/devices/{device_id}` | Disable a device registration |
 

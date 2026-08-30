@@ -1,0 +1,7 @@
+{% extends "base_email.html" %}
+{% block content %}
+<h1>Confirm your phone number change</h1>
+<p>Use this code to confirm the new phone number for your Sweep Food account.</p>
+<div class="code">{{ otp }}</div>
+<p class="note">This code expires in {{ expires_in_minutes }} minutes.</p>
+{% endblock %}

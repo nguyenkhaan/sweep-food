@@ -12,6 +12,7 @@ from src.core.setting import DATABASE_URL, REDIS_URL, get_env_var
 from src.db import db_session
 from src.module.auth.auth_router import auth_router
 from src.module.health.health_router import health_router
+from src.module.user.user_router import user_router
 from src.service.redis_service import redis_service
 
 APP_NAME = "Sweep Food API"
@@ -36,11 +37,11 @@ async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
     try:
         yield
     finally:
-        
         await redis_service.close()
         print("Redis closed")
         await db_session.close()
         print("Database closed")
+
 
 def create_app() -> FastAPI:
     """Create the configured Sweep Food API application."""
@@ -54,6 +55,7 @@ def create_app() -> FastAPI:
     register_exception_handlers(application)
     application.include_router(health_router, prefix=API_PREFIX)
     application.include_router(auth_router, prefix=API_PREFIX)
+    application.include_router(user_router, prefix=API_PREFIX)
     return application
 
 
