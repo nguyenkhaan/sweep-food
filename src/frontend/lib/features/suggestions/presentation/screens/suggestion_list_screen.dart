@@ -10,6 +10,7 @@ import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.da
 import 'package:frontend/features/suggestions/domain/entities/suggestion_request.dart';
 import 'package:frontend/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:frontend/features/suggestions/presentation/widgets/score_breakdown_sheet.dart';
+import 'package:frontend/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
 import 'package:frontend/shared/domain/dietary_preference.dart';
 import 'package:go_router/go_router.dart';
 
@@ -162,22 +163,6 @@ class _SuggestionTile extends StatelessWidget {
 
   final DishSuggestion suggestion;
 
-  List<SuggestionChip> get _chips {
-    final s = suggestion;
-    return [
-      if (s.nearExpiryCount > 0)
-        (
-          label: 'Dùng ${s.nearExpiryCount} đồ cận hạn',
-          tone: SuggestionChipTone.nearExpiry,
-        ),
-      (label: 'Có sẵn ${s.availabilityPercent}%', tone: SuggestionChipTone.available),
-      if (s.toBuyCount > 0)
-        (label: 'Cần mua ${s.toBuyCount}', tone: SuggestionChipTone.toBuy)
-      else
-        (label: 'Không cần mua', tone: SuggestionChipTone.available),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -187,7 +172,7 @@ class _SuggestionTile extends StatelessWidget {
           title: suggestion.dish.name,
           score: suggestion.score,
           meta: suggestion.dish.shortMeta,
-          chips: _chips,
+          chips: suggestion.cardChips,
           onTap: () => context.push(
             '${Routes.suggestions}/dish/${suggestion.id}',
             extra: suggestion,

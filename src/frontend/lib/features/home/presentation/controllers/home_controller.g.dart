@@ -49,4 +49,4 @@ final class HomeDashboardProvider extends $FunctionalProvider<
   }
 }
 
-String _$homeDashboardHash() => r'22915a76533cd06fb1cb2c05475a4c37aa2c1581';
+String _$homeDashboardHash() => r'd9cdd2e10b42ba7d2ea9fc01029dfaa3e4d71ba7';

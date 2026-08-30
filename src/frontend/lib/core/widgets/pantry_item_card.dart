@@ -55,14 +55,11 @@ class PantryItemCard extends StatelessWidget {
           padding: const EdgeInsets.all(Gap.sm),
           decoration: BoxDecoration(
             borderRadius: Radii.brLg,
-            border: Border(
-              top: BorderSide(color: context.sweep.hairline),
-              right: BorderSide(color: context.sweep.hairline),
-              bottom: BorderSide(color: context.sweep.hairline),
-              left: BorderSide(
-                color: urgent ? context.sweep.critical.fg : context.sweep.hairline,
-                width: urgent ? 3 : 1,
-              ),
+            // Uniform border only — a non-uniform Border with a borderRadius
+            // throws during paint. Urgent items get a full coloured outline.
+            border: Border.all(
+              color: urgent ? context.sweep.critical.fg : context.sweep.hairline,
+              width: urgent ? 1.5 : 1,
             ),
           ),
           child: Row(
