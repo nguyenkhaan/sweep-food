@@ -8,6 +8,7 @@ from uuid import UUID
 from pydantic import BaseModel, Field, field_validator
 
 _PHONE_E164_PATTERN = re.compile(r"^\+[1-9][0-9]{7,14}$")
+_EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 class PasswordOTPVerificationPurpose(str, Enum):
@@ -23,7 +24,8 @@ class RegisterRequestDTO(BaseModel):
     phone: str
     password: str = Field(min_length=8, max_length=128)
     name: str | None = Field(default=None, max_length=100)
-    email : str | None = Field(default = None, max_length = 50)
+    email: str | None = Field(default=None, max_length=254)
+
     @field_validator("phone")
     @classmethod
     def validate_phone(cls, value: str) -> str:
@@ -32,6 +34,19 @@ class RegisterRequestDTO(BaseModel):
         if not _PHONE_E164_PATTERN.fullmatch(phone):
             raise ValueError("Phone must use E.164 format")
         return phone
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value: str | None) -> str | None:
+        """Normalize an optional email address and reject invalid formats."""
+        if value is None:
+            return None
+        email = value.strip().lower()
+        if not _EMAIL_PATTERN.fullmatch(email):
+            raise ValueError("Email must be valid")
+        return email
+
+
 class PasswordOTPRequestDTO(BaseModel):
     """Request a reset-password OTP for an E.164 phone number."""
 

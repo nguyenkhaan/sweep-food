@@ -6,7 +6,7 @@ from uuid import UUID, uuid4
 
 from fastapi import HTTPException, status
 from sqlalchemy import select, update
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.setting import (
@@ -47,7 +47,7 @@ class AuthDomainError(HTTPException):
 
 
 class DuplicateRegistrationError(AuthDomainError):
-    """Raised when a phone already has an account."""
+    """Raised when a phone number or email already has an account."""
 
     status_code = status.HTTP_409_CONFLICT
     default_detail = "Phone is already registered"
@@ -97,15 +97,23 @@ class AuthService:
             existing_user = await self.find_user_by_phone(request.phone)
             if existing_user is not None:
                 raise DuplicateRegistrationError("Phone is already registered")
+            if request.email is not None:
+                existing_email_user = await self.find_user_by_email(request.email)
+                if existing_email_user is not None:
+                    raise DuplicateRegistrationError("Email is already registered")
             user = UserModel(
                 name=request.name,
-                email = request.email, 
+                email=request.email,
                 phone_e164=request.phone,
                 password_hash=hashing(request.password),
                 status=AccountStatus.UNVERIFIED,
             )
             self.db_session.add(user)
             await self.db_session.commit()
+        except IntegrityError as error:
+            await self.db_session.rollback()
+            print(f"Database integrity error: {error}")
+            raise DuplicateRegistrationError("Phone or email is already registered") from error
         except SQLAlchemyError as error:
             await self.db_session.rollback()
             print(f"Database error: {error}")
@@ -343,6 +351,13 @@ class AuthService:
         """Return the user matching one normalized phone number."""
         result = await self.db_session.execute(
             select(UserModel).where(UserModel.phone_e164 == phone)
+        )
+        return result.scalar_one_or_none()
+
+    async def find_user_by_email(self, email: str) -> UserModel | None:
+        """Return the user matching one normalized email address."""
+        result = await self.db_session.execute(
+            select(UserModel).where(UserModel.email == email)
         )
         return result.scalar_one_or_none()
 

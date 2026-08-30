@@ -23,6 +23,7 @@ from src.module.auth.auth_dto import (
 )
 from src.module.auth.auth_service import (
     AuthService,
+    DuplicateRegistrationError,
     InvalidCredentialsError,
     SessionNotFoundError,
 )
@@ -138,6 +139,27 @@ async def test_register_creates_unverified_user_and_sends_otp() -> None:
     assert compare_hash("new-password", created_user.password_hash)
     assert issued_otp.otp == delivery.requests[0].otp
     assert delivery.requests[0].template_id == "REGISTER"
+
+
+@pytest.mark.anyio
+async def test_register_rejects_a_duplicate_email_before_database_insert() -> None:
+    """A second account cannot use an email already held by another account."""
+    existing_user = _user()
+    existing_user.email = "cloudian@example.com"
+    database = FakeDatabaseSession(query_values=[None, existing_user])
+    delivery = FakeOTPDeliveryService()
+
+    with pytest.raises(DuplicateRegistrationError, match="Email is already registered"):
+        await _service(database, delivery).register(
+            RegisterRequestDTO(
+                phone="+84907654321",
+                password="new-password",
+                email="cloudian@example.com",
+            )
+        )
+
+    assert not database.added
+    assert database.commits == 0
 
 
 @pytest.mark.anyio
