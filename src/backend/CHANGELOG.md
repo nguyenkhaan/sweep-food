@@ -11,6 +11,7 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - Neon PostgreSQL as the managed system of record for the backend.
 - ADR-001 documenting the Neon PostgreSQL decision and safe migration/test workflow.
 - Agent-facing context and operating guidance in `COOKBOOK.md`.
+- Async SQLAlchemy database-session lifecycle and Alembic bootstrap revision for Neon PostgreSQL migrations.
 
 ### Changed
 

@@ -67,7 +67,7 @@
 ### Phase 1 — Runtime Foundation
 
 - [x] 1.1 Establish backend package structure and typed configuration — in progress
-- [ ] 1.2 Add persistent service dependencies and local Docker environment — awaiting manual review
+- [x] 1.2 Add persistent service dependencies and local Docker environment — awaiting manual review
 - [ ] 1.3 Bootstrap SQLAlchemy, Alembic, and database conventions
 - [ ] 1.4 Establish quality, test, and WireMock fixture harness
 - [ ] Phase 1 checkpoint
