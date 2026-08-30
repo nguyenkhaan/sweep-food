@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPath": "/__fixtures/provider/health"
+    "urlPath": "/mock/sms"
   },
   "response": {
     "status": 200,
@@ -9,7 +9,7 @@
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "provider": "wiremock",
+      "provider": "mock-sms",
       "status": "ok"
     }
   }

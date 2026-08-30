@@ -71,7 +71,7 @@
 - [x] 1.3 Bootstrap SQLAlchemy, Alembic, and database conventions
 - [ ] 1.4 Establish quality, test, and WireMock fixture harness
 - [ ] Phase 1 checkpoint
-
+Chạy docker restart wiremock để cập nhật lại file mocking mapping 
 ### Phase 2 — Authentication and User Foundation
 
 - [ ] 2.1 Add user and session schema
