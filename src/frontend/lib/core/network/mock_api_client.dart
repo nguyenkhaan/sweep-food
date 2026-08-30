@@ -1,3 +1,123 @@
-// lib/core/network/mock_api_client.dart
-// Serves assets/mock/*.json with artificial latency (BACKEND=mock)
-// TODO: implement — structure only. See ../plan.md and the design canvas.
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:frontend/core/config/app_constants.dart';
+import 'package:frontend/core/error/app_exception.dart';
+import 'package:frontend/core/network/api_client.dart';
+import 'package:frontend/core/network/api_paths.dart';
+import 'package:frontend/core/utils/logger.dart';
+
+/// [ApiClient] that serves canned JSON from `assets/mock/*.json` with a small
+/// artificial delay. Used when `AppConfig.backend == Backend.mock`.
+///
+/// - **GET** → returns the mapped fixture.
+/// - **POST/PUT/PATCH** → echoes the request body back, adding an `id` if absent
+///   (enough for optimistic-UI round trips in the mock).
+/// - **DELETE** → returns `null`.
+/// - Unmapped GET paths throw [MockFixtureException].
+///
+/// Fixture files are fleshed out per milestone (M1+). Add new mappings to
+/// [_fixtures] as endpoints come online.
+class MockApiClient implements ApiClient {
+  MockApiClient({Duration? latency})
+      : _latency = latency ?? AppConstants.mockLatency;
+
+  final Duration _latency;
+  final _cache = <String, dynamic>{};
+  var _autoId = 1000;
+
+  /// Path prefix → fixture asset (without `assets/mock/` or `.json`).
+  static final Map<String, String> _fixtures = {
+    ApiPaths.me: 'auth_me',
+    ApiPaths.ingredients: 'ingredients',
+    ApiPaths.pantryItems: 'pantry_items',
+    ApiPaths.pantrySummary: 'pantry_summary',
+    ApiPaths.suggestions: 'suggestions',
+    '/dishes/': 'dish',
+    ApiPaths.mealPlans: 'meal_plan',
+    '/shopping-lists': 'shopping_list',
+    ApiPaths.notifications: 'notifications',
+    ApiPaths.subscription: 'subscription',
+    ApiPaths.reportsWasteReduction: 'waste_reduction_report',
+  };
+
+  Future<dynamic> _load(String path) async {
+    final entry = _fixtures.entries.firstWhere(
+      (e) => path == e.key || path.startsWith(e.key),
+      orElse: () => throw MockFixtureException('Không có fixture cho "$path"'),
+    );
+    final key = entry.value;
+    if (_cache.containsKey(key)) return _clone(_cache[key]);
+    try {
+      final raw = await rootBundle.loadString('assets/mock/$key.json');
+      final decoded = jsonDecode(raw);
+      _cache[key] = decoded;
+      return _clone(decoded);
+    } catch (e) {
+      throw MockFixtureException('Fixture "assets/mock/$key.json" lỗi: $e');
+    }
+  }
+
+  dynamic _clone(dynamic v) => jsonDecode(jsonEncode(v));
+
+  dynamic _echo(Object? body) {
+    if (body is Map) {
+      final m = Map<String, dynamic>.from(body);
+      m.putIfAbsent('id', () => 'mock-${_autoId++}');
+      return m;
+    }
+    return body;
+  }
+
+  @override
+  Future<dynamic> get(String path, {Map<String, dynamic>? query}) async {
+    await Future<void>.delayed(_latency);
+    log.d('MOCK GET $path ${query ?? ''}');
+    return _load(path);
+  }
+
+  @override
+  Future<dynamic> post(
+    String path, {
+    Object? body,
+    Map<String, dynamic>? query,
+  }) async {
+    await Future<void>.delayed(_latency);
+    log.d('MOCK POST $path');
+    return _echo(body);
+  }
+
+  @override
+  Future<dynamic> put(String path, {Object? body}) async {
+    await Future<void>.delayed(_latency);
+    log.d('MOCK PUT $path');
+    return _echo(body);
+  }
+
+  @override
+  Future<dynamic> patch(String path, {Object? body}) async {
+    await Future<void>.delayed(_latency);
+    log.d('MOCK PATCH $path');
+    return _echo(body);
+  }
+
+  @override
+  Future<dynamic> delete(String path, {Object? body}) async {
+    await Future<void>.delayed(_latency);
+    log.d('MOCK DELETE $path');
+    return null;
+  }
+
+  @override
+  Future<dynamic> postMultipart(
+    String path, {
+    Map<String, dynamic> fields = const {},
+    List<UploadFile> files = const [],
+  }) async {
+    await Future<void>.delayed(_latency * 2);
+    log.d('MOCK MULTIPART $path (${files.length} file)');
+    // Scan endpoints return a canned ScanJob fixture in M4.
+    return _load(path);
+  }
+}
