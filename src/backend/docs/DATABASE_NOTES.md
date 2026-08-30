@@ -6,8 +6,9 @@
 
 - All IDs are UUIDs. All persisted timestamps are UTC. Expiration notifications use the fixed product timezone `Asia/Ho_Chi_Minh`; timezones are not stored per user in this MVP.
 - A user-owned record must be authorized through its direct `user_id` or an owned parent record. Admin users are created by the Python seed script; no public admin CRUD endpoint exists.
-- `users.phone_e164` is unique. `users.email` is unique when present, and email OTP is allowed only after `email_verified_at` is set.
-- OTP plaintext, provider credentials, and raw OCR/ASR/barcode input or output are never persisted.
+- `users.phone_e164` is unique. `users.email` is unique when present. Phone plus password is the only standard sign-in method; a verified email is an OTP destination for recovery and identity changes, never an alternate sign-in identifier in this MVP.
+- `users.password_hash` is required for every user and stores an Argon2id password hash only. Password plaintext is never persisted, logged, placed in a token, or returned by any API.
+- OTP plaintext, verification grants, provider credentials, and raw OCR/ASR/barcode input or output are never persisted. Redis challenges are scoped to an `OTPChannel` and `OTPPurpose`.
 - `auth_sessions.refresh_token_hash` is the only stored refresh-token representation. On refresh-token reuse, revoke sessions sharing the token family.
 
 ## Catalog and Seed Rules
@@ -48,7 +49,7 @@
 
 ## Required Indexes
 
-- Unique `users(phone_e164)` and non-null `users(email)`.
+- Unique `users(phone_e164)` and non-null `users(email)`; do not index `users.password_hash`.
 - `auth_sessions(user_id, expires_at)` and `auth_sessions(token_family_id)`.
 - `master_ingredients(category_id)`, unique `ingredient_aliases(normalized_alias)`, and shelf-life lookup by ingredient/category plus storage mode.
 - `recipe_ingredients(recipe_id)` and `recipe_ingredients(master_ingredient_id)`.
@@ -64,7 +65,7 @@ The legacy conceptual names below are mapping aids only. `DATABASE.txt` remains 
 
 | Original conceptual item | Approved destination | Migration decision |
 |---|---|---|
-| `user` | `users` | Renamed and expanded for phone/email verification, role, status, preferences, and timestamps. |
+| `user` | `users` | Renamed and expanded for phone/email verification, password hash, role, status, preferences, and timestamps. |
 | `master_ingredient` | `ingredient_categories` + `master_ingredients` | Category is normalized into its own table; nutrition and default storage remain on the ingredient. |
 | `user_ingredient` | `inventory_batches` + `inventory_ledger_entries` | Split into operational batch balance and immutable quantity history to support FEFO. |
 | `media` | Direct `media_url` fields | Removed; the MVP does not need a shared media entity. |
@@ -79,7 +80,7 @@ The legacy conceptual names below are mapping aids only. `DATABASE.txt` remains 
 
 Create migrations in this dependency order:
 
-1. Create the 20 PostgreSQL enums, then `users` and `auth_sessions`.
+1. Create the 22 PostgreSQL enums, then `users` and `auth_sessions`.
 2. Create `ingredient_categories`, `master_ingredients`, `ingredient_aliases`, and `shelf_life_rules`.
 3. Create `recipes` and `recipe_ingredients`.
 4. Create `recommendation_runs`, `recommendation_items`, `meal_plans`, and `meal_plan_items`.
@@ -92,7 +93,8 @@ Fields documented as `// table.id` in `DATABASE.txt` are relationship constraint
 ## Required Invariants and Constraints
 
 - Use database foreign keys for every documented relationship, except the explicitly deferred self/circular relationship while its target table is being created; add it before the migration is complete.
-- `users.phone_e164` is unique; `users.email` is unique when non-null; one `user_notification_preferences` row exists per user.
+- `users.phone_e164` is unique; `users.email` is unique when non-null; `users.password_hash` is non-null; an `ACTIVE` user has `phone_verified_at`; one `user_notification_preferences` row exists per user.
+- A registration, password-reset, password-change, phone-change, email-change, or step-up operation must consume a single-use OTP verification grant with the matching purpose and destination. Password reset/change revokes the affected user's active refresh-token sessions.
 - Category names, master ingredient names within a category, and recipe names are unique case-insensitively. `ingredient_aliases.normalized_alias` is unique.
 - A `shelf_life_rules` row has exactly one non-null target (`master_ingredient_id` or `category_id`), and that target/storage-mode pair is unique.
 - A recipe ingredient, meal-plan item serving, cooking session serving, cooking consumption, and shopping quantities must be positive. `meal_plans.starts_on <= ends_on`; a planned item date lies in that inclusive range.
@@ -106,7 +108,7 @@ Fields documented as `// table.id` in `DATABASE.txt` are relationship constraint
 
 | PRD flow | Approved storage | Review result |
 |---|---|---|
-| Phone OTP, optional verified-email OTP, refresh sessions | `users`, `auth_sessions`; OTP and rate limits in Redis | Covered; no plaintext OTP persists. |
+| Phone/password sign-in, OTP-gated registration and sensitive changes, refresh sessions | `users`, `auth_sessions`; OTP, verification grants, and rate limits in Redis | Covered; password/OTP plaintext never persists. |
 | Seeded catalog search and aliases | `ingredient_categories`, `master_ingredients`, `ingredient_aliases` | Covered. |
 | Estimated expiration | `shelf_life_rules`, `inventory_batches` | Covered; manufacturer date has precedence. |
 | Manual batch entry, separate expiry batches, FEFO, and audit | `inventory_batches`, `inventory_ledger_entries` | Covered; batch rows remain separate and ledger is immutable. |

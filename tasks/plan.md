@@ -23,7 +23,7 @@ Implementation constraints:
 - Python 3.11+ and FastAPI remain the application foundation.
 - Neon PostgreSQL is the managed system of record; Redis handles ephemeral OTPs, rate limits, locks, and job coordination.
 - The first source of catalog data is a repeatable Python seed script. Admin is seeded; no public admin CRUD API is included.
-- Phone OTP is the primary authentication method. A verified email becomes an alternate OTP channel.
+- Phone/password is the primary sign-in method. OTP verifies registration, password recovery, and sensitive identity changes; a verified email is an allowed OTP destination for recovery/changes.
 - Local/CI uses WireMock and a fixed OTP `123456`; staging uses eSMS Sandbox; production uses a registered eSMS Brandname adapter.
 - Every new Python function must be fully typed and meet the repository Python quality rules in `src/backend/AGENT.md`.
 
@@ -35,7 +35,7 @@ Implementation constraints:
 | Ephemeral state | Redis | TTL-backed OTP challenges, rate limits, locks, and background-job coordination |
 | API | FastAPI under `/api` | Matches the approved API prefix and produces OpenAPI contracts |
 | Persistence | SQLAlchemy 2.x + Alembic | Typed models and repeatable database migrations |
-| Auth | JWT access/rotating refresh sessions; backend-owned OTP | Provider-independent security and auditability |
+| Auth | Phone/password sign-in, JWT access/rotating refresh sessions, backend-owned OTP verification grants | Provider-independent security and auditability |
 | Provider abstraction | Protocol/interface plus environment-selected adapter | Keeps eSMS, FCM, OCR, ASR, barcode, and ML dependencies replaceable |
 | Background work | Redis-backed worker/scheduler selected during Phase 1 | Isolates expiration scan/retry work from request handling |
 | Local integrations | WireMock in Docker Compose | Deterministic tests for third-party success/failure behavior |
@@ -109,12 +109,13 @@ Database documentation and migrations are sequential. Feature slices may run in 
 
 | Step | Deliverable | Depends on |
 |---|---|---|
-| 2.1 | User, session, and account-status migrations/models/repositories | Phase 1 |
-| 2.2 | OTP domain service: generation, hashing, TTL, purpose isolation, rate limits, and WireMock SMS adapter | 2.1 |
-| 2.3 | Phone OTP request/verify, JWT access/refresh/logout, session revocation APIs | 2.2 |
-| 2.4 | Verified email alternate OTP flow, profile/preferences, role/ownership dependencies | 2.3 |
+| 2.1 | User/password/session/account-status migrations, models, and repositories | Phase 1 |
+| 2.2 | OTP domain service: generation, hashing, TTL, verification grants, purpose isolation, rate limits, and WireMock SMS adapter | 2.1 |
+| 2.3 | SMS/email delivery adapters and WireMock provider contracts | 2.2, 1.4 |
+| 2.4 | OTP-gated registration, phone/password login, JWT access/refresh/logout, password reset/change, and session-revocation APIs | 2.1–2.3 |
+| 2.5 | Verified-email recovery, phone/email change, profile/preferences, role/ownership dependencies | 2.4 |
 
-**Checkpoint:** A user can sign in locally with `123456`, use protected endpoints, refresh/revoke sessions, and cannot access another user's data.
+**Checkpoint:** A user can register locally with OTP `123456`, create a password, sign in with phone/password, reset or change a password through OTP verification, use protected endpoints, refresh/revoke sessions, and cannot access another user's data.
 
 ### Phase 3 — Catalog, Seed Pipeline, and Recipe Read APIs
 
@@ -241,7 +242,7 @@ Never parallelize migrations that touch the same table family, changes to shared
 | Schema drifts from PRD | High rework | Phase 0 approval; map every PRD entity to a documented table |
 | Batch/FEFO logic creates negative stock | Data integrity failure | Database constraints, row locks, idempotency keys, concurrency tests |
 | Unit incompatibility breaks matching | Poor recommendations/cooking failures | Explicit unit-group conversions and warning/error contracts |
-| OTP providers behave differently | Login instability | Backend-owned OTPs and provider adapters with WireMock contract tests |
+| OTP providers behave differently | Registration/recovery instability | Backend-owned OTPs and provider adapters with WireMock contract tests |
 | External OCR/ASR output is unreliable | Bad inventory data | Do not persist extraction output in MVP; return warnings/confidence |
 | Seed data quality is weak | Recipe/recommendation quality degradation | Deterministic natural-key upserts, dry run, validation, rejection report |
 | Scope expands to model training or admin UI | MVP delay | Keep model interface only and admin seed-only; enforce Phase checkpoints |

@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 from alembic import context
 from src.core.setting import DATABASE_URL
 from src.db import build_async_database_url
-from src.model.base import Base
+from src.model import Base
 
 config = context.config
 

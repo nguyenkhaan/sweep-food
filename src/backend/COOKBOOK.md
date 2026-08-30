@@ -10,7 +10,7 @@ This is the practical operating guide for engineers and agents working on the Sw
 | Primary database | Neon PostgreSQL, configured through `DATABASE_URL` |
 | Ephemeral state | Redis for OTP TTL, rate limits, locks, cache, and worker coordination |
 | Local/CI provider simulation | WireMock in Docker |
-| Authentication | Backend-owned OTP; phone is primary, verified email is an alternate OTP channel |
+| Authentication | Phone/password sign-in; backend-owned OTP verifies registration, recovery, and sensitive identity changes |
 | Seed data | One idempotent Python entry point at `scripts/seed.py` (to be created in Phase 3) |
 | Recommendation MVP | Explainable rule-based provider backed by seeded recipes and inventory |
 | Future recommendation model | XGBoost or LightGBM adapter behind `RecommendationProvider` |
@@ -170,7 +170,7 @@ The seed script must be idempotent and transactional. It seeds the admin account
 | Staging | eSMS Sandbox | Staging FCM project | Approved sandbox/test providers | Extraction returns `persisted: false` |
 | Production | eSMS Brandname | Production FCM | Approved production providers | Extraction returns `persisted: false` in MVP |
 
-The backend generates, hashes, expires, and verifies OTPs. eSMS and email providers only deliver the message. Do not send real SMS from a personal SIM or attempt to bypass provider/telecom controls.
+The backend generates, hashes, expires, and verifies OTPs. OTPs issue purpose-bound verification grants; they never replace phone/password sign-in. eSMS and email providers only deliver the message. Do not send real SMS from a personal SIM or attempt to bypass provider/telecom controls.
 
 ## 8. Core Domain Recipes
 

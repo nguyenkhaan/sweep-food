@@ -13,9 +13,15 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - Agent-facing context and operating guidance in `COOKBOOK.md`.
 - Async SQLAlchemy database-session lifecycle and Alembic bootstrap revision for Neon PostgreSQL migrations.
 - Pytest smoke-test harness under `src/test` and a deterministic WireMock provider fixture.
+- SQLAlchemy database models for every approved MVP table, with a common enum module and time-ordered UUIDv7 primary-key generation.
+
+### Fixed
+
+- Alembic revision template now includes dialect-specific imports emitted during autogeneration, allowing PostgreSQL `JSONB` migrations to run.
 
 ### Changed
 
+- **Breaking authentication change:** registration now requires phone OTP verification followed by password creation; sign-in now uses phone number and password. OTP is reserved for registration, password recovery/change, identity changes, and step-up authentication.
 - Backend database planning now targets Neon PostgreSQL instead of a local PostgreSQL container.
 - Replaced the early conceptual database notes with the canonical MVP schema contract covering identity, catalog, batch inventory, FEFO audit data, recommendations, planning, cooking, shopping, and notifications.
 - Split database documentation into table syntax (`DATABASE.txt`) and operational/design notes (`DATABASE_NOTES.md`) for faster schema review.

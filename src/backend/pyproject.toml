@@ -34,6 +34,15 @@ markers = [
 [tool.pylint.main]
 init-hook = "import sys; sys.path.insert(0, '.')"
 
+[tool.pylint.design]
+min-public-methods = 0
+
+[tool.pylint.similarities]
+min-similarity-lines = 10
+
+[tool.mypy]
+explicit_package_bases = true
+
 [dependency-groups]
 dev = [
     "mypy>=2.3.1",
