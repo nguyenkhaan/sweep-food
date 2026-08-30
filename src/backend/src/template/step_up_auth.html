@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "base_email.html" %}
 {% block content %}
-<h1>Xác minh thao tác nhạy cảm</h1>
-<p>Dùng mã này để tiếp tục thao tác bảo mật trên tài khoản của bạn.</p>
+<h1>Confirm a sensitive action</h1>
+<p>Use this code to continue with the security-sensitive action on your account.</p>
 <div class="code">{{ otp }}</div>
-<p class="note">Mã có hiệu lực trong {{ expires_in_minutes }} phút.</p>
+<p class="note">This code expires in {{ expires_in_minutes }} minutes.</p>
 {% endblock %}

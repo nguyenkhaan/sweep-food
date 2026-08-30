@@ -5,7 +5,7 @@ from enum import Enum
 
 class AccountStatus(str, Enum):
     """Current account access state."""
-
+    UNVERIFIED = "UNVERIFIED"
     ACTIVE = "ACTIVE"
     BANNED = "BANNED"
 

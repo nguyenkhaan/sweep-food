@@ -34,9 +34,9 @@
 | Field | Value |
 |---|---|
 | Active phase | Phase 2 — Identity, Authentication, and User Preferences |
-| Active task | Task 2.2 — Implement OTP challenge, hashing, and rate-limit services (`In progress`) |
-| Next task | Verify Redis-backed OTP behavior, then begin Task 2.4 |
-| Next required action | Start the backend with Redis and verify the Redis lifecycle connection |
+| Active task | Task 2.4 — Deliver registration, phone/password sign-in, and session APIs (`In progress`) |
+| Next task | Apply the `UNVERIFIED` migration, then verify the live auth flow locally |
+| Next required action | Run Alembic upgrade against the configured development database |
 | Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
 | Current blocker | None |
 
@@ -165,6 +165,7 @@
 | 2.1 Add user and session schema | `Done` | Phase 1 checkpoint | User-confirmed migration creates user/session tables and constraints; JWT access authentication and role demonstration endpoints are verified. |
 | 2.2 Implement OTP challenge, hashing, and rate-limit services | `In progress` | Task 2.1 | Redis-backed OTP service, password/OTP helpers, configurable limits, and unit tests are implemented; Redis lifecycle requires user confirmation. |
 | 2.3 Add SMS/email delivery adapters and WireMock contracts | `Done` | Task 2.2 | WireMock SMS and Mailpit-backed, template-based email delivery are verified locally; delivery remains provider-adapter based. |
+| 2.4 Deliver registration, phone/password sign-in, and session APIs | `In progress` | Tasks 2.1–2.3 | Auth module, OTP fallback, migration, unit/API tests, and protected-account status checks are implemented; migration and live verification are pending. |
 
 ## Decision Baseline
 
@@ -208,6 +209,14 @@
 | 2026-08-30 | Task 2.3 | `Ready` → `In progress` | Added provider-neutral OTP delivery contract, WireMock SMS adapter/fixtures, and non-delivering local email adapter; WireMock accepted contract passed with `DEFAULT_OTP`. |
 | 2026-08-30 | Task 2.3 | `In progress` → `Done` | User accepted Task 2.3 with the local/mock provider scope and fixed `DEFAULT_OTP`; eSMS live integration remains a future provider configuration task. |
 | 2026-08-30 | Task 2.3 extension | `Done` → `Done` | Replaced the non-delivering email adapter with Mailpit SMTP delivery, five purpose-specific HTML templates, Docker networking, and local SMTP verification. |
+| 2026-08-30 | Task 2.3 extension | `Done` → `Done` | Converted all email templates to English, renamed the shared layout to `base_email.html`, and added the Mailpit test-email endpoint. |
+| 2026-08-30 | Task 2.4 | `Ready` → `In progress` | Implemented the approved internal-OTP auth contract: unverified registration, registration verification, password OTP flows, sessions, and database account-status checks. |
+| 2026-08-30 | Task 2.4 revision | `In progress` → `In progress` | Removed client IP propagation from AuthService and added unverified-registration OTP resend; replacing a challenge invalidates its previous Redis key. |
+| 2026-08-30 | Task 2.4 migration fix | `In progress` → `In progress` | Corrected the `UNVERIFIED` PostgreSQL enum label to match SQLAlchemy's persisted enum-name convention; a follow-up migration is required for databases already upgraded. |
+| 2026-08-30 | Task 2.4 OTP contract correction | `In progress` → `In progress` | Removed public/internal challenge IDs from auth OTP flows. Issue/resend responses now return the generated OTP; Redis stores one hashed OTP per channel/purpose/destination scope, resend overwrites the old code, and local/test verification additionally accepts `123456`. |
+| 2026-08-30 | Task 2.4 JWT contract revision | `In progress` → `In progress` | Registration verification now returns plain text only. Login issues access/refresh JWTs, purpose claims and separate secrets are enforced, refresh can issue a new access JWT, and `device_label` was removed from login. |
+| 2026-08-30 | Task 2.4 OpenAPI security revision | `In progress` → `In progress` | Bearer security is now inferred recursively from `require_authentication` and `require_role(...)` dependencies, so protected routes receive Swagger lock icons without per-route `openapi_extra` declarations. |
+| 2026-08-30 | Task 2.4 token route revision | `In progress` → `In progress` | Removed the access-token-to-refresh-token route by user decision; login remains the refresh-token issuer and `/auth/token/refresh` exchanges a valid refresh JWT for a new access JWT. |
 
 ## Verification Evidence
 
@@ -274,6 +283,7 @@
 - Acceptance evidence: one provider-neutral `send_otp` contract supports WireMock SMS and Mailpit email delivery. `EmailService.send_email` renders purpose-specific, autoescaped HTML templates for verified-email, email-change, password-reset, password-change, and step-up flows; WireMock maps accepted, rejected, timeout, and malformed SMS responses to stable domain errors.
 - Verification commands: `docker compose config --quiet`; focused email and OTP-adapter tests — 13 passed; ruff and mypy — passed; Pylint — 10.00/10.
 - Manual verification: restarted WireMock and verified its accepted SMS contract. Mailpit SMTP is healthy and accepted a rendered local verification email using the configured SMTP host and port.
+- Latest extension: `POST /api/health/test-email` uses `HealthService` and `EmailService` to submit `base_email.html` to the Mailpit-only test inbox. English templates and the isolated endpoint test are verified.
 - Follow-up / known limitation: eSMS implementation is intentionally deferred until its endpoint, request schema, template, and credential contract are supplied.
 
 ## Verification Evidence Template

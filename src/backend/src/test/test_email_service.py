@@ -27,7 +27,7 @@ async def test_send_email_renders_verify_template_and_submits_message() -> None:
     service = EmailService(sender="noreply@sweep-food.local", transport=transport)
 
     message_id = await service.send_email(
-        subject="Xác minh email Sweep Food",
+        subject="Verify your Sweep Food email",
         payload={
             "recipient": "user@example.test",
             "recipient_name": "An",
@@ -42,7 +42,7 @@ async def test_send_email_renders_verify_template_and_submits_message() -> None:
     message = transport.messages[0]
     assert message["To"] == "user@example.test"
     assert message["From"] == "noreply@sweep-food.local"
-    assert str(message["Subject"]) == "Xác minh email Sweep Food"
+    assert str(message["Subject"]) == "Verify your Sweep Food email"
     html_part = message.get_body(preferencelist=("html",))
     assert html_part is not None
     assert "123456" in html_part.get_content()

@@ -195,7 +195,7 @@
 
 ### Task 2.4: Deliver registration, phone/password sign-in, and session APIs
 
-**Description:** Implement OTP request/verify, registration completion, phone/password login, password reset/change, access/refresh token, logout, and session management endpoints with consistent responses and ownership middleware.
+**Description:** Implement `UNVERIFIED` registration with internally issued SMS OTP, registration verification, phone/password login, internally issued password OTPs, password verification/change, access/refresh token, logout, and session management endpoints with consistent responses and ownership middleware. Generic OTP request/verify endpoints are not exposed.
 
 **Acceptance criteria:**
 

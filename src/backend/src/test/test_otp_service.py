@@ -110,22 +110,35 @@ def _service(
 
 
 @pytest.mark.anyio
-async def test_local_mock_code_replaces_generated_code() -> None:
-    """Local/CI configuration issues the fixed OTP without storing it plainly."""
-    issue = await _service(FakeOTPStore()).issue_challenge(
+async def test_local_mock_code_verifies_a_random_stored_challenge(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The local code can verify while Redis still stores a random OTP hash."""
+    monkeypatch.setattr("src.service.otp_service.generate_otp", lambda: "654321")
+    service = _service(FakeOTPStore())
+    issue = await service.issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
         "127.0.0.1",
     )
 
-    assert issue.otp == "123456"
+    assert issue.otp.isdigit()
+    assert len(issue.otp) == 6
+    assert issue.otp != "123456"
+    grant = await service.verify_otp(
+        OTPChannel.SMS,
+        "+84901234567",
+        OTPPurpose.REGISTER,
+        "123456",
+    )
+    assert grant.grant
 
 
 @pytest.mark.anyio
 async def test_production_style_code_is_six_random_digits() -> None:
     """Without the mock configuration, a six-digit code is issued."""
-    issue = await _service(FakeOTPStore(), fixed_otp_code=None).issue_challenge(
+    issue = await _service(FakeOTPStore(), fixed_otp_code=None).issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
@@ -140,9 +153,9 @@ async def test_production_style_code_is_six_random_digits() -> None:
 async def test_challenge_expires_after_its_ttl() -> None:
     """An expired challenge cannot be verified."""
     store = FakeOTPStore()
-    issue = await _service(
+    await _service(
         store, policy=_policy(challenge_ttl_seconds=10)
-    ).issue_challenge(
+    ).issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
@@ -153,8 +166,7 @@ async def test_challenge_expires_after_its_ttl() -> None:
     with pytest.raises(OTPChallengeNotFoundError):
         await _service(
             store, policy=_policy(challenge_ttl_seconds=10)
-        ).verify_challenge(
-            issue.challenge_id,
+        ).verify_otp(
             OTPChannel.SMS,
             "+84901234567",
             OTPPurpose.REGISTER,
@@ -163,39 +175,45 @@ async def test_challenge_expires_after_its_ttl() -> None:
 
 
 @pytest.mark.anyio
-async def test_replacement_invalidates_the_previous_challenge() -> None:
-    """Issuing another OTP for a scope invalidates the prior challenge."""
+async def test_replacement_invalidates_the_previous_otp(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Issuing another OTP for a scope invalidates the prior code."""
+    generated_codes = iter(("654321", "987654"))
+
+    def next_otp() -> str:
+        return next(generated_codes)
+
+    monkeypatch.setattr("src.service.otp_service.generate_otp", next_otp)
     store = FakeOTPStore()
-    service = _service(store)
-    first_issue = await service.issue_challenge(
+    service = _service(store, fixed_otp_code=None)
+    first_issue = await service.issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
         "127.0.0.1",
     )
     store.advance(60)
-    second_issue = await service.issue_challenge(
+    second_issue = await service.issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
         "127.0.0.1",
     )
 
-    with pytest.raises(OTPChallengeNotFoundError):
-        await service.verify_challenge(
-            first_issue.challenge_id,
+    with pytest.raises(OTPInvalidCodeError):
+        await service.verify_otp(
             OTPChannel.SMS,
             "+84901234567",
             OTPPurpose.REGISTER,
-            "123456",
+            first_issue.otp,
         )
 
-    grant = await service.verify_challenge(
-        second_issue.challenge_id,
+    grant = await service.verify_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
-        "123456",
+        second_issue.otp,
     )
     assert grant.grant
 
@@ -205,7 +223,7 @@ async def test_invalid_code_tracks_attempts_and_locks_the_challenge() -> None:
     """Repeated invalid codes consume the challenge at the configured limit."""
     store = FakeOTPStore()
     service = _service(store, policy=_policy(max_verification_attempts=2))
-    issue = await service.issue_challenge(
+    await service.issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
@@ -213,23 +231,21 @@ async def test_invalid_code_tracks_attempts_and_locks_the_challenge() -> None:
     )
 
     with pytest.raises(OTPInvalidCodeError):
-        await service.verify_challenge(
-            issue.challenge_id,
+        await service.verify_otp(
             OTPChannel.SMS,
             "+84901234567",
             OTPPurpose.REGISTER,
             "000000",
         )
     with pytest.raises(OTPAttemptsExceededError):
-        await service.verify_challenge(
-            issue.challenge_id,
+        await service.verify_otp(
             OTPChannel.SMS,
             "+84901234567",
             OTPPurpose.REGISTER,
             "000000",
         )
     with pytest.raises(OTPAttemptsCooldownError):
-        await service.issue_challenge(
+        await service.issue_otp(
             OTPChannel.SMS,
             "+84901234567",
             OTPPurpose.REGISTER,
@@ -238,27 +254,17 @@ async def test_invalid_code_tracks_attempts_and_locks_the_challenge() -> None:
 
 
 @pytest.mark.anyio
-async def test_purpose_mismatch_cannot_verify_or_consume_a_grant() -> None:
-    """A registration challenge/grant cannot authorize password reset."""
+async def test_grant_purpose_mismatch_cannot_authorize_another_operation() -> None:
+    """A registration grant cannot authorize password reset."""
     service = _service(FakeOTPStore())
-    issue = await service.issue_challenge(
+    await service.issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
         "127.0.0.1",
     )
 
-    with pytest.raises(OTPPurposeMismatchError):
-        await service.verify_challenge(
-            issue.challenge_id,
-            OTPChannel.SMS,
-            "+84901234567",
-            OTPPurpose.RESET_PASSWORD,
-            "123456",
-        )
-
-    grant = await service.verify_challenge(
-        issue.challenge_id,
+    grant = await service.verify_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
@@ -277,14 +283,13 @@ async def test_purpose_mismatch_cannot_verify_or_consume_a_grant() -> None:
 async def test_grant_is_single_use() -> None:
     """A consumed verification grant cannot authorize a second operation."""
     service = _service(FakeOTPStore())
-    issue = await service.issue_challenge(
+    await service.issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
         "127.0.0.1",
     )
-    grant = await service.verify_challenge(
-        issue.challenge_id,
+    grant = await service.verify_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
@@ -312,7 +317,7 @@ async def test_resend_cooldown_blocks_second_issue_until_expiry() -> None:
     """The destination/purpose cooldown blocks rapid resend requests."""
     store = FakeOTPStore()
     service = _service(store)
-    await service.issue_challenge(
+    await service.issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
@@ -320,7 +325,7 @@ async def test_resend_cooldown_blocks_second_issue_until_expiry() -> None:
     )
 
     with pytest.raises(OTPResendCooldownError):
-        await service.issue_challenge(
+        await service.issue_otp(
             OTPChannel.SMS,
             "+84901234567",
             OTPPurpose.REGISTER,
@@ -328,13 +333,14 @@ async def test_resend_cooldown_blocks_second_issue_until_expiry() -> None:
         )
 
     store.advance(60)
-    issue = await service.issue_challenge(
+    issue = await service.issue_otp(
         OTPChannel.SMS,
         "+84901234567",
         OTPPurpose.REGISTER,
         "127.0.0.1",
     )
-    assert issue.otp == "123456"
+    assert issue.otp.isdigit()
+    assert len(issue.otp) == 6
 
 
 def test_password_hash_helper_uses_argon2id_verification() -> None:
