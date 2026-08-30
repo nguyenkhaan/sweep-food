@@ -6,6 +6,7 @@ import 'package:frontend/core/network/dio_api_client.dart';
 import 'package:frontend/core/network/interceptors/auth_interceptor.dart';
 import 'package:frontend/core/network/interceptors/logging_interceptor.dart';
 import 'package:frontend/core/network/mock_api_client.dart';
+import 'package:frontend/core/network/session_expired.dart';
 import 'package:frontend/core/storage/storage_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,7 +26,11 @@ Dio dio(Ref ref) {
     ),
   );
   d.interceptors.addAll([
-    AuthInterceptor(ref.watch(secureStoreProvider)),
+    AuthInterceptor(
+      ref.watch(secureStoreProvider),
+      baseUrl: config.apiBaseUrl,
+      onSessionExpired: () => ref.read(sessionExpiredProvider.notifier).fire(),
+    ),
     LoggingInterceptor(),
   ]);
   return d;

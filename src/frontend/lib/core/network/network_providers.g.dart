@@ -51,7 +51,7 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$dioHash() => r'2b913bb40e0c9632f29c19b23d560e7c092286bc';
+String _$dioHash() => r'75e13955f415b2681594034583eaaeff92aae404';
 
 /// The app's [ApiClient] — mock or live, chosen by `AppConfig.backend`.
 /// All repositories depend on this, never on Dio directly.

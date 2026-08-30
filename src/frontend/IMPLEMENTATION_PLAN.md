@@ -15,8 +15,8 @@
 | **M1 — Kho (vertical slice)** | ✅ Xong |
 | **M2 — Trang chủ** | ✅ Xong |
 | **M3 — Gợi ý + Món + Nấu (vòng lặp lõi)** | ✅ Xong |
-| M4 — Nhập liệu đa phương thức | ⬜ Chưa — đang làm |
-| M5 — Auth + Onboarding + phần còn lại | ⬜ Chưa |
+| M4 — Nhập liệu đa phương thức | ⬜ Chưa — đang làm (teammate) |
+| M5 — Auth + Onboarding + phần còn lại | 🟡 Đang làm — **Auth gate + Onboarding xong**; còn Thông báo / Mua sắm / Thực đơn / Báo cáo / Cài đặt / Subscription / Analytics |
 | M6 — Hoàn thiện, i18n, test, build | ⬜ Chưa |
 
 ### M0 đã hoàn thành (2026-08-30)
@@ -67,6 +67,21 @@ Ba vertical slice khép kín vòng lặp lõi: **Gợi ý → Món → Nấu →
 - ✅ `dart run build_runner build` OK. ✅ `flutter analyze` → **No issues** (sửa luôn 3 lint trailing-comma tồn từ M1). ✅ `flutter test` xanh (9 pass / 2 skip stub). ✅ `flutter build web --dart-define-from-file=config/dev.json` → build thành công.
 
 **Chạy thử:** `flutter run -d chrome --dart-define-from-file=config/dev.json` → tab Gợi ý: lọc, mở "Vì sao điểm này?", mở chi tiết món, đổi khẩu phần (định lượng + dinh dưỡng đổi theo), "Đã nấu món này" → chọn "Dùng đúng định lượng" → màn kết quả trừ kho → "Xem kho" thấy Ức gà / Cà chua bi đã giảm.
+
+### M5 — phần Auth gate + Onboarding đã hoàn thành (2026-08-31)
+
+Vertical slice đầu của M5 (nhánh `feat/auth_onboarding`). Chưa đụng Thông báo / Mua sắm / Thực đơn / Báo cáo / Cài đặt (đầy đủ) / Subscription / Analytics — để các slice sau.
+
+- **`features/auth/`** — `domain/entities/` `user.dart` (freezed; `displayName`/`initials`; note FE giả định email+password còn BE stub đang phone+OTP — hoà giải ở M6), `session.dart` (`Session{user, accessToken, refreshToken}`); `domain/repositories/auth_repository.dart` (`register`/`login`/`me`/`requestPasswordReset`/`logout`/`hasStoredSession`); `data/` `auth_dto.dart` (`UserDto`/`SessionDto`/`TokenPairDto`, snake_case, `toEntity()`), `auth_remote_data_source.dart` (`/auth/*`, mọi call `skipAuth`), `auth_repository_impl.dart` (`@Riverpod(keepAlive:true) authRepository`; persist token pair vào `SecureStore`; `logout` best-effort rồi luôn `store.clear()`); `presentation/controllers/` `session_controller.dart` (`@Riverpod(keepAlive:true)` `AsyncNotifier<Session?>`: `build()` khôi phục phiên từ token + `/auth/me`; `logIn`/`register` rethrow `Failure` cho form; `logOut`; nghe `sessionExpiredProvider` → tự đăng xuất), `auth_form.dart` (`AuthFormState` + `isValidEmail`/`isValidPassword`), `login_controller.dart` / `register_controller.dart` / `forgot_password_controller.dart` (validate field-level 422, cờ submitting, banner lỗi form); `presentation/screens/` `splash_screen.dart` (G-01), `welcome_screen.dart` (A-01, PageView 3 slide), `login_screen.dart` (A-02), `register_screen.dart` (A-03 + checkbox điều khoản), `forgot_password_screen.dart` (A-04 `[S]` — form ↔ card "đã gửi"); `presentation/widgets/` `auth_text_field.dart`, `auth_form_error.dart`
+- **`features/onboarding/`** — `domain/entities/onboarding_state.dart` (`OnboardingStep` + progress bar helpers), `presentation/controllers/onboarding_controller.dart` (`@Riverpod(keepAlive:true)` `OnboardingController` bool `kOnboardingDone` + `complete()`; `DietaryPreferenceController` `DietaryPreference?` ↔ `kDietaryPreference` — settings/suggestions slice sau sẽ `watch`), `presentation/screens/` `dietary_preference_screen.dart` (A-05, 4 lựa chọn N-01, "Bỏ qua"), `onboarding_pantry_screen.dart` (A-06, CTA → `/pantry/add`, "Để sau" → `/home`); `presentation/widgets/onboarding_progress.dart`
+- **Router bật guard thật** — `route_guards.dart`: `appRedirect(Ref, …)` — phiên đang khôi phục → `/splash`; chưa đăng nhập → `/welcome` (trừ route auth); đã đăng nhập chưa onboarding → `/onboarding/diet`; đã onboarding mà ở splash/auth/onboarding → `/home`. `AuthRouterRefresh` (ChangeNotifier) cầu `sessionController` + `onboardingController` → `GoRouter.refreshListenable`. `app_router.dart` thêm 7 route gốc (splash/welcome/login/register/forgot + onboarding diet/pantry), `redirect` nhận `ref`. `Routes.initialLocation` → `splash`.
+- **`core/`** — `auth_interceptor.dart`: 401 → `/auth/refresh` một lần qua Dio trần → ghi token mới → replay request; thất bại → `store.clear()` + `onSessionExpired`. `session_expired.dart` (`SessionExpired` counter — phá vòng phụ thuộc interceptor→session). `network_providers.dart` nối `baseUrl` + `onSessionExpired` vào interceptor. `api_paths.dart` thêm `forgotPassword`.
+- **Settings** — `settings_home_screen.dart`: thêm header user + nút "Đăng xuất" (dialog xác nhận → `sessionController.logOut()`), giữ nút đổi theme. (Phần P-01 đầy đủ để slice Cài đặt sau.)
+- **MockApiClient** — `_postFixtures` map `/auth/login` & `/auth/register` → `auth_session.json`, `/auth/refresh` → `auth_tokens.json`. Fixture mới: `auth_session.json`, `auth_tokens.json`; `auth_me.json` điền thật.
+- **Test** — `test/unit/auth/auth_repository_impl_test.dart` (login map+persist, nhánh lỗi không persist, logout luôn clear, `hasStoredSession`, 401→`UnauthorizedFailure`), `test/unit/auth/session_controller_test.dart` (cold start có/không token, `/auth/me` lỗi → signed-out, `logIn` → `AsyncData(session)` / rethrow, `logOut` clear).
+- ✅ `dart run build_runner build` OK (68 outputs). ✅ `flutter analyze` → **No issues**. ✅ `flutter test` xanh (24 pass / 1 skip stub). ✅ `flutter build web --dart-define-from-file=config/dev.json` → build thành công.
+
+**Chạy thử:** `flutter run -d chrome --dart-define-from-file=config/dev.json` → Splash → Welcome (3 slide) → Đăng ký / Đăng nhập (mock chấp nhận mọi email hợp lệ + mật khẩu ≥ 8) → Onboarding ưu tiên dinh dưỡng → "Thêm nguyên liệu đầu tiên" vào thẳng màn add → dùng app → tab Cá nhân → Đăng xuất → về Welcome. Reload giữ nguyên phiên (token trong secure storage) + bỏ qua onboarding.
 
 > Cập nhật bảng này khi hoàn thành từng milestone.
 

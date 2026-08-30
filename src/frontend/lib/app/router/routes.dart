@@ -37,6 +37,7 @@ abstract final class Routes {
   static const settingsSubscription = '/settings/subscription';
   static const settingsProfile = '/settings/profile';
 
-  /// The first tab shown after launch.
-  static const initialLocation = home;
+  /// Where the router boots. [appRedirect] immediately routes on from here
+  /// based on session + onboarding state.
+  static const initialLocation = splash;
 }

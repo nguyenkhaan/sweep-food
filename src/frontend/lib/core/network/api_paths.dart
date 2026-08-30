@@ -12,6 +12,9 @@ abstract final class ApiPaths {
   static const logout = '/auth/logout';
   static const me = '/auth/me';
 
+  /// A-04. Frontend-assumed; not in the backend stub yet (see file header note).
+  static const forgotPassword = '/auth/forgot-password';
+
   // Catalog
   static const ingredients = '/ingredients';
   static String ingredient(String id) => '/ingredients/$id';
