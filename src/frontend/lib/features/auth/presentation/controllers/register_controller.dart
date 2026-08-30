@@ -1,3 +1,65 @@
-// lib/features/auth/presentation/controllers/register_controller.dart
-// Register form controller
-// TODO: implement — structure only. See ../plan.md and the design canvas.
+import 'package:frontend/core/error/failure.dart';
+import 'package:frontend/features/auth/presentation/controllers/auth_form.dart';
+import 'package:frontend/features/auth/presentation/controllers/session_controller.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'register_controller.g.dart';
+
+/// Form state + submit for A-03. The "đồng ý điều khoản" checkbox is screen-local
+/// state and passed into [submit]; everything else rides the shared
+/// [AuthFormState].
+@riverpod
+class RegisterController extends _$RegisterController {
+  @override
+  AuthFormState build() => const AuthFormState();
+
+  void toggleObscure() => state = state.copyWith(obscure: !state.obscure);
+
+  Future<bool> submit({
+    required String name,
+    required String email,
+    required String password,
+    required bool agreedToTerms,
+  }) async {
+    final errors = <String, String>{
+      if (name.trim().isEmpty) 'name': 'Nhập họ và tên',
+      if (!isValidEmail(email)) 'email': 'Email không hợp lệ',
+      if (!isValidPassword(password)) 'password': 'Ít nhất 8 ký tự',
+    };
+    if (errors.isNotEmpty) {
+      state = state.copyWith(fieldErrors: errors, formError: null);
+      return false;
+    }
+    if (!agreedToTerms) {
+      state = state.copyWith(
+        formError: 'Cần đồng ý với Điều khoản để tiếp tục.',
+        fieldErrors: const {},
+      );
+      return false;
+    }
+
+    state = state.copyWith(
+      submitting: true,
+      fieldErrors: const {},
+      formError: null,
+    );
+    try {
+      await ref.read(sessionControllerProvider.notifier).register(
+            name: name,
+            email: email,
+            password: password,
+          );
+      return true;
+    } on ValidationFailure catch (f) {
+      state = state.copyWith(
+        submitting: false,
+        fieldErrors: f.fieldErrors,
+        formError: f.fieldErrors.isEmpty ? f.message : null,
+      );
+      return false;
+    } on Failure catch (f) {
+      state = state.copyWith(submitting: false, formError: f.message);
+      return false;
+    }
+  }
+}

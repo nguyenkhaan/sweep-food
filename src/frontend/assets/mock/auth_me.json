@@ -1,1 +1,7 @@
-{ "_note": "mock fixture for auth_me — fill from plan.md §9 / api-contract.md" }
+{
+  "id": "u1",
+  "name": "Nguyễn Văn A",
+  "email": "ban@email.com",
+  "dietary_preference": "balanced",
+  "avatar_url": null
+}

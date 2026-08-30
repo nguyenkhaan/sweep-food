@@ -1,0 +1,68 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'session_controller.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
+/// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
+///
+/// The router watches this (via `route_guards.dart`) to gate every route.
+
+@ProviderFor(SessionController)
+final sessionControllerProvider = SessionControllerProvider._();
+
+/// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
+/// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
+///
+/// The router watches this (via `route_guards.dart`) to gate every route.
+final class SessionControllerProvider
+    extends $AsyncNotifierProvider<SessionController, Session?> {
+  /// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
+  /// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
+  ///
+  /// The router watches this (via `route_guards.dart`) to gate every route.
+  SessionControllerProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'sessionControllerProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$sessionControllerHash();
+
+  @$internal
+  @override
+  SessionController create() => SessionController();
+}
+
+String _$sessionControllerHash() => r'6e4ce59b874490c34a2f5ac51ec522a20a7be8b9';
+
+/// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
+/// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
+///
+/// The router watches this (via `route_guards.dart`) to gate every route.
+
+abstract class _$SessionController extends $AsyncNotifier<Session?> {
+  FutureOr<Session?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<Session?>, Session?>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AsyncValue<Session?>, Session?>,
+        AsyncValue<Session?>,
+        Object?,
+        Object?>;
+    element.handleCreate(ref, build);
+  }
+}

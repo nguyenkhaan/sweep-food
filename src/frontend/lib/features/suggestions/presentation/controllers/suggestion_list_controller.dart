@@ -51,6 +51,10 @@ class SuggestionFilter {
 class SuggestionFilterController extends _$SuggestionFilterController {
   @override
   SuggestionFilter build() => const SuggestionFilter();
+  // TODO(M5 settings slice): seed `dietaryPreference` from
+  // `dietaryPreferenceControllerProvider` (onboarding A-05 / Cài đặt N-01).
+  // Deferred so the suggestions test harness can add a SharedPreferences
+  // override first.
 
   void toggleMeal(MealType meal) => state = state.mealType == meal
       ? state.copyWith(clearMealType: true)

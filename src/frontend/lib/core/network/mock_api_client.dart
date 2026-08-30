@@ -47,6 +47,9 @@ class MockApiClient implements ApiClient {
   /// `/cook` suffix covers `POST /dishes/{id}/cook`.
   static final Map<String, String> _postFixtures = {
     ApiPaths.suggestions: 'suggestions',
+    ApiPaths.login: 'auth_session',
+    ApiPaths.register: 'auth_session',
+    ApiPaths.refresh: 'auth_tokens',
   };
 
   String? _postFixtureKey(String path) {

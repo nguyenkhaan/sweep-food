@@ -1,16 +1,63 @@
 import 'package:flutter/widgets.dart';
+import 'package:frontend/app/router/routes.dart';
+import 'package:frontend/features/auth/presentation/controllers/session_controller.dart';
+import 'package:frontend/features/onboarding/presentation/controllers/onboarding_controller.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-/// Redirect logic for [appRouter].
+/// Routes reachable while signed out.
+const _authRoutes = {
+  Routes.welcome,
+  Routes.login,
+  Routes.register,
+  Routes.forgotPassword,
+};
+
+const _onboardingRoutes = {Routes.onboardingDiet, Routes.onboardingPantry};
+
+/// Redirect logic for [appRouter]. Reads (never watches) the session + onboarding
+/// providers; the router's `refreshListenable` re-runs this whenever either
+/// changes.
 ///
-/// **M0–M4: dev-bypass** — always returns `null` (no redirect) so screens can be
-/// built without an auth flow.
-///
-/// **M5:** replace the body with real logic:
-///   - no session + not on an auth route  → [Routes.welcome]
-///   - has session + on an auth route     → [Routes.home]
-///   - has session + onboarding not done  → [Routes.onboardingDiet]
-///   - handle FCM deep links from `state.uri`.
-String? appRedirect(BuildContext context, GoRouterState state) {
+/// | state                         | allowed              | else →            |
+/// |-------------------------------|----------------------|-------------------|
+/// | session still restoring       | `/splash`            | `/splash`         |
+/// | signed out                    | auth routes          | `/welcome`        |
+/// | signed in, onboarding pending | onboarding routes    | `/onboarding/diet`|
+/// | signed in, onboarded          | everything else      | `/home`           |
+String? appRedirect(Ref ref, BuildContext context, GoRouterState state) {
+  final session = ref.read(sessionControllerProvider);
+  final loc = state.matchedLocation;
+  final atSplash = loc == Routes.splash;
+
+  // Cold start: still reading the persisted token / calling /auth/me.
+  if (session.isLoading && !session.hasValue) {
+    return atSplash ? null : Routes.splash;
+  }
+
+  // Resolved (data, or an unexpected error we treat as signed-out).
+  final signedIn = session.asData?.value != null;
+
+  if (!signedIn) {
+    return _authRoutes.contains(loc) ? null : Routes.welcome;
+  }
+
+  if (!ref.read(onboardingControllerProvider)) {
+    return _onboardingRoutes.contains(loc) ? null : Routes.onboardingDiet;
+  }
+
+  if (atSplash || _authRoutes.contains(loc) || _onboardingRoutes.contains(loc)) {
+    return Routes.home;
+  }
   return null;
+}
+
+/// Bridges the Riverpod providers the guard depends on to a [Listenable] that
+/// [GoRouter.refreshListenable] understands.
+class AuthRouterRefresh extends ChangeNotifier {
+  AuthRouterRefresh(Ref ref) {
+    ref
+      ..listen(sessionControllerProvider, (_, __) => notifyListeners())
+      ..listen(onboardingControllerProvider, (_, __) => notifyListeners());
+  }
 }
