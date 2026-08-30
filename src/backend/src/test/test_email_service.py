@@ -54,6 +54,7 @@ async def test_send_email_renders_verify_template_and_submits_message() -> None:
     [
         "VERIFY_EMAIL",
         "CHANGE_EMAIL",
+        "CHANGE_PHONE",
         "RESET_PASSWORD",
         "CHANGE_PASSWORD",
         "STEP_UP_AUTH",
