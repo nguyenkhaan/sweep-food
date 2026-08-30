@@ -3,6 +3,8 @@ import 'package:frontend/app/router/route_guards.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/shell/app_shell.dart';
 import 'package:frontend/features/home/presentation/screens/home_screen.dart';
+import 'package:frontend/features/pantry/presentation/screens/add_ingredient_screen.dart';
+import 'package:frontend/features/pantry/presentation/screens/pantry_item_detail_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/pantry_screen.dart';
 import 'package:frontend/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:frontend/features/shopping_list/presentation/screens/shopping_list_screen.dart';
@@ -48,6 +50,21 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: Routes.pantry,
                 builder: (context, state) => const PantryScreen(),
+                routes: [
+                  GoRoute(
+                    path: Routes.addIngredient, // '/pantry/add'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) =>
+                        AddIngredientScreen(editItemId: state.extra as String?),
+                  ),
+                  GoRoute(
+                    path: Routes.pantryItem, // '/pantry/item/:id'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => PantryItemDetailScreen(
+                      itemId: state.pathParameters['id']!,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
