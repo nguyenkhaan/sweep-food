@@ -13,9 +13,6 @@ from src.module.health.health_dto import LivenessResponseDTO
 from src.module.health.health_service import HealthService
 
 health_router = APIRouter(prefix="/health", tags=["health"])
-_BEARER_SECURITY: dict[str, list[dict[str, list[str]]]] = {
-    "security": [{"BearerAuth": []}],
-}
 
 
 def _authenticated_user_response(user: AuthenticatedUser) -> dict[str, object]:
@@ -54,7 +51,7 @@ async def get_text(
     return PlainTextResponse(content=service.get_text())
 
 
-@health_router.get("/test-login", openapi_extra=_BEARER_SECURITY)
+@health_router.get("/test-login")
 async def get_test_login(
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
 ) -> dict[str, object]:
@@ -62,7 +59,7 @@ async def get_test_login(
     return _authenticated_user_response(user)
 
 
-@health_router.get("/test-role", openapi_extra=_BEARER_SECURITY)
+@health_router.get("/test-role")
 async def get_test_role(
     user: Annotated[
         AuthenticatedUser,

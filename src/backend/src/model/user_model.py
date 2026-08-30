@@ -41,7 +41,7 @@ class UserModel(TimestampedUUIDModel):
     )
     status: Mapped[AccountStatus] = mapped_column(
         SQLEnum(AccountStatus, name="account_status"),
-        default=AccountStatus.ACTIVE,
+        default=AccountStatus.UNVERIFIED,
         nullable=False,
     )
     preferences: Mapped[dict[str, object]] = mapped_column(

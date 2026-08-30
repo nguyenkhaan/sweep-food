@@ -212,9 +212,9 @@ Seeded recipe totals may be denormalized for fast reads, but the seed process mu
 
 ### 6.2 Registration, sign-in, and sensitive-change flows
 
-1. **Registration:** request an SMS OTP with purpose `REGISTER`, verify it, then exchange the resulting short-lived single-use verification grant and a password through the registration-completion endpoint. The backend creates an `ACTIVE` user and session only after password creation succeeds.
-2. **Sign-in:** submit phone number and password. A successful password verification creates an access token and a rotating refresh-token session; it does not send an OTP.
-3. **Password reset or change:** request and verify an OTP sent to the current phone number or a verified email, then submit the matching verification grant and new password. Completing either operation revokes active refresh-token sessions.
+1. **Registration:** submit phone, password, and optional profile information. The backend stores the password hash on an `UNVERIFIED` user and issues a `REGISTER` SMS OTP. Submitting the phone and a valid OTP activates the user without creating tokens or a session.
+2. **Sign-in:** submit phone number and password. A successful password verification creates access and refresh JWTs plus a revocable refresh-token session; it does not send an OTP.
+3. **Password reset or change:** request an OTP sent to the current phone number or a verified email, then submit the destination, OTP, purpose, and new password. The backend consumes an internal purpose-bound grant and revokes active refresh-token sessions.
 4. **Phone or email change:** the authenticated user requests and verifies an OTP sent to the new destination, then consumes the matching verification grant to update that identity field.
 5. **Step-up authentication:** sensitive operations may require a fresh OTP verification with purpose `STEP_UP_AUTH`; the endpoint defines when this is required and consumes the resulting grant.
 
@@ -227,7 +227,7 @@ The Sweep Food backend owns OTP generation and validation. SMS/email providers o
 - Default TTL: five minutes.
 - Maximum verification attempts per challenge: five.
 - A successful verification consumes the challenge immediately.
-- Issuing a replacement OTP invalidates the previous active challenge for the same purpose and destination.
+- Issuing a replacement OTP overwrites and invalidates the previous active OTP for the same channel, purpose, and destination; no public challenge identifier is used.
 - A successful verification returns a short-lived, single-use verification grant bound to the challenge's purpose and destination. A grant authorizes only its matching follow-up operation and never creates a session by itself.
 - OTP values, hashes, access tokens, and provider secrets must never appear in production logs.
 
@@ -610,28 +610,39 @@ Validation errors use the same envelope. Internal stack traces are never returne
 
 | Method | Path | Purpose |
 |---|---|---|
-| `POST` | `/auth/otp/request` | Request phone or email OTP for a stated purpose |
-| `POST` | `/auth/otp/verify` | Verify OTP and return a purpose-bound verification grant |
-| `POST` | `/auth/register/complete` | Create an account and session from a verified registration grant and password |
+| `POST` | `/auth/register` | Create an `UNVERIFIED` phone/password account and send its registration OTP |
+| `POST` | `/auth/register/resend-otp` | Send a replacement registration OTP for an `UNVERIFIED` account |
+| `POST` | `/auth/verify/register` | Verify registration OTP, activate the account, and return a plain-text acknowledgement |
 | `POST` | `/auth/login` | Sign in with phone number and password |
-| `POST` | `/auth/password/reset` | Set a new password from a verified reset grant |
-| `POST` | `/auth/password/change` | Change password from a verified change-password grant |
-| `POST` | `/auth/token/refresh` | Rotate a refresh token |
-| `POST` | `/auth/logout` | Revoke current session |
+| `POST` | `/auth/password/reset` | Send a password-reset OTP to the submitted phone |
+| `POST` | `/auth/password/change` | Send a password-change OTP to the authenticated user's phone |
+| `POST` | `/auth/verify/change-password` | Verify reset/change OTP, replace password, and revoke sessions |
+| `POST` | `/auth/token/refresh` | Use a refresh JWT to create a new access JWT |
+| `POST` | `/auth/logout` | Revoke current session and return `Logout successfully` as plain text |
 | `GET` | `/auth/sessions` | List active user sessions |
 | `DELETE` | `/auth/sessions/{session_id}` | Revoke a session |
 
-Example OTP request:
+Example registration OTP issuance response:
 
 ```json
 {
-  "channel": "SMS",
-  "destination": "+84901234567",
-  "purpose": "REGISTER"
+  "otp": "654321",
+  "expires_in_seconds": 300
 }
 ```
 
-The request response returns a challenge ID, masked destination, resend time, and expiry time. It never returns the OTP outside the explicitly configured local/CI environment. Successful verification returns a purpose-bound verification grant, never a session or plaintext OTP.
+Example registration OTP verification request:
+
+```json
+{
+  "phone": "+84901234567",
+  "otp": "654321"
+}
+```
+
+OTP is generated internally by the registration and password routes, stored as a hash in Redis, sent through the configured provider, and returned as `otp` with `expires_in_seconds` for the current MVP client flow. Verification requests submit the phone and OTP without a challenge identifier. The generated OTP remains the primary value; local/CI additionally accepts `DEFAULT_OTP=123456`. Registration verification activates the `UNVERIFIED` account and returns only `verify account successfully`; tokens are created by login. Password verification replaces the password and revokes active sessions.
+
+Access and refresh tokens are JWTs with the same identity claims (`sub`, `roles`) and a distinguishing `purpose` claim (`access` or `refresh`). Access JWTs use `JWT_ACCESS_SECRET`; refresh JWTs use `JWT_REFRESH_SECRET`. Refresh JWT hashes remain attached to revocable database sessions. Login does not accept `device_label`.
 
 #### User profile and devices
 
@@ -1103,7 +1114,7 @@ WireMock fixtures must cover:
 
 ### 16.4 End-to-end acceptance scenario
 
-1. User requests and verifies fixed local registration OTP `123456`, then creates a password and signs in with phone plus password.
+1. User registers with phone plus password, verifies either the generated OTP or fixed local fallback `123456`, and signs in with phone plus password.
 2. User creates two batches of the same ingredient with different expiration dates.
 3. User requests recommendations and receives seeded recipes with score explanations.
 4. User previews a recipe and sees the earlier-expiring batch allocated first.
@@ -1117,11 +1128,11 @@ WireMock fixtures must cover:
 
 ### Authentication
 
-- Phone-based registration requires OTP verification followed by password creation; sign-in uses phone plus password.
+- Phone-based registration creates an `UNVERIFIED` password account; OTP verification activates it, and sign-in uses phone plus password.
 - Verified email can receive OTPs for password recovery and sensitive changes.
 - Unverified email cannot be used for recovery or sensitive identity changes.
 - Rate limits and challenge expiry are enforced.
-- Local/CI uses fixed OTP; production never exposes OTP in response/logs.
+- Local/CI accepts fixed fallback OTP `123456` in addition to the generated Redis-backed OTP; OTP values remain excluded from logs.
 
 ### Inventory
 
