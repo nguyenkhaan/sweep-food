@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Xác minh thao tác nhạy cảm</h1>
+<p>Dùng mã này để tiếp tục thao tác bảo mật trên tài khoản của bạn.</p>
+<div class="code">{{ otp }}</div>
+<p class="note">Mã có hiệu lực trong {{ expires_in_minutes }} phút.</p>
+{% endblock %}

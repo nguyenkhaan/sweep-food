@@ -6,7 +6,6 @@ import httpx
 import pytest
 
 from src.core.setting import DEFAULT_OTP
-from src.service.email_service import MockEmailService
 from src.service.otp_delivery_service import (
     OTPDeliveryMalformedResponseError,
     OTPDeliveryRejectedError,
@@ -19,7 +18,7 @@ from src.service.sms_service import WireMockSMSService
 def _request() -> OTPDeliveryRequest:
     return OTPDeliveryRequest(
         destination="+84901234567",
-        template_id="register",
+        template_id="VERIFY_EMAIL",
         otp=DEFAULT_OTP,
         expires_in_seconds=300,
         correlation_id="test-correlation-id",
@@ -97,12 +96,3 @@ async def test_wiremock_sms_service_maps_provider_timeout() -> None:
 
     with pytest.raises(OTPDeliveryTimeoutError):
         await service.send_otp(_request())
-
-
-@pytest.mark.anyio
-async def test_mock_email_service_never_delivers_or_returns_the_otp() -> None:
-    """The local email adapter provides only a deterministic reference."""
-    delivery_reference = await MockEmailService().send_otp(_request())
-
-    assert delivery_reference.startswith("mock-email-")
-    assert DEFAULT_OTP not in delivery_reference

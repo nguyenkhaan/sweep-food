@@ -164,7 +164,7 @@
 |---|---|---|---|
 | 2.1 Add user and session schema | `Done` | Phase 1 checkpoint | User-confirmed migration creates user/session tables and constraints; JWT access authentication and role demonstration endpoints are verified. |
 | 2.2 Implement OTP challenge, hashing, and rate-limit services | `In progress` | Task 2.1 | Redis-backed OTP service, password/OTP helpers, configurable limits, and unit tests are implemented; Redis lifecycle requires user confirmation. |
-| 2.3 Add SMS/email delivery adapters and WireMock contracts | `Done` | Task 2.2 | User accepted the local/mock delivery scope: WireMock SMS and non-delivering email adapters are verified with fixed `DEFAULT_OTP`. |
+| 2.3 Add SMS/email delivery adapters and WireMock contracts | `Done` | Task 2.2 | WireMock SMS and Mailpit-backed, template-based email delivery are verified locally; delivery remains provider-adapter based. |
 
 ## Decision Baseline
 
@@ -207,6 +207,7 @@
 | 2026-08-30 | Task 2.2 | `Ready` → `In progress` | Implemented Redis lifecycle, Argon2id/OTP helpers, and Redis-backed OTP challenge/grant/rate-limit service with isolated unit tests. |
 | 2026-08-30 | Task 2.3 | `Ready` → `In progress` | Added provider-neutral OTP delivery contract, WireMock SMS adapter/fixtures, and non-delivering local email adapter; WireMock accepted contract passed with `DEFAULT_OTP`. |
 | 2026-08-30 | Task 2.3 | `In progress` → `Done` | User accepted Task 2.3 with the local/mock provider scope and fixed `DEFAULT_OTP`; eSMS live integration remains a future provider configuration task. |
+| 2026-08-30 | Task 2.3 extension | `Done` → `Done` | Replaced the non-delivering email adapter with Mailpit SMTP delivery, five purpose-specific HTML templates, Docker networking, and local SMTP verification. |
 
 ## Verification Evidence
 
@@ -269,10 +270,10 @@
 ### Task 2.3 — Add SMS/email delivery adapters and WireMock contracts
 
 - Completed: 2026-08-30
-- Changed files: `src/backend/src/service/otp_delivery_service.py`, `src/backend/src/service/sms_service.py`, `src/backend/src/service/email_service.py`, `src/backend/wiremock/mappings/mock-sms*.json`, `src/backend/src/test/test_otp_delivery_service.py`, `src/backend/src/test/test_wiremock_contract.py`
-- Acceptance evidence: one provider-neutral `send_otp` contract supports the WireMock SMS and non-delivering email adapters. WireMock maps accepted, rejected, timeout, and malformed response scenarios; provider errors are mapped to stable domain errors.
-- Verification commands: adapter/OTP/WireMock tests — 15 passed; ruff and mypy strict — passed; Pylint — 10.00/10.
-- Manual verification: restarted WireMock, then verified `POST /mock/sms` returns accepted with fixed `DEFAULT_OTP` value `123456`.
+- Changed files: `src/backend/src/service/otp_delivery_service.py`, `src/backend/src/service/sms_service.py`, `src/backend/src/service/email_service.py`, `src/backend/src/template/*.html`, `src/backend/src/core/setting.py`, `src/backend/.env.example`, `src/backend/docker-compose.yaml`, `src/backend/wiremock/mappings/mock-sms*.json`, `src/backend/src/test/test_otp_delivery_service.py`, `src/backend/src/test/test_email_service.py`, `src/backend/src/test/test_wiremock_contract.py`
+- Acceptance evidence: one provider-neutral `send_otp` contract supports WireMock SMS and Mailpit email delivery. `EmailService.send_email` renders purpose-specific, autoescaped HTML templates for verified-email, email-change, password-reset, password-change, and step-up flows; WireMock maps accepted, rejected, timeout, and malformed SMS responses to stable domain errors.
+- Verification commands: `docker compose config --quiet`; focused email and OTP-adapter tests — 13 passed; ruff and mypy — passed; Pylint — 10.00/10.
+- Manual verification: restarted WireMock and verified its accepted SMS contract. Mailpit SMTP is healthy and accepted a rendered local verification email using the configured SMTP host and port.
 - Follow-up / known limitation: eSMS implementation is intentionally deferred until its endpoint, request schema, template, and credential contract are supplied.
 
 ## Verification Evidence Template

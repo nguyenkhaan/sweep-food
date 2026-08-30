@@ -1,0 +1,8 @@
+_TEMPLATE_FILENAMES: dict[str, str] = {
+    "VERIFY_EMAIL": "verify_email.html",
+    "CHANGE_EMAIL": "change_email.html",
+    "RESET_PASSWORD": "reset_password.html",
+    "CHANGE_PASSWORD": "change_password.html",
+    "STEP_UP_AUTH": "step_up_auth.html",
+    "BASE_HTML": "base.html"
+}

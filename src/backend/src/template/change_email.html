@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Xác nhận đổi email</h1>
+<p>Hãy dùng mã này để xác nhận địa chỉ email mới cho tài khoản Sweep Food.</p>
+<div class="code">{{ otp }}</div>
+<p class="note">Mã có hiệu lực trong {{ expires_in_minutes }} phút.</p>
+{% endblock %}

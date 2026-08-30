@@ -84,3 +84,6 @@ SMS_DELIVERY_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
     "SMS_DELIVERY_TIMEOUT_SECONDS",
     2,
 )
+EMAIL_SMTP_HOST: Final[str] = get_env_var("EMAIL_SMTP_HOST")
+EMAIL_SMTP_PORT: Final[int] = get_positive_int_env("EMAIL_SMTP_PORT", 1025)
+EMAIL_FROM: Final[str] = get_env_var("EMAIL_FROM")
