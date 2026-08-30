@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import DateTime, String, text
+from sqlalchemy import CheckConstraint, DateTime, String, text
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
@@ -15,6 +15,12 @@ class UserModel(TimestampedUUIDModel):
     """A password-authenticated Sweep Food user."""
 
     __tablename__ = "users"
+    __table_args__ = (
+        CheckConstraint(
+            "status <> 'ACTIVE' OR phone_verified_at IS NOT NULL",
+            name="active_user_requires_verified_phone",
+        ),
+    )
 
     name: Mapped[str | None] = mapped_column(String, nullable=True)
     phone_e164: Mapped[str] = mapped_column(String, unique=True, nullable=False)

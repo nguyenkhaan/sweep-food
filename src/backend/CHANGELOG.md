@@ -14,6 +14,7 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - Async SQLAlchemy database-session lifecycle and Alembic bootstrap revision for Neon PostgreSQL migrations.
 - Pytest smoke-test harness under `src/test` and a deterministic WireMock provider fixture.
 - SQLAlchemy database models for every approved MVP table, with a common enum module and time-ordered UUIDv7 primary-key generation.
+- Custom JWT service plus authentication and role-authorization dependencies with OpenAPI Bearer-token support and injected access-token secret keys.
 
 ### Fixed
 

@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, Index, String
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -14,6 +14,10 @@ class AuthSessionModel(CreatedAtUUIDModel):
     """One rotating refresh-token session for a user device."""
 
     __tablename__ = "auth_sessions"
+    __table_args__ = (
+        Index("ix_auth_sessions_user_id_expires_at", "user_id", "expires_at"),
+        Index("ix_auth_sessions_token_family_id", "token_family_id"),
+    )
 
     user_id: Mapped[UUID] = mapped_column(
         PostgreSQLUUID(as_uuid=True),

@@ -1,9 +1,12 @@
+"""FastAPI application factory and runtime lifespan."""
+
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
 from src.core.exceptions import register_exception_handlers
+from src.core.openapi import BearerOpenAPIFastAPI
 from src.core.setting import DATABASE_URL, get_env_var
 from src.db import db_session
 from src.module.health.health_router import health_router
@@ -15,18 +18,20 @@ API_PREFIX = "/api"
 
 @asynccontextmanager
 async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
+    """Open the database before serving requests and close it at shutdown."""
     await db_session.initialize(DATABASE_URL)
     application.state.db_session = db_session
-    print('Database connected')
+    print("Database connected")
     try:
         yield
     finally:
-        print('Database closed')
+        print("Database closed")
         await db_session.close()
 
 
 def create_app() -> FastAPI:
-    application = FastAPI(
+    """Create the configured Sweep Food API application."""
+    application = BearerOpenAPIFastAPI(
         title=APP_NAME,
         version=APP_VERSION,
         description="Sweep Food backend API.",

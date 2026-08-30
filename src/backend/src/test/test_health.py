@@ -3,6 +3,20 @@
 import httpx
 import pytest
 
+from src.core.setting import JWT_ACCESS_SECRET
+from src.model.enum_model import UserRole
+from src.service.jwt_service import JwtService
+
+TEST_USER_ID = "018f0f90-26e6-7ce7-8f61-8769b9e5aabb"
+
+
+def _authorization_header(*roles: UserRole) -> dict[str, str]:
+    token = JwtService.generate_jwt(
+        {"sub": TEST_USER_ID, "roles": [role.value for role in roles]},
+        JWT_ACCESS_SECRET,
+    )
+    return {"Authorization": f"Bearer {token}"}
+
 
 @pytest.mark.anyio
 async def test_liveness_returns_ok(api_client: httpx.AsyncClient) -> None:
@@ -36,3 +50,28 @@ async def test_text_returns_approved_plain_text(api_client: httpx.AsyncClient) -
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("text/plain")
     assert response.text == "Build with Cloudian Love Cloud"
+
+
+@pytest.mark.anyio
+async def test_login_route_uses_authentication_dependency(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """The test-login route exposes the authenticated token identity."""
+    response = await api_client.get(
+        "/api/health/test-login",
+        headers=_authorization_header(UserRole.USER),
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"user_id": TEST_USER_ID, "roles": ["USER"]}
+
+
+@pytest.mark.anyio
+async def test_role_route_requires_admin_role(api_client: httpx.AsyncClient) -> None:
+    """The test-role route rejects a valid access token without ADMIN."""
+    response = await api_client.get(
+        "/api/health/test-role",
+        headers=_authorization_header(UserRole.USER),
+    )
+
+    assert response.status_code == 403
