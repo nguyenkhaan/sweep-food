@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{
+      --green-800:#B7E4C7;--green-700:#40916C;--green-100:#17301F;
+      --ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;
+      --line:#2E362F;--fill:#242B25;--surface:#1A211C;--soon:#D6B45A;--soon-bg:#312B16;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-800)}a:hover{color:var(--green-700)}
+    .screen{width:390px;height:720px;display:flex;flex-direction:column;background:#101511}
+    .scrim{flex:1;background:rgba(0,0,0,.58)}
+    .sheet{flex:none;background:var(--surface);border-radius:22px 22px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.55);padding:14px 20px 22px;display:flex;flex-direction:column;gap:14px}
+    .grab{width:38px;height:4px;border-radius:999px;background:var(--line);align-self:center}
+    .tt{font-size:17px;font-weight:700}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .opt{border:1px solid var(--line);border-radius:16px;padding:15px;display:flex;flex-direction:column;gap:10px;min-height:120px}
+    .opt .ic{width:38px;height:38px;border-radius:11px;background:var(--green-100);color:var(--green-800);display:flex;align-items:center;justify-content:center}
+    .opt .ot{font-size:14px;font-weight:700}
+    .opt .os{font-size:11px;color:var(--ink-3);line-height:1.4}
+    .opt.primary{background:#21543E;border-color:#2C6B4F}
+    .opt.primary .ic{background:rgba(255,255,255,.14);color:#fff}
+    .opt.primary .ot{color:#fff}
+    .opt.primary .os{color:#A9D8BC}
+    .quota{display:flex;align-items:center;gap:8px;background:var(--soon-bg);color:var(--soon);border-radius:12px;padding:10px 13px;font-size:12px;font-weight:600}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="tt">Thêm nguyên liệu</div>
+
+    <div class="grid">
+      <div class="opt primary">
+        <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2h6l2 2h3v11H4Z"/><path d="M12 16a3.4 3.4 0 1 0 0-6.8 3.4 3.4 0 0 0 0 6.8Z"/></svg></span>
+        <div class="ot">Quét tem nhãn</div>
+        <div class="os">Chụp nhãn cân trên sản phẩm đóng gói</div>
+      </div>
+      <div class="opt">
+        <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21Z"/><path d="M9 8h6"/><path d="M9 12h6"/></svg></span>
+        <div class="ot">Quét hóa đơn</div>
+        <div class="os">Chụp hóa đơn, thêm nhiều mục một lúc</div>
+      </div>
+      <div class="opt">
+        <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v3"/></svg></span>
+        <div class="ot">Nói</div>
+        <div class="os">Đọc tên nguyên liệu và số lượng</div>
+      </div>
+      <div class="opt">
+        <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01"/><path d="M11 10h.01"/><path d="M15 10h.01"/><path d="M8 14h8"/></svg></span>
+        <div class="ot">Nhập tay</div>
+        <div class="os">Tự chọn từ danh mục nguyên liệu</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{
+      --green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-300:#95D5B2;--green-100:#D8F3DC;
+      --brick-500:#8D4D4E;--brick-100:#F6E7E7;
+      --ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;
+      --line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;
+      --crit:#C0562B;--crit-bg:#F7E9E0;--soon:#B08422;--soon-bg:#FBF3E2;
+      --exp:#8D4D4E;--exp-bg:#F6E7E7;--ok:#5C5F5A;--ok-bg:#EFF1EC;
+      --e1:0 1px 2px rgba(20,28,22,.06),0 1px 3px rgba(20,28,22,.04);
+      --e2:0 2px 8px rgba(20,28,22,.08);--e3:0 10px 26px rgba(20,28,22,.14);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}a:hover{color:var(--green-800)}
+    .sheet{width:1080px;padding:28px;display:flex;flex-direction:column;gap:22px}
+    .h1{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0}
+    .sub{font-size:14px;color:var(--ink-2);margin:4px 0 0}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--e1)}
+    .card.full{grid-column:1 / -1}
+    .card h2{margin:0 0 16px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+    .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .stack{display:flex;flex-direction:column;gap:12px}
+    /* buttons */
+    .btn{height:44px;padding:0 18px;border-radius:12px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;cursor:pointer}
+    .btn-primary{background:var(--green-700);color:#fff}
+    .btn-secondary{background:var(--green-100);color:var(--green-800)}
+    .btn-outline{background:transparent;border-color:var(--green-700);color:var(--green-700)}
+    .btn-inverted{background:var(--ink);color:#fff}
+    .btn-text{background:transparent;color:var(--green-700);padding:0 8px}
+    .btn-disabled{background:var(--fill);color:var(--ink-3)}
+    .btn-sm{height:36px;padding:0 14px;font-size:13px}
+    .iconbtn{width:44px;height:44px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+    .iconbtn.brick{background:var(--brick-100);border-color:transparent;color:var(--brick-500)}
+    .fab{width:56px;height:56px;border-radius:50%;background:var(--green-700);color:#fff;display:inline-flex;align-items:center;justify-content:center;box-shadow:var(--e3)}
+    /* search */
+    .search{flex:1;height:46px;border-radius:12px;background:var(--fill);display:flex;align-items:center;gap:10px;padding:0 14px;color:var(--ink-3);font-size:14px}
+    .chip{height:32px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:500;display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--surface);color:var(--ink-2)}
+    .chip.on{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+    /* expiry badge */
+    .badge{height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+    .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+    /* tier chip */
+    .tchip{height:30px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+    /* pantry item */
+    .pitem{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+    .pitem.urgent{border-left:3px solid var(--crit)}
+    .cbox{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);flex:none}
+    .thumb{width:44px;height:44px;border-radius:10px;background:#E4E7E1;display:flex;align-items:center;justify-content:center;color:#9AA298;flex:none}
+    .pitem .body{flex:1;min-width:0}
+    .pitem .nm{font-size:14px;font-weight:600}
+    .pitem .mt{font-size:12px;color:var(--ink-3);margin-top:2px}
+    .kebab{color:var(--ink-3);flex:none}
+    /* suggestion card */
+    .scard{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:var(--e1)}
+    .scard .img{height:130px;background:#E4E7E1;display:flex;align-items:center;justify-content:center;color:#AEB6AB;position:relative}
+    .score{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:700;line-height:1}
+    .score small{font-size:8px;font-weight:600;opacity:.8}
+    .scard .pad{padding:14px}
+    .scard .tt{font-size:16px;font-weight:700}
+    .scard .mt{font-size:12px;color:var(--ink-3);margin:3px 0 10px}
+    .mini{height:22px;padding:0 9px;border-radius:999px;font-size:11px;font-weight:600;display:inline-flex;align-items:center}
+    /* macro */
+    .macrowrap{display:flex;align-items:center;gap:18px}
+    .mchips{display:flex;flex-direction:column;gap:8px}
+    .mrow{display:flex;align-items:center;gap:8px;font-size:13px}
+    .mrow i{width:8px;height:8px;border-radius:50%;display:inline-block}
+    .mrow b{margin-left:auto;font-weight:600}
+    /* quota */
+    .quota{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface)}
+    .quota .top{display:flex;align-items:center;font-size:13px;font-weight:600}
+    .quota .top a{margin-left:auto;font-size:12px}
+    .track{height:6px;border-radius:999px;background:var(--fill);margin-top:8px;overflow:hidden}
+    .track>i{display:block;height:100%;background:var(--green-600);border-radius:999px}
+    /* sheet */
+    .sheetc{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:16px;max-width:420px}
+    .grab{width:36px;height:4px;border-radius:999px;background:var(--line);margin:0 auto 12px}
+    .qa{display:flex;align-items:center;gap:12px;padding:14px 8px;border-bottom:1px solid var(--fill);font-size:14px;font-weight:500}
+    .qa:last-child{border-bottom:0}
+    .qa .lead{width:32px;height:32px;border-radius:9px;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+    .qa .chev{margin-left:auto;color:var(--ink-3)}
+    /* empty / error */
+    .estate{text-align:center;padding:16px}
+    .eill{width:72px;height:72px;border-radius:50%;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+    .estate .et{font-size:15px;font-weight:700}
+    .estate .es{font-size:13px;color:var(--ink-2);margin:4px 0 14px}
+    /* skeleton */
+    .skrow{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px}
+    .sk{background:linear-gradient(90deg,#ECEEEA 25%,#F4F5F2 37%,#ECEEEA 63%);border-radius:8px}
+    /* bottom nav */
+    .bnav{display:flex;align-items:flex-end;justify-content:space-between;padding:10px 22px 12px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--e2);max-width:420px}
+    .nitem{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;font-weight:500;color:var(--ink-3);width:52px}
+    .nitem.on{color:var(--green-700)}
+    .nfab{width:52px;height:52px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--e3);margin-bottom:2px}
+    /* snackbar / savings / section head */
+    .snack{background:var(--ink);color:#fff;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;font-size:13px;max-width:360px}
+    .snack a{color:var(--green-300);font-weight:600;margin-left:auto}
+    .savings{display:inline-flex;align-items:center;gap:8px;background:var(--green-100);color:var(--green-800);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600}
+    .sechead{display:flex;align-items:center}
+    .sechead span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+    .sechead a{margin-left:auto;font-size:12px;font-weight:600}
+    .note{font-size:12px;color:var(--ink-3);margin:10px 0 0}
+  </style>
+</helmet>
+<div class="sheet">
+  <header>
+    <h1 class="h1">SweepFood — Thư viện thành phần</h1>
+    <p class="sub">Mid-fidelity · các khối tái dùng để ghép mọi màn hình</p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Nút</h2>
+      <div class="row">
+        <button class="btn btn-primary">Bắt đầu nấu</button>
+        <button class="btn btn-secondary">Thêm vào kho</button>
+        <button class="btn btn-outline">Thử lại</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn btn-inverted">Nâng cấp Premium</button>
+        <button class="btn btn-text">Xem tất cả</button>
+        <button class="btn btn-disabled">Đã hết lượt</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn btn-primary btn-sm">Thêm nhanh</button>
+        <span class="iconbtn brick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="M14 6l4 4"/></svg></span>
+        <span class="iconbtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 6h.01"/><path d="M12 12h.01"/><path d="M12 18h.01"/></svg></span>
+        <span class="fab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V6a2 2 0 0 1 2-2h3"/><path d="M20 9V6a2 2 0 0 0-2-2h-3"/><path d="M4 15v3a2 2 0 0 0 2 2h3"/><path d="M20 15v3a2 2 0 0 1-2 2h-3"/><path d="M4 12h16"/></svg></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Tìm kiếm &amp; Bộ lọc</h2>
+      <div class="row">
+        <span class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M20 20l-4-4"/></svg> Tìm trong tủ bếp…</span>
+        <span class="iconbtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/></svg></span>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <span class="chip on">Tất cả</span>
+        <span class="chip">Bữa sáng</span>
+        <span class="chip">Bữa trưa</span>
+        <span class="chip">Bữa tối</span>
+        <span class="chip">Ăn nhẹ</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Nhãn hạn dùng</h2>
+      <div class="row">
+        <span class="badge" style="background:var(--exp-bg);color:var(--exp)"><i class="dot"></i>Quá hạn 1 ngày</span>
+        <span class="badge" style="background:var(--crit-bg);color:var(--crit)"><i class="dot"></i>Còn 1 ngày</span>
+        <span class="badge" style="background:var(--soon-bg);color:var(--soon)"><i class="dot"></i>Còn 4 ngày</span>
+        <span class="badge" style="background:var(--ok-bg);color:var(--ok)"><i class="dot"></i>Còn 12 ngày</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Chip tầng bảo quản</h2>
+      <div class="row">
+        <span class="tchip" style="background:#F6E7E7;color:#8D4D4E"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 5 6 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5-1-9Z"/></svg>Ăn liền</span>
+        <span class="tchip" style="background:#E4F3EB;color:#2D6A4F"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/></svg>Ngăn mát</span>
+        <span class="tchip" style="background:#E3EFF1;color:#3E7C8B"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M4.5 7.5 19.5 16.5"/><path d="M19.5 7.5 4.5 16.5"/></svg>Ngăn đông</span>
+        <span class="tchip" style="background:#F2EFE8;color:#8A7A55"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8"/><path d="M9 3v3l-1 2v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8l-1-2V3"/></svg>Kệ đồ khô</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Thẻ nguyên liệu</h2>
+      <div class="stack">
+        <div class="pitem urgent">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/></svg></span>
+          <div class="body">
+            <div class="nm">Cà chua bi</div>
+            <div class="mt">500g · Rau củ · Ngăn mát</div>
+          </div>
+          <span class="badge" style="background:var(--crit-bg);color:var(--crit)"><i class="dot"></i>Còn 1 ngày</span>
+          <span class="kebab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 6h.01"/><path d="M12 12h.01"/><path d="M12 18h.01"/></svg></span>
+        </div>
+        <div class="pitem">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/></svg></span>
+          <div class="body">
+            <div class="nm">Trứng gà</div>
+            <div class="mt">10 quả · Đạm · Ngăn mát</div>
+          </div>
+          <span class="badge" style="background:var(--ok-bg);color:var(--ok)"><i class="dot"></i>Còn 12 ngày</span>
+          <span class="kebab"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 6h.01"/><path d="M12 12h.01"/><path d="M12 18h.01"/></svg></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Thẻ gợi ý món</h2>
+      <div class="scard" style="max-width:360px">
+        <div class="img">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/><path d="M3 13h18"/><path d="M12 5V3"/></svg>
+          <span class="score">95<small>ĐIỂM</small></span>
+        </div>
+        <div class="pad">
+          <div class="tt">Salad bơ ức gà</div>
+          <div class="mt">15 phút · Dễ · 320 kcal / khẩu phần</div>
+          <div class="row">
+            <span class="mini" style="background:var(--exp-bg);color:var(--exp)">Dùng 3 đồ cận hạn</span>
+            <span class="mini" style="background:var(--green-100);color:var(--green-800)">Có sẵn 80%</span>
+            <span class="mini" style="background:var(--fill);color:var(--ink-2)">Cần mua 2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Dinh dưỡng — theo khẩu phần</h2>
+      <div class="macrowrap">
+        <svg width="96" height="96" viewBox="0 0 42 42">
+          <circle cx="21" cy="21" r="16" fill="none" stroke="#EFF1EC" stroke-width="6"/>
+          <circle cx="21" cy="21" r="16" fill="none" stroke="#40916C" stroke-width="6" stroke-dasharray="45 100" stroke-dashoffset="25" stroke-linecap="round" transform="rotate(-90 21 21)"/>
+          <circle cx="21" cy="21" r="16" fill="none" stroke="#B08422" stroke-width="6" stroke-dasharray="33 100" stroke-dashoffset="-20" stroke-linecap="round" transform="rotate(-90 21 21)"/>
+          <text x="21" y="20" text-anchor="middle" font-size="7" font-weight="700" fill="#1A1C19">320</text>
+          <text x="21" y="27" text-anchor="middle" font-size="3.4" fill="#8A8D87">kcal</text>
+        </svg>
+        <div class="mchips">
+          <div class="mrow"><i style="background:#40916C"></i>Đạm <b>28g</b></div>
+          <div class="mrow"><i style="background:#B08422"></i>Tinh bột <b>30g</b></div>
+          <div class="mrow"><i style="background:#8D4D4E"></i>Chất béo <b>14g</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Thanh hạn mức (Freemium)</h2>
+      <div class="stack">
+        <div class="quota">
+          <div class="top">Đã dùng 8/10 lượt quét tháng này <a href="#">Nâng cấp</a></div>
+          <div class="track"><i style="width:80%"></i></div>
+        </div>
+        <div class="quota">
+          <div class="top">34/40 nguyên liệu đang lưu <a href="#">Nâng cấp</a></div>
+          <div class="track"><i style="width:85%"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Trạng thái rỗng</h2>
+      <div class="estate">
+        <span class="eill"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg></span>
+        <div class="et">Tủ bếp đang trống</div>
+        <div class="es">Thêm nguyên liệu đầu tiên để nhận gợi ý món</div>
+        <button class="btn btn-primary btn-sm">Thêm nguyên liệu</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Trạng thái lỗi</h2>
+      <div class="estate">
+        <span class="eill" style="background:var(--exp-bg);color:var(--exp)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21 19H3Z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg></span>
+        <div class="et">Không tải được dữ liệu</div>
+        <div class="es">Kiểm tra kết nối và thử lại</div>
+        <button class="btn btn-outline btn-sm">Thử lại</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Đang tải</h2>
+      <div class="skrow"><span class="sk" style="width:44px;height:44px"></span><span style="flex:1"><span class="sk" style="display:block;width:60%;height:12px;margin-bottom:8px"></span><span class="sk" style="display:block;width:40%;height:10px"></span></span></div>
+      <div class="skrow"><span class="sk" style="width:44px;height:44px"></span><span style="flex:1"><span class="sk" style="display:block;width:70%;height:12px;margin-bottom:8px"></span><span class="sk" style="display:block;width:35%;height:10px"></span></span></div>
+    </div>
+
+    <div class="card">
+      <h2>Tiện ích nhỏ</h2>
+      <div class="stack">
+        <div class="sechead"><span>Cần dùng sớm</span><a href="#">Xem tất cả</a></div>
+        <span class="savings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l6-6 4 4 6-7"/><path d="M16 7h4v4"/></svg>Đã tiết kiệm 240.000đ tháng này</span>
+        <div class="snack">Đã thêm 3 nguyên liệu vào kho <a href="#">Hoàn tác</a></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Bảng thao tác sau khi nấu</h2>
+      <div class="sheetc">
+        <div class="grab"></div>
+        <div style="font-size:15px;font-weight:700;padding:0 8px 8px">Bạn đã nấu &ldquo;Salad bơ ức gà&rdquo;?</div>
+        <div class="qa"><span class="lead"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Dùng đúng định lượng<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+        <div class="qa"><span class="lead">½</span>Dùng một nửa<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+        <div class="qa"><span class="lead"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M6 7v12h12V7"/><path d="M10 11v4"/><path d="M14 11v4"/></svg></span>Dùng hết<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+        <div class="qa"><span class="lead"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h12"/><path d="M9 8l-3 4 3 4"/><path d="M15 8l3 4-3 4"/></svg></span>Tự điều chỉnh<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      </div>
+    </div>
+
+    <div class="card full">
+      <h2>Thanh điều hướng</h2>
+      <div class="bnav">
+        <span class="nitem on">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg>Trang chủ
+        </span>
+        <span class="nitem">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/><path d="M9 6v2"/><path d="M9 14v3"/></svg>Kho
+        </span>
+        <span class="nfab">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V6a2 2 0 0 1 2-2h3"/><path d="M20 9V6a2 2 0 0 0-2-2h-3"/><path d="M4 15v3a2 2 0 0 0 2 2h3"/><path d="M20 15v3a2 2 0 0 1-2 2h-3"/><path d="M4 12h16"/></svg>
+        </span>
+        <span class="nitem">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4Z"/><path d="M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7Z"/></svg>Gợi ý
+        </span>
+        <span class="nitem">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg>Cá nhân
+        </span>
+      </div>
+      <p class="note">FAB giữa mở bảng chọn phương thức nhập: Quét tem · Quét hóa đơn · Nói · Nhập tay.</p>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-300:#95D5B2;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;padding:16px 24px 24px;min-height:780px}
+    .steps{display:flex;gap:6px}
+    .steps i{height:4px;border-radius:999px;background:var(--line);flex:1}
+    .steps i.on{background:var(--green-700)}
+    .art{margin:24px 0;height:250px;border-radius:24px;background:var(--green-100);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .art .card{position:absolute;background:var(--surface);border-radius:12px;box-shadow:0 6px 18px rgba(20,28,22,.12);display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:11px;font-weight:600}
+    .head .t{font-size:23px;font-weight:700;letter-spacing:-.02em;line-height:1.28}
+    .head .s{font-size:13px;color:var(--ink-2);margin-top:8px;line-height:1.55}
+    .methods{display:flex;gap:10px;margin-top:16px}
+    .m{flex:1;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--ink-2)}
+    .m .mic{width:32px;height:32px;border-radius:9px;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center}
+    .cta{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:22px}
+    .btn{height:50px;border-radius:12px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent}
+    .btn.pri{background:var(--green-700);color:#fff}
+    .btn.ghost{background:transparent;color:var(--ink-2)}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+
+  <div class="art">
+    <span class="card" style="top:34px;left:26px">Cà chua bi · 500g</span>
+    <span class="card" style="bottom:40px;right:22px">Trứng gà · 10 quả</span>
+    <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/><path d="M9 6v2"/><path d="M9 14v3"/></svg>
+  </div>
+
+  <div class="head">
+    <div class="t">Thêm nguyên liệu chỉ trong vài giây</div>
+    <div class="s">Quét tem nhãn hoặc hóa đơn để lấy sẵn tên, khối lượng, hạn dùng. Bận tay thì đọc bằng giọng nói. Không có bao bì thì nhập tay thật nhanh.</div>
+  </div>
+
+  <div class="methods">
+    <div class="m"><span class="mic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2h6l2 2h3v11H4Z"/><circle cx="12" cy="13" r="3.2"/></svg></span>Quét</div>
+    <div class="m"><span class="mic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v3"/></svg></span>Nói</div>
+    <div class="m"><span class="mic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01"/><path d="M11 10h.01"/><path d="M15 10h.01"/><path d="M8 14h8"/></svg></span>Nhập tay</div>
+  </div>
+
+  <div class="cta">
+    <button class="btn pri">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      Thêm nguyên liệu đầu tiên
+    </button>
+    <button class="btn ghost">Để sau</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

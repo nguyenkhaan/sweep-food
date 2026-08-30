@@ -1,18 +1,4 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-class AuthInterceptor extends Interceptor {
-  final _storage = const FlutterSecureStorage();
-
-  @override
-  Future<void> onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
-    final token = await _storage.read(key: 'access_token');
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
-    handler.next(options);
-  }
-}
+// lib/core/network/interceptors/auth_interceptor.dart
+// Dio interceptor: attach Bearer token from SecureStorage on each request;
+// on 401 trigger token refresh, and log the user out if refresh fails.
+// TODO: implement — structure only. See ../../../plan.md and the design canvas.

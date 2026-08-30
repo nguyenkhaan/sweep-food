@@ -1,51 +1,87 @@
 name: frontend
-description: "SweepFood - Smart food management and recipe recommendation app"
+description: "SweepFood - Trợ lý quản lý nguyên liệu và gợi ý bữa ăn thông minh"
 publish_to: "none"
 version: 1.0.0+1
 
 environment:
   sdk: ^3.5.0
 
+# NOTE: versions left loose (`any`) for the scaffold phase; pubspec.lock pins the
+# resolved set. Tighten to caret ranges once the stack is exercised (plan.md §3).
+
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
-  # State Management & DI
-  flutter_bloc: ^8.1.6
-  get_it: ^7.7.0
-  equatable: ^2.0.5
+  # State management & DI (Riverpod)
+  flutter_riverpod: any
+  riverpod_annotation: any
 
   # Routing
-  go_router: ^14.2.0
+  go_router: any
 
   # Networking
-  dio: ^5.5.0+1
+  dio: any
 
-  # Local Storage & Cache
-  shared_preferences: ^2.2.3
-  flutter_secure_storage: ^9.2.2
+  # Models / functional
+  freezed_annotation: any
+  json_annotation: any
+  fpdart: any
 
-  # Hardware & Multimodal
-  # camera: ^0.11.0+1
-  image_picker: ^1.1.2
-  image_cropper: ^8.0.2
-  # record: ^5.1.2
-  path_provider: ^2.1.3
-  permission_handler: ^11.3.1
+  # Local storage
+  shared_preferences: any
+  flutter_secure_storage: any
 
-  # UI & Charts
-  flutter_svg: ^2.0.10+1
-  cached_network_image: ^3.3.1
-  fl_chart: ^0.68.0
-  intl: ^0.19.0
+  # Media / multimodal input
+  image_picker: any
+  image_cropper: any
+  permission_handler: any
+  path_provider: any
+  # record: any            # voice capture — enable when wiring I-06
+  # just_audio: any        # playback preview for voice review
+
+  # Notifications
+  flutter_local_notifications: any
+  # firebase_core: any     # enable after `flutterfire configure`
+  # firebase_messaging: any
+
+  # UI & charts
+  flutter_svg: any
+  cached_network_image: any
+  fl_chart: any
+  intl: any
+
+  # Utilities
+  logger: any
+  connectivity_plus: any
+  package_info_plus: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  integration_test:
+    sdk: flutter
+
+  # Codegen
+  build_runner: any
+  riverpod_generator: any
+  freezed: any
+  json_serializable: any
+
+  # Lints
+  flutter_lints: any
+  custom_lint: any
+  riverpod_lint: any
+
+  # Testing
+  mocktail: any
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/icons/
     - assets/images/
+    - assets/mock/

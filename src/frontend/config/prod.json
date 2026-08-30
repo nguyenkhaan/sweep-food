@@ -1,0 +1,7 @@
+{
+  "FLAVOR": "prod",
+  "API_BASE_URL": "https://api.sweepfood.example/api/v1",
+  "BACKEND": "live",
+  "PREMIUM_ENABLED": false,
+  "NEAR_EXPIRY_DAYS": 3
+}

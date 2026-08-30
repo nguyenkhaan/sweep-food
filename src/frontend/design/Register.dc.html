@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}a:hover{color:var(--green-800)}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;padding:16px 24px 28px;min-height:780px}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .head{margin:22px 0 20px}
+    .head .t{font-size:26px;font-weight:700;letter-spacing:-.02em}
+    .head .s{font-size:14px;color:var(--ink-2);margin-top:6px}
+    .form{display:flex;flex-direction:column;gap:13px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field label{font-size:12px;font-weight:600;color:var(--ink-2)}
+    .input{height:48px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;gap:10px;padding:0 13px;font-size:14px}
+    .input .val{color:var(--ink)}
+    .input .ph{color:var(--ink-3)}
+    .input .eye{margin-left:auto;color:var(--ink-3)}
+    .agree{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--ink-2);line-height:1.5;margin-top:2px}
+    .cbox{width:20px;height:20px;border-radius:6px;background:var(--green-700);display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+    .btn{height:50px;border-radius:12px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;border:1px solid transparent;background:var(--green-700);color:#fff;margin-top:6px}
+    .foot{margin-top:auto;text-align:center;font-size:13px;color:var(--ink-2);padding-top:22px}
+    .foot a{font-weight:600}
+  </style>
+</helmet>
+<div class="screen">
+  <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+
+  <div class="head">
+    <div class="t">Tạo tài khoản</div>
+    <div class="s">Bắt đầu tiết kiệm thực phẩm cùng SweepFood</div>
+  </div>
+
+  <div class="form">
+    <div class="field">
+      <label>Họ và tên</label>
+      <div class="input"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A8D87" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="3.5"/><path d="M5 20c1.4-3.4 4-5 7-5s5.6 1.6 7 5"/></svg><span class="ph">Nguyễn Văn A</span></div>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <div class="input"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A8D87" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg><span class="ph">ban@email.com</span></div>
+    </div>
+    <div class="field">
+      <label>Mật khẩu</label>
+      <div class="input"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A8D87" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span class="ph">Ít nhất 8 ký tự</span><span class="eye"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span></div>
+    </div>
+    <div class="agree">
+      <span class="cbox"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+      <span>Tôi đồng ý với <a href="#">Điều khoản sử dụng</a> và <a href="#">Chính sách bảo mật</a>.</span>
+    </div>
+    <button class="btn">Tạo tài khoản</button>
+  </div>
+
+  <div class="foot">Đã có tài khoản? <a href="#">Đăng nhập</a></div>
+</div>
+</x-dc>
+</body>
+</html>

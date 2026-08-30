@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-700:#2D6A4F;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;--exp:#8D4D4E;--exp-bg:#F6E7E7;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700)}
+    .screen{width:390px;height:720px;background:var(--bg);display:flex;flex-direction:column;padding:16px 24px 28px}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .ill{width:88px;height:88px;border-radius:24px;background:var(--exp-bg);color:var(--exp);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+    .t{font-size:20px;font-weight:700}
+    .reasons{margin-top:16px;width:100%;display:flex;flex-direction:column;gap:8px;text-align:left}
+    .r{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:11px 13px;font-size:13px;color:var(--ink-2)}
+    .r .d{width:6px;height:6px;border-radius:50%;background:var(--ink-3);flex:none}
+    .cta{display:flex;flex-direction:column;gap:10px}
+    .btn{height:50px;border-radius:12px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent}
+    .btn.pri{background:var(--green-700);color:#fff}
+    .btn.ghost{background:transparent;color:var(--ink-2)}
+  </style>
+</helmet>
+<div class="screen">
+  <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+
+  <div class="mid">
+    <span class="ill"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h9l3 3v13H6Z"/><path d="M9 11l6 6"/><path d="M15 11l-6 6"/></svg></span>
+    <div class="t">Không đọc được nhãn</div>
+    <div class="reasons">
+      <div class="r"><span class="d"></span>Ảnh bị mờ hoặc chụp nghiêng</div>
+      <div class="r"><span class="d"></span>Nhãn bị rách hoặc phai mực</div>
+      <div class="r"><span class="d"></span>Thiếu sáng khi chụp</div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <button class="btn pri"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V6a2 2 0 0 1 2-2h3"/><path d="M20 9V6a2 2 0 0 0-2-2h-3"/><path d="M4 15v3a2 2 0 0 0 2 2h3"/><path d="M20 15v3a2 2 0 0 1-2 2h-3"/><path d="M4 12h16"/></svg>Chụp lại</button>
+    <button class="btn ghost">Nhập tay</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,3 @@
+// lib/shared/domain/measurement_unit.dart
+// Unit enum: g / kg / ml / l / cai / bo / hop / goi …
+// TODO: implement — structure only. See ../plan.md and the design canvas.

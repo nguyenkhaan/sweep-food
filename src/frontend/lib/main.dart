@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
-import 'app/routes/app_pages.dart';
-import 'injection_container.dart' as di;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await di.initDependencies();
-  runApp(const SweepFoodApp());
+/// App entry point.
+/// TODO: move init to bootstrap.dart, mount [SweepFoodApp] with AppRouter + AppTheme.
+void main() {
+  runApp(const ProviderScope(child: _ScaffoldReady()));
 }
 
-class SweepFoodApp extends StatelessWidget {
-  const SweepFoodApp({super.key});
+class _ScaffoldReady extends StatelessWidget {
+  const _ScaffoldReady();
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'SweepFood',
-      debugShowCheckedModeBanner: false,
-      routerConfig: AppPages.router,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF2E7D32),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: Center(child: Text('SweepFood — project scaffold ready')),
+        ),
+      );
 }

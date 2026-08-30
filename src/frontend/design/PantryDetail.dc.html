@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{
+      --green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-300:#95D5B2;--green-100:#D8F3DC;
+      --brick-500:#8D4D4E;--brick-100:#F6E7E7;
+      --ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;
+      --line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;
+      --crit:#C0562B;--crit-bg:#F7E9E0;--soon:#B08422;--soon-bg:#FBF3E2;
+      --exp:#8D4D4E;--exp-bg:#F6E7E7;--ok:#5C5F5A;--ok-bg:#EFF1EC;
+      --e1:0 1px 2px rgba(20,28,22,.06),0 1px 3px rgba(20,28,22,.04);
+      --e2:0 2px 10px rgba(20,28,22,.08);--e3:0 10px 26px rgba(20,28,22,.16);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}a:hover{color:var(--green-800)}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .rnd{width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .topbar .sp{flex:1}
+    .content{padding:2px 20px 24px;display:flex;flex-direction:column;gap:16px}
+    .hero{display:flex;flex-direction:column;gap:10px}
+    .hero .nm{font-size:24px;font-weight:700;letter-spacing:-.02em}
+    .tagrow{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{height:26px;padding:0 11px;border-radius:999px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center}
+    .stat .v{font-size:16px;font-weight:700}
+    .stat .k{font-size:11px;color:var(--ink-3);margin-top:2px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+    .card h2{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+    .drow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--fill);font-size:13px}
+    .drow:last-child{border-bottom:0}
+    .drow .lb{color:var(--ink-3)}
+    .drow .vl{margin-left:auto;font-weight:600}
+    .drow .ic{width:28px;height:28px;border-radius:8px;background:var(--fill);color:var(--ink-2);display:flex;align-items:center;justify-content:center;flex:none}
+    .macros{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .macro{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+    .macro .v{font-size:15px;font-weight:700}
+    .macro .k{font-size:11px;color:var(--ink-3);margin-top:2px}
+    .src{font-size:11px;color:var(--ink-3);margin-top:10px}
+    .tip{background:var(--green-800);color:#fff;border-radius:16px;padding:16px}
+    .tip h3{margin:0 0 6px;font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
+    .tip p{margin:0;font-size:13px;line-height:1.5;color:var(--green-100)}
+    .tip .lnk{margin-top:12px;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#fff;background:rgba(255,255,255,.14);border-radius:999px;padding:8px 14px}
+    .actionbar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(20,28,22,.06);display:flex;gap:10px;padding:12px 20px 18px}
+    .btn{flex:1;height:48px;border-radius:12px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent}
+    .btn.sec{background:var(--fill);color:var(--ink)}
+    .btn.pri{background:var(--green-700);color:#fff}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <span class="sp"></span>
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="M14 6l4 4"/></svg></span>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="nm">Cà chua bi</div>
+      <div class="tagrow">
+        <span class="pill" style="background:#E4F3EB;color:#2D6A4F"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/></svg>Ngăn mát</span>
+        <span class="pill" style="background:var(--crit-bg);color:var(--crit)"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block"></span>Còn 1 ngày</span>
+        <span class="pill" style="background:var(--fill);color:var(--ink-2)">Rau củ</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="v">500g</div><div class="k">Số lượng</div></div>
+      <div class="stat"><div class="v">12/09</div><div class="k">Hạn dùng</div></div>
+      <div class="stat"><div class="v">18.000đ</div><div class="k">Giá mua</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Chi tiết</h2>
+      <div class="drow">
+        <span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+        <span class="lb">Vị trí</span><span class="vl">Ngăn mát — tủ lạnh</span>
+      </div>
+      <div class="drow">
+        <span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4"/><path d="M16 3v4"/><path d="M4 11h16"/></svg></span>
+        <span class="lb">Ngày thêm</span><span class="vl">05/09/2026</span>
+      </div>
+      <div class="drow">
+        <span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2h6l2 2h3v11H4Z"/><circle cx="12" cy="13" r="3.2"/></svg></span>
+        <span class="lb">Nguồn nhập</span><span class="vl">Quét hóa đơn</span>
+      </div>
+      <div class="drow">
+        <span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M12 7v5l3 2"/></svg></span>
+        <span class="lb">Bảo quản tham khảo</span><span class="vl">3–5 ngày</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Dinh dưỡng / 100g</h2>
+      <div class="macros">
+        <div class="macro"><div class="v">18 kcal</div><div class="k">Năng lượng</div></div>
+        <div class="macro"><div class="v">0,9 g</div><div class="k">Đạm</div></div>
+        <div class="macro"><div class="v">3,9 g</div><div class="k">Tinh bột</div></div>
+        <div class="macro"><div class="v">0,2 g</div><div class="k">Chất béo</div></div>
+      </div>
+      <div class="src">Nguồn: Viện Dinh dưỡng Quốc gia · giá trị ước tính</div>
+    </div>
+
+    <div class="tip">
+      <h3><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0 0 12 3Z"/></svg>Mẹo dùng sớm</h3>
+      <p>Cà chua bi chín nhanh ở nhiệt độ phòng. Nên dùng cho salad, sốt hoặc canh trong 1–2 ngày tới để giữ vị ngọt.</p>
+      <span class="lnk">Xem 3 món gợi ý
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </span>
+    </div>
+  </div>
+
+  <div class="actionbar">
+    <button class="btn sec">Đã dùng hết</button>
+    <button class="btn pri">Tìm món dùng ngay</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:19px;font-weight:700;margin:0}
+    .pmark{font-size:10px;font-weight:700;color:var(--green-700);background:var(--green-100);border-radius:999px;padding:2px 8px}
+    .topbar .sp{flex:1}
+    .topbar .per{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
+    .rnd{width:34px;height:34px;border-radius:10px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .tabs{display:flex;gap:8px;padding:4px 20px 8px}
+    .tab{flex:1;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--ink-2)}
+    .tab.on{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+    .content{padding:8px 20px 24px;display:flex;flex-direction:column;gap:16px}
+    .big{background:var(--green-700);color:#fff;border-radius:18px;padding:18px}
+    .big .lb{font-size:12px;opacity:.85}
+    .big .v{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
+    .big .s{font-size:12px;opacity:.9;margin-top:6px;line-height:1.45}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+    .card h2{margin:0 0 14px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+    .bars{display:flex;align-items:flex-end;gap:14px;height:120px;padding:0 4px}
+    .bars .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .bars .bar{width:100%;background:var(--green-600);border-radius:6px 6px 0 0}
+    .bars .cl{font-size:10px;color:var(--ink-3)}
+    .brk{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--fill);font-size:13px}
+    .brk:last-child{border-bottom:0}
+    .brk .d{width:8px;height:8px;border-radius:2px;margin-right:10px}
+    .brk .vv{margin-left:auto;font-weight:700}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Chống lãng phí</h1>
+    <span class="sp"></span>
+    <span class="per">Tháng 9 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+  </div>
+
+  <div class="content">
+    <div class="big">
+      <div class="lb">Tháng 9 · nguyên liệu dùng trước hạn</div>
+      <div class="v">12 nguyên liệu</div>
+      <div class="s">≈ 1,4 kg thực phẩm tránh bị bỏ phí · 18 món đã nấu</div>
+    </div>
+
+    <div class="card">
+      <h2>Nguyên liệu cứu được theo tuần</h2>
+      <div class="bars">
+        <div class="col"><span class="bar" style="height:44%"></span><span class="cl">T1</span></div>
+        <div class="col"><span class="bar" style="height:70%"></span><span class="cl">T2</span></div>
+        <div class="col"><span class="bar" style="height:52%"></span><span class="cl">T3</span></div>
+        <div class="col"><span class="bar" style="height:88%"></span><span class="cl">T4</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Theo nhóm thực phẩm</h2>
+      <div class="brk"><span class="d" style="background:#40916C"></span>Rau củ <span class="vv">5 nguyên liệu</span></div>
+      <div class="brk"><span class="d" style="background:#8D4D4E"></span>Thịt &amp; cá <span class="vv">4 nguyên liệu</span></div>
+      <div class="brk"><span class="d" style="background:#B08422"></span>Khác <span class="vv">3 nguyên liệu</span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

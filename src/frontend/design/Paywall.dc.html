@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;--soon:#B08422;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .top{display:flex;padding:14px 18px}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .content{padding:6px 22px 24px;display:flex;flex-direction:column;gap:18px}
+    .hd .t{font-size:24px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
+    .hd .s{font-size:13px;color:var(--ink-2);margin-top:6px}
+    .benefits{display:flex;flex-direction:column;gap:10px}
+    .b{display:flex;align-items:center;gap:10px;font-size:13px}
+    .b .ck{width:22px;height:22px;border-radius:50%;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;flex:none}
+    .plans{display:flex;flex-direction:column;gap:10px}
+    .p{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px;display:flex;align-items:center;gap:12px}
+    .p.on{border-color:var(--green-700);border-width:2px}
+    .p .rad{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:none}
+    .p.on .rad{border-color:var(--green-700);background:var(--green-700);box-shadow:inset 0 0 0 3px #fff}
+    .p .nm{font-size:14px;font-weight:700}
+    .p .sub{font-size:11px;color:var(--ink-3);margin-top:1px}
+    .p .pr{margin-left:auto;font-size:14px;font-weight:700;text-align:right}
+    .p .pr span{display:block;font-size:10px;font-weight:500;color:var(--ink-3)}
+    .save-tag{font-size:10px;font-weight:700;color:var(--soon);border:1px solid var(--soon);border-radius:999px;padding:2px 6px}
+    .p.disabled{opacity:.55}
+    .cta{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(20,28,22,.06);padding:12px 22px 18px}
+    .btn{width:100%;height:50px;border-radius:12px;font-size:15px;font-weight:600;background:var(--green-700);color:#fff;border:0;display:flex;align-items:center;justify-content:center}
+    .fine{font-size:10px;color:var(--ink-3);text-align:center;margin-top:8px}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="top"><span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg></span></div>
+
+  <div class="content">
+    <div class="hd">
+      <div class="t">SweepFood Premium sắp ra mắt</div>
+      <div class="s">Hiện tại bạn đang dùng miễn phí tất cả tính năng. Đăng ký để được báo khi Premium chính thức và nhận ưu đãi sớm.</div>
+    </div>
+
+    <div class="benefits">
+      <div class="b"><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Kho nguyên liệu không giới hạn</div>
+      <div class="b"><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Quét tem &amp; hóa đơn không giới hạn</div>
+      <div class="b"><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Lập thực đơn tuần &amp; danh sách mua sắm</div>
+      <div class="b"><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Mục tiêu dinh dưỡng theo ngày</div>
+      <div class="b"><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Báo cáo chi tiêu &amp; thực phẩm đã tiết kiệm</div>
+      <div class="b"><span class="ck"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Chia sẻ tủ bếp cho tối đa 4 người</div>
+    </div>
+
+    <div class="plans">
+      <div class="p"><span class="rad"></span><div><div class="nm">Premium tháng</div><div class="sub">Thanh toán hằng tháng</div></div><span class="pr">39.000đ<span>/ tháng (dự kiến)</span></span></div>
+      <div class="p on"><span class="rad"></span><div><div class="nm">Premium năm <span class="save-tag">Tiết kiệm 36%</span></div><div class="sub">299.000đ / năm · ~24.900đ / tháng</div></div><span class="pr">299.000đ<span>/ năm (dự kiến)</span></span></div>
+      <div class="p disabled"><span class="rad"></span><div><div class="nm">Premium gia đình</div><div class="sub">Chia sẻ cho 4 người</div></div><span class="pr">Sắp có</span></div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <button class="btn">Nhận thông báo khi ra mắt</button>
+    <div class="fine">Chưa tính phí · giá &amp; gói đang trong giai đoạn kiểm chứng</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

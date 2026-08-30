@@ -1,0 +1,7 @@
+{
+  "FLAVOR": "dev",
+  "API_BASE_URL": "http://10.0.2.2:8000/api/v1",
+  "BACKEND": "mock",
+  "PREMIUM_ENABLED": false,
+  "NEAR_EXPIRY_DAYS": 3
+}

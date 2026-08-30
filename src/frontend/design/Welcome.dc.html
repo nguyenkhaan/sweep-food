@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-300:#95D5B2;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}a:hover{color:var(--green-800)}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;padding:22px 24px 28px;gap:22px;min-height:780px}
+    .brand{display:flex;align-items:center;gap:9px;font-size:18px;font-weight:700;letter-spacing:-.01em}
+    .art{flex:1;min-height:300px;border-radius:24px;background:var(--green-100);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .art .blob{position:absolute;border-radius:50%}
+    .copy .h{font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.22}
+    .copy .s{font-size:14px;color:var(--ink-2);line-height:1.5;margin-top:8px}
+    .dots{display:flex;gap:6px}
+    .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+    .dots i.on{width:20px;border-radius:999px;background:var(--green-700)}
+    .cta{display:flex;flex-direction:column;gap:10px}
+    .btn{height:50px;border-radius:12px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;border:1px solid transparent}
+    .btn.pri{background:var(--green-700);color:#fff}
+    .btn.ghost{background:transparent;color:var(--ink-2)}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="brand">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg>
+    SweepFood
+  </div>
+
+  <div class="art">
+    <span class="blob" style="width:120px;height:120px;background:rgba(255,255,255,.5);top:26px;left:32px"></span>
+    <span class="blob" style="width:70px;height:70px;background:var(--green-300);bottom:34px;right:40px"></span>
+    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg>
+  </div>
+
+  <div class="copy">
+    <div class="h">Biến nguyên liệu đang có thành bữa ăn</div>
+    <div class="s">SweepFood theo dõi hạn dùng, ưu tiên đồ cần dùng sớm và gợi ý 3–5 món hợp với tủ bếp của bạn.</div>
+  </div>
+
+  <div class="dots"><i class="on"></i><i></i><i></i></div>
+
+  <div class="cta">
+    <button class="btn pri">Bắt đầu</button>
+    <button class="btn ghost">Đã có tài khoản? Đăng nhập</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

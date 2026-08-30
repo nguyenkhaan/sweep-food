@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;padding:16px 24px 24px;min-height:780px}
+    .steps{display:flex;gap:6px}
+    .steps i{height:4px;border-radius:999px;background:var(--line);flex:1}
+    .steps i.on{background:var(--green-700)}
+    .head{margin:24px 0 18px}
+    .head .t{font-size:24px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
+    .head .s{font-size:13px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+    .opts{display:flex;flex-direction:column;gap:11px}
+    .opt{display:flex;align-items:center;gap:13px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px}
+    .opt.on{border-color:var(--green-700);background:var(--green-100)}
+    .opt .ic{width:40px;height:40px;border-radius:11px;background:var(--fill);color:var(--ink-2);display:flex;align-items:center;justify-content:center;flex:none}
+    .opt.on .ic{background:var(--surface);color:var(--green-700)}
+    .opt .ot{font-size:14px;font-weight:700}
+    .opt .os{font-size:12px;color:var(--ink-3);margin-top:2px}
+    .opt .rad{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);margin-left:auto;flex:none}
+    .opt.on .rad{border-color:var(--green-700);background:var(--green-700);box-shadow:inset 0 0 0 3px var(--surface)}
+    .cta{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:20px}
+    .btn{height:50px;border-radius:12px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;border:1px solid transparent}
+    .btn.pri{background:var(--green-700);color:#fff}
+    .btn.ghost{background:transparent;color:var(--ink-2)}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="steps"><i class="on"></i><i class="on"></i><i></i></div>
+
+  <div class="head">
+    <div class="t">Bạn muốn ăn theo hướng nào?</div>
+    <div class="s">Dùng để xếp hạng gợi ý món. Có thể đổi bất cứ lúc nào trong Cài đặt.</div>
+  </div>
+
+  <div class="opts">
+    <div class="opt on">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M4 8h16"/><path d="M6 12h12"/><path d="M8 16h8"/></svg></span>
+      <div><div class="ot">Cân bằng</div><div class="os">Đủ nhóm chất, không thiên lệch</div></div>
+      <span class="rad"></span>
+    </div>
+    <div class="opt">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10a5 5 0 0 1 10 0v6H7Z"/><path d="M9 16v3"/><path d="M15 16v3"/></svg></span>
+      <div><div class="ot">Nhiều protein</div><div class="os">Ưu tiên thịt, cá, trứng, đậu</div></div>
+      <span class="rad"></span>
+    </div>
+    <div class="opt">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l6-6 4 4 6-7"/><path d="M16 7h4v4"/></svg></span>
+      <div><div class="ot">Ít năng lượng</div><div class="os">Ưu tiên món dưới 400 kcal / khẩu phần</div></div>
+      <span class="rad"></span>
+    </div>
+    <div class="opt">
+      <span class="ic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg></span>
+      <div><div class="ot">Nhiều rau</div><div class="os">Ưu tiên món giàu rau củ, chất xơ</div></div>
+      <span class="rad"></span>
+    </div>
+  </div>
+
+  <div class="cta">
+    <button class="btn pri">Tiếp tục</button>
+    <button class="btn ghost">Bỏ qua</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

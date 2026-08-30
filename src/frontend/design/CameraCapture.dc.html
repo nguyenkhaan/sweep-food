@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:#fff;background:#0B0D0B;-webkit-font-smoothing:antialiased}
+    a{color:#95D5B2}
+    .screen{width:390px;height:788px;background:#0B0D0B;display:flex;flex-direction:column;position:relative;overflow:hidden}
+    .view{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 40%,#20261F,#0B0D0B)}
+    .top{position:relative;display:flex;align-items:center;gap:10px;padding:16px 18px;z-index:2}
+    .top .ttl{font-size:14px;font-weight:600}
+    .cbtn{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#fff}
+    .top .sp{flex:1}
+    .quota{position:relative;z-index:2;align-self:center;margin-top:4px;background:rgba(255,255,255,.12);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:600}
+    .frame{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+    .guide{width:250px;height:170px;border-radius:16px;position:relative}
+    .guide span{position:absolute;width:26px;height:26px;border:3px solid #95D5B2}
+    .guide .tl{top:0;left:0;border-right:0;border-bottom:0;border-radius:8px 0 0 0}
+    .guide .tr{top:0;right:0;border-left:0;border-bottom:0;border-radius:0 8px 0 0}
+    .guide .bl{bottom:0;left:0;border-right:0;border-top:0;border-radius:0 0 0 8px}
+    .guide .br{bottom:0;right:0;border-left:0;border-top:0;border-radius:0 0 8px 0}
+    .hint{font-size:13px;color:rgba(255,255,255,.8)}
+    .modes{position:relative;z-index:2;display:flex;gap:10px;justify-content:center;padding-bottom:14px}
+    .mode{font-size:13px;font-weight:600;color:rgba(255,255,255,.55);padding:6px 14px;border-radius:999px}
+    .mode.on{color:#0B0D0B;background:#fff}
+    .bar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:0 30px 30px}
+    .thumb{width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7)}
+    .shutter{width:70px;height:70px;border-radius:50%;background:#fff;border:5px solid rgba(255,255,255,.35)}
+    .manual{font-size:13px;font-weight:600;color:#fff;width:44px;text-align:center}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="view"></div>
+
+  <div class="top">
+    <span class="cbtn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg></span>
+    <span class="sp"></span>
+    <span class="ttl">Quét tem nhãn</span>
+    <span class="sp"></span>
+    <span class="cbtn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 4 14h6l-1 7 9-11h-6Z"/></svg></span>
+  </div>
+  <div class="frame">
+    <div class="guide"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+    <div class="hint">Đưa nhãn cân vào khung, giữ máy thẳng</div>
+  </div>
+
+  <div class="modes">
+    <span class="mode on">Tem nhãn</span>
+    <span class="mode">Hóa đơn</span>
+  </div>
+
+  <div class="bar">
+    <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="1.6"/><path d="M4 16l4-4 4 3 4-5 4 5"/></svg></span>
+    <span class="shutter"></span>
+    <span class="manual">Nhập tay</span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

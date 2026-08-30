@@ -1,0 +1,9 @@
+{
+  "@@locale": "en",
+  "appName": "SweepFood",
+  "navHome": "Home",
+  "navPantry": "Pantry",
+  "navSuggestions": "Suggestions",
+  "navShopping": "Shopping",
+  "navProfile": "Profile"
+}

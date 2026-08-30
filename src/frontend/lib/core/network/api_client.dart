@@ -1,20 +1,4 @@
-import 'package:dio/dio.dart';
-import '../constants/api_endpoints.dart';
-import 'interceptors/auth_interceptor.dart';
-
-class ApiClient {
-  late final Dio dio;
-
-  ApiClient() {
-    dio = Dio(
-      BaseOptions(
-        baseUrl: ApiEndpoints.baseUrl,
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
-        headers: {'Content-Type': 'application/json'},
-      ),
-    );
-    dio.interceptors.add(AuthInterceptor());
-    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-  }
-}
+// lib/core/network/api_client.dart
+// Abstract ApiClient interface (get / post / multipart). Implemented by
+// DioApiClient (live) and MockApiClient (assets/mock/*.json).
+// TODO: implement — structure only. See ../../plan.md §9 and the design canvas.

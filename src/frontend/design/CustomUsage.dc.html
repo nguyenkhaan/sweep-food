@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;height:660px;display:flex;flex-direction:column;background:#F8F9FA}
+    .scrim{flex:1;background:rgba(20,28,22,.34)}
+    .sheet{flex:none;background:var(--surface);border-radius:22px 22px 0 0;box-shadow:0 -12px 40px rgba(20,28,22,.22);padding:14px 20px 22px;display:flex;flex-direction:column;gap:14px}
+    .grab{width:38px;height:4px;border-radius:999px;background:var(--line);align-self:center}
+    .tt{font-size:16px;font-weight:700}
+    .ing{display:flex;flex-direction:column;gap:8px}
+    .ing .top{display:flex;align-items:center;font-size:13px}
+    .ing .top .nm{font-weight:600}
+    .ing .top .vv{margin-left:auto;font-weight:700}
+    .ing .top .vv span{color:var(--ink-3);font-weight:500}
+    .rail{position:relative;height:26px;display:flex;align-items:center}
+    .rail .bar{height:6px;border-radius:999px;background:var(--fill);width:100%}
+    .rail .fill{position:absolute;left:0;height:6px;border-radius:999px;background:var(--green-600)}
+    .rail .knob{position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--green-600);box-shadow:0 2px 6px rgba(20,28,22,.18);transform:translateX(-50%)}
+    .btns{display:flex;gap:10px;margin-top:4px}
+    .btn{flex:1;height:48px;border-radius:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;border:1px solid transparent}
+    .btn.ghost{background:var(--surface);border-color:var(--line);color:var(--ink-2)}
+    .btn.pri{background:var(--green-700);color:#fff}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="tt">Điều chỉnh lượng đã dùng</div>
+
+    <div class="ing">
+      <div class="top"><span class="nm">Bơ</span><span class="vv">1 <span>/ 1 quả</span></span></div>
+      <div class="rail"><span class="bar"></span><span class="fill" style="width:100%"></span><span class="knob" style="left:100%"></span></div>
+    </div>
+    <div class="ing">
+      <div class="top"><span class="nm">Ức gà</span><span class="vv">200 <span>/ 300 g</span></span></div>
+      <div class="rail"><span class="bar"></span><span class="fill" style="width:66%"></span><span class="knob" style="left:66%"></span></div>
+    </div>
+    <div class="ing">
+      <div class="top"><span class="nm">Cà chua bi</span><span class="vv">100 <span>/ 500 g</span></span></div>
+      <div class="rail"><span class="bar"></span><span class="fill" style="width:20%"></span><span class="knob" style="left:20%"></span></div>
+    </div>
+    <div class="ing">
+      <div class="top"><span class="nm">Xà lách</span><span class="vv">150 <span>/ 150 g</span></span></div>
+      <div class="rail"><span class="bar"></span><span class="fill" style="width:100%"></span><span class="knob" style="left:100%"></span></div>
+    </div>
+
+    <div class="btns">
+      <button class="btn ghost">Hủy</button>
+      <button class="btn pri">Xác nhận</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

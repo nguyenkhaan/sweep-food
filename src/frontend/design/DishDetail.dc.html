@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;--exp:#8D4D4E;--exp-bg:#F6E7E7;--soon:#B08422;--soon-bg:#FBF3E2;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .hero{height:200px;background:#E4E7E1;position:relative;display:flex;align-items:center;justify-content:center;color:#AEB6AB}
+    .hero .nav{position:absolute;top:14px;left:14px;right:14px;display:flex}
+    .hero .nav .sp{flex:1}
+    .rnd{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;color:#1A1C19}
+    .hero .score{position:absolute;bottom:-18px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:17px;font-weight:700;line-height:1;box-shadow:0 6px 16px rgba(20,28,22,.25)}
+    .hero .score small{font-size:7px;font-weight:600;opacity:.85}
+    .content{padding:26px 20px 24px;display:flex;flex-direction:column;gap:18px}
+    .ti .t{font-size:22px;font-weight:700;letter-spacing:-.02em}
+    .ti .m{font-size:13px;color:var(--ink-3);margin-top:4px}
+    .serv{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface)}
+    .serv .l{font-size:13px;font-weight:600}
+    .serv .stp{display:flex;align-items:center;gap:14px}
+    .serv .b{width:28px;height:28px;border-radius:8px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:var(--ink-2)}
+    .serv .v{font-size:14px;font-weight:700}
+    .nutri{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+    .nutri .macros{flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:6px 10px}
+    .nutri .mk{font-size:12px}
+    .nutri .mk b{font-weight:700}
+    .nutri .mk span{color:var(--ink-3)}
+    .sec .h{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+    .ing{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--fill);font-size:13px}
+    .ing:last-child{border-bottom:0}
+    .ing .ck{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+    .ing .ck.ok{background:var(--green-100);color:var(--green-700)}
+    .ing .ck.no{background:var(--fill);color:var(--ink-3)}
+    .ing .nm{flex:1}
+    .ing .qt{color:var(--ink-3)}
+    .ing .tag{font-size:10px;font-weight:700;border-radius:999px;padding:2px 7px}
+    .season{display:flex;flex-wrap:wrap;gap:7px}
+    .season span{height:28px;padding:0 11px;border-radius:999px;background:var(--fill);color:var(--ink-2);font-size:12px;font-weight:600;display:inline-flex;align-items:center}
+    .buybtn{margin-top:12px;width:100%;height:44px;border-radius:12px;border:1px solid var(--green-700);color:var(--green-700);background:transparent;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px}
+    .step{display:flex;gap:12px;padding:10px 0}
+    .step .n{width:24px;height:24px;border-radius:50%;background:var(--green-700);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+    .step .tx{font-size:13px;line-height:1.5;color:var(--ink-2)}
+    .savebar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(20,28,22,.06);padding:12px 20px 18px}
+    .btn{width:100%;height:50px;border-radius:12px;font-size:15px;font-weight:600;background:var(--green-700);color:#fff;border:0;display:flex;align-items:center;justify-content:center}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="hero">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/><path d="M3 13h18"/><path d="M12 5V3"/></svg>
+    <div class="nav">
+      <span class="rnd"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+      <span class="sp"></span>
+      <span class="rnd" style="margin-right:8px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8h16v-8"/><path d="M12 3v13"/><path d="M8 7l4-4 4 4"/></svg></span>
+      <span class="rnd"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v16l-5-3-5 3Z"/></svg></span>
+    </div>
+    <span class="score">95<small>ĐIỂM</small></span>
+  </div>
+
+  <div class="content">
+    <div class="ti">
+      <div class="t">Salad bơ ức gà</div>
+      <div class="m">15 phút chuẩn bị · Dễ · món trộn</div>
+    </div>
+
+    <div class="serv">
+      <span class="l">Khẩu phần</span>
+      <span class="stp"><span class="b">−</span><span class="v">2 phần</span><span class="b">+</span></span>
+    </div>
+
+    <div class="nutri">
+      <svg width="60" height="60" viewBox="0 0 42 42"><circle cx="21" cy="21" r="16" fill="none" stroke="#EFF1EC" stroke-width="6"/><circle cx="21" cy="21" r="16" fill="none" stroke="#40916C" stroke-width="6" stroke-dasharray="45 100" stroke-dashoffset="25" stroke-linecap="round" transform="rotate(-90 21 21)"/><circle cx="21" cy="21" r="16" fill="none" stroke="#B08422" stroke-width="6" stroke-dasharray="33 100" stroke-dashoffset="-20" stroke-linecap="round" transform="rotate(-90 21 21)"/><text x="21" y="20" text-anchor="middle" font-size="7" font-weight="700" fill="#1A1C19">320</text><text x="21" y="27" text-anchor="middle" font-size="3.4" fill="#8A8D87">kcal</text></svg>
+      <div class="macros">
+        <span class="mk"><b>320</b> <span>kcal</span></span>
+        <span class="mk"><b>28g</b> <span>đạm</span></span>
+        <span class="mk"><b>30g</b> <span>tinh bột</span></span>
+        <span class="mk"><b>14g</b> <span>béo</span></span>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--ink-3);margin-top:-10px">Ước tính theo 1 khẩu phần · nguồn Viện Dinh dưỡng Quốc gia</div>
+
+    <div class="sec">
+      <div class="h">Nguyên liệu · 2 phần</div>
+      <div class="ing"><span class="ck ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span><span class="nm">Bơ</span><span class="qt">1 quả</span><span class="tag" style="background:var(--exp-bg);color:var(--exp)">cận hạn</span></div>
+      <div class="ing"><span class="ck ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span><span class="nm">Ức gà</span><span class="qt">200 g</span><span class="tag" style="background:var(--exp-bg);color:var(--exp)">cận hạn</span></div>
+      <div class="ing"><span class="ck ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span><span class="nm">Cà chua bi</span><span class="qt">100 g</span><span class="tag" style="background:var(--soon-bg);color:var(--soon)">cận hạn</span></div>
+      <div class="ing"><span class="ck no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span><span class="nm">Xà lách</span><span class="qt">150 g</span><span class="tag" style="background:var(--fill);color:var(--ink-2)">cần mua</span></div>
+      <div class="ing"><span class="ck no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span><span class="nm">Dầu ô liu</span><span class="qt">1 thìa</span><span class="tag" style="background:var(--fill);color:var(--ink-2)">cần mua</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="h">Gia vị</div>
+      <div class="season"><span>Muối</span><span>Tiêu</span><span>Nước cốt chanh</span><span>Mật ong</span></div>
+      <button class="buybtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h2l2.4 11h9L20 8H7"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>Thêm 2 nguyên liệu thiếu vào danh sách mua</button>
+    </div>
+
+    <div class="sec">
+      <div class="h">Cách làm</div>
+      <div class="step"><span class="n">1</span><span class="tx">Luộc hoặc áp chảo ức gà chín tới, để nguội rồi xé sợi.</span></div>
+      <div class="step"><span class="n">2</span><span class="tx">Bơ cắt lát, cà chua bi bổ đôi, xà lách rửa sạch để ráo.</span></div>
+      <div class="step"><span class="n">3</span><span class="tx">Pha nước trộn: dầu ô liu, nước cốt chanh, mật ong, muối, tiêu.</span></div>
+      <div class="step"><span class="n">4</span><span class="tx">Cho tất cả vào tô, rưới nước trộn, đảo nhẹ và dùng ngay.</span></div>
+    </div>
+  </div>
+
+  <div class="savebar"><button class="btn">Đã nấu món này</button></div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+    .screen{width:390px;height:788px;background:#2D6A4F;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;position:relative}
+    .lg{width:96px;height:96px;border-radius:28px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center}
+    .wm{font-size:24px;font-weight:700;letter-spacing:-.01em;color:#fff}
+    .dots{position:absolute;bottom:56px;display:flex;gap:6px}
+    .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4)}
+    .dots i:nth-child(2){background:rgba(255,255,255,.85)}
+  </style>
+</helmet>
+<div class="screen">
+  <span class="lg"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg></span>
+  <span class="wm">SweepFood</span>
+  <div class="dots"><i></i><i></i><i></i></div>
+</div>
+</x-dc>
+</body>
+</html>

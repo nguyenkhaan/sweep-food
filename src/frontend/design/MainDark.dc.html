@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{
+      --green-800:#B7E4C7;--green-700:#40916C;--green-600:#52B788;--green-300:#74C69D;--green-100:#17301F;
+      --brick-500:#C99A9B;--brick-100:#33211F;
+      --ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;
+      --line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;
+      --crit:#E08A5C;--crit-bg:#352017;--soon:#D6B45A;--soon-bg:#312B16;
+      --exp:#D9A7A8;--exp-bg:#33211F;--ok:#A8ADA4;--ok-bg:#242B25;
+      --e1:0 1px 2px rgba(0,0,0,.4);--e2:0 2px 10px rgba(0,0,0,.5);--e3:0 10px 26px rgba(0,0,0,.55);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-300);text-decoration:none}a:hover{color:var(--green-600)}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;padding:16px 20px 8px}
+    .brand{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;letter-spacing:-.01em}
+    .bell{margin-left:auto;position:relative;width:40px;height:40px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .bell i{position:absolute;top:9px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--crit);border:2px solid var(--surface)}
+    .content{padding:8px 20px 0;display:flex;flex-direction:column;gap:18px}
+    .greet .hi{font-size:13px;font-weight:500;color:var(--ink-2)}
+    .greet .q{font-size:27px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
+    .savings{display:flex;align-items:center;gap:10px;background:var(--green-100);color:var(--green-800);border-radius:14px;padding:12px 14px}
+    .savings .sv-ic{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex:none}
+    .savings b{font-size:14px;font-weight:700}
+    .savings span{font-size:12px}
+    .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .tile{border-radius:16px;padding:14px;min-height:116px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid transparent}
+    .tile .ti-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .tile .ti-t{font-size:15px;font-weight:700;margin-top:10px}
+    .tile .ti-s{font-size:12px;margin-top:2px}
+    .tile.kho{background:var(--surface);border-color:var(--line)}
+    .tile.kho .ti-ic{background:var(--green-100);color:var(--green-300)}
+    .tile.kho .ti-s{color:var(--ink-3)}
+    .tile.warn{background:var(--brick-100)}
+    .tile.warn .ti-ic{background:var(--surface);color:var(--brick-500)}
+    .tile.warn .ti-t{color:var(--brick-500)}
+    .tile.warn .ti-s{color:var(--brick-500)}
+    .tile.sug{background:#21543E;color:#fff}
+    .tile.sug .ti-ic{background:rgba(255,255,255,.14);color:#fff}
+    .tile.sug .ti-s{color:#95D5B2}
+    .tile.add{background:var(--green-100)}
+    .tile.add .ti-ic{background:var(--surface);color:var(--green-300)}
+    .tile.add .ti-t{color:var(--green-800)}
+    .tile.add .ti-s{color:var(--green-800);opacity:.75}
+    .sec{display:flex;flex-direction:column;gap:10px}
+    .sechead{display:flex;align-items:center}
+    .sechead .ov{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+    .sechead a{margin-left:auto;font-size:12px;font-weight:600}
+    .hscroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:2px;margin:0 -20px;padding-left:20px;padding-right:20px}
+    .mini{flex:none;width:150px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}
+    .mini .thumb{width:100%;height:64px;border-radius:10px;background:#2A322B;display:flex;align-items:center;justify-content:center;color:#6E756B}
+    .mini .nm{font-size:13px;font-weight:600;line-height:1.25}
+    .mini .qt{font-size:11px;color:var(--ink-3)}
+    .badge{align-self:flex-start;height:22px;padding:0 9px;border-radius:999px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
+    .badge i{width:5px;height:5px;border-radius:50%;background:currentColor}
+    .scard{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--e1)}
+    .scard .img{height:132px;background:#222A24;display:flex;align-items:center;justify-content:center;color:#596159;position:relative}
+    .scard .score{position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;font-weight:700;line-height:1;box-shadow:var(--e2)}
+    .scard .score small{font-size:7px;font-weight:600;opacity:.85;letter-spacing:.06em}
+    .scard .pad{padding:14px}
+    .scard .tt{font-size:16px;font-weight:700}
+    .scard .mt{font-size:12px;color:var(--ink-3);margin:3px 0 10px}
+    .chips{display:flex;flex-wrap:wrap;gap:6px}
+    .mn{height:22px;padding:0 9px;border-radius:999px;font-size:11px;font-weight:600;display:inline-flex;align-items:center}
+    .bottomnav{margin-top:22px;position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(0,0,0,.4);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 20px 14px}
+    .nitem{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--ink-3);width:52px}
+    .nitem.on{color:var(--green-300)}
+    .nfab{width:54px;height:54px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--e3);margin-bottom:2px}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#74C69D" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg>
+      SweepFood
+    </span>
+    <span class="bell">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.6 2H4.4Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+      <i></i>
+    </span>
+  </div>
+
+  <div class="content">
+    <div class="greet">
+      <div class="hi">Chào buổi sáng, Alex</div>
+      <div class="q">Hôm nay ăn gì?</div>
+    </div>
+
+    <div class="savings">
+      <span class="sv-ic">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B7E4C7" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg>
+      </span>
+      <span><b>12 nguyên liệu</b><br>đã dùng trước hạn tháng này</span>
+    </div>
+
+    <div class="grid2">
+      <div class="tile kho">
+        <span class="ti-ic">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/><path d="M9 6v2"/><path d="M9 14v3"/></svg>
+        </span>
+        <div><div class="ti-t">Kho thực phẩm</div><div class="ti-s">142 nguyên liệu</div></div>
+      </div>
+      <div class="tile warn">
+        <span class="ti-ic">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 5 6 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5-1-9Z"/></svg>
+        </span>
+        <div><div class="ti-t">Cần dùng sớm</div><div class="ti-s">3 nguyên liệu</div></div>
+      </div>
+      <div class="tile sug">
+        <span class="ti-ic">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4Z"/><path d="M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7Z"/></svg>
+        </span>
+        <div><div class="ti-t">Gợi ý món</div><div class="ti-s">5 món phù hợp</div></div>
+      </div>
+      <div class="tile add">
+        <span class="ti-ic">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V6a2 2 0 0 1 2-2h3"/><path d="M20 9V6a2 2 0 0 0-2-2h-3"/><path d="M4 15v3a2 2 0 0 0 2 2h3"/><path d="M20 15v3a2 2 0 0 1-2 2h-3"/><path d="M4 12h16"/></svg>
+        </span>
+        <div><div class="ti-t">Thêm nhanh</div><div class="ti-s">Tem · Hóa đơn · Giọng nói</div></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sechead"><span class="ov">Cần dùng sớm</span><a href="#">Xem tất cả</a></div>
+      <div class="hscroll">
+        <div class="mini">
+          <span class="thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><path d="M12 6c0-2 1-3 3-3"/></svg></span>
+          <div class="nm">Cải bó xôi</div>
+          <span class="badge" style="background:var(--crit-bg);color:var(--crit)"><i></i>Hôm nay</span>
+          <div class="qt">1 bó · Ngăn mát</div>
+        </div>
+        <div class="mini">
+          <span class="thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/></svg></span>
+          <div class="nm">Cà chua bi</div>
+          <span class="badge" style="background:var(--crit-bg);color:var(--crit)"><i></i>Còn 1 ngày</span>
+          <div class="qt">500g · Ngăn mát</div>
+        </div>
+        <div class="mini">
+          <span class="thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l1 3v13H8V7Z"/></svg></span>
+          <div class="nm">Sữa tươi</div>
+          <span class="badge" style="background:var(--soon-bg);color:var(--soon)"><i></i>Còn 3 ngày</span>
+          <div class="qt">1 lít · Ngăn mát</div>
+        </div>
+        <div class="mini">
+          <span class="thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></span>
+          <div class="nm">Đậu hũ non</div>
+          <span class="badge" style="background:var(--soon-bg);color:var(--soon)"><i></i>Còn 4 ngày</span>
+          <div class="qt">2 hộp · Ngăn mát</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sechead"><span class="ov">Gợi ý cho bạn</span><a href="#">Xem tất cả</a></div>
+
+      <div class="scard">
+        <div class="img">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/><path d="M3 13h18"/><path d="M12 5V3"/></svg>
+          <span class="score">95<small>ĐIỂM</small></span>
+        </div>
+        <div class="pad">
+          <div class="tt">Salad bơ ức gà</div>
+          <div class="mt">15 phút · Dễ · 320 kcal / khẩu phần</div>
+          <div class="chips">
+            <span class="mn" style="background:var(--exp-bg);color:var(--exp)">Dùng 3 đồ cận hạn</span>
+            <span class="mn" style="background:var(--green-100);color:var(--green-800)">Có sẵn 80%</span>
+            <span class="mn" style="background:var(--fill);color:var(--ink-2)">Cần mua 2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="scard">
+        <div class="img">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 11H6Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg>
+          <span class="score">88<small>ĐIỂM</small></span>
+        </div>
+        <div class="pad">
+          <div class="tt">Canh chua cá lóc</div>
+          <div class="mt">35 phút · Trung bình · 280 kcal / khẩu phần</div>
+          <div class="chips">
+            <span class="mn" style="background:var(--exp-bg);color:var(--exp)">Dùng 2 đồ cận hạn</span>
+            <span class="mn" style="background:var(--green-100);color:var(--green-800)">Có sẵn 90%</span>
+            <span class="mn" style="background:var(--green-100);color:var(--green-800)">Đủ nguyên liệu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottomnav">
+    <span class="nitem on">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg>Trang chủ
+    </span>
+    <span class="nitem">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/><path d="M9 6v2"/><path d="M9 14v3"/></svg>Kho
+    </span>
+    <span class="nfab">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V6a2 2 0 0 1 2-2h3"/><path d="M20 9V6a2 2 0 0 0-2-2h-3"/><path d="M4 15v3a2 2 0 0 0 2 2h3"/><path d="M20 15v3a2 2 0 0 1-2 2h-3"/><path d="M4 12h16"/></svg>
+    </span>
+    <span class="nitem">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4Z"/><path d="M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7Z"/></svg>Gợi ý
+    </span>
+    <span class="nitem">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg>Cá nhân
+    </span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

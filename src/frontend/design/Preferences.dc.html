@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-700:#2D6A4F;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .content{padding:6px 20px;display:flex;flex-direction:column;gap:14px}
+    .glabel{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:-4px}
+    .grp{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+    .r{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid var(--fill);font-size:13px}
+    .r:last-child{border-bottom:0}
+    .r .lb{font-weight:600}
+    .r .sub{font-size:11px;color:var(--ink-3);margin-top:2px}
+    .r .val{margin-left:auto;color:var(--ink-3);font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px}
+    .seg{margin-left:auto;display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+    .seg span{padding:6px 11px;font-size:12px;font-weight:600;color:var(--ink-2)}
+    .seg span.on{background:var(--green-700);color:#fff}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Tùy chọn</h1>
+  </div>
+
+  <div class="content">
+    <div class="glabel">Bữa ăn</div>
+    <div class="grp">
+      <div class="r"><div><div class="lb">Ưu tiên dinh dưỡng</div><div class="sub">Dùng để xếp hạng gợi ý món</div></div><span class="val">Cân bằng <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="r"><div class="lb">Đơn vị đo mặc định</div><span class="seg"><span class="on">gam</span><span>lạng</span></span></div>
+      <div class="r"><div class="lb">Tiền tệ hiển thị</div><span class="val">VND (đ)</span></div>
+    </div>
+
+    <div class="glabel">Giao diện</div>
+    <div class="grp">
+      <div class="r"><div class="lb">Ngôn ngữ</div><span class="val">Tiếng Việt <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="r"><div><div class="lb">Chủ đề</div><div class="sub">Sáng · Tối · Theo hệ thống</div></div><span class="seg"><span>Sáng</span><span>Tối</span><span class="on">Hệ thống</span></span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

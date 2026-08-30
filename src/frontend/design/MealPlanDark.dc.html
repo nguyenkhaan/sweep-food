@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#B7E4C7;--green-700:#40916C;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:19px;font-weight:700;margin:0}
+    .pmark{font-size:10px;font-weight:700;color:var(--green-800);background:var(--green-100);border-radius:999px;padding:2px 8px}
+    .topbar .sp{flex:1}
+    .rnd{width:34px;height:34px;border-radius:10px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .week{display:flex;align-items:center;justify-content:center;gap:16px;padding:8px 20px;font-size:13px;font-weight:600}
+    .colhead{display:grid;grid-template-columns:34px 1fr 1fr 1fr;gap:6px;padding:6px 16px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+    .colhead span{text-align:center}
+    .drow{display:grid;grid-template-columns:34px 1fr 1fr 1fr;gap:6px;padding:5px 16px}
+    .dlab{font-size:12px;font-weight:700;color:var(--ink-2);display:flex;align-items:center;justify-content:center}
+    .cell{min-height:56px;border-radius:10px;border:1px solid var(--line);background:var(--surface);padding:6px;font-size:10px;font-weight:600;display:flex;flex-direction:column;gap:4px;justify-content:center}
+    .cell.empty{border-style:dashed;color:var(--ink-3);align-items:center;justify-content:center;font-weight:500}
+    .cell .pic{width:20px;height:20px;border-radius:6px;background:var(--green-100);color:var(--green-800);display:flex;align-items:center;justify-content:center}
+    .savebar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(0,0,0,.4);padding:12px 20px 18px}
+    .btn{width:100%;height:48px;border-radius:12px;font-size:14px;font-weight:600;background:var(--green-700);color:#fff;border:0;display:flex;align-items:center;justify-content:center;gap:8px}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Thực đơn tuần</h1>
+    <span class="sp"></span>
+  </div>
+
+  <div class="week">
+    <span class="rnd"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    9 – 15 / 09
+    <span class="rnd"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+  </div>
+
+  <div class="colhead"><span></span><span>Sáng</span><span>Trưa</span><span>Tối</span></div>
+
+  <div class="drow"><span class="dlab">T2</span>
+    <div class="cell"><span class="pic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/></svg></span>Bánh mì trứng</div>
+    <div class="cell"><span class="pic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/></svg></span>Salad bơ ức gà</div>
+    <div class="cell empty">+ Thêm</div>
+  </div>
+  <div class="drow"><span class="dlab">T3</span>
+    <div class="cell empty">+ Thêm</div>
+    <div class="cell"><span class="pic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/></svg></span>Canh chua cá lóc</div>
+    <div class="cell"><span class="pic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/></svg></span>Trứng chiên</div>
+  </div>
+  <div class="drow"><span class="dlab">T4</span>
+    <div class="cell empty">+ Thêm</div>
+    <div class="cell empty">+ Thêm</div>
+    <div class="cell"><span class="pic"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/></svg></span>Thịt ba chỉ rang</div>
+  </div>
+  <div class="drow"><span class="dlab">T5</span>
+    <div class="cell empty">+ Thêm</div><div class="cell empty">+ Thêm</div><div class="cell empty">+ Thêm</div>
+  </div>
+  <div class="drow"><span class="dlab">T6</span>
+    <div class="cell empty">+ Thêm</div><div class="cell empty">+ Thêm</div><div class="cell empty">+ Thêm</div>
+  </div>
+  <div class="drow"><span class="dlab">T7</span>
+    <div class="cell empty">+ Thêm</div><div class="cell empty">+ Thêm</div><div class="cell empty">+ Thêm</div>
+  </div>
+  <div class="drow"><span class="dlab">CN</span>
+    <div class="cell empty">+ Thêm</div><div class="cell empty">+ Thêm</div><div class="cell empty">+ Thêm</div>
+  </div>
+
+  <div class="savebar"><button class="btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h2l2.4 11h9L20 8H7"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>Tạo danh sách mua sắm</button></div>
+</div>
+</x-dc>
+</body>
+</html>

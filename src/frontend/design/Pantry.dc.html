@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{
+      --green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-300:#95D5B2;--green-100:#D8F3DC;
+      --brick-500:#8D4D4E;--brick-100:#F6E7E7;
+      --ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;
+      --line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;
+      --crit:#C0562B;--crit-bg:#F7E9E0;--soon:#B08422;--soon-bg:#FBF3E2;
+      --exp:#8D4D4E;--exp-bg:#F6E7E7;--ok:#5C5F5A;--ok-bg:#EFF1EC;
+      --e1:0 1px 2px rgba(20,28,22,.06),0 1px 3px rgba(20,28,22,.04);
+      --e2:0 2px 10px rgba(20,28,22,.08);--e3:0 10px 26px rgba(20,28,22,.16);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}a:hover{color:var(--green-800)}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .topbar{display:flex;align-items:center;gap:10px;padding:16px 20px 10px}
+    .topbar h1{font-size:20px;font-weight:700;letter-spacing:-.01em;margin:0}
+    .topbar .sub{font-size:12px;color:var(--ink-3);margin-left:auto}
+    .iconbtn{width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .content{padding:0 20px;display:flex;flex-direction:column;gap:14px}
+    .searchrow{display:flex;gap:10px}
+    .search{flex:1;height:44px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 14px;color:var(--ink-3);font-size:14px}
+    .tiers{display:flex;gap:8px;overflow-x:auto;margin:0 -20px;padding:2px 20px}
+    .tchip{flex:none;height:34px;padding:0 14px;border-radius:999px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink-2)}
+    .tchip .ct{font-weight:700;color:var(--ink-3)}
+    .tchip.on{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+    .tchip.on .ct{color:rgba(255,255,255,.75)}
+    .quota{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface)}
+    .quota .top{display:flex;align-items:center;font-size:12px;font-weight:600;color:var(--ink-2)}
+    .quota .top a{margin-left:auto;font-size:12px}
+    .track{height:5px;border-radius:999px;background:var(--fill);margin-top:7px;overflow:hidden}
+    .track>i{display:block;height:100%;background:var(--green-600);border-radius:999px}
+    .sortrow{display:flex;align-items:center;font-size:12px;color:var(--ink-3)}
+    .sortrow .pick{display:inline-flex;align-items:center;gap:5px;color:var(--ink);font-weight:600}
+    .sortrow .n{margin-left:auto}
+    .grouphead{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:6px 0 2px}
+    .list{display:flex;flex-direction:column;gap:10px}
+    .pitem{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+    .pitem.urgent{border-left:3px solid var(--crit)}
+    .cbox{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);flex:none}
+    .thumb{width:44px;height:44px;border-radius:10px;background:#E4E7E1;display:flex;align-items:center;justify-content:center;color:#9AA298;flex:none}
+    .pitem .body{flex:1;min-width:0}
+    .pitem .nm{font-size:14px;font-weight:600}
+    .pitem .mt{font-size:12px;color:var(--ink-3);margin-top:2px;display:flex;align-items:center;gap:6px}
+    .pill{height:18px;padding:0 7px;border-radius:999px;font-size:10px;font-weight:600;display:inline-flex;align-items:center}
+    .badge{flex:none;height:22px;padding:0 9px;border-radius:999px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:5px}
+    .badge i{width:5px;height:5px;border-radius:50%;background:currentColor}
+    .fab{position:absolute;right:18px;bottom:96px;height:48px;border-radius:999px;background:var(--green-700);color:#fff;display:flex;align-items:center;gap:8px;padding:0 18px;font-size:14px;font-weight:600;box-shadow:var(--e3)}
+    .bottomnav{margin-top:20px;position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(20,28,22,.05);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 20px 14px}
+    .nitem{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--ink-3);width:52px}
+    .nitem.on{color:var(--green-700)}
+    .nfab{width:54px;height:54px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--e3);margin-bottom:2px}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <h1>Kho thực phẩm</h1>
+    <span class="sub">142 nguyên liệu</span>
+    <span class="iconbtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/></svg></span>
+  </div>
+
+  <div class="content">
+    <div class="searchrow">
+      <span class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M20 20l-4-4"/></svg> Tìm trong tủ bếp…</span>
+      <span class="iconbtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v7"/><path d="M6 15v5"/><path d="M12 4v3"/><path d="M12 11v9"/><path d="M18 4v11"/><path d="M18 19v1"/><circle cx="6" cy="13" r="2"/><circle cx="12" cy="9" r="2"/><circle cx="18" cy="17" r="2"/></svg></span>
+    </div>
+
+    <div class="tiers">
+      <span class="tchip on">Tất cả <span class="ct">142</span></span>
+      <span class="tchip">Ăn liền <span class="ct">4</span></span>
+      <span class="tchip">Ngăn mát <span class="ct">68</span></span>
+      <span class="tchip">Ngăn đông <span class="ct">22</span></span>
+      <span class="tchip">Kệ đồ khô <span class="ct">48</span></span>
+    </div>
+
+    <div class="sortrow">
+      <span class="pick">Sắp xếp: Cận hạn
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </span>
+      <span class="n">8 mục</span>
+    </div>
+
+    <div>
+      <div class="grouphead">Cần dùng sớm</div>
+      <div class="list">
+        <div class="pitem urgent">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20c-1-6 2-11 6-12 4 1 7 6 6 12Z"/><path d="M12 8V4"/></svg></span>
+          <div class="body">
+            <div class="nm">Cải bó xôi</div>
+            <div class="mt">1 bó · Rau lá <span class="pill" style="background:#E4F3EB;color:#2D6A4F">Ngăn mát</span></div>
+          </div>
+          <span class="badge" style="background:var(--crit-bg);color:var(--crit)"><i></i>Hôm nay</span>
+        </div>
+        <div class="pitem urgent">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><path d="M12 6c0-2 1-3 3-3"/></svg></span>
+          <div class="body">
+            <div class="nm">Cà chua bi</div>
+            <div class="mt">500g · Rau củ <span class="pill" style="background:#E4F3EB;color:#2D6A4F">Ngăn mát</span></div>
+          </div>
+          <span class="badge" style="background:var(--crit-bg);color:var(--crit)"><i></i>Còn 1 ngày</span>
+        </div>
+        <div class="pitem urgent">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10a5 5 0 0 1 10 0v6H7Z"/><path d="M9 16v3"/><path d="M15 16v3"/></svg></span>
+          <div class="body">
+            <div class="nm">Ức gà</div>
+            <div class="mt">300g · Thịt <span class="pill" style="background:#E4F3EB;color:#2D6A4F">Ngăn mát</span></div>
+          </div>
+          <span class="badge" style="background:var(--crit-bg);color:var(--crit)"><i></i>Còn 2 ngày</span>
+        </div>
+        <div class="pitem">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l1 3v13H8V7Z"/></svg></span>
+          <div class="body">
+            <div class="nm">Sữa tươi</div>
+            <div class="mt">1 lít · Sữa <span class="pill" style="background:#E4F3EB;color:#2D6A4F">Ngăn mát</span></div>
+          </div>
+          <span class="badge" style="background:var(--soon-bg);color:var(--soon)"><i></i>Còn 3 ngày</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="grouphead">Còn hạn</div>
+      <div class="list">
+        <div class="pitem">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="12" rx="6" ry="8"/></svg></span>
+          <div class="body">
+            <div class="nm">Trứng gà</div>
+            <div class="mt">10 quả · Đạm <span class="pill" style="background:#E4F3EB;color:#2D6A4F">Ngăn mát</span></div>
+          </div>
+          <span class="badge" style="background:var(--ok-bg);color:var(--ok)"><i></i>Còn 12 ngày</span>
+        </div>
+        <div class="pitem">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14c4-2 12-2 16 0l-2 4H6Z"/><path d="M4 14 8 8h8l4 6"/></svg></span>
+          <div class="body">
+            <div class="nm">Cá hồi phi lê</div>
+            <div class="mt">400g · Hải sản <span class="pill" style="background:#E3EFF1;color:#3E7C8B">Ngăn đông</span></div>
+          </div>
+          <span class="badge" style="background:var(--ok-bg);color:var(--ok)"><i></i>Còn 45 ngày</span>
+        </div>
+        <div class="pitem">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7Z"/><path d="M9 8V6h6v2"/></svg></span>
+          <div class="body">
+            <div class="nm">Gạo ST25</div>
+            <div class="mt">5 kg · Ngũ cốc <span class="pill" style="background:#F2EFE8;color:#8A7A55">Kệ đồ khô</span></div>
+          </div>
+          <span class="badge" style="background:var(--ok-bg);color:var(--ok)"><i></i>Còn 8 tháng</span>
+        </div>
+        <div class="pitem">
+          <span class="cbox"></span>
+          <span class="thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v3l-1 2v12a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V8l-1-2V3"/></svg></span>
+          <div class="body">
+            <div class="nm">Nước mắm</div>
+            <div class="mt">500 ml · Gia vị <span class="pill" style="background:#F2EFE8;color:#8A7A55">Kệ đồ khô</span></div>
+          </div>
+          <span class="badge" style="background:var(--ok-bg);color:var(--ok)"><i></i>Còn 1 năm</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <span class="fab">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+    Thêm nguyên liệu
+  </span>
+
+  <div class="bottomnav">
+    <span class="nitem">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg>Trang chủ
+    </span>
+    <span class="nitem on">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/><path d="M9 6v2"/><path d="M9 14v3"/></svg>Kho
+    </span>
+    <span class="nfab">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V6a2 2 0 0 1 2-2h3"/><path d="M20 9V6a2 2 0 0 0-2-2h-3"/><path d="M4 15v3a2 2 0 0 0 2 2h3"/><path d="M20 15v3a2 2 0 0 1-2 2h-3"/><path d="M4 12h16"/></svg>
+    </span>
+    <span class="nitem">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4Z"/><path d="M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7Z"/></svg>Gợi ý
+    </span>
+    <span class="nitem">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg>Cá nhân
+    </span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

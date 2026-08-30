@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#B7E4C7;--green-700:#40916C;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--crit:#E08A5C;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-800);text-decoration:none}
+    .screen{width:390px;height:760px;background:var(--bg);display:flex;flex-direction:column;padding:16px 24px 28px}
+    .top{display:flex;align-items:center}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .top .t{margin:0 auto;font-size:16px;font-weight:700;padding-right:36px}
+    .hint{margin-top:34px;text-align:center}
+    .hint .h{font-size:20px;font-weight:700;letter-spacing:-.01em}
+    .hint .ex{font-size:13px;color:var(--ink-3);margin-top:10px;line-height:1.5;background:var(--fill);border-radius:12px;padding:12px 14px}
+    .wave{flex:1;display:flex;align-items:center;justify-content:center;gap:5px}
+    .wave i{width:5px;border-radius:999px;background:#52B788}
+    .status{text-align:center;font-size:13px;font-weight:600;color:var(--green-800)}
+    .timer{text-align:center;font-size:13px;color:var(--ink-3);margin-top:4px}
+    .partial{text-align:center;font-size:13px;color:var(--ink-2);margin-top:14px;min-height:20px;font-style:italic}
+    .ctl{display:flex;align-items:center;justify-content:center;gap:26px;margin-top:22px}
+    .mic{width:78px;height:78px;border-radius:50%;background:var(--crit);color:#101511;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 8px rgba(224,138,92,.16)}
+    .stop{font-size:14px;font-weight:600;color:var(--ink-2)}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="top">
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg></span>
+    <span class="t">Nói để thêm</span>
+  </div>
+
+  <div class="hint">
+    <div class="h">Đọc tên nguyên liệu và số lượng</div>
+    <div class="ex">VD: &ldquo;2 lạng thịt bò, 1 bó cải bó xôi, 3 quả trứng&rdquo;</div>
+  </div>
+
+  <div class="wave">
+    <i style="height:14px"></i><i style="height:32px"></i><i style="height:20px"></i><i style="height:46px"></i><i style="height:28px"></i><i style="height:54px"></i><i style="height:22px"></i><i style="height:40px"></i><i style="height:16px"></i><i style="height:36px"></i><i style="height:24px"></i><i style="height:48px"></i><i style="height:18px"></i>
+  </div>
+
+  <div class="status">Đang nghe…</div>
+  <div class="timer">0:07</div>
+  <div class="partial">…1 bó cải bó xôi</div>
+
+  <div class="ctl">
+    <span class="mic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="4" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v3"/></svg></span>
+    <span class="stop">Dừng</span>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

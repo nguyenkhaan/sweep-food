@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-700:#40916C;--green-800:#B7E4C7;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--surface:#1A211C;--crit:#E08A5C;--crit-bg:#352017;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;height:640px;display:flex;flex-direction:column;background:#101511}
+    .scrim{flex:1;background:rgba(0,0,0,.58)}
+    .sheet{flex:none;background:var(--surface);border-radius:22px 22px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.55);padding:14px 20px 22px;display:flex;flex-direction:column;gap:14px}
+    .grab{width:38px;height:4px;border-radius:999px;background:var(--line);align-self:center}
+    .hd{display:flex;align-items:center;gap:12px}
+    .thumb{width:46px;height:46px;border-radius:12px;background:#2A322B;display:flex;align-items:center;justify-content:center;color:#6E756B;flex:none}
+    .hd .nm{font-size:16px;font-weight:700}
+    .hd .mt{font-size:12px;color:var(--ink-3);margin-top:2px}
+    .badge{height:22px;padding:0 10px;border-radius:999px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:5px;background:var(--crit-bg);color:var(--crit)}
+    .badge i{width:5px;height:5px;border-radius:50%;background:currentColor}
+    .tip{font-size:12px;color:var(--ink-2);background:var(--fill);border-radius:12px;padding:11px 13px;line-height:1.5}
+    .cap{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+    .d{display:flex;align-items:center;gap:11px;padding:10px;border:1px solid var(--line);border-radius:12px}
+    .d .di{width:34px;height:34px;border-radius:9px;background:var(--green-100);color:var(--green-800);display:flex;align-items:center;justify-content:center;flex:none}
+    .d .dn{font-size:13px;font-weight:600}
+    .d .ds{font-size:11px;color:var(--ink-3)}
+    .d .dc{margin-left:auto;color:var(--ink-3)}
+    .btns{display:flex;gap:10px;margin-top:2px}
+    .btn{flex:1;height:46px;border-radius:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;border:1px solid transparent}
+    .btn.ghost{background:var(--surface);border-color:var(--line);color:var(--ink-2)}
+    .btn.pri{background:var(--green-700);color:#fff}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="hd">
+      <span class="thumb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20c-1-6 2-11 6-12 4 1 7 6 6 12Z"/><path d="M12 8V4"/></svg></span>
+      <div>
+        <div class="nm">Cải bó xôi</div>
+        <div class="mt">1 bó · Rau lá · Ngăn mát</div>
+      </div>
+      <span class="badge" style="margin-left:auto"><i></i>Hôm nay</span>
+    </div>
+
+    <div class="tip">Rau ăn lá nên dùng trong ngày để giữ độ tươi và dinh dưỡng. Kiểm tra lá có bị úa hoặc nhũn không trước khi nấu.</div>
+
+    <div class="cap">Món gợi ý dùng ngay</div>
+    <div class="d">
+      <span class="di"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/><path d="M3 13h18"/></svg></span>
+      <div><div class="dn">Canh cải bó xôi thịt băm</div><div class="ds">15 phút · dùng hết 1 bó</div></div>
+      <span class="dc"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+    </div>
+    <div class="d">
+      <span class="di"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/><path d="M3 13h18"/></svg></span>
+      <div><div class="dn">Cải bó xôi xào tỏi</div><div class="ds">8 phút · dùng 1 bó</div></div>
+      <span class="dc"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+    </div>
+
+    <div class="btns">
+      <button class="btn ghost">Đánh dấu đã dùng</button>
+      <button class="btn pri">Xem tất cả gợi ý</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

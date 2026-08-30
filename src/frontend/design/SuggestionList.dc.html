@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;--exp:#8D4D4E;--exp-bg:#F6E7E7;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:16px 20px 8px}
+    .topbar h1{font-size:20px;font-weight:700;margin:0}
+    .topbar .sp{flex:1}
+    .iconbtn{width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .filters{display:flex;gap:8px;overflow-x:auto;padding:8px 20px;margin:0}
+    .chip{flex:none;height:32px;padding:0 13px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);display:inline-flex;align-items:center;gap:6px}
+    .chip.on{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+    .cap{font-size:12px;color:var(--ink-3);padding:2px 20px 0}
+    .list{display:flex;flex-direction:column;gap:14px;padding:12px 20px 24px}
+    .scard{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(20,28,22,.05)}
+    .scard .img{height:130px;background:#E4E7E1;display:flex;align-items:center;justify-content:center;color:#AEB6AB;position:relative}
+    .scard .score{position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;background:var(--green-700);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;font-weight:700;line-height:1}
+    .scard .score small{font-size:7px;font-weight:600;opacity:.85}
+    .scard .pad{padding:14px}
+    .scard .tt{font-size:16px;font-weight:700}
+    .scard .mt{font-size:12px;color:var(--ink-3);margin:3px 0 10px}
+    .mn{height:22px;padding:0 9px;border-radius:999px;font-size:11px;font-weight:600;display:inline-flex;align-items:center}
+    .chips{display:flex;flex-wrap:wrap;gap:6px}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <h1>Gợi ý cho bạn</h1>
+    <span class="sp"></span>
+    <span class="iconbtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/></svg></span>
+  </div>
+
+  <div class="filters">
+    <span class="chip on">Tất cả</span>
+    <span class="chip">Bữa sáng</span>
+    <span class="chip">Bữa trưa</span>
+    <span class="chip">Bữa tối</span>
+    <span class="chip">≤ 30 phút</span>
+    <span class="chip">Nhiều rau</span>
+  </div>
+  <div class="cap">5 món hợp nhất với tủ bếp hiện tại · ưu tiên đồ cận hạn</div>
+
+  <div class="list">
+    <div class="scard">
+      <div class="img"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0Z"/><path d="M3 13h18"/><path d="M12 5V3"/></svg><span class="score">95<small>ĐIỂM</small></span></div>
+      <div class="pad">
+        <div class="tt">Salad bơ ức gà</div>
+        <div class="mt">15 phút · Dễ · 320 kcal / khẩu phần</div>
+        <div class="chips">
+          <span class="mn" style="background:var(--exp-bg);color:var(--exp)">Dùng 3 đồ cận hạn</span>
+          <span class="mn" style="background:var(--green-100);color:var(--green-800)">Có sẵn 80%</span>
+          <span class="mn" style="background:var(--fill);color:var(--ink-2)">Cần mua 2</span>
+        </div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="img"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 11H6Z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/></svg><span class="score">88<small>ĐIỂM</small></span></div>
+      <div class="pad">
+        <div class="tt">Canh chua cá lóc</div>
+        <div class="mt">35 phút · Trung bình · 280 kcal / khẩu phần</div>
+        <div class="chips">
+          <span class="mn" style="background:var(--exp-bg);color:var(--exp)">Dùng 2 đồ cận hạn</span>
+          <span class="mn" style="background:var(--green-100);color:var(--green-800)">Có sẵn 90%</span>
+          <span class="mn" style="background:var(--green-100);color:var(--green-800)">Đủ nguyên liệu</span>
+        </div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="img"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M6 12c0-4 2-6 6-6s6 2 6 6"/><path d="M8 16h8"/></svg><span class="score">82<small>ĐIỂM</small></span></div>
+      <div class="pad">
+        <div class="tt">Trứng chiên hành lá</div>
+        <div class="mt">10 phút · Dễ · 210 kcal / khẩu phần</div>
+        <div class="chips">
+          <span class="mn" style="background:var(--exp-bg);color:var(--exp)">Dùng 1 đồ cận hạn</span>
+          <span class="mn" style="background:var(--green-100);color:var(--green-800)">Có sẵn 100%</span>
+          <span class="mn" style="background:var(--green-100);color:var(--green-800)">Không cần mua</span>
+        </div>
+      </div>
+    </div>
+    <div class="scard">
+      <div class="img"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16"/><path d="M6 8h6a4 4 0 0 1 0 8H6"/><path d="M16 4v16"/></svg><span class="score">76<small>ĐIỂM</small></span></div>
+      <div class="pad">
+        <div class="tt">Thịt ba chỉ rang cháy cạnh</div>
+        <div class="mt">25 phút · Trung bình · 420 kcal / khẩu phần</div>
+        <div class="chips">
+          <span class="mn" style="background:var(--exp-bg);color:var(--exp)">Dùng 1 đồ cận hạn</span>
+          <span class="mn" style="background:var(--green-100);color:var(--green-800)">Có sẵn 70%</span>
+          <span class="mn" style="background:var(--fill);color:var(--ink-2)">Cần mua 3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

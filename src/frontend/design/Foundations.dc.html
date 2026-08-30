@@ -1,0 +1,301 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{
+      --green-900:#14352A;--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;
+      --green-500:#52B788;--green-400:#74C69D;--green-300:#95D5B2;--green-200:#B7E4C7;--green-100:#D8F3DC;
+      --brick-700:#5E2E2F;--brick-600:#763A3B;--brick-500:#8D4D4E;--brick-400:#A96B6C;
+      --brick-300:#C99A9B;--brick-200:#E6C9C9;--brick-100:#F6E7E7;
+      --ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;
+      --line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;
+      --crit:#C0562B;--crit-bg:#F7E9E0;--soon:#B08422;--soon-bg:#FBF3E2;
+      --exp:#8D4D4E;--exp-bg:#F6E7E7;--ok:#5C5F5A;--ok-bg:#EFF1EC;
+      --e1:0 1px 2px rgba(20,28,22,.06),0 1px 3px rgba(20,28,22,.04);
+      --e2:0 2px 8px rgba(20,28,22,.08);--e3:0 10px 26px rgba(20,28,22,.14);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}a:hover{color:var(--green-800)}
+    .sheet{width:960px;padding:28px;display:flex;flex-direction:column;gap:24px}
+    .h1{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0}
+    .sub{font-size:14px;color:var(--ink-2);margin:4px 0 0}
+    .meta{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .tag{font-size:12px;font-weight:500;color:var(--ink-2);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+    .cols{display:flex;gap:24px;align-items:flex-start}
+    .col{flex:1;display:flex;flex-direction:column;gap:24px;min-width:0}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--e1)}
+    .card h2{margin:0 0 14px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+    .ramp{display:flex;gap:4px}
+    .sw{flex:1;height:46px;border-radius:6px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px}
+    .sw span{font-size:10px;font-weight:600;color:rgba(255,255,255,.92)}
+    .sw.l span{color:var(--ink-2)}
+    .hexrow{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:10px}
+    .hex{font-size:12px;color:var(--ink-2)}
+    .hex b{color:var(--ink);font-weight:600}
+    .swatchline{display:flex;flex-direction:column;gap:12px}
+    .statusrow{display:flex;align-items:center;gap:12px}
+    .chipbig{border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600;white-space:nowrap}
+    .statusrow .name{font-size:13px;font-weight:600}
+    .statusrow .code{font-size:12px;color:var(--ink-3);margin-left:auto}
+    .tier{display:flex;align-items:center;gap:12px}
+    .tiericon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .tier .name{font-size:13px;font-weight:600}
+    .tier .desc{font-size:12px;color:var(--ink-3)}
+    .type{display:flex;flex-direction:column;gap:16px}
+    .typerow{display:flex;align-items:baseline;gap:16px}
+    .typerow .spec{margin-left:auto;font-size:11px;color:var(--ink-3);white-space:nowrap}
+    .brandrow{display:flex;gap:14px}
+    .lock{flex:1;display:flex;align-items:center;gap:10px;border-radius:12px;padding:16px;border:1px solid var(--line)}
+    .lock.dark{background:var(--green-800);border-color:var(--green-800)}
+    .wordmark{font-size:18px;font-weight:700;letter-spacing:-.01em}
+    .scalewrap{display:flex;flex-direction:column;gap:10px}
+    .scalerow{display:flex;align-items:center;gap:12px}
+    .scalebar{height:14px;background:var(--green-300);border-radius:4px}
+    .scalerow .n{font-size:11px;color:var(--ink-3);width:56px}
+    .radii{display:flex;gap:14px;align-items:flex-end}
+    .rad{background:var(--green-100);border:1px solid var(--green-300)}
+    .rad span{font-size:11px;color:var(--ink-2)}
+    .elev{display:flex;gap:14px}
+    .ecard{flex:1;background:var(--surface);border-radius:12px;height:66px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink-3)}
+    .icons{display:flex;flex-wrap:wrap;gap:14px}
+    .ico{width:40px;height:40px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .note{font-size:12px;color:var(--ink-3);margin-top:12px}
+  </style>
+</helmet>
+<div class="sheet">
+  <header>
+    <h1 class="h1">SweepFood — Nền tảng thiết kế</h1>
+    <p class="sub">Trợ lý quản lý nguyên liệu &amp; gợi ý bữa ăn · Ứng dụng di động (Flutter, mobile + web)</p>
+    <div class="meta">
+      <span class="tag">Ngôn ngữ: Tiếng Việt</span>
+      <span class="tag">Chữ: Inter</span>
+      <span class="tag">Độ chi tiết: Mid-fidelity</span>
+      <span class="tag">Material 3</span>
+    </div>
+  </header>
+
+  <div class="cols">
+    <div class="col">
+      <div class="card">
+        <h2>Thương hiệu</h2>
+        <div class="brandrow">
+          <div class="lock">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg>
+            <span class="wordmark" style="color:var(--ink)">SweepFood</span>
+          </div>
+          <div class="lock dark">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#95D5B2" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg>
+            <span class="wordmark" style="color:#fff">SweepFood</span>
+          </div>
+        </div>
+        <p class="note">Biểu tượng lá, nét đơn 1.75px. Dùng bản xanh đậm trên nền sáng, bản xanh bạc hà trên nền tối.</p>
+      </div>
+
+      <div class="card">
+        <h2>Màu chủ đạo — Xanh (Primary)</h2>
+        <div class="ramp">
+          <div class="sw" style="background:#14352A"><span>900</span></div>
+          <div class="sw" style="background:#1B4332"><span>800</span></div>
+          <div class="sw" style="background:#2D6A4F"><span>700</span></div>
+          <div class="sw" style="background:#40916C"><span>600</span></div>
+          <div class="sw" style="background:#52B788"><span>500</span></div>
+          <div class="sw l" style="background:#74C69D"><span>400</span></div>
+          <div class="sw l" style="background:#95D5B2"><span>300</span></div>
+          <div class="sw l" style="background:#B7E4C7"><span>200</span></div>
+          <div class="sw l" style="background:#D8F3DC"><span>100</span></div>
+        </div>
+        <div class="hexrow">
+          <span class="hex">Primary <b>#2D6A4F</b> (700)</span>
+          <span class="hex">Secondary <b>#95D5B2</b> (300)</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Màu phụ — Đỏ gạch (Tertiary)</h2>
+        <div class="ramp">
+          <div class="sw" style="background:#5E2E2F"><span>700</span></div>
+          <div class="sw" style="background:#763A3B"><span>600</span></div>
+          <div class="sw" style="background:#8D4D4E"><span>500</span></div>
+          <div class="sw" style="background:#A96B6C"><span>400</span></div>
+          <div class="sw l" style="background:#C99A9B"><span>300</span></div>
+          <div class="sw l" style="background:#E6C9C9"><span>200</span></div>
+          <div class="sw l" style="background:#F6E7E7"><span>100</span></div>
+        </div>
+        <div class="hexrow">
+          <span class="hex">Tertiary <b>#8D4D4E</b> (500) — cảnh báo, quá hạn, số liệu âm</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Trung tính</h2>
+        <div class="ramp">
+          <div class="sw" style="background:#1A1C19"><span>Ink</span></div>
+          <div class="sw" style="background:#5C5F5A"><span>Ink-2</span></div>
+          <div class="sw l" style="background:#8A8D87"><span>Ink-3</span></div>
+          <div class="sw l" style="background:#E1E3DE"><span>Line</span></div>
+          <div class="sw l" style="background:#EFF1EC"><span>Fill</span></div>
+          <div class="sw l" style="background:#F8F9FA"><span>BG</span></div>
+          <div class="sw l" style="background:#FFFFFF;border:1px solid #E1E3DE"><span>Surface</span></div>
+        </div>
+        <div class="hexrow">
+          <span class="hex">Nền app <b>#F8F9FA</b></span>
+          <span class="hex">Chữ chính <b>#1A1C19</b></span>
+          <span class="hex">Chữ phụ <b>#5C5F5A</b></span>
+          <span class="hex">Đường kẻ <b>#E1E3DE</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <h2>Trạng thái hạn dùng</h2>
+        <div class="swatchline">
+          <div class="statusrow">
+            <span class="chipbig" style="background:#F6E7E7;color:#8D4D4E">Quá hạn 1 ngày</span>
+            <span class="name">Quá hạn</span><span class="code">#8D4D4E / #F6E7E7</span>
+          </div>
+          <div class="statusrow">
+            <span class="chipbig" style="background:#F7E9E0;color:#C0562B">Còn 1 ngày</span>
+            <span class="name">Khẩn cấp · ≤ 2 ngày</span><span class="code">#C0562B / #F7E9E0</span>
+          </div>
+          <div class="statusrow">
+            <span class="chipbig" style="background:#FBF3E2;color:#B08422">Còn 4 ngày</span>
+            <span class="name">Sắp tới · 3–5 ngày</span><span class="code">#B08422 / #FBF3E2</span>
+          </div>
+          <div class="statusrow">
+            <span class="chipbig" style="background:#EFF1EC;color:#5C5F5A">Còn 12 ngày</span>
+            <span class="name">Ổn · &gt; 5 ngày</span><span class="code">#5C5F5A / #EFF1EC</span>
+          </div>
+        </div>
+        <p class="note">Không dùng riêng màu để truyền tải — luôn kèm số ngày.</p>
+      </div>
+
+      <div class="card">
+        <h2>Tầng bảo quản</h2>
+        <div class="swatchline">
+          <div class="tier">
+            <span class="tiericon" style="background:#F6E7E7;color:#8D4D4E"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 5 6 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5-1-9Z"/></svg></span>
+            <div><div class="name">Ăn liền / Nấu trong ngày</div><div class="desc">Ưu tiên cao nhất khi gợi ý món</div></div>
+          </div>
+          <div class="tier">
+            <span class="tiericon" style="background:#E4F3EB;color:#2D6A4F"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/><path d="M9 6v2"/><path d="M9 14v3"/></svg></span>
+            <div><div class="name">Ngăn mát</div><div class="desc">Mốc tham khảo theo nhóm thực phẩm</div></div>
+          </div>
+          <div class="tier">
+            <span class="tiericon" style="background:#E3EFF1;color:#3E7C8B"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M4.5 7.5 19.5 16.5"/><path d="M19.5 7.5 4.5 16.5"/></svg></span>
+            <div><div class="name">Ngăn đông</div><div class="desc">Thịt, cá, hải sản đông lạnh</div></div>
+          </div>
+          <div class="tier">
+            <span class="tiericon" style="background:#F2EFE8;color:#8A7A55"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8"/><path d="M9 3v3l-1 2v11a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8l-1-2V3"/></svg></span>
+            <div><div class="name">Kệ đồ khô</div><div class="desc">Gia vị, đồ hộp, mì, ngũ cốc — theo HSD</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Kiểu chữ — Inter</h2>
+        <div class="type">
+          <div class="typerow"><span style="font-size:28px;font-weight:700;letter-spacing:-.02em">Hôm nay ăn gì?</span><span class="spec">Display · 28 / 700 / -2%</span></div>
+          <div class="typerow"><span style="font-size:22px;font-weight:700;letter-spacing:-.01em">Gợi ý cho bạn</span><span class="spec">Headline · 22 / 700</span></div>
+          <div class="typerow"><span style="font-size:17px;font-weight:600">Salad bơ ức gà</span><span class="spec">Title · 17 / 600</span></div>
+          <div class="typerow"><span style="font-size:15px;font-weight:400">Còn 2 quả trứng trong ngăn mát</span><span class="spec">Body · 15 / 400 · 1.45</span></div>
+          <div class="typerow"><span style="font-size:13px;font-weight:500">500g · Rau củ</span><span class="spec">Label · 13 / 500</span></div>
+          <div class="typerow"><span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)">Cần dùng sớm</span><span class="spec">Overline · 11 / 600 / +8%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Khoảng cách · Bo góc · Đổ bóng</h2>
+    <div class="cols">
+      <div class="col">
+        <div class="scalewrap">
+          <div class="scalerow"><span class="n">4</span><span class="scalebar" style="width:4px"></span></div>
+          <div class="scalerow"><span class="n">8</span><span class="scalebar" style="width:8px"></span></div>
+          <div class="scalerow"><span class="n">12</span><span class="scalebar" style="width:12px"></span></div>
+          <div class="scalerow"><span class="n">16</span><span class="scalebar" style="width:16px"></span></div>
+          <div class="scalerow"><span class="n">20</span><span class="scalebar" style="width:20px"></span></div>
+          <div class="scalerow"><span class="n">24</span><span class="scalebar" style="width:24px"></span></div>
+          <div class="scalerow"><span class="n">32</span><span class="scalebar" style="width:32px"></span></div>
+          <div class="scalerow"><span class="n">40</span><span class="scalebar" style="width:40px"></span></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="radii">
+          <div class="rad" style="width:52px;height:52px;border-radius:8px"><span>8</span></div>
+          <div class="rad" style="width:52px;height:52px;border-radius:12px"><span>12</span></div>
+          <div class="rad" style="width:52px;height:52px;border-radius:16px"><span>16</span></div>
+          <div class="rad" style="width:52px;height:52px;border-radius:24px"><span>24</span></div>
+          <div class="rad" style="width:52px;height:52px;border-radius:999px"><span>pill</span></div>
+        </div>
+        <p class="note">Control 8 · Thẻ 16 · Bottom sheet 24 · Badge/nút tròn: pill</p>
+        <div class="elev">
+          <div class="ecard" style="box-shadow:var(--e1)">e1 · thẻ</div>
+          <div class="ecard" style="box-shadow:var(--e2)">e2 · nổi</div>
+          <div class="ecard" style="box-shadow:var(--e3)">e3 · sheet / FAB</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Biểu tượng — nét 1.75px, lưới 24px</h2>
+    <div class="icons">
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M6 11h12"/><path d="M9 6v2"/><path d="M9 14v3"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V6a2 2 0 0 1 2-2h3"/><path d="M20 9V6a2 2 0 0 0-2-2h-3"/><path d="M4 15v3a2 2 0 0 0 2 2h3"/><path d="M20 15v3a2 2 0 0 1-2 2h-3"/><path d="M4 12h16"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4Z"/><path d="M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7Z"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.6 2H4.4Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2h6l2 2h3v11H4Z"/><path d="M12 16a3.4 3.4 0 1 0 0-6.8 3.4 3.4 0 0 0 0 6.8Z"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4a3 3 0 0 1 3 3v5a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v3"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M12 7v5l3 2"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h2l2.4 11h9L20 8H7"/><path d="M9 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/><path d="M17 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z"/><path d="M20 20l-4-4"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M7 12h10"/><path d="M10 18h4"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21 19H3Z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l6-6 4 4 6-7"/><path d="M16 7h4v4"/></svg></span>
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></span>
+    </div>
+    <p class="note">Nhà / Tủ bếp / Quét / Gợi ý / Cá nhân / Chuông / Máy ảnh / Micro / Đồng hồ / Giỏ / Tìm / Lọc / Cảnh báo / Xu hướng / Thêm</p>
+  </div>
+
+  <div class="card">
+    <h2>Chế độ tối</h2>
+    <div style="background:#101511;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px">
+      <div class="ramp">
+        <div class="sw" style="background:#101511;border:1px solid #2E362F"><span>BG</span></div>
+        <div class="sw" style="background:#1A211C"><span>Surface</span></div>
+        <div class="sw" style="background:#222A24"><span>Nổi</span></div>
+        <div class="sw" style="background:#2E362F"><span>Line</span></div>
+        <div class="sw" style="background:#7C827A"><span>Ink-3</span></div>
+        <div class="sw" style="background:#A8ADA4"><span style="color:#101511">Ink-2</span></div>
+        <div class="sw l" style="background:#ECEFEA"><span>Ink</span></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="chipbig" style="background:#33211F;color:#D9A7A8">Quá hạn 1 ngày</span>
+        <span class="chipbig" style="background:#352017;color:#E08A5C">Còn 1 ngày</span>
+        <span class="chipbig" style="background:#312B16;color:#D6B45A">Còn 4 ngày</span>
+        <span class="chipbig" style="background:#242B25;color:#A8ADA4">Còn 12 ngày</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <span style="background:#40916C;color:#fff;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600">Nút chính</span>
+        <span style="border:1px solid #40916C;color:#74C69D;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600">Nút viền</span>
+        <span style="color:#B7E4C7;font-size:13px;font-weight:600">Chữ nhấn</span>
+      </div>
+      <div style="font-size:12px;color:#A8ADA4">Nền #101511 · Bề mặt #1A211C · Xanh chính sáng lên #40916C · Chữ nhấn #74C69D / #B7E4C7 · Trạng thái hạn dùng giảm sắc, giữ đúng 4 mức.</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

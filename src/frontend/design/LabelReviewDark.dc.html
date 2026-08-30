@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#B7E4C7;--green-700:#40916C;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--soon:#D6B45A;--soon-bg:#312B16;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-800);text-decoration:none}a:hover{color:var(--green-700)}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .topbar .sp{flex:1}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .content{padding:2px 20px 24px;display:flex;flex-direction:column;gap:14px}
+    .shot{display:flex;align-items:center;gap:12px}
+    .shot .img{width:64px;height:64px;border-radius:12px;background:#2A322B;display:flex;align-items:center;justify-content:center;color:#6E756B;flex:none}
+    .shot .rd{font-size:13px;font-weight:600}
+    .shot .rs{font-size:11px;color:var(--ink-3);margin-top:2px}
+    .banner{display:flex;gap:9px;align-items:flex-start;background:var(--green-100);color:var(--green-800);border-radius:12px;padding:11px 13px;font-size:12px;line-height:1.45}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field .lb{font-size:11px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+    .flag{font-size:10px;font-weight:700;color:var(--soon);background:var(--soon-bg);border-radius:999px;padding:2px 7px}
+    .val{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;padding:0 13px;font-size:14px;font-weight:500}
+    .val.warn{border-color:var(--soon);border-left-width:3px}
+    .val .edit{margin-left:auto;color:var(--ink-3)}
+    .row2{display:flex;gap:10px}
+    .chiprow{display:flex;gap:7px;flex-wrap:wrap}
+    .chip{height:32px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);display:inline-flex;align-items:center;gap:6px}
+    .chip.on{border-color:var(--green-700);background:var(--green-100);color:var(--green-800)}
+    .savebar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(0,0,0,.4);padding:12px 20px 18px}
+    .btn{width:100%;height:50px;border-radius:12px;font-size:15px;font-weight:600;background:var(--green-700);color:#fff;border:0;display:flex;align-items:center;justify-content:center}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Kiểm tra thông tin</h1>
+    <span class="sp"></span>
+  </div>
+
+  <div class="content">
+    <div class="shot">
+      <span class="img"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="2"/><path d="M7 10h10"/><path d="M7 13h6"/></svg></span>
+      <div>
+        <div class="rd">Ảnh tem nhãn</div>
+        <div class="rs"><a href="#">Chụp lại</a></div>
+      </div>
+    </div>
+
+    <div class="banner">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>
+      Đã đọc được 5 trường. Kiểm tra lại trường được đánh dấu trước khi lưu.
+    </div>
+
+    <div class="field">
+      <div class="lb">Tên nguyên liệu</div>
+      <div class="val">Cà chua bi <span class="edit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18 10l-4-4L4 16v4Z"/><path d="M13 7l4 4"/></svg></span></div>
+    </div>
+    <div class="row2">
+      <div class="field" style="flex:1">
+        <div class="lb">Khối lượng tịnh</div>
+        <div class="val">500 g</div>
+      </div>
+      <div class="field" style="flex:1">
+        <div class="lb">Giá</div>
+        <div class="val">18.000 đ</div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field" style="flex:1">
+        <div class="lb">Ngày đóng gói</div>
+        <div class="val">05/09/2026</div>
+      </div>
+      <div class="field" style="flex:1">
+        <div class="lb">Hạn sử dụng <span class="flag">Cần kiểm tra</span></div>
+        <div class="val warn">12/09/2026 <span class="edit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18 10l-4-4L4 16v4Z"/><path d="M13 7l4 4"/></svg></span></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="lb">Tầng bảo quản</div>
+      <div class="chiprow">
+        <span class="chip">Ăn liền</span>
+        <span class="chip on">Ngăn mát</span>
+        <span class="chip">Ngăn đông</span>
+        <span class="chip">Kệ đồ khô</span>
+      </div>
+    </div>
+    <div class="field">
+      <div class="lb">Danh mục</div>
+      <div class="val">Rau củ <span class="edit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>
+    </div>
+  </div>
+
+  <div class="savebar"><button class="btn">Thêm vào kho</button></div>
+</div>
+</x-dc>
+</body>
+</html>

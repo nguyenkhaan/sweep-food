@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-700:#40916C;--green-800:#B7E4C7;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--soon:#D6B45A;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .pmark{font-size:10px;font-weight:700;color:var(--green-800);background:var(--green-100);border-radius:999px;padding:2px 8px}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .content{padding:6px 20px;display:flex;flex-direction:column;gap:14px}
+    .s{font-size:13px;color:var(--ink-2);line-height:1.5}
+    .grp{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+    .m{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--fill)}
+    .m:last-child{border-bottom:0}
+    .m .av{width:38px;height:38px;border-radius:50%;background:var(--green-100);color:var(--green-800);display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+    .m .nm{font-size:13px;font-weight:600}
+    .m .role{font-size:11px;color:var(--ink-3);margin-top:1px}
+    .m .role.pending{color:var(--soon)}
+    .m .x{margin-left:auto;color:var(--ink-3)}
+    .invite{border:1px dashed var(--green-700);border-radius:14px;padding:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;font-weight:600;color:var(--green-800)}
+    .note{font-size:11px;color:var(--ink-3);line-height:1.5}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Chia sẻ tủ bếp</h1>
+    <span class="pmark">Sắp có</span>
+  </div>
+
+  <div class="content">
+    <div class="s">Mời tối đa 4 người cùng xem và cập nhật tủ bếp. Mọi thay đổi được đồng bộ cho tất cả thành viên.</div>
+
+    <div class="grp">
+      <div class="m"><span class="av">A</span><div><div class="nm">Bạn</div><div class="role">Chủ tủ bếp</div></div></div>
+      <div class="m"><span class="av">B</span><div><div class="nm">Lê B</div><div class="role">Có thể chỉnh sửa</div></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg></span></div>
+      <div class="m"><span class="av">C</span><div><div class="nm">Trần C</div><div class="role pending">Đã mời · chờ xác nhận</div></div><span class="x"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg></span></div>
+    </div>
+
+    <div class="invite">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      Mời thành viên
+    </div>
+
+    <div class="note">Thành viên có thể thêm, sửa, xóa nguyên liệu và xem gợi ý món. Chỉ chủ tủ bếp mới xóa được thành viên.</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

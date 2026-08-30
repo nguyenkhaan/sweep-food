@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-700:#40916C;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--brick-100:#33211F;--brick-500:#C99A9B;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:#B7E4C7;text-decoration:none}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .content{padding:8px 20px 24px;display:flex;flex-direction:column;gap:16px}
+    .app{text-align:center;padding:10px 0}
+    .app .lg{width:60px;height:60px;border-radius:18px;background:var(--green-100);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+    .app .nm{font-size:17px;font-weight:700}
+    .app .v{font-size:12px;color:var(--ink-3);margin-top:2px}
+    .glabel{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+    .grp{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+    .r{padding:13px 14px;border-bottom:1px solid var(--fill);font-size:13px}
+    .r:last-child{border-bottom:0}
+    .r .k{font-weight:600}
+    .r .s{font-size:11px;color:var(--ink-3);margin-top:2px}
+    .r.link{display:flex;align-items:center}
+    .r.link .ch{margin-left:auto;color:var(--ink-3)}
+    .disc{background:var(--brick-100);color:var(--brick-500);border-radius:14px;padding:14px;font-size:12px;line-height:1.55;display:flex;gap:10px}
+    .disc svg{flex:none;margin-top:1px}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Giới thiệu &amp; dữ liệu</h1>
+  </div>
+
+  <div class="content">
+    <div class="app">
+      <span class="lg"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#74C69D" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20c0-8 5-14 15-15 0 10-5 16-15 15Z"/><path d="M5 20C9 15 12.5 12 17 10"/></svg></span>
+      <div class="nm">SweepFood</div>
+      <div class="v">Phiên bản 1.0.0 (MVP)</div>
+    </div>
+
+    <div class="glabel">Nguồn dữ liệu</div>
+    <div class="grp">
+      <div class="r"><div class="k">Giá trị dinh dưỡng thực phẩm</div><div class="s">Viện Dinh dưỡng Quốc gia</div></div>
+      <div class="r"><div class="k">Thời gian bảo quản tham khảo</div><div class="s">FoodKeeper — FoodSafety.gov</div></div>
+    </div>
+
+    <div class="disc">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21 19H3Z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+      Thông tin dinh dưỡng và thời gian bảo quản chỉ mang tính ước tính, không thay thế tư vấn của chuyên gia dinh dưỡng hoặc y tế. Luôn kiểm tra màu sắc, mùi và trạng thái thực phẩm trước khi sử dụng.
+    </div>
+
+    <div class="grp">
+      <div class="r link"><span class="k">Điều khoản sử dụng</span><span class="ch"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="r link"><span class="k">Chính sách bảo mật</span><span class="ch"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+      <div class="r link"><span class="k">Đánh giá ứng dụng</span><span class="ch"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

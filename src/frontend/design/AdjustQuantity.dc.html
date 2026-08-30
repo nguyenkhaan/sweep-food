@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{
+      --green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;
+      --ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;
+      --line:#E1E3DE;--fill:#EFF1EC;--surface:#FFFFFF;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700)}a:hover{color:var(--green-800)}
+    .screen{width:390px;height:720px;display:flex;flex-direction:column;background:#F8F9FA}
+    .scrim{flex:1;background:rgba(20,28,22,.34)}
+    .sheet{flex:none;background:var(--surface);border-radius:22px 22px 0 0;box-shadow:0 -12px 40px rgba(20,28,22,.22);padding:14px 20px 22px;display:flex;flex-direction:column;gap:16px}
+    .grab{width:38px;height:4px;border-radius:999px;background:var(--line);align-self:center}
+    .head{display:flex;align-items:flex-start;gap:12px}
+    .head .tt{font-size:16px;font-weight:700}
+    .head .cur{font-size:12px;color:var(--ink-3);margin-top:2px}
+    .thumb{width:42px;height:42px;border-radius:10px;background:#E4E7E1;display:flex;align-items:center;justify-content:center;color:#9AA298;flex:none}
+    .segrow{display:flex;gap:8px}
+    .seg{flex:1;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--ink-2)}
+    .seg.on{border-color:var(--green-700);background:var(--green-100);color:var(--green-800)}
+    .slidewrap{display:flex;flex-direction:column;gap:10px}
+    .rail{position:relative;height:34px;display:flex;align-items:center}
+    .rail .bar{height:6px;border-radius:999px;background:var(--fill);width:100%}
+    .rail .fill{position:absolute;left:0;height:6px;border-radius:999px;background:var(--green-600);width:64%}
+    .rail .knob{position:absolute;left:64%;width:24px;height:24px;border-radius:50%;background:var(--surface);border:2px solid var(--green-600);box-shadow:0 2px 6px rgba(20,28,22,.18);transform:translateX(-50%)}
+    .scalelbl{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-3)}
+    .amount{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+    .amount .lb{font-size:13px;color:var(--ink-2)}
+    .amount .stp{display:flex;align-items:center;gap:12px}
+    .amount .sbtn{width:30px;height:30px;border-radius:8px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:var(--ink-2)}
+    .amount .v{font-size:15px;font-weight:700;min-width:56px;text-align:center}
+    .preview{background:var(--fill);border-radius:12px;padding:12px 14px;font-size:13px;display:flex;align-items:center;justify-content:space-between}
+    .preview b{font-weight:700}
+    .btns{display:flex;gap:10px}
+    .btn{flex:1;height:48px;border-radius:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;border:1px solid transparent}
+    .btn.ghost{background:var(--surface);border-color:var(--line);color:var(--ink-2)}
+    .btn.pri{background:var(--green-700);color:#fff}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="head">
+      <span class="thumb"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="7"/><path d="M12 6c0-2 1-3 3-3"/></svg></span>
+      <div>
+        <div class="tt">Cập nhật số lượng — Cà chua bi</div>
+        <div class="cur">Hiện có: 500 g · Ngăn mát</div>
+      </div>
+    </div>
+
+    <div class="segrow">
+      <span class="seg on">Dùng một phần</span>
+      <span class="seg">Dùng hết</span>
+      <span class="seg">Nhập số mới</span>
+    </div>
+
+    <div class="slidewrap">
+      <div class="rail">
+        <span class="bar"></span><span class="fill"></span><span class="knob"></span>
+      </div>
+      <div class="scalelbl"><span>0 g</span><span>500 g</span></div>
+    </div>
+
+    <div class="amount">
+      <span class="lb">Lượng đã dùng</span>
+      <span class="stp"><span class="sbtn">−</span><span class="v">320 g</span><span class="sbtn">+</span></span>
+    </div>
+
+    <div class="preview">Còn lại sau khi dùng <b>180 g</b></div>
+
+    <div class="btns">
+      <button class="btn ghost">Hủy</button>
+      <button class="btn pri">Lưu</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

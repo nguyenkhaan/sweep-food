@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-700);text-decoration:none}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:19px;font-weight:700;margin:0}
+    .topbar .sp{flex:1}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .src{font-size:12px;color:var(--ink-3);padding:0 20px}
+    .toggle{display:flex;align-items:center;gap:9px;padding:10px 20px;font-size:12px;color:var(--ink-2)}
+    .sw{width:34px;height:20px;border-radius:999px;background:var(--green-700);position:relative;flex:none}
+    .sw::after{content:"";position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:#fff}
+    .cat{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:14px 20px 6px}
+    .it{display:flex;align-items:center;gap:12px;padding:11px 20px;border-bottom:1px solid var(--fill);background:var(--surface)}
+    .cb{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);flex:none}
+    .cb.on{background:var(--green-700);border-color:var(--green-700);display:flex;align-items:center;justify-content:center;color:#fff}
+    .it .nm{flex:1;font-size:13px;font-weight:600}
+    .it .nm.done{text-decoration:line-through;color:var(--ink-3);font-weight:500}
+    .it .q{font-size:12px;color:var(--ink-3)}
+    .it .pr{font-size:12px;font-weight:600;color:var(--ink-2);min-width:64px;text-align:right}
+    .have{font-size:10px;font-weight:700;color:var(--green-700);background:var(--green-100);border-radius:999px;padding:2px 7px}
+    .total{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;font-size:14px;font-weight:700}
+    .total span{font-weight:500;color:var(--ink-3);font-size:12px}
+    .fab{position:absolute;right:18px;bottom:24px;height:46px;border-radius:999px;background:var(--green-700);color:#fff;display:flex;align-items:center;gap:8px;padding:0 18px;font-size:14px;font-weight:600;box-shadow:0 10px 24px rgba(20,28,22,.18)}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Danh sách mua sắm</h1>
+    <span class="sp"></span>
+    <span class="rnd"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8 11l8-5"/><path d="M8 13l8 5"/></svg></span>
+  </div>
+
+  <div class="src">Từ thực đơn tuần 09/09 – 15/09 · 8 món · đối chiếu với tủ bếp</div>
+
+  <div class="toggle"><span class="sw"></span> Ẩn nguyên liệu đã có trong kho</div>
+
+  <div class="cat">Rau củ</div>
+  <div class="it"><span class="cb"></span><span class="nm">Xà lách</span><span class="q">150 g</span><span class="pr">12.000đ</span></div>
+  <div class="it"><span class="cb on"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span><span class="nm done">Hành lá</span><span class="q">1 bó</span><span class="pr">5.000đ</span></div>
+  <div class="it"><span class="cb"></span><span class="nm">Chanh</span><span class="q">3 quả</span><span class="pr">9.000đ</span></div>
+
+  <div class="cat">Thịt &amp; hải sản</div>
+  <div class="it"><span class="cb"></span><span class="nm">Cá lóc</span><span class="q">500 g</span><span class="pr">70.000đ</span></div>
+  <div class="it"><span class="cb"></span><span class="nm">Thịt băm</span><span class="q">200 g</span><span class="pr">35.000đ</span></div>
+
+  <div class="cat">Gia vị &amp; khác</div>
+  <div class="it"><span class="cb"></span><span class="nm">Dầu ô liu</span><span class="q">1 chai nhỏ</span><span class="pr">45.000đ</span></div>
+  <div class="it"><span class="cb"></span><span class="nm">Me chua</span><span class="q">1 gói</span><span class="pr">9.000đ</span></div>
+
+  <div class="total">Ước tính <span>7 nguyên liệu cần mua</span> ~185.000đ</div>
+
+  <span class="fab"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>Thêm món</span>
+</div>
+</x-dc>
+</body>
+</html>

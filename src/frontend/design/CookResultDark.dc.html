@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#B7E4C7;--green-700:#40916C;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--soon:#D6B45A;--soon-bg:#312B16;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .content{padding:36px 20px 24px;display:flex;flex-direction:column;gap:18px}
+    .hero{text-align:center}
+    .hero .ck{width:64px;height:64px;border-radius:50%;background:var(--green-100);color:var(--green-800);display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+    .hero .t{font-size:20px;font-weight:700}
+    .save{display:flex;gap:10px;align-items:flex-start;background:var(--green-100);color:var(--green-800);border-radius:14px;padding:13px 14px;font-size:13px;line-height:1.45}
+    .save b{font-weight:700}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+    .card h2{margin:0 0 12px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+    .drow{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--fill);font-size:13px}
+    .drow:last-child{border-bottom:0}
+    .drow .nm{font-weight:600}
+    .drow .ch{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--ink-3)}
+    .drow .ch b{color:var(--ink);font-weight:700}
+    .alert{display:flex;align-items:center;gap:10px;background:var(--soon-bg);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--soon);font-weight:600;margin-top:10px}
+    .alert .add{margin-left:auto;background:var(--surface);border:1px solid var(--soon);border-radius:999px;padding:5px 11px;font-size:11px}
+    .bar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(0,0,0,.4);display:flex;gap:10px;padding:12px 20px 18px}
+    .btn{flex:1;height:48px;border-radius:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;border:1px solid transparent}
+    .btn.ghost{background:var(--fill);color:var(--ink)}
+    .btn.pri{background:var(--green-700);color:#fff}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="content">
+    <div class="hero">
+      <span class="ck"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+      <div class="t">Đã cập nhật kho</div>
+    </div>
+
+    <div class="save">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l6-6 4 4 6-7"/><path d="M16 7h4v4"/></svg>
+      <span>Bạn vừa tận dụng <b>3 nguyên liệu cận hạn</b> · tránh bỏ phí ~<b>0,4 kg</b> thực phẩm</span>
+    </div>
+
+    <div class="card">
+      <h2>Thay đổi trong kho</h2>
+      <div class="drow"><span class="nm">Bơ</span><span class="ch">2 quả <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg> <b>1 quả</b></span></div>
+      <div class="drow"><span class="nm">Ức gà</span><span class="ch">300 g <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg> <b>100 g</b></span></div>
+      <div class="drow"><span class="nm">Cà chua bi</span><span class="ch">500 g <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg> <b>400 g</b></span></div>
+      <div class="alert">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 21 19H3Z"/><path d="M12 10v4"/><path d="M12 17h.01"/></svg>
+        Ức gà sắp hết
+        <span class="add">+ Danh sách mua</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button class="btn ghost">Xem kho</button>
+    <button class="btn pri">Xong</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

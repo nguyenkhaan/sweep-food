@@ -51,8 +51,10 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+# NOTE: `lib/` / `lib64/` come from the Python packaging template. They are
+# scoped to the backend so they do NOT hide the Flutter app at src/frontend/lib/.
+/src/backend/**/lib/
+/src/backend/**/lib64/
 parts/
 sdist/
 var/
@@ -206,3 +208,23 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,flutter,kotlin
+
+### Project additions ###
+# Never ignore the Flutter app source (belt-and-suspenders vs the Python `lib/` rule above)
+!src/frontend/lib/
+
+# IDE
+.idea/
+*.iml
+*.iws
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Flutter generated / platform build
+**/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/lib/generated_plugin_registrant.dart
+src/frontend/android/build/
+# (.metadata and pubspec.lock ARE committed for an app — do not ignore)
+

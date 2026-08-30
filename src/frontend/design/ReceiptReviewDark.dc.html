@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#B7E4C7;--green-700:#40916C;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--soon:#D6B45A;--soon-bg:#312B16;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-800);text-decoration:none}a:hover{color:var(--green-700)}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;position:relative}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .topbar .sp{flex:1}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .content{padding:2px 20px 24px;display:flex;flex-direction:column;gap:12px}
+    .shot{display:flex;align-items:center;gap:12px}
+    .shot .img{width:56px;height:56px;border-radius:12px;background:#2A322B;display:flex;align-items:center;justify-content:center;color:#6E756B;flex:none}
+    .shot .rd{font-size:13px;font-weight:600}
+    .shot .rs{font-size:11px;color:var(--ink-3);margin-top:2px}
+    .selrow{display:flex;align-items:center;font-size:12px;color:var(--ink-3)}
+    .selrow b{color:var(--ink);font-weight:600}
+    .selrow a{margin-left:auto;font-weight:600}
+    .item{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
+    .cbox{width:20px;height:20px;border-radius:6px;background:var(--green-700);display:flex;align-items:center;justify-content:center;color:#fff;flex:none}
+    .cbox.off{background:transparent;border:1.5px solid var(--line)}
+    .item .bd{flex:1;min-width:0}
+    .item .nm{font-size:13px;font-weight:600}
+    .item .mt{font-size:11px;color:var(--ink-3);margin-top:2px}
+    .item .flag{font-size:10px;font-weight:700;color:var(--soon);background:var(--soon-bg);border-radius:999px;padding:2px 7px;flex:none}
+    .item .edit{color:var(--ink-3);flex:none}
+    .savebar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(0,0,0,.4);padding:12px 20px 18px}
+    .btn{width:100%;height:50px;border-radius:12px;font-size:15px;font-weight:600;background:var(--green-700);color:#fff;border:0;display:flex;align-items:center;justify-content:center}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Hóa đơn — 6 mục</h1>
+    <span class="sp"></span>
+  </div>
+
+  <div class="content">
+    <div class="shot">
+      <span class="img"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-2-1.5L14 21l-2-1.5L10 21l-2-1.5L6 21Z"/><path d="M9 8h6"/><path d="M9 12h6"/></svg></span>
+      <div>
+        <div class="rd">Bách Hóa Xanh · 05/09</div>
+        <div class="rs"><a href="#">Chụp lại</a></div>
+      </div>
+    </div>
+
+    <div class="selrow"><b>6</b>&nbsp;/ 6 mục được chọn <a href="#">Bỏ chọn tất cả</a></div>
+
+    <div class="item">
+      <span class="cbox"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+      <div class="bd"><div class="nm">Cà chua bi</div><div class="mt">500 g · Rau củ · Ngăn mát</div></div>
+      <span class="edit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18 10l-4-4L4 16v4Z"/><path d="M13 7l4 4"/></svg></span>
+    </div>
+    <div class="item">
+      <span class="cbox"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+      <div class="bd"><div class="nm">Trứng gà</div><div class="mt">10 quả · Đạm · Ngăn mát</div></div>
+      <span class="edit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18 10l-4-4L4 16v4Z"/><path d="M13 7l4 4"/></svg></span>
+    </div>
+    <div class="item">
+      <span class="cbox"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+      <div class="bd"><div class="nm">Thịt ba chỉ</div><div class="mt">300 g · Thịt · Ngăn mát</div></div>
+      <span class="flag">Kiểm tra</span>
+    </div>
+    <div class="item">
+      <span class="cbox"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+      <div class="bd"><div class="nm">Sữa tươi</div><div class="mt">1 lít · Sữa · Ngăn mát</div></div>
+      <span class="edit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18 10l-4-4L4 16v4Z"/><path d="M13 7l4 4"/></svg></span>
+    </div>
+    <div class="item">
+      <span class="cbox"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+      <div class="bd"><div class="nm">Hành lá</div><div class="mt">1 bó · Rau · Ngăn mát</div></div>
+      <span class="flag">Kiểm tra</span>
+    </div>
+    <div class="item">
+      <span class="cbox"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+      <div class="bd"><div class="nm">Dầu ăn</div><div class="mt">1 chai · Gia vị · Kệ đồ khô</div></div>
+      <span class="edit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18 10l-4-4L4 16v4Z"/><path d="M13 7l4 4"/></svg></span>
+    </div>
+  </div>
+
+  <div class="savebar"><button class="btn">Thêm 6 mục vào kho</button></div>
+</div>
+</x-dc>
+</body>
+</html>

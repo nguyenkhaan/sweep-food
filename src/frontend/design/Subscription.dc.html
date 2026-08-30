@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .content{padding:8px 20px;display:flex;flex-direction:column;gap:16px}
+    .cur{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+    .cur .lb{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+    .cur .nm{font-size:20px;font-weight:700;margin-top:4px}
+    .inc{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+    .inc .i{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--ink-2)}
+    .inc .i .c{width:18px;height:18px;border-radius:50%;background:var(--fill);color:var(--ink-3);display:flex;align-items:center;justify-content:center;flex:none}
+    .btn{width:100%;height:50px;border-radius:12px;font-size:15px;font-weight:600;background:var(--green-700);color:#fff;border:0;display:flex;align-items:center;justify-content:center;gap:8px}
+    .note{font-size:11px;color:var(--ink-3);text-align:center;line-height:1.5}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+    <h1>Gói dịch vụ</h1>
+  </div>
+
+  <div class="content">
+    <div class="cur">
+      <div class="lb">Bạn đang dùng</div>
+      <div class="nm">Bản đầy đủ · miễn phí</div>
+      <div class="inc">
+        <div class="i"><span class="c"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Kho nguyên liệu không giới hạn</div>
+        <div class="i"><span class="c"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Quét tem &amp; hóa đơn không giới hạn</div>
+        <div class="i"><span class="c"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Gợi ý món &amp; dinh dưỡng đầy đủ</div>
+        <div class="i"><span class="c"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>Thực đơn tuần, danh sách mua sắm, báo cáo</div>
+      </div>
+    </div>
+
+    <button class="btn">Quan tâm Premium — báo tôi khi ra mắt</button>
+
+    <div class="note">Trong giai đoạn thử nghiệm, tất cả tính năng đang miễn phí. Sau này một số tính năng nâng cao (đồng bộ nhiều thiết bị, chia sẻ tủ bếp, báo cáo chi tiết) sẽ chuyển sang gói Premium — bạn sẽ được báo trước.</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
