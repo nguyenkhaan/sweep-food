@@ -9,9 +9,10 @@ from typing import Protocol
 
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound, select_autoescape
 
+from src.base.constant.template_file_name import EMAIL_TEMPLATE_FILENAMES
 from src.core.setting import EMAIL_FROM, EMAIL_SMTP_HOST, EMAIL_SMTP_PORT
 from src.service.otp_delivery_service import OTPDeliveryRequest, OTPDeliveryService
-from src.base.constant.template_file_name import _TEMPLATE_FILENAMES
+
 
 class EmailDeliveryError(RuntimeError):
     """Raised when an email cannot be rendered or submitted to SMTP."""
@@ -69,6 +70,7 @@ class EmailService(OTPDeliveryService):
         payload: Mapping[str, object],
         template: str,
     ) -> str:
+        """Render a named template and send it to the payload recipient."""
         recipient = self._get_recipient(payload)
         html = self._render_template(template, payload)
         message = self._build_message(subject, recipient, html)
@@ -81,7 +83,7 @@ class EmailService(OTPDeliveryService):
     async def send_otp(self, request: OTPDeliveryRequest) -> str:
         """Send a purpose-specific OTP email through the common delivery contract."""
         return await self.send_email(
-            subject="Mã xác minh Sweep Food",
+            subject="Sweep Food verification code",
             payload={
                 "recipient": request.destination,
                 "otp": request.otp,
@@ -99,7 +101,7 @@ class EmailService(OTPDeliveryService):
         return recipient
 
     def _render_template(self, template: str, payload: Mapping[str, object]) -> str:
-        filename = _TEMPLATE_FILENAMES.get(template, template)
+        filename = EMAIL_TEMPLATE_FILENAMES.get(template, template)
         if Path(filename).name != filename or not filename.endswith(".html"):
             raise ValueError("Email template must be an HTML filename in src/template")
         try:
@@ -114,6 +116,6 @@ class EmailService(OTPDeliveryService):
         message["From"] = self._sender
         message["To"] = recipient
         message["Message-ID"] = make_msgid(domain="sweep-food.local")
-        message.set_content("Vui lòng xem email này bằng ứng dụng hỗ trợ HTML.")
+        message.set_content("Please view this email in an HTML-capable email client.")
         message.add_alternative(html, subtype="html")
         return message

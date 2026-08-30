@@ -1,12 +1,18 @@
 """Custom JWT authentication dependency."""
 
 from dataclasses import dataclass
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import HTTPException, Request, status
+from fastapi import Depends, HTTPException, Request, status
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.setting import JWT_ACCESS_SECRET
-from src.model.enum_model import UserRole
+from src.db import get_db_session
+from src.model.enum_model import AccountStatus, UserRole
+from src.model.user_model import UserModel
 from src.service.jwt_service import JwtService, JwtVerificationError
 
 
@@ -42,7 +48,12 @@ def _parse_authenticated_user(payload: object) -> AuthenticatedUser:
 
     raw_subject = payload.get("sub")
     raw_roles = payload.get("roles")
-    if not isinstance(raw_subject, str) or not isinstance(raw_roles, list):
+    raw_purpose = payload.get("purpose")
+    if (
+        not isinstance(raw_subject, str)
+        or not isinstance(raw_roles, list)
+        or raw_purpose != "access"
+    ):
         raise _unauthorized()
 
     try:
@@ -58,11 +69,24 @@ def _parse_authenticated_user(payload: object) -> AuthenticatedUser:
     return AuthenticatedUser(user_id=user_id, roles=roles)
 
 
-def require_authentication(request: Request) -> AuthenticatedUser:
-    """Validate a Bearer access JWT using the configured access secret key."""
+async def require_authentication(
+    request: Request,
+    db_session: Annotated[AsyncSession, Depends(get_db_session)],
+) -> AuthenticatedUser:
+    """Validate JWT identity and ensure the database account remains active."""
     token = _get_bearer_token(request.headers.get("Authorization"))
     try:
         payload = JwtService.verify_jwt(token, JWT_ACCESS_SECRET)
     except (JwtVerificationError, ValueError) as error:
         raise _unauthorized() from error
-    return _parse_authenticated_user(payload)
+    authenticated_user = _parse_authenticated_user(payload)
+    try:
+        result = await db_session.execute(
+            select(UserModel).where(UserModel.id == authenticated_user.user_id)
+        )
+    except SQLAlchemyError as error:
+        raise _unauthorized() from error
+    user = result.scalar_one_or_none()
+    if user is None or user.status is not AccountStatus.ACTIVE:
+        raise _unauthorized()
+    return authenticated_user

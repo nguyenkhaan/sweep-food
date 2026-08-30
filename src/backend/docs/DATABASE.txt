@@ -161,7 +161,6 @@ table auth_sessions {
   user_id string  // users.id
   refresh_token_hash string
   token_family_id string // uuid
-  device_label string // nullable
   ip_address string // nullable
   user_agent string // nullable
   expires_at datetime

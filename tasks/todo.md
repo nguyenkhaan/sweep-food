@@ -195,19 +195,19 @@
 
 ### Task 2.4: Deliver registration, phone/password sign-in, and session APIs
 
-**Description:** Implement OTP request/verify, registration completion, phone/password login, password reset/change, access/refresh token, logout, and session management endpoints with consistent responses and ownership middleware.
+**Description:** Implement `UNVERIFIED` registration with internally issued SMS OTP, registration verification, phone/password login, internally issued password OTPs, password verification/change, access/refresh token, logout, and session management endpoints with consistent responses and ownership middleware. Generic OTP request/verify endpoints are not exposed.
 
 **Acceptance criteria:**
 
-- [ ] A verified registration grant plus valid password creates/activates a user; OTP verification alone never creates a session.
-- [ ] Phone/password login returns access/refresh session data without disclosing whether an account existed or password verification failed.
-- [ ] Password reset/change consumes a matching OTP grant and revokes affected refresh-token sessions.
-- [ ] Refresh rotation and revocation invalidate the correct session family.
+- [x] A valid registration OTP activates the `UNVERIFIED` password account; OTP verification alone never creates a session.
+- [x] Phone/password login returns purpose-scoped access/refresh JWT session data without disclosing whether an account existed or password verification failed.
+- [x] Password reset/change consumes a matching OTP grant and revokes affected refresh-token sessions.
+- [x] A valid refresh JWT issues a new access JWT, while logout/session revocation invalidates the matching refresh session.
 
 **Verification:**
 
-- [ ] API tests register locally with `123456`, sign in with phone/password, reset/change password through OTP verification, refresh, logout, and fail after revocation.
-- [ ] A banned account cannot use protected endpoints.
+- [x] API/service tests register locally with `123456`, sign in with phone/password, reset/change password through OTP verification, refresh, logout, and fail after revocation.
+- [x] A banned account cannot use protected endpoints.
 
 **Dependencies:** Tasks 2.1–2.3.  
 **Files likely touched:** `src/backend/src/module/auth/*`, `src/backend/src/middleware/*`, tests  

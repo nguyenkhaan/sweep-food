@@ -13,9 +13,9 @@
 |---|---|
 | **M0 — Nền tảng + khung 5 tab** | ✅ Xong |
 | **M1 — Kho (vertical slice)** | ✅ Xong |
-| M2 — Trang chủ | ⬜ Chưa — teammate đang làm |
+| **M2 — Trang chủ** | ✅ Xong |
 | **M3 — Gợi ý + Món + Nấu (vòng lặp lõi)** | ✅ Xong |
-| M4 — Nhập liệu đa phương thức | ⬜ Chưa |
+| M4 — Nhập liệu đa phương thức | ⬜ Chưa — đang làm |
 | M5 — Auth + Onboarding + phần còn lại | ⬜ Chưa |
 | M6 — Hoàn thiện, i18n, test, build | ⬜ Chưa |
 
@@ -54,7 +54,7 @@
 
 ### M3 đã hoàn thành (2026-08-31)
 
-Ba vertical slice khép kín vòng lặp lõi: **Gợi ý → Món → Nấu → trừ kho**. (M2 Trang chủ do teammate làm song song — M3 không đụng `features/home/*`; chỉ trừ kho qua `pantryListController` + invalidate `pantrySummaryProvider` để số ở Home tự cập nhật.)
+Ba vertical slice khép kín vòng lặp lõi: **Gợi ý → Món → Nấu → trừ kho**. (M2 Trang chủ do teammate làm song song, đã merge từ `dev` — M3 không đụng `features/home/*`; chỉ trừ kho qua `pantryListController` + invalidate `pantrySummaryProvider` để số ở Home tự cập nhật.)
 
 - **`features/suggestions/`** — `domain/entities/` `dish_suggestion.dart` (`DishSuggestion{dish, breakdown, nearExpiryIngredients, availabilityRatio, toBuyCount}` + computed `score`/`availabilityPercent`), `score_breakdown.dart` (`ScoreBreakdown{e,a,p,u}` + `total = 0.4E+0.3A+0.2P+0.1U`, `scoreOutOf100`, `components` cho S-02), `suggestion_request.dart` (`SuggestionRequest` + enum `MealType`); `data/` `dish_suggestion_dto.dart` (nhúng `DishDto`, `ScoreBreakdownDto`, snake_case, `toEntity()`), `suggestion_remote_data_source.dart` (`POST /suggestions/dishes`), `suggestion_repository_impl.dart` (`@Riverpod(keepAlive:true)`, `runGuarded`); `presentation/controllers/suggestion_list_controller.dart` (`SuggestionFilter` bữa/≤30 phút/nhiều rau → `SuggestionRequest`; `SuggestionFilterController` + `SuggestionListController` AsyncNotifier watch filter → refetch); `presentation/screens/suggestion_list_screen.dart` (S-01: filter chip row, caption "N món hợp nhất…", `SuggestionCard` map từ entity, empty/loading/error, tap → dish detail), `presentation/widgets/score_breakdown_sheet.dart` (S-02: formula pill + 4 hàng E/A/P/U có bar + lý do sinh từ dữ liệu suggestion)
 - **`features/dishes/`** — `domain/entities/` `dish.dart` (`Dish` + `scaledTo(servings)` scale định lượng & dinh dưỡng từ base, `mainIngredients`/`seasonings`/`missingCount`/`metaLine`/`shortMeta`), `dish_ingredient.dart` (`DishIngredient{quantity, unit, isSeasoning, availableInPantry, missingQty, nearExpiry, pantryItemId}`), `cooking_step.dart`; `data/` `dish_dto.dart` (`DishDto`+`DishIngredientDto`+`CookingStepDto`+`MacrosDto`), `dish_remote_data_source.dart` (`GET /dishes/{id}`), `dish_repository_impl.dart` (`@Riverpod(keepAlive:true)`); `presentation/controllers/dish_detail_controller.dart` (`dishById` FutureProvider, `DishServings` family Notifier, `scaledDish` derived — luôn scale từ base để không trôi số); `presentation/screens/dish_detail_screen.dart` (D-01: hero + score badge, stepper khẩu phần, `MacroBreakdown`, `IngredientChecklist`, chip gia vị, nút "Thêm phần thiếu" = stub M5, `CookingStepsView`, bottom bar "Đã nấu món này" → `PostCookConfirmSheet`), `presentation/widgets/` `ingredient_checklist.dart` (✓ có sẵn / + cần mua + tag cận hạn), `cooking_steps_view.dart`

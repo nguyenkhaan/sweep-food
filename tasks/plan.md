@@ -112,7 +112,7 @@ Database documentation and migrations are sequential. Feature slices may run in 
 | 2.1 | User/password/session/account-status migrations, models, and repositories | Phase 1 |
 | 2.2 | OTP domain service: generation, hashing, TTL, verification grants, purpose isolation, rate limits, and WireMock SMS adapter | 2.1 |
 | 2.3 | SMS/email delivery adapters and WireMock provider contracts | 2.2, 1.4 |
-| 2.4 | OTP-gated registration, phone/password login, JWT access/refresh/logout, password reset/change, and session-revocation APIs | 2.1–2.3 |
+| 2.4 | `UNVERIFIED` registration with internal SMS OTP, registration verification, phone/password login, JWT access/refresh/logout, password reset/change verification, and session-revocation APIs | 2.1–2.3 |
 | 2.5 | Verified-email recovery, phone/email change, profile/preferences, role/ownership dependencies | 2.4 |
 
 **Checkpoint:** A user can register locally with OTP `123456`, create a password, sign in with phone/password, reset or change a password through OTP verification, use protected endpoints, refresh/revoke sessions, and cannot access another user's data.

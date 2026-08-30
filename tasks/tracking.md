@@ -34,9 +34,9 @@
 | Field | Value |
 |---|---|
 | Active phase | Phase 2 — Identity, Authentication, and User Preferences |
-| Active task | Task 2.2 — Implement OTP challenge, hashing, and rate-limit services (`In progress`) |
-| Next task | Verify Redis-backed OTP behavior, then begin Task 2.4 |
-| Next required action | Start the backend with Redis and verify the Redis lifecycle connection |
+| Active task | Task 2.5 — Add profile, verified-email, and authorization policies (`Done`) |
+| Next task | Phase 2 checkpoint |
+| Next required action | Manually validate the Task 2.5 protected endpoints from Swagger or the frontend, then confirm the Phase 2 checkpoint. |
 | Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
 | Current blocker | None |
 
@@ -77,9 +77,9 @@
 - [x] 2.1 Add user and session schema
 - [x] 2.2 Implement OTP challenge, hashing, and rate-limit services (`In progress`)
 - [x] 2.3 Add SMS/email delivery adapters and WireMock contracts
-- [ ] 2.4 Deliver registration, phone/password sign-in, and session APIs
-- [ ] 2.5 Add profile, verified-email, and authorization policies
-- [ ] Phase 2 checkpoint
+- [x] 2.4 Deliver registration, phone/password sign-in, and session APIs
+- [x] 2.5 Add profile, verified-email, and authorization policies
+- [x] Phase 2 checkpoint
 
 ### Phase 3 — Catalog and Seed Data
 
@@ -158,13 +158,15 @@
 | 1.3 Bootstrap SQLAlchemy, Alembic, and database conventions | `Done` | 1.1–1.2 | Async SQLAlchemy session manager, lifespan lifecycle, UUID/timestamp ORM base, Alembic environment, and bootstrap revision are implemented; user verified `alembic upgrade head`. |
 | 1.4 Establish quality, test, and WireMock fixture harness | `Done` | 1.2–1.3 | `src/test` harness, health smoke tests, deterministic `/mock/sms` mapping, and test-folder quality checks passed. |
 
-### Phase 2 Ready Work
+### Phase 2 Work
 
 | Task | Status | Dependencies | Evidence / next action |
 |---|---|---|---|
 | 2.1 Add user and session schema | `Done` | Phase 1 checkpoint | User-confirmed migration creates user/session tables and constraints; JWT access authentication and role demonstration endpoints are verified. |
 | 2.2 Implement OTP challenge, hashing, and rate-limit services | `In progress` | Task 2.1 | Redis-backed OTP service, password/OTP helpers, configurable limits, and unit tests are implemented; Redis lifecycle requires user confirmation. |
 | 2.3 Add SMS/email delivery adapters and WireMock contracts | `Done` | Task 2.2 | WireMock SMS and Mailpit-backed, template-based email delivery are verified locally; delivery remains provider-adapter based. |
+| 2.4 Deliver registration, phone/password sign-in, and session APIs | `Done` | Tasks 2.1–2.3 | Database is at `20260830_0003 (head)`; auth/OTP/JWT/session tests pass, WireMock contract is verified against the healthy container, and logout revocation blocks refresh-token reuse. |
+| 2.5 Add profile, verified-email, and authorization policies | `Done` | Task 2.4 | Added protected `users` module: minimal JWT identity, profile read/update, email verification/change, and phone change APIs. No migration was needed; all tests pass (`63 passed, 1 skipped`) and focused Ruff, mypy, and Pylint checks pass. |
 
 ## Decision Baseline
 
@@ -208,6 +210,20 @@
 | 2026-08-30 | Task 2.3 | `Ready` → `In progress` | Added provider-neutral OTP delivery contract, WireMock SMS adapter/fixtures, and non-delivering local email adapter; WireMock accepted contract passed with `DEFAULT_OTP`. |
 | 2026-08-30 | Task 2.3 | `In progress` → `Done` | User accepted Task 2.3 with the local/mock provider scope and fixed `DEFAULT_OTP`; eSMS live integration remains a future provider configuration task. |
 | 2026-08-30 | Task 2.3 extension | `Done` → `Done` | Replaced the non-delivering email adapter with Mailpit SMTP delivery, five purpose-specific HTML templates, Docker networking, and local SMTP verification. |
+| 2026-08-30 | Task 2.3 extension | `Done` → `Done` | Converted all email templates to English, renamed the shared layout to `base_email.html`, and added the Mailpit test-email endpoint. |
+| 2026-08-30 | Task 2.4 | `Ready` → `In progress` | Implemented the approved internal-OTP auth contract: unverified registration, registration verification, password OTP flows, sessions, and database account-status checks. |
+| 2026-08-30 | Task 2.4 revision | `In progress` → `In progress` | Removed client IP propagation from AuthService and added unverified-registration OTP resend; replacing a challenge invalidates its previous Redis key. |
+| 2026-08-30 | Task 2.4 migration fix | `In progress` → `In progress` | Corrected the `UNVERIFIED` PostgreSQL enum label to match SQLAlchemy's persisted enum-name convention; a follow-up migration is required for databases already upgraded. |
+| 2026-08-30 | Task 2.4 OTP contract correction | `In progress` → `In progress` | Removed public/internal challenge IDs from auth OTP flows. Issue/resend responses now return the generated OTP; Redis stores one hashed OTP per channel/purpose/destination scope, resend overwrites the old code, and local/test verification additionally accepts `123456`. |
+| 2026-08-30 | Task 2.4 JWT contract revision | `In progress` → `In progress` | Registration verification now returns plain text only. Login issues access/refresh JWTs, purpose claims and separate secrets are enforced, refresh can issue a new access JWT, and `device_label` was removed from login. |
+| 2026-08-30 | Task 2.4 OpenAPI security revision | `In progress` → `In progress` | Bearer security is now inferred recursively from `require_authentication` and `require_role(...)` dependencies, so protected routes receive Swagger lock icons without per-route `openapi_extra` declarations. |
+| 2026-08-30 | Task 2.4 token route revision | `In progress` → `In progress` | Removed the access-token-to-refresh-token route by user decision; login remains the refresh-token issuer and `/auth/token/refresh` exchanges a valid refresh JWT for a new access JWT. |
+| 2026-08-30 | Task 2.4 | `In progress` → `Done` | Removed obsolete refresh-issuance service/test code, confirmed database revision `20260830_0003 (head)`, passed the live WireMock contract, and verified logout revokes the matching session and blocks refresh reuse. |
+| 2026-08-31 | Task 2.5 | `Ready` → `Done` | Implemented and documented the protected user module: `/users/me` returns only JWT identity, `/users/profile` owns profile reads/updates, and email/phone changes require purpose-scoped OTP verification. Full test suite passed (`57 passed, 1 skipped`); focused static quality checks passed. |
+| 2026-08-31 | Task 2.5 API contract revision | `Done` → `Done` | Email verification now accepts only OTP. The user-scoped pending email and purpose are stored in Redis with the OTP TTL, replaced by a subsequent request, and removed after successful verification; full suite passed (`59 passed, 1 skipped`). |
+| 2026-08-31 | Task 2.5 phone/contact revision | `Done` → `Done` | Phone confirmation now accepts only OTP and resolves the user-scoped pending phone from Redis. Successful email/phone verification returns the required plain text; phone-change OTP is also emailed when `user.email` exists using the new `CHANGE_PHONE` template. Full suite passed (`63 passed, 1 skipped`). |
+| 2026-08-31 | Task 2.4 registration validation revision | `Done` → `Done` | Registration now validates and normalizes optional email input before persistence, returns a clear 422 error for invalid email, checks duplicate email before insertion, and maps a concurrent unique-constraint failure to a 409 domain error. Full suite passed (`65 passed, 1 skipped`). |
+| 2026-08-31 | Auth/user DTO email validation audit | `Done` → `Done` | Confirmed all client-supplied email fields in `auth_dto.py` and `user_dto.py` validate and normalize email before service/database access. Added the user email-request route contract test; full suite passed (`66 passed, 1 skipped`). |
 
 ## Verification Evidence
 
@@ -274,6 +290,7 @@
 - Acceptance evidence: one provider-neutral `send_otp` contract supports WireMock SMS and Mailpit email delivery. `EmailService.send_email` renders purpose-specific, autoescaped HTML templates for verified-email, email-change, password-reset, password-change, and step-up flows; WireMock maps accepted, rejected, timeout, and malformed SMS responses to stable domain errors.
 - Verification commands: `docker compose config --quiet`; focused email and OTP-adapter tests — 13 passed; ruff and mypy — passed; Pylint — 10.00/10.
 - Manual verification: restarted WireMock and verified its accepted SMS contract. Mailpit SMTP is healthy and accepted a rendered local verification email using the configured SMTP host and port.
+- Latest extension: `POST /api/health/test-email` uses `HealthService` and `EmailService` to submit `base_email.html` to the Mailpit-only test inbox. English templates and the isolated endpoint test are verified.
 - Follow-up / known limitation: eSMS implementation is intentionally deferred until its endpoint, request schema, template, and credential contract are supplied.
 
 ## Verification Evidence Template

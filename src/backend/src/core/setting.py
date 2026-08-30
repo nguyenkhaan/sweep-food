@@ -87,3 +87,11 @@ SMS_DELIVERY_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
 EMAIL_SMTP_HOST: Final[str] = get_env_var("EMAIL_SMTP_HOST")
 EMAIL_SMTP_PORT: Final[int] = get_positive_int_env("EMAIL_SMTP_PORT", 1025)
 EMAIL_FROM: Final[str] = get_env_var("EMAIL_FROM")
+JWT_ACCESS_TOKEN_TTL_MINUTES: Final[int] = get_positive_int_env(
+    "JWT_ACCESS_TOKEN_TTL_MINUTES",
+    15,
+)
+JWT_REFRESH_TOKEN_TTL_DAYS: Final[int] = get_positive_int_env(
+    "JWT_REFRESH_TOKEN_TTL_DAYS",
+    30,
+)

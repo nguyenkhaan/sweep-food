@@ -1,13 +1,15 @@
+"""Redis-backed OTP challenge, verification, and grant operations."""
+
 import json
 from abc import abstractmethod
 from dataclasses import dataclass
 from hashlib import sha256
 from secrets import token_urlsafe
 from typing import ClassVar, Protocol
-from uuid import UUID, uuid4
 
 from src.core.setting import (
     DEFAULT_OTP,
+    ENV,
     OTP_CHALLENGE_TTL_SECONDS,
     OTP_DESTINATION_REQUEST_LIMIT,
     OTP_FAILED_ATTEMPT_COOLDOWN_SECONDS,
@@ -146,10 +148,9 @@ DEFAULT_OTP_POLICY = OTPPolicy(
 
 
 @dataclass(frozen=True, slots=True)
-class OTPChallengeIssue:
-    """Internal challenge issuance result for a future delivery adapter."""
+class OTPIssue:
+    """Generated OTP and its remaining validity for delivery and API response."""
 
-    challenge_id: UUID
     otp: str
     expires_in_seconds: int
 
@@ -189,7 +190,7 @@ class OTPService:
         self,
         store: OTPStore,
         policy: OTPPolicy = DEFAULT_OTP_POLICY,
-        fixed_otp_code: str | None = DEFAULT_OTP,
+        fixed_otp_code: str | None = DEFAULT_OTP if ENV in {"dev", "test"} else None,
     ) -> None:
         """Create an OTP service with a Redis-compatible store and policy."""
         self._store = store
@@ -197,27 +198,18 @@ class OTPService:
         self._fixed_otp_code = fixed_otp_code
         self._validate_configuration()
 
-    async def issue_challenge(
+    async def issue_otp(
         self,
         channel: OTPChannel,
         destination: str,
         purpose: OTPPurpose,
         ip_address: str | None,
-    ) -> OTPChallengeIssue:
-        """Create a scoped OTP challenge after enforcing request limits."""
+    ) -> OTPIssue:
+        """Generate and store a scoped OTP after enforcing request limits."""
         destination_hash = self._hash_destination(destination)
         scope_key = self._scope_key(channel, destination_hash, purpose)
         await self._enforce_request_limits(scope_key, destination_hash, ip_address)
-
-        previous_challenge_id = await self._store.get(
-            self._challenge_index_key(scope_key)
-        )
-        if previous_challenge_id is not None:
-            await self._store.delete(self._challenge_key(previous_challenge_id))
-
-        challenge_id = uuid4()
-        generated_otp = generate_otp()
-        otp = self._fixed_otp_code or generated_otp
+        otp = generate_otp()
         record = _OTPChallengeRecord(
             channel=channel,
             destination_hash=destination_hash,
@@ -226,37 +218,31 @@ class OTPService:
             attempts=0,
         )
         await self._store.set(
-            self._challenge_key(str(challenge_id)),
+            self._otp_key(scope_key),
             self._serialize_challenge(record),
             self._policy.challenge_ttl_seconds,
         )
-        await self._store.set(
-            self._challenge_index_key(scope_key),
-            str(challenge_id),
-            self._policy.challenge_ttl_seconds,
-        )
-        return OTPChallengeIssue(
-            challenge_id=challenge_id,
+        return OTPIssue(
             otp=otp,
             expires_in_seconds=self._policy.challenge_ttl_seconds,
         )
 
-    async def verify_challenge(
+    async def verify_otp(
         self,
-        challenge_id: UUID,
         channel: OTPChannel,
         destination: str,
         purpose: OTPPurpose,
         otp: str,
     ) -> OTPVerificationGrant:
-        """Consume a matching OTP challenge and create a single-use grant."""
-        challenge_key = self._challenge_key(str(challenge_id))
-        raw_record = await self._store.get(challenge_key)
+        """Consume the current scoped OTP and create a single-use grant."""
+        destination_hash = self._hash_destination(destination)
+        scope_key = self._scope_key(channel, destination_hash, purpose)
+        otp_key = self._otp_key(scope_key)
+        raw_record = await self._store.get(otp_key)
         if raw_record is None:
             raise OTPChallengeNotFoundError()
 
         record = self._deserialize_challenge(raw_record)
-        destination_hash = self._hash_destination(destination)
         if (
             record.channel is not channel
             or record.destination_hash != destination_hash
@@ -264,11 +250,15 @@ class OTPService:
         ):
             raise OTPPurposeMismatchError()
 
-        if not compare_hash(otp, record.otp_hash):
-            await self._record_failed_attempt(challenge_key, record)
+        is_stored_otp_valid = compare_hash(otp, record.otp_hash)
+        is_local_mock_otp_valid = (
+            self._fixed_otp_code is not None and otp == self._fixed_otp_code
+        )
+        if not is_stored_otp_valid and not is_local_mock_otp_valid:
+            await self._record_failed_attempt(otp_key, record)
             raise OTPInvalidCodeError()
 
-        await self._delete_challenge(challenge_id, channel, destination_hash, purpose)
+        await self._store.delete(otp_key)
         return await self._create_grant(channel, destination_hash, purpose)
 
     async def consume_grant(
@@ -350,15 +340,6 @@ class OTPService:
         )
         if failed_record.attempts >= self._policy.max_verification_attempts:
             await self._store.delete(challenge_key)
-            await self._store.delete(
-                self._challenge_index_key(
-                    self._scope_key(
-                        record.channel,
-                        record.destination_hash,
-                        record.purpose,
-                    )
-                )
-            )
             await self._store.set(
                 self._failed_attempt_cooldown_key(
                     self._scope_key(
@@ -376,21 +357,6 @@ class OTPService:
             self._serialize_challenge(failed_record),
             remaining_ttl,
         )
-
-    async def _delete_challenge(
-        self,
-        challenge_id: UUID,
-        channel: OTPChannel,
-        destination_hash: str,
-        purpose: OTPPurpose,
-    ) -> None:
-        challenge_id_text = str(challenge_id)
-        await self._store.delete(self._challenge_key(challenge_id_text))
-        index_key = self._challenge_index_key(
-            self._scope_key(channel, destination_hash, purpose)
-        )
-        if await self._store.get(index_key) == challenge_id_text:
-            await self._store.delete(index_key)
 
     async def _create_grant(
         self,
@@ -521,12 +487,8 @@ class OTPService:
         return f"{channel.value}:{purpose.value}:{destination_hash}"
 
     @staticmethod
-    def _challenge_key(challenge_id: str) -> str:
-        return f"otp:challenge:{challenge_id}"
-
-    @staticmethod
-    def _challenge_index_key(scope_key: str) -> str:
-        return f"otp:challenge-index:{scope_key}"
+    def _otp_key(scope_key: str) -> str:
+        return f"otp:code:{scope_key}"
 
     @staticmethod
     def _grant_key(grant: str) -> str:
