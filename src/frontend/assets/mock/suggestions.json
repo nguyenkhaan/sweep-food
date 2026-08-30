@@ -1,1 +1,72 @@
-{ "_note": "mock fixture for suggestions — fill from plan.md §9 / api-contract.md" }
+{
+  "items": [
+    {
+      "score": 95,
+      "availability_ratio": 0.8,
+      "to_buy_count": 2,
+      "near_expiry_ingredients": ["Bơ", "Ức gà", "Cà chua bi"],
+      "breakdown": { "e": 0.92, "a": 0.8, "p": 0.74, "u": 0.78 },
+      "dish": {
+        "id": "d1",
+        "name": "Salad bơ ức gà",
+        "servings": 2,
+        "prep_time_min": 15,
+        "cook_time_min": 10,
+        "cuisine": "món trộn",
+        "difficulty": "Dễ",
+        "nutrition_per_serving": { "energy_kcal": 320, "protein_g": 28, "carb_g": 30, "lipid_g": 14 }
+      }
+    },
+    {
+      "score": 88,
+      "availability_ratio": 0.9,
+      "to_buy_count": 0,
+      "near_expiry_ingredients": ["Cà chua bi", "Cải bó xôi"],
+      "breakdown": { "e": 0.7, "a": 0.9, "p": 0.82, "u": 1.0 },
+      "dish": {
+        "id": "d2",
+        "name": "Canh chua cá lóc",
+        "servings": 3,
+        "prep_time_min": 15,
+        "cook_time_min": 20,
+        "cuisine": "món canh",
+        "difficulty": "Trung bình",
+        "nutrition_per_serving": { "energy_kcal": 280, "protein_g": 26, "carb_g": 18, "lipid_g": 11 }
+      }
+    },
+    {
+      "score": 82,
+      "availability_ratio": 1.0,
+      "to_buy_count": 0,
+      "near_expiry_ingredients": ["Trứng gà"],
+      "breakdown": { "e": 0.55, "a": 1.0, "p": 0.7, "u": 1.0 },
+      "dish": {
+        "id": "d3",
+        "name": "Trứng chiên hành lá",
+        "servings": 2,
+        "prep_time_min": 5,
+        "cook_time_min": 5,
+        "cuisine": "món mặn",
+        "difficulty": "Dễ",
+        "nutrition_per_serving": { "energy_kcal": 210, "protein_g": 15, "carb_g": 3, "lipid_g": 15 }
+      }
+    },
+    {
+      "score": 76,
+      "availability_ratio": 0.7,
+      "to_buy_count": 3,
+      "near_expiry_ingredients": ["Thịt ba chỉ"],
+      "breakdown": { "e": 0.5, "a": 0.7, "p": 0.68, "u": 0.55 },
+      "dish": {
+        "id": "d4",
+        "name": "Thịt ba chỉ rang cháy cạnh",
+        "servings": 3,
+        "prep_time_min": 10,
+        "cook_time_min": 15,
+        "cuisine": "món mặn",
+        "difficulty": "Trung bình",
+        "nutrition_per_serving": { "energy_kcal": 420, "protein_g": 22, "carb_g": 6, "lipid_g": 35 }
+      }
+    }
+  ]
+}

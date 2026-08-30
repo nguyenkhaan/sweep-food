@@ -15,15 +15,15 @@ final pantryFilterControllerProvider = PantryFilterControllerProvider._();
 final class PantryFilterControllerProvider
     extends $NotifierProvider<PantryFilterController, PantryFilter> {
   PantryFilterControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'pantryFilterControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'pantryFilterControllerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$pantryFilterControllerHash();
@@ -50,14 +50,11 @@ abstract class _$PantryFilterController extends $Notifier<PantryFilter> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<PantryFilter, PantryFilter>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<PantryFilter, PantryFilter>,
-              PantryFilter,
-              Object?,
-              Object?
-            >;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<PantryFilter, PantryFilter>,
+        PantryFilter,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -75,15 +72,15 @@ final class PantryListControllerProvider
   /// Loads the full active pantry list (mock returns everything) and owns the
   /// mutations. Filtering/sorting is applied client-side by [pantryListView].
   PantryListControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'pantryListControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'pantryListControllerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$pantryListControllerHash();
@@ -94,7 +91,7 @@ final class PantryListControllerProvider
 }
 
 String _$pantryListControllerHash() =>
-    r'2b58574ed06b7b6c2fa6ab722146b80d67bb0578';
+    r'4d0ab01c107040b1e64de6d821e67a1a19ef3e58';
 
 /// Loads the full active pantry list (mock returns everything) and owns the
 /// mutations. Filtering/sorting is applied client-side by [pantryListView].
@@ -106,14 +103,11 @@ abstract class _$PantryListController extends $AsyncNotifier<List<PantryItem>> {
   void runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<List<PantryItem>>, List<PantryItem>>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<PantryItem>>, List<PantryItem>>,
-              AsyncValue<List<PantryItem>>,
-              Object?,
-              Object?
-            >;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AsyncValue<List<PantryItem>>, List<PantryItem>>,
+        AsyncValue<List<PantryItem>>,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }
@@ -125,25 +119,19 @@ final pantryListViewProvider = PantryListViewProvider._();
 
 /// The filtered + sorted list the K-01 screen renders.
 
-final class PantryListViewProvider
-    extends
-        $FunctionalProvider<
-          List<PantryItem>,
-          List<PantryItem>,
-          List<PantryItem>
-        >
-    with $Provider<List<PantryItem>> {
+final class PantryListViewProvider extends $FunctionalProvider<List<PantryItem>,
+    List<PantryItem>, List<PantryItem>> with $Provider<List<PantryItem>> {
   /// The filtered + sorted list the K-01 screen renders.
   PantryListViewProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'pantryListViewProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'pantryListViewProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$pantryListViewHash();
@@ -176,25 +164,21 @@ final pantryTierCountsProvider = PantryTierCountsProvider._();
 
 /// Per-tier counts for the segmented control chips.
 
-final class PantryTierCountsProvider
-    extends
-        $FunctionalProvider<
-          Map<StorageTier?, int>,
-          Map<StorageTier?, int>,
-          Map<StorageTier?, int>
-        >
-    with $Provider<Map<StorageTier?, int>> {
+final class PantryTierCountsProvider extends $FunctionalProvider<
+    Map<StorageTier?, int>,
+    Map<StorageTier?, int>,
+    Map<StorageTier?, int>> with $Provider<Map<StorageTier?, int>> {
   /// Per-tier counts for the segmented control chips.
   PantryTierCountsProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'pantryTierCountsProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'pantryTierCountsProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$pantryTierCountsHash();
@@ -202,8 +186,8 @@ final class PantryTierCountsProvider
   @$internal
   @override
   $ProviderElement<Map<StorageTier?, int>> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
   Map<StorageTier?, int> create(Ref ref) {
@@ -228,25 +212,20 @@ final pantrySummaryProvider = PantrySummaryProvider._();
 
 /// `GET /pantry/summary` (Home dashboard; also invalidated after mutations).
 
-final class PantrySummaryProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<PantrySummary>,
-          PantrySummary,
-          FutureOr<PantrySummary>
-        >
+final class PantrySummaryProvider extends $FunctionalProvider<
+        AsyncValue<PantrySummary>, PantrySummary, FutureOr<PantrySummary>>
     with $FutureModifier<PantrySummary>, $FutureProvider<PantrySummary> {
   /// `GET /pantry/summary` (Home dashboard; also invalidated after mutations).
   PantrySummaryProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'pantrySummaryProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'pantrySummaryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$pantrySummaryHash();
@@ -254,8 +233,8 @@ final class PantrySummaryProvider
   @$internal
   @override
   $FutureProviderElement<PantrySummary> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
   FutureOr<PantrySummary> create(Ref ref) {

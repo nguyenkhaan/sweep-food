@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:frontend/app/router/route_guards.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/shell/app_shell.dart';
+import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
+import 'package:frontend/features/cooking/presentation/screens/cook_result_screen.dart';
+import 'package:frontend/features/dishes/presentation/screens/dish_detail_screen.dart';
 import 'package:frontend/features/home/presentation/screens/home_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/add_ingredient_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/pantry_item_detail_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/pantry_screen.dart';
 import 'package:frontend/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:frontend/features/shopping_list/presentation/screens/shopping_list_screen.dart';
+import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:frontend/features/suggestions/presentation/screens/suggestion_list_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -74,6 +78,16 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: Routes.suggestions,
                 builder: (context, state) => const SuggestionListScreen(),
+                routes: [
+                  GoRoute(
+                    path: Routes.dish, // '/suggestions/dish/:id'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => DishDetailScreen(
+                      dishId: state.pathParameters['id']!,
+                      suggestion: state.extra as DishSuggestion?,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -96,6 +110,12 @@ GoRouter appRouter(Ref ref) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: Routes.cookResult,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) =>
+            CookResultScreen(result: state.extra! as CookResult),
       ),
     ],
   );

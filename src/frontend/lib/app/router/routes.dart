@@ -25,6 +25,7 @@ abstract final class Routes {
   static const dish = 'dish/:id'; // relative to /suggestions
 
   // Misc pushed screens
+  static const cookResult = '/cook-result';
   static const notifications = '/notifications';
   static const paywall = '/paywall';
   static const reports = '/reports';

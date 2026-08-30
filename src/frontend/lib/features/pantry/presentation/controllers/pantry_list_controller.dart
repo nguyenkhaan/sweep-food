@@ -110,6 +110,26 @@ class PantryListController extends _$PantryListController {
   }
 
   Future<void> refresh() => ref.refresh(pantryListControllerProvider.future);
+
+  /// Insert an already-built item (leftover saved after cooking, D-06).
+  void addExisting(PantryItem item) {
+    state = AsyncData([..._current, item]);
+    ref.invalidate(pantrySummaryProvider);
+  }
+
+  /// Splice post-cook quantities into the loaded list and drop depleted batches
+  /// (M3 core loop — `CookResult.updatedPantryItems`).
+  void applyCookChanges({
+    required List<PantryItem> updated,
+    List<String> depletedIds = const [],
+  }) {
+    final byId = {for (final u in updated) u.id: u};
+    state = AsyncData([
+      for (final i in _current)
+        if (!depletedIds.contains(i.id)) byId[i.id] ?? i,
+    ]);
+    ref.invalidate(pantrySummaryProvider);
+  }
 }
 
 /// The filtered + sorted list the K-01 screen renders.
@@ -127,12 +147,15 @@ List<PantryItem> pantryListView(Ref ref) {
     return true;
   }).toList();
 
-  out.sort(switch (f.sort) {
-    PantrySort.priority => (a, b) => a.priorityScore.compareTo(b.priorityScore),
-    PantrySort.name => (a, b) =>
-        a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-    PantrySort.recent => (a, b) => b.addedAt.compareTo(a.addedAt),
-  });
+  out.sort(
+    switch (f.sort) {
+      PantrySort.priority => (a, b) =>
+          a.priorityScore.compareTo(b.priorityScore),
+      PantrySort.name => (a, b) =>
+          a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+      PantrySort.recent => (a, b) => b.addedAt.compareTo(a.addedAt),
+    },
+  );
   return out;
 }
 

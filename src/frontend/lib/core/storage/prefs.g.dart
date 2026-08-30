@@ -17,26 +17,22 @@ final sharedPreferencesProvider = SharedPreferencesProvider._();
 /// The [SharedPreferences] instance, loaded once in `bootstrap.dart` and
 /// injected via `overrideWithValue`. Reading it before that override is a bug.
 
-final class SharedPreferencesProvider
-    extends
-        $FunctionalProvider<
-          SharedPreferences,
-          SharedPreferences,
-          SharedPreferences
-        >
-    with $Provider<SharedPreferences> {
+final class SharedPreferencesProvider extends $FunctionalProvider<
+    SharedPreferences,
+    SharedPreferences,
+    SharedPreferences> with $Provider<SharedPreferences> {
   /// The [SharedPreferences] instance, loaded once in `bootstrap.dart` and
   /// injected via `overrideWithValue`. Reading it before that override is a bug.
   SharedPreferencesProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'sharedPreferencesProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'sharedPreferencesProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$sharedPreferencesHash();
@@ -44,8 +40,8 @@ final class SharedPreferencesProvider
   @$internal
   @override
   $ProviderElement<SharedPreferences> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
   SharedPreferences create(Ref ref) {

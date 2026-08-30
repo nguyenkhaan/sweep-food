@@ -24,8 +24,8 @@ _PantryItemDto _$PantryItemDtoFromJson(Map<String, dynamic> json) =>
       expiryDate: json['expiry_date'] == null
           ? null
           : DateTime.parse(json['expiry_date'] as String),
-      referenceShelfLifeDays: (json['reference_shelf_life_days'] as num?)
-          ?.toInt(),
+      referenceShelfLifeDays:
+          (json['reference_shelf_life_days'] as num?)?.toInt(),
       priceVnd: (json['price_vnd'] as num?)?.toInt(),
     );
 
@@ -50,13 +50,11 @@ Map<String, dynamic> _$PantryItemDtoToJson(_PantryItemDto instance) =>
 _PantrySummaryDto _$PantrySummaryDtoFromJson(Map<String, dynamic> json) =>
     _PantrySummaryDto(
       totalCount: (json['total_count'] as num).toInt(),
-      countByTier:
-          (json['count_by_tier'] as Map<String, dynamic>?)?.map(
+      countByTier: (json['count_by_tier'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, (e as num).toInt()),
           ) ??
           const {},
-      nearExpiry:
-          (json['near_expiry'] as List<dynamic>?)
+      nearExpiry: (json['near_expiry'] as List<dynamic>?)
               ?.map((e) => PantryItemDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
