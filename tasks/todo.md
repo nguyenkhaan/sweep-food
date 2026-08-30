@@ -136,18 +136,19 @@
 
 ### Task 2.1: Add user and session schema
 
-**Description:** Implement migrations/models for users, account status/roles, profile preferences, and refresh-token sessions exactly as approved in `DATABASE.txt`.
+**Description:** Implement migrations/models for users, password credentials, account status/roles, profile preferences, and refresh-token sessions exactly as approved in `DATABASE.txt`.
 
 **Acceptance criteria:**
 
 - [ ] Phone is unique and normalized as E.164; email is nullable and unique when present.
+- [ ] Every user has an Argon2id `password_hash`; no plaintext password is persisted, logged, or returned.
 - [ ] User role/status and verified-at fields are represented.
 - [ ] Refresh tokens are stored as hashes, not clear values.
 
 **Verification:**
 
 - [ ] Migration upgrade/downgrade test passes.
-- [ ] Constraint tests reject duplicate phone/email and invalid status combinations.
+- [ ] Constraint tests reject duplicate phone/email, absent password hashes, and invalid status combinations.
 
 **Dependencies:** Phase 1 checkpoint.  
 **Files likely touched:** migrations, `src/backend/src/model/*`, `src/backend/src/module/auth/*`, tests  
@@ -155,12 +156,13 @@
 
 ### Task 2.2: Implement OTP challenge, hashing, and rate-limit services
 
-**Description:** Build the backend-owned OTP domain service using Redis TTL state, purpose separation, secure generation, hash verification, attempt limits, and configurable resend limits.
+**Description:** Build the backend-owned OTP domain service using Redis TTL state, purpose separation, secure generation, hash verification, short-lived single-use verification grants, attempt limits, and configurable resend limits.
 
 **Acceptance criteria:**
 
 - [ ] OTP is six numeric digits in non-test environments and is never persisted/logged in clear text.
 - [ ] Challenges expire, are single-use, and are scoped to destination plus purpose.
+- [ ] A successful verification returns only a short-lived grant bound to the matching purpose/destination; it does not create a session.
 - [ ] Request/attempt rate limits return stable domain errors.
 
 **Verification:**
@@ -191,19 +193,20 @@
 **Files likely touched:** `src/backend/src/service/*`, `src/backend/src/module/auth/*`, `src/backend/wiremock/*`, tests  
 **Estimated scope:** M
 
-### Task 2.4: Deliver phone OTP sign-in and session APIs
+### Task 2.4: Deliver registration, phone/password sign-in, and session APIs
 
-**Description:** Implement OTP request/verify, access/refresh token, logout, and session management endpoints with consistent responses and ownership middleware.
+**Description:** Implement OTP request/verify, registration completion, phone/password login, password reset/change, access/refresh token, logout, and session management endpoints with consistent responses and ownership middleware.
 
 **Acceptance criteria:**
 
-- [ ] First phone verification creates/activates a user; later verification signs in the existing user.
-- [ ] Verify returns access/refresh session data without disclosing whether an account existed before request.
+- [ ] A verified registration grant plus valid password creates/activates a user; OTP verification alone never creates a session.
+- [ ] Phone/password login returns access/refresh session data without disclosing whether an account existed or password verification failed.
+- [ ] Password reset/change consumes a matching OTP grant and revokes affected refresh-token sessions.
 - [ ] Refresh rotation and revocation invalidate the correct session family.
 
 **Verification:**
 
-- [ ] API tests sign in locally using `123456`, refresh, logout, and fail after revocation.
+- [ ] API tests register locally with `123456`, sign in with phone/password, reset/change password through OTP verification, refresh, logout, and fail after revocation.
 - [ ] A banned account cannot use protected endpoints.
 
 **Dependencies:** Tasks 2.1–2.3.  
@@ -212,18 +215,18 @@
 
 ### Task 2.5: Add profile, verified-email, and authorization policies
 
-**Description:** Implement profile/preferences APIs, verified-email attachment and alternate email OTP sign-in, plus reusable user ownership/admin role policy dependencies.
+**Description:** Implement profile/preferences APIs, verified-email recovery, verified phone/email change, and reusable user ownership/admin role policy dependencies.
 
 **Acceptance criteria:**
 
-- [ ] An unverified email cannot be used for alternate sign-in.
+- [ ] An unverified email cannot be used for password recovery or sensitive identity changes.
 - [ ] Email verification requires an OTP with the correct purpose.
 - [ ] Protected resource queries enforce current user ownership.
 
 **Verification:**
 
 - [ ] Cross-user access tests return a non-disclosing error.
-- [ ] Profile/session/email API tests pass with both SMS and email channels.
+- [ ] Profile/session/email API tests pass with both SMS and verified-email OTP channels.
 
 **Dependencies:** Task 2.4.  
 **Files likely touched:** `src/backend/src/module/users/*`, `src/backend/src/module/auth/*`, tests  
@@ -231,7 +234,7 @@
 
 ### Checkpoint: Phase 2
 
-- [ ] Phone OTP and verified-email alternate OTP flows work end-to-end locally.
+- [ ] OTP-gated registration, phone/password sign-in, password recovery, and verified phone/email change flows work end-to-end locally.
 - [ ] Session rotation/revocation, rate limits, account status, and ownership checks pass tests.
 - [ ] No OTP, token, or provider secret appears in captured logs.
 

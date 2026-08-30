@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/mock/sms"
+  },
+  "response": {
+    "status": 202,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "provider": "mock-sms",
+      "status": "accepted",
+      "delivery_reference": "mock-sms-accepted",
+      "otp": "123456"
+    }
+  }
+}

@@ -59,7 +59,7 @@ The backend must enable the user to:
 
 The MVP is successful when all of the following are demonstrable in an end-to-end test environment:
 
-- A user can authenticate with a phone OTP and optionally verify an email address.
+- A user can register through phone OTP verification and password creation, sign in with phone and password, and optionally verify an email address.
 - A user can create, read, edit, consume, and archive ingredient batches through manual-entry APIs.
 - Two batches of the same ingredient remain distinct and are consumed in expiration order.
 - Expiration status and recommendation inputs are computed consistently.
@@ -74,8 +74,9 @@ The MVP is successful when all of the following are demonstrable in an end-to-en
 ### 3.1 In scope for MVP
 
 - Single-user personal inventory.
-- User authentication by phone number and SMS OTP.
-- Optional email verification and email OTP as an alternate verification/sign-in channel after verification.
+- User registration through phone OTP verification followed by password creation.
+- User sign-in by phone number and password.
+- Optional email verification; verified email is an OTP destination for password recovery and sensitive identity changes, not an alternate sign-in channel.
 - Admin account seeded separately; authorization support for the `admin` role.
 - Manual inventory batch CRUD.
 - Master ingredient, recipe, and recipe-ingredient catalogs seeded by a Python script.
@@ -182,14 +183,13 @@ Seeded recipe totals may be denormalized for fast reads, but the seed process mu
 
 | Role | Creation | MVP permissions |
 |---|---|---|
-| `user` | Created through phone verification | Manage only their profile, inventory, recommendations, meal selections, shopping list, favorites, device registrations, and cooking history |
+| `user` | Created after phone OTP verification and password creation | Manage only their profile, inventory, recommendations, meal selections, shopping list, favorites, device registrations, and cooking history |
 | `admin` | Created by seed/configuration only | Reserved for future catalog administration; no public admin CRUD API in MVP |
 
 ### 5.2 Account status
 
 | Status | Meaning |
 |---|---|
-| `UNVERIFIED` | Account exists but primary phone verification is incomplete |
 | `ACTIVE` | Account is verified and may use protected APIs |
 | `BANNED` | Authentication and protected access are denied |
 
@@ -205,12 +205,20 @@ Seeded recipe totals may be denormalized for fast reads, but the seed process mu
 
 ### 6.1 Supported identity channels
 
-- Phone number is required for initial account registration and is stored in E.164 format, e.g. `+84901234567`.
-- Email is nullable.
-- An email must be verified before it can be used as an alternate OTP sign-in or recovery channel.
+- Phone number is required for initial account registration and standard sign-in; it is stored in E.164 format, e.g. `+84901234567`.
+- Password is required to complete registration. The backend stores only an Argon2id password hash; plaintext passwords must never be logged, persisted, or returned.
+- Email is nullable. A verified email may receive OTPs for password recovery and sensitive identity changes, but cannot be used as a sign-in identifier in this MVP.
 - Adding or changing a phone number or email requires verification of the new destination.
 
-### 6.2 OTP ownership
+### 6.2 Registration, sign-in, and sensitive-change flows
+
+1. **Registration:** request an SMS OTP with purpose `REGISTER`, verify it, then exchange the resulting short-lived single-use verification grant and a password through the registration-completion endpoint. The backend creates an `ACTIVE` user and session only after password creation succeeds.
+2. **Sign-in:** submit phone number and password. A successful password verification creates an access token and a rotating refresh-token session; it does not send an OTP.
+3. **Password reset or change:** request and verify an OTP sent to the current phone number or a verified email, then submit the matching verification grant and new password. Completing either operation revokes active refresh-token sessions.
+4. **Phone or email change:** the authenticated user requests and verifies an OTP sent to the new destination, then consumes the matching verification grant to update that identity field.
+5. **Step-up authentication:** sensitive operations may require a fresh OTP verification with purpose `STEP_UP_AUTH`; the endpoint defines when this is required and consumes the resulting grant.
+
+### 6.3 OTP ownership
 
 The Sweep Food backend owns OTP generation and validation. SMS/email providers only deliver messages.
 
@@ -220,13 +228,18 @@ The Sweep Food backend owns OTP generation and validation. SMS/email providers o
 - Maximum verification attempts per challenge: five.
 - A successful verification consumes the challenge immediately.
 - Issuing a replacement OTP invalidates the previous active challenge for the same purpose and destination.
+- A successful verification returns a short-lived, single-use verification grant bound to the challenge's purpose and destination. A grant authorizes only its matching follow-up operation and never creates a session by itself.
 - OTP values, hashes, access tokens, and provider secrets must never appear in production logs.
 
-### 6.3 OTP purposes
+### 6.4 OTP purposes
 
-`REGISTER`, `LOGIN`, `VERIFY_EMAIL`, `CHANGE_PHONE`, `CHANGE_EMAIL`, and `RECOVER_ACCESS` must be modeled as separate purposes. A challenge created for one purpose cannot be used for another.
+`REGISTER`, `VERIFY_EMAIL`, `CHANGE_PHONE`, `CHANGE_EMAIL`, `RESET_PASSWORD`, `CHANGE_PASSWORD`, and `STEP_UP_AUTH` must be modeled as separate purposes. A challenge or verification grant created for one purpose cannot be used for another. `LOGIN` is not an OTP purpose in this MVP.
 
-### 6.4 Rate limiting
+### 6.5 Password security and rate limiting
+
+- Passwords must be checked against a configurable strength policy and hashed with Argon2id using environment-configured cost parameters.
+- Login attempts must be rate-limited by phone number and IP address. Responses must not reveal whether the phone number exists or whether a password was correct.
+- Password reset/change, registration completion, and identity changes must be rate-limited and audited.
 
 Initial policy, configurable by environment:
 
@@ -238,7 +251,7 @@ Initial policy, configurable by environment:
 
 Responses must avoid revealing whether a phone number or email is already registered where that information would enable account enumeration.
 
-### 6.5 Tokens and sessions
+### 6.6 Tokens and sessions
 
 - Short-lived signed access token: recommended 15 minutes.
 - Rotating refresh token: recommended 30 days.
@@ -246,7 +259,7 @@ Responses must avoid revealing whether a phone number or email is already regist
 - Refresh token reuse revokes the affected token family.
 - Users can list and revoke active sessions.
 
-### 6.6 Environment behavior
+### 6.7 Environment behavior
 
 | Environment | Delivery adapter | Expected behavior |
 |---|---|---|
@@ -254,7 +267,7 @@ Responses must avoid revealing whether a phone number or email is already regist
 | Staging | eSMS Sandbox | Exercise provider contract without fees or delivery to a real phone |
 | Production | eSMS SMS Brandname OTP | Deliver registered transactional OTP templates to the user's phone |
 
-Email OTP uses a provider adapter with the same internal interface. The concrete production email provider may be selected during implementation; local/CI must use a non-delivering mock adapter.
+Email OTP uses a provider adapter with the same internal interface. The concrete production email provider may be selected during implementation; local/CI must use a non-delivering mock adapter. Fixed local/CI OTP `123456` applies only to OTP-gated flows, not password sign-in.
 
 ## 7. Functional Requirements
 
@@ -598,7 +611,11 @@ Validation errors use the same envelope. Internal stack traces are never returne
 | Method | Path | Purpose |
 |---|---|---|
 | `POST` | `/auth/otp/request` | Request phone or email OTP for a stated purpose |
-| `POST` | `/auth/otp/verify` | Verify OTP and create/authorize a session |
+| `POST` | `/auth/otp/verify` | Verify OTP and return a purpose-bound verification grant |
+| `POST` | `/auth/register/complete` | Create an account and session from a verified registration grant and password |
+| `POST` | `/auth/login` | Sign in with phone number and password |
+| `POST` | `/auth/password/reset` | Set a new password from a verified reset grant |
+| `POST` | `/auth/password/change` | Change password from a verified change-password grant |
 | `POST` | `/auth/token/refresh` | Rotate a refresh token |
 | `POST` | `/auth/logout` | Revoke current session |
 | `GET` | `/auth/sessions` | List active user sessions |
@@ -610,11 +627,11 @@ Example OTP request:
 {
   "channel": "SMS",
   "destination": "+84901234567",
-  "purpose": "LOGIN"
+  "purpose": "REGISTER"
 }
 ```
 
-The response returns a challenge ID, masked destination, resend time, and expiry time. It never returns the OTP outside the explicitly configured local/CI environment.
+The request response returns a challenge ID, masked destination, resend time, and expiry time. It never returns the OTP outside the explicitly configured local/CI environment. Successful verification returns a purpose-bound verification grant, never a session or plaintext OTP.
 
 #### User profile and devices
 
@@ -624,6 +641,8 @@ The response returns a challenge ID, masked destination, resend time, and expiry
 | `PATCH` | `/users/me` | Update profile/preferences |
 | `POST` | `/users/me/email/request-verification` | Start email verification |
 | `POST` | `/users/me/email/verify` | Verify and attach email |
+| `POST` | `/users/me/phone/request-change` | Start phone-number change verification for a new phone |
+| `POST` | `/users/me/phone/confirm-change` | Consume the verified phone-change grant |
 | `POST` | `/users/me/devices` | Register/update an FCM device token |
 | `DELETE` | `/users/me/devices/{device_id}` | Disable a device registration |
 
@@ -734,8 +753,9 @@ Neon PostgreSQL is the system of record. Redis stores ephemeral OTP challenges, 
 - `phone_verified_at timestamptz nullable`
 - `email citext unique nullable`
 - `email_verified_at timestamptz nullable`
+- `password_hash varchar not null` (Argon2id hash only)
 - `role enum(user, admin) not null`
-- `status enum(unverified, active, banned) not null`
+- `status enum(active, banned) not null`
 - `preferences jsonb not null default '{}'`
 - `created_at`, `updated_at timestamptz`
 
@@ -969,7 +989,7 @@ Production adapter: eSMS SMS Brandname OTP. Staging passes the supported sandbox
 
 ### 12.2 Email
 
-Internal interface mirrors the SMS delivery contract. Verified email can be used for alternate OTP login/recovery. Provider selection is deferred but must not affect public authentication APIs.
+Internal interface mirrors the SMS delivery contract. A verified email can be used for password recovery and sensitive-change verification. Provider selection is deferred but must not affect public authentication APIs.
 
 ### 12.3 FCM
 
@@ -1083,7 +1103,7 @@ WireMock fixtures must cover:
 
 ### 16.4 End-to-end acceptance scenario
 
-1. User requests and verifies fixed local OTP `123456`.
+1. User requests and verifies fixed local registration OTP `123456`, then creates a password and signs in with phone plus password.
 2. User creates two batches of the same ingredient with different expiration dates.
 3. User requests recommendations and receives seeded recipes with score explanations.
 4. User previews a recipe and sees the earlier-expiring batch allocated first.
@@ -1097,9 +1117,9 @@ WireMock fixtures must cover:
 
 ### Authentication
 
-- Phone-based registration/login works through OTP.
-- Verified email can be used as an alternate OTP channel.
-- Unverified email cannot be used to authenticate.
+- Phone-based registration requires OTP verification followed by password creation; sign-in uses phone plus password.
+- Verified email can receive OTPs for password recovery and sensitive changes.
+- Unverified email cannot be used for recovery or sensitive identity changes.
 - Rate limits and challenge expiry are enforced.
 - Local/CI uses fixed OTP; production never exposes OTP in response/logs.
 
@@ -1149,7 +1169,7 @@ WireMock fixtures must cover:
 ### Phase 1 — Platform foundation
 
 - Configuration, Neon PostgreSQL, Redis, migrations, request/error conventions.
-- Phone OTP authentication, optional verified email, sessions, roles.
+- Phone OTP-gated registration, phone/password sign-in, verified-email recovery, sessions, roles.
 - WireMock SMS fixtures and eSMS adapter boundaries.
 - Seed pipeline and initial catalog.
 
@@ -1190,7 +1210,7 @@ WireMock fixtures must cover:
 | Mock recommendations appear arbitrary | Low trust | Deterministic scoring and component explanations |
 | Future ML model changes API shape | Rework across clients | Stable provider interface and public result contract |
 | OTP abuse increases cost | Cost/security incident | Multi-dimensional rate limits, cooldowns, hashed OTPs, provider monitoring |
-| SMS delivery is blocked/delayed | Login failure | Registered Brandname/template, alternate verified email, resend controls, provider abstraction |
+| SMS delivery is blocked/delayed | Registration or sensitive-change delay | Registered Brandname/template, verified-email recovery, resend controls, provider abstraction |
 | Concurrent cooking causes negative stock | Corrupt inventory | Transactional row locks, revalidation, idempotency keys |
 | Seed scrape quality is poor | Broken catalog/nutrition | Schema validation, dry run, deterministic natural keys, reject report |
 

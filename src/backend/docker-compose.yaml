@@ -10,6 +10,7 @@ services:
     environment:
       REDIS_URL: redis://redis:6379/0
       WIREMOCK_URL: http://wiremock:8080
+      EMAIL_SMTP_HOST: mailpit
     ports:
       - "4000:4000"
     depends_on:
@@ -17,6 +18,8 @@ services:
         condition: service_healthy
       wiremock:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     healthcheck:
       test:
         - CMD
@@ -35,6 +38,8 @@ services:
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis_data:/data
+    ports: 
+      - 6379:6379
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -54,6 +59,14 @@ services:
       interval: 10s
       timeout: 3s
       retries: 5
+    networks:
+      - backend_network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
     networks:
       - backend_network
 

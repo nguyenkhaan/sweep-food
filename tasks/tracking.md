@@ -33,20 +33,20 @@
 
 | Field | Value |
 |---|---|
-| Active phase | Phase 1 — Runtime Foundation and Development Environment |
-| Active task | Task 1.2 — Docker environment review |
-| Next task | Task 1.1 — resolve the paused health smoke validation |
-| Next required action | Await user manual Docker test; no Compose containers were started by the agent |
-| Database target | Neon PostgreSQL; migration/test branches must be disposable and are not used until Phase 1 |
-| Current blocker | Health endpoint smoke validation paused after three unsuccessful attempts; user direction is required before another retry |
+| Active phase | Phase 2 — Identity, Authentication, and User Preferences |
+| Active task | Task 2.2 — Implement OTP challenge, hashing, and rate-limit services (`In progress`) |
+| Next task | Verify Redis-backed OTP behavior, then begin Task 2.4 |
+| Next required action | Start the backend with Redis and verify the Redis lifecycle connection |
+| Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
+| Current blocker | None |
 
 ## Phase Dashboard
 
 | Phase | Objective | Status | Entry condition | Exit evidence |
 |---|---|---|---|---|
 | 0 | Data Contract and Database Redesign | `Done` | PRD approved | User approved `DATABASE.txt`; data model maps all MVP data/invariants |
-| 1 | Runtime Foundation and Development Environment | `In progress` | Phase 0 checkpoint complete | API, Neon migration path, Redis/WireMock, tests, quality gate work from clean setup |
-| 2 | Identity, Authentication, and User Preferences | `Not started` | Phase 1 checkpoint complete | Phone/email OTP, sessions, roles, ownership checks pass |
+| 1 | Runtime Foundation and Development Environment | `Done` | Phase 0 checkpoint complete | User-confirmed checkpoint: API, Alembic path, Redis/WireMock, test harness, and Phase 1 quality evidence are available |
+| 2 | Identity, Authentication, and User Preferences | `In progress` | Phase 1 checkpoint complete | Phone/password sign-in; OTP-gated registration, recovery, sensitive changes; sessions, roles, and ownership checks pass |
 | 3 | Catalog, Seed Pipeline, and Recipe Read APIs | `Not started` | Phase 0 and 1 checkpoints complete | Disposable Neon branch migrates/seeds repeatedly; read APIs work |
 | 4 | Inventory, Shelf Life, and FEFO | `Not started` | Phase 3 checkpoint complete | Manual batches, ledger, expiry logic, and concurrency-safe FEFO work |
 | 5 | Recommendations, Meal Selection, and Shopping Lists | `Not started` | Phases 3 and 4 checkpoints complete | Explainable inventory-sensitive recommendations and shopping list work |
@@ -66,18 +66,18 @@
 
 ### Phase 1 — Runtime Foundation
 
-- [x] 1.1 Establish backend package structure and typed configuration — in progress
-- [ ] 1.2 Add persistent service dependencies and local Docker environment — awaiting manual review
-- [ ] 1.3 Bootstrap SQLAlchemy, Alembic, and database conventions
-- [ ] 1.4 Establish quality, test, and WireMock fixture harness
-- [ ] Phase 1 checkpoint
+- [x] 1.1 Establish backend package structure and typed configuration
+- [x] 1.2 Add persistent service dependencies and local Docker environment
+- [x] 1.3 Bootstrap SQLAlchemy, Alembic, and database conventions
+- [x] 1.4 Establish quality, test, and WireMock fixture harness
+- [x] Phase 1 checkpoint — user confirmed
 
 ### Phase 2 — Authentication and User Foundation
 
-- [ ] 2.1 Add user and session schema
-- [ ] 2.2 Implement OTP challenge, hashing, and rate-limit services
-- [ ] 2.3 Add SMS/email delivery adapters and WireMock contracts
-- [ ] 2.4 Deliver phone OTP sign-in and session APIs
+- [x] 2.1 Add user and session schema
+- [x] 2.2 Implement OTP challenge, hashing, and rate-limit services (`In progress`)
+- [x] 2.3 Add SMS/email delivery adapters and WireMock contracts
+- [ ] 2.4 Deliver registration, phone/password sign-in, and session APIs
 - [ ] 2.5 Add profile, verified-email, and authorization policies
 - [ ] Phase 2 checkpoint
 
@@ -144,21 +144,27 @@
 
 | Task | Status | Dependencies | Evidence / next action |
 |---|---|---|---|
-| 0.1 Replace conceptual database schema | `Done` | None | User-approved schema has 20 enums and 24 tables; notes and all delivery documents are synchronized |
+| 0.1 Replace conceptual database schema | `Done` | None | User-approved schema has 22 enums and 24 tables, including password credentials and purpose-scoped OTP contracts; notes and delivery documents are synchronized |
 | 0.2 Add schema migration mapping and invariants | `Done` | 0.1 | Mapping, migration order, invariants, and indexes are documented in `DATABASE_NOTES.md` |
 | 0.3 Review data model against MVP flows | `Done` | 0.1, 0.2 | Every persisted and non-persisting PRD flow maps to the user-approved schema or Redis/transient processing |
 | Phase 0 checkpoint | `Done` | 0.1–0.3 | User approved the database contract by authorizing Task 1.1 |
 
-### Future Phases
-
-Tasks 1.1 through 9.4 remain `Not started`. Their authoritative acceptance criteria, dependencies, likely files, and verification commands are maintained in [`todo.md`](todo.md). Promote only the next unblocked task to `Ready` or `In progress` here when its phase begins.
-
-### Phase 1 Active Work
+### Phase 1 Completed Work
 
 | Task | Status | Dependencies | Evidence / next action |
 |---|---|---|---|
-| 1.1 Establish backend package structure and configuration | `In progress` | Phase 0 checkpoint | Environment helper and module structure are implemented; health smoke validation is paused under the retry limit. |
-| 1.2 Add persistent service dependencies and local Docker environment | `Review` | 1.1, user authorization | Dockerfile and Compose syntax are validated; user will manually run containers. |
+| 1.1 Establish backend package structure and configuration | `Done` | Phase 0 checkpoint | `/api` application layout, environment helper, error envelope, and health module are implemented; Phase 1 checkpoint is user-confirmed. |
+| 1.2 Add persistent service dependencies and local Docker environment | `Done` | 1.1 | Docker Compose defines API, Redis, and WireMock without local PostgreSQL; Compose syntax and WireMock startup were verified. |
+| 1.3 Bootstrap SQLAlchemy, Alembic, and database conventions | `Done` | 1.1–1.2 | Async SQLAlchemy session manager, lifespan lifecycle, UUID/timestamp ORM base, Alembic environment, and bootstrap revision are implemented; user verified `alembic upgrade head`. |
+| 1.4 Establish quality, test, and WireMock fixture harness | `Done` | 1.2–1.3 | `src/test` harness, health smoke tests, deterministic `/mock/sms` mapping, and test-folder quality checks passed. |
+
+### Phase 2 Ready Work
+
+| Task | Status | Dependencies | Evidence / next action |
+|---|---|---|---|
+| 2.1 Add user and session schema | `Done` | Phase 1 checkpoint | User-confirmed migration creates user/session tables and constraints; JWT access authentication and role demonstration endpoints are verified. |
+| 2.2 Implement OTP challenge, hashing, and rate-limit services | `In progress` | Task 2.1 | Redis-backed OTP service, password/OTP helpers, configurable limits, and unit tests are implemented; Redis lifecycle requires user confirmation. |
+| 2.3 Add SMS/email delivery adapters and WireMock contracts | `Done` | Task 2.2 | WireMock SMS and Mailpit-backed, template-based email delivery are verified locally; delivery remains provider-adapter based. |
 
 ## Decision Baseline
 
@@ -168,7 +174,7 @@ Tasks 1.1 through 9.4 remain `Not started`. Their authoritative acceptance crite
 | Batch-level stock and FEFO deduction | Accepted | PRD §4.2–4.3 |
 | Neon PostgreSQL system of record | Accepted | [ADR-001](../src/backend/docs/decisions/ADR-001-neon-postgresql.md) |
 | Redis for ephemeral OTP/rate-limit/lock/job state | Accepted | PRD §9, ADR-001 |
-| Phone OTP primary; verified email alternate | Accepted | PRD §6 |
+| Phone/password primary sign-in; OTP for registration, recovery, sensitive changes, and step-up authentication | Accepted | PRD §6; user-approved auth-contract update |
 | Seed-only admin/catalog management | Accepted | PRD §3, §10 |
 | Rule-based recommendation provider before XGBoost/LightGBM | Accepted | PRD §7.7 |
 | OCR/ASR/barcode extraction does not persist in MVP | Accepted | PRD §7.14 |
@@ -188,11 +194,20 @@ Tasks 1.1 through 9.4 remain `Not started`. Their authoritative acceptance crite
 | 2026-08-30 | Task 0.1 revision | `In progress` → `Done` | Restored 22 enums and 25 tables for all persistent PRD flows; confirmed table-only syntax, notes coverage, and clean whitespace validation. |
 | 2026-08-30 | Task 0.1 revision | `Done` → `In progress` | User edited `DATABASE.txt` directly and designated it as the source of truth. Documentation and dangling definitions are being reconciled. |
 | 2026-08-30 | Task 0.1 revision | `In progress` → `Done` | Removed the orphaned recommendation-event enum, synchronized documentation, and confirmed all documented table references resolve. |
-| 2026-08-30 | Tasks 0.2–0.3 | `In progress` → `Done` | Completed migration mapping/invariant review and verified every PRD flow against the 20-enum, 24-table user-approved schema. |
+| 2026-08-30 | Tasks 0.2–0.3 | `In progress` → `Done` | Completed migration mapping/invariant review and verified every PRD flow against the approved schema. |
 | 2026-08-30 | Phase 0 checkpoint | `Review` → `Done` | User authorized Task 1.1 after reviewing the data contract. |
 | 2026-08-30 | Task 1.1 | `Ready` → `In progress` | Replacing the FastAPI stub with the approved `/api` module architecture, typed settings, global exception handler, and health endpoints. |
 | 2026-08-30 | Task 1.1 | `In progress` | User replaced typed Pydantic settings with `python-dotenv` and `core/setting.py`; `main.py` remains the entry point. Health smoke validation remains paused under the retry-limit rule. |
 | 2026-08-30 | Task 1.2 | `Ready` → `Review` | Created backend-local Dockerfile/Compose assets; YAML and `docker compose config --quiet` passed without starting containers. |
+| 2026-08-30 | Tasks 1.3–1.4 | `In progress` → `Done` | Added async SQLAlchemy/Alembic bootstrap, `src/test` pytest harness, and deterministic WireMock `/mock/sms` contract. User verified `alembic upgrade head`; test harness passed 4/4 tests. |
+| 2026-08-30 | Phase 1 checkpoint | `In progress` → `Done` | User confirmed the Phase 1 checkpoint after runtime, migration, Docker/WireMock, and test-harness work. |
+| 2026-08-30 | Authentication contract | `Accepted` | User approved phone/password sign-in. OTP now verifies registration, password recovery/change, phone/email changes, and optional step-up authentication; PRD/schema/plan/checklist were updated. |
+| 2026-08-30 | Task 2.1 | `Ready` → `In progress` | Declared 24 table models in individual `*_model.py` files, registered shared enums in `enum_model.py`, and verified model metadata/foreign keys without circular imports. |
+| 2026-08-30 | Task 2.1 | `In progress` → `Done` | User confirmed `alembic upgrade head` succeeds for the focused user/session migration; JWT service, authentication/role dependencies, and protected demonstration endpoints passed verification. |
+| 2026-08-30 | Task 2.2 | `Ready` → `In progress` | Implemented Redis lifecycle, Argon2id/OTP helpers, and Redis-backed OTP challenge/grant/rate-limit service with isolated unit tests. |
+| 2026-08-30 | Task 2.3 | `Ready` → `In progress` | Added provider-neutral OTP delivery contract, WireMock SMS adapter/fixtures, and non-delivering local email adapter; WireMock accepted contract passed with `DEFAULT_OTP`. |
+| 2026-08-30 | Task 2.3 | `In progress` → `Done` | User accepted Task 2.3 with the local/mock provider scope and fixed `DEFAULT_OTP`; eSMS live integration remains a future provider configuration task. |
+| 2026-08-30 | Task 2.3 extension | `Done` → `Done` | Replaced the non-delivering email adapter with Mailpit SMTP delivery, five purpose-specific HTML templates, Docker networking, and local SMTP verification. |
 
 ## Verification Evidence
 
@@ -201,14 +216,14 @@ Tasks 1.1 through 9.4 remain `Not started`. Their authoritative acceptance crite
 - Completed: 2026-08-29
 - Changed files: `src/backend/docs/DATABASE.txt`, `src/backend/docs/DATABASE_NOTES.md`, `src/backend/COOKBOOK.md`, `src/backend/CHANGELOG.md`, `tasks/todo.md`, `tasks/tracking.md`
 - Acceptance evidence: all identity, catalog, recipe, batch inventory/ledger, recommendation, meal-plan, cooking, shopping, device, and notification entities are explicitly modeled. The legacy `user_ingredient` shape and misspelled enum/field names are absent.
-- File layout evidence: `DATABASE.txt` contains only 22 enum blocks, 25 table blocks, fields, and relationship comments in the requested syntax. `DATABASE_NOTES.md` contains constraints, indexes, Redis-only state, relationships, and data rules.
+- File layout evidence: `DATABASE.txt` contains only 22 enum blocks, 24 table blocks, fields, and relationship comments in the requested syntax. `DATABASE_NOTES.md` contains constraints, indexes, Redis-only state, relationships, and data rules.
 - Storage coverage: OTP challenges and rate-limit/lock/job coordination are documented as Redis-only; OCR/ASR/barcode explicitly have no persistent MVP tables.
 - Critical-flow review: FEFO, cooking/ledger, session hashing, and notification deduplication are retained as explicit notes outside the syntax-only schema file.
-- Verification commands: required-table coverage script — 25/25 present; table-syntax-only scan — passed; trailing-whitespace scan — passed.
+- Verification commands: required-table coverage script — 24/24 present; table-syntax-only scan — passed; trailing-whitespace scan — passed.
 - Manual verification: traced every PRD §9 entity and the FEFO, OTP/session, cooking, notification, seed, and non-persisting extraction scenarios to documented storage.
 - Follow-up: Task 0.2 must add the legacy schema mapping and consolidated cross-table invariant/index reference before Phase 0 review.
 - Revision note: The user clarified that their smaller schema was illustrative only. The final contract retains auth sessions, catalog categories/aliases/shelf-life rules, batch ledger, recommendation history, normalized plan/cooking/shopping data, devices, and notifications.
-- Final verification: `rg -c '^enum ' src/backend/docs/DATABASE.txt` — 20; `rg -c '^table ' src/backend/docs/DATABASE.txt` — 24; documented-reference scan — every referenced table exists; `git diff --check` — passed.
+- Final verification: `rg -c '^enum ' src/backend/docs/DATABASE.txt` — 22; `rg -c '^table ' src/backend/docs/DATABASE.txt` — 24; documented-reference scan — every referenced table exists; `git diff --check` — passed.
 - Latest revision: `DATABASE.txt` was accepted as the source of truth. Per-user timezone, redundant dimension/seed/version metadata, and recommendation-event persistence are intentionally absent; PRD, plan, checklist, cookbook, and database notes match this contract.
 
 ### Task 0.2 — Add schema migration mapping and invariants
@@ -217,7 +232,7 @@ Tasks 1.1 through 9.4 remain `Not started`. Their authoritative acceptance crite
 - Changed files: `src/backend/docs/DATABASE_NOTES.md`, `tasks/todo.md`, `tasks/tracking.md`
 - Acceptance evidence: the mapping names every original conceptual table and its approved destination; migration order resolves the nullable cooking-leftover circular reference; ownership, quantity, expiry, FEFO, ledger, idempotency, uniqueness, and index requirements are explicit.
 - Verification commands: documented-reference scan — every `// table.id` reference resolves; `git diff --check` — passed.
-- Manual verification: reviewed all 20 enums and 24 tables in `DATABASE.txt` as the source of truth.
+- Manual verification: reviewed all 22 enums and 24 tables in `DATABASE.txt` as the source of truth.
 
 ### Task 0.3 — Review data model against MVP flows
 
@@ -226,6 +241,40 @@ Tasks 1.1 through 9.4 remain `Not started`. Their authoritative acceptance crite
 - Acceptance evidence: the MVP flow review maps authentication, catalog, expiration, inventory/FEFO, recipes, recommendation, planning, shopping, cooking/leftovers, favorites, notifications, and non-persisting extraction to approved storage.
 - Verification commands: obsolete-schema scan — no references to removed timezone, dimension, seed/version, or recommendation-event persistence; `git diff --check` — passed.
 - Manual verification: verified that OCR/ASR/invoice/barcode have no persistence path and that all retained relationship comments reference existing tables.
+
+### Task 1.3 — Bootstrap SQLAlchemy, Alembic, and database conventions
+
+- Completed: 2026-08-30
+- Changed files: `src/backend/src/db.py`, `src/backend/src/app.py`, `src/backend/src/core/setting.py`, `src/backend/src/model/base.py`, `src/backend/alembic/*`, `src/backend/alembic.ini`
+- Acceptance evidence: async `db_session` initializes and disposes with FastAPI lifespan; `DATABASE_URL` is normalized for `asyncpg`; Alembic has an asynchronous environment and revision-controlled bootstrap migration.
+- Verification commands: application compile/import, URL-normalization check, and `uv run alembic history` — passed; `uv run alembic upgrade head` — user verified.
+- Manual verification: database URLs retain secrets outside source control; example configuration uses the `postgresql+asyncpg` scheme.
+
+### Task 1.4 — Establish quality, test, and WireMock fixture harness
+
+- Completed: 2026-08-30
+- Changed files: `src/backend/src/test/*`, `src/backend/pyproject.toml`, `src/backend/wiremock/mappings/mock-sms.json`
+- Acceptance evidence: pytest discovers `src/test`; reusable API, safe test-database, Redis, and WireMock fixtures exist; health liveness/error/text smoke tests and deterministic `/mock/sms` contract test exist.
+- Verification commands: `uv run pytest` — 4 passed; `uv run ruff check src/test`, `uv run ruff format --check src/test`, `uv run mypy --strict src/test` — passed; `uv run pylint src/test` — 10.00/10.
+- Manual verification: WireMock was started with Docker Compose and the `/mock/sms` contract test passed against the running container.
+
+### Task 2.1 — Add user and session schema
+
+- Completed: 2026-08-30
+- Changed files: `src/backend/src/model/user_model.py`, `src/backend/src/model/auth_session_model.py`, `src/backend/alembic/versions/6470957327a3_create_mvp_models.py`, `src/backend/src/service/jwt_service.py`, `src/backend/src/middleware/*`, `src/backend/src/module/health/health_router.py`, `src/backend/src/test/test_auth_middleware.py`, `src/backend/src/test/test_health.py`
+- Acceptance evidence: focused migration creates `users` and `auth_sessions`, `user_role`/`account_status` enums, verified-phone constraint, and refresh-session indexes. Custom JWT parsing exposes only `user_id` and `roles`; `require_authentication` and `require_role` guard the protected demonstration routes.
+- Verification commands: ruff and mypy strict — passed; Pylint — 10.00/10; targeted JWT/health suite — 14 passed; Alembic offline upgrade/downgrade SQL generation — passed.
+- Manual verification: user confirmed `uv run alembic upgrade head` succeeds. `/api/health/test-login` accepts a valid access JWT and `/api/health/test-role` rejects a non-admin JWT.
+- Follow-up / known limitation: OTP, password hashing, registration, sign-in, refresh, and session-revocation APIs are intentionally deferred to Tasks 2.2–2.5.
+
+### Task 2.3 — Add SMS/email delivery adapters and WireMock contracts
+
+- Completed: 2026-08-30
+- Changed files: `src/backend/src/service/otp_delivery_service.py`, `src/backend/src/service/sms_service.py`, `src/backend/src/service/email_service.py`, `src/backend/src/template/*.html`, `src/backend/src/core/setting.py`, `src/backend/.env.example`, `src/backend/docker-compose.yaml`, `src/backend/wiremock/mappings/mock-sms*.json`, `src/backend/src/test/test_otp_delivery_service.py`, `src/backend/src/test/test_email_service.py`, `src/backend/src/test/test_wiremock_contract.py`
+- Acceptance evidence: one provider-neutral `send_otp` contract supports WireMock SMS and Mailpit email delivery. `EmailService.send_email` renders purpose-specific, autoescaped HTML templates for verified-email, email-change, password-reset, password-change, and step-up flows; WireMock maps accepted, rejected, timeout, and malformed SMS responses to stable domain errors.
+- Verification commands: `docker compose config --quiet`; focused email and OTP-adapter tests — 13 passed; ruff and mypy — passed; Pylint — 10.00/10.
+- Manual verification: restarted WireMock and verified its accepted SMS contract. Mailpit SMTP is healthy and accepted a rendered local verification email using the configured SMTP host and port.
+- Follow-up / known limitation: eSMS implementation is intentionally deferred until its endpoint, request schema, template, and credential contract are supplied.
 
 ## Verification Evidence Template
 

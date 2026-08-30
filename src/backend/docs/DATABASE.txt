@@ -1,12 +1,26 @@
 enum AccountStatus {
   ACTIVE
   BANNED
-  UNVERIFIED
 }
 
 enum UserRole {
   USER
   ADMIN
+}
+
+enum OTPChannel {
+  SMS
+  EMAIL
+}
+
+enum OTPPurpose {
+  REGISTER
+  VERIFY_EMAIL
+  CHANGE_PHONE
+  CHANGE_EMAIL
+  RESET_PASSWORD
+  CHANGE_PASSWORD
+  STEP_UP_AUTH
 }
 
 enum MeasurementUnit {
@@ -134,6 +148,7 @@ table users {
   phone_verified_at datetime // nullable
   email string // nullable
   email_verified_at datetime // nullable
+  password_hash string
   role UserRole
   status AccountStatus
   preferences jsonb
