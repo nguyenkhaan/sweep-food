@@ -34,9 +34,9 @@
 | Field | Value |
 |---|---|
 | Active phase | Phase 2 — Identity, Authentication, and User Preferences |
-| Active task | Task 2.1 — Add user and session schema (`In progress`) |
-| Next task | Complete Task 2.1 migrations and constraint tests |
-| Next required action | Create the user/password/session migration and validate it against a disposable Neon branch |
+| Active task | Task 2.2 — Implement OTP challenge, hashing, and rate-limit services (`In progress`) |
+| Next task | Verify Redis-backed OTP behavior, then begin Task 2.3 |
+| Next required action | Start the backend with Redis and verify the Redis lifecycle connection |
 | Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
 | Current blocker | None |
 
@@ -74,8 +74,8 @@
 
 ### Phase 2 — Authentication and User Foundation
 
-- [ ] 2.1 Add user and session schema
-- [ ] 2.2 Implement OTP challenge, hashing, and rate-limit services
+- [x] 2.1 Add user and session schema
+- [ ] 2.2 Implement OTP challenge, hashing, and rate-limit services (`In progress`)
 - [ ] 2.3 Add SMS/email delivery adapters and WireMock contracts
 - [ ] 2.4 Deliver registration, phone/password sign-in, and session APIs
 - [ ] 2.5 Add profile, verified-email, and authorization policies
@@ -162,7 +162,8 @@
 
 | Task | Status | Dependencies | Evidence / next action |
 |---|---|---|---|
-| 2.1 Add user and session schema | `In progress` | Phase 1 checkpoint | All 24 SQLAlchemy table models and shared enums are declared without circular imports. User/password/session migrations and database constraint tests remain. |
+| 2.1 Add user and session schema | `Done` | Phase 1 checkpoint | User-confirmed migration creates user/session tables and constraints; JWT access authentication and role demonstration endpoints are verified. |
+| 2.2 Implement OTP challenge, hashing, and rate-limit services | `In progress` | Task 2.1 | Redis-backed OTP service, password/OTP helpers, configurable limits, and unit tests are implemented; Redis lifecycle requires user confirmation. |
 
 ## Decision Baseline
 
@@ -201,6 +202,8 @@
 | 2026-08-30 | Phase 1 checkpoint | `In progress` → `Done` | User confirmed the Phase 1 checkpoint after runtime, migration, Docker/WireMock, and test-harness work. |
 | 2026-08-30 | Authentication contract | `Accepted` | User approved phone/password sign-in. OTP now verifies registration, password recovery/change, phone/email changes, and optional step-up authentication; PRD/schema/plan/checklist were updated. |
 | 2026-08-30 | Task 2.1 | `Ready` → `In progress` | Declared 24 table models in individual `*_model.py` files, registered shared enums in `enum_model.py`, and verified model metadata/foreign keys without circular imports. |
+| 2026-08-30 | Task 2.1 | `In progress` → `Done` | User confirmed `alembic upgrade head` succeeds for the focused user/session migration; JWT service, authentication/role dependencies, and protected demonstration endpoints passed verification. |
+| 2026-08-30 | Task 2.2 | `Ready` → `In progress` | Implemented Redis lifecycle, Argon2id/OTP helpers, and Redis-backed OTP challenge/grant/rate-limit service with isolated unit tests. |
 
 ## Verification Evidence
 
@@ -250,6 +253,15 @@
 - Acceptance evidence: pytest discovers `src/test`; reusable API, safe test-database, Redis, and WireMock fixtures exist; health liveness/error/text smoke tests and deterministic `/mock/sms` contract test exist.
 - Verification commands: `uv run pytest` — 4 passed; `uv run ruff check src/test`, `uv run ruff format --check src/test`, `uv run mypy --strict src/test` — passed; `uv run pylint src/test` — 10.00/10.
 - Manual verification: WireMock was started with Docker Compose and the `/mock/sms` contract test passed against the running container.
+
+### Task 2.1 — Add user and session schema
+
+- Completed: 2026-08-30
+- Changed files: `src/backend/src/model/user_model.py`, `src/backend/src/model/auth_session_model.py`, `src/backend/alembic/versions/6470957327a3_create_mvp_models.py`, `src/backend/src/service/jwt_service.py`, `src/backend/src/middleware/*`, `src/backend/src/module/health/health_router.py`, `src/backend/src/test/test_auth_middleware.py`, `src/backend/src/test/test_health.py`
+- Acceptance evidence: focused migration creates `users` and `auth_sessions`, `user_role`/`account_status` enums, verified-phone constraint, and refresh-session indexes. Custom JWT parsing exposes only `user_id` and `roles`; `require_authentication` and `require_role` guard the protected demonstration routes.
+- Verification commands: ruff and mypy strict — passed; Pylint — 10.00/10; targeted JWT/health suite — 14 passed; Alembic offline upgrade/downgrade SQL generation — passed.
+- Manual verification: user confirmed `uv run alembic upgrade head` succeeds. `/api/health/test-login` accepts a valid access JWT and `/api/health/test-role` rejects a non-admin JWT.
+- Follow-up / known limitation: OTP, password hashing, registration, sign-in, refresh, and session-revocation APIs are intentionally deferred to Tasks 2.2–2.5.
 
 ## Verification Evidence Template
 

@@ -8,7 +8,9 @@ from src.module.health.health_dto import LivenessResponseDTO
 class HealthService:
 
     def get_liveness(self) -> LivenessResponseDTO: 
-        return LivenessResponseDTO()
+        return LivenessResponseDTO(
+            message = "Build with Cloudian 💙 Cloud"
+        )
 
     def raise_forced_error(self) -> Never:
         raise HTTPException(
