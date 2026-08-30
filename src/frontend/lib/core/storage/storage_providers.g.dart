@@ -12,24 +12,20 @@ part of 'storage_providers.dart';
 @ProviderFor(flutterSecureStorage)
 final flutterSecureStorageProvider = FlutterSecureStorageProvider._();
 
-final class FlutterSecureStorageProvider
-    extends
-        $FunctionalProvider<
-          FlutterSecureStorage,
-          FlutterSecureStorage,
-          FlutterSecureStorage
-        >
-    with $Provider<FlutterSecureStorage> {
+final class FlutterSecureStorageProvider extends $FunctionalProvider<
+    FlutterSecureStorage,
+    FlutterSecureStorage,
+    FlutterSecureStorage> with $Provider<FlutterSecureStorage> {
   FlutterSecureStorageProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'flutterSecureStorageProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'flutterSecureStorageProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$flutterSecureStorageHash();
@@ -37,8 +33,8 @@ final class FlutterSecureStorageProvider
   @$internal
   @override
   $ProviderElement<FlutterSecureStorage> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
   FlutterSecureStorage create(Ref ref) {
@@ -64,15 +60,15 @@ final class SecureStoreProvider
     extends $FunctionalProvider<SecureStore, SecureStore, SecureStore>
     with $Provider<SecureStore> {
   SecureStoreProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'secureStoreProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'secureStoreProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$secureStoreHash();

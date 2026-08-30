@@ -15,27 +15,24 @@ final homeDashboardProvider = HomeDashboardProvider._();
 
 /// Controller providing aggregated data for the H-01 Home Dashboard.
 
-final class HomeDashboardProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<HomeDashboardData>,
-          HomeDashboardData,
-          FutureOr<HomeDashboardData>
-        >
+final class HomeDashboardProvider extends $FunctionalProvider<
+        AsyncValue<HomeDashboardData>,
+        HomeDashboardData,
+        FutureOr<HomeDashboardData>>
     with
         $FutureModifier<HomeDashboardData>,
         $FutureProvider<HomeDashboardData> {
   /// Controller providing aggregated data for the H-01 Home Dashboard.
   HomeDashboardProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'homeDashboardProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'homeDashboardProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$homeDashboardHash();
@@ -43,8 +40,8 @@ final class HomeDashboardProvider
   @$internal
   @override
   $FutureProviderElement<HomeDashboardData> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
   FutureOr<HomeDashboardData> create(Ref ref) {
@@ -52,4 +49,4 @@ final class HomeDashboardProvider
   }
 }
 
-String _$homeDashboardHash() => r'f1006482d35a7efc4b75c8d1549b8b1aa7390a4a';
+String _$homeDashboardHash() => r'd9cdd2e10b42ba7d2ea9fc01029dfaa3e4d71ba7';

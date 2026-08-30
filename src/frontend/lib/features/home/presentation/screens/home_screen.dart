@@ -5,12 +5,15 @@ import 'package:frontend/app/theme/app_colors.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/async_value_widget.dart';
+import 'package:frontend/core/widgets/empty_state.dart';
 import 'package:frontend/core/widgets/pantry_item_card.dart';
 import 'package:frontend/core/widgets/section_header.dart';
 import 'package:frontend/core/widgets/suggestion_card.dart';
 import 'package:frontend/core/widgets/waste_saved_pill.dart';
 import 'package:frontend/features/home/presentation/controllers/home_controller.dart';
 import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
+import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:frontend/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
 import 'package:go_router/go_router.dart';
 
 /// H-01 Trang chủ / Dashboard.
@@ -57,7 +60,10 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            onPressed: () => context.push(Routes.notifications),
+            // Notification Center is M5 — no route yet; stub the tap until then.
+            onPressed: () => context.showSnack(
+              'Trung tâm thông báo sẽ có trong bản cập nhật tới.',
+            ),
           ),
           const SizedBox(width: Gap.xs),
         ],
@@ -74,32 +80,41 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-class _HomeContent extends ConsumerWidget {
+class _HomeContent extends StatelessWidget {
   const _HomeContent({required this.data});
 
   final HomeDashboardData data;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final sweep = context.sweep;
+
+    // Empty pantry → greeting + a single "add your first ingredient" CTA
+    // (spec M2: "trỏ mock vào fixture kho rỗng để xem empty state").
+    if (data.isEmpty) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl),
+        children: [
+          const _GreetingHeader(),
+          const SizedBox(height: 56),
+          EmptyState(
+            title: 'Kho của bạn đang trống',
+            message:
+                'Thêm vài nguyên liệu để nhận gợi ý món và nhắc hạn sử dụng.',
+            icon: Icons.kitchen_outlined,
+            actionLabel: 'Thêm nguyên liệu đầu tiên',
+            onAction: () =>
+                context.push('${Routes.pantry}/${Routes.addIngredient}'),
+          ),
+        ],
+      );
+    }
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 2),
       children: [
         // ── Greeting ──────────────────────────────────────────────────────────
-        Text(
-          'Chào buổi sáng',
-          style: context.text.bodyMedium?.copyWith(
-            color: sweep.textSecondary,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          'Hôm nay ăn gì?',
-          style: context.text.headlineMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        const _GreetingHeader(),
         Gap.gapMd,
 
         // ── Waste Saved Pill ──────────────────────────────────────────────────
@@ -140,7 +155,9 @@ class _HomeContent extends ConsumerWidget {
             _DashboardTile(
               icon: Icons.auto_awesome_outlined,
               title: 'Gợi ý món',
-              subtitle: '5 món phù hợp',
+              subtitle: data.suggestionCount > 0
+                  ? '${data.suggestionCount} món phù hợp'
+                  : 'Món hợp tủ bếp',
               bgColor: BrandPalette.green700,
               iconBgColor: Colors.white.withValues(alpha: 0.16),
               iconFgColor: Colors.white,
@@ -179,8 +196,11 @@ class _HomeContent extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.check_circle_outline_rounded,
-                    color: BrandPalette.green700, size: 20),
+                const Icon(
+                  Icons.check_circle_outline_rounded,
+                  color: BrandPalette.green700,
+                  size: 20,
+                ),
                 const SizedBox(width: Gap.sm),
                 Expanded(
                   child: Text(
@@ -217,35 +237,81 @@ class _HomeContent extends ConsumerWidget {
           ),
         Gap.gapLg,
 
-        // ── Section: Gợi ý cho bạn (M3 preview) ──────────────────────────────
+        // ── Section: Gợi ý cho bạn ───────────────────────────────────────────
         SectionHeader(
           title: 'Gợi ý cho bạn',
           actionLabel: 'Xem tất cả',
           onAction: () => context.go(Routes.suggestions),
         ),
         Gap.gapSm,
-        const SuggestionCard(
-          title: 'Salad bơ ức gà',
-          score: 95,
-          meta: '15 phút · Dễ · 320 kcal / khẩu phần',
-          chips: [
-            (label: 'Dùng 3 đồ cận hạn', tone: SuggestionChipTone.nearExpiry),
-            (label: 'Có sẵn 80%', tone: SuggestionChipTone.available),
-            (label: 'Cần mua 2', tone: SuggestionChipTone.toBuy),
-          ],
+        if (data.suggestions.isEmpty)
+          Text(
+            'Chưa tải được gợi ý. Kéo xuống để làm mới.',
+            style: context.text.bodyMedium?.copyWith(
+              color: sweep.textSecondary,
+            ),
+          ),
+        for (var i = 0; i < data.suggestions.length; i++) ...[
+          if (i > 0) Gap.gapSm,
+          _HomeSuggestionCard(suggestion: data.suggestions[i]),
+        ],
+      ],
+    );
+  }
+}
+
+/// Time-aware greeting shown at the top of Home (both the empty and full state).
+class _GreetingHeader extends StatelessWidget {
+  const _GreetingHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _greeting(DateTime.now().hour),
+          style: context.text.bodyMedium?.copyWith(
+            color: context.sweep.textSecondary,
+          ),
         ),
-        Gap.gapSm,
-        const SuggestionCard(
-          title: 'Canh chua cá lóc',
-          score: 88,
-          meta: '35 phút · Trung bình · 280 kcal / khẩu phần',
-          chips: [
-            (label: 'Dùng 2 đồ cận hạn', tone: SuggestionChipTone.nearExpiry),
-            (label: 'Có sẵn 90%', tone: SuggestionChipTone.available),
-            (label: 'Đủ nguyên liệu', tone: SuggestionChipTone.available),
-          ],
+        const SizedBox(height: 2),
+        Text(
+          'Hôm nay ăn gì?',
+          style: context.text.headlineMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ],
+    );
+  }
+
+  static String _greeting(int hour) {
+    if (hour < 11) return 'Chào buổi sáng';
+    if (hour < 14) return 'Chào buổi trưa';
+    if (hour < 18) return 'Chào buổi chiều';
+    return 'Chào buổi tối';
+  }
+}
+
+/// A tappable Home suggestion card → D-01 dish detail (carrying the suggestion
+/// so the score badge/chips render without a second fetch).
+class _HomeSuggestionCard extends StatelessWidget {
+  const _HomeSuggestionCard({required this.suggestion});
+
+  final DishSuggestion suggestion;
+
+  @override
+  Widget build(BuildContext context) {
+    return SuggestionCard(
+      title: suggestion.dish.name,
+      score: suggestion.score,
+      meta: suggestion.dish.shortMeta,
+      chips: suggestion.cardChips,
+      onTap: () => context.push(
+        '${Routes.suggestions}/dish/${suggestion.id}',
+        extra: suggestion,
+      ),
     );
   }
 }

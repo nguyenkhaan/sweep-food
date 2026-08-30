@@ -22,16 +22,16 @@ final class PantryItemByIdProvider
     with $Provider<PantryItem?> {
   /// A single pantry item for the detail screen (K-02), read from the loaded list.
   /// Returns `null` if the id isn't in the list (e.g. after it was deleted).
-  PantryItemByIdProvider._({
-    required PantryItemByIdFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: null,
-         name: r'pantryItemByIdProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+  PantryItemByIdProvider._(
+      {required PantryItemByIdFamily super.from,
+      required String super.argument})
+      : super(
+          retry: null,
+          name: r'pantryItemByIdProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$pantryItemByIdHash();
@@ -51,7 +51,10 @@ final class PantryItemByIdProvider
   @override
   PantryItem? create(Ref ref) {
     final argument = this.argument as String;
-    return pantryItemById(ref, argument);
+    return pantryItemById(
+      ref,
+      argument,
+    );
   }
 
   /// {@macro riverpod.override_with_value}
@@ -81,18 +84,20 @@ String _$pantryItemByIdHash() => r'38b67e89ecfcf04b4cc6b0764f4ae570f81ee7ea';
 final class PantryItemByIdFamily extends $Family
     with $FunctionalFamilyOverride<PantryItem?, String> {
   PantryItemByIdFamily._()
-    : super(
-        retry: null,
-        name: r'pantryItemByIdProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
+      : super(
+          retry: null,
+          name: r'pantryItemByIdProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
 
   /// A single pantry item for the detail screen (K-02), read from the loaded list.
   /// Returns `null` if the id isn't in the list (e.g. after it was deleted).
 
-  PantryItemByIdProvider call(String id) =>
+  PantryItemByIdProvider call(
+    String id,
+  ) =>
       PantryItemByIdProvider._(argument: id, from: this);
 
   @override

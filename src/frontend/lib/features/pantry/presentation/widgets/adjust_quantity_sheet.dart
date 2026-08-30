@@ -85,9 +85,14 @@ class _State extends ConsumerState<AdjustQuantitySheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('0 $unit', style: context.text.labelSmall?.copyWith(letterSpacing: 0)),
-                Text('${_total.round()} $unit',
-                    style: context.text.labelSmall?.copyWith(letterSpacing: 0)),
+                Text(
+                  '0 $unit',
+                  style: context.text.labelSmall?.copyWith(letterSpacing: 0),
+                ),
+                Text(
+                  '${_total.round()} $unit',
+                  style: context.text.labelSmall?.copyWith(letterSpacing: 0),
+                ),
               ],
             ),
           ],
@@ -102,8 +107,10 @@ class _State extends ConsumerState<AdjustQuantitySheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Còn lại sau khi dùng'),
-                Text('${remaining.round()} $unit',
-                    style: const TextStyle(fontWeight: FontWeight.w700)),
+                Text(
+                  '${remaining.round()} $unit',
+                  style: const TextStyle(fontWeight: FontWeight.w700),
+                ),
               ],
             ),
           ),

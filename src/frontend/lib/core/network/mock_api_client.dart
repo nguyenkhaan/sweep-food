@@ -42,12 +42,30 @@ class MockApiClient implements ApiClient {
     ApiPaths.reportsWasteReduction: 'waste_reduction_report',
   };
 
-  Future<dynamic> _load(String path) async {
+  /// Read-shaped POST endpoints that return a canned fixture instead of echoing
+  /// the request body (dish scoring, cook result). Matched exact-or-prefix; the
+  /// `/cook` suffix covers `POST /dishes/{id}/cook`.
+  static final Map<String, String> _postFixtures = {
+    ApiPaths.suggestions: 'suggestions',
+  };
+
+  String? _postFixtureKey(String path) {
+    if (path.endsWith('/cook')) return 'cook_result';
+    for (final e in _postFixtures.entries) {
+      if (path == e.key || path.startsWith(e.key)) return e.value;
+    }
+    return null;
+  }
+
+  Future<dynamic> _load(String path) {
     final entry = _fixtures.entries.firstWhere(
       (e) => path == e.key || path.startsWith(e.key),
       orElse: () => throw MockFixtureException('Không có fixture cho "$path"'),
     );
-    final key = entry.value;
+    return _loadKey(entry.value);
+  }
+
+  Future<dynamic> _loadKey(String key) async {
     if (_cache.containsKey(key)) return _clone(_cache[key]);
     try {
       final raw = _fillDates(await rootBundle.loadString('assets/mock/$key.json'));
@@ -97,6 +115,8 @@ class MockApiClient implements ApiClient {
   }) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK POST $path');
+    final fixture = _postFixtureKey(path);
+    if (fixture != null) return _loadKey(fixture);
     return _echo(body);
   }
 

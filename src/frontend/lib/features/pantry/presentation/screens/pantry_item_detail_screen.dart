@@ -181,8 +181,7 @@ class _PantryItemDetailScreenState
           SecondaryButton(
             label: 'Tìm món nấu từ nguyên liệu này',
             icon: Icons.restaurant_menu_rounded,
-            onPressed: () =>
-                AppSnack.show(context, 'Gợi ý món sẽ có ở bước kế tiếp.'),
+            onPressed: () => context.go(Routes.suggestions),
           ),
         ],
       ),

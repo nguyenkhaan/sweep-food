@@ -19,15 +19,15 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
   /// The live Dio instance (only actually hit when `backend == live`).
   DioProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'dioProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'dioProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$dioHash();
@@ -68,15 +68,15 @@ final class ApiClientProvider
   /// The app's [ApiClient] — mock or live, chosen by `AppConfig.backend`.
   /// All repositories depend on this, never on Dio directly.
   ApiClientProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'apiClientProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'apiClientProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$apiClientHash();

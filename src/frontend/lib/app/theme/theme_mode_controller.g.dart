@@ -21,15 +21,15 @@ final class ThemeModeControllerProvider
   /// App theme mode (system / light / dark), persisted to SharedPreferences.
   /// Read by [MaterialApp.router] in `app.dart`; changed from Cài đặt → Tùy chọn.
   ThemeModeControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'themeModeControllerProvider',
-        isAutoDispose: false,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'themeModeControllerProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$themeModeControllerHash();
@@ -59,14 +59,8 @@ abstract class _$ThemeModeController extends $Notifier<ThemeMode> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<ThemeMode, ThemeMode>,
-              ThemeMode,
-              Object?,
-              Object?
-            >;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<ThemeMode, ThemeMode>, ThemeMode, Object?, Object?>;
     element.handleCreate(ref, build);
   }
 }
