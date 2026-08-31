@@ -30,7 +30,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
   final _nameCtrl = TextEditingController();
   final _categoryCtrl = TextEditingController();
   final _qtyCtrl = TextEditingController();
-  final _priceCtrl = TextEditingController();
   final _nameFocus = FocusNode();
 
   bool _busy = false;
@@ -48,7 +47,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
     _nameCtrl.text = draft.name;
     _categoryCtrl.text = draft.category;
     if (draft.quantity > 0) _qtyCtrl.text = _fmtQty(draft.quantity);
-    if (draft.priceVnd != null) _priceCtrl.text = draft.priceVnd.toString();
     _nameFocus.addListener(() {
       if (!_nameFocus.hasFocus && mounted) setState(() {});
     });
@@ -59,7 +57,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
     _nameCtrl.dispose();
     _categoryCtrl.dispose();
     _qtyCtrl.dispose();
-    _priceCtrl.dispose();
     _nameFocus.dispose();
     super.dispose();
   }
@@ -257,16 +254,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
                 ),
               ),
             ],
-          ),
-          Gap.gapMd,
-          _Label(l10n.pantryFieldPrice),
-          TextField(
-            controller: _priceCtrl,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(hintText: '0', suffixText: 'đ'),
-            onChanged: (v) =>
-                _ctrl.setPrice(v.isEmpty ? null : int.tryParse(v)),
           ),
           Gap.gapXl,
           PrimaryButton(

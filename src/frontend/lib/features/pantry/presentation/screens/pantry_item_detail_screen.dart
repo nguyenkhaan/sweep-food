@@ -4,7 +4,6 @@ import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/utils/extensions/date_time_x.dart';
-import 'package:frontend/core/utils/formatters/currency_vnd.dart';
 import 'package:frontend/core/utils/formatters/expiry_text.dart';
 import 'package:frontend/core/widgets/app_snackbar.dart';
 import 'package:frontend/core/widgets/empty_state.dart';
@@ -169,19 +168,13 @@ class _PantryItemDetailScreenState
                 ),
                 const SizedBox(width: Gap.sm),
                 Expanded(
-                  child: item.priceVnd != null
-                      ? _StatTile(
-                          icon: Icons.payments_outlined,
-                          label: l10n.pantryStatPrice,
-                          value: formatVnd(item.priceVnd!),
-                        )
-                      : _StatTile(
-                          icon: Icons.schedule_outlined,
-                          label: l10n.pantryStatStorage,
-                          value: item.referenceShelfLifeDays != null
-                              ? l10n.daysApprox(item.referenceShelfLifeDays!)
-                              : '—',
-                        ),
+                  child: _StatTile(
+                    icon: Icons.schedule_outlined,
+                    label: l10n.pantryStatStorage,
+                    value: item.referenceShelfLifeDays != null
+                        ? l10n.daysApprox(item.referenceShelfLifeDays!)
+                        : '—',
+                  ),
                 ),
               ],
             ),
