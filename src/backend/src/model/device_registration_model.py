@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String, UniqueConstraint
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -16,7 +16,10 @@ class DeviceRegistrationModel(TimestampedUUIDModel):
     """Encrypted FCM registration for one user device."""
 
     __tablename__ = "device_registrations"
-    __table_args__ = (UniqueConstraint("fcm_token_hash"),)
+    __table_args__ = (
+        UniqueConstraint("fcm_token_hash"),
+        Index("ix_device_registrations_user_enabled", "user_id", "is_enabled"),
+    )
 
     user_id: Mapped[UUID] = mapped_column(
         PostgreSQLUUID(as_uuid=True),

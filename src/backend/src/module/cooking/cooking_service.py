@@ -1,5 +1,6 @@
 """Database orchestration for cooking previews and session completion."""
 
+from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
 from sqlalchemy import select
@@ -8,8 +9,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.model.cooking_consumption_model import CookingConsumptionModel
 from src.model.cooking_session_model import CookingSessionModel
-from src.model.enum_model import CookingSessionStatus, InventoryBatchStatus
+from src.model.enum_model import (
+    CookingSessionStatus,
+    ExpirationSource,
+    InventoryBatchStatus,
+    InventoryBatchType,
+    InventoryLedgerEventType,
+    InventorySource,
+)
 from src.model.inventory_batch_model import InventoryBatchModel
+from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.meal_plan_item_model import MealPlanItemModel
 from src.model.meal_plan_model import MealPlanModel
@@ -17,10 +26,16 @@ from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
 from src.module.cooking.cooking_dto import (
     CompleteCookingSessionRequestDTO,
+    CookedLeftoverResponseDTO,
+    CookingConsumptionDTO,
     CookingCompletionResponseDTO,
+    CookingHistoryDetailResponseDTO,
+    CookingHistoryListResponseDTO,
+    CookingHistorySummaryDTO,
     CookingPreviewRequestDTO,
     CookingPreviewResponseDTO,
     CookingSessionDTO,
+    CreateCookedLeftoverRequestDTO,
     CreateCookingSessionRequestDTO,
 )
 from src.module.cooking.cooking_helper import (
@@ -183,6 +198,181 @@ class CookingService:
         except (CookingDomainError, SQLAlchemyError):
             await self.db_session.rollback()
             raise
+
+    async def create_leftover(
+        self,
+        user_id: UUID,
+        session_id: UUID,
+        request: CreateCookedLeftoverRequestDTO,
+    ) -> CookedLeftoverResponseDTO:
+        """Create a COOKED_FOOD batch linked to a completed cooking session."""
+        try:
+            cooking_session = await self._find_session_by_id(user_id, session_id)
+            if cooking_session.status is not CookingSessionStatus.COMPLETED:
+                raise CookingCompletionConflictError(
+                    "Leftovers can only be created for completed cooking sessions",
+                )
+            recipe = await self._find_recipe(cooking_session.recipe_id)
+
+            now = datetime.now(UTC)
+            expires_at = request.expires_at
+            expiration_source = (
+                ExpirationSource.USER_OVERRIDE
+                if expires_at is not None
+                else ExpirationSource.ESTIMATED
+            )
+            if expires_at is None:
+                expires_at = now + timedelta(days=3)
+
+            leftover_batch = InventoryBatchModel(
+                user_id=user_id,
+                master_ingredient_id=None,
+                custom_name=recipe.name,
+                batch_type=InventoryBatchType.COOKED_FOOD,
+                initial_quantity=request.quantity,
+                current_quantity=request.quantity,
+                unit=request.unit,
+                storage_mode=request.storage_mode,
+                status=InventoryBatchStatus.ACTIVE,
+                expires_at=expires_at,
+                expiration_source=expiration_source,
+                note=request.note,
+                source=InventorySource.LEFTOVER,
+                source_cooking_session_id=cooking_session.id,
+            )
+            self.db_session.add(leftover_batch)
+            await self.db_session.flush()
+
+            ledger_entry = InventoryLedgerEntryModel(
+                user_id=user_id,
+                inventory_batch_id=leftover_batch.id,
+                event_type=InventoryLedgerEventType.LEFTOVER_CREATED,
+                quantity_before=0.0,
+                quantity_delta=request.quantity,
+                quantity_after=request.quantity,
+                unit=request.unit,
+                cooking_session_id=cooking_session.id,
+            )
+            self.db_session.add(ledger_entry)
+            await self.db_session.commit()
+
+            return CookedLeftoverResponseDTO(
+                batch_id=leftover_batch.id,
+                cooking_session_id=cooking_session.id,
+                batch_type=leftover_batch.batch_type,
+                quantity=leftover_batch.current_quantity,
+                unit=leftover_batch.unit,
+                storage_mode=leftover_batch.storage_mode,
+                expires_at=leftover_batch.expires_at,
+                created_at=leftover_batch.created_at,
+            )
+        except (CookingDomainError, SQLAlchemyError):
+            await self.db_session.rollback()
+            raise
+
+    async def get_cooking_history(
+        self,
+        user_id: UUID,
+    ) -> CookingHistoryListResponseDTO:
+        """List all completed cooking sessions for the authenticated user."""
+        try:
+            result = await self.db_session.execute(
+                select(CookingSessionModel)
+                .where(
+                    CookingSessionModel.user_id == user_id,
+                    CookingSessionModel.status == CookingSessionStatus.COMPLETED,
+                )
+                .order_by(CookingSessionModel.completed_at.desc()),
+            )
+            sessions = list(result.scalars().all())
+            recipe_ids = [s.recipe_id for s in sessions]
+            recipes_by_id = {}
+            if recipe_ids:
+                recipes_result = await self.db_session.execute(
+                    select(RecipeModel).where(RecipeModel.id.in_(recipe_ids)),
+                )
+                for recipe in recipes_result.scalars().all():
+                    recipes_by_id[recipe.id] = recipe
+
+            items = [
+                CookingHistorySummaryDTO(
+                    session_id=s.id,
+                    recipe_id=s.recipe_id,
+                    recipe_name=recipes_by_id[s.recipe_id].name
+                    if s.recipe_id in recipes_by_id
+                    else "Unknown Recipe",
+                    servings=s.servings,
+                    status=s.status,
+                    completed_at=s.completed_at,
+                )
+                for s in sessions
+            ]
+            return CookingHistoryListResponseDTO(items=items)
+        except SQLAlchemyError:
+            await self.db_session.rollback()
+            raise
+
+    async def get_cooking_history_detail(
+        self,
+        user_id: UUID,
+        session_id: UUID,
+    ) -> CookingHistoryDetailResponseDTO:
+        """Get detail of one completed cooking session, consumptions, and leftover."""
+        try:
+            cooking_session = await self._find_session_by_id(user_id, session_id)
+            recipe = await self._find_recipe(cooking_session.recipe_id)
+
+            consumptions_result = await self.db_session.execute(
+                select(CookingConsumptionModel)
+                .where(CookingConsumptionModel.cooking_session_id == cooking_session.id)
+                .order_by(CookingConsumptionModel.created_at),
+            )
+            consumptions = [
+                CookingConsumptionDTO(
+                    recipe_ingredient_id=c.recipe_ingredient_id,
+                    inventory_batch_id=c.inventory_batch_id,
+                    quantity=c.quantity,
+                    unit=c.unit,
+                )
+                for c in consumptions_result.scalars().all()
+            ]
+
+            leftover_result = await self.db_session.execute(
+                select(InventoryBatchModel).where(
+                    InventoryBatchModel.source_cooking_session_id == cooking_session.id,
+                    InventoryBatchModel.source == InventorySource.LEFTOVER,
+                ),
+            )
+            leftover_batch = leftover_result.scalar_one_or_none()
+
+            return CookingHistoryDetailResponseDTO(
+                session=self.helper.to_session_dto(cooking_session),
+                recipe_id=recipe.id,
+                recipe_name=recipe.name,
+                consumptions=consumptions,
+                leftover_batch_id=leftover_batch.id if leftover_batch else None,
+                completed_at=cooking_session.completed_at,
+            )
+        except (CookingDomainError, SQLAlchemyError):
+            await self.db_session.rollback()
+            raise
+
+    async def _find_session_by_id(
+        self,
+        user_id: UUID,
+        session_id: UUID,
+    ) -> CookingSessionModel:
+        result = await self.db_session.execute(
+            select(CookingSessionModel).where(
+                CookingSessionModel.id == session_id,
+                CookingSessionModel.user_id == user_id,
+            ),
+        )
+        cooking_session = result.scalar_one_or_none()
+        if cooking_session is None:
+            raise CookingSessionNotFoundError()
+        return cooking_session
+
 
     async def _find_recipe(self, recipe_id: UUID) -> RecipeModel:
         result = await self.db_session.execute(

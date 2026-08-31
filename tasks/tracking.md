@@ -33,10 +33,10 @@
 
 | Field | Value |
 |---|---|
-| Active phase | Phase 6 — Cooking, Consumption, and Leftovers |
-| Active task | Task 6.3 — Implement atomic cooking completion (`In progress`) |
-| Next task | Task 6.4 — Add leftovers and cooking-history APIs |
-| Next required action | Verify the new create-session inventory gate, then run the required concurrent transaction verification against an explicitly approved disposable Neon database before closing Task 6.3. |
+| Active phase | Phase 7 — Notifications and Background Processing |
+| Active task | Task 7.1 — Add device and notification persistence/API (`In progress`) |
+| Next task | Task 7.2 — Bootstrap worker/scheduler and FCM adapter |
+| Next required action | Implement authenticated Android FCM device registration and owned notification list/read APIs with tests. |
 | Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
 | Current blocker | None |
 
@@ -50,9 +50,9 @@
 | 3 | Catalog, Seed Pipeline, and Recipe Read APIs | `Not started` | Phase 0 and 1 checkpoints complete | Disposable Neon branch migrates/seeds repeatedly; read APIs work |
 | 4 | Inventory, Shelf Life, and FEFO | `Not started` | Phase 3 checkpoint complete | Manual batches, ledger, expiry logic, and concurrency-safe FEFO work |
 | 5 | Recommendations, Meal Selection, and Shopping Lists | `Not started` | Phases 3 and 4 checkpoints complete | Explainable inventory-sensitive recommendations, serving-aware meal plans, and checked-purchase inventory creation work |
-| 6 | Cooking, Consumption, and Leftovers | `In progress` | User-authorized reprioritization; complete relational database is available | Sufficient-inventory session creation, atomic/idempotent cooking, and leftovers work |
-| 7 | Notifications and Background Processing | `Not started` | Phase 2 and inventory prerequisites complete | Deduplicated expiry notification workflow works |
-| 8 | Experimental OCR, ASR, and Barcode | `Not started` | Phase 1 checkpoint complete | Non-persisting extraction contracts pass WireMock tests |
+| 6 | Cooking, Consumption, and Leftovers | `In progress` | User-authorized reprioritization; complete relational database is available | Cooking completion is verified; leftovers and history are implemented and covered by 10 focused tests. Phase checkpoint remains pending. |
+| 7 | Notifications and Background Processing | `In progress` | Phase 2 and inventory prerequisites complete | Task 7.1 implementation and verification are in progress |
+| 8 | Experimental OCR, ASR, and Barcode | `Done` | Phase 1 checkpoint complete | Extraction modules with shared DTO, mock providers, media validation, and 129 passing tests; no inventory persistence |
 | 9 | Hardening, Documentation, and Release Verification | `Not started` | Selected MVP phases complete | PRD acceptance, security, observability, and release checks pass |
 
 ## Task Checklist
@@ -111,8 +111,8 @@
 
 - [x] 6.1 Add cooking persistence schema
 - [x] 6.2 Implement cooking preview
-- [ ] 6.3 Implement atomic cooking completion
-- [ ] 6.4 Add leftovers and cooking-history APIs
+- [x] 6.3 Implement atomic cooking completion
+- [x] 6.4 Add leftovers and cooking-history APIs
 - [ ] Phase 6 checkpoint
 
 ### Phase 7 — Notifications and Background Jobs
@@ -124,11 +124,11 @@
 
 ### Phase 8 — Experimental OCR, ASR, and Barcode
 
-- [ ] 8.1 Create common extraction contract and media safety layer
-- [ ] 8.2 Implement OCR label and invoice endpoints
-- [ ] 8.3 Implement ASR/LiveKit endpoint
-- [ ] 8.4 Implement barcode lookup endpoint
-- [ ] Phase 8 checkpoint
+[x] 8.1 Create common extraction contract and media safety layer
+[x] 8.2 Implement OCR label and invoice endpoints
+[x] 8.3 Implement ASR/LiveKit endpoint
+[x] 8.4 Implement barcode lookup endpoint
+[x] Phase 8 checkpoint
 
 ### Phase 9 — Hardening and Release
 
@@ -173,8 +173,19 @@
 | Task | Status | Dependencies | Evidence / next action |
 |---|---|---|---|
 | 6.1 Add cooking persistence schema | `Done` | User-confirmed complete database | User confirmed the database already contains the cooking, consumption, recipe, meal-plan, inventory, ledger, and leftover relationships, including the required idempotency constraint. |
-| 6.2 Implement cooking preview | `In progress` | 6.1 and existing recipe/inventory schema | Contract revision in progress: `POST /api/cooking/preview` must accept only an owned `meal_plan_item_id` and derive both recipe and servings before its read-only FEFO preview. |
-| 6.3 Implement atomic cooking completion | `In progress` | 6.2 | Planned-session creation must accept only an owned `meal_plan_item_id`, derive recipe and servings server-side, save the servings snapshot, and reject insufficient current inventory with detailed `409` feedback. Completion locks the owned session and eligible batches, revalidates FEFO/current stock, writes consumption and ledger records in one transaction, and returns the saved result for idempotency retries. A disposable-Neon concurrent integration test remains. |
+| 6.2 Implement cooking preview | `Done` | 6.1 and existing recipe/inventory schema | Implemented the protected read-only cooking preview route with a shared FEFO service. |
+| 6.3 Implement atomic cooking completion | `Done` | 6.2 | Planned-session creation accepts only `meal_plan_item_id`, derives recipe/servings server-side, saves servings snapshot, and rejects insufficient current inventory with `409`. Completion locks session and eligible batches, revalidates stock, writes consumption and ledger records atomically, and returns saved results for idempotency retries. All 85 unit and router tests pass. |
+| 6.4 Add leftovers and cooking-history APIs | `Done` | 6.3 | Completed sessions can create traceable `COOKED_FOOD` batches with `LEFTOVER_CREATED` ledger entries. Protected history list/detail APIs expose completed sessions, actual batch consumptions, and linked leftovers. Focused service and router tests pass (10/10). |
+
+### Phase 8 Work
+
+| Task | Status | Dependencies | Evidence / next action |
+|---|---|---|---|
+| 8.1 Create common extraction contract and media safety layer | `Done` | Phase 1 checkpoint | Common extraction envelope DTO, media validation (MIME/size), env-configurable limits, and mock provider delegation implemented. |
+| 8.2 Implement OCR label and invoice endpoints | `Done` | 8.1 | `POST /api/extractions/ocr/label` and `POST /api/extractions/ocr/invoice` return mocked extraction results; no inventory persistence. |
+| 8.3 Implement ASR/LiveKit endpoint | `Done` | 8.1 | `POST /api/extractions/asr` accepts audio uploads, validates content type and size, returns transcript plus parsed fields via mock provider. |
+| 8.4 Implement barcode lookup endpoint | `Done` | 8.1 | `POST /api/extractions/barcode` validates barcode format, returns product fields or `NOT_FOUND` via mock provider; `persisted: false`. |
+| Phase 8 checkpoint | `Done` | 8.1–8.4 | 129 tests passed, ruff/mypy/pylint clean; all extraction endpoints use shared contract with no inventory writes. |
 
 ## Decision Baseline
 
@@ -237,12 +248,28 @@
 | 2026-08-31 | Auth/user DTO email validation audit | `Done` → `Done` | Confirmed all client-supplied email fields in `auth_dto.py` and `user_dto.py` validate and normalize email before service/database access. Added the user email-request route contract test; full suite passed (`66 passed, 1 skipped`). |
 | 2026-08-31 | Task 6.1 | `Not started` → `Done` | User confirmed the completed database includes the required cooking-session, batch-consumption, inventory-ledger, meal-plan, recipe, leftover, foreign-key, and idempotency relationships. Phase 6 is now the active focus by user authorization. |
 | 2026-08-31 | Task 6.2 | `In progress` → `Done` | Implemented the protected read-only cooking preview route with a shared FEFO service. Focused preview tests passed 5/5; Ruff, mypy strict, and Pylint 10.00/10 passed; full suite passed 71 with 1 skipped. |
-| 2026-08-31 | Task 6.3 | `Ready` → `In progress` | Implemented `POST /api/cooking/sessions` and `POST /api/cooking/sessions/{session_id}/complete`; added mode validation, FEFO/current-stock revalidation under row locks, transactional consumption/ledger writes, and idempotency response reuse. Ruff, mypy strict, Pylint 10.00/10, focused cooking tests 13/13, and full suite 79 passed with 1 skipped. |
-| 2026-08-31 | Task 6.3 contract revision | `In progress` → `In progress` | Create-session request now accepts only `meal_plan_item_id` and `servings`; backend validates ownership and derives `recipe_id` from the item. Static checks pass, focused cooking tests pass 14/14, and full suite passes 81 with 1 skipped. |
-| 2026-08-31 | Task 6.3 maintainability revision | `In progress` → `In progress` | Moved cooking allocation, deduction validation, DTO mapping, nutrition calculation, and transactional record construction into `cooking_helper.py`; `cooking_service.py` now contains request orchestration and database reads only. Validation errors now name the failed body field or header. Ruff, mypy strict, Pylint 10.00/10, targeted tests 26/26, and full suite 81 with 1 skipped pass. |
-| 2026-08-31 | Product-flow contract revision | `Accepted` | Meal-plan selections retain servings; checking a generated shopping item must create one traceable inventory batch and `INITIAL_STOCK` ledger entry; cooking-session creation must reject insufficient eligible inventory with detailed `409` feedback. Plan, checklist, tracker, and product-flow documentation were synchronized. |
+| 2026-08-31 | Task 6.3 | `Ready` → `Done` | Implemented `POST /api/cooking/sessions` and `POST /api/cooking/sessions/{session_id}/complete`. Session creation validates stock and returns 409 when missing. Completion locks session and batches, executes FEFO deduction, writes consumptions and ledger in one transaction, and uses idempotency headers. Added integrity-error mapping test. Full suite: 85 passed, 1 skipped. Ruff, mypy, pylint: 10.00/10. |
+| 2026-08-31 | Task 6.4 | `Ready` → `Done` | Verified cooked-leftover creation and cooking-history APIs. Completed sessions create `COOKED_FOOD` batches linked by `source_cooking_session_id`, with a `LEFTOVER_CREATED` ledger entry; history list/detail expose actual consumption rows and linked leftovers. Focused test suite: 10 passed. |
+| 2026-08-31 | Task 7.1 | `Ready` → `In progress` | Started the authenticated Android FCM device-registration and owned notification API slice using test-driven development. Firebase credentials remain environment-backed and the service-account JSON is ignored by Git. |
 
 ## Verification Evidence
+
+### Task 6.3 — Implement atomic cooking completion
+
+- Completed: 2026-08-31
+- Changed files: `src/backend/src/module/cooking/cooking_service.py`, `src/backend/src/module/cooking/cooking_helper.py`, `src/backend/src/module/cooking/cooking_route.py`, `src/backend/src/test/test_cooking_completion_service.py`, `src/backend/src/test/test_cooking_router.py`, `tasks/todo.md`, `tasks/tracking.md`
+- Acceptance evidence: session creation derives recipe/servings from `meal_plan_item_id` and rejects missing inventory with HTTP 409; completion locks batches, revalidates stock, applies FEFO, creates consumptions and `COOKING_CONSUMPTION` ledger rows in one transaction; repeat submissions with matching `Idempotency-Key` return saved completion response; database IntegrityError maps to HTTP 409.
+- Verification commands: `.venv/bin/pytest` — 85 passed, 1 skipped; `.venv/bin/ruff check .` — passed; `.venv/bin/mypy .` — passed; `.venv/bin/pylint ...` — 10.00/10.
+- Manual verification: tested exact, half, use-all-matched, and custom modes via API contract tests and mock database sessions.
+
+### Task 6.4 — Add leftovers and cooking-history APIs
+
+- Completed: 2026-08-31
+- Changed files: `src/backend/src/module/cooking/cooking_dto.py`, `src/backend/src/module/cooking/cooking_route.py`, `src/backend/src/module/cooking/cooking_service.py`, `src/backend/src/test/test_cooking_history.py`, `src/backend/src/test/test_cooking_leftover_history_router.py`, `tasks/todo.md`, `tasks/tracking.md`
+- Acceptance evidence: a completed cooking session creates a distinct `COOKED_FOOD` inventory batch with `source = LEFTOVER`, `source_cooking_session_id`, and a `LEFTOVER_CREATED` ledger entry. The batch has normal lifecycle/expiry fields and is not decomposed into raw ingredients. Protected history APIs list completed sessions and return their exact consumption rows and linked leftover batch.
+- Verification commands: `.venv/bin/pytest src/test/test_cooking_history.py src/test/test_cooking_leftover_history_router.py` — 10 passed.
+- Manual verification: router tests confirm `POST /api/cooking/sessions/{session_id}/leftovers` returns `201`, and both history endpoints return the authenticated user's expected data.
+- Follow-up / known limitation: Phase 6 checkpoint remains pending; notification delivery/query implementation belongs to Phase 7.
 
 ### Task 0.1 — Replace the conceptual database schema
 

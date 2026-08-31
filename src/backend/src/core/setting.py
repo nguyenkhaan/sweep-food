@@ -95,3 +95,27 @@ JWT_REFRESH_TOKEN_TTL_DAYS: Final[int] = get_positive_int_env(
     "JWT_REFRESH_TOKEN_TTL_DAYS",
     30,
 )
+EXTRACTION_MAX_IMAGE_SIZE: Final[int] = get_positive_int_env(
+    "EXTRACTION_MAX_IMAGE_SIZE",
+    5_242_880,
+)
+EXTRACTION_MAX_AUDIO_SIZE: Final[int] = get_positive_int_env(
+    "EXTRACTION_MAX_AUDIO_SIZE",
+    10_485_760,
+)
+EXTRACTION_MAX_AUDIO_DURATION: Final[int] = get_positive_int_env(
+    "EXTRACTION_MAX_AUDIO_DURATION",
+    60,
+)
+EXTRACTION_ALLOWED_IMAGE_TYPES: Final[str] = get_env_var(
+    "EXTRACTION_ALLOWED_IMAGE_TYPES",
+    "image/jpeg,image/png,image/webp",
+)
+EXTRACTION_ALLOWED_AUDIO_TYPES: Final[str] = get_env_var(
+    "EXTRACTION_ALLOWED_AUDIO_TYPES",
+    "audio/mpeg,audio/wav,audio/ogg",
+)
+EXTRACTION_PROVIDER_TIMEOUT: Final[int] = get_positive_int_env(
+    "EXTRACTION_PROVIDER_TIMEOUT",
+    15,
+)
