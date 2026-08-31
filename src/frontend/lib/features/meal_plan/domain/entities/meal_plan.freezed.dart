@@ -11,318 +11,270 @@ part of 'meal_plan.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$MealPlan {
-  DateTime get weekStart;
-  List<MealPlanEntry> get entries;
 
-  /// Create a copy of MealPlan
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $MealPlanCopyWith<MealPlan> get copyWith =>
-      _$MealPlanCopyWithImpl<MealPlan>(this as MealPlan, _$identity);
+ DateTime get weekStart; List<MealPlanEntry> get entries;
+/// Create a copy of MealPlan
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MealPlanCopyWith<MealPlan> get copyWith => _$MealPlanCopyWithImpl<MealPlan>(this as MealPlan, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is MealPlan &&
-            (identical(other.weekStart, weekStart) ||
-                other.weekStart == weekStart) &&
-            const DeepCollectionEquality().equals(other.entries, entries));
-  }
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, weekStart, const DeepCollectionEquality().hash(entries));
 
-  @override
-  String toString() {
-    return 'MealPlan(weekStart: $weekStart, entries: $entries)';
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlan&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&const DeepCollectionEquality().equals(other.entries, entries));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,weekStart,const DeepCollectionEquality().hash(entries));
+
+@override
+String toString() {
+  return 'MealPlan(weekStart: $weekStart, entries: $entries)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $MealPlanCopyWith<$Res> {
-  factory $MealPlanCopyWith(MealPlan value, $Res Function(MealPlan) _then) =
-      _$MealPlanCopyWithImpl;
-  @useResult
-  $Res call({DateTime weekStart, List<MealPlanEntry> entries});
-}
+abstract mixin class $MealPlanCopyWith<$Res>  {
+  factory $MealPlanCopyWith(MealPlan value, $Res Function(MealPlan) _then) = _$MealPlanCopyWithImpl;
+@useResult
+$Res call({
+ DateTime weekStart, List<MealPlanEntry> entries
+});
 
+
+
+
+}
 /// @nodoc
-class _$MealPlanCopyWithImpl<$Res> implements $MealPlanCopyWith<$Res> {
+class _$MealPlanCopyWithImpl<$Res>
+    implements $MealPlanCopyWith<$Res> {
   _$MealPlanCopyWithImpl(this._self, this._then);
 
   final MealPlan _self;
   final $Res Function(MealPlan) _then;
 
-  /// Create a copy of MealPlan
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? weekStart = null,
-    Object? entries = null,
-  }) {
-    return _then(_self.copyWith(
-      weekStart: null == weekStart
-          ? _self.weekStart
-          : weekStart // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      entries: null == entries
-          ? _self.entries
-          : entries // ignore: cast_nullable_to_non_nullable
-              as List<MealPlanEntry>,
-    ));
-  }
+/// Create a copy of MealPlan
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? weekStart = null,Object? entries = null,}) {
+  return _then(_self.copyWith(
+weekStart: null == weekStart ? _self.weekStart : weekStart // ignore: cast_nullable_to_non_nullable
+as DateTime,entries: null == entries ? _self.entries : entries // ignore: cast_nullable_to_non_nullable
+as List<MealPlanEntry>,
+  ));
 }
+
+}
+
 
 /// Adds pattern-matching-related methods to [MealPlan].
 extension MealPlanPatterns on MealPlan {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_MealPlan value)? $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _MealPlan() when $default != null:
-        return $default(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MealPlan value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _MealPlan() when $default != null:
+return $default(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_MealPlan value) $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _MealPlan():
-        return $default(_that);
-      case _:
-        throw StateError('Unexpected subclass');
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MealPlan value)  $default,){
+final _that = this;
+switch (_that) {
+case _MealPlan():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_MealPlan value)? $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _MealPlan() when $default != null:
-        return $default(_that);
-      case _:
-        return null;
-    }
-  }
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MealPlan value)?  $default,){
+final _that = this;
+switch (_that) {
+case _MealPlan() when $default != null:
+return $default(_that);case _:
+  return null;
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(DateTime weekStart, List<MealPlanEntry> entries)?
-        $default, {
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _MealPlan() when $default != null:
-        return $default(_that.weekStart, _that.entries);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime weekStart,  List<MealPlanEntry> entries)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _MealPlan() when $default != null:
+return $default(_that.weekStart,_that.entries);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(DateTime weekStart, List<MealPlanEntry> entries) $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _MealPlan():
-        return $default(_that.weekStart, _that.entries);
-      case _:
-        throw StateError('Unexpected subclass');
-    }
-  }
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime weekStart,  List<MealPlanEntry> entries)  $default,) {final _that = this;
+switch (_that) {
+case _MealPlan():
+return $default(_that.weekStart,_that.entries);case _:
+  throw StateError('Unexpected subclass');
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(DateTime weekStart, List<MealPlanEntry> entries)?
-        $default,
-  ) {
-    final _that = this;
-    switch (_that) {
-      case _MealPlan() when $default != null:
-        return $default(_that.weekStart, _that.entries);
-      case _:
-        return null;
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime weekStart,  List<MealPlanEntry> entries)?  $default,) {final _that = this;
+switch (_that) {
+case _MealPlan() when $default != null:
+return $default(_that.weekStart,_that.entries);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
+
 
 class _MealPlan extends MealPlan {
-  const _MealPlan(
-      {required this.weekStart,
-      final List<MealPlanEntry> entries = const <MealPlanEntry>[]})
-      : _entries = entries,
-        super._();
+  const _MealPlan({required this.weekStart, final  List<MealPlanEntry> entries = const <MealPlanEntry>[]}): _entries = entries,super._();
+  
 
-  @override
-  final DateTime weekStart;
-  final List<MealPlanEntry> _entries;
-  @override
-  @JsonKey()
-  List<MealPlanEntry> get entries {
-    if (_entries is EqualUnmodifiableListView) return _entries;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_entries);
-  }
+@override final  DateTime weekStart;
+ final  List<MealPlanEntry> _entries;
+@override@JsonKey() List<MealPlanEntry> get entries {
+  if (_entries is EqualUnmodifiableListView) return _entries;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_entries);
+}
 
-  /// Create a copy of MealPlan
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$MealPlanCopyWith<_MealPlan> get copyWith =>
-      __$MealPlanCopyWithImpl<_MealPlan>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _MealPlan &&
-            (identical(other.weekStart, weekStart) ||
-                other.weekStart == weekStart) &&
-            const DeepCollectionEquality().equals(other._entries, _entries));
-  }
+/// Create a copy of MealPlan
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MealPlanCopyWith<_MealPlan> get copyWith => __$MealPlanCopyWithImpl<_MealPlan>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(
-      runtimeType, weekStart, const DeepCollectionEquality().hash(_entries));
 
-  @override
-  String toString() {
-    return 'MealPlan(weekStart: $weekStart, entries: $entries)';
-  }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlan&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&const DeepCollectionEquality().equals(other._entries, _entries));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,weekStart,const DeepCollectionEquality().hash(_entries));
+
+@override
+String toString() {
+  return 'MealPlan(weekStart: $weekStart, entries: $entries)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class _$MealPlanCopyWith<$Res>
-    implements $MealPlanCopyWith<$Res> {
-  factory _$MealPlanCopyWith(_MealPlan value, $Res Function(_MealPlan) _then) =
-      __$MealPlanCopyWithImpl;
-  @override
-  @useResult
-  $Res call({DateTime weekStart, List<MealPlanEntry> entries});
-}
+abstract mixin class _$MealPlanCopyWith<$Res> implements $MealPlanCopyWith<$Res> {
+  factory _$MealPlanCopyWith(_MealPlan value, $Res Function(_MealPlan) _then) = __$MealPlanCopyWithImpl;
+@override @useResult
+$Res call({
+ DateTime weekStart, List<MealPlanEntry> entries
+});
 
+
+
+
+}
 /// @nodoc
-class __$MealPlanCopyWithImpl<$Res> implements _$MealPlanCopyWith<$Res> {
+class __$MealPlanCopyWithImpl<$Res>
+    implements _$MealPlanCopyWith<$Res> {
   __$MealPlanCopyWithImpl(this._self, this._then);
 
   final _MealPlan _self;
   final $Res Function(_MealPlan) _then;
 
-  /// Create a copy of MealPlan
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? weekStart = null,
-    Object? entries = null,
-  }) {
-    return _then(_MealPlan(
-      weekStart: null == weekStart
-          ? _self.weekStart
-          : weekStart // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      entries: null == entries
-          ? _self._entries
-          : entries // ignore: cast_nullable_to_non_nullable
-              as List<MealPlanEntry>,
-    ));
-  }
+/// Create a copy of MealPlan
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? weekStart = null,Object? entries = null,}) {
+  return _then(_MealPlan(
+weekStart: null == weekStart ? _self.weekStart : weekStart // ignore: cast_nullable_to_non_nullable
+as DateTime,entries: null == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
+as List<MealPlanEntry>,
+  ));
+}
+
+
 }
 
 // dart format on

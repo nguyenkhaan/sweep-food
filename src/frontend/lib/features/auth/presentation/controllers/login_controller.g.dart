@@ -24,15 +24,15 @@ final class LoginControllerProvider
   /// this holds only what needs to survive a rebuild (obscure toggle, in-flight
   /// flag, server errors).
   LoginControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'loginControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'loginControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$loginControllerHash();
@@ -62,11 +62,14 @@ abstract class _$LoginController extends $Notifier<AuthFormState> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AuthFormState, AuthFormState>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AuthFormState, AuthFormState>,
-        AuthFormState,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AuthFormState, AuthFormState>,
+              AuthFormState,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

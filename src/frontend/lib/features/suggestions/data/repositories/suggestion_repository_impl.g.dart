@@ -12,20 +12,24 @@ part of 'suggestion_repository_impl.dart';
 @ProviderFor(suggestionRepository)
 final suggestionRepositoryProvider = SuggestionRepositoryProvider._();
 
-final class SuggestionRepositoryProvider extends $FunctionalProvider<
-    SuggestionRepository,
-    SuggestionRepository,
-    SuggestionRepository> with $Provider<SuggestionRepository> {
+final class SuggestionRepositoryProvider
+    extends
+        $FunctionalProvider<
+          SuggestionRepository,
+          SuggestionRepository,
+          SuggestionRepository
+        >
+    with $Provider<SuggestionRepository> {
   SuggestionRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'suggestionRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'suggestionRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$suggestionRepositoryHash();
@@ -33,8 +37,8 @@ final class SuggestionRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<SuggestionRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   SuggestionRepository create(Ref ref) {

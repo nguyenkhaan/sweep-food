@@ -33,15 +33,15 @@ final class SessionExpiredProvider
   /// fails it bumps this counter; [SessionController] listens and tears the
   /// session down, which flips the router back to `/welcome`.
   SessionExpiredProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'sessionExpiredProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sessionExpiredProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$sessionExpiredHash();
@@ -74,8 +74,14 @@ abstract class _$SessionExpired extends $Notifier<int> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<int, int>;
-    final element = ref.element
-        as $ClassProviderElement<AnyNotifier<int, int>, int, Object?, Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

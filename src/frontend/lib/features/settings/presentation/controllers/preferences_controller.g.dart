@@ -24,15 +24,15 @@ final class PreferencesControllerProvider
   /// delegated to [DietaryPreferenceController] (shared with onboarding A-05 and
   /// the suggestion scorer) so there's a single source of truth.
   PreferencesControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'preferencesControllerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'preferencesControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$preferencesControllerHash();
@@ -63,11 +63,14 @@ abstract class _$PreferencesController extends $Notifier<AppPreferences> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AppPreferences, AppPreferences>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AppPreferences, AppPreferences>,
-        AppPreferences,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AppPreferences, AppPreferences>,
+              AppPreferences,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

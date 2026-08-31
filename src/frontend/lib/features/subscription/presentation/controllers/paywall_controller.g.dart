@@ -15,15 +15,15 @@ final paywallControllerProvider = PaywallControllerProvider._();
 final class PaywallControllerProvider
     extends $NotifierProvider<PaywallController, PaywallState> {
   PaywallControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'paywallControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'paywallControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$paywallControllerHash();
@@ -49,11 +49,14 @@ abstract class _$PaywallController extends $Notifier<PaywallState> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<PaywallState, PaywallState>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<PaywallState, PaywallState>,
-        PaywallState,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<PaywallState, PaywallState>,
+              PaywallState,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

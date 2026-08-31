@@ -10,15 +10,18 @@ _CookResultDto _$CookResultDtoFromJson(Map<String, dynamic> json) =>
     _CookResultDto(
       dishId: json['dish_id'] as String? ?? '',
       dishName: json['dish_name'] as String? ?? '',
-      changes: (json['changes'] as List<dynamic>?)
+      changes:
+          (json['changes'] as List<dynamic>?)
               ?.map((e) => PantryChangeDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <PantryChangeDto>[],
-      updatedPantryItems: (json['updated_pantry_items'] as List<dynamic>?)
+      updatedPantryItems:
+          (json['updated_pantry_items'] as List<dynamic>?)
               ?.map((e) => PantryItemDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const <PantryItemDto>[],
-      depletedItemIds: (json['depleted_item_ids'] as List<dynamic>?)
+      depletedItemIds:
+          (json['depleted_item_ids'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const <String>[],

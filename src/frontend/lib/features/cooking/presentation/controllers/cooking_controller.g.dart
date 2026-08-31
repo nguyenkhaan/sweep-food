@@ -33,15 +33,15 @@ final class CookingControllerProvider
   /// Kept alive: the confirming widget (a bottom sheet) only `read`s this, so an
   /// auto-dispose provider would be torn down mid-request.
   CookingControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'cookingControllerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'cookingControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$cookingControllerHash();
@@ -74,8 +74,14 @@ abstract class _$CookingController extends $Notifier<CookResult?> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<CookResult?, CookResult?>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<CookResult?, CookResult?>, CookResult?, Object?, Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<CookResult?, CookResult?>,
+              CookResult?,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

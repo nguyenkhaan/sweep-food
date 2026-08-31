@@ -12,20 +12,24 @@ part of 'pantry_repository_impl.dart';
 @ProviderFor(pantryRepository)
 final pantryRepositoryProvider = PantryRepositoryProvider._();
 
-final class PantryRepositoryProvider extends $FunctionalProvider<
-    PantryRepository,
-    PantryRepository,
-    PantryRepository> with $Provider<PantryRepository> {
+final class PantryRepositoryProvider
+    extends
+        $FunctionalProvider<
+          PantryRepository,
+          PantryRepository,
+          PantryRepository
+        >
+    with $Provider<PantryRepository> {
   PantryRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'pantryRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'pantryRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$pantryRepositoryHash();

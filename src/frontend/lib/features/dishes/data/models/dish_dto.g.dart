@@ -7,42 +7,44 @@ part of 'dish_dto.dart';
 // **************************************************************************
 
 _DishDto _$DishDtoFromJson(Map<String, dynamic> json) => _DishDto(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      servings: (json['servings'] as num?)?.toInt() ?? 1,
-      prepTimeMin: (json['prep_time_min'] as num?)?.toInt() ?? 0,
-      cookTimeMin: (json['cook_time_min'] as num?)?.toInt() ?? 0,
-      cuisine: json['cuisine'] as String? ?? '',
-      difficulty: json['difficulty'] as String? ?? '',
-      imageUrl: json['image_url'] as String?,
-      nutritionPerServing: json['nutrition_per_serving'] == null
-          ? null
-          : MacrosDto.fromJson(
-              json['nutrition_per_serving'] as Map<String, dynamic>),
-      ingredients: (json['ingredients'] as List<dynamic>?)
-              ?.map(
-                  (e) => DishIngredientDto.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const <DishIngredientDto>[],
-      steps: (json['steps'] as List<dynamic>?)
-              ?.map((e) => CookingStepDto.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const <CookingStepDto>[],
-    );
+  id: json['id'] as String,
+  name: json['name'] as String,
+  servings: (json['servings'] as num?)?.toInt() ?? 1,
+  prepTimeMin: (json['prep_time_min'] as num?)?.toInt() ?? 0,
+  cookTimeMin: (json['cook_time_min'] as num?)?.toInt() ?? 0,
+  cuisine: json['cuisine'] as String? ?? '',
+  difficulty: json['difficulty'] as String? ?? '',
+  imageUrl: json['image_url'] as String?,
+  nutritionPerServing: json['nutrition_per_serving'] == null
+      ? null
+      : MacrosDto.fromJson(
+          json['nutrition_per_serving'] as Map<String, dynamic>,
+        ),
+  ingredients:
+      (json['ingredients'] as List<dynamic>?)
+          ?.map((e) => DishIngredientDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <DishIngredientDto>[],
+  steps:
+      (json['steps'] as List<dynamic>?)
+          ?.map((e) => CookingStepDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <CookingStepDto>[],
+);
 
 Map<String, dynamic> _$DishDtoToJson(_DishDto instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'servings': instance.servings,
-      'prep_time_min': instance.prepTimeMin,
-      'cook_time_min': instance.cookTimeMin,
-      'cuisine': instance.cuisine,
-      'difficulty': instance.difficulty,
-      'image_url': instance.imageUrl,
-      'nutrition_per_serving': instance.nutritionPerServing,
-      'ingredients': instance.ingredients,
-      'steps': instance.steps,
-    };
+  'id': instance.id,
+  'name': instance.name,
+  'servings': instance.servings,
+  'prep_time_min': instance.prepTimeMin,
+  'cook_time_min': instance.cookTimeMin,
+  'cuisine': instance.cuisine,
+  'difficulty': instance.difficulty,
+  'image_url': instance.imageUrl,
+  'nutrition_per_serving': instance.nutritionPerServing,
+  'ingredients': instance.ingredients,
+  'steps': instance.steps,
+};
 
 _DishIngredientDto _$DishIngredientDtoFromJson(Map<String, dynamic> json) =>
     _DishIngredientDto(
@@ -83,11 +85,11 @@ Map<String, dynamic> _$CookingStepDtoToJson(_CookingStepDto instance) =>
     };
 
 _MacrosDto _$MacrosDtoFromJson(Map<String, dynamic> json) => _MacrosDto(
-      energyKcal: (json['energy_kcal'] as num?)?.toDouble() ?? 0,
-      proteinG: (json['protein_g'] as num?)?.toDouble() ?? 0,
-      carbG: (json['carb_g'] as num?)?.toDouble() ?? 0,
-      lipidG: (json['lipid_g'] as num?)?.toDouble() ?? 0,
-    );
+  energyKcal: (json['energy_kcal'] as num?)?.toDouble() ?? 0,
+  proteinG: (json['protein_g'] as num?)?.toDouble() ?? 0,
+  carbG: (json['carb_g'] as num?)?.toDouble() ?? 0,
+  lipidG: (json['lipid_g'] as num?)?.toDouble() ?? 0,
+);
 
 Map<String, dynamic> _$MacrosDtoToJson(_MacrosDto instance) =>
     <String, dynamic>{

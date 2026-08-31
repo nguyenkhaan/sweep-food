@@ -12,20 +12,24 @@ part of 'meal_plan_repository_impl.dart';
 @ProviderFor(mealPlanRepository)
 final mealPlanRepositoryProvider = MealPlanRepositoryProvider._();
 
-final class MealPlanRepositoryProvider extends $FunctionalProvider<
-    MealPlanRepository,
-    MealPlanRepository,
-    MealPlanRepository> with $Provider<MealPlanRepository> {
+final class MealPlanRepositoryProvider
+    extends
+        $FunctionalProvider<
+          MealPlanRepository,
+          MealPlanRepository,
+          MealPlanRepository
+        >
+    with $Provider<MealPlanRepository> {
   MealPlanRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'mealPlanRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mealPlanRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$mealPlanRepositoryHash();
@@ -33,8 +37,8 @@ final class MealPlanRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<MealPlanRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   MealPlanRepository create(Ref ref) {

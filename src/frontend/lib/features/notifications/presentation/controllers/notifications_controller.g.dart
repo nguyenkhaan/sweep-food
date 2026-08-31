@@ -16,20 +16,21 @@ final notificationsControllerProvider = NotificationsControllerProvider._();
 
 /// T-01 Trung tâm thông báo. Loads the list; `markRead` / `markAllRead` update
 /// optimistically and roll back on failure.
-final class NotificationsControllerProvider extends $AsyncNotifierProvider<
-    NotificationsController, List<AppNotification>> {
+final class NotificationsControllerProvider
+    extends
+        $AsyncNotifierProvider<NotificationsController, List<AppNotification>> {
   /// T-01 Trung tâm thông báo. Loads the list; `markRead` / `markAllRead` update
   /// optimistically and roll back on failure.
   NotificationsControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'notificationsControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'notificationsControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$notificationsControllerHash();
@@ -51,13 +52,20 @@ abstract class _$NotificationsController
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref
-        as $Ref<AsyncValue<List<AppNotification>>, List<AppNotification>>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<List<AppNotification>>, List<AppNotification>>,
-        AsyncValue<List<AppNotification>>,
-        Object?,
-        Object?>;
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<List<AppNotification>>, List<AppNotification>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<AppNotification>>,
+                List<AppNotification>
+              >,
+              AsyncValue<List<AppNotification>>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }
@@ -70,18 +78,19 @@ final unreadNotificationCountProvider = UnreadNotificationCountProvider._();
 /// Unread badge count for the Home bell.
 
 final class UnreadNotificationCountProvider
-    extends $FunctionalProvider<int, int, int> with $Provider<int> {
+    extends $FunctionalProvider<int, int, int>
+    with $Provider<int> {
   /// Unread badge count for the Home bell.
   UnreadNotificationCountProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'unreadNotificationCountProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'unreadNotificationCountProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$unreadNotificationCountHash();
@@ -111,20 +120,24 @@ String _$unreadNotificationCountHash() =>
 @ProviderFor(groupedNotifications)
 final groupedNotificationsProvider = GroupedNotificationsProvider._();
 
-final class GroupedNotificationsProvider extends $FunctionalProvider<
-    List<NotificationDay>,
-    List<NotificationDay>,
-    List<NotificationDay>> with $Provider<List<NotificationDay>> {
+final class GroupedNotificationsProvider
+    extends
+        $FunctionalProvider<
+          List<NotificationDay>,
+          List<NotificationDay>,
+          List<NotificationDay>
+        >
+    with $Provider<List<NotificationDay>> {
   GroupedNotificationsProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'groupedNotificationsProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'groupedNotificationsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$groupedNotificationsHash();
@@ -132,8 +145,8 @@ final class GroupedNotificationsProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<List<NotificationDay>> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   List<NotificationDay> create(Ref ref) {

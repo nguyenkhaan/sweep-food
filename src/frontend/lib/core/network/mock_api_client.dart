@@ -40,6 +40,10 @@ class MockApiClient implements ApiClient {
     ApiPaths.notifications: 'notifications',
     ApiPaths.subscription: 'subscription',
     ApiPaths.reportsWasteReduction: 'waste_reduction_report',
+    // M4 multimodal ingestion — `postMultipart` returns these canned ScanJobs.
+    ApiPaths.scanLabel: 'scan_label',
+    ApiPaths.scanReceipt: 'scan_receipt',
+    ApiPaths.scanVoice: 'scan_voice',
   };
 
   /// Read-shaped POST endpoints that return a canned fixture instead of echoing

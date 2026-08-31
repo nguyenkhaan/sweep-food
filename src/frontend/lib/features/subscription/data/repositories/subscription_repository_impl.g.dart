@@ -12,20 +12,24 @@ part of 'subscription_repository_impl.dart';
 @ProviderFor(subscriptionRepository)
 final subscriptionRepositoryProvider = SubscriptionRepositoryProvider._();
 
-final class SubscriptionRepositoryProvider extends $FunctionalProvider<
-    SubscriptionRepository,
-    SubscriptionRepository,
-    SubscriptionRepository> with $Provider<SubscriptionRepository> {
+final class SubscriptionRepositoryProvider
+    extends
+        $FunctionalProvider<
+          SubscriptionRepository,
+          SubscriptionRepository,
+          SubscriptionRepository
+        >
+    with $Provider<SubscriptionRepository> {
   SubscriptionRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'subscriptionRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'subscriptionRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$subscriptionRepositoryHash();
@@ -33,8 +37,8 @@ final class SubscriptionRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<SubscriptionRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   SubscriptionRepository create(Ref ref) {

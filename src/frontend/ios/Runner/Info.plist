@@ -4,6 +4,12 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>SweepFood dùng máy ảnh để quét tem nhãn và hoá đơn, trích xuất thông tin nguyên liệu.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>SweepFood dùng micro để nhận diện giọng nói khi bạn đọc danh sách nguyên liệu.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>SweepFood cần truy cập thư viện ảnh để bạn chọn ảnh tem nhãn hoặc hoá đơn có sẵn.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

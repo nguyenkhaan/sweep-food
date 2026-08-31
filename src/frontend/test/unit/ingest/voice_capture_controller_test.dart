@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:frontend/features/ingest/presentation/controllers/voice_capture_controller.dart';
 import 'package:frontend/features/pantry/data/repositories/pantry_repository_impl.dart';
 import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
@@ -9,6 +8,7 @@ import 'package:frontend/shared/domain/measurement_unit.dart';
 import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../helpers/ingest_fixtures.dart';
 import '../../helpers/mocks.dart';
 import '../../helpers/test_providers.dart';
 
@@ -26,93 +26,65 @@ void main() {
     );
   });
 
-  group('VoiceCaptureController', () {
-    test('initializes with default voice items and recording false', () {
-      final container = createContainer();
-      final state = container.read(voiceCaptureControllerProvider);
+  final job = voiceScanJob();
 
-      expect(state.isRecording, isFalse);
+  group('VoiceCaptureController', () {
+    test('seeds transcript + items from the scan job', () {
+      final container = createContainer();
+      final state = container.read(voiceCaptureControllerProvider(job));
+
+      expect(state.transcript, contains('thịt bò'));
       expect(state.items, hasLength(3));
       expect(state.items[0].name, 'Thịt bò');
       expect(state.items[1].name, 'Cải bó xôi');
       expect(state.items[2].name, 'Trứng gà');
     });
 
-    test('startRecording, incrementTimer and stopRecording modify state', () {
+    test('addItem, updateItem, removeItem update the item list', () {
       final container = createContainer();
-      final notifier = container.read(voiceCaptureControllerProvider.notifier);
+      final notifier =
+          container.read(voiceCaptureControllerProvider(job).notifier);
 
-      notifier.startRecording();
-      var state = container.read(voiceCaptureControllerProvider);
-      expect(state.isRecording, isTrue);
-      expect(state.elapsedSeconds, 0);
-
-      notifier.incrementTimer();
-      notifier.incrementTimer();
-      state = container.read(voiceCaptureControllerProvider);
-      expect(state.elapsedSeconds, 2);
-
-      notifier.stopRecording();
-      state = container.read(voiceCaptureControllerProvider);
-      expect(state.isRecording, isFalse);
-    });
-
-    test('addItem, updateItem, removeItem update items list', () {
-      final container = createContainer();
-      final notifier = container.read(voiceCaptureControllerProvider.notifier);
-
-      // Add item
-      const newItem = ParsedItemDraft(
-        name: 'Hành tây',
-        quantity: 2,
-        unit: MeasurementUnit.piece,
-        storageTier: StorageTier.pantryShelf,
-      );
-      notifier.addItem(newItem);
-      var state = container.read(voiceCaptureControllerProvider);
+      notifier.addItem(kBlankVoiceDraft);
+      var state = container.read(voiceCaptureControllerProvider(job));
       expect(state.items, hasLength(4));
-      expect(state.items.last.name, 'Hành tây');
+      expect(state.items.last.name, 'Nguyên liệu mới');
 
-      // Update item
-      final updated = state.items[0].copyWith(quantity: 350);
-      notifier.updateItem(0, updated);
-      state = container.read(voiceCaptureControllerProvider);
+      notifier.updateItem(0, state.items[0].copyWith(quantity: 350));
+      state = container.read(voiceCaptureControllerProvider(job));
       expect(state.items[0].quantity, 350);
 
-      // Remove item
       notifier.removeItem(0);
-      state = container.read(voiceCaptureControllerProvider);
+      state = container.read(voiceCaptureControllerProvider(job));
       expect(state.items, hasLength(3));
       expect(state.items[0].name, 'Cải bó xôi');
     });
 
-    test('saveAllToPantry saves all items to pantry repository', () async {
+    test('saveAllToPantry saves every item with the voice source', () async {
       final repo = MockPantryRepository();
-      when(() => repo.add(any())).thenAnswer(
-        (inv) async {
-          final draft = inv.positionalArguments.first as PantryItemDraft;
-          return Right(
-            PantryItem(
-              id: 'voice-${draft.name}',
-              name: draft.name,
-              category: draft.category,
-              quantity: draft.quantity,
-              unit: draft.unit,
-              storageTier: draft.storageTier,
-              source: draft.source,
-              status: PantryItemStatus.active,
-              addedAt: DateTime.now(),
-            ),
-          );
-        },
-      );
+      when(() => repo.add(any())).thenAnswer((inv) async {
+        final draft = inv.positionalArguments.first as PantryItemDraft;
+        return Right(
+          PantryItem(
+            id: 'voice-${draft.name}',
+            name: draft.name,
+            category: draft.category,
+            quantity: draft.quantity,
+            unit: draft.unit,
+            storageTier: draft.storageTier,
+            source: draft.source,
+            status: PantryItemStatus.active,
+            addedAt: DateTime.now(),
+          ),
+        );
+      });
 
       final container = createContainer(
         overrides: [pantryRepositoryProvider.overrideWithValue(repo)],
       );
-
-      final notifier = container.read(voiceCaptureControllerProvider.notifier);
-      final saved = await notifier.saveAllToPantry();
+      final saved = await container
+          .read(voiceCaptureControllerProvider(job).notifier)
+          .saveAllToPantry();
 
       expect(saved, hasLength(3));
       expect(saved[0].name, 'Thịt bò');

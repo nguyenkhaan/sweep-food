@@ -6,25 +6,33 @@ import 'package:frontend/shared/domain/storage_tier.dart';
 
 part 'parsed_item_draft.freezed.dart';
 
-/// One parsed item draft from OCR label / receipt / voice ingestion before saving.
+/// One item parsed from OCR label / receipt / voice ingestion, shown on the
+/// review screens (I-03 / I-05 / I-07) before the user confirms it into the
+/// pantry. Defaults are neutral — real values come from the [ScanJob].
 @freezed
 abstract class ParsedItemDraft with _$ParsedItemDraft {
   const ParsedItemDraft._();
 
   const factory ParsedItemDraft({
-    @Default('Cà chua bi') String name,
-    @Default('Rau củ') String category,
-    @Default(500) double quantity,
+    @Default('') String name,
+    @Default('') String category,
+    @Default(0) double quantity,
     @Default(MeasurementUnit.gram) MeasurementUnit unit,
     @Default(StorageTier.fridge) StorageTier storageTier,
     DateTime? packedDate,
     DateTime? expiryDate,
     int? priceVnd,
+
+    /// The OCR / ASR filled this field with low confidence — flag it for review.
     @Default(false) bool isExpiryWarn,
     String? imagePath,
   }) = _ParsedItemDraft;
 
-  PantryItemDraft toPantryItemDraft({PantrySource source = PantrySource.labelScan}) {
+  bool get isValid => name.trim().isNotEmpty && quantity > 0;
+
+  PantryItemDraft toPantryItemDraft({
+    PantrySource source = PantrySource.labelScan,
+  }) {
     return PantryItemDraft(
       name: name,
       category: category,

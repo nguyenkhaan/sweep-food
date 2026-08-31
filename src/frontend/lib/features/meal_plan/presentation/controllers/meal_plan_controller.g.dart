@@ -18,15 +18,15 @@ final class MealPlanWeekStartProvider
     extends $NotifierProvider<MealPlanWeekStart, DateTime> {
   /// The Monday of the week shown in M-01. `‹ / ›` step it by 7 days.
   MealPlanWeekStartProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'mealPlanWeekStartProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mealPlanWeekStartProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$mealPlanWeekStartHash();
@@ -54,8 +54,14 @@ abstract class _$MealPlanWeekStart extends $Notifier<DateTime> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<DateTime, DateTime>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<DateTime, DateTime>, DateTime, Object?, Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<DateTime, DateTime>,
+              DateTime,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }
@@ -73,15 +79,15 @@ final class MealPlanControllerProvider
   /// M-01 weekly grid. Re-fetches when the week changes; assign / clear update
   /// optimistically and persist via `PUT /meal-plans/{weekStart}`.
   MealPlanControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'mealPlanControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mealPlanControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$mealPlanControllerHash();
@@ -103,11 +109,14 @@ abstract class _$MealPlanController extends $AsyncNotifier<MealPlan> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AsyncValue<MealPlan>, MealPlan>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<MealPlan>, MealPlan>,
-        AsyncValue<MealPlan>,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<MealPlan>, MealPlan>,
+              AsyncValue<MealPlan>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

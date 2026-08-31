@@ -17,20 +17,26 @@ final analyticsProvider = AnalyticsProvider._();
 /// The app-wide [AnalyticsService]. MVP wires [NoopAnalyticsService]; M6 can
 /// override this with a Firebase-backed impl in `bootstrap()`.
 
-final class AnalyticsProvider extends $FunctionalProvider<AnalyticsService,
-    AnalyticsService, AnalyticsService> with $Provider<AnalyticsService> {
+final class AnalyticsProvider
+    extends
+        $FunctionalProvider<
+          AnalyticsService,
+          AnalyticsService,
+          AnalyticsService
+        >
+    with $Provider<AnalyticsService> {
   /// The app-wide [AnalyticsService]. MVP wires [NoopAnalyticsService]; M6 can
   /// override this with a Firebase-backed impl in `bootstrap()`.
   AnalyticsProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'analyticsProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'analyticsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$analyticsHash();

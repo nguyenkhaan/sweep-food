@@ -12,20 +12,24 @@ part of 'notification_repository_impl.dart';
 @ProviderFor(notificationRepository)
 final notificationRepositoryProvider = NotificationRepositoryProvider._();
 
-final class NotificationRepositoryProvider extends $FunctionalProvider<
-    NotificationRepository,
-    NotificationRepository,
-    NotificationRepository> with $Provider<NotificationRepository> {
+final class NotificationRepositoryProvider
+    extends
+        $FunctionalProvider<
+          NotificationRepository,
+          NotificationRepository,
+          NotificationRepository
+        >
+    with $Provider<NotificationRepository> {
   NotificationRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'notificationRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'notificationRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$notificationRepositoryHash();
@@ -33,8 +37,8 @@ final class NotificationRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<NotificationRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   NotificationRepository create(Ref ref) {

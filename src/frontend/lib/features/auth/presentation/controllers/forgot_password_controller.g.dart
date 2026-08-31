@@ -15,15 +15,15 @@ final forgotPasswordControllerProvider = ForgotPasswordControllerProvider._();
 final class ForgotPasswordControllerProvider
     extends $NotifierProvider<ForgotPasswordController, ForgotPasswordState> {
   ForgotPasswordControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'forgotPasswordControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'forgotPasswordControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$forgotPasswordControllerHash();
@@ -51,11 +51,14 @@ abstract class _$ForgotPasswordController
   @override
   void runBuild() {
     final ref = this.ref as $Ref<ForgotPasswordState, ForgotPasswordState>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<ForgotPasswordState, ForgotPasswordState>,
-        ForgotPasswordState,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<ForgotPasswordState, ForgotPasswordState>,
+              ForgotPasswordState,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

@@ -24,15 +24,15 @@ final class OnboardingControllerProvider
   /// survives a logout/login on the same device. Watched by `route_guards.dart`:
   /// a signed-in user with `false` here is pinned to `/onboarding/diet`.
   OnboardingControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'onboardingControllerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'onboardingControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$onboardingControllerHash();
@@ -63,8 +63,14 @@ abstract class _$OnboardingController extends $Notifier<bool> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<bool, bool>, bool, Object?, Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }
@@ -86,15 +92,15 @@ final class DietaryPreferenceControllerProvider
   /// later editable in Cài đặt → Tùy chọn. Feeds the `P` term of suggestion
   /// scoring — `SuggestionFilterController` seeds its default from here.
   DietaryPreferenceControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'dietaryPreferenceControllerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dietaryPreferenceControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$dietaryPreferenceControllerHash();
@@ -126,11 +132,14 @@ abstract class _$DietaryPreferenceController
   @override
   void runBuild() {
     final ref = this.ref as $Ref<DietaryPreference?, DietaryPreference?>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<DietaryPreference?, DietaryPreference?>,
-        DietaryPreference?,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<DietaryPreference?, DietaryPreference?>,
+              DietaryPreference?,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

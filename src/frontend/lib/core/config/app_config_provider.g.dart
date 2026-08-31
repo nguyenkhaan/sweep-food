@@ -23,15 +23,15 @@ final class AppConfigProvider
   /// The app-wide [AppConfig]. Overridden in `bootstrap()` with the instance read
   /// from `--dart-define`; the fallback here keeps tests / previews working.
   AppConfigProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'appConfigProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appConfigProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$appConfigHash();

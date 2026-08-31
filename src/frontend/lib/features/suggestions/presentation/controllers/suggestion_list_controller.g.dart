@@ -16,15 +16,15 @@ final suggestionFilterControllerProvider =
 final class SuggestionFilterControllerProvider
     extends $NotifierProvider<SuggestionFilterController, SuggestionFilter> {
   SuggestionFilterControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'suggestionFilterControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'suggestionFilterControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$suggestionFilterControllerHash();
@@ -52,11 +52,14 @@ abstract class _$SuggestionFilterController
   @override
   void runBuild() {
     final ref = this.ref as $Ref<SuggestionFilter, SuggestionFilter>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<SuggestionFilter, SuggestionFilter>,
-        SuggestionFilter,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<SuggestionFilter, SuggestionFilter>,
+              SuggestionFilter,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }
@@ -69,20 +72,21 @@ final suggestionListControllerProvider = SuggestionListControllerProvider._();
 
 /// S-01 list. Re-fetches whenever the filter changes; the server does the
 /// `0.4E + 0.3A + 0.2P + 0.1U` scoring.
-final class SuggestionListControllerProvider extends $AsyncNotifierProvider<
-    SuggestionListController, List<DishSuggestion>> {
+final class SuggestionListControllerProvider
+    extends
+        $AsyncNotifierProvider<SuggestionListController, List<DishSuggestion>> {
   /// S-01 list. Re-fetches whenever the filter changes; the server does the
   /// `0.4E + 0.3A + 0.2P + 0.1U` scoring.
   SuggestionListControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'suggestionListControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'suggestionListControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$suggestionListControllerHash();
@@ -104,13 +108,20 @@ abstract class _$SuggestionListController
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref
-        as $Ref<AsyncValue<List<DishSuggestion>>, List<DishSuggestion>>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<List<DishSuggestion>>, List<DishSuggestion>>,
-        AsyncValue<List<DishSuggestion>>,
-        Object?,
-        Object?>;
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<List<DishSuggestion>>, List<DishSuggestion>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<DishSuggestion>>,
+                List<DishSuggestion>
+              >,
+              AsyncValue<List<DishSuggestion>>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }
