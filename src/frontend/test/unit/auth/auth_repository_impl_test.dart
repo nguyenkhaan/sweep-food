@@ -12,6 +12,25 @@ class _MockApiClient extends Mock implements ApiClient {}
 
 class _MockSecureStore extends Mock implements SecureStore {}
 
+Map<String, dynamic> _tokenPair() => {
+      'access_token': 'at',
+      'refresh_token': 'rt',
+      'token_type': 'bearer',
+      'access_expires_in_seconds': 900,
+      'refresh_expires_in_seconds': 2592000,
+      'session_id': 's1',
+    };
+
+Map<String, dynamic> _profile({String? diet}) => {
+      'user_id': 'u1',
+      'name': 'Nguyễn Văn A',
+      'phone': '+84901234567',
+      'phone_verified_at': null,
+      'email': 'ban@email.com',
+      'email_verified_at': null,
+      'preferences': {if (diet != null) 'dietary_preference': diet},
+    };
+
 void main() {
   late _MockApiClient api;
   late _MockSecureStore store;
@@ -31,36 +50,28 @@ void main() {
   });
 
   group('login()', () {
-    test('maps the response and persists the token pair', () async {
-      when(() => api.post(ApiPaths.login, body: any(named: 'body'))).thenAnswer(
-        (_) async => {
-          'user': {
-            'id': 'u1',
-            'name': 'Nguyễn Văn A',
-            'email': 'ban@email.com',
-            'dietary_preference': 'more_veg',
-          },
-          'access_token': 'at',
-          'refresh_token': 'rt',
-        },
-      );
+    test('signs in, persists the token pair, then loads the profile', () async {
+      when(() => api.post(ApiPaths.login, body: any(named: 'body')))
+          .thenAnswer((_) async => _tokenPair());
+      when(() => api.get(ApiPaths.profile))
+          .thenAnswer((_) async => _profile(diet: 'more_veg'));
 
-      final res = await repo.login(email: 'ban@email.com', password: 'secret123');
+      final res = await repo.login(phone: '+84901234567', password: 'secret123');
 
       final session = res.fold((f) => fail('expected Right, got $f'), (r) => r);
       expect(session.user.id, 'u1');
+      expect(session.user.phone, '+84901234567');
       expect(session.user.dietaryPreference, DietaryPreference.moreVeg);
       expect(session.accessToken, 'at');
       verify(() => store.writeTokens(accessToken: 'at', refreshToken: 'rt'))
           .called(1);
     });
 
-    test('returns a Failure and does not persist when the client throws',
-        () async {
+    test('returns a Failure and does not persist when login throws', () async {
       when(() => api.post(ApiPaths.login, body: any(named: 'body')))
           .thenThrow(Exception('boom'));
 
-      final res = await repo.login(email: 'a@b.com', password: 'x');
+      final res = await repo.login(phone: '+84900000000', password: 'x');
 
       expect(res.isLeft(), isTrue);
       verifyNever(
@@ -69,6 +80,21 @@ void main() {
           refreshToken: any(named: 'refreshToken'),
         ),
       );
+    });
+  });
+
+  group('register()', () {
+    test('returns the OTP lifetime in seconds', () async {
+      when(() => api.post(ApiPaths.register, body: any(named: 'body')))
+          .thenAnswer((_) async => {'otp': '123456', 'expires_in_seconds': 300});
+
+      final res = await repo.register(
+        phone: '+84901234567',
+        password: 'secret123',
+        name: 'A',
+      );
+
+      expect(res.fold((f) => fail('$f'), (ttl) => ttl), 300);
     });
   });
 
@@ -99,7 +125,7 @@ void main() {
 
   group('me()', () {
     test('surfaces a 401 as an UnauthorizedFailure', () async {
-      when(() => api.get(ApiPaths.me)).thenThrow(
+      when(() => api.get(ApiPaths.profile)).thenThrow(
         const UnauthorizedFailure(),
       );
       final res = await repo.me();

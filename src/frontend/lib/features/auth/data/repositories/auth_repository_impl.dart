@@ -24,39 +24,69 @@ class AuthRepositoryImpl implements AuthRepository {
   final SecureStore _store;
 
   @override
-  Future<Result<Session>> register({
-    required String name,
-    required String email,
+  Future<Result<int>> register({
+    required String phone,
     required String password,
+    String? name,
+    String? email,
   }) =>
       runGuarded(() async {
         final dto = await _remote.register(
+          phone: phone,
+          password: password,
           name: name,
           email: email,
-          password: password,
         );
-        await _persist(dto.accessToken, dto.refreshToken);
-        return dto.toEntity();
+        return dto.expiresInSeconds;
+      });
+
+  @override
+  Future<Result<int>> resendRegisterOtp(String phone) => runGuarded(
+        () async => (await _remote.resendRegisterOtp(phone)).expiresInSeconds,
+      );
+
+  @override
+  Future<Result<Session>> verifyRegisterAndLogin({
+    required String phone,
+    required String otp,
+    required String password,
+  }) =>
+      runGuarded(() async {
+        await _remote.verifyRegister(phone: phone, otp: otp);
+        return _loginAndBuildSession(phone: phone, password: password);
       });
 
   @override
   Future<Result<Session>> login({
-    required String email,
+    required String phone,
     required String password,
   }) =>
-      runGuarded(() async {
-        final dto = await _remote.login(email: email, password: password);
-        await _persist(dto.accessToken, dto.refreshToken);
-        return dto.toEntity();
-      });
+      runGuarded(
+        () => _loginAndBuildSession(phone: phone, password: password),
+      );
 
   @override
   Future<Result<User>> me() =>
-      runGuarded(() async => (await _remote.me()).toEntity());
+      runGuarded(() async => (await _remote.profile()).toEntity());
 
   @override
-  Future<Result<void>> requestPasswordReset(String email) =>
-      guardVoid(() => _remote.requestPasswordReset(email));
+  Future<Result<int>> requestPasswordReset(String phone) => runGuarded(
+        () async => (await _remote.requestPasswordReset(phone)).expiresInSeconds,
+      );
+
+  @override
+  Future<Result<void>> confirmPasswordReset({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) =>
+      guardVoid(
+        () => _remote.confirmPasswordReset(
+          phone: phone,
+          otp: otp,
+          newPassword: newPassword,
+        ),
+      );
 
   @override
   Future<Result<void>> logout() => guardVoid(() async {
@@ -74,6 +104,22 @@ class AuthRepositoryImpl implements AuthRepository {
     return token != null && token.isNotEmpty;
   }
 
-  Future<void> _persist(String access, String refresh) =>
-      _store.writeTokens(accessToken: access, refreshToken: refresh);
+  /// Sign in, persist the token pair, then fetch the profile to build a
+  /// self-contained [Session] (the login response carries no user block).
+  Future<Session> _loginAndBuildSession({
+    required String phone,
+    required String password,
+  }) async {
+    final tokens = await _remote.login(phone: phone, password: password);
+    await _store.writeTokens(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
+    final user = (await _remote.profile()).toEntity();
+    return Session(
+      user: user,
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
+  }
 }

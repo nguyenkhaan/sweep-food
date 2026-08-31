@@ -2251,6 +2251,66 @@ abstract class AppL10n {
   /// **'Ít nhất 8 ký tự'**
   String get authPasswordTooShort;
 
+  /// No description provided for @authPhone.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số điện thoại'**
+  String get authPhone;
+
+  /// No description provided for @authInvalidPhone.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số điện thoại không hợp lệ'**
+  String get authInvalidPhone;
+
+  /// No description provided for @authOtpTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập mã xác thực'**
+  String get authOtpTitle;
+
+  /// No description provided for @authOtpSubtitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã gồm 6 chữ số đã được gửi tới {phone}.'**
+  String authOtpSubtitle(String phone);
+
+  /// No description provided for @authOtpLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã xác thực'**
+  String get authOtpLabel;
+
+  /// No description provided for @authOtpInvalid.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã gồm 6 chữ số'**
+  String get authOtpInvalid;
+
+  /// No description provided for @authOtpConfirm.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xác nhận'**
+  String get authOtpConfirm;
+
+  /// No description provided for @authOtpResendCta.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gửi lại mã'**
+  String get authOtpResendCta;
+
+  /// No description provided for @authOtpResent.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã gửi lại mã.'**
+  String get authOtpResent;
+
+  /// No description provided for @authOtpMissingArgs.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thiếu thông tin. Quay lại và thử lại.'**
+  String get authOtpMissingArgs;
+
   /// No description provided for @welcomeSlide1Title.
   ///
   /// In vi, this message translates to:
@@ -2362,7 +2422,7 @@ abstract class AppL10n {
   /// No description provided for @forgotSubtitle.
   ///
   /// In vi, this message translates to:
-  /// **'Nhập email tài khoản, chúng tôi sẽ gửi liên kết đặt lại mật khẩu.'**
+  /// **'Nhập số điện thoại tài khoản, chúng tôi sẽ gửi mã đặt lại mật khẩu.'**
   String get forgotSubtitle;
 
   /// No description provided for @forgotSendLink.
@@ -2371,11 +2431,47 @@ abstract class AppL10n {
   /// **'Gửi liên kết'**
   String get forgotSendLink;
 
+  /// No description provided for @forgotSendCode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gửi mã'**
+  String get forgotSendCode;
+
   /// No description provided for @forgotBackToLogin.
   ///
   /// In vi, this message translates to:
   /// **'Quay lại đăng nhập'**
   String get forgotBackToLogin;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đặt lại mật khẩu'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập mã đã gửi tới {phone} và mật khẩu mới.'**
+  String resetPasswordSubtitle(String phone);
+
+  /// No description provided for @resetPasswordNewLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mật khẩu mới'**
+  String get resetPasswordNewLabel;
+
+  /// No description provided for @resetPasswordCta.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đặt lại mật khẩu'**
+  String get resetPasswordCta;
+
+  /// No description provided for @resetPasswordDone.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã đặt lại mật khẩu. Đăng nhập lại nhé.'**
+  String get resetPasswordDone;
 
   /// No description provided for @forgotSentTo.
   ///

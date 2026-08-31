@@ -10,7 +10,9 @@ const _authRoutes = {
   Routes.welcome,
   Routes.login,
   Routes.register,
+  Routes.verifyOtp,
   Routes.forgotPassword,
+  Routes.resetPassword,
 };
 
 const _onboardingRoutes = {Routes.onboardingDiet, Routes.onboardingPantry};

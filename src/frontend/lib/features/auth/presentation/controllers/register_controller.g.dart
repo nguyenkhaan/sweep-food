@@ -8,21 +8,24 @@ part of 'register_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Form state + submit for A-03. The "đồng ý điều khoản" checkbox is screen-local
-/// state and passed into [submit]; everything else rides the shared
-/// [AuthFormState].
+/// Form state + submit for A-03 step 1. The "đồng ý điều khoản" checkbox is
+/// screen-local state and passed into [submit]. On success the account exists
+/// (unverified) and an OTP has been sent — the screen then routes to the OTP
+/// screen with the normalised phone + password.
 
 @ProviderFor(RegisterController)
 final registerControllerProvider = RegisterControllerProvider._();
 
-/// Form state + submit for A-03. The "đồng ý điều khoản" checkbox is screen-local
-/// state and passed into [submit]; everything else rides the shared
-/// [AuthFormState].
+/// Form state + submit for A-03 step 1. The "đồng ý điều khoản" checkbox is
+/// screen-local state and passed into [submit]. On success the account exists
+/// (unverified) and an OTP has been sent — the screen then routes to the OTP
+/// screen with the normalised phone + password.
 final class RegisterControllerProvider
     extends $NotifierProvider<RegisterController, AuthFormState> {
-  /// Form state + submit for A-03. The "đồng ý điều khoản" checkbox is screen-local
-  /// state and passed into [submit]; everything else rides the shared
-  /// [AuthFormState].
+  /// Form state + submit for A-03 step 1. The "đồng ý điều khoản" checkbox is
+  /// screen-local state and passed into [submit]. On success the account exists
+  /// (unverified) and an OTP has been sent — the screen then routes to the OTP
+  /// screen with the normalised phone + password.
   RegisterControllerProvider._()
     : super(
         from: null,
@@ -51,11 +54,12 @@ final class RegisterControllerProvider
 }
 
 String _$registerControllerHash() =>
-    r'82cd6d2aa14d5a6316106cfb3ba7d593bc5dfd91';
+    r'd49c5bd6a3e56c35ff401e95749304843f908ba6';
 
-/// Form state + submit for A-03. The "đồng ý điều khoản" checkbox is screen-local
-/// state and passed into [submit]; everything else rides the shared
-/// [AuthFormState].
+/// Form state + submit for A-03 step 1. The "đồng ý điều khoản" checkbox is
+/// screen-local state and passed into [submit]. On success the account exists
+/// (unverified) and an OTP has been sent — the screen then routes to the OTP
+/// screen with the normalised phone + password.
 
 abstract class _$RegisterController extends $Notifier<AuthFormState> {
   AuthFormState build();

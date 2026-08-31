@@ -22,7 +22,10 @@ sealed class Failure {
     QuotaExceededFailure() => l10n.failQuota,
     ParseFailure() => l10n.failParse,
     UnknownFailure() => l10n.failUnknown,
-    NotFoundFailure() || ValidationFailure() || ServerFailure() => message,
+    ConflictFailure() ||
+    NotFoundFailure() ||
+    ValidationFailure() ||
+    ServerFailure() => message,
   };
 
   @override
@@ -51,6 +54,13 @@ class UnauthorizedFailure extends Failure {
 class ForbiddenFailure extends Failure {
   const ForbiddenFailure({super.cause, super.stackTrace})
     : super('Bạn không có quyền thực hiện thao tác này.');
+}
+
+/// 409 — the request conflicts with existing state (e.g. the phone number is
+/// already registered). Carries the server [message] so the form can show it.
+class ConflictFailure extends Failure {
+  const ConflictFailure({String? message, super.cause, super.stackTrace})
+    : super(message ?? 'Thông tin này đã được sử dụng.');
 }
 
 /// 404.

@@ -11,8 +11,8 @@ part 'session_controller.g.dart';
 /// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
 ///
 /// The router watches this (via `route_guards.dart`) to gate every route. The
-/// form controllers (`login`/`register`) call in here and rethrow failures for
-/// the form to display — this notifier only ever moves to a resolved state.
+/// form controllers call in here and rethrow failures for the form to display —
+/// this notifier only ever moves to a resolved state.
 @Riverpod(keepAlive: true)
 class SessionController extends _$SessionController {
   @override
@@ -44,24 +44,27 @@ class SessionController extends _$SessionController {
 
   bool get isAuthenticated => currentSession != null;
 
-  Future<void> logIn({required String email, required String password}) async {
+  /// A-02. Sign in with phone + password. Rethrows the `Failure` for the form.
+  Future<void> logIn({required String phone, required String password}) async {
     final res = await ref
         .read(authRepositoryProvider)
-        .login(email: email, password: password);
+        .login(phone: phone, password: password);
     res.fold(
       (failure) => throw failure,
       (session) => state = AsyncData(session),
     );
   }
 
-  Future<void> register({
-    required String name,
-    required String email,
+  /// A-03 step 2. Confirm the registration OTP and sign in with the credentials
+  /// just entered. Rethrows the `Failure` for the OTP form.
+  Future<void> verifyRegister({
+    required String phone,
+    required String otp,
     required String password,
   }) async {
-    final res = await ref.read(authRepositoryProvider).register(
-          name: name,
-          email: email,
+    final res = await ref.read(authRepositoryProvider).verifyRegisterAndLogin(
+          phone: phone,
+          otp: otp,
           password: password,
         );
     res.fold(

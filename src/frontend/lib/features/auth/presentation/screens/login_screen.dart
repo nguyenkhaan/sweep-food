@@ -19,12 +19,12 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _email = TextEditingController();
+  final _phone = TextEditingController();
   final _password = TextEditingController();
 
   @override
   void dispose() {
-    _email.dispose();
+    _phone.dispose();
     _password.dispose();
     super.dispose();
   }
@@ -34,7 +34,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     await ref
         .read(loginControllerProvider.notifier)
         .submit(
-          email: _email.text,
+          phone: _phone.text,
           password: _password.text,
           l10n: context.l10n,
         );
@@ -67,14 +67,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             Gap.gapXl,
             AuthTextField(
-              label: l10n.authEmail,
-              controller: _email,
-              hintText: 'ban@email.com',
-              prefixIcon: Icons.mail_outline_rounded,
-              keyboardType: TextInputType.emailAddress,
+              label: l10n.authPhone,
+              controller: _phone,
+              hintText: '0901 234 567',
+              prefixIcon: Icons.phone_outlined,
+              keyboardType: TextInputType.phone,
               textInputAction: TextInputAction.next,
-              autofillHints: const [AutofillHints.email],
-              errorText: state.fieldErrors['email'],
+              autofillHints: const [AutofillHints.telephoneNumber],
+              errorText: state.fieldErrors['phone'],
             ),
             Gap.gapMd,
             AuthTextField(

@@ -80,12 +80,13 @@ class AuthInterceptor extends Interceptor {
     if (refreshToken == null || refreshToken.isEmpty) return false;
     try {
       final res = await _refresher.post<Map<String, dynamic>>(
-        ApiPaths.refresh,
+        ApiPaths.tokenRefresh,
         data: {'refresh_token': refreshToken},
       );
       final data = res.data;
       if (data == null) return false;
       final access = data['access_token'] as String?;
+      // The backend does not rotate the refresh token — keep the current one.
       final refresh = (data['refresh_token'] as String?) ?? refreshToken;
       if (access == null || access.isEmpty) return false;
       await _store.writeTokens(accessToken: access, refreshToken: refresh);

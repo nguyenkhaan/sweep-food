@@ -228,3 +228,6 @@ pyrightconfig.json
 src/frontend/android/build/
 # (.metadata and pubspec.lock ARE committed for an app — do not ignore)
 
+# custom_lint analyzer output (can grow very large - never commit)
+*.log
+src/frontend/custom_lint.log
