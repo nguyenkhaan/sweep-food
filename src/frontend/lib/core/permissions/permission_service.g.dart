@@ -12,24 +12,20 @@ part of 'permission_service.dart';
 @ProviderFor(permissionService)
 final permissionServiceProvider = PermissionServiceProvider._();
 
-final class PermissionServiceProvider
-    extends
-        $FunctionalProvider<
-          PermissionService,
-          PermissionService,
-          PermissionService
-        >
-    with $Provider<PermissionService> {
+final class PermissionServiceProvider extends $FunctionalProvider<
+    PermissionService,
+    PermissionService,
+    PermissionService> with $Provider<PermissionService> {
   PermissionServiceProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'permissionServiceProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'permissionServiceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$permissionServiceHash();
@@ -37,8 +33,8 @@ final class PermissionServiceProvider
   @$internal
   @override
   $ProviderElement<PermissionService> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
   PermissionService create(Ref ref) {

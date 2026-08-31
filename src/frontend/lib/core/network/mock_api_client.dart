@@ -50,6 +50,7 @@ class MockApiClient implements ApiClient {
     ApiPaths.login: 'auth_session',
     ApiPaths.register: 'auth_session',
     ApiPaths.refresh: 'auth_tokens',
+    ApiPaths.shoppingListsGenerate: 'shopping_list',
   };
 
   String? _postFixtureKey(String path) {
@@ -82,14 +83,18 @@ class MockApiClient implements ApiClient {
 
   dynamic _clone(dynamic v) => jsonDecode(jsonEncode(v));
 
-  /// Replaces `{{today}}` / `{{today+N}}` / `{{today-N}}` with an ISO date so
-  /// fixtures stay demo-stable regardless of run date.
-  static final _dateToken = RegExp(r'\{\{today([+-]\d+)?\}\}');
+  /// Replaces `{{today}}` / `{{today+N}}` / `{{today-N}}` — optionally with a
+  /// `THH:MM` suffix (`{{today-1T19:00}}`) — with an ISO datetime so fixtures
+  /// stay demo-stable regardless of run date.
+  static final _dateToken =
+      RegExp(r'\{\{today([+-]\d+)?(?:T(\d{2}):(\d{2}))?\}\}');
   String _fillDates(String raw) {
     final today = DateTime.now();
     return raw.replaceAllMapped(_dateToken, (m) {
       final offset = int.tryParse(m.group(1) ?? '0') ?? 0;
-      final d = DateTime(today.year, today.month, today.day + offset);
+      final hh = int.tryParse(m.group(2) ?? '0') ?? 0;
+      final mm = int.tryParse(m.group(3) ?? '0') ?? 0;
+      final d = DateTime(today.year, today.month, today.day + offset, hh, mm);
       return d.toIso8601String();
     });
   }

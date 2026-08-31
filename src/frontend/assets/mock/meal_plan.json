@@ -1,1 +1,35 @@
-{ "_note": "mock fixture for meal_plan — fill from plan.md §9 / api-contract.md" }
+{
+  "week_start": "{{today}}",
+  "entries": [
+    {
+      "date": "{{today-6}}",
+      "slot": "breakfast",
+      "dish_id": "d1",
+      "dish_name": "Bánh mì trứng"
+    },
+    {
+      "date": "{{today-6}}",
+      "slot": "lunch",
+      "dish_id": "d1",
+      "dish_name": "Salad bơ ức gà"
+    },
+    {
+      "date": "{{today-5}}",
+      "slot": "lunch",
+      "dish_id": "d1",
+      "dish_name": "Canh chua cá lóc"
+    },
+    {
+      "date": "{{today-5}}",
+      "slot": "dinner",
+      "dish_id": "d1",
+      "dish_name": "Trứng chiên"
+    },
+    {
+      "date": "{{today-4}}",
+      "slot": "dinner",
+      "dish_id": "d1",
+      "dish_name": "Thịt ba chỉ rang"
+    }
+  ]
+}

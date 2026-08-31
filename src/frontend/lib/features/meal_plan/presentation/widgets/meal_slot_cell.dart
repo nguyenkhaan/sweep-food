@@ -1,3 +1,60 @@
-// lib/features/meal_plan/presentation/widgets/meal_slot_cell.dart
-// Single day/meal slot
-// TODO: implement — structure only. See ../plan.md and the design canvas.
+import 'package:flutter/material.dart';
+import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
+import 'package:frontend/features/meal_plan/domain/entities/meal_plan_entry.dart';
+
+/// One day×slot cell of the M-01 grid: empty "+ Thêm" or an assigned dish.
+class MealSlotCell extends StatelessWidget {
+  const MealSlotCell({
+    required this.entry,
+    required this.onTap,
+    this.onClear,
+    super.key,
+  });
+
+  final MealPlanEntry? entry;
+  final VoidCallback onTap;
+  final VoidCallback? onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    final filled = entry != null;
+    return InkWell(
+      onTap: onTap,
+      onLongPress: filled ? onClear : null,
+      borderRadius: Radii.brSm,
+      child: Container(
+        height: 52,
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(
+          color: filled
+              ? context.colors.primaryContainer
+              : context.sweep.subtleFill,
+          borderRadius: Radii.brSm,
+          border: filled
+              ? null
+              : Border.all(color: context.sweep.hairline),
+        ),
+        child: Center(
+          child: filled
+              ? Text(
+                  entry!.dishName ?? 'Món đã chọn',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: context.text.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: context.colors.onPrimaryContainer,
+                  ),
+                )
+              : Text(
+                  '+ Thêm',
+                  style: context.text.labelSmall?.copyWith(
+                    color: context.sweep.textTertiary,
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+}

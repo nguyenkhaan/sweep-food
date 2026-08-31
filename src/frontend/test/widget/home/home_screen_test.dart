@@ -71,8 +71,8 @@ void main() {
         child: MaterialApp(theme: AppTheme.light, home: const HomeScreen()),
       ),
     );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+    // Drain the notification-badge fetch (mock latency) so no timer leaks.
+    await _settle(tester);
 
     expect(find.text('Kho của bạn đang trống'), findsOneWidget);
     expect(find.text('Thêm nguyên liệu đầu tiên'), findsOneWidget);

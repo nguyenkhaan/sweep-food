@@ -12,6 +12,7 @@ import 'package:frontend/core/widgets/suggestion_card.dart';
 import 'package:frontend/core/widgets/waste_saved_pill.dart';
 import 'package:frontend/features/home/presentation/controllers/home_controller.dart';
 import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
+import 'package:frontend/features/notifications/presentation/controllers/notifications_controller.dart';
 import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:frontend/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
 import 'package:go_router/go_router.dart';
@@ -46,24 +47,22 @@ class HomeScreen extends ConsumerWidget {
               clipBehavior: Clip.none,
               children: [
                 const Icon(Icons.notifications_outlined),
-                Positioned(
-                  top: 2,
-                  right: 2,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: BrandPalette.warnCritical,
-                      shape: BoxShape.circle,
+                if (ref.watch(unreadNotificationCountProvider) > 0)
+                  Positioned(
+                    top: 2,
+                    right: 2,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: BrandPalette.warnCritical,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
-            // Notification Center is M5 — no route yet; stub the tap until then.
-            onPressed: () => context.showSnack(
-              'Trung tâm thông báo sẽ có trong bản cập nhật tới.',
-            ),
+            onPressed: () => context.push(Routes.notifications),
           ),
           const SizedBox(width: Gap.xs),
         ],

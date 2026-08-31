@@ -15,15 +15,15 @@ final voiceCaptureControllerProvider = VoiceCaptureControllerProvider._();
 final class VoiceCaptureControllerProvider
     extends $NotifierProvider<VoiceCaptureController, VoiceCaptureState> {
   VoiceCaptureControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'voiceCaptureControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'voiceCaptureControllerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$voiceCaptureControllerHash();
@@ -50,14 +50,11 @@ abstract class _$VoiceCaptureController extends $Notifier<VoiceCaptureState> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<VoiceCaptureState, VoiceCaptureState>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<VoiceCaptureState, VoiceCaptureState>,
-              VoiceCaptureState,
-              Object?,
-              Object?
-            >;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<VoiceCaptureState, VoiceCaptureState>,
+        VoiceCaptureState,
+        Object?,
+        Object?>;
     element.handleCreate(ref, build);
   }
 }

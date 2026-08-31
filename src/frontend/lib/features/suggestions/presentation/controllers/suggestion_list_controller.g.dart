@@ -43,7 +43,7 @@ final class SuggestionFilterControllerProvider
 }
 
 String _$suggestionFilterControllerHash() =>
-    r'032affb83d25b284ad3baec53aad0e471a573570';
+    r'c207535b247e99ed0167e81b14207975a977df60';
 
 abstract class _$SuggestionFilterController
     extends $Notifier<SuggestionFilter> {

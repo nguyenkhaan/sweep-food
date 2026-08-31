@@ -1,1 +1,10 @@
-{ "_note": "mock fixture for subscription — fill from plan.md §9 / api-contract.md" }
+{
+  "tier": "free",
+  "premium_interest_registered": false,
+  "perks": [
+    "Kho nguyên liệu không giới hạn",
+    "Quét tem & hóa đơn không giới hạn",
+    "Gợi ý món & dinh dưỡng đầy đủ",
+    "Thực đơn tuần, danh sách mua sắm, báo cáo"
+  ]
+}
