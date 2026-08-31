@@ -428,11 +428,11 @@ The MVP does not automatically schedule a full week with AI. It stores explicit 
 
 ### 7.9 Cooking workflow
 
-Cooking is a confirmable two-step process.
+Cooking is a confirmable two-step process for a recipe already selected in a meal plan. An owned `meal_plan_item_id` is the only client input for preview and session creation; the backend derives the recipe and planned servings from that item. The derived servings are saved in the cooking session as a historical snapshot.
 
 #### Preview
 
-The user selects a recipe and serving count. The backend returns:
+The user submits `meal_plan_item_id`. The backend returns the plan item's recipe and servings with:
 
 - Scaled recipe requirements.
 - Eligible inventory batches in FEFO order.
@@ -718,8 +718,8 @@ Example recommendation item:
 
 | Method | Path | Purpose |
 |---|---|---|
-| `POST` | `/cooking/preview` | Preview FEFO allocation and missing quantities |
-| `POST` | `/cooking/sessions` | Create a planned cooking session |
+| `POST` | `/cooking/preview` | Preview FEFO allocation and missing quantities for an owned `meal_plan_item_id` |
+| `POST` | `/cooking/sessions` | Create a planned cooking session from an owned `meal_plan_item_id` |
 | `POST` | `/cooking/sessions/{session_id}/complete` | Atomically record actual use and deduct stock |
 | `POST` | `/cooking/sessions/{session_id}/leftovers` | Add cooked leftovers as a batch |
 | `GET` | `/cooking/history` | List completed cooking history |
