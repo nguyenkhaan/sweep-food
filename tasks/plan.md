@@ -165,8 +165,8 @@ Database documentation and migrations are sequential. Feature slices may run in 
 | Step | Deliverable | Depends on |
 |---|---|---|
 | 6.1 | Cooking-session and consumption-record migrations/models | Phases 4–5 |
-| 6.2 | Cooking preview API with scaled recipe, FEFO proposal, missing quantities, and warnings | 6.1, 4.5 |
-| 6.3 | Require sufficient current FEFO inventory before creating a cooking session, then complete idempotently for exact, half, use-all-matched, and custom consumption | 6.2 |
+| 6.2 | Meal-plan-item cooking preview API deriving recipe/servings, FEFO proposal, missing quantities, and warnings | 6.1, 4.5 |
+| 6.3 | Derive recipe/servings from an owned meal-plan item, require sufficient current FEFO inventory before creating a cooking session, then complete idempotently for exact, half, use-all-matched, and custom consumption | 6.2 |
 | 6.4 | Cooked-leftover creation and cooking-history APIs | 6.3 |
 | 6.5 | Transaction, retry, and concurrent-completion tests | 6.3–6.4 |
 

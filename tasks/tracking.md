@@ -173,8 +173,8 @@
 | Task | Status | Dependencies | Evidence / next action |
 |---|---|---|---|
 | 6.1 Add cooking persistence schema | `Done` | User-confirmed complete database | User confirmed the database already contains the cooking, consumption, recipe, meal-plan, inventory, ledger, and leftover relationships, including the required idempotency constraint. |
-| 6.2 Implement cooking preview | `Done` | 6.1 and existing recipe/inventory schema | Added authenticated `POST /api/cooking/preview`, serving/nutrition scaling, ownership-scoped batch reads, reusable FEFO allocation, conversion, missing quantities, and expired/unknown/incompatible warnings. The preview path is read-only. Focused tests pass 5/5; full suite passes 71 with 1 skipped. |
-| 6.3 Implement atomic cooking completion | `In progress` | 6.2 | Planned-session creation accepts only an owned `meal_plan_item_id`, derives its recipe server-side, and must reject insufficient current inventory with detailed `409` feedback. Completion locks the owned session and eligible batches, revalidates FEFO/current stock, writes consumption and ledger records in one transaction, and returns the saved result for idempotency retries. A disposable-Neon concurrent integration test remains. |
+| 6.2 Implement cooking preview | `In progress` | 6.1 and existing recipe/inventory schema | Contract revision in progress: `POST /api/cooking/preview` must accept only an owned `meal_plan_item_id` and derive both recipe and servings before its read-only FEFO preview. |
+| 6.3 Implement atomic cooking completion | `In progress` | 6.2 | Planned-session creation must accept only an owned `meal_plan_item_id`, derive recipe and servings server-side, save the servings snapshot, and reject insufficient current inventory with detailed `409` feedback. Completion locks the owned session and eligible batches, revalidates FEFO/current stock, writes consumption and ledger records in one transaction, and returns the saved result for idempotency retries. A disposable-Neon concurrent integration test remains. |
 
 ## Decision Baseline
 
@@ -190,6 +190,7 @@
 | OCR/ASR/barcode extraction does not persist in MVP | Accepted | PRD §7.14 |
 | Checking an unchecked generated shopping item creates one owned raw inventory batch and `INITIAL_STOCK` ledger entry | Accepted | User-approved product flow / shopping contract |
 | A cooking session requires sufficient eligible FEFO inventory at creation time | Accepted | User-approved product flow / cooking contract |
+| Cooking preview and session creation accept only `meal_plan_item_id`; recipe and servings are derived from the owned item | Accepted | User-approved product workflow revision |
 
 ## Execution Log
 

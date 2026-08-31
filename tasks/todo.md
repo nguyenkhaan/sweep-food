@@ -553,13 +553,14 @@
 
 ### Task 6.2: Implement cooking preview
 
-**Description:** Return scaled ingredient requirements, FEFO allocation proposals, missing quantities, warnings, and nutrition before any stock mutation.
+**Description:** Accept an owned `meal_plan_item_id`, derive its recipe and servings, then return scaled ingredient requirements, FEFO allocation proposals, missing quantities, warnings, and nutrition before any stock mutation.
 
 **Acceptance criteria:**
 
 - [x] Preview uses the shared `FEFOService` intended for completion reuse.
 - [x] Preview writes no inventory, ledger, or cooking-completion record.
 - [x] Expired/unknown/incompatible stock is reported clearly.
+- [ ] Preview request accepts only `meal_plan_item_id`; recipe and servings are derived server-side.
 
 **Verification:**
 
@@ -572,12 +573,13 @@
 
 ### Task 6.3: Implement atomic cooking completion
 
-**Description:** Create a cooking session only when current FEFO inventory covers the meal-plan recipe, then complete it using exact, half, use-all-matched, or custom quantities with revalidation, locks, ledger entries, and idempotency.
+**Description:** Create a cooking session from an owned `meal_plan_item_id` only when current FEFO inventory covers its derived recipe and servings; save those servings as the session snapshot, then complete it using exact, half, use-all-matched, or custom quantities with revalidation, locks, ledger entries, and idempotency.
 
 **Acceptance criteria:**
 
 - [ ] Every successful completion creates consumption records and ledger entries in one transaction.
 - [ ] Session creation returns a detailed `409` and persists no session when any required quantity is missing.
+- [ ] Session-creation request accepts only `meal_plan_item_id`; it never accepts `recipe_id` or `servings`.
 - [ ] Repeat requests with the same idempotency key return the original outcome without double deduction.
 - [ ] Insufficient stock or stale allocation returns a conflict with no partial changes.
 

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from typing import cast
 from uuid import UUID
 
@@ -16,15 +16,18 @@ from src.model.enum_model import (
     InventoryBatchStatus,
     InventoryBatchType,
     InventorySource,
+    MealPlanItemStatus,
+    MealSlot,
     MeasurementUnit,
     StorageMode,
 )
 from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.master_ingredient_model import MasterIngredientModel
+from src.model.meal_plan_item_model import MealPlanItemModel
 from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
 from src.module.cooking.cooking_dto import CookingPreviewRequestDTO
-from src.module.cooking.cooking_helper import RecipeNotFoundError
+from src.module.cooking.cooking_helper import MealPlanItemNotFoundError
 from src.module.cooking.cooking_service import CookingService
 from src.service.fefo_service import FEFOService
 
@@ -34,15 +37,17 @@ RECIPE_INGREDIENT_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a013")
 INGREDIENT_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a014")
 CATEGORY_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a015")
 BATCH_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a016")
+MEAL_PLAN_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a017")
+MEAL_PLAN_ITEM_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a018")
 
 
 @dataclass
 class FakeRecipeResult:
     """Expose the scalar recipe result consumed by CookingService."""
 
-    recipe: RecipeModel | None
+    recipe: MealPlanItemModel | RecipeModel | None
 
-    def scalar_one_or_none(self) -> RecipeModel | None:
+    def scalar_one_or_none(self) -> MealPlanItemModel | RecipeModel | None:
         """Return the configured recipe result."""
         return self.recipe
 
@@ -131,6 +136,20 @@ def build_recipe() -> RecipeModel:
     )
 
 
+def build_meal_plan_item() -> MealPlanItemModel:
+    """Build the owned plan item that is the preview contract input."""
+    return MealPlanItemModel(
+        id=MEAL_PLAN_ITEM_ID,
+        meal_plan_id=MEAL_PLAN_ID,
+        recipe_id=RECIPE_ID,
+        recommendation_run_id=None,
+        planned_for=date(2026, 8, 31),
+        meal_slot=MealSlot.LUNCH,
+        servings=2.0,
+        status=MealPlanItemStatus.PLANNED,
+    )
+
+
 def build_recipe_ingredient() -> tuple[RecipeIngredientModel, MasterIngredientModel]:
     """Build the recipe ingredient and its canonical catalog record."""
     recipe_ingredient = RecipeIngredientModel(
@@ -181,6 +200,7 @@ async def test_preview_scales_recipe_and_does_not_write_inventory() -> None:
     recipe_ingredient, ingredient = build_recipe_ingredient()
     database = FakeDatabaseSession(
         results=[
+            FakeRecipeResult(build_meal_plan_item()),
             FakeRecipeResult(recipe),
             FakeIngredientResult([(recipe_ingredient, ingredient)]),
             FakeBatchResult([build_batch()]),
@@ -190,9 +210,11 @@ async def test_preview_scales_recipe_and_does_not_write_inventory() -> None:
 
     response = await service.preview(
         USER_ID,
-        CookingPreviewRequestDTO(recipe_id=RECIPE_ID, servings=2.0),
+        CookingPreviewRequestDTO(meal_plan_item_id=MEAL_PLAN_ITEM_ID),
     )
 
+    assert response.recipe_id == RECIPE_ID
+    assert response.servings == 2.0
     assert response.scaled_ingredients[0].required_quantity == 500.0
     assert response.proposed_deductions[0].batch_id == BATCH_ID
     assert response.proposed_deductions[0].quantity == 0.5
@@ -200,21 +222,21 @@ async def test_preview_scales_recipe_and_does_not_write_inventory() -> None:
     assert response.proposed_deductions[0].recipe_quantity == 500.0
     assert not response.missing_ingredients
     assert response.nutrition_estimate.calories == 122.0
-    assert database.execution_count == 3
+    assert database.execution_count == 4
     assert database.rollback_count == 0
     assert not database.write_method_called
 
 
 @pytest.mark.anyio
-async def test_preview_returns_not_found_for_an_unknown_recipe() -> None:
-    """Recipe lookup fails safely before reading inventory or mutating data."""
+async def test_preview_returns_not_found_for_an_unowned_meal_plan_item() -> None:
+    """Plan-item ownership fails before reading recipe or inventory data."""
     database = FakeDatabaseSession(results=[FakeRecipeResult(None)])
     service = CookingService(cast(AsyncSession, database), FEFOService())
 
-    with pytest.raises(RecipeNotFoundError):
+    with pytest.raises(MealPlanItemNotFoundError):
         await service.preview(
             USER_ID,
-            CookingPreviewRequestDTO(recipe_id=RECIPE_ID, servings=2.0),
+            CookingPreviewRequestDTO(meal_plan_item_id=MEAL_PLAN_ITEM_ID),
         )
 
     assert database.execution_count == 1

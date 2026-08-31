@@ -192,7 +192,7 @@ def build_recipe_ingredient() -> tuple[RecipeIngredientModel, MasterIngredientMo
     return recipe_ingredient, ingredient
 
 
-def build_meal_plan_item() -> MealPlanItemModel:
+def build_meal_plan_item(servings: float = 2.0) -> MealPlanItemModel:
     """Build an owned meal-plan item that selects the completion-test recipe."""
     return MealPlanItemModel(
         id=MEAL_PLAN_ITEM_ID,
@@ -201,7 +201,7 @@ def build_meal_plan_item() -> MealPlanItemModel:
         recommendation_run_id=None,
         planned_for=date(2026, 8, 31),
         meal_slot=MealSlot.LUNCH,
-        servings=2.0,
+        servings=servings,
         status=MealPlanItemStatus.PLANNED,
     )
 
@@ -282,7 +282,7 @@ async def test_create_session_derives_recipe_from_an_owned_meal_plan_item() -> N
     recipe_ingredient, ingredient = build_recipe_ingredient()
     database = FakeDatabaseSession(
         results=[
-            FakeScalarResult(build_meal_plan_item()),
+            FakeScalarResult(build_meal_plan_item(servings=4.0)),
             FakeScalarResult(build_recipe()),
             FakeIngredientResult([(recipe_ingredient, ingredient)]),
             FakeBatchResult([build_batch()]),
@@ -294,17 +294,18 @@ async def test_create_session_derives_recipe_from_an_owned_meal_plan_item() -> N
         USER_ID,
         CreateCookingSessionRequestDTO(
             meal_plan_item_id=MEAL_PLAN_ITEM_ID,
-            servings=2.0,
         ),
     )
 
     assert response.id == SESSION_ID
     assert response.recipe_id == RECIPE_ID
     assert response.meal_plan_item_id == MEAL_PLAN_ITEM_ID
+    assert response.servings == 4.0
     assert response.status is CookingSessionStatus.PLANNED
     assert database.commit_count == 1
     assert database.rollback_count == 0
     assert isinstance(database.added[0], CookingSessionModel)
+    assert database.added[0].servings == 4.0
 
 
 @pytest.mark.anyio
@@ -326,14 +327,12 @@ async def test_create_session_rejects_missing_inventory_without_writes() -> None
             USER_ID,
             CreateCookingSessionRequestDTO(
                 meal_plan_item_id=MEAL_PLAN_ITEM_ID,
-                servings=2.0,
             ),
         )
 
     assert error.value.status_code == 409
     assert error.value.detail == (
-        "Insufficient inventory to create cooking session: "
-        "Fresh milk: missing 500 ML"
+        "Insufficient inventory to create cooking session: Fresh milk: missing 500 ML"
     )
     assert database.commit_count == 0
     assert database.rollback_count == 1

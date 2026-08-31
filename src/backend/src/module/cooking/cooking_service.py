@@ -48,9 +48,13 @@ class CookingService:
         user_id: UUID,
         request: CookingPreviewRequestDTO,
     ) -> CookingPreviewResponseDTO:
-        """Return one recipe's serving-scaled, ownership-safe cooking proposal."""
+        """Return an ownership-safe, serving-scaled preview for one planned meal."""
         try:
-            recipe = await self._find_recipe(request.recipe_id)
+            meal_plan_item = await self._find_meal_plan_item(
+                user_id,
+                request.meal_plan_item_id,
+            )
+            recipe = await self._find_recipe(meal_plan_item.recipe_id)
             recipe_ingredients = await self._find_recipe_ingredients(recipe.id)
             batches = await self._find_active_batches(
                 user_id,
@@ -66,7 +70,7 @@ class CookingService:
             recipe,
             recipe_ingredients,
             batches,
-            request.servings,
+            meal_plan_item.servings,
         )
 
     async def create_session(
@@ -76,24 +80,24 @@ class CookingService:
     ) -> CookingSessionDTO:
         """Create a planned session from an owned meal-plan item without deduction."""
         try:
-            meal_plan_item_id = request.meal_plan_item_id
-            if meal_plan_item_id is None:
-                raise MealPlanItemNotFoundError()
             meal_plan_item = await self._find_meal_plan_item(
                 user_id,
-                meal_plan_item_id,
+                request.meal_plan_item_id,
             )
             recipe = await self._find_recipe(meal_plan_item.recipe_id)
             recipe_ingredients = await self._find_recipe_ingredients(recipe.id)
             batches = await self._find_active_batches(
                 user_id,
-                [ingredient.master_ingredient_id for ingredient, _ in recipe_ingredients],
+                [
+                    ingredient.master_ingredient_id
+                    for ingredient, _ in recipe_ingredients
+                ],
             )
             preview = self.helper.build_preview(
                 recipe,
                 recipe_ingredients,
                 batches,
-                request.servings,
+                meal_plan_item.servings,
             )
             if preview.missing_ingredients:
                 raise InsufficientInventoryError(
@@ -103,13 +107,13 @@ class CookingService:
                 )
             nutrition_snapshot = self.helper.scale_nutrition(
                 recipe,
-                request.servings / recipe.default_servings,
+                meal_plan_item.servings / recipe.default_servings,
             ).model_dump()
             cooking_session = CookingSessionModel(
                 user_id=user_id,
                 recipe_id=recipe.id,
-                meal_plan_item_id=meal_plan_item_id,
-                servings=request.servings,
+                meal_plan_item_id=meal_plan_item.id,
+                servings=meal_plan_item.servings,
                 status=CookingSessionStatus.PLANNED,
                 nutrition_snapshot=nutrition_snapshot,
             )

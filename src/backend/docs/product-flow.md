@@ -125,8 +125,8 @@ sequenceDiagram
 2. Người dùng chọn món, số servings, ngày và khung bữa ăn để thêm vào meal plan.
 3. Người dùng tạo shopping list từ meal plan; hệ thống cộng nhu cầu đã scale theo servings, trừ tồn kho còn dùng được và chỉ trả nguyên liệu thiếu.
 4. Sau khi mua, người dùng check từng shopping item. Theo luồng sản phẩm đã chốt, hệ thống tạo batch inventory và `INITIAL_STOCK` ledger cho item generated vừa được check.
-5. Trước khi nấu, người dùng gọi `POST /api/cooking/preview` để xem FEFO, batch dự kiến dùng, cảnh báo và nguyên liệu thiếu.
-6. Người dùng tạo session qua `POST /api/cooking/sessions` với `meal_plan_item_id` và `servings`. API chỉ tạo session khi tồn kho hiện tại đủ; nếu thiếu trả `409` nêu rõ nguyên liệu và số lượng thiếu.
+5. Trước khi nấu, người dùng gọi `POST /api/cooking/preview` với `meal_plan_item_id` để xem FEFO, batch dự kiến dùng, cảnh báo và nguyên liệu thiếu. Hệ thống lấy recipe và servings từ meal-plan item.
+6. Người dùng tạo session qua `POST /api/cooking/sessions` chỉ với `meal_plan_item_id`. API lấy recipe/servings từ item và chỉ tạo session khi tồn kho hiện tại đủ; nếu thiếu trả `409` nêu rõ nguyên liệu và số lượng thiếu.
 7. Sau khi nấu, người dùng gọi `POST /api/cooking/sessions/{session_id}/complete` với `Idempotency-Key` và mode tiêu thụ. Hệ thống lock batch, revalidate, trừ tồn kho FEFO và ghi ledger.
 
 *Một bữa ăn (meal) được đề xuất được tạo thành từ nhiều món ăn (recipe). Người dùng chọn ra các món cần nấu từ danh sách đề xuất và tiến hành thêm vào để tạo một bữa ăn (meal). Hệ thống sẽ lên danh sách shopping list cho người dùng để hoàn thiện bữa ăn này. Người dùng check và tiến hành di mua đồ ăn.*
@@ -148,27 +148,57 @@ flowchart TD
 
 ## Luồng mua sắm, bổ sung nguyên liệu vào kho
 
-### Các bước chi tiết
+### Mua theo danh sách đề xuất lúc quét món ăn
 
-1. Người dùng chọn meal plan rồi tạo shopping list; mỗi item hiển thị nhu cầu, tồn kho đang có và số lượng còn thiếu.
-2. Người dùng mua nguyên liệu và check item generated chưa check.
-3. Hệ thống chỉ xử lý lần check đầu tiên: tạo một raw-ingredient batch thuộc user với `missing_quantity`, dùng đơn vị/catalog ingredient của item và ghi `INITIAL_STOCK` ledger.
-4. Batch mới dùng default storage của catalog và quy tắc ước tính hạn dùng; người dùng có thể bổ sung/chỉnh sửa các chi tiết inventory khi cần.
-5. Shopping item giữ batch ID đã tạo trong `source_metadata`, nên lần check lại không tạo thêm tồn kho. Batch mới được tính vào preview, recommendation và kiểm tra tạo cooking session.
+#### Các bước chi tiết
 
-*Hiện trạng API: shopping-list và inventory batch routes chưa được triển khai; đây là contract cần hoàn thành ở Task 5.5 và các task inventory liên quan.*
+1. Người dùng chọn các món được đề xuất, thêm vào meal plan kèm servings, rồi yêu cầu tạo shopping list.
+2. Hệ thống quy đổi định lượng theo servings, trừ tồn kho khả dụng và tạo các generated shopping item cho phần nguyên liệu còn thiếu.
+3. Sau khi mua, người dùng check từng generated item chưa được check.
+4. Ở lần check đầu tiên, hệ thống tạo một raw-ingredient batch thuộc user với `missing_quantity`, dùng catalog ingredient/đơn vị của item và ghi `INITIAL_STOCK` ledger.
+5. Batch ID được lưu trong `source_metadata`; check lại cùng item không tạo thêm tồn kho. Batch mới được tính vào preview, recommendation và điều kiện tạo cooking session.
 
-### Sơ đồ
+#### Sơ đồ
 
 ```mermaid
 flowchart TD
-    A[Meal plan] --> B[Tạo shopping list]
-    B --> C[Hiển thị nguyên liệu thiếu]
-    C --> D[Người dùng check đã mua]
-    D --> E{Item generated chưa check?}
-    E -- Có --> F[Tạo inventory batch]
+    A[Chọn món đề xuất và servings] --> B[Thêm vào meal plan]
+    B --> C[Tạo shopping list]
+    C --> D[Hiển thị nguyên liệu còn thiếu]
+    D --> E[Người dùng check đã mua]
+    E --> F{Generated item đã được xử lý?}
+    F -- Chưa --> G[Tạo inventory batch]
+    G --> H[Ghi INITIAL_STOCK ledger]
+    H --> I[Lưu batch ID vào source metadata]
+    F -- Rồi --> I
+    I --> J[Tồn kho sẵn sàng cho cooking]
+```
+
+### Bổ sung nguyên liệu thủ công vào kho
+
+#### Các bước chi tiết
+
+Chúng ta có 2 cách để tăng nguyên liệu trong kho
++ Qua shopping item thủ công: ghi thứ cần mua → mua xong → check → tạo inventory batch.
++ Nhập batch trực tiếp: đã mua nguyên liệu rồi → nhập thông tin lô hàng → tạo inventory batch ngay.
+
+1. Người dùng chọn một trong hai cách: tạo shopping item thủ công để ghi nhớ cần mua, hoặc nhập trực tiếp lô nguyên liệu đã mua vào kho.
+2. Với shopping item thủ công, người dùng chỉ nhập nguyên liệu, số lượng và đơn vị cần mua. Item này chưa làm tăng tồn kho.
+3. Sau khi mua, người dùng check shopping item. Hệ thống yêu cầu hoặc áp dụng thông tin batch cần thiết, như nơi bảo quản và hạn dùng, rồi tạo inventory batch.
+4. Với nhập kho trực tiếp, người dùng nhập nguyên liệu, số lượng, đơn vị, nơi bảo quản và hạn dùng (nếu có), sau đó xác nhận tạo inventory batch ngay; không cần shopping item.
+5. Ở cả hai cách, hệ thống ghi `INITIAL_STOCK` ledger (lịch sử biến động tồn kho) cho batch mới. Batch này được cộng vào tồn kho khả dụng, không cần liên kết với recipe hoặc meal plan và sẵn sàng cho các luồng sau.
+
+#### Sơ đồ
+
+```mermaid
+flowchart TD
+    A[Mua nguyên liệu thủ công] --> B{Cách nhập}
+    B -- Shopping item thủ công --> C[Tạo item: nguyên liệu, số lượng, đơn vị]
+    C --> D[Sau khi mua: check item và nhập thông tin batch]
+    B -- Nhập kho trực tiếp --> E[Nhập thông tin batch]
+    D --> F[Tạo inventory batch]
+    E --> F
     F --> G[Ghi INITIAL_STOCK ledger]
-    G --> H[Lưu batch ID vào source metadata]
-    E -- Không --> H
-    H --> I[Tồn kho sẵn sàng cho cooking]
+    G --> H[Cộng vào tồn kho khả dụng]
+    H --> I[Sẵn sàng cho các luồng sau]
 ```
