@@ -2,6 +2,7 @@
 # uv run -m src.seed
 import asyncio
 import hashlib
+import os
 from collections.abc import Sequence
 from datetime import UTC, date, datetime, timedelta
 from uuid import UUID, uuid5
@@ -111,7 +112,7 @@ def token_hash(value: str) -> str:
 
 def load_demo_password() -> str:
     """Read the explicit password shared by the demo accounts."""
-    password = "cloudian123"
+    password = os.getenv("SEED_DEMO_PASSWORD")
     if not password:
         raise ValueError(
             "SEED_DEMO_PASSWORD is required; use the approved local test password.",
