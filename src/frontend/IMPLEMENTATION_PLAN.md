@@ -15,7 +15,7 @@
 | **M1 — Kho (vertical slice)** | ✅ Xong |
 | **M2 — Trang chủ** | ✅ Xong |
 | **M3 — Gợi ý + Món + Nấu (vòng lặp lõi)** | ✅ Xong |
-| M4 — Nhập liệu đa phương thức | ⬜ Chưa — đang làm (teammate) |
+| **M4 — Nhập liệu đa phương thức** | ✅ Xong |
 | M5 — Auth + Onboarding + phần còn lại | 🟡 Đang làm — **Auth gate + Onboarding xong**; còn Thông báo / Mua sắm / Thực đơn / Báo cáo / Cài đặt / Subscription / Analytics |
 | M6 — Hoàn thiện, i18n, test, build | ⬜ Chưa |
 

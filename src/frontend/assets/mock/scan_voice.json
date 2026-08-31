@@ -1,0 +1,32 @@
+{
+  "job_id": "job_voice_001",
+  "type": "voice",
+  "status": "completed",
+  "raw_transcript": "2 lạng thịt bò, 1 bó cải bó xôi, 3 quả trứng",
+  "items": [
+    {
+      "name": "Thịt bò",
+      "quantity": 200.0,
+      "unit": "g",
+      "storage_tier": "fridge",
+      "category": "Thịt & Hải sản",
+      "is_warn": false
+    },
+    {
+      "name": "Cải bó xôi",
+      "quantity": 1.0,
+      "unit": "bo",
+      "storage_tier": "fridge",
+      "category": "Rau củ",
+      "is_warn": false
+    },
+    {
+      "name": "Trứng gà",
+      "quantity": 3.0,
+      "unit": "qua",
+      "storage_tier": "fridge",
+      "category": "Trứng & Sữa",
+      "is_warn": false
+    }
+  ]
+}

@@ -14,6 +14,9 @@ import 'package:frontend/features/home/presentation/screens/home_screen.dart';
 import 'package:frontend/features/ingest/presentation/screens/camera_capture_screen.dart';
 import 'package:frontend/features/ingest/presentation/screens/label_review_screen.dart';
 import 'package:frontend/features/ingest/presentation/screens/receipt_review_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/scan_failed_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/voice_capture_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/voice_review_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/dietary_preference_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/onboarding_pantry_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/add_ingredient_screen.dart';
@@ -131,6 +134,21 @@ GoRouter appRouter(Ref ref) {
                     builder: (context, state) => ReceiptReviewScreen(
                       imagePath: state.extra as String?,
                     ),
+                  ),
+                  GoRoute(
+                    path: Routes.scanVoiceCapture, // '/pantry/scan/voice-capture'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const VoiceCaptureScreen(),
+                  ),
+                  GoRoute(
+                    path: Routes.scanVoiceReview, // '/pantry/scan/voice-review'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const VoiceReviewScreen(),
+                  ),
+                  GoRoute(
+                    path: Routes.scanFailed, // '/pantry/scan/failed'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const ScanFailedScreen(),
                   ),
                 ],
               ),

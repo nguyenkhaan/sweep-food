@@ -104,7 +104,7 @@ class AddEntryChooserSheet extends StatelessWidget {
                     subtitle: 'Đọc tên nguyên liệu và số lượng',
                     onTap: () {
                       context.pop();
-                      // TODO M4: navigate sang VoiceCaptureScreen
+                      context.push('${Routes.pantry}/${Routes.scanVoiceCapture}');
                     },
                   ),
                   _OptionCard(
