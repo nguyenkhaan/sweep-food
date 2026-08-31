@@ -21,15 +21,15 @@ final class LeftoverControllerProvider
   /// D-06 — saves leftover portions as a new "Ăn liền" batch and refreshes the
   /// pantry list. Kept alive: the saving sheet only `read`s this.
   LeftoverControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'leftoverControllerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'leftoverControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$leftoverControllerHash();
@@ -51,11 +51,14 @@ abstract class _$LeftoverController extends $AsyncNotifier<void> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<void>, void>,
-        AsyncValue<void>,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

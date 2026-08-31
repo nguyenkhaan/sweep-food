@@ -15,22 +15,25 @@ final ingredientSearchProvider = IngredientSearchFamily._();
 
 /// Autocomplete results for [query] (K-03). Empty query → a short popular list.
 
-final class IngredientSearchProvider extends $FunctionalProvider<
-        AsyncValue<List<Ingredient>>,
-        List<Ingredient>,
-        FutureOr<List<Ingredient>>>
+final class IngredientSearchProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Ingredient>>,
+          List<Ingredient>,
+          FutureOr<List<Ingredient>>
+        >
     with $FutureModifier<List<Ingredient>>, $FutureProvider<List<Ingredient>> {
   /// Autocomplete results for [query] (K-03). Empty query → a short popular list.
-  IngredientSearchProvider._(
-      {required IngredientSearchFamily super.from,
-      required String super.argument})
-      : super(
-          retry: null,
-          name: r'ingredientSearchProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+  IngredientSearchProvider._({
+    required IngredientSearchFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'ingredientSearchProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$ingredientSearchHash();
@@ -45,16 +48,13 @@ final class IngredientSearchProvider extends $FunctionalProvider<
   @$internal
   @override
   $FutureProviderElement<List<Ingredient>> $createElement(
-          $ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<Ingredient>> create(Ref ref) {
     final argument = this.argument as String;
-    return ingredientSearch(
-      ref,
-      argument,
-    );
+    return ingredientSearch(ref, argument);
   }
 
   @override
@@ -75,19 +75,17 @@ String _$ingredientSearchHash() => r'9ae48e3edd734f75088759a3b40d9c1bfc3f49c4';
 final class IngredientSearchFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<Ingredient>>, String> {
   IngredientSearchFamily._()
-      : super(
-          retry: null,
-          name: r'ingredientSearchProvider',
-          dependencies: null,
-          $allTransitiveDependencies: null,
-          isAutoDispose: true,
-        );
+    : super(
+        retry: null,
+        name: r'ingredientSearchProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
   /// Autocomplete results for [query] (K-03). Empty query → a short popular list.
 
-  IngredientSearchProvider call(
-    String query,
-  ) =>
+  IngredientSearchProvider call(String query) =>
       IngredientSearchProvider._(argument: query, from: this);
 
   @override

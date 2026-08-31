@@ -8,25 +8,28 @@ part of 'label_review_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Controller managing the state of the Label Review screen (I-03).
+/// Holds the single editable draft on the Label Review screen (I-03), seeded
+/// from the OCR [ScanJob].
 
 @ProviderFor(LabelReviewController)
 final labelReviewControllerProvider = LabelReviewControllerFamily._();
 
-/// Controller managing the state of the Label Review screen (I-03).
+/// Holds the single editable draft on the Label Review screen (I-03), seeded
+/// from the OCR [ScanJob].
 final class LabelReviewControllerProvider
     extends $NotifierProvider<LabelReviewController, ParsedItemDraft> {
-  /// Controller managing the state of the Label Review screen (I-03).
-  LabelReviewControllerProvider._(
-      {required LabelReviewControllerFamily super.from,
-      required String? super.argument})
-      : super(
-          retry: null,
-          name: r'labelReviewControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+  /// Holds the single editable draft on the Label Review screen (I-03), seeded
+  /// from the OCR [ScanJob].
+  LabelReviewControllerProvider._({
+    required LabelReviewControllerFamily super.from,
+    required ScanJob super.argument,
+  }) : super(
+         retry: null,
+         name: r'labelReviewControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$labelReviewControllerHash();
@@ -62,56 +65,59 @@ final class LabelReviewControllerProvider
 }
 
 String _$labelReviewControllerHash() =>
-    r'e8e6a66abaca054d3d364ed9ba689ed292f2d844';
+    r'a8708b1088a43901fe290bc738adb4c242141b7b';
 
-/// Controller managing the state of the Label Review screen (I-03).
+/// Holds the single editable draft on the Label Review screen (I-03), seeded
+/// from the OCR [ScanJob].
 
 final class LabelReviewControllerFamily extends $Family
     with
-        $ClassFamilyOverride<LabelReviewController, ParsedItemDraft,
-            ParsedItemDraft, ParsedItemDraft, String?> {
+        $ClassFamilyOverride<
+          LabelReviewController,
+          ParsedItemDraft,
+          ParsedItemDraft,
+          ParsedItemDraft,
+          ScanJob
+        > {
   LabelReviewControllerFamily._()
-      : super(
-          retry: null,
-          name: r'labelReviewControllerProvider',
-          dependencies: null,
-          $allTransitiveDependencies: null,
-          isAutoDispose: true,
-        );
+    : super(
+        retry: null,
+        name: r'labelReviewControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
-  /// Controller managing the state of the Label Review screen (I-03).
+  /// Holds the single editable draft on the Label Review screen (I-03), seeded
+  /// from the OCR [ScanJob].
 
-  LabelReviewControllerProvider call({
-    String? imagePath,
-  }) =>
-      LabelReviewControllerProvider._(argument: imagePath, from: this);
+  LabelReviewControllerProvider call(ScanJob job) =>
+      LabelReviewControllerProvider._(argument: job, from: this);
 
   @override
   String toString() => r'labelReviewControllerProvider';
 }
 
-/// Controller managing the state of the Label Review screen (I-03).
+/// Holds the single editable draft on the Label Review screen (I-03), seeded
+/// from the OCR [ScanJob].
 
 abstract class _$LabelReviewController extends $Notifier<ParsedItemDraft> {
-  late final _$args = ref.$arg as String?;
-  String? get imagePath => _$args;
+  late final _$args = ref.$arg as ScanJob;
+  ScanJob get job => _$args;
 
-  ParsedItemDraft build({
-    String? imagePath,
-  });
+  ParsedItemDraft build(ScanJob job);
   @$mustCallSuper
   @override
   void runBuild() {
     final ref = this.ref as $Ref<ParsedItemDraft, ParsedItemDraft>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<ParsedItemDraft, ParsedItemDraft>,
-        ParsedItemDraft,
-        Object?,
-        Object?>;
-    element.handleCreate(
-        ref,
-        () => build(
-              imagePath: _$args,
-            ));
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<ParsedItemDraft, ParsedItemDraft>,
+              ParsedItemDraft,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
   }
 }

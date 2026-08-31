@@ -33,15 +33,15 @@ final class SessionControllerProvider
   /// form controllers (`login`/`register`) call in here and rethrow failures for
   /// the form to display — this notifier only ever moves to a resolved state.
   SessionControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'sessionControllerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sessionControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$sessionControllerHash();
@@ -66,11 +66,14 @@ abstract class _$SessionController extends $AsyncNotifier<Session?> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AsyncValue<Session?>, Session?>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<Session?>, Session?>,
-        AsyncValue<Session?>,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Session?>, Session?>,
+              AsyncValue<Session?>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

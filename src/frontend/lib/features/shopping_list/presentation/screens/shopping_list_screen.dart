@@ -26,6 +26,9 @@ class ShoppingListScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Danh sách mua sắm')),
       floatingActionButton: async.hasValue
           ? FloatingActionButton.extended(
+              // Unique tag — see note on the Pantry FAB (shared IndexedStack
+              // subtree ⇒ default FAB hero tags collide).
+              heroTag: 'shopping_fab',
               onPressed: () => AddShoppingItemSheet.show(context),
               icon: const Icon(Icons.add_rounded),
               label: const Text('Thêm món'),

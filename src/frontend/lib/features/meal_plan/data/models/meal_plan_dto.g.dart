@@ -25,12 +25,13 @@ Map<String, dynamic> _$MealPlanEntryDtoToJson(_MealPlanEntryDto instance) =>
     };
 
 _MealPlanDto _$MealPlanDtoFromJson(Map<String, dynamic> json) => _MealPlanDto(
-      weekStart: DateTime.parse(json['week_start'] as String),
-      entries: (json['entries'] as List<dynamic>?)
-              ?.map((e) => MealPlanEntryDto.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const <MealPlanEntryDto>[],
-    );
+  weekStart: DateTime.parse(json['week_start'] as String),
+  entries:
+      (json['entries'] as List<dynamic>?)
+          ?.map((e) => MealPlanEntryDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const <MealPlanEntryDto>[],
+);
 
 Map<String, dynamic> _$MealPlanDtoToJson(_MealPlanDto instance) =>
     <String, dynamic>{

@@ -6,27 +6,27 @@
   "items": [
     {
       "name": "Thịt bò",
+      "category": "Thịt & Hải sản",
       "quantity": 200.0,
       "unit": "g",
       "storage_tier": "fridge",
-      "category": "Thịt & Hải sản",
-      "is_warn": false
+      "is_expiry_warn": false
     },
     {
       "name": "Cải bó xôi",
+      "category": "Rau củ",
       "quantity": 1.0,
       "unit": "bo",
       "storage_tier": "fridge",
-      "category": "Rau củ",
-      "is_warn": false
+      "is_expiry_warn": false
     },
     {
       "name": "Trứng gà",
+      "category": "Trứng & Sữa",
       "quantity": 3.0,
       "unit": "qua",
       "storage_tier": "fridge",
-      "category": "Trứng & Sữa",
-      "is_warn": false
+      "is_expiry_warn": false
     }
   ]
 }

@@ -23,15 +23,15 @@ final class AppRouterProvider
   /// The app's [GoRouter], provided via Riverpod so redirects can react to auth
   /// state (from M5). Kept alive for the app's lifetime.
   AppRouterProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'appRouterProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'appRouterProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$appRouterHash();
@@ -55,4 +55,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'df8215f16dedab1f75d60a16fef3237ed71640da';
+String _$appRouterHash() => r'b5acef8552a2cadc55ad5d30b60f7149100c4bee';

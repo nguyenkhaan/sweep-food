@@ -12,20 +12,24 @@ part of 'report_repository_impl.dart';
 @ProviderFor(reportRepository)
 final reportRepositoryProvider = ReportRepositoryProvider._();
 
-final class ReportRepositoryProvider extends $FunctionalProvider<
-    ReportRepository,
-    ReportRepository,
-    ReportRepository> with $Provider<ReportRepository> {
+final class ReportRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ReportRepository,
+          ReportRepository,
+          ReportRepository
+        >
+    with $Provider<ReportRepository> {
   ReportRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'reportRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reportRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$reportRepositoryHash();

@@ -12,20 +12,24 @@ part of 'shopping_list_repository_impl.dart';
 @ProviderFor(shoppingListRepository)
 final shoppingListRepositoryProvider = ShoppingListRepositoryProvider._();
 
-final class ShoppingListRepositoryProvider extends $FunctionalProvider<
-    ShoppingListRepository,
-    ShoppingListRepository,
-    ShoppingListRepository> with $Provider<ShoppingListRepository> {
+final class ShoppingListRepositoryProvider
+    extends
+        $FunctionalProvider<
+          ShoppingListRepository,
+          ShoppingListRepository,
+          ShoppingListRepository
+        >
+    with $Provider<ShoppingListRepository> {
   ShoppingListRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'shoppingListRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'shoppingListRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$shoppingListRepositoryHash();
@@ -33,8 +37,8 @@ final class ShoppingListRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<ShoppingListRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   ShoppingListRepository create(Ref ref) {

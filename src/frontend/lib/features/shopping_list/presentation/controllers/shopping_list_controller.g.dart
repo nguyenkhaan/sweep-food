@@ -18,15 +18,15 @@ final class ShoppingListShowInStockProvider
     extends $NotifierProvider<ShoppingListShowInStock, bool> {
   /// B-01 toggle: show the "đã có trong kho" lines or hide them (default hidden).
   ShoppingListShowInStockProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'shoppingListShowInStockProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'shoppingListShowInStockProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$shoppingListShowInStockHash();
@@ -55,8 +55,14 @@ abstract class _$ShoppingListShowInStock extends $Notifier<bool> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<bool, bool>, bool, Object?, Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<bool, bool>,
+              bool,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }
@@ -74,15 +80,15 @@ final class ShoppingListControllerProvider
   /// B-01. Loads the current list; check-off / add / remove update optimistically
   /// and roll back on failure.
   ShoppingListControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'shoppingListControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'shoppingListControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$shoppingListControllerHash();
@@ -104,11 +110,14 @@ abstract class _$ShoppingListController extends $AsyncNotifier<ShoppingList> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AsyncValue<ShoppingList>, ShoppingList>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<ShoppingList>, ShoppingList>,
-        AsyncValue<ShoppingList>,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<ShoppingList>, ShoppingList>,
+              AsyncValue<ShoppingList>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

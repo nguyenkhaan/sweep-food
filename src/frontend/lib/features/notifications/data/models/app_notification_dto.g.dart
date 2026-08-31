@@ -15,7 +15,8 @@ _AppNotificationDto _$AppNotificationDtoFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['created_at'] as String),
       read: json['read'] as bool? ?? false,
       pantryItemId: json['pantry_item_id'] as String?,
-      dishIds: (json['dish_ids'] as List<dynamic>?)
+      dishIds:
+          (json['dish_ids'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const <String>[],

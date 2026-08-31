@@ -18,15 +18,15 @@ final class ReportPeriodControllerProvider
     extends $NotifierProvider<ReportPeriodController, ReportPeriod> {
   /// R-01 period selector (Tuần này / Tháng này).
   ReportPeriodControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'reportPeriodControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reportPeriodControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$reportPeriodControllerHash();
@@ -55,11 +55,14 @@ abstract class _$ReportPeriodController extends $Notifier<ReportPeriod> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<ReportPeriod, ReportPeriod>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<ReportPeriod, ReportPeriod>,
-        ReportPeriod,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<ReportPeriod, ReportPeriod>,
+              ReportPeriod,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }
@@ -74,15 +77,15 @@ final class ReportsControllerProvider
     extends $AsyncNotifierProvider<ReportsController, WasteReductionSummary> {
   /// R-01 "Chống lãng phí" metrics for the selected period.
   ReportsControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'reportsControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'reportsControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$reportsControllerHash();
@@ -102,13 +105,20 @@ abstract class _$ReportsController
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref
-        as $Ref<AsyncValue<WasteReductionSummary>, WasteReductionSummary>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<WasteReductionSummary>, WasteReductionSummary>,
-        AsyncValue<WasteReductionSummary>,
-        Object?,
-        Object?>;
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<WasteReductionSummary>, WasteReductionSummary>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<WasteReductionSummary>,
+                WasteReductionSummary
+              >,
+              AsyncValue<WasteReductionSummary>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

@@ -11,7 +11,7 @@ _SubscriptionDto _$SubscriptionDtoFromJson(Map<String, dynamic> json) =>
       tier: json['tier'] as String,
       perks:
           (json['perks'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-              const <String>[],
+          const <String>[],
       premiumInterestRegistered:
           json['premium_interest_registered'] as bool? ?? false,
     );

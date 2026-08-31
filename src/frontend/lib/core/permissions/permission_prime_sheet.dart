@@ -3,15 +3,74 @@
 // Design: PermissionPrime.dc.html
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/theme/app_colors.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/permissions/permission_service.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:go_router/go_router.dart';
 
 enum PermissionKind { camera, microphone }
 
+/// G-04 gate: returns `true` only once the OS permission for [kind] is granted.
+///
+/// If not already granted it primes the user with [PermissionPrimeSheet] first
+/// (so the system dialog never appears cold), then requests. A permanently
+/// denied permission surfaces a "mở Cài đặt" snackbar and returns `false`.
+Future<bool> ensureMediaPermission(
+  BuildContext context,
+  WidgetRef ref,
+  PermissionKind kind,
+) async {
+  final service = ref.read(permissionServiceProvider);
+  final isCamera = kind == PermissionKind.camera;
+
+  if (isCamera
+      ? await service.hasCameraPermission()
+      : await service.hasMicrophonePermission()) {
+    return true;
+  }
+
+  if (!context.mounted) return false;
+  final primed = await showPermissionPrimeSheet(context, kind: kind);
+  if (primed != true) return false;
+
+  final granted = isCamera
+      ? await service.requestCameraPermission()
+      : await service.requestMicrophonePermission();
+  if (granted) return true;
+
+  final permanently = isCamera
+      ? await service.isCameraPermanentlyDenied()
+      : await service.isMicrophonePermanentlyDenied();
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      permanently
+          ? SnackBar(
+              content: Text(
+                isCamera
+                    ? 'Hãy bật quyền Máy ảnh trong Cài đặt để quét.'
+                    : 'Hãy bật quyền Micro trong Cài đặt để nói.',
+              ),
+              action: SnackBarAction(
+                label: 'Mở Cài đặt',
+                onPressed: service.openSettings,
+              ),
+            )
+          : SnackBar(
+              content: Text(
+                isCamera
+                    ? 'Chưa cấp quyền Máy ảnh — hãy thử lại và chọn "Cho phép".'
+                    : 'Chưa cấp quyền Micro — hãy thử lại và chọn "Cho phép".',
+              ),
+            ),
+    );
+  }
+  return false;
+}
+
 /// Convenience helper to open the priming bottom sheet G-04.
-/// Returns `true` if user tapped "Cho phép", `false` if dismissed/cancelled.
+/// Returns `true` if user tapped "Cho phép", `false`/`null` if dismissed.
 Future<bool?> showPermissionPrimeSheet(
   BuildContext context, {
   required PermissionKind kind,

@@ -138,42 +138,48 @@ class _PantryItemDetailScreenState
             ),
           ),
           Gap.gapLg,
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: _StatTile(
-                  icon: Icons.scale_outlined,
-                  label: 'Số lượng',
-                  value: item.quantityLabel,
+          // IntrinsicHeight bounds the cross axis so `stretch` is safe — a bare
+          // `Row(crossAxisAlignment: stretch)` inside a ListView gets an
+          // unbounded height and asserts "BoxConstraints forces an infinite
+          // height".
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _StatTile(
+                    icon: Icons.scale_outlined,
+                    label: 'Số lượng',
+                    value: item.quantityLabel,
+                  ),
                 ),
-              ),
-              const SizedBox(width: Gap.sm),
-              Expanded(
-                child: _StatTile(
-                  icon: Icons.event_outlined,
-                  label: 'Hạn dùng',
-                  value: item.expiryDate?.ddMM ?? '—',
-                  sub: expiryText(item.daysUntilExpiry),
+                const SizedBox(width: Gap.sm),
+                Expanded(
+                  child: _StatTile(
+                    icon: Icons.event_outlined,
+                    label: 'Hạn dùng',
+                    value: item.expiryDate?.ddMM ?? '—',
+                    sub: expiryText(item.daysUntilExpiry),
+                  ),
                 ),
-              ),
-              const SizedBox(width: Gap.sm),
-              Expanded(
-                child: item.priceVnd != null
-                    ? _StatTile(
-                        icon: Icons.payments_outlined,
-                        label: 'Giá',
-                        value: formatVnd(item.priceVnd!),
-                      )
-                    : _StatTile(
-                        icon: Icons.schedule_outlined,
-                        label: 'Bảo quản',
-                        value: item.referenceShelfLifeDays != null
-                            ? '~${item.referenceShelfLifeDays} ngày'
-                            : '—',
-                      ),
-              ),
-            ],
+                const SizedBox(width: Gap.sm),
+                Expanded(
+                  child: item.priceVnd != null
+                      ? _StatTile(
+                          icon: Icons.payments_outlined,
+                          label: 'Giá',
+                          value: formatVnd(item.priceVnd!),
+                        )
+                      : _StatTile(
+                          icon: Icons.schedule_outlined,
+                          label: 'Bảo quản',
+                          value: item.referenceShelfLifeDays != null
+                              ? '~${item.referenceShelfLifeDays} ngày'
+                              : '—',
+                        ),
+                ),
+              ],
+            ),
           ),
           Gap.gapLg,
           _DetailCard(item: item),

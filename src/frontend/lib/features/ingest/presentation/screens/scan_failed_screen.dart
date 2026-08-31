@@ -7,22 +7,33 @@ import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_colors.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
+import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
 import 'package:go_router/go_router.dart';
 
-/// I-09 — Màn hình thông báo lỗi khi không đọc được tem nhãn / hóa đơn.
+/// I-09 — Không đọc được tem nhãn / hóa đơn / giọng nói.
 class ScanFailedScreen extends StatelessWidget {
-  const ScanFailedScreen({
-    this.title = 'Không đọc được nhãn',
-    this.reasons = const [
-      'Ảnh bị mờ hoặc chụp nghiêng',
-      'Nhãn bị rách hoặc phai mực',
-      'Thiếu sáng khi chụp',
-    ],
-    super.key,
-  });
+  const ScanFailedScreen({this.type, super.key});
 
-  final String title;
-  final List<String> reasons;
+  final ScanType? type;
+
+  String get _title => switch (type) {
+        ScanType.receipt => 'Không đọc được hóa đơn',
+        ScanType.voice => 'Không nghe rõ',
+        _ => 'Không đọc được nhãn',
+      };
+
+  List<String> get _reasons => switch (type) {
+        ScanType.voice => const [
+            'Môi trường quá ồn',
+            'Nói quá nhanh hoặc quá nhỏ',
+            'Micro bị che',
+          ],
+        _ => const [
+            'Ảnh bị mờ hoặc chụp nghiêng',
+            'Nhãn bị rách hoặc phai mực',
+            'Thiếu sáng khi chụp',
+          ],
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +51,6 @@ class ScanFailedScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(Gap.xl, Gap.md, Gap.xl, Gap.xl),
           child: Column(
             children: [
-              // ── Center illustration & reasons ──────────────────────────────
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -52,15 +62,17 @@ class ScanFailedScreen extends StatelessWidget {
                         color: BrandPalette.brick100,
                         borderRadius: BorderRadius.circular(24),
                       ),
-                      child: const Icon(
-                        Icons.document_scanner_outlined,
+                      child: Icon(
+                        type == ScanType.voice
+                            ? Icons.mic_off_outlined
+                            : Icons.document_scanner_outlined,
                         size: 40,
                         color: BrandPalette.brick500,
                       ),
                     ),
                     const SizedBox(height: Gap.lg),
                     Text(
-                      title,
+                      _title,
                       textAlign: TextAlign.center,
                       style: context.text.titleLarge?.copyWith(
                         fontWeight: FontWeight.w700,
@@ -68,56 +80,59 @@ class ScanFailedScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: Gap.md),
                     Column(
-                      children: reasons.map((reason) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: Gap.xs),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: Gap.md,
-                              vertical: Gap.sm,
-                            ),
-                            decoration: BoxDecoration(
-                              color: context.colors.surface,
-                              borderRadius: Radii.brMd,
-                              border: Border.all(color: sweep.hairline),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 6,
-                                  height: 6,
-                                  decoration: BoxDecoration(
-                                    color: sweep.textTertiary,
-                                    shape: BoxShape.circle,
-                                  ),
+                      children: _reasons
+                          .map(
+                            (reason) => Padding(
+                              padding: const EdgeInsets.only(bottom: Gap.xs),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: Gap.md,
+                                  vertical: Gap.sm,
                                 ),
-                                const SizedBox(width: Gap.sm),
-                                Expanded(
-                                  child: Text(
-                                    reason,
-                                    style: context.text.bodyMedium?.copyWith(
-                                      color: sweep.textSecondary,
+                                decoration: BoxDecoration(
+                                  color: context.colors.surface,
+                                  borderRadius: Radii.brMd,
+                                  border: Border.all(color: sweep.hairline),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        color: sweep.textTertiary,
+                                        shape: BoxShape.circle,
+                                      ),
                                     ),
-                                  ),
+                                    const SizedBox(width: Gap.sm),
+                                    Expanded(
+                                      child: Text(
+                                        reason,
+                                        style:
+                                            context.text.bodyMedium?.copyWith(
+                                          color: sweep.textSecondary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          )
+                          .toList(),
                     ),
                   ],
                 ),
               ),
-
-              // ── Action buttons ─────────────────────────────────────────────
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ElevatedButton.icon(
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Chụp lại'),
+                    label: Text(
+                      type == ScanType.voice ? 'Thu lại' : 'Chụp lại',
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: BrandPalette.green700,
                       foregroundColor: Colors.white,

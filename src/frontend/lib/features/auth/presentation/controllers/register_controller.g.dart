@@ -24,15 +24,15 @@ final class RegisterControllerProvider
   /// state and passed into [submit]; everything else rides the shared
   /// [AuthFormState].
   RegisterControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'registerControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'registerControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$registerControllerHash();
@@ -63,11 +63,14 @@ abstract class _$RegisterController extends $Notifier<AuthFormState> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AuthFormState, AuthFormState>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AuthFormState, AuthFormState>,
-        AuthFormState,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AuthFormState, AuthFormState>,
+              AuthFormState,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

@@ -11,24 +11,26 @@ import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/utils/extensions/date_time_x.dart';
 import 'package:frontend/core/widgets/app_snackbar.dart';
 import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
+import 'package:frontend/features/ingest/domain/entities/scan_job.dart';
 import 'package:frontend/features/ingest/presentation/controllers/receipt_review_controller.dart';
+import 'package:frontend/features/ingest/presentation/widgets/parsed_item_row.dart';
 import 'package:frontend/shared/domain/measurement_unit.dart';
 import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:go_router/go_router.dart';
 
-/// I-05 — Màn hình kiểm tra & chọn lưu danh sách nguyên liệu từ hóa đơn.
+/// I-05 — Kiểm tra & chọn lưu danh sách nguyên liệu từ hóa đơn.
 class ReceiptReviewScreen extends ConsumerWidget {
-  const ReceiptReviewScreen({this.imagePath, super.key});
+  const ReceiptReviewScreen({required this.job, super.key});
 
-  final String? imagePath;
+  final ScanJob job;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(receiptReviewControllerProvider(imagePath: imagePath));
-    final controller = ref.read(receiptReviewControllerProvider(imagePath: imagePath).notifier);
+    final state = ref.watch(receiptReviewControllerProvider(job));
+    final controller = ref.read(receiptReviewControllerProvider(job).notifier);
     final sweep = context.sweep;
-
-    final allSelected = state.selectedCount == state.items.length && state.items.isNotEmpty;
+    final allSelected =
+        state.selectedCount == state.items.length && state.items.isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +43,6 @@ class ReceiptReviewScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 3),
         children: [
-          // ── Store & Photo summary ───────────────────────────────────────────
           Row(
             children: [
               Container(
@@ -63,7 +64,9 @@ class ReceiptReviewScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${state.storeName} · ${state.purchaseDate.ddMM}',
+                    state.purchaseDate != null
+                        ? '${state.storeName} · ${state.purchaseDate!.ddMM}'
+                        : state.storeName,
                     style: context.text.titleSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -84,8 +87,6 @@ class ReceiptReviewScreen extends ConsumerWidget {
             ],
           ),
           Gap.gapMd,
-
-          // ── Selection toolbar ───────────────────────────────────────────────
           Row(
             children: [
               Text.rich(
@@ -105,13 +106,9 @@ class ReceiptReviewScreen extends ConsumerWidget {
               ),
               const Spacer(),
               GestureDetector(
-                onTap: () {
-                  if (allSelected) {
-                    controller.deselectAll();
-                  } else {
-                    controller.selectAll();
-                  }
-                },
+                onTap: allSelected
+                    ? controller.deselectAll
+                    : controller.selectAll,
                 child: Text(
                   allSelected ? 'Bỏ chọn tất cả' : 'Chọn tất cả',
                   style: context.text.bodySmall?.copyWith(
@@ -123,12 +120,10 @@ class ReceiptReviewScreen extends ConsumerWidget {
             ],
           ),
           Gap.gapSm,
-
-          // ── Item list ───────────────────────────────────────────────────────
           for (var i = 0; i < state.items.length; i++) ...[
-            _ReceiptItemTile(
+            ParsedItemRow(
               item: state.items[i],
-              isSelected: state.isSelected(i),
+              selected: state.isSelected(i),
               onToggle: () => controller.toggleItem(i),
               onEdit: () => _editItem(context, i, state.items[i], controller),
             ),
@@ -157,7 +152,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
                         'Đã thêm $count nguyên liệu vào kho!',
                       );
                       context.go(Routes.pantry);
-                    } catch (e) {
+                    } on Object catch (e) {
                       if (!context.mounted) return;
                       AppSnack.show(context, 'Lỗi lưu nguyên liệu: $e');
                     }
@@ -189,12 +184,21 @@ class ReceiptReviewScreen extends ConsumerWidget {
     ReceiptReviewController controller,
   ) async {
     final nameController = TextEditingController(text: item.name);
-    final qtyController = TextEditingController(text: item.quantity.toString());
+    final qtyController = TextEditingController(
+      text: item.quantity == 0 ? '' : item.quantity.toString(),
+    );
     var selectedUnit = item.unit;
     var selectedTier = item.storageTier;
-    var selectedCategory = item.category;
+    var selectedCategory = item.category.isEmpty ? 'Khác' : item.category;
 
-    const categories = ['Rau củ', 'Thịt & Hải sản', 'Gia vị', 'Trứng & Sữa', 'Đồ khô', 'Khác'];
+    const categories = [
+      'Rau củ',
+      'Thịt & Hải sản',
+      'Gia vị',
+      'Trứng & Sữa',
+      'Đồ khô',
+      'Khác',
+    ];
 
     await showModalBottomSheet<void>(
       context: context,
@@ -249,9 +253,12 @@ class ReceiptReviewScreen extends ConsumerWidget {
                         labelText: 'Đơn vị',
                         border: OutlineInputBorder(),
                       ),
-                      items: MeasurementUnit.values.map((u) {
-                        return DropdownMenuItem(value: u, child: Text(u.label));
-                      }).toList(),
+                      items: MeasurementUnit.values
+                          .map((u) => DropdownMenuItem(
+                                value: u,
+                                child: Text(u.label),
+                              ))
+                          .toList(),
                       onChanged: (u) {
                         if (u != null) setState(() => selectedUnit = u);
                       },
@@ -266,9 +273,9 @@ class ReceiptReviewScreen extends ConsumerWidget {
                   labelText: 'Danh mục',
                   border: OutlineInputBorder(),
                 ),
-                items: categories.map((c) {
-                  return DropdownMenuItem(value: c, child: Text(c));
-                }).toList(),
+                items: categories
+                    .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                    .toList(),
                 onChanged: (c) {
                   if (c != null) setState(() => selectedCategory = c);
                 },
@@ -280,9 +287,12 @@ class ReceiptReviewScreen extends ConsumerWidget {
                   labelText: 'Tầng bảo quản',
                   border: OutlineInputBorder(),
                 ),
-                items: StorageTier.values.map((t) {
-                  return DropdownMenuItem(value: t, child: Text(t.label));
-                }).toList(),
+                items: StorageTier.values
+                    .map((t) => DropdownMenuItem(
+                          value: t,
+                          child: Text(t.label),
+                        ))
+                    .toList(),
                 onChanged: (t) {
                   if (t != null) setState(() => selectedTier = t);
                 },
@@ -305,16 +315,20 @@ class ReceiptReviewScreen extends ConsumerWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        final qty = double.tryParse(qtyController.text.trim()) ?? item.quantity;
-                        final updated = item.copyWith(
-                          name: nameController.text.trim(),
-                          quantity: qty,
-                          unit: selectedUnit,
-                          category: selectedCategory,
-                          storageTier: selectedTier,
-                          isExpiryWarn: false,
+                        final qty =
+                            double.tryParse(qtyController.text.trim()) ??
+                                item.quantity;
+                        controller.updateItem(
+                          index,
+                          item.copyWith(
+                            name: nameController.text.trim(),
+                            quantity: qty,
+                            unit: selectedUnit,
+                            category: selectedCategory,
+                            storageTier: selectedTier,
+                            isExpiryWarn: false,
+                          ),
                         );
-                        controller.updateItem(index, updated);
                         ctx.pop();
                       },
                       style: ElevatedButton.styleFrom(
@@ -327,132 +341,6 @@ class ReceiptReviewScreen extends ConsumerWidget {
                 ],
               ),
               Gap.gapMd,
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Receipt Item Tile Component
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _ReceiptItemTile extends StatelessWidget {
-  const _ReceiptItemTile({
-    required this.item,
-    required this.isSelected,
-    required this.onToggle,
-    required this.onEdit,
-  });
-
-  final ParsedItemDraft item;
-  final bool isSelected;
-  final VoidCallback onToggle;
-  final VoidCallback onEdit;
-
-  @override
-  Widget build(BuildContext context) {
-    final sweep = context.sweep;
-
-    final quantityFormatted = item.quantity == item.quantity.roundToDouble()
-        ? item.quantity.round().toString()
-        : item.quantity.toStringAsFixed(1);
-    final subtitle = '$quantityFormatted ${item.unit.label} · ${item.category} · ${item.storageTier.label}';
-
-    return Material(
-      color: context.colors.surface,
-      borderRadius: Radii.brMd,
-      child: InkWell(
-        onTap: onToggle,
-        borderRadius: Radii.brMd,
-        child: Container(
-          padding: const EdgeInsets.all(Gap.sm),
-          decoration: BoxDecoration(
-            borderRadius: Radii.brMd,
-            border: Border.all(
-              color: isSelected ? BrandPalette.green700 : sweep.hairline,
-              width: isSelected ? 1.5 : 1,
-            ),
-          ),
-          child: Row(
-            children: [
-              // Checkbox icon
-              Container(
-                width: 22,
-                height: 22,
-                decoration: BoxDecoration(
-                  color: isSelected ? BrandPalette.green700 : Colors.transparent,
-                  borderRadius: BorderRadius.circular(6),
-                  border: isSelected
-                      ? null
-                      : Border.all(color: sweep.hairline, width: 1.5),
-                ),
-                child: isSelected
-                    ? const Icon(Icons.check_rounded, size: 16, color: Colors.white)
-                    : null,
-              ),
-              const SizedBox(width: Gap.sm),
-
-              // Item details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.name,
-                      style: context.text.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isSelected
-                            ? context.colors.onSurface
-                            : sweep.textTertiary,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: context.text.bodySmall?.copyWith(
-                        color: sweep.textTertiary,
-                        fontSize: 11,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-
-              // Flag / Edit action
-              if (item.isExpiryWarn) ...[
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: BrandPalette.warnSoon.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: const Text(
-                    'Kiểm tra',
-                    style: TextStyle(
-                      color: BrandPalette.warnSoon,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: Gap.xs),
-              ],
-              IconButton(
-                visualDensity: VisualDensity.compact,
-                icon: Icon(
-                  Icons.edit_outlined,
-                  size: 18,
-                  color: sweep.textTertiary,
-                ),
-                onPressed: onEdit,
-              ),
             ],
           ),
         ),

@@ -12,20 +12,24 @@ part of 'cooking_repository_impl.dart';
 @ProviderFor(cookingRepository)
 final cookingRepositoryProvider = CookingRepositoryProvider._();
 
-final class CookingRepositoryProvider extends $FunctionalProvider<
-    CookingRepository,
-    CookingRepository,
-    CookingRepository> with $Provider<CookingRepository> {
+final class CookingRepositoryProvider
+    extends
+        $FunctionalProvider<
+          CookingRepository,
+          CookingRepository,
+          CookingRepository
+        >
+    with $Provider<CookingRepository> {
   CookingRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'cookingRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'cookingRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$cookingRepositoryHash();
@@ -33,8 +37,8 @@ final class CookingRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<CookingRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   CookingRepository create(Ref ref) {

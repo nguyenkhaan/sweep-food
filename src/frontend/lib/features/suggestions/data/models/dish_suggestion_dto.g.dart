@@ -12,8 +12,10 @@ _DishSuggestionDto _$DishSuggestionDtoFromJson(Map<String, dynamic> json) =>
       breakdown: json['breakdown'] == null
           ? null
           : ScoreBreakdownDto.fromJson(
-              json['breakdown'] as Map<String, dynamic>),
-      nearExpiryIngredients: (json['near_expiry_ingredients'] as List<dynamic>?)
+              json['breakdown'] as Map<String, dynamic>,
+            ),
+      nearExpiryIngredients:
+          (json['near_expiry_ingredients'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const <String>[],

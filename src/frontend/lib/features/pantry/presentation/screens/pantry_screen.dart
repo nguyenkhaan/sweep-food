@@ -42,6 +42,10 @@ class PantryScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        // Unique tag — all 5 shell branches stay mounted in the
+        // StatefulShellRoute IndexedStack, so a default-tagged FAB here
+        // collides with the one on the Shopping tab during route transitions.
+        heroTag: 'pantry_fab',
         onPressed: () => showAddEntryChooser(context),
         icon: const Icon(Icons.add_rounded),
         label: const Text('Thêm nguyên liệu'),

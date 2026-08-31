@@ -3,16 +3,21 @@
 // Design: VoiceCapture.dc.html
 
 import 'dart:async';
-import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_colors.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/media/audio_recorder_service.dart';
+import 'package:frontend/core/media/media_providers.dart';
+import 'package:frontend/core/permissions/permission_prime_sheet.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
+import 'package:frontend/core/widgets/waveform_recorder.dart';
+import 'package:frontend/features/ingest/presentation/controllers/scan_controller.dart';
 import 'package:go_router/go_router.dart';
 
-/// I-06 — Màn hình thu âm giọng nói để thêm nguyên liệu.
+/// I-06 — Thu âm giọng nói để thêm nguyên liệu.
 class VoiceCaptureScreen extends ConsumerStatefulWidget {
   const VoiceCaptureScreen({super.key});
 
@@ -20,44 +25,80 @@ class VoiceCaptureScreen extends ConsumerStatefulWidget {
   ConsumerState<VoiceCaptureScreen> createState() => _VoiceCaptureScreenState();
 }
 
-class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _animController;
+class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
+  late final AudioRecorderService _recorder;
   Timer? _timer;
-  int _seconds = 7;
+  int _seconds = 0;
+  bool _listening = false;
+  bool _capturing = false;
+  bool _submitting = false;
+  Stream<double> _amplitude = const Stream<double>.empty();
 
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    )..repeat(reverse: true);
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) {
-        setState(() => _seconds++);
-      }
-    });
+    _recorder = ref.read(audioRecorderServiceProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _begin());
   }
 
   @override
   void dispose() {
-    _animController.dispose();
     _timer?.cancel();
+    if (_capturing) unawaited(_recorder.cancel());
     super.dispose();
   }
 
-  void _stopAndReview() {
-    _timer?.cancel();
-    context.push('${Routes.pantry}/${Routes.scanVoiceReview}');
+  Future<void> _begin() async {
+    final granted =
+        await ensureMediaPermission(context, ref, PermissionKind.microphone);
+    if (!mounted) return;
+
+    var capturing = false;
+    if (granted) capturing = await _recorder.start();
+    if (!mounted) return;
+
+    setState(() {
+      _listening = granted;
+      _capturing = capturing;
+      _amplitude = _recorder.amplitude();
+    });
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() => _seconds++);
+    });
   }
 
-  String _formatTimer(int totalSeconds) {
-    final m = totalSeconds ~/ 60;
-    final s = totalSeconds % 60;
-    return '$m:${s.toString().padLeft(2, '0')}';
+  Future<void> _stopAndReview() async {
+    if (_submitting) return;
+    setState(() => _submitting = true);
+    _timer?.cancel();
+
+    String? path;
+    if (_capturing) {
+      path = await _recorder.stop();
+    }
+
+    try {
+      final job = await ref
+          .read(scanControllerProvider.notifier)
+          .scanVoice(audioPath: path);
+      if (!mounted) return;
+      if (job.isFailed || !job.hasItems) {
+        context.pushReplacement('${Routes.pantry}/${Routes.scanFailed}');
+        return;
+      }
+      context.pushReplacement(
+        '${Routes.pantry}/${Routes.scanVoiceReview}',
+        extra: job,
+      );
+    } on Object {
+      if (mounted) {
+        context.pushReplacement('${Routes.pantry}/${Routes.scanFailed}');
+      }
+    }
   }
+
+  String _formatTimer(int total) =>
+      '${total ~/ 60}:${(total % 60).toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +117,6 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen>
           padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
           child: Column(
             children: [
-              // ── Hint Header ───────────────────────────────────────────────
               Text(
                 'Đọc tên nguyên liệu và số lượng',
                 textAlign: TextAlign.center,
@@ -102,39 +142,20 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen>
                   ),
                 ),
               ),
-
-              // ── Animated Waveform Visualizer ──────────────────────────────
               Expanded(
                 child: Center(
-                  child: AnimatedBuilder(
-                    animation: _animController,
-                    builder: (context, _) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(14, (i) {
-                          final waveFactor = math.sin((i / 14 * math.pi * 2) + (_animController.value * math.pi));
-                          final height = (20 + (waveFactor * 24)).abs().clamp(10.0, 54.0);
-                          return Container(
-                            width: 5,
-                            height: height,
-                            margin: const EdgeInsets.symmetric(horizontal: 2.5),
-                            decoration: BoxDecoration(
-                              color: BrandPalette.green600,
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                          );
-                        }),
-                      );
-                    },
-                  ),
+                  child: WaveformRecorder(stream: _amplitude),
                 ),
               ),
-
-              // ── Status & Live partial text ────────────────────────────────
               Text(
-                'Đang nghe…',
+                _listening
+                    ? 'Đang nghe…'
+                    : 'Chưa bật được micro — cứ đọc rồi kiểm tra',
+                textAlign: TextAlign.center,
                 style: context.text.titleSmall?.copyWith(
-                  color: BrandPalette.green700,
+                  color: _listening
+                      ? BrandPalette.green700
+                      : sweep.textTertiary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -145,19 +166,9 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen>
                   color: sweep.textTertiary,
                 ),
               ),
-              const SizedBox(height: Gap.md),
-              Text(
-                '…1 bó cải bó xôi',
-                style: context.text.bodyMedium?.copyWith(
-                  color: sweep.textSecondary,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
               const SizedBox(height: Gap.xl),
-
-              // ── Mic & Stop Button ─────────────────────────────────────────
               GestureDetector(
-                onTap: _stopAndReview,
+                onTap: _submitting ? null : _stopAndReview,
                 child: Container(
                   width: 78,
                   height: 78,
@@ -172,22 +183,27 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen>
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.stop_rounded,
-                    size: 36,
-                    color: Colors.white,
-                  ),
+                  child: _submitting
+                      ? const Padding(
+                          padding: EdgeInsets.all(22),
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
+                          ),
+                        )
+                      : const Icon(
+                          Icons.stop_rounded,
+                          size: 36,
+                          color: Colors.white,
+                        ),
                 ),
               ),
               const SizedBox(height: Gap.sm),
-              GestureDetector(
-                onTap: _stopAndReview,
-                child: Text(
-                  'Dừng & Kiểm tra',
-                  style: context.text.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: sweep.textSecondary,
-                  ),
+              Text(
+                'Dừng & Kiểm tra',
+                style: context.text.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: sweep.textSecondary,
                 ),
               ),
             ],

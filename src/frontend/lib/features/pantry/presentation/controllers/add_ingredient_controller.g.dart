@@ -17,16 +17,16 @@ final addIngredientControllerProvider = AddIngredientControllerFamily._();
 final class AddIngredientControllerProvider
     extends $NotifierProvider<AddIngredientController, PantryItemDraft> {
   /// Form state for K-03 (add) and K-03 in edit mode (`editItemId != null`).
-  AddIngredientControllerProvider._(
-      {required AddIngredientControllerFamily super.from,
-      required String? super.argument})
-      : super(
-          retry: null,
-          name: r'addIngredientControllerProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+  AddIngredientControllerProvider._({
+    required AddIngredientControllerFamily super.from,
+    required String? super.argument,
+  }) : super(
+         retry: null,
+         name: r'addIngredientControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$addIngredientControllerHash();
@@ -69,22 +69,25 @@ String _$addIngredientControllerHash() =>
 
 final class AddIngredientControllerFamily extends $Family
     with
-        $ClassFamilyOverride<AddIngredientController, PantryItemDraft,
-            PantryItemDraft, PantryItemDraft, String?> {
+        $ClassFamilyOverride<
+          AddIngredientController,
+          PantryItemDraft,
+          PantryItemDraft,
+          PantryItemDraft,
+          String?
+        > {
   AddIngredientControllerFamily._()
-      : super(
-          retry: null,
-          name: r'addIngredientControllerProvider',
-          dependencies: null,
-          $allTransitiveDependencies: null,
-          isAutoDispose: true,
-        );
+    : super(
+        retry: null,
+        name: r'addIngredientControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
 
   /// Form state for K-03 (add) and K-03 in edit mode (`editItemId != null`).
 
-  AddIngredientControllerProvider call(
-    String? editItemId,
-  ) =>
+  AddIngredientControllerProvider call(String? editItemId) =>
       AddIngredientControllerProvider._(argument: editItemId, from: this);
 
   @override
@@ -97,22 +100,19 @@ abstract class _$AddIngredientController extends $Notifier<PantryItemDraft> {
   late final _$args = ref.$arg as String?;
   String? get editItemId => _$args;
 
-  PantryItemDraft build(
-    String? editItemId,
-  );
+  PantryItemDraft build(String? editItemId);
   @$mustCallSuper
   @override
   void runBuild() {
     final ref = this.ref as $Ref<PantryItemDraft, PantryItemDraft>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<PantryItemDraft, PantryItemDraft>,
-        PantryItemDraft,
-        Object?,
-        Object?>;
-    element.handleCreate(
-        ref,
-        () => build(
-              _$args,
-            ));
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<PantryItemDraft, PantryItemDraft>,
+              PantryItemDraft,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
   }
 }

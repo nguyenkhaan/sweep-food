@@ -13,21 +13,24 @@ part of 'notification_providers.dart';
 final flutterLocalNotificationsPluginProvider =
     FlutterLocalNotificationsPluginProvider._();
 
-final class FlutterLocalNotificationsPluginProvider extends $FunctionalProvider<
-        FlutterLocalNotificationsPlugin,
-        FlutterLocalNotificationsPlugin,
-        FlutterLocalNotificationsPlugin>
+final class FlutterLocalNotificationsPluginProvider
+    extends
+        $FunctionalProvider<
+          FlutterLocalNotificationsPlugin,
+          FlutterLocalNotificationsPlugin,
+          FlutterLocalNotificationsPlugin
+        >
     with $Provider<FlutterLocalNotificationsPlugin> {
   FlutterLocalNotificationsPluginProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'flutterLocalNotificationsPluginProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'flutterLocalNotificationsPluginProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$flutterLocalNotificationsPluginHash();
@@ -35,8 +38,8 @@ final class FlutterLocalNotificationsPluginProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<FlutterLocalNotificationsPlugin> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   FlutterLocalNotificationsPlugin create(Ref ref) {
@@ -47,8 +50,9 @@ final class FlutterLocalNotificationsPluginProvider extends $FunctionalProvider<
   Override overrideWithValue(FlutterLocalNotificationsPlugin value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride:
-          $SyncValueProvider<FlutterLocalNotificationsPlugin>(value),
+      providerOverride: $SyncValueProvider<FlutterLocalNotificationsPlugin>(
+        value,
+      ),
     );
   }
 }
@@ -63,21 +67,25 @@ final localNotificationsProvider = LocalNotificationsProvider._();
 
 /// Local (on-device) notifications — the MVP reminder channel.
 
-final class LocalNotificationsProvider extends $FunctionalProvider<
-    LocalNotifications,
-    LocalNotifications,
-    LocalNotifications> with $Provider<LocalNotifications> {
+final class LocalNotificationsProvider
+    extends
+        $FunctionalProvider<
+          LocalNotifications,
+          LocalNotifications,
+          LocalNotifications
+        >
+    with $Provider<LocalNotifications> {
   /// Local (on-device) notifications — the MVP reminder channel.
   LocalNotificationsProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'localNotificationsProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localNotificationsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$localNotificationsHash();
@@ -85,8 +93,8 @@ final class LocalNotificationsProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<LocalNotifications> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   LocalNotifications create(Ref ref) {
@@ -117,15 +125,15 @@ final class FcmServiceProvider
     with $Provider<FcmService> {
   /// FCM — no-op until M6 (see [FcmService]).
   FcmServiceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'fcmServiceProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fcmServiceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$fcmServiceHash();

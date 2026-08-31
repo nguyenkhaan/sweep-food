@@ -17,20 +17,24 @@ final notificationSettingsControllerProvider =
 
 /// P-04 Cài đặt thông báo. Persisted as JSON in SharedPreferences; on every
 /// change it re-schedules the local near-expiry reminders.
-final class NotificationSettingsControllerProvider extends $NotifierProvider<
-    NotificationSettingsController, NotificationPreferences> {
+final class NotificationSettingsControllerProvider
+    extends
+        $NotifierProvider<
+          NotificationSettingsController,
+          NotificationPreferences
+        > {
   /// P-04 Cài đặt thông báo. Persisted as JSON in SharedPreferences; on every
   /// change it re-schedules the local near-expiry reminders.
   NotificationSettingsControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'notificationSettingsControllerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'notificationSettingsControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$notificationSettingsControllerHash();
@@ -62,11 +66,14 @@ abstract class _$NotificationSettingsController
   void runBuild() {
     final ref =
         this.ref as $Ref<NotificationPreferences, NotificationPreferences>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<NotificationPreferences, NotificationPreferences>,
-        NotificationPreferences,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<NotificationPreferences, NotificationPreferences>,
+              NotificationPreferences,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

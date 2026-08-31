@@ -16,15 +16,15 @@ final class DishRepositoryProvider
     extends $FunctionalProvider<DishRepository, DishRepository, DishRepository>
     with $Provider<DishRepository> {
   DishRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'dishRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'dishRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$dishRepositoryHash();

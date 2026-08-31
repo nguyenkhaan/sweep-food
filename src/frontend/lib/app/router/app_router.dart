@@ -11,6 +11,8 @@ import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
 import 'package:frontend/features/cooking/presentation/screens/cook_result_screen.dart';
 import 'package:frontend/features/dishes/presentation/screens/dish_detail_screen.dart';
 import 'package:frontend/features/home/presentation/screens/home_screen.dart';
+import 'package:frontend/features/ingest/domain/entities/scan_job.dart';
+import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
 import 'package:frontend/features/ingest/presentation/screens/camera_capture_screen.dart';
 import 'package:frontend/features/ingest/presentation/screens/label_review_screen.dart';
 import 'package:frontend/features/ingest/presentation/screens/receipt_review_screen.dart';
@@ -135,14 +137,16 @@ GoRouter appRouter(Ref ref) {
                     path: Routes.scanLabelReview, // '/pantry/scan/label-review'
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) => LabelReviewScreen(
-                      imagePath: state.extra as String?,
+                      job: state.extra as ScanJob? ??
+                          const ScanJob(id: 'manual', type: ScanType.label),
                     ),
                   ),
                   GoRoute(
                     path: Routes.scanReceiptReview, // '/pantry/scan/receipt-review'
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) => ReceiptReviewScreen(
-                      imagePath: state.extra as String?,
+                      job: state.extra as ScanJob? ??
+                          const ScanJob(id: 'manual', type: ScanType.receipt),
                     ),
                   ),
                   GoRoute(
@@ -153,12 +157,16 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: Routes.scanVoiceReview, // '/pantry/scan/voice-review'
                     parentNavigatorKey: _rootKey,
-                    builder: (context, state) => const VoiceReviewScreen(),
+                    builder: (context, state) => VoiceReviewScreen(
+                      job: state.extra as ScanJob? ??
+                          const ScanJob(id: 'manual', type: ScanType.voice),
+                    ),
                   ),
                   GoRoute(
                     path: Routes.scanFailed, // '/pantry/scan/failed'
                     parentNavigatorKey: _rootKey,
-                    builder: (context, state) => const ScanFailedScreen(),
+                    builder: (context, state) =>
+                        ScanFailedScreen(type: state.extra as ScanType?),
                   ),
                 ],
               ),

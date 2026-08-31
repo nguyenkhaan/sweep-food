@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/features/ingest/presentation/screens/label_review_screen.dart';
 
+import '../../helpers/ingest_fixtures.dart';
+
 void main() {
   testWidgets('LabelReviewScreen renders OCR parsed fields and warning badges', (
     tester,
@@ -15,7 +17,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: AppTheme.light,
-          home: const LabelReviewScreen(),
+          home: LabelReviewScreen(job: labelScanJob()),
         ),
       ),
     );

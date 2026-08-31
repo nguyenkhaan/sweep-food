@@ -39,7 +39,11 @@ dependencies:
   image_cropper: any
   permission_handler: any
   path_provider: any
-  # record: any            # voice capture — enable when wiring I-06
+  # record: any            # voice capture (I-06): AudioRecorderService is written
+  #                        # against this API but the cached record_web (1.1.9) is
+  #                        # incompatible with record_platform_interface >=1.5.0 and
+  #                        # breaks `flutter build web`. Re-enable once the record
+  #                        # stack realigns (needs network to resolve a fixed set).
   # just_audio: any        # playback preview for voice review
 
   # Notifications

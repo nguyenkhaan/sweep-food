@@ -15,9 +15,10 @@ _IngredientDto _$IngredientDtoFromJson(Map<String, dynamic> json) =>
       nutritionPer100g: json['nutrition_per_100g'] == null
           ? null
           : NutritionPer100gDto.fromJson(
-              json['nutrition_per_100g'] as Map<String, dynamic>),
-      referenceShelfLifeDays:
-          (json['reference_shelf_life_days'] as num?)?.toInt(),
+              json['nutrition_per_100g'] as Map<String, dynamic>,
+            ),
+      referenceShelfLifeDays: (json['reference_shelf_life_days'] as num?)
+          ?.toInt(),
     );
 
 Map<String, dynamic> _$IngredientDtoToJson(_IngredientDto instance) =>
@@ -39,10 +40,10 @@ _NutritionPer100gDto _$NutritionPer100gDtoFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$NutritionPer100gDtoToJson(
-        _NutritionPer100gDto instance) =>
-    <String, dynamic>{
-      'energy_kcal': instance.energyKcal,
-      'protein_g': instance.proteinG,
-      'carb_g': instance.carbG,
-      'lipid_g': instance.lipidG,
-    };
+  _NutritionPer100gDto instance,
+) => <String, dynamic>{
+  'energy_kcal': instance.energyKcal,
+  'protein_g': instance.proteinG,
+  'carb_g': instance.carbG,
+  'lipid_g': instance.lipidG,
+};

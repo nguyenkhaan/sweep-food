@@ -10,19 +10,21 @@ import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/app_snackbar.dart';
 import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
+import 'package:frontend/features/ingest/domain/entities/scan_job.dart';
 import 'package:frontend/features/ingest/presentation/controllers/voice_capture_controller.dart';
 import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:go_router/go_router.dart';
 
-/// I-07 — Màn hình kiểm tra & chỉnh sửa danh sách bóc tách từ giọng nói.
+/// I-07 — Kiểm tra & chỉnh sửa danh sách bóc tách từ giọng nói.
 class VoiceReviewScreen extends ConsumerWidget {
-  const VoiceReviewScreen({super.key});
+  const VoiceReviewScreen({required this.job, super.key});
+
+  final ScanJob job;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(voiceCaptureControllerProvider);
-    final controller = ref.read(voiceCaptureControllerProvider.notifier);
+    final state = ref.watch(voiceCaptureControllerProvider(job));
+    final controller = ref.read(voiceCaptureControllerProvider(job).notifier);
     final sweep = context.sweep;
 
     return Scaffold(
@@ -36,58 +38,40 @@ class VoiceReviewScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 3),
         children: [
-          // ── Audio Transcript Box ───────────────────────────────────────────
-          Container(
-            padding: const EdgeInsets.all(Gap.md),
-            decoration: BoxDecoration(
-              color: context.colors.surface,
-              borderRadius: Radii.brMd,
-              border: Border.all(color: sweep.hairline),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '“${state.transcript}”',
-                  style: context.text.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    height: 1.5,
+          if (state.transcript.isNotEmpty) ...[
+            Container(
+              padding: const EdgeInsets.all(Gap.md),
+              decoration: BoxDecoration(
+                color: context.colors.surface,
+                borderRadius: Radii.brMd,
+                border: Border.all(color: sweep.hairline),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '“${state.transcript}”',
+                    style: context.text.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      height: 1.5,
+                    ),
                   ),
-                ),
-                const SizedBox(height: Gap.sm),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        AppSnack.show(context, 'Đang phát lại đoạn thu âm…');
-                      },
-                      child: Text(
-                        'Nghe lại',
-                        style: context.text.bodySmall?.copyWith(
-                          color: BrandPalette.green700,
-                          fontWeight: FontWeight.w600,
-                        ),
+                  const SizedBox(height: Gap.sm),
+                  GestureDetector(
+                    onTap: () => context.pop(),
+                    child: Text(
+                      'Ghi lại',
+                      style: context.text.bodySmall?.copyWith(
+                        color: BrandPalette.green700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: Gap.lg),
-                    GestureDetector(
-                      onTap: () => context.pop(),
-                      child: Text(
-                        'Ghi lại',
-                        style: context.text.bodySmall?.copyWith(
-                          color: BrandPalette.green700,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Gap.gapMd,
-
-          // ── Caption ────────────────────────────────────────────────────────
+            Gap.gapMd,
+          ],
           Text(
             'Đã bóc tách ${state.items.length} nguyên liệu',
             style: context.text.labelMedium?.copyWith(
@@ -96,39 +80,28 @@ class VoiceReviewScreen extends ConsumerWidget {
             ),
           ),
           Gap.gapSm,
-
-          // ── Parsed Items List ──────────────────────────────────────────────
           for (var i = 0; i < state.items.length; i++) ...[
             _VoiceItemRow(
               item: state.items[i],
-              onQuantityChanged: (qty) {
-                controller.updateItem(i, state.items[i].copyWith(quantity: qty));
-              },
-              onUnitChanged: (unit) {
-                controller.updateItem(i, state.items[i].copyWith(unit: unit));
-              },
-              onNameChanged: (name) {
-                controller.updateItem(i, state.items[i].copyWith(name: name));
-              },
+              onQuantityChanged: (qty) => controller.updateItem(
+                i,
+                state.items[i].copyWith(quantity: qty),
+              ),
+              onUnitChanged: (unit) => controller.updateItem(
+                i,
+                state.items[i].copyWith(unit: unit),
+              ),
+              onNameChanged: (name) => controller.updateItem(
+                i,
+                state.items[i].copyWith(name: name),
+              ),
               onDelete: () => controller.removeItem(i),
             ),
             const SizedBox(height: Gap.xs + 2),
           ],
-
-          // ── Add row action ─────────────────────────────────────────────────
           const SizedBox(height: Gap.xs),
           GestureDetector(
-            onTap: () {
-              controller.addItem(
-                const ParsedItemDraft(
-                  name: 'Nguyên liệu mới',
-                  quantity: 1,
-                  unit: MeasurementUnit.piece,
-                  storageTier: StorageTier.fridge,
-                  category: 'Khác',
-                ),
-              );
-            },
+            onTap: () => controller.addItem(kBlankVoiceDraft),
             child: Row(
               children: [
                 const Icon(
@@ -165,9 +138,12 @@ class VoiceReviewScreen extends ConsumerWidget {
                       final count = state.items.length;
                       await controller.saveAllToPantry();
                       if (!context.mounted) return;
-                      AppSnack.show(context, 'Đã thêm $count nguyên liệu vào kho!');
+                      AppSnack.show(
+                        context,
+                        'Đã thêm $count nguyên liệu vào kho!',
+                      );
                       context.go(Routes.pantry);
-                    } catch (e) {
+                    } on Object catch (e) {
                       if (!context.mounted) return;
                       AppSnack.show(context, 'Lỗi lưu nguyên liệu: $e');
                     }
@@ -191,10 +167,6 @@ class VoiceReviewScreen extends ConsumerWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Voice Item Row Component
-// ─────────────────────────────────────────────────────────────────────────────
-
 class _VoiceItemRow extends StatelessWidget {
   const _VoiceItemRow({
     required this.item,
@@ -213,13 +185,13 @@ class _VoiceItemRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sweep = context.sweep;
-
-    final quantityFormatted = item.quantity == item.quantity.roundToDouble()
+    final qty = item.quantity == item.quantity.roundToDouble()
         ? item.quantity.round().toString()
         : item.quantity.toStringAsFixed(1);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Gap.sm, vertical: Gap.xs + 2),
+      padding:
+          const EdgeInsets.symmetric(horizontal: Gap.sm, vertical: Gap.xs + 2),
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: Radii.brMd,
@@ -227,32 +199,11 @@ class _VoiceItemRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Quantity box
           GestureDetector(
             onTap: () async {
-              final textController = TextEditingController(text: quantityFormatted);
-              final res = await showDialog<String>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: const Text('Số lượng'),
-                  content: TextField(
-                    controller: textController,
-                    keyboardType: TextInputType.number,
-                    autofocus: true,
-                  ),
-                  actions: [
-                    TextButton(onPressed: () => ctx.pop(), child: const Text('Hủy')),
-                    ElevatedButton(
-                      onPressed: () => ctx.pop(textController.text.trim()),
-                      child: const Text('Lưu'),
-                    ),
-                  ],
-                ),
-              );
-              if (res != null) {
-                final qty = double.tryParse(res);
-                if (qty != null && qty > 0) onQuantityChanged(qty);
-              }
+              final res = await _prompt(context, 'Số lượng', qty, number: true);
+              final parsed = double.tryParse(res ?? '');
+              if (parsed != null && parsed > 0) onQuantityChanged(parsed);
             },
             child: Container(
               width: 58,
@@ -264,7 +215,7 @@ class _VoiceItemRow extends StatelessWidget {
                 color: sweep.subtleFill,
               ),
               child: Text(
-                quantityFormatted,
+                qty,
                 style: context.text.titleSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -272,14 +223,12 @@ class _VoiceItemRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: Gap.xs),
-
-          // Unit selector button
           PopupMenuButton<MeasurementUnit>(
             initialValue: item.unit,
             onSelected: onUnitChanged,
-            itemBuilder: (_) => MeasurementUnit.values.map((u) {
-              return PopupMenuItem(value: u, child: Text(u.label));
-            }).toList(),
+            itemBuilder: (_) => MeasurementUnit.values
+                .map((u) => PopupMenuItem(value: u, child: Text(u.label)))
+                .toList(),
             child: Container(
               height: 38,
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -308,33 +257,14 @@ class _VoiceItemRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: Gap.sm),
-
-          // Name (editable)
           Expanded(
             child: GestureDetector(
               onTap: () async {
-                final textController = TextEditingController(text: item.name);
-                final res = await showDialog<String>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Tên nguyên liệu'),
-                    content: TextField(
-                      controller: textController,
-                      autofocus: true,
-                    ),
-                    actions: [
-                      TextButton(onPressed: () => ctx.pop(), child: const Text('Hủy')),
-                      ElevatedButton(
-                        onPressed: () => ctx.pop(textController.text.trim()),
-                        child: const Text('Lưu'),
-                      ),
-                    ],
-                  ),
-                );
+                final res = await _prompt(context, 'Tên nguyên liệu', item.name);
                 if (res != null && res.isNotEmpty) onNameChanged(res);
               },
               child: Text(
-                item.name,
+                item.name.isEmpty ? 'Chưa rõ tên' : item.name,
                 style: context.text.titleSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -343,16 +273,37 @@ class _VoiceItemRow extends StatelessWidget {
               ),
             ),
           ),
-
-          // Delete icon
           IconButton(
             visualDensity: VisualDensity.compact,
-            icon: Icon(
-              Icons.close_rounded,
-              size: 18,
-              color: sweep.textTertiary,
-            ),
+            icon: Icon(Icons.close_rounded, size: 18, color: sweep.textTertiary),
             onPressed: onDelete,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<String?> _prompt(
+    BuildContext context,
+    String title,
+    String initial, {
+    bool number = false,
+  }) {
+    final textController = TextEditingController(text: initial);
+    return showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: TextField(
+          controller: textController,
+          autofocus: true,
+          keyboardType: number ? TextInputType.number : null,
+        ),
+        actions: [
+          TextButton(onPressed: () => ctx.pop(), child: const Text('Hủy')),
+          ElevatedButton(
+            onPressed: () => ctx.pop(textController.text.trim()),
+            child: const Text('Lưu'),
           ),
         ],
       ),

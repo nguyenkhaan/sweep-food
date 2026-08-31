@@ -12,20 +12,24 @@ part of 'ingredient_repository_impl.dart';
 @ProviderFor(ingredientRepository)
 final ingredientRepositoryProvider = IngredientRepositoryProvider._();
 
-final class IngredientRepositoryProvider extends $FunctionalProvider<
-    IngredientRepository,
-    IngredientRepository,
-    IngredientRepository> with $Provider<IngredientRepository> {
+final class IngredientRepositoryProvider
+    extends
+        $FunctionalProvider<
+          IngredientRepository,
+          IngredientRepository,
+          IngredientRepository
+        >
+    with $Provider<IngredientRepository> {
   IngredientRepositoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'ingredientRepositoryProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'ingredientRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$ingredientRepositoryHash();
@@ -33,8 +37,8 @@ final class IngredientRepositoryProvider extends $FunctionalProvider<
   @$internal
   @override
   $ProviderElement<IngredientRepository> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   IngredientRepository create(Ref ref) {

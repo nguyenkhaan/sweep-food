@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/features/ingest/presentation/screens/voice_review_screen.dart';
 
+import '../../helpers/ingest_fixtures.dart';
+
 void main() {
   testWidgets('VoiceReviewScreen renders transcript and parsed items list', (
     tester,
@@ -15,7 +17,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: AppTheme.light,
-          home: const VoiceReviewScreen(),
+          home: VoiceReviewScreen(job: voiceScanJob()),
         ),
       ),
     );
@@ -23,7 +25,6 @@ void main() {
 
     expect(find.text('Kiểm tra kết quả'), findsOneWidget);
     expect(find.textContaining('2 lạng thịt bò'), findsOneWidget);
-    expect(find.text('Nghe lại'), findsOneWidget);
     expect(find.text('Ghi lại'), findsOneWidget);
     expect(find.text('Thịt bò'), findsOneWidget);
     expect(find.text('Cải bó xôi'), findsOneWidget);

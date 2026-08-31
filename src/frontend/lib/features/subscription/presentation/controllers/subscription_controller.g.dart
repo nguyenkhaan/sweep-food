@@ -21,15 +21,15 @@ final class SubscriptionControllerProvider
   /// P-02. Loads the current plan; falls back to the free default if the call
   /// fails (the MVP is free either way).
   SubscriptionControllerProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'subscriptionControllerProvider',
-          isAutoDispose: false,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'subscriptionControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
 
   @override
   String debugGetCreateSourceHash() => _$subscriptionControllerHash();
@@ -51,11 +51,14 @@ abstract class _$SubscriptionController extends $AsyncNotifier<Subscription> {
   @override
   void runBuild() {
     final ref = this.ref as $Ref<AsyncValue<Subscription>, Subscription>;
-    final element = ref.element as $ClassProviderElement<
-        AnyNotifier<AsyncValue<Subscription>, Subscription>,
-        AsyncValue<Subscription>,
-        Object?,
-        Object?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Subscription>, Subscription>,
+              AsyncValue<Subscription>,
+              Object?,
+              Object?
+            >;
     element.handleCreate(ref, build);
   }
 }

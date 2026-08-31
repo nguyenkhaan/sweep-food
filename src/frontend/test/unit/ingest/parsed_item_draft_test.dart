@@ -6,14 +6,21 @@ import 'package:frontend/shared/domain/storage_tier.dart';
 
 void main() {
   group('ParsedItemDraft', () {
-    test('creates with default values', () {
+    test('creates with neutral default values', () {
       const draft = ParsedItemDraft();
-      expect(draft.name, 'Cà chua bi');
-      expect(draft.category, 'Rau củ');
-      expect(draft.quantity, 500);
+      expect(draft.name, '');
+      expect(draft.category, '');
+      expect(draft.quantity, 0);
       expect(draft.unit, MeasurementUnit.gram);
       expect(draft.storageTier, StorageTier.fridge);
       expect(draft.isExpiryWarn, isFalse);
+      expect(draft.isValid, isFalse);
+    });
+
+    test('isValid requires a name and a positive quantity', () {
+      expect(const ParsedItemDraft(name: 'Sữa', quantity: 1).isValid, isTrue);
+      expect(const ParsedItemDraft(name: '', quantity: 1).isValid, isFalse);
+      expect(const ParsedItemDraft(name: 'Sữa', quantity: 0).isValid, isFalse);
     });
 
     test('toPantryItemDraft converts correctly with given source', () {
@@ -31,7 +38,8 @@ void main() {
         isExpiryWarn: true,
       );
 
-      final pantryDraft = draft.toPantryItemDraft(source: PantrySource.labelScan);
+      final pantryDraft =
+          draft.toPantryItemDraft(source: PantrySource.labelScan);
 
       expect(pantryDraft.name, 'Thịt bò phi lê');
       expect(pantryDraft.category, 'Thịt & Hải sản');

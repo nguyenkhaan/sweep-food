@@ -15,7 +15,8 @@ _ShoppingListItemDto _$ShoppingListItemDtoFromJson(Map<String, dynamic> json) =>
       category: json['category'] as String? ?? 'Khác',
       isChecked: json['checked'] as bool? ?? false,
       alreadyInPantry: json['already_in_pantry'] as bool? ?? false,
-      fromDishIds: (json['from_dish_ids'] as List<dynamic>?)
+      fromDishIds:
+          (json['from_dish_ids'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const <String>[],
@@ -23,26 +24,28 @@ _ShoppingListItemDto _$ShoppingListItemDtoFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$ShoppingListItemDtoToJson(
-        _ShoppingListItemDto instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'quantity': instance.quantity,
-      'unit': instance.unit,
-      'category': instance.category,
-      'checked': instance.isChecked,
-      'already_in_pantry': instance.alreadyInPantry,
-      'from_dish_ids': instance.fromDishIds,
-      'est_price_vnd': instance.estPriceVnd,
-    };
+  _ShoppingListItemDto instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'quantity': instance.quantity,
+  'unit': instance.unit,
+  'category': instance.category,
+  'checked': instance.isChecked,
+  'already_in_pantry': instance.alreadyInPantry,
+  'from_dish_ids': instance.fromDishIds,
+  'est_price_vnd': instance.estPriceVnd,
+};
 
 _ShoppingListDto _$ShoppingListDtoFromJson(Map<String, dynamic> json) =>
     _ShoppingListDto(
       id: json['id'] as String,
       sourceLabel: json['source_label'] as String?,
-      items: (json['items'] as List<dynamic>?)
-              ?.map((e) =>
-                  ShoppingListItemDto.fromJson(e as Map<String, dynamic>))
+      items:
+          (json['items'] as List<dynamic>?)
+              ?.map(
+                (e) => ShoppingListItemDto.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           const <ShoppingListItemDto>[],
     );

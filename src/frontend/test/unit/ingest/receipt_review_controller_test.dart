@@ -9,6 +9,7 @@ import 'package:frontend/shared/domain/measurement_unit.dart';
 import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../helpers/ingest_fixtures.dart';
 import '../../helpers/mocks.dart';
 import '../../helpers/test_providers.dart';
 
@@ -26,12 +27,12 @@ void main() {
     );
   });
 
+  final job = receiptScanJob();
+
   group('ReceiptReviewController', () {
-    test('initializes with 6 items all selected by default', () {
+    test('seeds store + every line selected by default', () {
       final container = createContainer();
-      final state = container.read(
-        receiptReviewControllerProvider(imagePath: null),
-      );
+      final state = container.read(receiptReviewControllerProvider(job));
 
       expect(state.storeName, 'Bách Hóa Xanh');
       expect(state.items, hasLength(6));
@@ -42,97 +43,85 @@ void main() {
 
     test('toggleItem, selectAll, deselectAll operate properly', () {
       final container = createContainer();
-      final notifier = container.read(
-        receiptReviewControllerProvider(imagePath: null).notifier,
+      final notifier =
+          container.read(receiptReviewControllerProvider(job).notifier);
+
+      notifier.toggleItem(0);
+      expect(
+        container.read(receiptReviewControllerProvider(job)).selectedCount,
+        5,
       );
 
-      // Deselect item at index 0
       notifier.toggleItem(0);
-      var state = container.read(
-        receiptReviewControllerProvider(imagePath: null),
+      expect(
+        container.read(receiptReviewControllerProvider(job)).isSelected(0),
+        isTrue,
       );
-      expect(state.selectedCount, 5);
-      expect(state.isSelected(0), isFalse);
 
-      // Re-select item at index 0
-      notifier.toggleItem(0);
-      state = container.read(receiptReviewControllerProvider(imagePath: null));
-      expect(state.selectedCount, 6);
-      expect(state.isSelected(0), isTrue);
-
-      // Deselect all
       notifier.deselectAll();
-      state = container.read(receiptReviewControllerProvider(imagePath: null));
-      expect(state.selectedCount, 0);
+      expect(
+        container.read(receiptReviewControllerProvider(job)).selectedCount,
+        0,
+      );
 
-      // Select all
       notifier.selectAll();
-      state = container.read(receiptReviewControllerProvider(imagePath: null));
-      expect(state.selectedCount, 6);
+      expect(
+        container.read(receiptReviewControllerProvider(job)).selectedCount,
+        6,
+      );
     });
 
-    test('updateItem and removeItem modify the items list correctly', () {
+    test('updateItem and removeItem modify the list + keep selection aligned',
+        () {
       final container = createContainer();
-      final notifier = container.read(
-        receiptReviewControllerProvider(imagePath: null).notifier,
-      );
+      final notifier =
+          container.read(receiptReviewControllerProvider(job).notifier);
 
-      // Update item 0
-      const updated = ParsedItemDraft(
-        name: 'Cà chua organic',
-        category: 'Rau củ',
-        quantity: 600,
-        unit: MeasurementUnit.gram,
-        storageTier: StorageTier.fridge,
+      notifier.updateItem(
+        0,
+        const ParsedItemDraft(
+          name: 'Cà chua organic',
+          category: 'Rau củ',
+          quantity: 600,
+        ),
       );
-      notifier.updateItem(0, updated);
-
-      var state = container.read(
-        receiptReviewControllerProvider(imagePath: null),
-      );
+      var state = container.read(receiptReviewControllerProvider(job));
       expect(state.items[0].name, 'Cà chua organic');
       expect(state.items[0].quantity, 600);
 
-      // Remove item 0
       notifier.removeItem(0);
-      state = container.read(receiptReviewControllerProvider(imagePath: null));
+      state = container.read(receiptReviewControllerProvider(job));
       expect(state.items, hasLength(5));
       expect(state.items[0].name, 'Trứng gà');
     });
 
-    test('saveSelectedToPantry adds all selected items to pantry repository', () async {
+    test('saveSelectedToPantry adds only the selected lines', () async {
       final repo = MockPantryRepository();
-      when(() => repo.add(any())).thenAnswer(
-        (inv) async {
-          final draft = inv.positionalArguments.first as PantryItemDraft;
-          return Right(
-            PantryItem(
-              id: 'id-${draft.name}',
-              name: draft.name,
-              category: draft.category,
-              quantity: draft.quantity,
-              unit: draft.unit,
-              storageTier: draft.storageTier,
-              source: draft.source,
-              status: PantryItemStatus.active,
-              addedAt: DateTime.now(),
-            ),
-          );
-        },
-      );
+      when(() => repo.add(any())).thenAnswer((inv) async {
+        final draft = inv.positionalArguments.first as PantryItemDraft;
+        return Right(
+          PantryItem(
+            id: 'id-${draft.name}',
+            name: draft.name,
+            category: draft.category,
+            quantity: draft.quantity,
+            unit: draft.unit,
+            storageTier: draft.storageTier,
+            source: draft.source,
+            status: PantryItemStatus.active,
+            addedAt: DateTime.now(),
+          ),
+        );
+      });
 
       final container = createContainer(
         overrides: [pantryRepositoryProvider.overrideWithValue(repo)],
       );
-
-      final notifier = container.read(
-        receiptReviewControllerProvider(imagePath: null).notifier,
-      );
-
-      // Deselect everything except 2 items
-      notifier.deselectAll();
-      notifier.toggleItem(0); // Cà chua bi
-      notifier.toggleItem(1); // Trứng gà
+      final notifier =
+          container.read(receiptReviewControllerProvider(job).notifier)
+            ..deselectAll()
+            ..toggleItem(0)
+            ..toggleItem(1);
 
       final saved = await notifier.saveSelectedToPantry();
 

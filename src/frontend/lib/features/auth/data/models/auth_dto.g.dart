@@ -7,26 +7,26 @@ part of 'auth_dto.dart';
 // **************************************************************************
 
 _UserDto _$UserDtoFromJson(Map<String, dynamic> json) => _UserDto(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      dietaryPreference: json['dietary_preference'] as String?,
-      avatarUrl: json['avatar_url'] as String?,
-    );
+  id: json['id'] as String,
+  name: json['name'] as String,
+  email: json['email'] as String,
+  dietaryPreference: json['dietary_preference'] as String?,
+  avatarUrl: json['avatar_url'] as String?,
+);
 
 Map<String, dynamic> _$UserDtoToJson(_UserDto instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'email': instance.email,
-      'dietary_preference': instance.dietaryPreference,
-      'avatar_url': instance.avatarUrl,
-    };
+  'id': instance.id,
+  'name': instance.name,
+  'email': instance.email,
+  'dietary_preference': instance.dietaryPreference,
+  'avatar_url': instance.avatarUrl,
+};
 
 _SessionDto _$SessionDtoFromJson(Map<String, dynamic> json) => _SessionDto(
-      user: UserDto.fromJson(json['user'] as Map<String, dynamic>),
-      accessToken: json['access_token'] as String,
-      refreshToken: json['refresh_token'] as String,
-    );
+  user: UserDto.fromJson(json['user'] as Map<String, dynamic>),
+  accessToken: json['access_token'] as String,
+  refreshToken: json['refresh_token'] as String,
+);
 
 Map<String, dynamic> _$SessionDtoToJson(_SessionDto instance) =>
     <String, dynamic>{
