@@ -1,0 +1,8 @@
+# Test tags. The `live` suite talks to a running backend and is skipped by
+# default. Run it explicitly:
+#
+#   flutter test --tags live \
+#     --dart-define=LIVE_BASE_URL=http://localhost:4000/api
+tags:
+  live:
+    skip: "needs a running backend — run with --tags live --dart-define=LIVE_BASE_URL=..."

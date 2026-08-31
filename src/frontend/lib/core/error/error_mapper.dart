@@ -82,10 +82,18 @@ Failure _fromStatus(
   Map<String, String> fields = const {},
 ]) {
   return switch (status) {
+    // 400 covers the backend's OTP failures (invalid / expired / wrong purpose).
+    400 => ValidationFailure(
+        message: serverMsg,
+        fieldErrors: fields,
+        cause: cause,
+        stackTrace: st,
+      ),
     401 => UnauthorizedFailure(cause: cause, stackTrace: st),
     402 => QuotaExceededFailure(cause: cause, stackTrace: st),
     403 => ForbiddenFailure(cause: cause, stackTrace: st),
     404 => NotFoundFailure(message: serverMsg, cause: cause, stackTrace: st),
+    409 => ConflictFailure(message: serverMsg, cause: cause, stackTrace: st),
     422 => ValidationFailure(
         message: serverMsg,
         fieldErrors: fields,

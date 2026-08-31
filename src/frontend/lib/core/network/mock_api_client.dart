@@ -28,8 +28,11 @@ class MockApiClient implements ApiClient {
   var _autoId = 1000;
 
   /// Path prefix → fixture asset (without `assets/mock/` or `.json`).
+  ///
+  /// NOTE: `/auth/*` and `/users/*` are intentionally absent — auth now runs
+  /// against the real backend only. Use `config/live.json` (`BACKEND=live`)
+  /// to exercise the sign-in flow.
   static final Map<String, String> _fixtures = {
-    ApiPaths.me: 'auth_me',
     ApiPaths.ingredients: 'ingredients',
     ApiPaths.pantryItems: 'pantry_items',
     ApiPaths.pantrySummary: 'pantry_summary',
@@ -51,9 +54,6 @@ class MockApiClient implements ApiClient {
   /// `/cook` suffix covers `POST /dishes/{id}/cook`.
   static final Map<String, String> _postFixtures = {
     ApiPaths.suggestions: 'suggestions',
-    ApiPaths.login: 'auth_session',
-    ApiPaths.register: 'auth_session',
-    ApiPaths.refresh: 'auth_tokens',
     ApiPaths.shoppingListsGenerate: 'shopping_list',
   };
 

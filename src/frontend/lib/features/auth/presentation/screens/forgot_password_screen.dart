@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/primary_button.dart';
 import 'package:sweepfood/features/auth/presentation/controllers/forgot_password_controller.dart';
+import 'package:sweepfood/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:sweepfood/features/auth/presentation/widgets/auth_form_error.dart';
 import 'package:sweepfood/features/auth/presentation/widgets/auth_text_field.dart';
 
-/// A-04 Quên mật khẩu `[S]` — form, then a "đã gửi" confirmation card.
+/// A-04 step 1 `[S]` — enter the account phone number; the backend sends a
+/// reset OTP and we route to the reset-password screen.
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
@@ -18,19 +21,22 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
-  final _email = TextEditingController();
+  final _phone = TextEditingController();
 
   @override
   void dispose() {
-    _email.dispose();
+    _phone.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
-    await ref
+    final phone = await ref
         .read(forgotPasswordControllerProvider.notifier)
-        .submit(_email.text, context.l10n);
+        .submit(_phone.text, context.l10n);
+    if (phone != null && mounted) {
+      context.push(Routes.resetPassword, extra: ResetPasswordArgs(phone: phone));
+    }
   }
 
   @override
@@ -59,31 +65,27 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               ),
             ),
             Gap.gapXl,
-            if (state.isSent)
-              _SentCard(email: state.sentToEmail!)
-            else ...[
-              AuthTextField(
-                label: l10n.authEmail,
-                controller: _email,
-                hintText: 'ban@email.com',
-                prefixIcon: Icons.mail_outline_rounded,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.done,
-                autofillHints: const [AutofillHints.email],
-                onSubmitted: (_) => _submit(),
-                errorText: state.form.fieldErrors['email'],
-              ),
-              if (state.form.formError != null) ...[
-                Gap.gapXs,
-                AuthFormError(state.form.formError!),
-              ],
-              Gap.gapMd,
-              PrimaryButton(
-                label: l10n.forgotSendLink,
-                loading: state.form.submitting,
-                onPressed: state.form.submitting ? null : _submit,
-              ),
+            AuthTextField(
+              label: l10n.authPhone,
+              controller: _phone,
+              hintText: '0901 234 567',
+              prefixIcon: Icons.phone_outlined,
+              keyboardType: TextInputType.phone,
+              textInputAction: TextInputAction.done,
+              autofillHints: const [AutofillHints.telephoneNumber],
+              onSubmitted: (_) => _submit(),
+              errorText: state.fieldErrors['phone'],
+            ),
+            if (state.formError != null) ...[
+              Gap.gapXs,
+              AuthFormError(state.formError!),
             ],
+            Gap.gapMd,
+            PrimaryButton(
+              label: l10n.forgotSendCode,
+              loading: state.submitting,
+              onPressed: state.submitting ? null : _submit,
+            ),
             Gap.gapMd,
             Center(
               child: TextButton(
@@ -93,58 +95,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _SentCard extends StatelessWidget {
-  const _SentCard({required this.email});
-
-  final String email;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final l10n = context.l10n;
-    return Container(
-      padding: const EdgeInsets.all(Gap.md),
-      decoration: BoxDecoration(
-        color: scheme.primaryContainer,
-        borderRadius: Radii.brLg,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.mark_email_read_outlined,
-            color: scheme.onPrimaryContainer,
-          ),
-          Gap.gapSm,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.forgotSentTo(email),
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: scheme.onPrimaryContainer,
-                  ),
-                ),
-                Gap.gapXxs,
-                Text(
-                  l10n.forgotCheckInbox,
-                  style: TextStyle(
-                    fontSize: 12,
-                    height: 1.45,
-                    color: scheme.onPrimaryContainer.withValues(alpha: 0.85),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

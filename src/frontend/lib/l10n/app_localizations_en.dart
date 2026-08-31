@@ -1229,6 +1229,38 @@ class AppL10nEn extends AppL10n {
   String get authPasswordTooShort => 'At least 8 characters';
 
   @override
+  String get authPhone => 'Phone number';
+
+  @override
+  String get authInvalidPhone => 'Invalid phone number';
+
+  @override
+  String get authOtpTitle => 'Enter verification code';
+
+  @override
+  String authOtpSubtitle(String phone) {
+    return 'We sent a 6-digit code to $phone.';
+  }
+
+  @override
+  String get authOtpLabel => 'Verification code';
+
+  @override
+  String get authOtpInvalid => 'The code is 6 digits';
+
+  @override
+  String get authOtpConfirm => 'Confirm';
+
+  @override
+  String get authOtpResendCta => 'Resend code';
+
+  @override
+  String get authOtpResent => 'Code resent.';
+
+  @override
+  String get authOtpMissingArgs => 'Missing details. Go back and try again.';
+
+  @override
   String get welcomeSlide1Title => 'Turn what you have into meals';
 
   @override
@@ -1287,13 +1319,33 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get forgotSubtitle =>
-      'Enter your account email and we\'ll send a reset link.';
+      'Enter your account phone number and we\'ll send a reset code.';
 
   @override
   String get forgotSendLink => 'Send link';
 
   @override
+  String get forgotSendCode => 'Send code';
+
+  @override
   String get forgotBackToLogin => 'Back to sign in';
+
+  @override
+  String get resetPasswordTitle => 'Reset password';
+
+  @override
+  String resetPasswordSubtitle(String phone) {
+    return 'Enter the code sent to $phone and a new password.';
+  }
+
+  @override
+  String get resetPasswordNewLabel => 'New password';
+
+  @override
+  String get resetPasswordCta => 'Reset password';
+
+  @override
+  String get resetPasswordDone => 'Password reset. Please sign in.';
 
   @override
   String forgotSentTo(String email) {

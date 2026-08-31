@@ -1,6 +1,6 @@
 {
   "FLAVOR": "dev",
-  "API_BASE_URL": "http://10.0.2.2:8000/api/v1",
+  "API_BASE_URL": "http://127.0.0.1:4000/api",
   "BACKEND": "live",
   "PREMIUM_ENABLED": false,
   "NEAR_EXPIRY_DAYS": 3,

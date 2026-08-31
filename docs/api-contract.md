@@ -2,7 +2,7 @@
 
 > **Phiên bản:** M6.2 — 2026-08-31 · *Mục 1 (Auth) đã đối chiếu với code BE thực tế; các mục khác vẫn là bản FE đề xuất*  
 > **Tác giả:** Frontend team  
-> **Base URL:** `{API_BASE_URL}` (env) — mặc định `http://10.0.2.2:8000/api` · BE dùng prefix `/api`, **không có `/v1`**  
+> **Base URL:** `{API_BASE_URL}` (env) — BE chạy cổng **`4000`**, prefix `/api`, **không có `/v1`**. Local: `http://localhost:4000/api` (web/desktop) hoặc `http://10.0.2.2:4000/api` (Android emulator). Lưu ý: cổng `8000` trong `docker-compose.yaml` là WireMock, không phải API.  
 > **Auth:** Bearer token (JWT access token) trong header `Authorization: Bearer <token>`  
 > **Định dạng:** JSON (`Content-Type: application/json`)
 

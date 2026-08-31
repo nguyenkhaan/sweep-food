@@ -1,67 +1,85 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:sweepfood/features/auth/domain/entities/session.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/auth/domain/entities/user.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 part 'auth_dto.freezed.dart';
 part 'auth_dto.g.dart';
 
-/// `/auth/me` payload and the `user` block embedded in a login/register response.
+/// `POST /auth/register`, `/register/resend-otp`, `/password/reset`,
+/// `/password/change` — the backend returns the generated OTP (MVP/local) and
+/// its lifetime. The frontend only needs the lifetime for the resend timer.
 @freezed
-abstract class UserDto with _$UserDto {
-  const UserDto._();
+abstract class OtpIssueDto with _$OtpIssueDto {
+  const factory OtpIssueDto({
+    required String otp,
+    @JsonKey(name: 'expires_in_seconds') required int expiresInSeconds,
+  }) = _OtpIssueDto;
 
-  const factory UserDto({
-    required String id,
-    required String name,
-    required String email,
-    @JsonKey(name: 'dietary_preference') String? dietaryPreference,
-    @JsonKey(name: 'avatar_url') String? avatarUrl,
-  }) = _UserDto;
-
-  factory UserDto.fromJson(Map<String, dynamic> json) =>
-      _$UserDtoFromJson(json);
-
-  User toEntity() => User(
-        id: id,
-        name: name,
-        email: email,
-        dietaryPreference: dietaryPreference == null
-            ? null
-            : DietaryPreference.fromWire(dietaryPreference),
-        avatarUrl: avatarUrl,
-      );
+  factory OtpIssueDto.fromJson(Map<String, dynamic> json) =>
+      _$OtpIssueDtoFromJson(json);
 }
 
-/// The `POST /auth/login` and `POST /auth/register` response envelope.
-@freezed
-abstract class SessionDto with _$SessionDto {
-  const SessionDto._();
-
-  const factory SessionDto({
-    required UserDto user,
-    @JsonKey(name: 'access_token') required String accessToken,
-    @JsonKey(name: 'refresh_token') required String refreshToken,
-  }) = _SessionDto;
-
-  factory SessionDto.fromJson(Map<String, dynamic> json) =>
-      _$SessionDtoFromJson(json);
-
-  Session toEntity() => Session(
-        user: user.toEntity(),
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      );
-}
-
-/// The `POST /auth/refresh` response — a fresh token pair, no user block.
+/// `POST /auth/login` response — the token pair plus session metadata. There is
+/// **no** `user` block; fetch `GET /users/profile` separately.
 @freezed
 abstract class TokenPairDto with _$TokenPairDto {
   const factory TokenPairDto({
     @JsonKey(name: 'access_token') required String accessToken,
     @JsonKey(name: 'refresh_token') required String refreshToken,
+    @JsonKey(name: 'token_type') String? tokenType,
+    @JsonKey(name: 'access_expires_in_seconds') int? accessExpiresInSeconds,
+    @JsonKey(name: 'refresh_expires_in_seconds') int? refreshExpiresInSeconds,
+    @JsonKey(name: 'session_id') String? sessionId,
   }) = _TokenPairDto;
 
   factory TokenPairDto.fromJson(Map<String, dynamic> json) =>
       _$TokenPairDtoFromJson(json);
+}
+
+/// `POST /auth/token/refresh` response — a fresh access token only (the backend
+/// does not rotate the refresh token).
+@freezed
+abstract class AccessTokenDto with _$AccessTokenDto {
+  const factory AccessTokenDto({
+    @JsonKey(name: 'access_token') required String accessToken,
+    @JsonKey(name: 'token_type') String? tokenType,
+    @JsonKey(name: 'access_expires_in_seconds') int? accessExpiresInSeconds,
+  }) = _AccessTokenDto;
+
+  factory AccessTokenDto.fromJson(Map<String, dynamic> json) =>
+      _$AccessTokenDtoFromJson(json);
+}
+
+/// `GET /users/profile` payload. `name`/`email` are nullable; the meal-ranking
+/// preference and avatar live in the free-form `preferences` map.
+@freezed
+abstract class UserProfileDto with _$UserProfileDto {
+  const UserProfileDto._();
+
+  const factory UserProfileDto({
+    @JsonKey(name: 'user_id') required String userId,
+    String? name,
+    required String phone,
+    @JsonKey(name: 'phone_verified_at') String? phoneVerifiedAt,
+    String? email,
+    @JsonKey(name: 'email_verified_at') String? emailVerifiedAt,
+    @Default(<String, dynamic>{}) Map<String, dynamic> preferences,
+  }) = _UserProfileDto;
+
+  factory UserProfileDto.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileDtoFromJson(json);
+
+  User toEntity() {
+    final rawDiet = preferences['dietary_preference'];
+    final rawAvatar = preferences['avatar_url'];
+    return User(
+      id: userId,
+      phone: phone,
+      name: name,
+      email: email,
+      dietaryPreference:
+          rawDiet is String ? DietaryPreference.fromWire(rawDiet) : null,
+      avatarUrl: rawAvatar is String ? rawAvatar : null,
+    );
+  }
 }

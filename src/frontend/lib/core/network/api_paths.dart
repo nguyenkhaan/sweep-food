@@ -1,19 +1,25 @@
-/// REST paths, relative to `AppConfig.apiBaseUrl` (which already ends in
-/// `/api/v1`). Keep the whole app pointed at these constants — see plan.md §9.
+/// REST paths, relative to `AppConfig.apiBaseUrl` (which ends in `/api`).
+/// Keep the whole app pointed at these constants — see `docs/api-contract.md`.
 ///
-/// NOTE: endpoint naming still needs reconciling with the backend team
-/// (they stubbed `/ingestion/ocr/*`, `/recipes/recommend`). This file is the
-/// frontend's assumed contract; `docs/api-contract.md` (M6) makes it shared.
+/// NOTE: only `/auth/*` and `/users/*` are reconciled with the real backend
+/// (see `docs/api-contract.md` §1). The rest is still the frontend's assumed
+/// contract and served by `MockApiClient`.
 abstract final class ApiPaths {
-  // Auth
+  // Auth — phone (E.164) + password + OTP. See api-contract.md §1.
   static const register = '/auth/register';
+  static const registerResendOtp = '/auth/register/resend-otp';
+  static const verifyRegister = '/auth/verify/register';
   static const login = '/auth/login';
-  static const refresh = '/auth/refresh';
+  static const tokenRefresh = '/auth/token/refresh';
   static const logout = '/auth/logout';
-  static const me = '/auth/me';
+  static const sessions = '/auth/sessions';
+  static const passwordReset = '/auth/password/reset';
+  static const passwordChange = '/auth/password/change';
+  static const verifyChangePassword = '/auth/verify/change-password';
 
-  /// A-04. Frontend-assumed; not in the backend stub yet (see file header note).
-  static const forgotPassword = '/auth/forgot-password';
+  // Current user
+  static const me = '/users/me';
+  static const profile = '/users/profile';
 
   // Catalog
   static const ingredients = '/ingredients';

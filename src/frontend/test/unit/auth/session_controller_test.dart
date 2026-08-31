@@ -15,7 +15,7 @@ class _MockAuthRepository extends Mock implements AuthRepository {}
 
 class _MockSecureStore extends Mock implements SecureStore {}
 
-const _user = User(id: 'u1', name: 'A', email: 'a@b.com');
+const _user = User(id: 'u1', phone: '+84901234567', name: 'A', email: 'a@b.com');
 const _session =
     Session(user: _user, accessToken: 'at', refreshToken: 'rt');
 
@@ -52,7 +52,7 @@ void main() {
     verifyNever(repo.me);
   });
 
-  test('cold start with a valid token revives the session from /auth/me',
+  test('cold start with a valid token revives the session from the profile',
       () async {
     when(repo.hasStoredSession).thenAnswer((_) async => true);
     when(repo.me).thenAnswer((_) async => const Right<Failure, User>(_user));
@@ -64,7 +64,7 @@ void main() {
     expect(result?.accessToken, 'at');
   });
 
-  test('a failing /auth/me resolves to signed-out (no throw)', () async {
+  test('a failing profile call resolves to signed-out (no throw)', () async {
     when(repo.hasStoredSession).thenAnswer((_) async => true);
     when(repo.me).thenAnswer(
       (_) async => const Left<Failure, User>(ServerFailure()),
@@ -76,21 +76,21 @@ void main() {
 
   test('logIn moves the notifier to AsyncData(session)', () async {
     when(repo.hasStoredSession).thenAnswer((_) async => false);
-    when(() => repo.login(email: any(named: 'email'), password: any(named: 'password')))
+    when(() => repo.login(phone: any(named: 'phone'), password: any(named: 'password')))
         .thenAnswer((_) async => const Right<Failure, Session>(_session));
     final c = makeContainer();
     await c.read(sessionControllerProvider.future);
 
     await c
         .read(sessionControllerProvider.notifier)
-        .logIn(email: 'a@b.com', password: 'secret123');
+        .logIn(phone: '+84901234567', password: 'secret123');
 
     expect(c.read(sessionControllerProvider).asData?.value, _session);
   });
 
   test('logIn rethrows the Failure on bad credentials', () async {
     when(repo.hasStoredSession).thenAnswer((_) async => false);
-    when(() => repo.login(email: any(named: 'email'), password: any(named: 'password')))
+    when(() => repo.login(phone: any(named: 'phone'), password: any(named: 'password')))
         .thenAnswer((_) async => const Left<Failure, Session>(UnauthorizedFailure()));
     final c = makeContainer();
     await c.read(sessionControllerProvider.future);
@@ -98,7 +98,7 @@ void main() {
     expect(
       () => c
           .read(sessionControllerProvider.notifier)
-          .logIn(email: 'a@b.com', password: 'nope'),
+          .logIn(phone: '+84901234567', password: 'nope'),
       throwsA(isA<UnauthorizedFailure>()),
     );
   });

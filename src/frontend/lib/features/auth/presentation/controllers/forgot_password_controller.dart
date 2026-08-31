@@ -5,64 +5,40 @@ import 'package:sweepfood/l10n/app_localizations.dart';
 
 part 'forgot_password_controller.g.dart';
 
-/// A-04. Two visual states: the form, and the "đã gửi tới …" confirmation.
-class ForgotPasswordState {
-  const ForgotPasswordState({
-    this.form = const AuthFormState(),
-    this.sentToEmail,
-  });
-
-  final AuthFormState form;
-
-  /// Non-null once the reset link request has been accepted — the screen then
-  /// swaps to the confirmation card.
-  final String? sentToEmail;
-
-  bool get isSent => sentToEmail != null;
-
-  ForgotPasswordState copyWith({AuthFormState? form, String? sentToEmail}) =>
-      ForgotPasswordState(
-        form: form ?? this.form,
-        sentToEmail: sentToEmail ?? this.sentToEmail,
-      );
-}
-
+/// A-04 step 1 — enter the account phone number. On success the backend has
+/// sent a reset OTP; the screen routes to the reset-password screen with the
+/// normalised phone.
 @riverpod
 class ForgotPasswordController extends _$ForgotPasswordController {
   @override
-  ForgotPasswordState build() => const ForgotPasswordState();
+  AuthFormState build() => const AuthFormState();
 
-  Future<void> submit(String email, AppL10n l10n) async {
-    if (!isValidEmail(email)) {
-      state = state.copyWith(
-        form: state.form.copyWith(
-          fieldErrors: {'email': l10n.authInvalidEmail},
-        ),
-      );
-      return;
+  /// Returns the normalised E.164 phone on success, else `null`.
+  Future<String?> submit(String phone, AppL10n l10n) async {
+    if (!isValidPhone(phone)) {
+      state = state.copyWith(fieldErrors: {'phone': l10n.authInvalidPhone});
+      return null;
     }
+    final e164 = normalizePhoneE164(phone);
     state = state.copyWith(
-      form: state.form.copyWith(
-        submitting: true,
-        fieldErrors: const {},
-        formError: null,
-      ),
+      submitting: true,
+      fieldErrors: const {},
+      formError: null,
     );
-    final res = await ref
-        .read(authRepositoryProvider)
-        .requestPasswordReset(email);
-    state = res.fold(
-      (f) => state.copyWith(
-        form: state.form.copyWith(
+    final res =
+        await ref.read(authRepositoryProvider).requestPasswordReset(e164);
+    return res.fold(
+      (f) {
+        state = state.copyWith(
           submitting: false,
           formError: f.localizedMessage(l10n),
-        ),
-      ),
-      // Same confirmation whether or not the address exists (no account enum).
-      (_) => state.copyWith(
-        form: state.form.copyWith(submitting: false),
-        sentToEmail: email.trim(),
-      ),
+        );
+        return null;
+      },
+      (_) {
+        state = state.copyWith(submitting: false);
+        return e164;
+      },
     );
   }
 }

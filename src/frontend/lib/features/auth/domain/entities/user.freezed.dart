@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
- String get id; String get name; String get email; DietaryPreference? get dietaryPreference; String? get avatarUrl;
+ String get id; String get phone; String? get name; String? get email; DietaryPreference? get dietaryPreference; String? get avatarUrl;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.dietaryPreference, dietaryPreference) || other.dietaryPreference == dietaryPreference)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.dietaryPreference, dietaryPreference) || other.dietaryPreference == dietaryPreference)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,email,dietaryPreference,avatarUrl);
+int get hashCode => Object.hash(runtimeType,id,phone,name,email,dietaryPreference,avatarUrl);
 
 @override
 String toString() {
-  return 'User(id: $id, name: $name, email: $email, dietaryPreference: $dietaryPreference, avatarUrl: $avatarUrl)';
+  return 'User(id: $id, phone: $phone, name: $name, email: $email, dietaryPreference: $dietaryPreference, avatarUrl: $avatarUrl)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String email, DietaryPreference? dietaryPreference, String? avatarUrl
+ String id, String phone, String? name, String? email, DietaryPreference? dietaryPreference, String? avatarUrl
 });
 
 
@@ -62,12 +62,13 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? email = null,Object? dietaryPreference = freezed,Object? avatarUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? phone = null,Object? name = freezed,Object? email = freezed,Object? dietaryPreference = freezed,Object? avatarUrl = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,dietaryPreference: freezed == dietaryPreference ? _self.dietaryPreference : dietaryPreference // ignore: cast_nullable_to_non_nullable
+as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,dietaryPreference: freezed == dietaryPreference ? _self.dietaryPreference : dietaryPreference // ignore: cast_nullable_to_non_nullable
 as DietaryPreference?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String email,  DietaryPreference? dietaryPreference,  String? avatarUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String phone,  String? name,  String? email,  DietaryPreference? dietaryPreference,  String? avatarUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.name,_that.email,_that.dietaryPreference,_that.avatarUrl);case _:
+return $default(_that.id,_that.phone,_that.name,_that.email,_that.dietaryPreference,_that.avatarUrl);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.id,_that.name,_that.email,_that.dietaryPreference,_that.av
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String email,  DietaryPreference? dietaryPreference,  String? avatarUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String phone,  String? name,  String? email,  DietaryPreference? dietaryPreference,  String? avatarUrl)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.id,_that.name,_that.email,_that.dietaryPreference,_that.avatarUrl);case _:
+return $default(_that.id,_that.phone,_that.name,_that.email,_that.dietaryPreference,_that.avatarUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.id,_that.name,_that.email,_that.dietaryPreference,_that.av
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String email,  DietaryPreference? dietaryPreference,  String? avatarUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String phone,  String? name,  String? email,  DietaryPreference? dietaryPreference,  String? avatarUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.name,_that.email,_that.dietaryPreference,_that.avatarUrl);case _:
+return $default(_that.id,_that.phone,_that.name,_that.email,_that.dietaryPreference,_that.avatarUrl);case _:
   return null;
 
 }
@@ -210,12 +211,13 @@ return $default(_that.id,_that.name,_that.email,_that.dietaryPreference,_that.av
 
 
 class _User extends User {
-  const _User({required this.id, required this.name, required this.email, this.dietaryPreference, this.avatarUrl}): super._();
+  const _User({required this.id, required this.phone, this.name, this.email, this.dietaryPreference, this.avatarUrl}): super._();
   
 
 @override final  String id;
-@override final  String name;
-@override final  String email;
+@override final  String phone;
+@override final  String? name;
+@override final  String? email;
 @override final  DietaryPreference? dietaryPreference;
 @override final  String? avatarUrl;
 
@@ -229,16 +231,16 @@ _$UserCopyWith<_User> get copyWith => __$UserCopyWithImpl<_User>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.dietaryPreference, dietaryPreference) || other.dietaryPreference == dietaryPreference)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email)&&(identical(other.dietaryPreference, dietaryPreference) || other.dietaryPreference == dietaryPreference)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,email,dietaryPreference,avatarUrl);
+int get hashCode => Object.hash(runtimeType,id,phone,name,email,dietaryPreference,avatarUrl);
 
 @override
 String toString() {
-  return 'User(id: $id, name: $name, email: $email, dietaryPreference: $dietaryPreference, avatarUrl: $avatarUrl)';
+  return 'User(id: $id, phone: $phone, name: $name, email: $email, dietaryPreference: $dietaryPreference, avatarUrl: $avatarUrl)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String email, DietaryPreference? dietaryPreference, String? avatarUrl
+ String id, String phone, String? name, String? email, DietaryPreference? dietaryPreference, String? avatarUrl
 });
 
 
@@ -266,12 +268,13 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? email = null,Object? dietaryPreference = freezed,Object? avatarUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? phone = null,Object? name = freezed,Object? email = freezed,Object? dietaryPreference = freezed,Object? avatarUrl = freezed,}) {
   return _then(_User(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,dietaryPreference: freezed == dietaryPreference ? _self.dietaryPreference : dietaryPreference // ignore: cast_nullable_to_non_nullable
+as String,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
+as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,dietaryPreference: freezed == dietaryPreference ? _self.dietaryPreference : dietaryPreference // ignore: cast_nullable_to_non_nullable
 as DietaryPreference?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
