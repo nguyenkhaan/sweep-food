@@ -6,6 +6,7 @@ import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/async_value_widget.dart';
 import 'package:frontend/core/widgets/empty_state.dart';
 import 'package:frontend/core/widgets/suggestion_card.dart';
+import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
 import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:frontend/features/suggestions/domain/entities/suggestion_request.dart';
 import 'package:frontend/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
@@ -129,7 +130,7 @@ class _List extends StatelessWidget {
             message: 'Thêm vài nguyên liệu vào kho để nhận 3–5 gợi ý món.',
             icon: Icons.restaurant_menu_rounded,
             actionLabel: 'Thêm nguyên liệu',
-            onAction: () => context.push('${Routes.pantry}/add'),
+            onAction: () => showAddEntryChooser(context),
           ),
         ],
       );
