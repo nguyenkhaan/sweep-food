@@ -1,4 +1,4 @@
-"""Authenticated read-only cooking preview API route."""
+"""Authenticated cooking preview, completion, leftover, and history API routes."""
 
 from typing import Annotated
 from uuid import UUID
@@ -9,10 +9,14 @@ from src.middleware.auth_middleware import AuthenticatedUser, require_authentica
 from src.module.cooking.cooking_dependency import get_cooking_service
 from src.module.cooking.cooking_dto import (
     CompleteCookingSessionRequestDTO,
+    CookedLeftoverResponseDTO,
     CookingCompletionResponseDTO,
+    CookingHistoryDetailResponseDTO,
+    CookingHistoryListResponseDTO,
     CookingPreviewRequestDTO,
     CookingPreviewResponseDTO,
     CookingSessionDTO,
+    CreateCookedLeftoverRequestDTO,
     CreateCookingSessionRequestDTO,
 )
 from src.module.cooking.cooking_service import CookingService
@@ -81,3 +85,58 @@ async def post_complete_cooking_session(
         idempotency_key,
         body,
     )
+
+
+@cooking_router.post(
+    "/sessions/{session_id}/leftovers",
+    response_model=CookedLeftoverResponseDTO,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a cooked-food leftover batch",
+    description=(
+        "Save remaining cooked food from a completed cooking session as a new "
+        "COOKED_FOOD inventory batch with optional expiry and note."
+    ),
+)
+async def post_cooked_leftover(
+    session_id: UUID,
+    body: CreateCookedLeftoverRequestDTO,
+    user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[CookingService, Depends(get_cooking_service)],
+) -> CookedLeftoverResponseDTO:
+    """Create a leftover batch linked to a completed cooking session."""
+    return await service.create_leftover(user.user_id, session_id, body)
+
+
+@cooking_router.get(
+    "/history",
+    response_model=CookingHistoryListResponseDTO,
+    summary="List cooking history",
+    description=(
+        "Return all completed cooking sessions for the authenticated user, "
+        "ordered by most recently completed."
+    ),
+)
+async def get_cooking_history(
+    user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[CookingService, Depends(get_cooking_service)],
+) -> CookingHistoryListResponseDTO:
+    """Return the user's completed cooking session history."""
+    return await service.get_cooking_history(user.user_id)
+
+
+@cooking_router.get(
+    "/history/{session_id}",
+    response_model=CookingHistoryDetailResponseDTO,
+    summary="Get cooking history detail",
+    description=(
+        "Return one completed cooking session with its recipe, "
+        "consumption records, and linked leftover batch."
+    ),
+)
+async def get_cooking_history_detail(
+    session_id: UUID,
+    user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[CookingService, Depends(get_cooking_service)],
+) -> CookingHistoryDetailResponseDTO:
+    """Return detail of one completed cooking session for the authenticated user."""
+    return await service.get_cooking_history_detail(user.user_id, session_id)

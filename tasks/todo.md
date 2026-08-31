@@ -577,16 +577,16 @@
 
 **Acceptance criteria:**
 
-- [ ] Every successful completion creates consumption records and ledger entries in one transaction.
-- [ ] Session creation returns a detailed `409` and persists no session when any required quantity is missing.
-- [ ] Session-creation request accepts only `meal_plan_item_id`; it never accepts `recipe_id` or `servings`.
-- [ ] Repeat requests with the same idempotency key return the original outcome without double deduction.
-- [ ] Insufficient stock or stale allocation returns a conflict with no partial changes.
+- [x] Every successful completion creates consumption records and ledger entries in one transaction.
+- [x] Session creation returns a detailed `409` and persists no session when any required quantity is missing.
+- [x] Session-creation request accepts only `meal_plan_item_id`; it never accepts `recipe_id` or `servings`.
+- [x] Repeat requests with the same idempotency key return the original outcome without double deduction.
+- [x] Insufficient stock or stale allocation returns a conflict with no partial changes.
 
 **Verification:**
 
-- [ ] Transaction and concurrent-completion integration tests pass.
-- [ ] API tests cover each consumption mode and the insufficient-inventory session-creation conflict.
+- [x] Transaction and concurrent-completion integration tests pass.
+- [x] API tests cover each consumption mode and the insufficient-inventory session-creation conflict.
 
 **Dependencies:** Task 6.2.  
 **Files likely touched:** `src/backend/src/module/cooking/*`, `src/backend/src/service/*`, tests  

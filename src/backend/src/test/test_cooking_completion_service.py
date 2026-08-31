@@ -9,6 +9,7 @@ from typing import cast
 from uuid import UUID
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.model.cooking_consumption_model import CookingConsumptionModel
@@ -36,7 +37,10 @@ from src.module.cooking.cooking_dto import (
     CompleteCookingSessionRequestDTO,
     CreateCookingSessionRequestDTO,
 )
-from src.module.cooking.cooking_helper import InsufficientInventoryError
+from src.module.cooking.cooking_helper import (
+    CookingCompletionConflictError,
+    InsufficientInventoryError,
+)
 from src.module.cooking.cooking_service import CookingService
 from src.service.fefo_service import FEFOService
 
@@ -102,6 +106,7 @@ class FakeDatabaseSession:
     added: list[object] = field(default_factory=list)
     commit_count: int = 0
     rollback_count: int = 0
+    raise_integrity_error_on_commit: bool = False
 
     async def execute(
         self,
@@ -118,6 +123,8 @@ class FakeDatabaseSession:
 
     async def commit(self) -> None:
         """Record a successful transaction commit."""
+        if self.raise_integrity_error_on_commit:
+            raise IntegrityError("statement", {}, Exception("unique constraint violation"))
         self.commit_count += 1
 
     async def rollback(self) -> None:
@@ -397,3 +404,25 @@ async def test_complete_session_returns_saved_result_for_an_idempotency_retry() 
     assert database.commit_count == 0
     assert database.rollback_count == 0
     assert not database.added
+
+
+@pytest.mark.anyio
+async def test_complete_session_maps_integrity_error_to_conflict() -> None:
+    """A database integrity error during commit maps to a domain conflict error."""
+    database = build_completion_database(build_batch())
+    database.raise_integrity_error_on_commit = True
+    service = CookingService(cast(AsyncSession, database), FEFOService())
+
+    with pytest.raises(CookingCompletionConflictError) as error:
+        await service.complete_session(
+            USER_ID,
+            SESSION_ID,
+            "conflict-key",
+            CompleteCookingSessionRequestDTO(
+                consumption_mode=CookingConsumptionMode.EXACT
+            ),
+        )
+
+    assert error.value.status_code == 409
+    assert error.value.detail == "Cooking completion was already submitted"
+    assert database.rollback_count == 1

@@ -11,7 +11,9 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 from src.model.enum_model import (
     CookingConsumptionMode,
     CookingSessionStatus,
+    InventoryBatchType,
     MeasurementUnit,
+    StorageMode,
 )
 
 
@@ -183,3 +185,57 @@ class CookingCompletionResponseDTO(BaseModel):
     session: CookingSessionDTO
     consumptions: list[CookingConsumptionDTO]
     updated_batches: list[UpdatedInventoryBatchDTO]
+
+
+class CreateCookedLeftoverRequestDTO(BaseModel):
+    """Request to create a cooked food leftover batch from a completed session."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    quantity: float = Field(gt=0)
+    unit: MeasurementUnit
+    storage_mode: StorageMode = StorageMode.REFRIGERATED
+    expires_at: datetime | None = None
+    note: str | None = None
+
+
+class CookedLeftoverResponseDTO(BaseModel):
+    """Response shape for a created cooked-food leftover batch."""
+
+    batch_id: UUID
+    cooking_session_id: UUID
+    batch_type: InventoryBatchType
+    quantity: float
+    unit: MeasurementUnit
+    storage_mode: StorageMode
+    expires_at: datetime | None
+    created_at: datetime
+
+
+class CookingHistorySummaryDTO(BaseModel):
+    """Summary of one completed cooking session in history list."""
+
+    session_id: UUID
+    recipe_id: UUID
+    recipe_name: str
+    servings: float
+    status: CookingSessionStatus
+    completed_at: datetime | None
+
+
+class CookingHistoryListResponseDTO(BaseModel):
+    """Paginated or listed cooking history entries."""
+
+    items: list[CookingHistorySummaryDTO]
+
+
+class CookingHistoryDetailResponseDTO(BaseModel):
+    """Detailed view of a completed cooking session, consumptions, and leftover batch."""
+
+    session: CookingSessionDTO
+    recipe_id: UUID
+    recipe_name: str
+    consumptions: list[CookingConsumptionDTO]
+    leftover_batch_id: UUID | None
+    completed_at: datetime | None
+
