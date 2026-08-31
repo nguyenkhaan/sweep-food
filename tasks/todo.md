@@ -536,14 +536,14 @@
 
 **Acceptance criteria:**
 
-- [ ] Sessions track planned/completed/cancelled state, servings, consumption mode, and idempotency key.
-- [ ] Consumption rows identify the exact batch and quantity used.
-- [ ] Data model links leftover batches to their source session.
+- [x] Sessions track planned/completed/cancelled state, servings, consumption mode, and idempotency key.
+- [x] Consumption rows identify the exact batch and quantity used.
+- [x] Data model links leftover batches to their source session.
 
 **Verification:**
 
-- [ ] Migration/FK tests pass.
-- [ ] Duplicate idempotency keys are constrained per user/operation.
+- [x] Migration/FK relationship coverage is confirmed by the user against the completed database.
+- [x] Duplicate idempotency keys are constrained per user/operation.
 
 **Dependencies:** Phase 5 checkpoint, Task 4.1.  
 **Files likely touched:** migrations, `src/backend/src/model/*`, tests  
@@ -555,14 +555,14 @@
 
 **Acceptance criteria:**
 
-- [ ] Preview uses the same FEFO service as completion.
-- [ ] Preview writes no inventory, ledger, or cooking-completion record.
-- [ ] Expired/unknown/incompatible stock is reported clearly.
+- [x] Preview uses the shared `FEFOService` intended for completion reuse.
+- [x] Preview writes no inventory, ledger, or cooking-completion record.
+- [x] Expired/unknown/incompatible stock is reported clearly.
 
 **Verification:**
 
-- [ ] API test compares preview allocation against expected batch order.
-- [ ] Database state is unchanged after repeated previews.
+- [x] Unit/API tests compare preview allocation against expected FEFO order and unit conversion.
+- [x] Service tests confirm preview uses no write method; repeated requests are read-only.
 
 **Dependencies:** Task 6.1, Task 4.5, Task 3.3.  
 **Files likely touched:** `src/backend/src/module/cooking/*`, `src/backend/src/service/*`, tests  

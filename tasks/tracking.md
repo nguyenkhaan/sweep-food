@@ -33,10 +33,10 @@
 
 | Field | Value |
 |---|---|
-| Active phase | Phase 2 — Identity, Authentication, and User Preferences |
-| Active task | Task 2.5 — Add profile, verified-email, and authorization policies (`Done`) |
-| Next task | Phase 2 checkpoint |
-| Next required action | Manually validate the Task 2.5 protected endpoints from Swagger or the frontend, then confirm the Phase 2 checkpoint. |
+| Active phase | Phase 6 — Cooking, Consumption, and Leftovers |
+| Active task | Task 6.2 — Implement cooking preview (`Done`) |
+| Next task | Task 6.3 — Implement atomic cooking completion |
+| Next required action | Design the idempotent completion contract, then use the shared FEFO service to revalidate and atomically deduct inventory. |
 | Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
 | Current blocker | None |
 
@@ -50,7 +50,7 @@
 | 3 | Catalog, Seed Pipeline, and Recipe Read APIs | `Not started` | Phase 0 and 1 checkpoints complete | Disposable Neon branch migrates/seeds repeatedly; read APIs work |
 | 4 | Inventory, Shelf Life, and FEFO | `Not started` | Phase 3 checkpoint complete | Manual batches, ledger, expiry logic, and concurrency-safe FEFO work |
 | 5 | Recommendations, Meal Selection, and Shopping Lists | `Not started` | Phases 3 and 4 checkpoints complete | Explainable inventory-sensitive recommendations and shopping list work |
-| 6 | Cooking, Consumption, and Leftovers | `Not started` | Phases 4 and 5 checkpoints complete | Atomic/idempotent cooking and leftovers work |
+| 6 | Cooking, Consumption, and Leftovers | `In progress` | User-authorized reprioritization; complete relational database is available | Atomic/idempotent cooking and leftovers work |
 | 7 | Notifications and Background Processing | `Not started` | Phase 2 and inventory prerequisites complete | Deduplicated expiry notification workflow works |
 | 8 | Experimental OCR, ASR, and Barcode | `Not started` | Phase 1 checkpoint complete | Non-persisting extraction contracts pass WireMock tests |
 | 9 | Hardening, Documentation, and Release Verification | `Not started` | Selected MVP phases complete | PRD acceptance, security, observability, and release checks pass |
@@ -109,8 +109,8 @@
 
 ### Phase 6 — Cooking and Leftovers
 
-- [ ] 6.1 Add cooking persistence schema
-- [ ] 6.2 Implement cooking preview
+- [x] 6.1 Add cooking persistence schema
+- [x] 6.2 Implement cooking preview
 - [ ] 6.3 Implement atomic cooking completion
 - [ ] 6.4 Add leftovers and cooking-history APIs
 - [ ] Phase 6 checkpoint
@@ -168,6 +168,13 @@
 | 2.4 Deliver registration, phone/password sign-in, and session APIs | `Done` | Tasks 2.1–2.3 | Database is at `20260830_0003 (head)`; auth/OTP/JWT/session tests pass, WireMock contract is verified against the healthy container, and logout revocation blocks refresh-token reuse. |
 | 2.5 Add profile, verified-email, and authorization policies | `Done` | Task 2.4 | Added protected `users` module: minimal JWT identity, profile read/update, email verification/change, and phone change APIs. No migration was needed; all tests pass (`63 passed, 1 skipped`) and focused Ruff, mypy, and Pylint checks pass. |
 
+### Phase 6 Work
+
+| Task | Status | Dependencies | Evidence / next action |
+|---|---|---|---|
+| 6.1 Add cooking persistence schema | `Done` | User-confirmed complete database | User confirmed the database already contains the cooking, consumption, recipe, meal-plan, inventory, ledger, and leftover relationships, including the required idempotency constraint. |
+| 6.2 Implement cooking preview | `Done` | 6.1 and existing recipe/inventory schema | Added authenticated `POST /api/cooking/preview`, serving/nutrition scaling, ownership-scoped batch reads, reusable FEFO allocation, conversion, missing quantities, and expired/unknown/incompatible warnings. The preview path is read-only. Focused tests pass 5/5; full suite passes 71 with 1 skipped. |
+
 ## Decision Baseline
 
 | Decision | Status | Source |
@@ -224,6 +231,8 @@
 | 2026-08-31 | Task 2.5 phone/contact revision | `Done` → `Done` | Phone confirmation now accepts only OTP and resolves the user-scoped pending phone from Redis. Successful email/phone verification returns the required plain text; phone-change OTP is also emailed when `user.email` exists using the new `CHANGE_PHONE` template. Full suite passed (`63 passed, 1 skipped`). |
 | 2026-08-31 | Task 2.4 registration validation revision | `Done` → `Done` | Registration now validates and normalizes optional email input before persistence, returns a clear 422 error for invalid email, checks duplicate email before insertion, and maps a concurrent unique-constraint failure to a 409 domain error. Full suite passed (`65 passed, 1 skipped`). |
 | 2026-08-31 | Auth/user DTO email validation audit | `Done` → `Done` | Confirmed all client-supplied email fields in `auth_dto.py` and `user_dto.py` validate and normalize email before service/database access. Added the user email-request route contract test; full suite passed (`66 passed, 1 skipped`). |
+| 2026-08-31 | Task 6.1 | `Not started` → `Done` | User confirmed the completed database includes the required cooking-session, batch-consumption, inventory-ledger, meal-plan, recipe, leftover, foreign-key, and idempotency relationships. Phase 6 is now the active focus by user authorization. |
+| 2026-08-31 | Task 6.2 | `In progress` → `Done` | Implemented the protected read-only cooking preview route with a shared FEFO service. Focused preview tests passed 5/5; Ruff, mypy strict, and Pylint 10.00/10 passed; full suite passed 71 with 1 skipped. |
 
 ## Verification Evidence
 
