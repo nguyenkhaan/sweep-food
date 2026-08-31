@@ -1,0 +1,64 @@
+{
+  "job_id": "job_receipt_001",
+  "type": "receipt",
+  "status": "completed",
+  "store_name": "Bách Hóa Xanh",
+  "purchase_date": "2026-09-05T00:00:00Z",
+  "raw_text": "Bách Hóa Xanh 05/09/2026\n1. Cà chua bi 500g 18.000d\n2. Trứng gà 10 quả 32.000d\n3. Thịt ba chỉ 300g 45.000d\n4. Sữa tươi 1L 36.000d\n5. Hành lá 1 bó 5.000d\n6. Dầu ăn 1 chai 42.000d",
+  "items": [
+    {
+      "name": "Cà chua bi",
+      "quantity": 500.0,
+      "unit": "g",
+      "price_vnd": 18000,
+      "storage_tier": "fridge",
+      "category": "Rau củ",
+      "is_warn": false
+    },
+    {
+      "name": "Trứng gà",
+      "quantity": 10.0,
+      "unit": "qua",
+      "price_vnd": 32000,
+      "storage_tier": "fridge",
+      "category": "Trứng & Sữa",
+      "is_warn": false
+    },
+    {
+      "name": "Thịt ba chỉ",
+      "quantity": 300.0,
+      "unit": "g",
+      "price_vnd": 45000,
+      "storage_tier": "fridge",
+      "category": "Thịt & Hải sản",
+      "is_warn": true
+    },
+    {
+      "name": "Sữa tươi",
+      "quantity": 1.0,
+      "unit": "l",
+      "price_vnd": 36000,
+      "storage_tier": "fridge",
+      "category": "Trứng & Sữa",
+      "is_warn": false
+    },
+    {
+      "name": "Hành lá",
+      "quantity": 1.0,
+      "unit": "bo",
+      "price_vnd": 5000,
+      "storage_tier": "fridge",
+      "category": "Rau củ",
+      "is_warn": true
+    },
+    {
+      "name": "Dầu ăn",
+      "quantity": 1.0,
+      "unit": "chai",
+      "price_vnd": 42000,
+      "storage_tier": "pantry_shelf",
+      "category": "Gia vị",
+      "is_warn": false
+    }
+  ]
+}
