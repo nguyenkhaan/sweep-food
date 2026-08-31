@@ -13,6 +13,7 @@ from sqlalchemy.sql.functions import count
 from scripts.seed import (
     DEFAULT_DATASET,
     AdminSeedConfig,
+    NutritionSeed,
     RecipeIngredientSeed,
     SeedDataset,
     SeedValidationError,
@@ -91,12 +92,23 @@ def _seed_dataset_input() -> SeedDataset:
                 ),
             )
             for rule in DEFAULT_DATASET.shelf_life_rules
+            if rule.target_key in {"leafy-greens", "spinach"}
         ),
         recipes=(
             replace(
                 DEFAULT_DATASET.recipes[0],
                 key="seed-test-spinach-soup",
                 name="Seed test spinach soup",
+                details=replace(
+                    DEFAULT_DATASET.recipes[0].details,
+                    nutrition=NutritionSeed(
+                        calories=Decimal("46.000"),
+                        protein_g=Decimal("5.800"),
+                        fat_g=Decimal("0.800"),
+                        carbs_g=Decimal("7.200"),
+                        sugar_g=Decimal("0.800"),
+                    ),
+                ),
             ),
         ),
         recipe_ingredients=(

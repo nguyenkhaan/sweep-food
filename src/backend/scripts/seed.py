@@ -4,177 +4,108 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import importlib
 import os
+import sys
 from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from decimal import Decimal
-from typing import TypeVar, cast
+from pathlib import Path
+from typing import TYPE_CHECKING, TypeVar, cast
 from uuid import UUID
 
 from sqlalchemy import Select, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from src.db import build_async_database_url
-from src.helper.pwd_hash import compare_hash, hashing
-from src.model.enum_model import (
-    AccountStatus,
-    MeasurementUnit,
-    ShelfLifeRuleScope,
-    StorageMode,
-    UserRole,
-)
-from src.model.ingredient_alias_model import IngredientAliasModel
-from src.model.ingredient_category_model import IngredientCategoryModel
-from src.model.master_ingredient_model import MasterIngredientModel
-from src.model.recipe_ingredient_model import RecipeIngredientModel
-from src.model.recipe_model import RecipeModel
-from src.model.shelf_life_rule_model import ShelfLifeRuleModel
-from src.model.user_model import UserModel
+if TYPE_CHECKING:
+    from scripts.seed_data import DEFAULT_DATASET
+    from scripts.seed_types import (
+        AdminSeedConfig,
+        AliasSeed,
+        CategorySeed,
+        IngredientSeed,
+        NutritionSeed,
+        RecipeIngredientSeed,
+        RecipeSeed,
+        SeedDataset,
+        SeedReport,
+        SeedRunContext,
+        ShelfLifeRuleSeed,
+    )
+    from src.db import build_async_database_url
+    from src.helper.pwd_hash import compare_hash, hashing
+    from src.model.enum_model import (
+        AccountStatus,
+        MeasurementUnit,
+        ShelfLifeRuleScope,
+        StorageMode,
+        UserRole,
+    )
+    from src.model.ingredient_alias_model import IngredientAliasModel
+    from src.model.ingredient_category_model import IngredientCategoryModel
+    from src.model.master_ingredient_model import MasterIngredientModel
+    from src.model.recipe_ingredient_model import RecipeIngredientModel
+    from src.model.recipe_model import RecipeModel
+    from src.model.shelf_life_rule_model import ShelfLifeRuleModel
+    from src.model.user_model import UserModel
+else:
+    if __package__ is None:
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    _seed_data = importlib.import_module("scripts.seed_data")
+    _seed_types = importlib.import_module("scripts.seed_types")
+    DEFAULT_DATASET = _seed_data.DEFAULT_DATASET
+    AdminSeedConfig = _seed_types.AdminSeedConfig
+    AliasSeed = _seed_types.AliasSeed
+    CategorySeed = _seed_types.CategorySeed
+    IngredientSeed = _seed_types.IngredientSeed
+    NutritionSeed = _seed_types.NutritionSeed
+    RecipeIngredientSeed = _seed_types.RecipeIngredientSeed
+    RecipeSeed = _seed_types.RecipeSeed
+    SeedDataset = _seed_types.SeedDataset
+    SeedReport = _seed_types.SeedReport
+    SeedRunContext = _seed_types.SeedRunContext
+    ShelfLifeRuleSeed = _seed_types.ShelfLifeRuleSeed
+    _db = importlib.import_module("src.db")
+    _pwd_hash = importlib.import_module("src.helper.pwd_hash")
+    _enums = importlib.import_module("src.model.enum_model")
+    _ingredient_alias = importlib.import_module("src.model.ingredient_alias_model")
+    _ingredient_category = importlib.import_module(
+        "src.model.ingredient_category_model"
+    )
+    _master_ingredient = importlib.import_module("src.model.master_ingredient_model")
+    _recipe_ingredient = importlib.import_module("src.model.recipe_ingredient_model")
+    _recipe = importlib.import_module("src.model.recipe_model")
+    _shelf_life_rule = importlib.import_module("src.model.shelf_life_rule_model")
+    _user = importlib.import_module("src.model.user_model")
+    build_async_database_url = _db.build_async_database_url
+    compare_hash = _pwd_hash.compare_hash
+    hashing = _pwd_hash.hashing
+    AccountStatus = _enums.AccountStatus
+    MeasurementUnit = _enums.MeasurementUnit
+    ShelfLifeRuleScope = _enums.ShelfLifeRuleScope
+    StorageMode = _enums.StorageMode
+    UserRole = _enums.UserRole
+    IngredientAliasModel = _ingredient_alias.IngredientAliasModel
+    IngredientCategoryModel = _ingredient_category.IngredientCategoryModel
+    MasterIngredientModel = _master_ingredient.MasterIngredientModel
+    RecipeIngredientModel = _recipe_ingredient.RecipeIngredientModel
+    RecipeModel = _recipe.RecipeModel
+    ShelfLifeRuleModel = _shelf_life_rule.ShelfLifeRuleModel
+    UserModel = _user.UserModel
+
+__all__ = [
+    "DEFAULT_DATASET",
+    "AdminSeedConfig",
+    "NutritionSeed",
+    "RecipeIngredientSeed",
+    "SeedDataset",
+    "SeedValidationError",
+    "reconcile_recipe_nutrition",
+    "seed_dataset",
+    "validate_seed_input",
+]
 
 NameModel = TypeVar("NameModel", IngredientCategoryModel, RecipeModel)
-
-
-@dataclass(frozen=True)
-class AdminSeedConfig:
-    """Environment-provided identity for the single bootstrap administrator."""
-
-    name: str
-    phone_e164: str
-    email: str
-    password: str
-
-
-@dataclass(frozen=True)
-class CategorySeed:
-    """Natural-keyed category input."""
-
-    key: str
-    name: str
-    description: str | None
-
-
-@dataclass(frozen=True)
-class NutritionSeed:
-    """Approved catalog nutrition values shared by ingredients and recipes."""
-
-    calories: Decimal | None = None
-    protein_g: Decimal | None = None
-    fat_g: Decimal | None = None
-    carbs_g: Decimal | None = None
-    sugar_g: Decimal | None = None
-    sodium_mg: Decimal | None = None
-    other_nutrients: dict[str, object] = field(default_factory=dict)
-
-
-@dataclass(frozen=True)
-class IngredientSeed:
-    """Natural-keyed master ingredient input."""
-
-    key: str
-    category_key: str
-    name: str
-    description: str
-    canonical_unit: MeasurementUnit
-    default_storage_mode: StorageMode | None
-    nutrition: NutritionSeed = field(default_factory=NutritionSeed)
-
-
-@dataclass(frozen=True)
-class AliasSeed:
-    """Natural-keyed alias input."""
-
-    normalized_alias: str
-    alias: str
-    ingredient_key: str
-
-
-@dataclass(frozen=True)
-class ShelfLifeRuleSeed:
-    """One category- or ingredient-scoped shelf-life input."""
-
-    scope: ShelfLifeRuleScope
-    target_key: str
-    storage_mode: StorageMode
-    min_days: int
-    max_days: int
-    default_days: int
-
-
-@dataclass(frozen=True)
-class RecipeDetailsSeed:
-    """Non-key recipe values kept together for one deterministic upsert."""
-
-    description: str
-    instructions: dict[str, object]
-    default_servings: Decimal
-    estimated_cooking_minutes: int
-    estimated_cost: float | None
-    nutrition: NutritionSeed = field(default_factory=NutritionSeed)
-    tags: dict[str, object] = field(default_factory=dict)
-
-
-@dataclass(frozen=True)
-class RecipeSeed:
-    """Natural-keyed recipe input."""
-
-    key: str
-    name: str
-    details: RecipeDetailsSeed
-
-
-@dataclass(frozen=True)
-class RecipeIngredientSeed:
-    """Natural-keyed recipe ingredient input."""
-
-    recipe_key: str
-    ingredient_key: str
-    required_quantity: Decimal
-    unit: MeasurementUnit
-    is_optional: bool = False
-    preparation_note: str | None = None
-
-
-@dataclass(frozen=True)
-class SeedDataset:
-    """The catalog release unit applied atomically by this seed entry point."""
-
-    categories: tuple[CategorySeed, ...]
-    ingredients: tuple[IngredientSeed, ...]
-    aliases: tuple[AliasSeed, ...]
-    shelf_life_rules: tuple[ShelfLifeRuleSeed, ...]
-    recipes: tuple[RecipeSeed, ...]
-    recipe_ingredients: tuple[RecipeIngredientSeed, ...]
-
-
-@dataclass
-class SeedReport:
-    """Classified outcomes for a seed validation or application run."""
-
-    created: list[str] = field(default_factory=list)
-    updated: list[str] = field(default_factory=list)
-    unchanged: list[str] = field(default_factory=list)
-    rejected: list[str] = field(default_factory=list)
-
-    def add(self, outcome: str, record: str) -> None:
-        """Add one classified record outcome."""
-        getattr(self, outcome).append(record)
-
-    def summary(self) -> str:
-        """Return a secret-free report summary suitable for command output."""
-        return (
-            f"created={len(self.created)} updated={len(self.updated)} "
-            f"unchanged={len(self.unchanged)} rejected={len(self.rejected)}"
-        )
-
-
-@dataclass(frozen=True)
-class SeedRunContext:
-    """Mutable-operation context shared by all ordered natural-key upserts."""
-
-    session: AsyncSession
-    report: SeedReport
-    dry_run: bool
 
 
 class SeedValidationError(ValueError):
@@ -184,91 +115,6 @@ class SeedValidationError(ValueError):
         self.report = report
         details = "; ".join(report.rejected)
         super().__init__(f"Seed validation failed: {details}")
-
-
-DEFAULT_DATASET = SeedDataset(
-    categories=(
-        CategorySeed(
-            key="leafy-greens",
-            name="Leafy greens",
-            description="Fresh leafy vegetables.",
-        ),
-    ),
-    ingredients=(
-        IngredientSeed(
-            key="spinach",
-            category_key="leafy-greens",
-            name="Spinach",
-            description="Fresh leafy spinach.",
-            canonical_unit=MeasurementUnit.GRAM,
-            default_storage_mode=StorageMode.REFRIGERATED,
-            nutrition=NutritionSeed(
-                calories=Decimal("23.000"),
-                protein_g=Decimal("2.900"),
-                fat_g=Decimal("0.400"),
-                carbs_g=Decimal("3.600"),
-                sugar_g=Decimal("0.400"),
-                sodium_mg=Decimal("79.000"),
-                other_nutrients={"fiber_g": 2.2},
-            ),
-        ),
-    ),
-    aliases=(
-        AliasSeed(
-            normalized_alias="baby spinach",
-            alias="Baby spinach",
-            ingredient_key="spinach",
-        ),
-    ),
-    shelf_life_rules=(
-        ShelfLifeRuleSeed(
-            scope=ShelfLifeRuleScope.CATEGORY,
-            target_key="leafy-greens",
-            storage_mode=StorageMode.REFRIGERATED,
-            min_days=3,
-            max_days=5,
-            default_days=4,
-        ),
-        ShelfLifeRuleSeed(
-            scope=ShelfLifeRuleScope.INGREDIENT,
-            target_key="spinach",
-            storage_mode=StorageMode.REFRIGERATED,
-            min_days=2,
-            max_days=4,
-            default_days=3,
-        ),
-    ),
-    recipes=(
-        RecipeSeed(
-            key="spinach-soup",
-            name="Spinach soup",
-            details=RecipeDetailsSeed(
-                description="A small bootstrap recipe using fresh spinach.",
-                instructions={"steps": ["Wash spinach", "Cook for five minutes"]},
-                default_servings=Decimal("2.00"),
-                estimated_cooking_minutes=15,
-                estimated_cost=25000.0,
-                nutrition=NutritionSeed(
-                    calories=Decimal("46.000"),
-                    protein_g=Decimal("5.800"),
-                    fat_g=Decimal("0.800"),
-                    carbs_g=Decimal("7.200"),
-                    sugar_g=Decimal("0.800"),
-                    other_nutrients={"fiber_g": 4.4},
-                ),
-                tags={"values": ["quick", "vegetarian"]},
-            ),
-        ),
-    ),
-    recipe_ingredients=(
-        RecipeIngredientSeed(
-            recipe_key="spinach-soup",
-            ingredient_key="spinach",
-            required_quantity=Decimal("200.000"),
-            unit=MeasurementUnit.GRAM,
-        ),
-    ),
-)
 
 
 def load_admin_seed_config(environ: dict[str, str] | None = None) -> AdminSeedConfig:
@@ -323,9 +169,10 @@ def validate_seed_input(dataset: SeedDataset, config: AdminSeedConfig) -> SeedRe
     _validate_recipe_ingredients(
         dataset.recipe_ingredients,
         recipe_keys,
-        ingredient_keys,
+        {item.key: item for item in dataset.ingredients},
         report,
     )
+    _validate_recipe_nutrition(dataset, report)
 
     if report.rejected:
         raise SeedValidationError(report)
@@ -435,7 +282,7 @@ def _validate_recipes(records: tuple[RecipeSeed, ...], report: SeedReport) -> No
 def _validate_recipe_ingredients(
     records: tuple[RecipeIngredientSeed, ...],
     recipe_keys: set[str],
-    ingredient_keys: set[str],
+    ingredients: Mapping[str, IngredientSeed],
     report: SeedReport,
 ) -> None:
     """Validate natural keys, references, units, and positive recipe quantities."""
@@ -452,13 +299,13 @@ def _validate_recipe_ingredients(
                 f"recipe-ingredient:{record.recipe_key}/{record.ingredient_key} is duplicated",
             )
         natural_keys.add(natural_key)
-        _validate_recipe_ingredient_record(record, recipe_keys, ingredient_keys, report)
+        _validate_recipe_ingredient_record(record, recipe_keys, ingredients, report)
 
 
 def _validate_recipe_ingredient_record(
     record: RecipeIngredientSeed,
     recipe_keys: set[str],
-    ingredient_keys: set[str],
+    ingredients: Mapping[str, IngredientSeed],
     report: SeedReport,
 ) -> None:
     """Validate one recipe ingredient's dependency and quantity values."""
@@ -466,7 +313,7 @@ def _validate_recipe_ingredient_record(
         report.add(
             "rejected", f"recipe-ingredient references recipe:{record.recipe_key}"
         )
-    if record.ingredient_key not in ingredient_keys:
+    if record.ingredient_key not in ingredients:
         report.add(
             "rejected",
             f"recipe-ingredient references ingredient:{record.ingredient_key}",
@@ -481,6 +328,125 @@ def _validate_recipe_ingredient_record(
             "recipe-ingredient:"
             f"{record.recipe_key}/{record.ingredient_key} has non-positive quantity",
         )
+
+    ingredient = ingredients.get(record.ingredient_key)
+    if ingredient is not None and not _are_units_compatible(
+        record.unit, ingredient.canonical_unit
+    ):
+        report.add(
+            "rejected",
+            "recipe-ingredient:"
+            f"{record.recipe_key}/{record.ingredient_key} has an incompatible unit",
+        )
+
+
+def _validate_recipe_nutrition(dataset: SeedDataset, report: SeedReport) -> None:
+    """Reject declared recipe totals that disagree with computable ingredients."""
+    calculated = reconcile_recipe_nutrition(dataset)
+    for recipe in dataset.recipes:
+        expected = calculated.get(recipe.key)
+        if expected is not None and not _nutrition_matches(
+            recipe.details.nutrition, expected
+        ):
+            report.add("rejected", f"recipe:{recipe.key} nutrition does not reconcile")
+
+
+def reconcile_recipe_nutrition(
+    dataset: SeedDataset,
+) -> dict[str, NutritionSeed]:
+    """Calculate recipe totals when every ingredient has usable mass nutrition."""
+    ingredients = {item.key: item for item in dataset.ingredients}
+    calculated: dict[str, NutritionSeed] = {}
+    for recipe in dataset.recipes:
+        recipe_ingredients = tuple(
+            item for item in dataset.recipe_ingredients if item.recipe_key == recipe.key
+        )
+        nutrition = _calculate_recipe_nutrition(recipe_ingredients, ingredients)
+        if nutrition is not None:
+            calculated[recipe.key] = nutrition
+    return calculated
+
+
+def _calculate_recipe_nutrition(
+    recipe_ingredients: tuple[RecipeIngredientSeed, ...],
+    ingredients: Mapping[str, IngredientSeed],
+) -> NutritionSeed | None:
+    """Return a mass-based nutrition total, or None when a value is unavailable."""
+    if not recipe_ingredients:
+        return None
+    totals = [Decimal(0) for _ in range(5)]
+    for recipe_ingredient in recipe_ingredients:
+        ingredient = ingredients.get(recipe_ingredient.ingredient_key)
+        if ingredient is None:
+            return None
+        grams = _quantity_in_grams(recipe_ingredient)
+        nutrition_values = _ingredient_recipe_nutrition(ingredient)
+        if grams is None or any(value is None for value in nutrition_values):
+            return None
+        multiplier = grams / Decimal(100)
+        for index, value in enumerate(nutrition_values):
+            totals[index] += cast(Decimal, value) * multiplier
+    return NutritionSeed(
+        calories=totals[0],
+        protein_g=totals[1],
+        fat_g=totals[2],
+        carbs_g=totals[3],
+        sugar_g=totals[4],
+    )
+
+
+def _quantity_in_grams(record: RecipeIngredientSeed) -> Decimal | None:
+    """Convert a supported mass recipe quantity to grams for nutrition calculation."""
+    if record.unit is MeasurementUnit.GRAM:
+        return record.required_quantity
+    if record.unit is MeasurementUnit.KG:
+        return record.required_quantity * Decimal(1000)
+    return None
+
+
+def _ingredient_recipe_nutrition(
+    ingredient: IngredientSeed,
+) -> tuple[Decimal | None, ...]:
+    """Return the five nutrition totals that the recipe model can store directly."""
+    return (
+        ingredient.nutrition.calories,
+        ingredient.nutrition.protein_g,
+        ingredient.nutrition.fat_g,
+        ingredient.nutrition.carbs_g,
+        ingredient.nutrition.sugar_g,
+    )
+
+
+def _nutrition_matches(expected: NutritionSeed, actual: NutritionSeed) -> bool:
+    """Compare all denormalized recipe nutrition fields exactly as seeded."""
+    return _recipe_nutrition_values(expected) == _recipe_nutrition_values(actual)
+
+
+def _recipe_nutrition_values(
+    nutrition: NutritionSeed,
+) -> tuple[Decimal | None, ...]:
+    """Return the denormalized nutrition fields persisted on recipes."""
+    return (
+        nutrition.calories,
+        nutrition.protein_g,
+        nutrition.fat_g,
+        nutrition.carbs_g,
+        nutrition.sugar_g,
+    )
+
+
+def _are_units_compatible(
+    left: MeasurementUnit,
+    right: MeasurementUnit,
+) -> bool:
+    """Return whether recipe and canonical units are equal or in one unit group."""
+    mass_units = {MeasurementUnit.GRAM, MeasurementUnit.KG}
+    volume_units = {MeasurementUnit.ML, MeasurementUnit.LITER}
+    return (
+        left == right
+        or (left in mass_units and right in mass_units)
+        or (left in volume_units and right in volume_units)
+    )
 
 
 async def seed_dataset(
