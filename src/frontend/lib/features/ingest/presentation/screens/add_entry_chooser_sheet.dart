@@ -44,10 +44,11 @@ class AddEntryChooserSheet extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(
             Gap.lg, Gap.sm, Gap.lg, Gap.xl,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
               // ── Grab handle ─────────────────────────────────────
               Center(
                 child: Container(
@@ -122,7 +123,8 @@ class AddEntryChooserSheet extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }
 
