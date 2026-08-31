@@ -13,10 +13,11 @@ class SettingsHomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final user = ref.watch(sessionControllerProvider).asData?.value?.user;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Cá nhân')),
+      appBar: AppBar(title: Text(l10n.navProfile)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
         children: [
@@ -30,76 +31,76 @@ class SettingsHomeScreen extends ConsumerWidget {
           _PlanBar(onTap: () => context.push(Routes.paywall)),
           Gap.gapLg,
           SettingsGroup(
-            label: 'Tài khoản',
+            label: l10n.settingsGroupAccount,
             rows: [
               SettingsRow(
                 icon: Icons.person_outline_rounded,
-                label: 'Hồ sơ & mật khẩu',
+                label: l10n.settingsProfilePassword,
                 onTap: () => context.push(Routes.settingsProfile),
               ),
               SettingsRow(
                 icon: Icons.workspace_premium_outlined,
-                label: 'Gói dịch vụ',
-                trailing: 'Premium sắp có',
+                label: l10n.settingsPlan,
+                trailing: l10n.settingsPremiumSoon,
                 onTap: () => context.push(Routes.settingsSubscription),
               ),
               SettingsRow(
                 icon: Icons.group_outlined,
-                label: 'Chia sẻ tủ bếp',
-                badge: 'Sắp có',
+                label: l10n.settingsPantrySharing,
+                badge: l10n.commonComingSoon,
                 onTap: () => context.push(Routes.settingsPantrySharing),
               ),
             ],
           ),
           Gap.gapMd,
           SettingsGroup(
-            label: 'Kế hoạch bữa ăn',
+            label: l10n.settingsGroupMealPlanning,
             rows: [
               SettingsRow(
                 icon: Icons.calendar_month_rounded,
-                label: 'Thực đơn tuần',
+                label: l10n.mealPlanTitle,
                 onTap: () => context.push(Routes.mealPlan),
               ),
               SettingsRow(
                 icon: Icons.insights_rounded,
-                label: 'Báo cáo chống lãng phí',
+                label: l10n.settingsWasteReport,
                 onTap: () => context.push(Routes.reports),
               ),
             ],
           ),
           Gap.gapMd,
           SettingsGroup(
-            label: 'Ứng dụng',
+            label: l10n.settingsGroupApp,
             rows: [
               SettingsRow(
                 icon: Icons.tune_rounded,
-                label: 'Tùy chọn',
+                label: l10n.prefsTitle,
                 onTap: () => context.push(Routes.settingsPreferences),
               ),
               SettingsRow(
                 icon: Icons.notifications_none_rounded,
-                label: 'Thông báo',
+                label: l10n.notifTitle,
                 onTap: () => context.push(Routes.settingsNotifications),
               ),
-              const SettingsRow(
+              SettingsRow(
                 icon: Icons.language_rounded,
-                label: 'Ngôn ngữ',
-                trailing: 'Tiếng Việt',
+                label: l10n.prefsLanguage,
+                trailing: l10n.prefsLanguageValue,
               ),
             ],
           ),
           Gap.gapMd,
           SettingsGroup(
-            label: 'Khác',
+            label: l10n.settingsGroupOther,
             rows: [
               SettingsRow(
                 icon: Icons.info_outline_rounded,
-                label: 'Giới thiệu & nguồn dữ liệu',
+                label: l10n.settingsAboutData,
                 onTap: () => context.push(Routes.settingsAbout),
               ),
               SettingsRow(
                 icon: Icons.logout_rounded,
-                label: 'Đăng xuất',
+                label: l10n.settingsSignOut,
                 danger: true,
                 onTap: () => _confirmSignOut(context, ref),
               ),
@@ -111,19 +112,20 @@ class SettingsHomeScreen extends ConsumerWidget {
   }
 
   Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Đăng xuất?'),
-        content: const Text('Bạn sẽ cần đăng nhập lại để dùng SweepFood.'),
+        title: Text(l10n.signOutConfirmTitle),
+        content: Text(l10n.signOutConfirmBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Đăng xuất'),
+            child: Text(l10n.settingsSignOut),
           ),
         ],
       ),
@@ -174,8 +176,9 @@ class _ProfileCard extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: context.text.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: context.text.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Text(
                     email,
@@ -186,7 +189,10 @@ class _ProfileCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_right_rounded, color: context.sweep.textTertiary),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: context.sweep.textTertiary,
+            ),
           ],
         ),
       ),
@@ -201,6 +207,7 @@ class _PlanBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Material(
       color: context.colors.primaryContainer,
       borderRadius: Radii.brLg,
@@ -216,7 +223,7 @@ class _PlanBar extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Bản đầy đủ · miễn phí',
+                      l10n.planFullFree,
                       style: context.text.titleSmall?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: context.colors.onPrimaryContainer,
@@ -224,10 +231,11 @@ class _PlanBar extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Premium (đồng bộ, báo cáo nâng cao…) đang phát triển',
+                      l10n.planPremiumDeveloping,
                       style: context.text.bodySmall?.copyWith(
-                        color: context.colors.onPrimaryContainer
-                            .withValues(alpha: 0.8),
+                        color: context.colors.onPrimaryContainer.withValues(
+                          alpha: 0.8,
+                        ),
                       ),
                     ),
                   ],
@@ -235,7 +243,7 @@ class _PlanBar extends StatelessWidget {
               ),
               Gap.gapSm,
               Text(
-                'Quan tâm',
+                l10n.planInterested,
                 style: context.text.labelLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: context.colors.onPrimaryContainer,

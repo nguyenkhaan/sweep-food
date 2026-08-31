@@ -1,26 +1,31 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 part 'waste_reduction_summary.freezed.dart';
 
 enum ReportPeriod {
-  week('week', 'Tuần này'),
-  month('month', 'Tháng này');
+  week('week'),
+  month('month');
 
-  const ReportPeriod(this.wire, this.label);
+  const ReportPeriod(this.wire);
   final String wire;
-  final String label;
 
-  static ReportPeriod fromWire(String? v) => ReportPeriod.values
-      .firstWhere((p) => p.wire == v, orElse: () => ReportPeriod.month);
+  String label(AppL10n l10n) => switch (this) {
+    ReportPeriod.week => l10n.reportPeriodWeek,
+    ReportPeriod.month => l10n.reportPeriodMonth,
+  };
+
+  static ReportPeriod fromWire(String? v) => ReportPeriod.values.firstWhere(
+    (p) => p.wire == v,
+    orElse: () => ReportPeriod.month,
+  );
 }
 
 /// One bar in the weekly chart (R-01).
 @freezed
 abstract class WasteReductionBar with _$WasteReductionBar {
-  const factory WasteReductionBar({
-    required String label,
-    required int value,
-  }) = _WasteReductionBar;
+  const factory WasteReductionBar({required String label, required int value}) =
+      _WasteReductionBar;
 }
 
 /// One row of the "theo nhóm thực phẩm" breakdown.
@@ -55,6 +60,5 @@ abstract class WasteReductionSummary with _$WasteReductionSummary {
   String get wasteAvoidedLabel =>
       '${wasteAvoidedKg.toStringAsFixed(1).replaceAll('.', ',')} kg';
 
-  int get maxBar =>
-      weeklyBars.fold(1, (m, b) => b.value > m ? b.value : m);
+  int get maxBar => weeklyBars.fold(1, (m, b) => b.value > m ? b.value : m);
 }

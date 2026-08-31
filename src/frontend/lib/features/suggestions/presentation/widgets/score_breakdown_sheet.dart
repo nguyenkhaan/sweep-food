@@ -4,6 +4,7 @@ import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/app_bottom_sheet.dart';
 import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:frontend/features/suggestions/domain/entities/score_breakdown.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 /// S-02 — "Vì sao món này đạt N điểm?". Explains the `0.4E + 0.3A + 0.2P + 0.1U`
 /// components with a short reason and a bar per term.
@@ -18,28 +19,35 @@ class ScoreBreakdownSheet extends StatelessWidget {
         builder: (_) => ScoreBreakdownSheet(suggestion: suggestion),
       );
 
-  String _reason(String letter) {
+  String _reason(String letter, AppL10n l10n) {
     final s = suggestion;
     return switch (letter) {
-      'E' => s.nearExpiryIngredients.isEmpty
-          ? 'Không dùng nguyên liệu cận hạn nào'
-          : 'Dùng ${s.nearExpiryCount} nguyên liệu cận hạn: '
-              '${s.nearExpiryIngredients.join(", ")}',
-      'A' => '${s.availabilityPercent}% nguyên liệu đã có trong tủ bếp',
-      'P' => '${s.dish.servings} khẩu phần · '
-          '${s.dish.nutritionPerServing.energyKcal.round()} kcal · '
-          '${s.dish.totalTimeMin} phút',
-      'U' => s.toBuyCount == 0
-          ? 'Không phải mua thêm nguyên liệu nào'
-          : 'Chỉ cần mua thêm ${s.toBuyCount} nguyên liệu',
+      'E' =>
+        s.nearExpiryIngredients.isEmpty
+            ? l10n.scoreReasonENone
+            : l10n.scoreReasonE(
+                s.nearExpiryCount,
+                s.nearExpiryIngredients.join(', '),
+              ),
+      'A' => l10n.scoreReasonA(s.availabilityPercent),
+      'P' => l10n.scoreReasonP(
+        s.dish.servings,
+        s.dish.nutritionPerServing.energyKcal.round(),
+        s.dish.totalTimeMin,
+      ),
+      'U' =>
+        s.toBuyCount == 0
+            ? l10n.scoreReasonUNone
+            : l10n.scoreReasonU(s.toBuyCount),
       _ => '',
     };
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SheetBody(
-      title: 'Vì sao “${suggestion.dish.name}” đạt ${suggestion.score} điểm?',
+      title: l10n.scoreSheetTitle(suggestion.dish.name, suggestion.score),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,7 +62,7 @@ class ScoreBreakdownSheet extends StatelessWidget {
               borderRadius: Radii.brMd,
             ),
             child: Text(
-              'Điểm = 0.4·E + 0.3·A + 0.2·P + 0.1·U',
+              l10n.scoreFormula,
               textAlign: TextAlign.center,
               style: context.text.labelMedium?.copyWith(
                 letterSpacing: 0.2,
@@ -64,10 +72,13 @@ class ScoreBreakdownSheet extends StatelessWidget {
             ),
           ),
           Gap.gapMd,
-          for (final c in suggestion.breakdown.components)
+          for (final c in suggestion.breakdown.components(l10n))
             Padding(
               padding: const EdgeInsets.only(bottom: Gap.md),
-              child: _ComponentRow(component: c, reason: _reason(c.letter)),
+              child: _ComponentRow(
+                component: c,
+                reason: _reason(c.letter, l10n),
+              ),
             ),
         ],
       ),

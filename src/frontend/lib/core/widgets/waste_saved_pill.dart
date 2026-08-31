@@ -9,17 +9,21 @@ import 'package:frontend/core/utils/extensions/build_context_x.dart';
 class WasteSavedPill extends StatelessWidget {
   const WasteSavedPill({
     required this.count,
-    this.periodLabel = 'tháng này',
+    this.periodLabel,
     this.wasteAvoidedKg,
     super.key,
   });
 
   final int count;
-  final String periodLabel;
+
+  /// Defaults to the localized "this month" when null.
+  final String? periodLabel;
   final double? wasteAvoidedKg;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final period = periodLabel ?? l10n.wastePillPeriodThisMonth;
     return Container(
       padding: const EdgeInsets.all(Gap.sm + 2),
       decoration: BoxDecoration(
@@ -50,14 +54,18 @@ class WasteSavedPill extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                    text: '$count nguyên liệu',
+                    text: l10n.wastePillCount(count),
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                   TextSpan(
                     text: wasteAvoidedKg != null
-                        ? '\nđã dùng trước hạn $periodLabel · '
-                            '≈ ${wasteAvoidedKg!.toStringAsFixed(1).replaceAll('.', ',')} kg tránh bỏ phí'
-                        : '\nđã dùng trước hạn $periodLabel',
+                        ? l10n.wastePillUsedBeforeExpiryWithKg(
+                            period,
+                            wasteAvoidedKg!
+                                .toStringAsFixed(1)
+                                .replaceAll('.', ','),
+                          )
+                        : l10n.wastePillUsedBeforeExpiry(period),
                   ),
                 ],
               ),

@@ -8,8 +8,8 @@ import 'package:frontend/shared/domain/expiry_status.dart';
 /// always with text (a11y, spec 3.4).
 class ExpiryBadge extends StatelessWidget {
   const ExpiryBadge({required this.daysUntilExpiry, super.key})
-      : level = null,
-        text = null;
+    : level = null,
+      text = null;
 
   const ExpiryBadge.custom({
     required ExpiryLevel this.level,
@@ -24,7 +24,7 @@ class ExpiryBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lvl = level ?? Expiry.levelFromDays(daysUntilExpiry);
-    final label = text ?? expiryText(daysUntilExpiry);
+    final label = text ?? expiryText(daysUntilExpiry, context.l10n);
     final c = context.sweep.expiry(lvl);
 
     return Container(

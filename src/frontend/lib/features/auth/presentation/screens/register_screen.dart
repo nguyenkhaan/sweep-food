@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/primary_button.dart';
 import 'package:frontend/features/auth/presentation/controllers/register_controller.dart';
 import 'package:frontend/features/auth/presentation/widgets/auth_form_error.dart';
@@ -32,17 +33,21 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
-    await ref.read(registerControllerProvider.notifier).submit(
+    await ref
+        .read(registerControllerProvider.notifier)
+        .submit(
           name: _name.text,
           email: _email.text,
           password: _password.text,
           agreedToTerms: _agree,
+          l10n: context.l10n,
         );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final state = ref.watch(registerControllerProvider);
 
     return Scaffold(
@@ -52,22 +57,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           padding: const EdgeInsets.fromLTRB(Gap.xl, Gap.xs, Gap.xl, Gap.xl),
           children: [
             Text(
-              'Tạo tài khoản',
-              style: theme.textTheme.headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              l10n.authCreateAccount,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Gap.gapXxs,
             Text(
-              'Bắt đầu tiết kiệm thực phẩm cùng SweepFood',
+              l10n.registerSubtitle,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             Gap.gapXl,
             AuthTextField(
-              label: 'Họ và tên',
+              label: l10n.authFullName,
               controller: _name,
-              hintText: 'Nguyễn Văn A',
+              hintText: l10n.authFullNameHint,
               prefixIcon: Icons.person_outline_rounded,
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.next,
@@ -76,7 +82,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ),
             Gap.gapMd,
             AuthTextField(
-              label: 'Email',
+              label: l10n.authEmail,
               controller: _email,
               hintText: 'ban@email.com',
               prefixIcon: Icons.mail_outline_rounded,
@@ -87,13 +93,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ),
             Gap.gapMd,
             AuthTextField(
-              label: 'Mật khẩu',
+              label: l10n.authPassword,
               controller: _password,
-              hintText: 'Ít nhất 8 ký tự',
+              hintText: l10n.authPasswordHint,
               prefixIcon: Icons.lock_outline_rounded,
               obscureText: state.obscure,
-              onToggleObscure:
-                  ref.read(registerControllerProvider.notifier).toggleObscure,
+              onToggleObscure: ref
+                  .read(registerControllerProvider.notifier)
+                  .toggleObscure,
               textInputAction: TextInputAction.done,
               autofillHints: const [AutofillHints.newPassword],
               onSubmitted: (_) => _submit(),
@@ -110,7 +117,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ],
             Gap.gapMd,
             PrimaryButton(
-              label: 'Tạo tài khoản',
+              label: l10n.authCreateAccount,
               loading: state.submitting,
               onPressed: state.submitting ? null : _submit,
             ),
@@ -118,11 +125,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Đã có tài khoản? ', style: theme.textTheme.bodyMedium),
+                Text(
+                  l10n.registerHaveAccount,
+                  style: theme.textTheme.bodyMedium,
+                ),
                 GestureDetector(
                   onTap: () => context.pushReplacement(Routes.login),
                   child: Text(
-                    'Đăng nhập',
+                    l10n.authSignIn,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -147,6 +157,7 @@ class _TermsCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return InkWell(
       onTap: () => onChanged(!value),
       borderRadius: Radii.brSm,
@@ -167,15 +178,15 @@ class _TermsCheckbox extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10),
                 child: Text.rich(
                   TextSpan(
-                    text: 'Tôi đồng ý với ',
+                    text: l10n.termsPrefix,
                     children: [
                       TextSpan(
-                        text: 'Điều khoản sử dụng',
+                        text: l10n.termsOfUse,
                         style: TextStyle(color: theme.colorScheme.primary),
                       ),
-                      const TextSpan(text: ' và '),
+                      TextSpan(text: l10n.termsAnd),
                       TextSpan(
-                        text: 'Chính sách bảo mật',
+                        text: l10n.termsPrivacy,
                         style: TextStyle(color: theme.colorScheme.primary),
                       ),
                       const TextSpan(text: '.'),

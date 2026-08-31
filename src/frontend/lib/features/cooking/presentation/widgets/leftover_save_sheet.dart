@@ -26,15 +26,14 @@ class LeftoverSaveSheet extends ConsumerStatefulWidget {
     required String dishId,
     required String dishName,
     required int initialServings,
-  }) =>
-      showAppBottomSheet(
-        context,
-        builder: (_) => LeftoverSaveSheet(
-          dishId: dishId,
-          dishName: dishName,
-          initialServings: initialServings < 1 ? 1 : initialServings,
-        ),
-      );
+  }) => showAppBottomSheet(
+    context,
+    builder: (_) => LeftoverSaveSheet(
+      dishId: dishId,
+      dishName: dishName,
+      initialServings: initialServings < 1 ? 1 : initialServings,
+    ),
+  );
 
   @override
   ConsumerState<LeftoverSaveSheet> createState() => _State();
@@ -48,7 +47,9 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
   Future<void> _save() async {
     setState(() => _busy = true);
     try {
-      await ref.read(leftoverControllerProvider.notifier).save(
+      await ref
+          .read(leftoverControllerProvider.notifier)
+          .save(
             CookedFood(
               dishId: widget.dishId,
               dishName: widget.dishName,
@@ -58,25 +59,26 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
           );
       if (!mounted) return;
       Navigator.of(context).pop();
-      AppSnack.show(context, 'Đã lưu phần thừa vào kho');
+      AppSnack.show(context, context.l10n.leftoverSaved);
     } catch (_) {
       if (!mounted) return;
       setState(() => _busy = false);
-      AppSnack.show(context, 'Không lưu được. Thử lại.');
+      AppSnack.show(context, context.l10n.leftoverSaveFailed);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SheetBody(
-      title: 'Còn dư món ăn?',
-      subtitle: 'Lưu phần còn lại vào kho (tầng Ăn liền) và đặt nhắc dùng sớm.',
+      title: l10n.leftoverTitle,
+      subtitle: l10n.leftoverSubtitle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _Row(
-            label: 'Số khẩu phần còn',
+            label: l10n.leftoverServingsLabel,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -88,7 +90,10 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
                   icon: const Icon(Icons.remove_rounded, size: 18),
                 ),
                 const SizedBox(width: Gap.sm),
-                Text('$_servings phần', style: context.text.titleSmall),
+                Text(
+                  l10n.servingsCount(_servings),
+                  style: context.text.titleSmall,
+                ),
                 const SizedBox(width: Gap.sm),
                 IconButton.filledTonal(
                   visualDensity: VisualDensity.compact,
@@ -102,17 +107,19 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
           ),
           Gap.gapSm,
           _Row(
-            label: 'Nhắc dùng',
+            label: l10n.leftoverReminderLabel,
             child: DropdownButton<int>(
               value: _reminderDays,
               underline: const SizedBox.shrink(),
               onChanged: _busy
                   ? null
                   : (v) => setState(() => _reminderDays = v ?? 2),
-              items: const [
-                DropdownMenuItem(value: 1, child: Text('Sau 1 ngày')),
-                DropdownMenuItem(value: 2, child: Text('Sau 2 ngày')),
-                DropdownMenuItem(value: 3, child: Text('Sau 3 ngày')),
+              items: [
+                for (final d in const [1, 2, 3])
+                  DropdownMenuItem(
+                    value: d,
+                    child: Text(l10n.leftoverReminderInDays(d)),
+                  ),
               ],
             ),
           ),
@@ -134,8 +141,7 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
                 const SizedBox(width: Gap.xs),
                 Expanded(
                   child: Text(
-                    'Thức ăn đã nấu nên dùng trong 1–2 ngày. Kiểm tra mùi và '
-                    'trạng thái trước khi ăn.',
+                    l10n.leftoverSafetyNote,
                     style: context.text.labelMedium?.copyWith(
                       color: context.sweep.expired.fg,
                       height: 1.4,
@@ -151,7 +157,7 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: _busy ? null : () => Navigator.of(context).pop(),
-                  child: const Text('Bỏ qua'),
+                  child: Text(l10n.commonSkip),
                 ),
               ),
               const SizedBox(width: Gap.sm),
@@ -167,7 +173,7 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text('Lưu phần thừa'),
+                      : Text(l10n.leftoverSaveCta),
                 ),
               ),
             ],

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 
 /// Temporary body for screens not yet implemented in the current milestone.
 /// Replace the whole screen when its milestone comes up (see IMPLEMENTATION_PLAN.md).
 class FeaturePlaceholder extends StatelessWidget {
-  const FeaturePlaceholder({
-    required this.title,
-    this.milestone,
-    super.key,
-  });
+  const FeaturePlaceholder({required this.title, this.milestone, super.key});
 
   final String title;
   final String? milestone;
@@ -32,7 +29,7 @@ class FeaturePlaceholder extends StatelessWidget {
             if (milestone != null) ...[
               Gap.gapXxs,
               Text(
-                'Sẽ hiện thực ở $milestone',
+                context.l10n.featureComingInMilestone(milestone!),
                 style: t.bodyMedium,
                 textAlign: TextAlign.center,
               ),

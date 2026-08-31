@@ -12,8 +12,9 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Giới thiệu & dữ liệu')),
+      appBar: AppBar(title: Text(l10n.aboutTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.lg, Gap.lg, Gap.xxl),
         children: [
@@ -36,11 +37,12 @@ class AboutScreen extends StatelessWidget {
                 Gap.gapSm,
                 Text(
                   AppConstants.appName,
-                  style: context.text.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                  style: context.text.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 Text(
-                  'Phiên bản 1.0.0 (MVP)',
+                  l10n.aboutVersion,
                   style: context.text.bodySmall?.copyWith(
                     color: context.sweep.textSecondary,
                   ),
@@ -49,17 +51,17 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           Gap.gapLg,
-          const SettingsGroup(
-            label: 'Nguồn dữ liệu',
+          SettingsGroup(
+            label: l10n.aboutDataSources,
             rows: [
               SettingsRow(
                 icon: Icons.restaurant_rounded,
-                label: 'Giá trị dinh dưỡng thực phẩm',
-                trailing: 'Viện Dinh dưỡng QG',
+                label: l10n.aboutNutritionData,
+                trailing: l10n.aboutNutritionSource,
               ),
               SettingsRow(
                 icon: Icons.ac_unit_rounded,
-                label: 'Thời gian bảo quản tham khảo',
+                label: l10n.aboutShelfLifeData,
                 trailing: 'FoodKeeper',
               ),
             ],
@@ -82,10 +84,7 @@ class AboutScreen extends StatelessWidget {
                 Gap.gapSm,
                 Expanded(
                   child: Text(
-                    'Thông tin dinh dưỡng và thời gian bảo quản chỉ mang tính '
-                    'ước tính, không thay thế tư vấn của chuyên gia dinh dưỡng '
-                    'hoặc y tế. Luôn kiểm tra màu sắc, mùi và trạng thái thực '
-                    'phẩm trước khi sử dụng.',
+                    l10n.aboutDisclaimer,
                     style: context.text.bodySmall?.copyWith(
                       color: BrandPalette.brick500,
                       height: 1.55,
@@ -100,18 +99,18 @@ class AboutScreen extends StatelessWidget {
             rows: [
               SettingsRow(
                 icon: Icons.description_outlined,
-                label: 'Điều khoản sử dụng',
-                onTap: () => AppSnack.show(context, 'Sẽ mở trong trình duyệt.'),
+                label: l10n.termsOfUse,
+                onTap: () => AppSnack.show(context, l10n.willOpenInBrowser),
               ),
               SettingsRow(
                 icon: Icons.shield_outlined,
-                label: 'Chính sách bảo mật',
-                onTap: () => AppSnack.show(context, 'Sẽ mở trong trình duyệt.'),
+                label: l10n.termsPrivacy,
+                onTap: () => AppSnack.show(context, l10n.willOpenInBrowser),
               ),
               SettingsRow(
                 icon: Icons.star_outline_rounded,
-                label: 'Đánh giá ứng dụng',
-                onTap: () => AppSnack.show(context, 'Cảm ơn bạn!'),
+                label: l10n.aboutRateApp,
+                onTap: () => AppSnack.show(context, l10n.aboutThanks),
               ),
             ],
           ),

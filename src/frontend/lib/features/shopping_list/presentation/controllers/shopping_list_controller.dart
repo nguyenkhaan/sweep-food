@@ -4,6 +4,7 @@ import 'package:frontend/features/dishes/domain/entities/dish.dart';
 import 'package:frontend/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
 import 'package:frontend/features/shopping_list/domain/entities/shopping_list.dart';
 import 'package:frontend/features/shopping_list/domain/entities/shopping_list_item.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'shopping_list_controller.g.dart';
@@ -43,11 +44,9 @@ class ShoppingListController extends _$ShoppingListController {
         ],
       ),
     );
-    final res = await ref.read(shoppingListRepositoryProvider).setChecked(
-          listId: list.id,
-          itemId: itemId,
-          checked: next,
-        );
+    final res = await ref
+        .read(shoppingListRepositoryProvider)
+        .setChecked(listId: list.id, itemId: itemId, checked: next);
     res.fold((_) => ref.invalidateSelf(), (_) {});
   }
 
@@ -68,7 +67,10 @@ class ShoppingListController extends _$ShoppingListController {
     if (list == null) return;
     state = AsyncData(
       list.copyWith(
-        items: [for (final i in list.items) if (i.id != itemId) i],
+        items: [
+          for (final i in list.items)
+            if (i.id != itemId) i,
+        ],
       ),
     );
     final res = await ref
@@ -78,20 +80,22 @@ class ShoppingListController extends _$ShoppingListController {
   }
 
   /// D-01 "Thêm phần thiếu vào danh sách mua". Returns how many lines were added.
-  Future<int> addMissingFromDish(Dish dish) async {
+  Future<int> addMissingFromDish(Dish dish, AppL10n l10n) async {
     final list = _list;
     if (list == null) return 0;
     final missing = dish.mainIngredients.where((i) => !i.availableInPantry);
     var added = 0;
     for (final ing in missing) {
       final qty = ing.missingQty > 0 ? ing.missingQty : ing.quantity;
-      final res = await ref.read(shoppingListRepositoryProvider).addItem(
+      final res = await ref
+          .read(shoppingListRepositoryProvider)
+          .addItem(
             listId: list.id,
             draft: ShoppingListItemDraft(
               name: ing.name,
               quantity: qty,
               unit: ing.unit,
-              category: 'Từ công thức',
+              category: l10n.shoppingFromRecipe,
               fromDishIds: [dish.id],
             ),
           );
@@ -102,10 +106,10 @@ class ShoppingListController extends _$ShoppingListController {
       });
     }
     if (added > 0) {
-      ref.read(analyticsProvider).log(
-        AnalyticsEvents.shoppingListGenerated,
-        {AnalyticsParams.dishId: dish.id, AnalyticsParams.count: added},
-      );
+      ref.read(analyticsProvider).log(AnalyticsEvents.shoppingListGenerated, {
+        AnalyticsParams.dishId: dish.id,
+        AnalyticsParams.count: added,
+      });
     }
     return added;
   }

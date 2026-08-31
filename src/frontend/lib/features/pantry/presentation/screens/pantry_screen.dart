@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/config/app_config_provider.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/app_search_field.dart';
 import 'package:frontend/core/widgets/async_value_widget.dart';
 import 'package:frontend/core/widgets/empty_state.dart';
@@ -21,13 +22,14 @@ class PantryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final listAsync = ref.watch(pantryListControllerProvider);
     final filter = ref.watch(pantryFilterControllerProvider);
     final counts = ref.watch(pantryTierCountsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kho thực phẩm'),
+        title: Text(l10n.pantryTitle),
         actions: [
           PopupMenuButton<PantrySort>(
             icon: const Icon(Icons.sort_rounded),
@@ -36,7 +38,10 @@ class PantryScreen extends ConsumerWidget {
                 ref.read(pantryFilterControllerProvider.notifier).setSort(s),
             itemBuilder: (_) => [
               for (final s in PantrySort.values)
-                PopupMenuItem(value: s, child: Text('Sắp xếp: ${s.label}')),
+                PopupMenuItem(
+                  value: s,
+                  child: Text(l10n.pantrySortPrefix(s.label(l10n))),
+                ),
             ],
           ),
         ],
@@ -48,14 +53,14 @@ class PantryScreen extends ConsumerWidget {
         heroTag: 'pantry_fab',
         onPressed: () => showAddEntryChooser(context),
         icon: const Icon(Icons.add_rounded),
-        label: const Text('Thêm nguyên liệu'),
+        label: Text(l10n.pantryAddIngredient),
       ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xs),
             child: AppSearchField(
-              hintText: 'Tìm trong tủ bếp…',
+              hintText: l10n.pantrySearchHint,
               onChanged: (q) =>
                   ref.read(pantryFilterControllerProvider.notifier).setQuery(q),
             ),
@@ -89,6 +94,7 @@ class _PantryList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final items = ref.watch(pantryListViewProvider);
     final threshold = ref.watch(appConfigProvider).nearExpiryDays;
 
@@ -98,13 +104,11 @@ class _PantryList extends ConsumerWidget {
           (ref.watch(pantryListControllerProvider).asData?.value ?? [])
               .isNotEmpty;
       return EmptyState(
-        title: anyItems ? 'Không có kết quả' : 'Tủ bếp đang trống',
-        message: anyItems
-            ? 'Thử đổi bộ lọc hoặc từ khóa khác.'
-            : 'Thêm nguyên liệu đầu tiên để nhận gợi ý món.',
+        title: anyItems ? l10n.pantryNoResults : l10n.pantryEmptyTitle,
+        message: anyItems ? l10n.pantryNoResultsBody : l10n.pantryEmptyBody,
         icon: anyItems ? Icons.search_off_rounded : Icons.eco_outlined,
         actionLabel: filtering.tier == null && filtering.query.isEmpty
-            ? 'Thêm nguyên liệu'
+            ? l10n.pantryAddIngredient
             : null,
         onAction: () => showAddEntryChooser(context),
       );
@@ -123,9 +127,9 @@ class _PantryList extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(Gap.lg, 0, Gap.lg, 96),
       children: [
         if (near.isNotEmpty) ...[
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: Gap.xs),
-            child: SectionHeader(title: 'Cần dùng sớm'),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: Gap.xs),
+            child: SectionHeader(title: l10n.pantrySectionNear),
           ),
           for (final i in near) _row(context, i),
           Gap.gapMd,
@@ -133,7 +137,11 @@ class _PantryList extends ConsumerWidget {
         if (rest.isNotEmpty) ...[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: Gap.xs),
-            child: SectionHeader(title: near.isEmpty ? 'Tất cả' : 'Còn hạn'),
+            child: SectionHeader(
+              title: near.isEmpty
+                  ? l10n.pantrySectionAll
+                  : l10n.pantrySectionRest,
+            ),
           ),
           for (final i in rest) _row(context, i),
         ],

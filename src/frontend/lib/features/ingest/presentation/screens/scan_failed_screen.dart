@@ -8,6 +8,7 @@ import 'package:frontend/app/theme/app_colors.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// I-09 — Không đọc được tem nhãn / hóa đơn / giọng nói.
@@ -16,28 +17,29 @@ class ScanFailedScreen extends StatelessWidget {
 
   final ScanType? type;
 
-  String get _title => switch (type) {
-        ScanType.receipt => 'Không đọc được hóa đơn',
-        ScanType.voice => 'Không nghe rõ',
-        _ => 'Không đọc được nhãn',
-      };
+  String _title(AppL10n l10n) => switch (type) {
+    ScanType.receipt => l10n.scanFailReceiptTitle,
+    ScanType.voice => l10n.scanFailVoiceTitle,
+    _ => l10n.scanFailLabelTitle,
+  };
 
-  List<String> get _reasons => switch (type) {
-        ScanType.voice => const [
-            'Môi trường quá ồn',
-            'Nói quá nhanh hoặc quá nhỏ',
-            'Micro bị che',
-          ],
-        _ => const [
-            'Ảnh bị mờ hoặc chụp nghiêng',
-            'Nhãn bị rách hoặc phai mực',
-            'Thiếu sáng khi chụp',
-          ],
-      };
+  List<String> _reasons(AppL10n l10n) => switch (type) {
+    ScanType.voice => [
+      l10n.scanFailVoiceReason1,
+      l10n.scanFailVoiceReason2,
+      l10n.scanFailVoiceReason3,
+    ],
+    _ => [
+      l10n.scanFailImgReason1,
+      l10n.scanFailImgReason2,
+      l10n.scanFailImgReason3,
+    ],
+  };
 
   @override
   Widget build(BuildContext context) {
     final sweep = context.sweep;
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +74,7 @@ class ScanFailedScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: Gap.lg),
                     Text(
-                      _title,
+                      _title(l10n),
                       textAlign: TextAlign.center,
                       style: context.text.titleLarge?.copyWith(
                         fontWeight: FontWeight.w700,
@@ -80,7 +82,7 @@ class ScanFailedScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: Gap.md),
                     Column(
-                      children: _reasons
+                      children: _reasons(l10n)
                           .map(
                             (reason) => Padding(
                               padding: const EdgeInsets.only(bottom: Gap.xs),
@@ -108,10 +110,10 @@ class ScanFailedScreen extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         reason,
-                                        style:
-                                            context.text.bodyMedium?.copyWith(
-                                          color: sweep.textSecondary,
-                                        ),
+                                        style: context.text.bodyMedium
+                                            ?.copyWith(
+                                              color: sweep.textSecondary,
+                                            ),
                                       ),
                                     ),
                                   ],
@@ -131,7 +133,9 @@ class ScanFailedScreen extends StatelessWidget {
                     onPressed: () => context.pop(),
                     icon: const Icon(Icons.refresh_rounded),
                     label: Text(
-                      type == ScanType.voice ? 'Thu lại' : 'Chụp lại',
+                      type == ScanType.voice
+                          ? l10n.scanFailRerecord
+                          : l10n.reviewRetake,
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: BrandPalette.green700,
@@ -152,7 +156,7 @@ class ScanFailedScreen extends StatelessWidget {
                       foregroundColor: sweep.textSecondary,
                       minimumSize: const Size.fromHeight(48),
                     ),
-                    child: const Text('Nhập tay'),
+                    child: Text(l10n.chooserManual),
                   ),
                 ],
               ),

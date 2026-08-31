@@ -27,6 +27,7 @@ class LabelReviewScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final draft = ref.watch(labelReviewControllerProvider(job));
     final controller = ref.read(labelReviewControllerProvider(job).notifier);
     final sweep = context.sweep;
@@ -38,7 +39,7 @@ class LabelReviewScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back_rounded),
         ),
-        title: const Text('Kiểm tra thông tin'),
+        title: Text(l10n.reviewLabelTitle),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 3),
@@ -46,14 +47,11 @@ class LabelReviewScreen extends ConsumerWidget {
           _Thumbnail(onRetake: () => context.pop()),
           Gap.gapMd,
           if (fieldCount > 0) ...[
-            _Banner(
-              text: 'Đã đọc được $fieldCount trường. Kiểm tra lại trường được '
-                  'đánh dấu trước khi lưu.',
-            ),
+            _Banner(text: l10n.reviewFieldsRead(fieldCount)),
             Gap.gapMd,
           ],
           ConfidenceField(
-            label: 'Tên nguyên liệu',
+            label: l10n.pantryFieldName,
             value: draft.name.isEmpty ? '—' : draft.name,
             onTap: () => _editName(context, draft.name, controller),
           ),
@@ -62,7 +60,7 @@ class LabelReviewScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: ConfidenceField(
-                  label: 'Khối lượng tịnh',
+                  label: l10n.reviewNetWeight,
                   value: '${draft.quantity.round()} ${draft.unit.label}',
                   onTap: () => _editQuantity(context, draft, controller),
                 ),
@@ -70,9 +68,10 @@ class LabelReviewScreen extends ConsumerWidget {
               const SizedBox(width: Gap.sm),
               Expanded(
                 child: ConfidenceField(
-                  label: 'Giá',
-                  value:
-                      draft.priceVnd != null ? formatVnd(draft.priceVnd!) : '—',
+                  label: l10n.pantryStatPrice,
+                  value: draft.priceVnd != null
+                      ? formatVnd(draft.priceVnd!)
+                      : '—',
                   onTap: () => _editPrice(context, draft.priceVnd, controller),
                 ),
               ),
@@ -83,7 +82,7 @@ class LabelReviewScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: ConfidenceField(
-                  label: 'Ngày đóng gói',
+                  label: l10n.reviewPackedDate,
                   value: draft.packedDate.ddMMyyyyOrDash,
                   onTap: () async {
                     final date = await showDatePicker(
@@ -99,13 +98,14 @@ class LabelReviewScreen extends ConsumerWidget {
               const SizedBox(width: Gap.sm),
               Expanded(
                 child: ConfidenceField(
-                  label: 'Hạn sử dụng',
+                  label: l10n.pantryFieldExpiry,
                   value: draft.expiryDate.ddMMyyyyOrDash,
                   needsReview: draft.isExpiryWarn,
                   onTap: () async {
                     final date = await showDatePicker(
                       context: context,
-                      initialDate: draft.expiryDate ??
+                      initialDate:
+                          draft.expiryDate ??
                           DateTime.now().add(const Duration(days: 7)),
                       firstDate: DateTime(2020),
                       lastDate: DateTime(2030),
@@ -118,7 +118,7 @@ class LabelReviewScreen extends ConsumerWidget {
           ),
           Gap.gapMd,
           Text(
-            'Tầng bảo quản',
+            l10n.reviewStorageTier,
             style: context.text.labelMedium?.copyWith(
               fontWeight: FontWeight.w600,
               color: sweep.textSecondary,
@@ -131,7 +131,7 @@ class LabelReviewScreen extends ConsumerWidget {
             children: StorageTier.values.map((tier) {
               final selected = draft.storageTier == tier;
               return ChoiceChip(
-                label: Text(tier.label),
+                label: Text(tier.label(l10n)),
                 selected: selected,
                 showCheckmark: false,
                 selectedColor: BrandPalette.green100,
@@ -151,8 +151,8 @@ class LabelReviewScreen extends ConsumerWidget {
           ),
           Gap.gapMd,
           ConfidenceField(
-            label: 'Danh mục',
-            value: draft.category.isEmpty ? 'Khác' : draft.category,
+            label: l10n.reviewCategory,
+            value: draft.category.isEmpty ? l10n.catOther : draft.category,
             trailingIcon: Icons.keyboard_arrow_down_rounded,
             onTap: () => _editCategory(context, draft.category, controller),
           ),
@@ -173,11 +173,14 @@ class LabelReviewScreen extends ConsumerWidget {
                     try {
                       await controller.saveToPantry();
                       if (!context.mounted) return;
-                      AppSnack.show(context, 'Đã thêm ${draft.name} vào kho!');
+                      AppSnack.show(
+                        context,
+                        context.l10n.scanAddedToPantry(draft.name),
+                      );
                       context.go(Routes.pantry);
                     } on Object catch (e) {
                       if (!context.mounted) return;
-                      AppSnack.show(context, 'Lỗi lưu nguyên liệu: $e');
+                      AppSnack.show(context, context.l10n.scanSaveError('$e'));
                     }
                   },
             style: ElevatedButton.styleFrom(
@@ -188,9 +191,9 @@ class LabelReviewScreen extends ConsumerWidget {
               minimumSize: const Size.fromHeight(50),
               shape: const RoundedRectangleBorder(borderRadius: Radii.brMd),
             ),
-            child: const Text(
-              'Thêm vào kho',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            child: Text(
+              l10n.pantryAddToPantry,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
           ),
         ),
@@ -205,9 +208,9 @@ class LabelReviewScreen extends ConsumerWidget {
   ) async {
     final result = await _promptText(
       context,
-      title: 'Tên nguyên liệu',
+      title: context.l10n.pantryFieldName,
       initial: initial,
-      hint: 'Nhập tên nguyên liệu',
+      hint: context.l10n.reviewNameHint,
     );
     if (result != null && result.isNotEmpty) controller.setName(result);
   }
@@ -221,26 +224,29 @@ class LabelReviewScreen extends ConsumerWidget {
       text: draft.quantity == 0 ? '' : draft.quantity.toString(),
     );
     var selectedUnit = draft.unit;
+    final l10n = context.l10n;
 
     await showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
-          title: const Text('Khối lượng tịnh'),
+          title: Text(l10n.reviewNetWeight),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: qtyController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Số lượng'),
+                decoration: InputDecoration(labelText: l10n.pantryStatQuantity),
               ),
               const SizedBox(height: Gap.md),
               DropdownButtonFormField<MeasurementUnit>(
                 initialValue: selectedUnit,
-                decoration: const InputDecoration(labelText: 'Đơn vị'),
+                decoration: InputDecoration(labelText: l10n.reviewUnit),
                 items: MeasurementUnit.values
-                    .map((u) => DropdownMenuItem(value: u, child: Text(u.label)))
+                    .map(
+                      (u) => DropdownMenuItem(value: u, child: Text(u.label)),
+                    )
                     .toList(),
                 onChanged: (u) {
                   if (u != null) setState(() => selectedUnit = u);
@@ -251,7 +257,7 @@ class LabelReviewScreen extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () => ctx.pop(),
-              child: const Text('Hủy'),
+              child: Text(l10n.commonCancel),
             ),
             ElevatedButton(
               onPressed: () {
@@ -262,7 +268,7 @@ class LabelReviewScreen extends ConsumerWidget {
                 }
                 ctx.pop();
               },
-              child: const Text('Lưu'),
+              child: Text(l10n.commonSave),
             ),
           ],
         ),
@@ -277,9 +283,9 @@ class LabelReviewScreen extends ConsumerWidget {
   ) async {
     final result = await _promptText(
       context,
-      title: 'Giá mua (VNĐ)',
+      title: context.l10n.reviewPurchasePrice,
       initial: initialPrice?.toString() ?? '',
-      hint: 'Ví dụ: 18000',
+      hint: context.l10n.reviewPriceHint,
       number: true,
     );
     if (result != null) controller.setPrice(int.tryParse(result));
@@ -290,13 +296,14 @@ class LabelReviewScreen extends ConsumerWidget {
     String current,
     LabelReviewController controller,
   ) async {
-    const categories = [
-      'Rau củ',
-      'Thịt & Hải sản',
-      'Gia vị',
-      'Trứng & Sữa',
-      'Đồ khô',
-      'Khác',
+    final l10n = context.l10n;
+    final categories = [
+      l10n.catVegetables,
+      l10n.catMeatSeafood,
+      l10n.catSpices,
+      l10n.catDairyEgg,
+      l10n.catDryGoods,
+      l10n.catOther,
     ];
     final result = await showModalBottomSheet<String>(
       context: context,
@@ -304,11 +311,14 @@ class LabelReviewScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(Gap.md),
+            Padding(
+              padding: const EdgeInsets.all(Gap.md),
               child: Text(
-                'Chọn danh mục',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                l10n.reviewPickCategory,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
             ...categories.map(
@@ -348,11 +358,11 @@ class LabelReviewScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => ctx.pop(),
-            child: const Text('Hủy'),
+            child: Text(context.l10n.commonCancel),
           ),
           ElevatedButton(
             onPressed: () => ctx.pop(textController.text.trim()),
-            child: const Text('Lưu'),
+            child: Text(context.l10n.commonSave),
           ),
         ],
       ),
@@ -390,7 +400,7 @@ class _Thumbnail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Ảnh tem nhãn',
+              context.l10n.reviewLabelPhoto,
               style: context.text.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -399,7 +409,7 @@ class _Thumbnail extends StatelessWidget {
             GestureDetector(
               onTap: onRetake,
               child: Text(
-                'Chụp lại',
+                context.l10n.reviewRetake,
                 style: context.text.bodySmall?.copyWith(
                   color: BrandPalette.green700,
                   fontWeight: FontWeight.w600,
@@ -421,8 +431,7 @@ class _Banner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: Gap.md, vertical: Gap.sm),
+      padding: const EdgeInsets.symmetric(horizontal: Gap.md, vertical: Gap.sm),
       decoration: const BoxDecoration(
         color: BrandPalette.green100,
         borderRadius: Radii.brMd,

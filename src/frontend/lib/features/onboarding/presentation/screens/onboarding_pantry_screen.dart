@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/app_text_button.dart';
 import 'package:frontend/core/widgets/primary_button.dart';
 import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
@@ -18,17 +19,14 @@ class OnboardingPantryScreen extends ConsumerWidget {
   static const _methods = [
     (
       icon: Icons.center_focus_strong_outlined,
-      label: 'Quét',
       route: '${Routes.pantry}/${Routes.scanCamera}',
     ),
     (
       icon: Icons.mic_none_rounded,
-      label: 'Nói',
       route: '${Routes.pantry}/${Routes.scanVoiceCapture}',
     ),
     (
       icon: Icons.keyboard_outlined,
-      label: 'Nhập tay',
       route: '${Routes.pantry}/${Routes.addIngredient}',
     ),
   ];
@@ -42,6 +40,12 @@ class OnboardingPantryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final l10n = context.l10n;
+    final methodLabels = [
+      l10n.onbMethodScan,
+      l10n.onbMethodVoice,
+      l10n.onbMethodManual,
+    ];
 
     return Scaffold(
       body: SafeArea(
@@ -68,14 +72,14 @@ class OnboardingPantryScreen extends ConsumerWidget {
               ),
               Gap.gapXl,
               Text(
-                'Thêm nguyên liệu chỉ trong vài giây',
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                l10n.onbPantryTitle,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               Gap.gapXs,
               Text(
-                'Quét tem nhãn hoặc hóa đơn để lấy sẵn tên, khối lượng, hạn dùng. '
-                'Bận tay thì đọc bằng giọng nói. Không có bao bì thì nhập tay thật nhanh.',
+                l10n.onbPantryBody,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: scheme.onSurfaceVariant,
                   height: 1.5,
@@ -84,12 +88,12 @@ class OnboardingPantryScreen extends ConsumerWidget {
               Gap.gapMd,
               Row(
                 children: [
-                  for (final m in _methods) ...[
-                    if (m != _methods.first) Gap.gapXs,
+                  for (final (i, m) in _methods.indexed) ...[
+                    if (i != 0) Gap.gapXs,
                     Expanded(
                       child: _MethodChip(
                         icon: m.icon,
-                        label: m.label,
+                        label: methodLabels[i],
                         onTap: () => _finish(ref, context, m.route),
                       ),
                     ),
@@ -98,10 +102,12 @@ class OnboardingPantryScreen extends ConsumerWidget {
               ),
               Gap.gapLg,
               PrimaryButton(
-                label: 'Thêm nguyên liệu đầu tiên',
+                label: l10n.onbPantryCta,
                 icon: Icons.add_rounded,
                 onPressed: () async {
-                  await ref.read(onboardingControllerProvider.notifier).complete();
+                  await ref
+                      .read(onboardingControllerProvider.notifier)
+                      .complete();
                   if (!context.mounted) return;
                   context.go(Routes.pantry);
                   showAddEntryChooser(context);
@@ -110,7 +116,7 @@ class OnboardingPantryScreen extends ConsumerWidget {
               Gap.gapXxs,
               Center(
                 child: AppTextButton(
-                  label: 'Để sau',
+                  label: l10n.onbLater,
                   onPressed: () => _finish(ref, context, Routes.home),
                 ),
               ),

@@ -11,17 +11,17 @@ import 'package:frontend/features/subscription/presentation/widgets/plan_option_
 class PaywallScreen extends ConsumerWidget {
   const PaywallScreen({super.key});
 
-  static const _benefits = [
-    'Kho nguyên liệu không giới hạn',
-    'Quét tem & hóa đơn không giới hạn',
-    'Lập thực đơn tuần & danh sách mua sắm',
-    'Mục tiêu dinh dưỡng theo ngày',
-    'Báo cáo thực phẩm đã tiết kiệm',
-    'Chia sẻ tủ bếp cho tối đa 4 người',
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final benefits = [
+      l10n.paywallBenefit1,
+      l10n.paywallBenefit2,
+      l10n.paywallBenefit3,
+      l10n.paywallBenefit4,
+      l10n.paywallBenefit5,
+      l10n.paywallBenefit6,
+    ];
     final state = ref.watch(paywallControllerProvider);
     final ctrl = ref.read(paywallControllerProvider.notifier);
 
@@ -36,21 +36,21 @@ class PaywallScreen extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(Gap.lg, 0, Gap.lg, Gap.xxl),
         children: [
           Text(
-            'SweepFood Premium sắp ra mắt',
-            style: context.text.headlineSmall
-                ?.copyWith(fontWeight: FontWeight.w700),
+            l10n.paywallTitle,
+            style: context.text.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
           ),
           Gap.gapXs,
           Text(
-            'Hiện tại bạn đang dùng miễn phí tất cả tính năng. Đăng ký để được '
-            'báo khi Premium chính thức và nhận ưu đãi sớm.',
+            l10n.paywallSubtitle,
             style: context.text.bodyMedium?.copyWith(
               color: context.sweep.textSecondary,
               height: 1.5,
             ),
           ),
           Gap.gapLg,
-          for (final b in _benefits)
+          for (final b in benefits)
             Padding(
               padding: const EdgeInsets.only(bottom: Gap.xs),
               child: Row(
@@ -91,8 +91,8 @@ class PaywallScreen extends ConsumerWidget {
           children: [
             PrimaryButton(
               label: state.submitted
-                  ? 'Đã ghi nhận — cảm ơn bạn!'
-                  : 'Nhận thông báo khi ra mắt',
+                  ? l10n.paywallSubmitted
+                  : l10n.paywallNotifyMe,
               icon: state.submitted ? Icons.check_rounded : null,
               loading: state.submitting,
               onPressed: state.submitted || state.submitting
@@ -101,7 +101,7 @@ class PaywallScreen extends ConsumerWidget {
             ),
             Gap.gapXs,
             Text(
-              'Chưa tính phí · giá & gói đang trong giai đoạn kiểm chứng',
+              l10n.paywallFinePrint,
               style: context.text.labelSmall?.copyWith(
                 color: context.sweep.textTertiary,
               ),

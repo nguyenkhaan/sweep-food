@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/features/suggestions/presentation/screens/suggestion_list_screen.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 void main() {
   testWidgets('renders ranked cards and opens the score-breakdown sheet', (
@@ -13,6 +14,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: const Locale('vi'),
+          supportedLocales: AppL10n.supportedLocales,
+          localizationsDelegates: AppL10n.localizationsDelegates,
           theme: AppTheme.light,
           home: const SuggestionListScreen(),
         ),

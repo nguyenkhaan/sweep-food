@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:frontend/shared/domain/expiry_status.dart';
 import 'package:frontend/shared/domain/measurement_unit.dart';
 import 'package:frontend/shared/domain/storage_tier.dart';
@@ -16,16 +17,18 @@ enum PantrySource {
   const PantrySource(this.wire);
   final String wire;
 
-  static PantrySource fromWire(String? v) => PantrySource.values
-      .firstWhere((s) => s.wire == v, orElse: () => PantrySource.manual);
+  static PantrySource fromWire(String? v) => PantrySource.values.firstWhere(
+    (s) => s.wire == v,
+    orElse: () => PantrySource.manual,
+  );
 
-  String get label => switch (this) {
-        PantrySource.labelScan => 'Quét tem nhãn',
-        PantrySource.receiptScan => 'Quét hóa đơn',
-        PantrySource.voice => 'Nhập bằng giọng nói',
-        PantrySource.manual => 'Nhập tay',
-        PantrySource.cooked => 'Thức ăn đã nấu',
-      };
+  String label(AppL10n l10n) => switch (this) {
+    PantrySource.labelScan => l10n.pantrySourceLabelScan,
+    PantrySource.receiptScan => l10n.pantrySourceReceiptScan,
+    PantrySource.voice => l10n.pantrySourceVoice,
+    PantrySource.manual => l10n.pantrySourceManual,
+    PantrySource.cooked => l10n.pantrySourceCooked,
+  };
 }
 
 enum PantryItemStatus {

@@ -5,6 +5,7 @@ import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/core/media/media_providers.dart';
 import 'package:frontend/core/permissions/permission_service.dart';
 import 'package:frontend/features/ingest/presentation/screens/voice_capture_screen.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 import '../../helpers/media_fakes.dart';
 
@@ -15,12 +16,17 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          permissionServiceProvider
-              .overrideWithValue(const GrantedPermissionService()),
-          audioRecorderServiceProvider
-              .overrideWithValue(FakeAudioRecorderService()),
+          permissionServiceProvider.overrideWithValue(
+            const GrantedPermissionService(),
+          ),
+          audioRecorderServiceProvider.overrideWithValue(
+            FakeAudioRecorderService(),
+          ),
         ],
         child: MaterialApp(
+          locale: const Locale('vi'),
+          supportedLocales: AppL10n.supportedLocales,
+          localizationsDelegates: AppL10n.localizationsDelegates,
           theme: AppTheme.light,
           home: const VoiceCaptureScreen(),
         ),

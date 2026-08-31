@@ -41,28 +41,29 @@ class _PantryItemDetailScreenState
           .consume(item.id, quantityUsed: item.quantity);
       if (!mounted) return;
       context.pop();
-      AppSnack.show(context, 'Đã dùng hết ${item.name}');
+      AppSnack.show(context, context.l10n.pantryConsumedAll(item.name));
     } catch (_) {
       if (!mounted) return;
       setState(() => _busy = false);
-      AppSnack.show(context, 'Không cập nhật được. Thử lại.');
+      AppSnack.show(context, context.l10n.pantryUpdateFailed);
     }
   }
 
   Future<void> _delete(PantryItem item) async {
+    final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Xóa nguyên liệu?'),
-        content: Text('“${item.name}” sẽ bị xóa khỏi kho.'),
+        title: Text(l10n.pantryDeleteTitle),
+        content: Text(l10n.pantryDeleteBody(item.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Hủy'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Xóa'),
+            child: Text(l10n.commonDelete),
           ),
         ],
       ),
@@ -73,24 +74,25 @@ class _PantryItemDetailScreenState
       await ref.read(pantryListControllerProvider.notifier).delete(item.id);
       if (!mounted) return;
       context.pop();
-      AppSnack.show(context, 'Đã xóa ${item.name}');
+      AppSnack.show(context, context.l10n.pantryDeleted(item.name));
     } catch (_) {
       if (!mounted) return;
       setState(() => _busy = false);
-      AppSnack.show(context, 'Không xóa được. Thử lại.');
+      AppSnack.show(context, context.l10n.pantryDeleteFailed);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final item = ref.watch(pantryItemByIdProvider(widget.itemId));
 
     if (item == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: const EmptyState(
-          title: 'Không tìm thấy nguyên liệu',
-          message: 'Có thể nó đã được dùng hết hoặc đã xóa khỏi kho.',
+        body: EmptyState(
+          title: l10n.pantryNotFoundTitle,
+          message: l10n.pantryNotFoundBody,
           icon: Icons.inventory_2_outlined,
         ),
       );
@@ -101,7 +103,7 @@ class _PantryItemDetailScreenState
         title: Text(item.name),
         actions: [
           IconButton(
-            tooltip: 'Sửa',
+            tooltip: l10n.commonEdit,
             icon: const Icon(Icons.edit_outlined),
             onPressed: _busy
                 ? null
@@ -112,8 +114,11 @@ class _PantryItemDetailScreenState
             onSelected: (v) {
               if (v == 'delete') _delete(item);
             },
-            itemBuilder: (_) => const [
-              PopupMenuItem(value: 'delete', child: Text('Xóa khỏi kho')),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: 'delete',
+                child: Text(l10n.pantryDeleteMenu),
+              ),
             ],
           ),
         ],
@@ -149,7 +154,7 @@ class _PantryItemDetailScreenState
                 Expanded(
                   child: _StatTile(
                     icon: Icons.scale_outlined,
-                    label: 'Số lượng',
+                    label: l10n.pantryStatQuantity,
                     value: item.quantityLabel,
                   ),
                 ),
@@ -157,9 +162,9 @@ class _PantryItemDetailScreenState
                 Expanded(
                   child: _StatTile(
                     icon: Icons.event_outlined,
-                    label: 'Hạn dùng',
+                    label: l10n.pantryStatExpiry,
                     value: item.expiryDate?.ddMM ?? '—',
-                    sub: expiryText(item.daysUntilExpiry),
+                    sub: expiryText(item.daysUntilExpiry, l10n),
                   ),
                 ),
                 const SizedBox(width: Gap.sm),
@@ -167,14 +172,14 @@ class _PantryItemDetailScreenState
                   child: item.priceVnd != null
                       ? _StatTile(
                           icon: Icons.payments_outlined,
-                          label: 'Giá',
+                          label: l10n.pantryStatPrice,
                           value: formatVnd(item.priceVnd!),
                         )
                       : _StatTile(
                           icon: Icons.schedule_outlined,
-                          label: 'Bảo quản',
+                          label: l10n.pantryStatStorage,
                           value: item.referenceShelfLifeDays != null
-                              ? '~${item.referenceShelfLifeDays} ngày'
+                              ? l10n.daysApprox(item.referenceShelfLifeDays!)
                               : '—',
                         ),
                 ),
@@ -185,7 +190,7 @@ class _PantryItemDetailScreenState
           _DetailCard(item: item),
           Gap.gapMd,
           SecondaryButton(
-            label: 'Tìm món nấu từ nguyên liệu này',
+            label: l10n.pantryFindDishes,
             icon: Icons.restaurant_menu_rounded,
             onPressed: () => context.go(Routes.suggestions),
           ),
@@ -260,14 +265,18 @@ class _DetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final rows = <(String, String)>[
-      ('Vị trí bảo quản', item.storageTier.label),
-      ('Ngày thêm', item.addedAt.ddMMyyyy),
+      (l10n.pantryDetailLocation, item.storageTier.label(l10n)),
+      (l10n.pantryDetailAdded, item.addedAt.ddMMyyyy),
       if (item.packedDate != null)
-        ('Ngày đóng gói / mua', item.packedDate!.ddMMyyyy),
-      ('Nguồn nhập', item.source.label),
+        (l10n.pantryDetailPacked, item.packedDate!.ddMMyyyy),
+      (l10n.pantryDetailSource, item.source.label(l10n)),
       if (item.referenceShelfLifeDays != null)
-        ('Bảo quản tham khảo', '${item.referenceShelfLifeDays} ngày'),
+        (
+          l10n.pantryDetailShelfRef,
+          l10n.daysCount(item.referenceShelfLifeDays!),
+        ),
     ];
 
     return Container(
@@ -279,7 +288,7 @@ class _DetailCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Chi tiết', style: context.text.titleSmall),
+          Text(l10n.pantryDetailCardTitle, style: context.text.titleSmall),
           Gap.gapXs,
           for (final (label, value) in rows)
             Padding(
@@ -325,13 +334,14 @@ class _ActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SafeArea(
       minimum: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.sm),
       child: Row(
         children: [
           Expanded(
             child: SecondaryButton(
-              label: 'Điều chỉnh',
+              label: l10n.pantryAdjust,
               icon: Icons.tune_rounded,
               onPressed: busy ? null : onAdjust,
             ),
@@ -339,7 +349,7 @@ class _ActionBar extends StatelessWidget {
           const SizedBox(width: Gap.sm),
           Expanded(
             child: PrimaryButton(
-              label: 'Đã dùng hết',
+              label: l10n.pantryConsumeAll,
               icon: Icons.check_rounded,
               loading: busy,
               onPressed: busy ? null : onConsumeAll,

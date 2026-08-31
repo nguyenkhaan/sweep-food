@@ -49,8 +49,11 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
   }
 
   Future<void> _begin() async {
-    final granted =
-        await ensureMediaPermission(context, ref, PermissionKind.microphone);
+    final granted = await ensureMediaPermission(
+      context,
+      ref,
+      PermissionKind.microphone,
+    );
     if (!mounted) return;
 
     var capturing = false;
@@ -103,6 +106,7 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
   @override
   Widget build(BuildContext context) {
     final sweep = context.sweep;
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
@@ -110,7 +114,7 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
           onPressed: () => context.pop(),
           icon: const Icon(Icons.close_rounded),
         ),
-        title: const Text('Nói để thêm'),
+        title: Text(l10n.voiceCaptureTitle),
       ),
       body: SafeArea(
         child: Padding(
@@ -118,7 +122,7 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
           child: Column(
             children: [
               Text(
-                'Đọc tên nguyên liệu và số lượng',
+                l10n.voiceCapturePrompt,
                 textAlign: TextAlign.center,
                 style: context.text.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
@@ -135,7 +139,7 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
                   borderRadius: Radii.brMd,
                 ),
                 child: Text(
-                  'VD: “2 lạng thịt bò, 1 bó cải bó xôi, 3 quả trứng”',
+                  l10n.voiceCaptureExample,
                   textAlign: TextAlign.center,
                   style: context.text.bodySmall?.copyWith(
                     color: sweep.textTertiary,
@@ -143,14 +147,10 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
                 ),
               ),
               Expanded(
-                child: Center(
-                  child: WaveformRecorder(stream: _amplitude),
-                ),
+                child: Center(child: WaveformRecorder(stream: _amplitude)),
               ),
               Text(
-                _listening
-                    ? 'Đang nghe…'
-                    : 'Chưa bật được micro — cứ đọc rồi kiểm tra',
+                _listening ? l10n.voiceListening : l10n.voiceMicOff,
                 textAlign: TextAlign.center,
                 style: context.text.titleSmall?.copyWith(
                   color: _listening
@@ -177,7 +177,9 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: BrandPalette.warnCritical.withValues(alpha: 0.25),
+                        color: BrandPalette.warnCritical.withValues(
+                          alpha: 0.25,
+                        ),
                         blurRadius: 0,
                         spreadRadius: 8,
                       ),
@@ -200,7 +202,7 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
               ),
               const SizedBox(height: Gap.sm),
               Text(
-                'Dừng & Kiểm tra',
+                l10n.voiceStopReview,
                 style: context.text.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: sweep.textSecondary,

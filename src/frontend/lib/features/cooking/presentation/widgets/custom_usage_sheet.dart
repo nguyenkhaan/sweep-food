@@ -56,7 +56,7 @@ class _State extends ConsumerState<CustomUsageSheet> {
     } catch (_) {
       if (!mounted) return;
       setState(() => _busy = false);
-      AppSnack.show(context, 'Không cập nhật được kho. Thử lại.');
+      AppSnack.show(context, context.l10n.cookUpdateFailed);
     }
   }
 
@@ -67,7 +67,7 @@ class _State extends ConsumerState<CustomUsageSheet> {
     final notifier = ref.read(customUsageControllerProvider(dishId).notifier);
 
     return SheetBody(
-      title: 'Điều chỉnh lượng đã dùng',
+      title: context.l10n.customUsageTitle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -93,8 +93,10 @@ class _State extends ConsumerState<CustomUsageSheet> {
                     ],
                   ),
                   Slider(
-                    value: (usage[ing.name] ?? ing.quantity)
-                        .clamp(0.0, ing.quantity == 0 ? 1.0 : ing.quantity),
+                    value: (usage[ing.name] ?? ing.quantity).clamp(
+                      0.0,
+                      ing.quantity == 0 ? 1.0 : ing.quantity,
+                    ),
                     max: ing.quantity == 0 ? 1 : ing.quantity,
                     onChanged: _busy
                         ? null
@@ -109,7 +111,7 @@ class _State extends ConsumerState<CustomUsageSheet> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: _busy ? null : () => Navigator.of(context).pop(),
-                  child: const Text('Hủy'),
+                  child: Text(context.l10n.commonCancel),
                 ),
               ),
               const SizedBox(width: Gap.sm),
@@ -125,7 +127,7 @@ class _State extends ConsumerState<CustomUsageSheet> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text('Xác nhận'),
+                      : Text(context.l10n.commonConfirm),
                 ),
               ),
             ],

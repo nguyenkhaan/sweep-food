@@ -2,17 +2,21 @@ import 'package:frontend/core/utils/result.dart';
 import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
 import 'package:frontend/features/pantry/domain/entities/pantry_item_draft.dart';
 import 'package:frontend/features/pantry/domain/entities/pantry_summary.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:frontend/shared/domain/paginated.dart';
 import 'package:frontend/shared/domain/storage_tier.dart';
 
 /// How the pantry list is sorted (K-01).
 enum PantrySort {
-  priority('Cận hạn'),
-  name('Tên A–Z'),
-  recent('Mới thêm');
+  priority,
+  name,
+  recent;
 
-  const PantrySort(this.label);
-  final String label;
+  String label(AppL10n l10n) => switch (this) {
+    PantrySort.priority => l10n.pantrySortPriority,
+    PantrySort.name => l10n.pantrySortName,
+    PantrySort.recent => l10n.pantrySortRecent,
+  };
 }
 
 abstract interface class PantryRepository {

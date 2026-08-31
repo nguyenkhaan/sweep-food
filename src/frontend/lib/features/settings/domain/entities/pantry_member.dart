@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 enum PantryMemberRole { owner, editor }
 
@@ -22,11 +23,11 @@ class PantryMember {
       ? '?'
       : name.trim().split(RegExp(r'\s+')).last.substring(0, 1).toUpperCase();
 
-  String get roleLabel => switch (status) {
-        PantryMemberStatus.invited => 'Đã mời · chờ xác nhận',
-        _ => switch (role) {
-            PantryMemberRole.owner => 'Chủ tủ bếp',
-            PantryMemberRole.editor => 'Có thể chỉnh sửa',
-          },
-      };
+  String roleLabel(AppL10n l10n) => switch (status) {
+    PantryMemberStatus.invited => l10n.pantryMemberInvited,
+    _ => switch (role) {
+      PantryMemberRole.owner => l10n.pantryRoleOwner,
+      PantryMemberRole.editor => l10n.pantryRoleEditor,
+    },
+  };
 }

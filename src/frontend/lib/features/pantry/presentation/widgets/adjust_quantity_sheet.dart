@@ -15,7 +15,10 @@ class AdjustQuantitySheet extends ConsumerStatefulWidget {
   final PantryItem item;
 
   static Future<void> show(BuildContext context, PantryItem item) =>
-      showAppBottomSheet(context, builder: (_) => AdjustQuantitySheet(item: item));
+      showAppBottomSheet(
+        context,
+        builder: (_) => AdjustQuantitySheet(item: item),
+      );
 
   @override
   ConsumerState<AdjustQuantitySheet> createState() => _State();
@@ -29,10 +32,10 @@ class _State extends ConsumerState<AdjustQuantitySheet> {
   double get _total => widget.item.quantity;
 
   double get _effectiveUsed => switch (_mode) {
-        _Mode.all => _total,
-        _Mode.exact => _total,
-        _Mode.partial => _used.clamp(0, _total),
-      };
+    _Mode.all => _total,
+    _Mode.exact => _total,
+    _Mode.partial => _used.clamp(0, _total),
+  };
 
   Future<void> _submit() async {
     setState(() => _busy = true);
@@ -42,32 +45,42 @@ class _State extends ConsumerState<AdjustQuantitySheet> {
           .consume(widget.item.id, quantityUsed: _effectiveUsed);
       if (mounted) {
         Navigator.of(context).pop();
-        AppSnack.show(context, 'Đã cập nhật ${widget.item.name}');
+        AppSnack.show(
+          context,
+          context.l10n.pantryItemUpdated(widget.item.name),
+        );
       }
     } catch (e) {
       if (mounted) {
         setState(() => _busy = false);
-        AppSnack.show(context, 'Không cập nhật được. Thử lại.');
+        AppSnack.show(context, context.l10n.pantryUpdateFailed);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final unit = widget.item.unit.label;
     final remaining = (_total - _effectiveUsed).clamp(0, _total);
 
     return SheetBody(
-      title: 'Cập nhật số lượng — ${widget.item.name}',
-      subtitle: 'Hiện có: ${widget.item.quantityLabel} · ${widget.item.storageTier.shortLabel}',
+      title: l10n.adjustQtyTitle(widget.item.name),
+      subtitle: l10n.adjustQtySubtitle(
+        widget.item.quantityLabel,
+        widget.item.storageTier.shortLabel(l10n),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SegmentedButton<_Mode>(
-            segments: const [
-              ButtonSegment(value: _Mode.partial, label: Text('Dùng một phần')),
-              ButtonSegment(value: _Mode.all, label: Text('Dùng hết')),
+            segments: [
+              ButtonSegment(
+                value: _Mode.partial,
+                label: Text(l10n.adjustQtyPartial),
+              ),
+              ButtonSegment(value: _Mode.all, label: Text(l10n.adjustQtyAll)),
             ],
             selected: {_mode == _Mode.exact ? _Mode.partial : _mode},
             onSelectionChanged: (s) => setState(() => _mode = s.first),
@@ -106,7 +119,7 @@ class _State extends ConsumerState<AdjustQuantitySheet> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Còn lại sau khi dùng'),
+                Text(l10n.adjustQtyRemaining),
                 Text(
                   '${remaining.round()} $unit',
                   style: const TextStyle(fontWeight: FontWeight.w700),
@@ -120,7 +133,7 @@ class _State extends ConsumerState<AdjustQuantitySheet> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: _busy ? null : () => Navigator.of(context).pop(),
-                  child: const Text('Hủy'),
+                  child: Text(l10n.commonCancel),
                 ),
               ),
               const SizedBox(width: Gap.sm),
@@ -136,7 +149,7 @@ class _State extends ConsumerState<AdjustQuantitySheet> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text('Lưu'),
+                      : Text(l10n.commonSave),
                 ),
               ),
             ],

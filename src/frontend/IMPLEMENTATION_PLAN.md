@@ -17,7 +17,8 @@
 | **M3 — Gợi ý + Món + Nấu (vòng lặp lõi)** | ✅ Xong |
 | **M4 — Nhập liệu đa phương thức** | ✅ Xong |
 | **M5 — Auth + Onboarding + phần còn lại** | ✅ Xong |
-| M6 — Hoàn thiện, i18n, test, build | ⬜ Chưa |
+| **M6.1 — i18n (tách chuỗi → `AppL10n`)** | ✅ Xong |
+| M6.2 — api-contract, live-swap, FCM, build, đổi tên package | ⬜ Chưa |
 
 ### M0 đã hoàn thành (2026-08-30)
 
@@ -134,6 +135,17 @@ Phần còn lại của M5, làm sau khi teammate merge M4. Mock-first; `premium
 
 > **Còn treo cho M6:** lịch nhắc cận hạn giờ chính xác (cần `timezone` init) · FCM thật · các "sẽ có ở bản sau" trong Settings (sửa hồ sơ, đổi mật khẩu, mở link Điều khoản) · `mock` PUT/POST không lưu trạng thái nên thao tác meal-plan/shopping-list reset khi reload màn.
 
+### M6.1 — i18n đã hoàn thành (2026-08-31)
+
+Tách **toàn bộ chuỗi tiếng Việt của tầng view** ra `lib/l10n/*.arb` + wire `AppL10n` (gen-l10n). App vẫn chạy **`vi` duy nhất** (`app.dart` khoá `locale: const Locale('vi')`); `app_en.arb` được **dịch đầy đủ** để CI không có warning "untranslated" và để bật `en` sau này chỉ là bỏ dòng khoá locale.
+
+- **Hạ tầng** — `l10n.yaml` (template `app_vi.arb`, class `AppL10n`, `nullable-getter: false`); `app.dart` dùng `AppL10n.localizationsDelegates` / `AppL10n.supportedLocales` (bỏ import `flutter_localizations` trực tiếp); `core/utils/extensions/build_context_x.dart` thêm `context.l10n` getter. `lib/l10n/app_localizations*.dart` commit kèm (như các file `.g.dart` khác). `app_vi.arb` / `app_en.arb` ~**540 key** (`{placeholder}` cho mọi nội suy số/tên).
+- **Enum hiển thị → hàm nhận `AppL10n`** (không còn getter `label` hằng): `StorageTier.label/shortLabel`, `DietaryPreference.label/description`, `CookMode.label/description`, `MealSlot.label`, `MealType.label`, `ReportPeriod.label`, `PantrySort.label`, `PantrySource.label`, `SubscriptionTier.label`, `CameraScanMode.title`. `ScoreBreakdown.components(l10n)`, `Dish.metaLine(l10n)/shortMeta(l10n)`, `CookingStep.durationLabel(l10n)`, `PantryMember.roleLabel(l10n)`, `ExpiryTips.forCategory(cat, l10n)`, `expiryText(days, l10n)` — sửa hết call site (đều ở widget có `context`).
+- **Controller nhận `AppL10n`** cho thông báo lỗi form: `LoginController.submit`, `RegisterController.submit`, `ForgotPasswordController.submit`, `ShoppingListController.addMissingFromDish` — màn truyền `context.l10n`. `Failure` thêm `localizedMessage(AppL10n)` (7 loại cố định → key; NotFound/Validation/Server giữ `message` do BE có thể trả text riêng); `ErrorView.fromFailure` resolve qua `context.l10n`.
+- **Phạm vi đã tách:** mọi `presentation/screens` + `presentation/widgets` + `core/widgets` + `core/permissions/permission_prime_sheet` + các enum/getter hiển thị ở trên. `flutter analyze` → **No issues**, `flutter test` xanh (65 pass / 1 skip), `flutter build web` OK.
+- **Test:** `test/helpers/pump_app.dart` (`wrapApp` — MaterialApp có `AppL10n` delegates + `locale: vi`); 11 widget-test hiện có được nối delegates (nếu không `AppL10n.of(context)` ném null).
+- **Cố ý CHƯA tách (giữ tiếng Việt, ghi làm follow-up):** `MeasurementUnit.label` (viết tắt đơn vị: g/kg/lít/cái…) · `core/notifications/local_notifications.dart` (tên/mô tả Android channel — nền, không có `context`, chờ FCM ở M6.2) · `core/network/mock_api_client.dart` + các `*_dto` (fixture/data dev) · `cooking_repository_impl` `'(đã nấu)'` / `'Thức ăn đã nấu'`, `receipt_review_controller` `'Hóa đơn'`, `voice_capture_controller` `kBlankVoiceDraft`, `shopping_list_item` default `'Khác'` (BE cấp giá trị thật ở prod) · `user.displayName` fallback `'bạn'` · `plan_option.dart` + `Subscription.freeDefault.perks` (copy Premium trong `const`, `premiumEnabled=false`) · `formatters/currency_vnd` ký hiệu `đ` · `pantry_item_tile`/`report_dto` map danh mục (khoá tra cứu khớp fixture) · comment/doc-string.
+
 > Cập nhật bảng này khi hoàn thành từng milestone.
 
 ---
@@ -147,7 +159,7 @@ Phần còn lại của M5, làm sau khi teammate merge M4. Mock-first; `premium
 - **Luồng lỗi:** datasource `throw` (`DioException`, `FormatException`) → repository `try/catch` → `error_mapper.dart` → trả `Either<Failure, T>` (`typedef Result<T> = Either<Failure, T>` trong `core/utils/result.dart`, dùng fpdart). Controller đổi thành `AsyncValue` cho UI. UI render qua `core/widgets/async_value_widget.dart` (loading skeleton / error view / data).
 - **Mock-first:** `core/network/mock_api_client.dart` implement `ApiClient`; khớp `core/network/api_paths.dart`; đọc `assets/mock/<name>.json` qua `rootBundle`; trễ ~320ms; write thì echo lại payload kèm id sinh ra. `network_providers.dart` chọn Mock vs `DioApiClient` theo `AppConfig.backend`.
 - **Design → code:** 1 artboard `*.dc.html` → 1 file screen/widget. `core/widgets/*` ứng 1:1 với artboard "Components"; `app/theme/*` ứng artboard "Foundations" (primary `#2D6A4F`, secondary `#95D5B2`, tertiary `#8D4D4E`, expiry `expired/critical/soon/ok`, 4 tint tầng, thang chữ Inter, spacing 4–40, radius 8/12/16/24, đổ bóng, dark bg `#101511` / surface `#1A211C`).
-- **Chuỗi text:** hardcode **tiếng Việt** thẳng trong widget cho nhanh. Tách ra `app_vi.arb` ở M6. Không có "tiền tiết kiệm" ở đâu cả (đã bỏ — dùng số nguyên liệu dùng trước hạn / kg).
+- **Chuỗi text (từ M6.1):** mọi chuỗi tầng view đi qua `context.l10n.<key>` — thêm key vào **`lib/l10n/app_vi.arb`** (nguồn) + **`app_en.arb`** (dịch), chạy `flutter gen-l10n`. Nội suy số/tên dùng `{placeholder}`. Enum hiển thị: `label(AppL10n)` chứ không phải getter hằng. **Không** hardcode tiếng Việt trong widget nữa. Không có "tiền tiết kiệm" ở đâu cả (đã bỏ — dùng số nguyên liệu dùng trước hạn / kg).
 - **`premiumEnabled = false`** (`core/entitlements/premium_flag.dart`): `entitlementsProvider` trả `Entitlements.allUnlocked()`; widget `Gated` render child vô điều kiện; không có `QuotaBanner` / màn I-08.
 - **Chạy app:** luôn `flutter run --dart-define-from-file=config/dev.json` (thêm `-d chrome` / `-d <emulator>`). Giữ `flutter analyze` sạch sau mỗi milestone (hiện đang sạch — đừng làm hỏng).
 - **Package name** hiện là `frontend` (org `com.example.frontend`). Import dạng `package:frontend/...`. Đổi tên → M6.
@@ -227,7 +239,7 @@ Phần còn lại của M5, làm sau khi teammate merge M4. Mock-first; `premium
 **Kiểm tra:** thủ công toàn bộ 5 tab + auth gate; analyze.
 
 ### M6 — Hoàn thiện, i18n, test, live-swap, build
-- **i18n:** tách chuỗi vi → `lib/l10n/app_vi.arb` + `AppL10n` (`flutter gen-l10n`); thêm `app_en.arb` khung
+- **i18n:** ✅ **Xong (M6.1, xem phần trên).** Tách chuỗi vi tầng view → `lib/l10n/app_vi.arb` + `AppL10n` (`flutter gen-l10n`); `app_en.arb` đã dịch đầy đủ. Còn lại của M6.2: các chuỗi data/nền cố ý giữ tiếng Việt (danh sách trong M6.1) khi chúng có `context` / có BE thật.
 - **`docs/api-contract.md`** (gốc repo): FE tự viết hợp đồng REST từ `plan.md §9` + domain model, để BE implement theo. Chốt với team BE: base path (`/api/v1`), **port (config đang `8000`, plan.md giả định `4000`)**, tên endpoint (BE stub dùng `/ingestion/ocr/receipt`, `/recipes/recommend` vs plan.md `/scan/*`, `/suggestions/dishes`), envelope lỗi, pagination
 - **Live swap:** `config/prod.json` `BACKEND=live`; chạy với backend thật; verify `DioApiClient` + `auth_interceptor`; ghi chú CORS cho web
 - **Firebase/FCM** (khi có project): `flutterfire configure`; bật `firebase_core`/`firebase_messaging` trong `pubspec.yaml`; implement `fcm_service.dart` + `device_remote_data_source.dart`; xử lý deep-link trong `app_router.dart`

@@ -28,13 +28,14 @@ class NearExpiryDetailSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final item = ref.watch(pantryItemByIdProvider(pantryItemId));
 
     if (item == null) {
-      return const SheetBody(
+      return SheetBody(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: Gap.lg),
-          child: Text('Không tìm thấy nguyên liệu này trong kho.'),
+          padding: const EdgeInsets.symmetric(vertical: Gap.lg),
+          child: Text(l10n.nearExpiryNotFound),
         ),
       );
     }
@@ -66,7 +67,7 @@ class NearExpiryDetailSheet extends ConsumerWidget {
                     Text(item.name, style: context.text.titleMedium),
                     Text(
                       '${item.quantityLabel} · ${item.category} · '
-                      '${item.storageTier.shortLabel}',
+                      '${item.storageTier.shortLabel(l10n)}',
                       style: context.text.bodySmall?.copyWith(
                         color: context.sweep.textSecondary,
                       ),
@@ -85,7 +86,7 @@ class NearExpiryDetailSheet extends ConsumerWidget {
               borderRadius: Radii.brMd,
             ),
             child: Text(
-              ExpiryTips.forCategory(item.category),
+              ExpiryTips.forCategory(item.category, l10n),
               style: context.text.bodySmall?.copyWith(height: 1.5),
             ),
           ),
@@ -94,7 +95,7 @@ class NearExpiryDetailSheet extends ConsumerWidget {
             children: [
               Expanded(
                 child: SecondaryButton(
-                  label: 'Đánh dấu đã dùng',
+                  label: l10n.nearExpiryMarkUsed,
                   onPressed: () {
                     Navigator.of(context).pop();
                     AdjustQuantitySheet.show(context, item);
@@ -104,7 +105,7 @@ class NearExpiryDetailSheet extends ConsumerWidget {
               Gap.gapSm,
               Expanded(
                 child: PrimaryButton(
-                  label: 'Xem gợi ý',
+                  label: l10n.nearExpirySeeSuggestions,
                   onPressed: () {
                     Navigator.of(context).pop();
                     context.go(Routes.suggestions);

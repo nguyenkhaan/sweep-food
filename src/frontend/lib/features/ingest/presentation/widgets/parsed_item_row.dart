@@ -35,7 +35,7 @@ class ParsedItemRow extends StatelessWidget {
         ? item.quantity.round().toString()
         : item.quantity.toStringAsFixed(1);
     final subtitle =
-        '$qty ${item.unit.label} · ${item.category} · ${item.storageTier.shortLabel}';
+        '$qty ${item.unit.label} · ${item.category} · ${item.storageTier.shortLabel(context.l10n)}';
 
     return Material(
       color: context.colors.surface,
@@ -63,7 +63,7 @@ class ParsedItemRow extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      item.name.isEmpty ? 'Chưa rõ tên' : item.name,
+                      item.name.isEmpty ? context.l10n.scanNoName : item.name,
                       style: context.text.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: selected
@@ -88,15 +88,17 @@ class ParsedItemRow extends StatelessWidget {
               ),
               if (item.isExpiryWarn) ...[
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: BrandPalette.warnSoon.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: const Text(
-                    'Kiểm tra',
-                    style: TextStyle(
+                  child: Text(
+                    context.l10n.scanNeedsCheckShort,
+                    style: const TextStyle(
                       color: BrandPalette.warnSoon,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -108,15 +110,21 @@ class ParsedItemRow extends StatelessWidget {
               if (onEdit != null)
                 IconButton(
                   visualDensity: VisualDensity.compact,
-                  icon: Icon(Icons.edit_outlined,
-                      size: 18, color: sweep.textTertiary),
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    size: 18,
+                    color: sweep.textTertiary,
+                  ),
                   onPressed: onEdit,
                 ),
               if (onDelete != null)
                 IconButton(
                   visualDensity: VisualDensity.compact,
-                  icon: Icon(Icons.close_rounded,
-                      size: 18, color: sweep.textTertiary),
+                  icon: Icon(
+                    Icons.close_rounded,
+                    size: 18,
+                    color: sweep.textTertiary,
+                  ),
                   onPressed: onDelete,
                 ),
             ],

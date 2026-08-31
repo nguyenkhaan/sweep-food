@@ -1,6 +1,7 @@
 import 'package:frontend/core/error/failure.dart';
 import 'package:frontend/features/auth/presentation/controllers/auth_form.dart';
 import 'package:frontend/features/auth/presentation/controllers/session_controller.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'register_controller.g.dart';
@@ -20,11 +21,12 @@ class RegisterController extends _$RegisterController {
     required String email,
     required String password,
     required bool agreedToTerms,
+    required AppL10n l10n,
   }) async {
     final errors = <String, String>{
-      if (name.trim().isEmpty) 'name': 'Nhập họ và tên',
-      if (!isValidEmail(email)) 'email': 'Email không hợp lệ',
-      if (!isValidPassword(password)) 'password': 'Ít nhất 8 ký tự',
+      if (name.trim().isEmpty) 'name': l10n.authEnterName,
+      if (!isValidEmail(email)) 'email': l10n.authInvalidEmail,
+      if (!isValidPassword(password)) 'password': l10n.authPasswordTooShort,
     };
     if (errors.isNotEmpty) {
       state = state.copyWith(fieldErrors: errors, formError: null);
@@ -32,7 +34,7 @@ class RegisterController extends _$RegisterController {
     }
     if (!agreedToTerms) {
       state = state.copyWith(
-        formError: 'Cần đồng ý với Điều khoản để tiếp tục.',
+        formError: l10n.registerNeedTerms,
         fieldErrors: const {},
       );
       return false;
@@ -44,21 +46,22 @@ class RegisterController extends _$RegisterController {
       formError: null,
     );
     try {
-      await ref.read(sessionControllerProvider.notifier).register(
-            name: name,
-            email: email,
-            password: password,
-          );
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .register(name: name, email: email, password: password);
       return true;
     } on ValidationFailure catch (f) {
       state = state.copyWith(
         submitting: false,
         fieldErrors: f.fieldErrors,
-        formError: f.fieldErrors.isEmpty ? f.message : null,
+        formError: f.fieldErrors.isEmpty ? f.localizedMessage(l10n) : null,
       );
       return false;
     } on Failure catch (f) {
-      state = state.copyWith(submitting: false, formError: f.message);
+      state = state.copyWith(
+        submitting: false,
+        formError: f.localizedMessage(l10n),
+      );
       return false;
     }
   }

@@ -1,19 +1,27 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 part 'meal_plan_entry.freezed.dart';
 
 /// The three planned meals per day (M-01 grid columns).
 enum MealSlot {
-  breakfast('breakfast', 'Sáng'),
-  lunch('lunch', 'Trưa'),
-  dinner('dinner', 'Tối');
+  breakfast('breakfast'),
+  lunch('lunch'),
+  dinner('dinner');
 
-  const MealSlot(this.wire, this.label);
+  const MealSlot(this.wire);
   final String wire;
-  final String label;
 
-  static MealSlot fromWire(String? v) =>
-      MealSlot.values.firstWhere((s) => s.wire == v, orElse: () => MealSlot.lunch);
+  String label(AppL10n l10n) => switch (this) {
+    MealSlot.breakfast => l10n.mealSlotBreakfast,
+    MealSlot.lunch => l10n.mealSlotLunch,
+    MealSlot.dinner => l10n.mealSlotDinner,
+  };
+
+  static MealSlot fromWire(String? v) => MealSlot.values.firstWhere(
+    (s) => s.wire == v,
+    orElse: () => MealSlot.lunch,
+  );
 }
 
 /// One filled cell of the weekly grid.

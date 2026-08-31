@@ -15,7 +15,7 @@ class ConfidenceField extends StatelessWidget {
     required this.value,
     this.onTap,
     this.needsReview = false,
-    this.reviewLabel = 'Cần kiểm tra',
+    this.reviewLabel,
     this.trailingIcon = Icons.edit_outlined,
     super.key,
   });
@@ -24,7 +24,9 @@ class ConfidenceField extends StatelessWidget {
   final String value;
   final VoidCallback? onTap;
   final bool needsReview;
-  final String reviewLabel;
+
+  /// Defaults to the localized "check this" chip when null.
+  final String? reviewLabel;
   final IconData trailingIcon;
 
   @override
@@ -52,7 +54,7 @@ class ConfidenceField extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
-                  reviewLabel,
+                  reviewLabel ?? context.l10n.confidenceNeedsReview,
                   style: const TextStyle(
                     color: BrandPalette.warnSoon,
                     fontSize: 10,
@@ -85,8 +87,9 @@ class ConfidenceField extends StatelessWidget {
                   Expanded(
                     child: Text(
                       value,
-                      style: context.text.bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w500),
+                      style: context.text.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

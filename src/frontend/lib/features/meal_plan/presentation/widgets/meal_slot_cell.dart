@@ -31,14 +31,12 @@ class MealSlotCell extends StatelessWidget {
               ? context.colors.primaryContainer
               : context.sweep.subtleFill,
           borderRadius: Radii.brSm,
-          border: filled
-              ? null
-              : Border.all(color: context.sweep.hairline),
+          border: filled ? null : Border.all(color: context.sweep.hairline),
         ),
         child: Center(
           child: filled
               ? Text(
-                  entry!.dishName ?? 'Món đã chọn',
+                  entry!.dishName ?? context.l10n.mealSlotChosen,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -48,7 +46,7 @@ class MealSlotCell extends StatelessWidget {
                   ),
                 )
               : Text(
-                  '+ Thêm',
+                  context.l10n.mealSlotAdd,
                   style: context.text.labelSmall?.copyWith(
                     color: context.sweep.textTertiary,
                   ),

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 part 'cooking_step.freezed.dart';
 
@@ -13,6 +14,7 @@ abstract class CookingStep with _$CookingStep {
     int? durationMin,
   }) = _CookingStep;
 
-  /// "· 5 phút" suffix when the step is timed.
-  String get durationLabel => durationMin == null ? '' : '$durationMin phút';
+  /// "5 phút" label when the step is timed.
+  String durationLabel(AppL10n l10n) =>
+      durationMin == null ? '' : l10n.minutesLabel(durationMin!);
 }

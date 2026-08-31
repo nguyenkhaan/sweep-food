@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/primary_button.dart';
 import 'package:frontend/features/auth/presentation/controllers/forgot_password_controller.dart';
 import 'package:frontend/features/auth/presentation/widgets/auth_form_error.dart';
@@ -27,12 +28,15 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
-    await ref.read(forgotPasswordControllerProvider.notifier).submit(_email.text);
+    await ref
+        .read(forgotPasswordControllerProvider.notifier)
+        .submit(_email.text, context.l10n);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final state = ref.watch(forgotPasswordControllerProvider);
 
     return Scaffold(
@@ -42,13 +46,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
           padding: const EdgeInsets.fromLTRB(Gap.xl, Gap.xs, Gap.xl, Gap.xl),
           children: [
             Text(
-              'Quên mật khẩu',
-              style: theme.textTheme.headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              l10n.authForgotTitle,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Gap.gapXxs,
             Text(
-              'Nhập email tài khoản, chúng tôi sẽ gửi liên kết đặt lại mật khẩu.',
+              l10n.forgotSubtitle,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -58,7 +63,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               _SentCard(email: state.sentToEmail!)
             else ...[
               AuthTextField(
-                label: 'Email',
+                label: l10n.authEmail,
                 controller: _email,
                 hintText: 'ban@email.com',
                 prefixIcon: Icons.mail_outline_rounded,
@@ -74,7 +79,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               ],
               Gap.gapMd,
               PrimaryButton(
-                label: 'Gửi liên kết',
+                label: l10n.forgotSendLink,
                 loading: state.form.submitting,
                 onPressed: state.form.submitting ? null : _submit,
               ),
@@ -83,7 +88,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             Center(
               child: TextButton(
                 onPressed: () => context.pop(),
-                child: const Text('Quay lại đăng nhập'),
+                child: Text(l10n.forgotBackToLogin),
               ),
             ),
           ],
@@ -101,6 +106,7 @@ class _SentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(Gap.md),
       decoration: BoxDecoration(
@@ -110,14 +116,17 @@ class _SentCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.mark_email_read_outlined, color: scheme.onPrimaryContainer),
+          Icon(
+            Icons.mark_email_read_outlined,
+            color: scheme.onPrimaryContainer,
+          ),
           Gap.gapSm,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Đã gửi tới $email',
+                  l10n.forgotSentTo(email),
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: scheme.onPrimaryContainer,
@@ -125,7 +134,7 @@ class _SentCard extends StatelessWidget {
                 ),
                 Gap.gapXxs,
                 Text(
-                  'Kiểm tra hộp thư (kể cả mục spam). Liên kết hiệu lực trong 30 phút.',
+                  l10n.forgotCheckInbox,
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.45,

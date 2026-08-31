@@ -1,18 +1,25 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 part 'subscription.freezed.dart';
 
 /// Spec 12.1. In the MVP everyone is [SubscriptionTier.free] and every feature
 /// is unlocked (see `core/entitlements/`); this entity backs the P-02 screen.
 enum SubscriptionTier {
-  free('free', 'Bản đầy đủ · miễn phí'),
-  premiumMonthly('premium_monthly', 'Premium tháng'),
-  premiumYearly('premium_yearly', 'Premium năm'),
-  premiumFamily('premium_family', 'Premium gia đình');
+  free('free'),
+  premiumMonthly('premium_monthly'),
+  premiumYearly('premium_yearly'),
+  premiumFamily('premium_family');
 
-  const SubscriptionTier(this.wire, this.label);
+  const SubscriptionTier(this.wire);
   final String wire;
-  final String label;
+
+  String label(AppL10n l10n) => switch (this) {
+    SubscriptionTier.free => l10n.subTierFree,
+    SubscriptionTier.premiumMonthly => l10n.subTierMonthly,
+    SubscriptionTier.premiumYearly => l10n.subTierYearly,
+    SubscriptionTier.premiumFamily => l10n.subTierFamily,
+  };
 
   static SubscriptionTier fromWire(String? v) => SubscriptionTier.values
       .firstWhere((t) => t.wire == v, orElse: () => SubscriptionTier.free);

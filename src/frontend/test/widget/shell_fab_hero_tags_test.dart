@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/features/pantry/presentation/screens/pantry_screen.dart';
 import 'package:frontend/features/shopping_list/presentation/screens/shopping_list_screen.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 void main() {
   testWidgets('Pantry and Shopping FABs use distinct, non-null hero tags', (
@@ -20,7 +21,13 @@ void main() {
     for (final screen in const [PantryScreen(), ShoppingListScreen()]) {
       await tester.pumpWidget(
         ProviderScope(
-          child: MaterialApp(theme: AppTheme.light, home: screen),
+          child: MaterialApp(
+            locale: const Locale('vi'),
+            supportedLocales: AppL10n.supportedLocales,
+            localizationsDelegates: AppL10n.localizationsDelegates,
+            theme: AppTheme.light,
+            home: screen,
+          ),
         ),
       );
       // Past the mock's ~320ms latency; Shopping only shows its FAB once loaded.

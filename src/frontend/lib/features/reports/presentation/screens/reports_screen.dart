@@ -16,12 +16,13 @@ class ReportsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final period = ref.watch(reportPeriodControllerProvider);
     final async = ref.watch(reportsControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chống lãng phí'),
+        title: Text(l10n.reportsTitle),
         actions: [
           PeriodSelector(
             value: period,
@@ -37,12 +38,11 @@ class ReportsScreen extends ConsumerWidget {
         data: (r) {
           if (r.isEmpty) {
             return ListView(
-              children: const [
-                SizedBox(height: 72),
+              children: [
+                const SizedBox(height: 72),
                 EmptyState(
-                  title: 'Chưa có dữ liệu',
-                  message:
-                      'Nấu vài món dùng nguyên liệu cận hạn để xem bạn tiết kiệm được bao nhiêu.',
+                  title: l10n.reportsEmptyTitle,
+                  message: l10n.reportsEmptyBody,
                   icon: Icons.insights_outlined,
                 ),
               ],
@@ -54,12 +54,12 @@ class ReportsScreen extends ConsumerWidget {
               _HeroCard(summary: r),
               Gap.gapMd,
               _Card(
-                title: 'Nguyên liệu cứu được theo tuần',
+                title: l10n.reportsWeeklyCard,
                 child: ReportBarChart(bars: r.weeklyBars),
               ),
               Gap.gapMd,
               _Card(
-                title: 'Theo nhóm thực phẩm',
+                title: l10n.reportsByCategoryCard,
                 child: Column(
                   children: [
                     for (final c in r.byCategory)
@@ -78,9 +78,10 @@ class ReportsScreen extends ConsumerWidget {
                             Gap.gapSm,
                             Expanded(child: Text(c.category)),
                             Text(
-                              '${c.count} nguyên liệu',
-                              style: context.text.bodyMedium
-                                  ?.copyWith(fontWeight: FontWeight.w700),
+                              l10n.ingredientCount(c.count),
+                              style: context.text.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ],
                         ),
@@ -103,6 +104,7 @@ class _HeroCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(Gap.lg),
@@ -114,14 +116,14 @@ class _HeroCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${summary.periodLabel} · nguyên liệu dùng trước hạn',
+            l10n.reportsHeroPeriod(summary.periodLabel),
             style: context.text.labelMedium?.copyWith(
               color: context.colors.onPrimaryContainer.withValues(alpha: 0.8),
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            '${summary.itemsUsedBeforeExpiry} nguyên liệu',
+            l10n.ingredientCount(summary.itemsUsedBeforeExpiry),
             style: context.text.headlineMedium?.copyWith(
               fontWeight: FontWeight.w700,
               color: context.colors.onPrimaryContainer,
@@ -129,8 +131,10 @@ class _HeroCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '≈ ${summary.wasteAvoidedLabel} thực phẩm tránh bị bỏ phí · '
-            '${summary.dishesCooked} món đã nấu',
+            l10n.reportsHeroDetail(
+              summary.wasteAvoidedLabel,
+              summary.dishesCooked,
+            ),
             style: context.text.bodySmall?.copyWith(
               color: context.colors.onPrimaryContainer.withValues(alpha: 0.9),
             ),

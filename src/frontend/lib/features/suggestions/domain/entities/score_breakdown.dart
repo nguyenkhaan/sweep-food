@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 part 'score_breakdown.freezed.dart';
 
@@ -26,39 +27,38 @@ abstract class ScoreBreakdown with _$ScoreBreakdown {
   static const weights = (e: 0.4, a: 0.3, p: 0.2, u: 0.1);
 
   /// Weighted total in `0..1`.
-  double get total =>
-      0.4 * e + 0.3 * a + 0.2 * p + 0.1 * u;
+  double get total => 0.4 * e + 0.3 * a + 0.2 * p + 0.1 * u;
 
   /// Total as the 0–100 figure shown on the card badge.
   int get scoreOutOf100 => (total * 100).round();
 
   /// The rows the S-02 sheet renders, top-weighted first.
-  List<ScoreComponent> get components => [
-        ScoreComponent(
-          letter: 'E',
-          name: 'Dùng đồ cận hạn',
-          weightLabel: '40%',
-          value: e,
-        ),
-        ScoreComponent(
-          letter: 'A',
-          name: 'Tỉ lệ nguyên liệu có sẵn',
-          weightLabel: '30%',
-          value: a,
-        ),
-        ScoreComponent(
-          letter: 'P',
-          name: 'Hợp khẩu phần & sở thích',
-          weightLabel: '20%',
-          value: p,
-        ),
-        ScoreComponent(
-          letter: 'U',
-          name: 'Ít phải mua thêm',
-          weightLabel: '10%',
-          value: u,
-        ),
-      ];
+  List<ScoreComponent> components(AppL10n l10n) => [
+    ScoreComponent(
+      letter: 'E',
+      name: l10n.scoreCompE,
+      weightLabel: '40%',
+      value: e,
+    ),
+    ScoreComponent(
+      letter: 'A',
+      name: l10n.scoreCompA,
+      weightLabel: '30%',
+      value: a,
+    ),
+    ScoreComponent(
+      letter: 'P',
+      name: l10n.scoreCompP,
+      weightLabel: '20%',
+      value: p,
+    ),
+    ScoreComponent(
+      letter: 'U',
+      name: l10n.scoreCompU,
+      weightLabel: '10%',
+      value: u,
+    ),
+  ];
 }
 
 /// One display row for the score-breakdown sheet.

@@ -36,8 +36,7 @@ class ShoppingItemRow extends StatelessWidget {
                 item.name,
                 style: context.text.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  decoration:
-                      item.checked ? TextDecoration.lineThrough : null,
+                  decoration: item.checked ? TextDecoration.lineThrough : null,
                   color: item.checked ? context.sweep.textTertiary : null,
                 ),
               ),
@@ -63,10 +62,7 @@ class ShoppingItemRow extends StatelessWidget {
                 ),
               ),
             ],
-            if (item.alreadyInPantry) ...[
-              Gap.gapSm,
-              _HavePill(),
-            ],
+            if (item.alreadyInPantry) ...[Gap.gapSm, _HavePill()],
           ],
         ),
       ),
@@ -121,9 +117,9 @@ class _HavePill extends StatelessWidget {
         color: BrandPalette.green100,
         borderRadius: BorderRadius.circular(Radii.pill),
       ),
-      child: const Text(
-        'đã có',
-        style: TextStyle(
+      child: Text(
+        context.l10n.shoppingHavePill,
+        style: const TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w700,
           color: BrandPalette.green700,

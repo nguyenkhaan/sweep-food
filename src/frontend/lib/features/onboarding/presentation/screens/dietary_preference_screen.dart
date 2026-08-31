@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/app_text_button.dart';
 import 'package:frontend/core/widgets/primary_button.dart';
 import 'package:frontend/features/onboarding/domain/entities/onboarding_state.dart';
@@ -33,6 +34,7 @@ class _DietaryPreferenceScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -43,13 +45,14 @@ class _DietaryPreferenceScreenState
               const OnboardingProgress(step: OnboardingStep.dietaryPreference),
               Gap.gapXl,
               Text(
-                'Bạn muốn ăn theo hướng nào?',
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                l10n.onbDietTitle,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               Gap.gapXs,
               Text(
-                'Dùng để xếp hạng gợi ý món. Có thể đổi bất cứ lúc nào trong Cài đặt.',
+                l10n.onbDietSubtitle,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -71,15 +74,12 @@ class _DietaryPreferenceScreenState
               ),
               Gap.gapMd,
               PrimaryButton(
-                label: 'Tiếp tục',
+                label: l10n.commonContinue,
                 onPressed: () => _next(save: _selected),
               ),
               Gap.gapXxs,
               Center(
-                child: AppTextButton(
-                  label: 'Bỏ qua',
-                  onPressed: _next,
-                ),
+                child: AppTextButton(label: l10n.commonSkip, onPressed: _next),
               ),
             ],
           ),
@@ -136,13 +136,14 @@ class _PreferenceCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    preference.label,
-                    style: theme.textTheme.titleSmall
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    preference.label(context.l10n),
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Gap.gapXxs,
                   Text(
-                    preference.description,
+                    preference.description(context.l10n),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: scheme.onSurfaceVariant,
                     ),

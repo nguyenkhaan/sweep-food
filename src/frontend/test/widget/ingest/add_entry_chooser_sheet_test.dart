@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 void main() {
   testWidgets('AddEntryChooserSheet renders 4 input methods in 2x2 grid', (
@@ -11,10 +12,11 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: const Locale('vi'),
+          supportedLocales: AppL10n.supportedLocales,
+          localizationsDelegates: AppL10n.localizationsDelegates,
           theme: AppTheme.light,
-          home: const Scaffold(
-            body: AddEntryChooserSheet(),
-          ),
+          home: const Scaffold(body: AddEntryChooserSheet()),
         ),
       ),
     );
@@ -37,6 +39,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: const Locale('vi'),
+          supportedLocales: AppL10n.supportedLocales,
+          localizationsDelegates: AppL10n.localizationsDelegates,
           theme: AppTheme.light,
           home: const MediaQuery(
             data: MediaQueryData(textScaler: TextScaler.linear(1.3)),
@@ -56,6 +61,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: const Locale('vi'),
+          supportedLocales: AppL10n.supportedLocales,
+          localizationsDelegates: AppL10n.localizationsDelegates,
           theme: AppTheme.light,
           home: Scaffold(
             body: Builder(
