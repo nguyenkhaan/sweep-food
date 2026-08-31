@@ -11,6 +11,12 @@ import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
 import 'package:frontend/features/cooking/presentation/screens/cook_result_screen.dart';
 import 'package:frontend/features/dishes/presentation/screens/dish_detail_screen.dart';
 import 'package:frontend/features/home/presentation/screens/home_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/camera_capture_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/label_review_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/receipt_review_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/scan_failed_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/voice_capture_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/voice_review_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/dietary_preference_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/onboarding_pantry_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/add_ingredient_screen.dart';
@@ -103,6 +109,46 @@ GoRouter appRouter(Ref ref) {
                     builder: (context, state) => PantryItemDetailScreen(
                       itemId: state.pathParameters['id']!,
                     ),
+                  ),
+                  GoRoute(
+                    path: Routes.scanCamera, // '/pantry/scan/camera'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) {
+                      final modeQuery = state.uri.queryParameters['mode'];
+                      final initialMode = modeQuery == 'receipt'
+                          ? CameraScanMode.receipt
+                          : CameraScanMode.label;
+                      return CameraCaptureScreen(initialMode: initialMode);
+                    },
+                  ),
+                  GoRoute(
+                    path: Routes.scanLabelReview, // '/pantry/scan/label-review'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => LabelReviewScreen(
+                      imagePath: state.extra as String?,
+                    ),
+                  ),
+                  GoRoute(
+                    path: Routes.scanReceiptReview, // '/pantry/scan/receipt-review'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => ReceiptReviewScreen(
+                      imagePath: state.extra as String?,
+                    ),
+                  ),
+                  GoRoute(
+                    path: Routes.scanVoiceCapture, // '/pantry/scan/voice-capture'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const VoiceCaptureScreen(),
+                  ),
+                  GoRoute(
+                    path: Routes.scanVoiceReview, // '/pantry/scan/voice-review'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const VoiceReviewScreen(),
+                  ),
+                  GoRoute(
+                    path: Routes.scanFailed, // '/pantry/scan/failed'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const ScanFailedScreen(),
                   ),
                 ],
               ),

@@ -7,6 +7,7 @@ import 'package:frontend/core/widgets/app_search_field.dart';
 import 'package:frontend/core/widgets/async_value_widget.dart';
 import 'package:frontend/core/widgets/empty_state.dart';
 import 'package:frontend/core/widgets/section_header.dart';
+import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
 import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
 import 'package:frontend/features/pantry/domain/repositories/pantry_repository.dart';
 import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
@@ -41,7 +42,7 @@ class PantryScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('${Routes.pantry}/add'),
+        onPressed: () => showAddEntryChooser(context),
         icon: const Icon(Icons.add_rounded),
         label: const Text('Thêm nguyên liệu'),
       ),
@@ -101,7 +102,7 @@ class _PantryList extends ConsumerWidget {
         actionLabel: filtering.tier == null && filtering.query.isEmpty
             ? 'Thêm nguyên liệu'
             : null,
-        onAction: () => context.push('${Routes.pantry}/add'),
+        onAction: () => showAddEntryChooser(context),
       );
     }
 

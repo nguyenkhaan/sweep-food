@@ -4,20 +4,33 @@ import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/widgets/app_text_button.dart';
 import 'package:frontend/core/widgets/primary_button.dart';
+import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
 import 'package:frontend/features/onboarding/domain/entities/onboarding_state.dart';
 import 'package:frontend/features/onboarding/presentation/controllers/onboarding_controller.dart';
 import 'package:frontend/features/onboarding/presentation/widgets/onboarding_progress.dart';
 import 'package:go_router/go_router.dart';
 
 /// A-06 Onboarding · Hướng dẫn nhập kho lần đầu. Both CTAs mark onboarding done;
-/// "Thêm nguyên liệu đầu tiên" drops the user straight into manual add.
+/// "Thêm nguyên liệu đầu tiên" drops the user into AddEntryChooser.
 class OnboardingPantryScreen extends ConsumerWidget {
   const OnboardingPantryScreen({super.key});
 
   static const _methods = [
-    (icon: Icons.center_focus_strong_outlined, label: 'Quét'),
-    (icon: Icons.mic_none_rounded, label: 'Nói'),
-    (icon: Icons.keyboard_outlined, label: 'Nhập tay'),
+    (
+      icon: Icons.center_focus_strong_outlined,
+      label: 'Quét',
+      route: '${Routes.pantry}/${Routes.scanCamera}',
+    ),
+    (
+      icon: Icons.mic_none_rounded,
+      label: 'Nói',
+      route: '${Routes.pantry}/${Routes.scanVoiceCapture}',
+    ),
+    (
+      icon: Icons.keyboard_outlined,
+      label: 'Nhập tay',
+      route: '${Routes.pantry}/${Routes.addIngredient}',
+    ),
   ];
 
   Future<void> _finish(WidgetRef ref, BuildContext context, String to) async {
@@ -41,6 +54,7 @@ class OnboardingPantryScreen extends ConsumerWidget {
               Gap.gapXl,
               Expanded(
                 child: Container(
+                  width: double.infinity,
                   decoration: BoxDecoration(
                     color: scheme.primaryContainer,
                     borderRadius: Radii.brXl,
@@ -72,7 +86,13 @@ class OnboardingPantryScreen extends ConsumerWidget {
                 children: [
                   for (final m in _methods) ...[
                     if (m != _methods.first) Gap.gapXs,
-                    Expanded(child: _MethodChip(icon: m.icon, label: m.label)),
+                    Expanded(
+                      child: _MethodChip(
+                        icon: m.icon,
+                        label: m.label,
+                        onTap: () => _finish(ref, context, m.route),
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -80,8 +100,12 @@ class OnboardingPantryScreen extends ConsumerWidget {
               PrimaryButton(
                 label: 'Thêm nguyên liệu đầu tiên',
                 icon: Icons.add_rounded,
-                onPressed: () =>
-                    _finish(ref, context, '${Routes.pantry}/${Routes.addIngredient}'),
+                onPressed: () async {
+                  await ref.read(onboardingControllerProvider.notifier).complete();
+                  if (!context.mounted) return;
+                  context.go(Routes.pantry);
+                  showAddEntryChooser(context);
+                },
               ),
               Gap.gapXxs,
               Center(
@@ -99,33 +123,46 @@ class OnboardingPantryScreen extends ConsumerWidget {
 }
 
 class _MethodChip extends StatelessWidget {
-  const _MethodChip({required this.icon, required this.label});
+  const _MethodChip({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   final IconData icon;
   final String label;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: Gap.sm),
-      decoration: BoxDecoration(
-        color: scheme.surface,
+    return Material(
+      color: scheme.surface,
+      borderRadius: Radii.brMd,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: Radii.brMd,
-        border: Border.all(color: scheme.outlineVariant),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, size: 22, color: scheme.primary),
-          Gap.gapXxs,
-          Text(
-            label,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: scheme.onSurfaceVariant,
-            ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: Gap.sm),
+          decoration: BoxDecoration(
+            borderRadius: Radii.brMd,
+            border: Border.all(color: scheme.outlineVariant),
           ),
-        ],
+          child: Column(
+            children: [
+              Icon(icon, size: 22, color: scheme.primary),
+              Gap.gapXxs,
+              Text(
+                label,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
