@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 """Unit tests for the read-only cooking preview service."""
 
 from __future__ import annotations
@@ -23,7 +24,8 @@ from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
 from src.module.cooking.cooking_dto import CookingPreviewRequestDTO
-from src.module.cooking.cooking_service import CookingService, RecipeNotFoundError
+from src.module.cooking.cooking_helper import RecipeNotFoundError
+from src.module.cooking.cooking_service import CookingService
 from src.service.fefo_service import FEFOService
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a011")

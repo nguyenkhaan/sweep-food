@@ -1,12 +1,18 @@
 """Request and response DTOs for read-only cooking previews."""
 
+from __future__ import annotations
+
 from datetime import datetime
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
-from src.model.enum_model import MeasurementUnit
+from src.model.enum_model import (
+    CookingConsumptionMode,
+    CookingSessionStatus,
+    MeasurementUnit,
+)
 
 
 class CookingPreviewRequestDTO(BaseModel):
@@ -88,3 +94,90 @@ class CookingPreviewResponseDTO(BaseModel):
     missing_ingredients: list[MissingIngredientDTO]
     nutrition_estimate: NutritionEstimateDTO
     warnings: list[CookingPreviewWarningDTO]
+
+
+class CreateCookingSessionRequestDTO(BaseModel):
+    """Create a planned cooking session before any inventory deduction."""
+
+    meal_plan_item_id: UUID
+    servings: float = Field(gt=0)
+
+
+class CookingSessionDTO(BaseModel):
+    """Safe public data for a planned or completed cooking session."""
+
+    id: UUID
+    recipe_id: UUID
+    meal_plan_item_id: UUID | None
+    servings: float
+    status: CookingSessionStatus
+    consumption_mode: CookingConsumptionMode | None
+    nutrition_snapshot: dict[str, object]
+    completed_at: datetime | None
+
+
+class CookingConsumptionInputDTO(BaseModel):
+    """One user-confirmed batch selection for custom completion modes."""
+
+    recipe_ingredient_id: UUID
+    inventory_batch_id: UUID
+    quantity: float | None = Field(default=None, gt=0)
+
+
+class CompleteCookingSessionRequestDTO(BaseModel):
+    """Confirm a planned session with the desired actual-consumption mode."""
+
+    consumption_mode: CookingConsumptionMode
+    consumptions: list[CookingConsumptionInputDTO] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_consumptions(self) -> CompleteCookingSessionRequestDTO:
+        """Require mode-appropriate custom inputs without accepting duplicates."""
+        requires_matches = self.consumption_mode in {
+            CookingConsumptionMode.CUSTOM,
+            CookingConsumptionMode.USE_ALL_MATCHED,
+        }
+        if requires_matches and not self.consumptions:
+            raise ValueError(
+                "This consumption mode requires at least one matched batch"
+            )
+        if not requires_matches and self.consumptions:
+            raise ValueError("EXACT and HALF calculate FEFO allocations automatically")
+        if self.consumption_mode is CookingConsumptionMode.CUSTOM and any(
+            item.quantity is None for item in self.consumptions
+        ):
+            raise ValueError("CUSTOM consumption requires a quantity for every batch")
+        if self.consumption_mode is CookingConsumptionMode.USE_ALL_MATCHED and any(
+            item.quantity is not None for item in self.consumptions
+        ):
+            raise ValueError("USE_ALL_MATCHED must not include custom quantities")
+        batch_ids = [item.inventory_batch_id for item in self.consumptions]
+        if len(batch_ids) != len(set(batch_ids)):
+            raise ValueError("Each matched inventory batch may appear only once")
+        return self
+
+
+class CookingConsumptionDTO(BaseModel):
+    """One persisted actual consumption in a completed cooking session."""
+
+    recipe_ingredient_id: UUID | None
+    inventory_batch_id: UUID
+    quantity: float
+    unit: MeasurementUnit
+
+
+class UpdatedInventoryBatchDTO(BaseModel):
+    """The balance and status of one batch after cooking deduction."""
+
+    inventory_batch_id: UUID
+    current_quantity: float
+    unit: MeasurementUnit
+    status: str
+
+
+class CookingCompletionResponseDTO(BaseModel):
+    """The idempotent result of an atomically completed cooking session."""
+
+    session: CookingSessionDTO
+    consumptions: list[CookingConsumptionDTO]
+    updated_batches: list[UpdatedInventoryBatchDTO]

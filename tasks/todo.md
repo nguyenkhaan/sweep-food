@@ -491,6 +491,7 @@
 **Acceptance criteria:**
 
 - [ ] Users can create, add, replace, reschedule, and remove meal-plan items.
+- [ ] Each meal-plan item persists a positive serving count with its selected recipe and meal slot.
 - [ ] Users can add/remove favorite recipes and manage named favorite menus.
 - [ ] All objects are user-owned and pagination/filtering behavior is documented.
 
@@ -505,18 +506,19 @@
 
 ### Task 5.5: Implement shopping-list generation and editing
 
-**Description:** Generate missing ingredients from selected meal-plan recipes after subtracting usable inventory; allow manual list item changes.
+**Description:** Generate missing ingredients from selected meal-plan recipes after subtracting usable inventory; allow manual list item changes and turn a checked generated purchase into inventory.
 
 **Acceptance criteria:**
 
 - [ ] Requirements are scaled by servings and merged by compatible master ingredient/unit.
 - [ ] Non-expired available inventory is subtracted; no negative missing quantity is returned.
 - [ ] Generated items link to source recipes and manual items remain distinct.
+- [ ] Checking an unchecked generated item atomically creates its owned raw inventory batch and `INITIAL_STOCK` ledger entry exactly once.
 
 **Verification:**
 
 - [ ] Unit tests cover duplicate recipes, enough inventory, missing stock, and incompatible units.
-- [ ] API tests cover check/edit/delete item actions.
+- [ ] API tests cover check/edit/delete item actions, including the checked-item inventory and ledger side effect.
 
 **Dependencies:** Tasks 5.1, 5.4, Task 4.4.  
 **Files likely touched:** `src/backend/src/module/shopping/*`, `src/backend/src/service/*`, tests  
@@ -570,18 +572,19 @@
 
 ### Task 6.3: Implement atomic cooking completion
 
-**Description:** Complete a cooking session using exact, half, use-all-matched, or custom quantities with revalidation, locks, FEFO deduction, ledger entries, and idempotency.
+**Description:** Create a cooking session only when current FEFO inventory covers the meal-plan recipe, then complete it using exact, half, use-all-matched, or custom quantities with revalidation, locks, ledger entries, and idempotency.
 
 **Acceptance criteria:**
 
 - [ ] Every successful completion creates consumption records and ledger entries in one transaction.
+- [ ] Session creation returns a detailed `409` and persists no session when any required quantity is missing.
 - [ ] Repeat requests with the same idempotency key return the original outcome without double deduction.
 - [ ] Insufficient stock or stale allocation returns a conflict with no partial changes.
 
 **Verification:**
 
 - [ ] Transaction and concurrent-completion integration tests pass.
-- [ ] API tests cover each consumption mode.
+- [ ] API tests cover each consumption mode and the insufficient-inventory session-creation conflict.
 
 **Dependencies:** Task 6.2.  
 **Files likely touched:** `src/backend/src/module/cooking/*`, `src/backend/src/service/*`, tests  
