@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/utils/formatters/currency_vnd.dart';
+
 import 'package:frontend/core/widgets/async_value_widget.dart';
 import 'package:frontend/core/widgets/empty_state.dart';
 import 'package:frontend/features/shopping_list/domain/entities/shopping_list.dart';
@@ -130,13 +130,6 @@ class ShoppingListScreen extends ConsumerWidget {
                         ),
                       ),
                       const Spacer(),
-                      if (list.hasPriceData)
-                        Text(
-                          formatVndApprox(list.estTotalVnd),
-                          style: context.text.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
                     ],
                   ),
                 ),

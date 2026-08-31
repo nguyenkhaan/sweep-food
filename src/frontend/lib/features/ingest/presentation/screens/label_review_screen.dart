@@ -9,7 +9,6 @@ import 'package:frontend/app/theme/app_colors.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/utils/extensions/date_time_x.dart';
-import 'package:frontend/core/utils/formatters/currency_vnd.dart';
 import 'package:frontend/core/widgets/app_snackbar.dart';
 import 'package:frontend/core/widgets/confidence_field.dart';
 import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
@@ -56,26 +55,10 @@ class LabelReviewScreen extends ConsumerWidget {
             onTap: () => _editName(context, draft.name, controller),
           ),
           Gap.gapSm,
-          Row(
-            children: [
-              Expanded(
-                child: ConfidenceField(
-                  label: l10n.reviewNetWeight,
-                  value: '${draft.quantity.round()} ${draft.unit.label}',
-                  onTap: () => _editQuantity(context, draft, controller),
-                ),
-              ),
-              const SizedBox(width: Gap.sm),
-              Expanded(
-                child: ConfidenceField(
-                  label: l10n.pantryStatPrice,
-                  value: draft.priceVnd != null
-                      ? formatVnd(draft.priceVnd!)
-                      : '—',
-                  onTap: () => _editPrice(context, draft.priceVnd, controller),
-                ),
-              ),
-            ],
+          ConfidenceField(
+            label: l10n.reviewNetWeight,
+            value: '${draft.quantity.round()} ${draft.unit.label}',
+            onTap: () => _editQuantity(context, draft, controller),
           ),
           Gap.gapSm,
           Row(
@@ -274,21 +257,6 @@ class LabelReviewScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _editPrice(
-    BuildContext context,
-    int? initialPrice,
-    LabelReviewController controller,
-  ) async {
-    final result = await _promptText(
-      context,
-      title: context.l10n.reviewPurchasePrice,
-      initial: initialPrice?.toString() ?? '',
-      hint: context.l10n.reviewPriceHint,
-      number: true,
-    );
-    if (result != null) controller.setPrice(int.tryParse(result));
   }
 
   Future<void> _editCategory(

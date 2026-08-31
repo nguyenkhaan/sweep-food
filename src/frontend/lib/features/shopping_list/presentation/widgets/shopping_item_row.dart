@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/app/theme/app_colors.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/utils/formatters/currency_vnd.dart';
+
 import 'package:frontend/features/shopping_list/domain/entities/shopping_list_item.dart';
 
 /// One checkable line on the shopping list (B-01).
@@ -48,20 +48,6 @@ class ShoppingItemRow extends StatelessWidget {
                 color: context.sweep.textTertiary,
               ),
             ),
-            if (item.estPriceVnd != null) ...[
-              Gap.gapSm,
-              SizedBox(
-                width: 68,
-                child: Text(
-                  formatVnd(item.estPriceVnd!),
-                  textAlign: TextAlign.right,
-                  style: context.text.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: context.sweep.textSecondary,
-                  ),
-                ),
-              ),
-            ],
             if (item.alreadyInPantry) ...[Gap.gapSm, _HavePill()],
           ],
         ),
