@@ -72,51 +72,49 @@ class _State extends ConsumerState<PostCookConfirmSheet> {
     } catch (_) {
       if (!mounted) return;
       setState(() => _busy = false);
-      AppSnack.show(context, 'Không cập nhật được kho. Thử lại.');
+      AppSnack.show(context, context.l10n.cookUpdateFailed);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SheetBody(
-      title: 'Bạn đã nấu “${widget.dish.name}”?',
-      subtitle: 'Chọn lượng nguyên liệu đã dùng để cập nhật kho',
+      title: l10n.cookConfirmTitle(widget.dish.name),
+      subtitle: l10n.cookConfirmSubtitle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _Option(
             icon: Icons.check_rounded,
-            label: CookMode.exact.label,
-            description: 'Trừ kho theo công thức (${widget.dish.servings} phần)',
+            label: CookMode.exact.label(l10n),
+            description: l10n.cookExactWithServings(widget.dish.servings),
             recommended: true,
             enabled: !_busy,
             onTap: () => _confirm(CookMode.exact),
           ),
           _Option(
             iconText: '½',
-            label: CookMode.half.label,
-            description: CookMode.half.description,
+            label: CookMode.half.label(l10n),
+            description: CookMode.half.description(l10n),
             enabled: !_busy,
             onTap: () => _confirm(CookMode.half),
           ),
           _Option(
             icon: Icons.delete_sweep_outlined,
-            label: CookMode.all.label,
-            description: CookMode.all.description,
+            label: CookMode.all.label(l10n),
+            description: CookMode.all.description(l10n),
             enabled: !_busy,
             onTap: () => _confirm(CookMode.all),
           ),
           _Option(
             icon: Icons.tune_rounded,
-            label: CookMode.custom.label,
-            description: CookMode.custom.description,
+            label: CookMode.custom.label(l10n),
+            description: CookMode.custom.description(l10n),
             enabled: !_busy,
             onTap: () => Navigator.of(context).pop(const _WantCustom()),
           ),
-          if (_busy) ...[
-            Gap.gapSm,
-            const LinearProgressIndicator(),
-          ],
+          if (_busy) ...[Gap.gapSm, const LinearProgressIndicator()],
         ],
       ),
     );
@@ -177,7 +175,7 @@ class _Option extends StatelessWidget {
                 borderRadius: BorderRadius.circular(Radii.pill),
               ),
               child: Text(
-                'Gợi ý',
+                context.l10n.commonRecommended,
                 style: context.text.labelSmall?.copyWith(
                   letterSpacing: 0,
                   color: context.colors.primary,

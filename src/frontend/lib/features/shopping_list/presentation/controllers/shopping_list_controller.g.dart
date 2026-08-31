@@ -99,7 +99,7 @@ final class ShoppingListControllerProvider
 }
 
 String _$shoppingListControllerHash() =>
-    r'f01ac3b3f8a34c5afc5ea19acd6a57b62efd811d';
+    r'6d84632be7f6893027279e8981a1164acfc46198';
 
 /// B-01. Loads the current list; check-off / add / remove update optimistically
 /// and roll back on failure.

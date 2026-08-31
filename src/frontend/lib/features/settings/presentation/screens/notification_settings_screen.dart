@@ -11,17 +11,21 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final prefs = ref.watch(notificationSettingsControllerProvider);
     final ctrl = ref.read(notificationSettingsControllerProvider.notifier);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Thông báo')),
+      appBar: AppBar(title: Text(l10n.notifTitle)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
         children: [
           Padding(
             padding: const EdgeInsets.only(left: Gap.xxs, bottom: Gap.xs),
-            child: Text('LOẠI THÔNG BÁO', style: context.text.labelSmall),
+            child: Text(
+              l10n.notifSettingsTypesHeader,
+              style: context.text.labelSmall,
+            ),
           ),
           Container(
             decoration: BoxDecoration(
@@ -32,32 +36,32 @@ class NotificationSettingsScreen extends ConsumerWidget {
             child: Column(
               children: [
                 _ToggleRow(
-                  label: 'Cảnh báo cận hạn',
-                  subtitle: 'Khi nguyên liệu sắp hết hạn',
+                  label: l10n.notifTypeNearExpiry,
+                  subtitle: l10n.notifTypeNearExpirySub,
                   value: prefs.nearExpiry,
                   onChanged: ctrl.toggleNearExpiry,
                 ),
                 _divider(context),
                 _ToggleRow(
-                  label: 'Gợi ý món hằng ngày',
+                  label: l10n.notifTypeDailySuggestions,
                   value: prefs.dailySuggestions,
                   onChanged: ctrl.toggleDailySuggestions,
                 ),
                 _divider(context),
                 _ToggleRow(
-                  label: 'Báo cáo tuần',
+                  label: l10n.notifTypeWeeklyReport,
                   value: prefs.weeklyReport,
                   onChanged: ctrl.toggleWeeklyReport,
                 ),
                 _divider(context),
                 _ToggleRow(
-                  label: 'Nhắc sau khi nấu',
+                  label: l10n.notifTypePostCook,
                   value: prefs.postCookReminder,
                   onChanged: ctrl.togglePostCookReminder,
                 ),
                 _divider(context),
                 _ToggleRow(
-                  label: 'Khuyến mãi & mẹo',
+                  label: l10n.notifTypePromos,
                   value: prefs.promosAndTips,
                   onChanged: ctrl.togglePromosAndTips,
                 ),
@@ -66,23 +70,26 @@ class NotificationSettingsScreen extends ConsumerWidget {
           ),
           Gap.gapMd,
           SettingsGroup(
-            label: 'Thời điểm',
+            label: l10n.notifSettingsTiming,
             rows: [
               SettingsRow(
                 icon: Icons.schedule_rounded,
-                label: 'Nhắc cận hạn lúc',
+                label: l10n.notifRemindAt,
                 trailing: prefs.nearExpiryTimeLabel,
                 onTap: () async {
                   final picked = await showTimePicker(
                     context: context,
-                    initialTime: TimeOfDay(hour: prefs.nearExpiryHour, minute: 0),
+                    initialTime: TimeOfDay(
+                      hour: prefs.nearExpiryHour,
+                      minute: 0,
+                    ),
                   );
                   if (picked != null) await ctrl.setNearExpiryHour(picked.hour);
                 },
               ),
               SettingsRow(
                 icon: Icons.do_not_disturb_on_outlined,
-                label: 'Không làm phiền',
+                label: l10n.notifDnd,
                 trailing: prefs.dndWindowLabel,
                 onTap: () => _editDnd(
                   context,
@@ -110,13 +117,13 @@ class NotificationSettingsScreen extends ConsumerWidget {
     final s = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(hour: start, minute: 0),
-      helpText: 'Bắt đầu không làm phiền',
+      helpText: context.l10n.notifDndStart,
     );
     if (s == null || !context.mounted) return;
     final e = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(hour: end, minute: 0),
-      helpText: 'Kết thúc không làm phiền',
+      helpText: context.l10n.notifDndEnd,
     );
     if (e == null) return;
     await ref

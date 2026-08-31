@@ -27,7 +27,7 @@ class DishDetailScreen extends ConsumerWidget {
     final async = ref.watch(dishByIdProvider(dishId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Chi tiết món')),
+      appBar: AppBar(title: Text(context.l10n.dishDetailTitle)),
       body: AsyncValueWidget<Dish>(
         value: async,
         onRetry: () => ref.invalidate(dishByIdProvider(dishId)),
@@ -45,6 +45,7 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final dish = ref.watch(scaledDishProvider(dishId));
     if (dish == null) return const SizedBox.shrink();
 
@@ -61,7 +62,7 @@ class _Body extends ConsumerWidget {
               Text(dish.name, style: context.text.headlineSmall),
               const SizedBox(height: 4),
               Text(
-                dish.metaLine,
+                dish.metaLine(l10n),
                 style: context.text.bodyMedium?.copyWith(
                   color: context.sweep.textTertiary,
                 ),
@@ -75,12 +76,12 @@ class _Body extends ConsumerWidget {
               Gap.gapLg,
               MacroBreakdown(nutrition: dish.nutritionPerServing),
               Gap.gapLg,
-              SectionHeader(title: 'Nguyên liệu · $servings phần'),
+              SectionHeader(title: l10n.dishIngredientsWithServings(servings)),
               Gap.gapXs,
               IngredientChecklist(ingredients: dish.mainIngredients),
               if (dish.seasonings.isNotEmpty) ...[
                 Gap.gapLg,
-                const SectionHeader(title: 'Gia vị'),
+                SectionHeader(title: l10n.dishSeasonings),
                 Gap.gapXs,
                 Wrap(
                   spacing: Gap.xs,
@@ -100,24 +101,22 @@ class _Body extends ConsumerWidget {
                   onPressed: () async {
                     final added = await ref
                         .read(shoppingListControllerProvider.notifier)
-                        .addMissingFromDish(dish);
+                        .addMissingFromDish(dish, l10n);
                     if (!context.mounted) return;
                     AppSnack.show(
                       context,
                       added > 0
-                          ? 'Đã thêm $added nguyên liệu vào danh sách mua'
-                          : 'Danh sách mua chưa sẵn sàng — thử lại sau.',
+                          ? context.l10n.dishAddedToShopping(added)
+                          : context.l10n.dishShoppingNotReady,
                     );
                   },
                   icon: const Icon(Icons.add_shopping_cart_rounded, size: 18),
-                  label: Text(
-                    'Thêm ${dish.missingCount} nguyên liệu thiếu vào danh sách mua',
-                  ),
+                  label: Text(l10n.dishAddMissing(dish.missingCount)),
                 ),
               ],
               if (dish.steps.isNotEmpty) ...[
                 Gap.gapLg,
-                const SectionHeader(title: 'Cách làm'),
+                SectionHeader(title: l10n.dishHowTo),
                 Gap.gapXs,
                 CookingStepsView(steps: dish.steps),
               ],
@@ -176,7 +175,7 @@ class _Hero extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'ĐIỂM',
+                      context.l10n.scoreBadgeLabel,
                       style: TextStyle(
                         color: context.colors.onPrimary.withValues(alpha: 0.85),
                         fontSize: 7,
@@ -211,7 +210,7 @@ class _ServingsRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text('Khẩu phần', style: context.text.titleSmall),
+          Text(context.l10n.dishServingsLabel, style: context.text.titleSmall),
           const Spacer(),
           IconButton.filledTonal(
             onPressed: servings > 1 ? () => onChanged(servings - 1) : null,
@@ -219,7 +218,10 @@ class _ServingsRow extends StatelessWidget {
             visualDensity: VisualDensity.compact,
           ),
           const SizedBox(width: Gap.sm),
-          Text('$servings phần', style: context.text.titleMedium),
+          Text(
+            context.l10n.servingsCount(servings),
+            style: context.text.titleMedium,
+          ),
           const SizedBox(width: Gap.sm),
           IconButton.filledTonal(
             onPressed: servings < 12 ? () => onChanged(servings + 1) : null,
@@ -246,7 +248,7 @@ class _CookBar extends StatelessWidget {
         child: FilledButton.icon(
           onPressed: () => PostCookConfirmSheet.show(context, dish: dish),
           icon: const Icon(Icons.restaurant_menu_rounded, size: 18),
-          label: const Text('Đã nấu món này'),
+          label: Text(context.l10n.dishCookedThis),
         ),
       ),
     );

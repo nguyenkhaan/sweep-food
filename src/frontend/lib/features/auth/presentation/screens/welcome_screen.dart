@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/app_text_button.dart';
 import 'package:frontend/core/widgets/primary_button.dart';
 import 'package:go_router/go_router.dart';
@@ -17,25 +18,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final _controller = PageController();
   int _page = 0;
 
-  static const _slides = [
-    (
-      icon: Icons.schedule_rounded,
-      title: 'Biến nguyên liệu đang có thành bữa ăn',
-      body:
-          'SweepFood theo dõi hạn dùng và luôn đẩy những món cần dùng sớm lên đầu.',
-    ),
-    (
-      icon: Icons.restaurant_menu_rounded,
-      title: 'Gợi ý món hợp tủ bếp của bạn',
-      body:
-          '3–5 món mỗi lần, chấm điểm theo nguyên liệu sẵn có và đồ sắp hết hạn.',
-    ),
-    (
-      icon: Icons.eco_rounded,
-      title: 'Nấu hết đồ, bớt lãng phí',
-      body:
-          'Xem bạn đã dùng kịp bao nhiêu nguyên liệu trước hạn — tính bằng kg tránh bỏ phí.',
-    ),
+  static const _icons = [
+    Icons.schedule_rounded,
+    Icons.restaurant_menu_rounded,
+    Icons.eco_rounded,
   ];
 
   @override
@@ -47,6 +33,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
+    final slides = [
+      (
+        icon: _icons[0],
+        title: l10n.welcomeSlide1Title,
+        body: l10n.welcomeSlide1Body,
+      ),
+      (
+        icon: _icons[1],
+        title: l10n.welcomeSlide2Title,
+        body: l10n.welcomeSlide2Body,
+      ),
+      (
+        icon: _icons[2],
+        title: l10n.welcomeSlide3Title,
+        body: l10n.welcomeSlide3Body,
+      ),
+    ];
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -59,18 +63,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Gap.gapXs,
                   Text(
                     'SweepFood',
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
               Expanded(
                 child: PageView.builder(
                   controller: _controller,
-                  itemCount: _slides.length,
+                  itemCount: slides.length,
                   onPageChanged: (i) => setState(() => _page = i),
                   itemBuilder: (context, i) {
-                    final s = _slides[i];
+                    final s = slides[i];
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -91,8 +96,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         Text(
                           s.title,
                           textAlign: TextAlign.center,
-                          style: theme.textTheme.headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.w700),
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                         Gap.gapSm,
                         Text(
@@ -107,15 +113,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                 ),
               ),
-              _Dots(count: _slides.length, active: _page),
+              _Dots(count: slides.length, active: _page),
               Gap.gapLg,
               PrimaryButton(
-                label: 'Bắt đầu',
+                label: l10n.welcomeStart,
                 onPressed: () => context.push(Routes.register),
               ),
               Gap.gapXs,
               AppTextButton(
-                label: 'Đã có tài khoản? Đăng nhập',
+                label: l10n.welcomeHaveAccount,
                 onPressed: () => context.push(Routes.login),
               ),
             ],
@@ -145,9 +151,7 @@ class _Dots extends StatelessWidget {
             width: i == active ? 20 : 7,
             height: 7,
             decoration: BoxDecoration(
-              color: i == active
-                  ? scheme.primary
-                  : scheme.outlineVariant,
+              color: i == active ? scheme.primary : scheme.outlineVariant,
               borderRadius: Radii.brSm,
             ),
           ),

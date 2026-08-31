@@ -31,6 +31,7 @@ class AddEntryChooserSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = context.colors;
     final sweep = context.sweep;
+    final l10n = context.l10n;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -41,114 +42,112 @@ class AddEntryChooserSheet extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            Gap.lg, Gap.sm, Gap.lg, Gap.xl,
-          ),
+          padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.sm, Gap.lg, Gap.xl),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-              // ── Grab handle ─────────────────────────────────────
-              Center(
-                child: Container(
-                  width: 38,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: sweep.hairline,
-                    borderRadius: Radii.brSheet,
+                // ── Grab handle ─────────────────────────────────────
+                Center(
+                  child: Container(
+                    width: 38,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: sweep.hairline,
+                      borderRadius: Radii.brSheet,
+                    ),
                   ),
                 ),
-              ),
-              Gap.gapMd,
+                Gap.gapMd,
 
-              // ── Tiêu đề ─────────────────────────────────────────
-              Text(
-                'Thêm nguyên liệu',
-                style: context.text.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
+                // ── Tiêu đề ─────────────────────────────────────────
+                Text(
+                  l10n.pantryAddIngredient,
+                  style: context.text.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              Gap.gapMd,
+                Gap.gapMd,
 
-              // ── 2×2 lưới (row + IntrinsicHeight — co giãn theo cỡ chữ,
-              //    không overflow như childAspectRatio cố định) ────────
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: _OptionCard(
-                        icon: const _CameraIcon(),
-                        title: 'Quét tem nhãn',
-                        subtitle: 'Chụp nhãn cân trên sản phẩm đóng gói',
-                        isPrimary: true,
-                        onTap: () {
-                          context.pop(); // đóng sheet
-                          context.push(
-                            '${Routes.pantry}/${Routes.scanCamera}?mode=label',
-                          );
-                        },
+                // ── 2×2 lưới (row + IntrinsicHeight — co giãn theo cỡ chữ,
+                //    không overflow như childAspectRatio cố định) ────────
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: _OptionCard(
+                          icon: const _CameraIcon(),
+                          title: l10n.chooserScanLabel,
+                          subtitle: l10n.chooserScanLabelSub,
+                          isPrimary: true,
+                          onTap: () {
+                            context.pop(); // đóng sheet
+                            context.push(
+                              '${Routes.pantry}/${Routes.scanCamera}?mode=label',
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: Gap.sm),
-                    Expanded(
-                      child: _OptionCard(
-                        icon: const _ReceiptIcon(),
-                        title: 'Quét hóa đơn',
-                        subtitle: 'Chụp hóa đơn, thêm nhiều mục một lúc',
-                        onTap: () {
-                          context.pop();
-                          context.push(
-                            '${Routes.pantry}/${Routes.scanCamera}?mode=receipt',
-                          );
-                        },
+                      const SizedBox(width: Gap.sm),
+                      Expanded(
+                        child: _OptionCard(
+                          icon: const _ReceiptIcon(),
+                          title: l10n.chooserScanReceipt,
+                          subtitle: l10n.chooserScanReceiptSub,
+                          onTap: () {
+                            context.pop();
+                            context.push(
+                              '${Routes.pantry}/${Routes.scanCamera}?mode=receipt',
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: Gap.sm),
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(
-                      child: _OptionCard(
-                        icon: const _MicIcon(),
-                        title: 'Nói',
-                        subtitle: 'Đọc tên nguyên liệu và số lượng',
-                        onTap: () {
-                          context.pop();
-                          context.push(
-                            '${Routes.pantry}/${Routes.scanVoiceCapture}',
-                          );
-                        },
+                const SizedBox(height: Gap.sm),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: _OptionCard(
+                          icon: const _MicIcon(),
+                          title: l10n.chooserVoice,
+                          subtitle: l10n.chooserVoiceSub,
+                          onTap: () {
+                            context.pop();
+                            context.push(
+                              '${Routes.pantry}/${Routes.scanVoiceCapture}',
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: Gap.sm),
-                    Expanded(
-                      child: _OptionCard(
-                        icon: const _KeyboardIcon(),
-                        title: 'Nhập tay',
-                        subtitle: 'Tự chọn từ danh mục nguyên liệu',
-                        onTap: () {
-                          context.pop();
-                          context.push(
-                            '${Routes.pantry}/${Routes.addIngredient}',
-                          );
-                        },
+                      const SizedBox(width: Gap.sm),
+                      Expanded(
+                        child: _OptionCard(
+                          icon: const _KeyboardIcon(),
+                          title: l10n.chooserManual,
+                          subtitle: l10n.chooserManualSub,
+                          onTap: () {
+                            context.pop();
+                            context.push(
+                              '${Routes.pantry}/${Routes.addIngredient}',
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 }
 
@@ -176,10 +175,8 @@ class _OptionCard extends StatelessWidget {
     final cs = context.colors;
     final sweep = context.sweep;
 
-    final bgColor =
-        isPrimary ? BrandPalette.green700 : cs.surface;
-    final borderColor =
-        isPrimary ? BrandPalette.green700 : sweep.hairline;
+    final bgColor = isPrimary ? BrandPalette.green700 : cs.surface;
+    final borderColor = isPrimary ? BrandPalette.green700 : sweep.hairline;
     final iconBg = isPrimary
         ? Colors.white.withValues(alpha: 0.16)
         : BrandPalette.green100;

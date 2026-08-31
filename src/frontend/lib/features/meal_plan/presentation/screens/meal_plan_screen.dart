@@ -22,19 +22,28 @@ import 'package:go_router/go_router.dart';
 class MealPlanScreen extends ConsumerWidget {
   const MealPlanScreen({super.key});
 
-  static const _dayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final dayLabels = [
+      l10n.wdMon,
+      l10n.wdTue,
+      l10n.wdWed,
+      l10n.wdThu,
+      l10n.wdFri,
+      l10n.wdSat,
+      l10n.wdSun,
+    ];
     final weekStart = ref.watch(mealPlanWeekStartProvider);
     final async = ref.watch(mealPlanControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Thực đơn tuần')),
+      appBar: AppBar(title: Text(l10n.mealPlanTitle)),
       body: Column(
         children: [
           _WeekNav(
-            label: '${weekStart.ddMM} – '
+            label:
+                '${weekStart.ddMM} – '
                 '${weekStart.add(const Duration(days: 6)).ddMM}',
             onPrev: () =>
                 ref.read(mealPlanWeekStartProvider.notifier).previous(),
@@ -57,7 +66,7 @@ class MealPlanScreen extends ConsumerWidget {
                         SizedBox(
                           width: 28,
                           child: Text(
-                            _dayLabels[i],
+                            dayLabels[i],
                             style: context.text.labelMedium?.copyWith(
                               fontWeight: FontWeight.w700,
                               color: context.sweep.textSecondary,
@@ -70,8 +79,7 @@ class MealPlanScreen extends ConsumerWidget {
                               padding: const EdgeInsets.only(left: Gap.xxs),
                               child: MealSlotCell(
                                 entry: plan.entryAt(day, slot),
-                                onTap: () =>
-                                    _assign(context, ref, day, slot),
+                                onTap: () => _assign(context, ref, day, slot),
                                 onClear: () => ref
                                     .read(mealPlanControllerProvider.notifier)
                                     .clear(day, slot),
@@ -89,9 +97,14 @@ class MealPlanScreen extends ConsumerWidget {
       ),
       bottomNavigationBar: async.hasValue
           ? SafeArea(
-              minimum: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.md),
+              minimum: const EdgeInsets.fromLTRB(
+                Gap.lg,
+                Gap.xs,
+                Gap.lg,
+                Gap.md,
+              ),
               child: PrimaryButton(
-                label: 'Tạo danh sách mua sắm',
+                label: l10n.mealPlanGenerateShopping,
                 icon: Icons.shopping_cart_outlined,
                 onPressed: () => _generateShoppingList(context, ref),
               ),
@@ -111,7 +124,9 @@ class MealPlanScreen extends ConsumerWidget {
       builder: (_) => const _AssignSheet(),
     );
     if (picked == null) return;
-    await ref.read(mealPlanControllerProvider.notifier).assign(
+    await ref
+        .read(mealPlanControllerProvider.notifier)
+        .assign(
           date: day,
           slot: slot,
           dishId: picked.id,
@@ -120,13 +135,19 @@ class MealPlanScreen extends ConsumerWidget {
         );
   }
 
-  Future<void> _generateShoppingList(BuildContext context, WidgetRef ref) async {
+  Future<void> _generateShoppingList(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     final res = await ref
         .read(shoppingListRepositoryProvider)
         .generate(mealPlanId: 'current');
     res.fold(
-      (f) => messenger.showSnackBar(SnackBar(content: Text(f.message))),
+      (f) => messenger.showSnackBar(
+        SnackBar(content: Text(f.localizedMessage(l10n))),
+      ),
       (_) {
         ref.invalidate(shoppingListControllerProvider);
         if (context.mounted) context.go(Routes.shopping);
@@ -159,7 +180,9 @@ class _WeekNav extends StatelessWidget {
           ),
           Text(
             label,
-            style: context.text.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+            style: context.text.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
           ),
           IconButton(
             onPressed: onNext,
@@ -186,7 +209,7 @@ class _ColumnHeader extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: Gap.xxs),
                 child: Text(
-                  s.label,
+                  s.label(context.l10n),
                   textAlign: TextAlign.center,
                   style: context.text.labelSmall,
                 ),
@@ -206,8 +229,8 @@ class _AssignSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(suggestionListControllerProvider);
     return SheetBody(
-      title: 'Chọn món',
-      subtitle: 'Từ gợi ý hợp tủ bếp của bạn',
+      title: context.l10n.mealPlanPickDish,
+      subtitle: context.l10n.mealPlanPickDishSub,
       child: SizedBox(
         height: 360,
         child: AsyncValueWidget<List<DishSuggestion>>(
@@ -222,7 +245,7 @@ class _AssignSheet extends ConsumerWidget {
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.restaurant_rounded),
                 title: Text(s.dish.name),
-                subtitle: Text(s.dish.shortMeta),
+                subtitle: Text(s.dish.shortMeta(context.l10n)),
                 onTap: () => Navigator.of(context).pop(s),
               );
             },

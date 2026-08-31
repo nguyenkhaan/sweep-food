@@ -1,15 +1,21 @@
 import 'package:frontend/core/config/app_constants.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:frontend/shared/domain/dietary_preference.dart';
 
 /// Which meal the user is cooking (S-01 filter).
 enum MealType {
-  breakfast('breakfast', 'Bữa sáng'),
-  lunch('lunch', 'Bữa trưa'),
-  dinner('dinner', 'Bữa tối');
+  breakfast('breakfast'),
+  lunch('lunch'),
+  dinner('dinner');
 
-  const MealType(this.wire, this.label);
+  const MealType(this.wire);
   final String wire;
-  final String label;
+
+  String label(AppL10n l10n) => switch (this) {
+    MealType.breakfast => l10n.mealTypeBreakfast,
+    MealType.lunch => l10n.mealTypeLunch,
+    MealType.dinner => l10n.mealTypeDinner,
+  };
 }
 
 /// Body for `POST /suggestions/dishes`. The server scores with
@@ -40,18 +46,19 @@ class SuggestionRequest {
       dietaryPreference: clearDietaryPreference
           ? null
           : dietaryPreference ?? this.dietaryPreference,
-      maxCookTimeMin:
-          clearMaxCookTime ? null : maxCookTimeMin ?? this.maxCookTimeMin,
+      maxCookTimeMin: clearMaxCookTime
+          ? null
+          : maxCookTimeMin ?? this.maxCookTimeMin,
       mealType: clearMealType ? null : mealType ?? this.mealType,
       limit: limit ?? this.limit,
     );
   }
 
   Map<String, dynamic> toBody() => {
-        if (dietaryPreference != null)
-          'dietary_preference': dietaryPreference!.wire,
-        if (maxCookTimeMin != null) 'max_cook_time': maxCookTimeMin,
-        if (mealType != null) 'meal_type': mealType!.wire,
-        'limit': limit,
-      };
+    if (dietaryPreference != null)
+      'dietary_preference': dietaryPreference!.wire,
+    if (maxCookTimeMin != null) 'max_cook_time': maxCookTimeMin,
+    if (mealType != null) 'meal_type': mealType!.wire,
+    'limit': limit,
+  };
 }

@@ -14,9 +14,13 @@ class PantrySharingScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final me = ref.watch(sessionControllerProvider).asData?.value?.user;
     final members = [
-      PantryMember(name: me?.name ?? 'Bạn', role: PantryMemberRole.owner),
+      PantryMember(
+        name: me?.name ?? l10n.commonYou,
+        role: PantryMemberRole.owner,
+      ),
       const PantryMember(name: 'Lê B', role: PantryMemberRole.editor),
       const PantryMember(
         name: 'Trần C',
@@ -27,12 +31,12 @@ class PantrySharingScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chia sẻ tủ bếp'),
+        title: Text(l10n.settingsPantrySharing),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: Gap.md),
             child: Chip(
-              label: const Text('Sắp có'),
+              label: Text(l10n.commonComingSoon),
               visualDensity: VisualDensity.compact,
               backgroundColor: context.colors.primaryContainer,
               side: BorderSide.none,
@@ -44,8 +48,7 @@ class PantrySharingScreen extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
         children: [
           Text(
-            'Mời tối đa 4 người cùng xem và cập nhật tủ bếp. Mọi thay đổi được '
-            'đồng bộ cho tất cả thành viên.',
+            l10n.pantrySharingIntro,
             style: context.text.bodyMedium?.copyWith(
               color: context.sweep.textSecondary,
             ),
@@ -58,13 +61,10 @@ class PantrySharingScreen extends ConsumerWidget {
             ),
           ),
           Gap.gapMd,
-          DottedInviteButton(
-            onTap: () => context.push(Routes.paywall),
-          ),
+          DottedInviteButton(onTap: () => context.push(Routes.paywall)),
           Gap.gapMd,
           Text(
-            'Thành viên có thể thêm, sửa, xóa nguyên liệu và xem gợi ý món. '
-            'Chỉ chủ tủ bếp mới xóa được thành viên.',
+            l10n.pantrySharingFootnote,
             style: context.text.bodySmall?.copyWith(
               color: context.sweep.textTertiary,
               height: 1.5,
@@ -107,11 +107,12 @@ class _MemberRow extends StatelessWidget {
               children: [
                 Text(
                   member.name,
-                  style: context.text.bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: context.text.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 Text(
-                  member.roleLabel,
+                  member.roleLabel(context.l10n),
                   style: context.text.bodySmall?.copyWith(
                     color: pending
                         ? context.colors.tertiary
@@ -122,7 +123,11 @@ class _MemberRow extends StatelessWidget {
             ),
           ),
           if (member.role != PantryMemberRole.owner)
-            Icon(Icons.close_rounded, size: 18, color: context.sweep.textTertiary),
+            Icon(
+              Icons.close_rounded,
+              size: 18,
+              color: context.sweep.textTertiary,
+            ),
         ],
       ),
     );
@@ -155,7 +160,7 @@ class DottedInviteButton extends StatelessWidget {
             Icon(Icons.add_rounded, size: 18, color: context.colors.primary),
             Gap.gapXs,
             Text(
-              'Mời thành viên',
+              context.l10n.pantrySharingInvite,
               style: context.text.labelLarge?.copyWith(
                 color: context.colors.primary,
                 fontWeight: FontWeight.w700,

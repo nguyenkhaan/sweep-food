@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/app_bottom_sheet.dart';
 import 'package:frontend/core/widgets/primary_button.dart';
 import 'package:frontend/features/settings/presentation/controllers/preferences_controller.dart';
@@ -13,10 +14,8 @@ import 'package:frontend/shared/domain/measurement_unit.dart';
 class AddShoppingItemSheet extends ConsumerStatefulWidget {
   const AddShoppingItemSheet({super.key});
 
-  static Future<void> show(BuildContext context) => showAppBottomSheet(
-        context,
-        builder: (_) => const AddShoppingItemSheet(),
-      );
+  static Future<void> show(BuildContext context) =>
+      showAppBottomSheet(context, builder: (_) => const AddShoppingItemSheet());
 
   @override
   ConsumerState<AddShoppingItemSheet> createState() => _State();
@@ -26,7 +25,9 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
   final _name = TextEditingController();
   final _qty = TextEditingController(text: '1');
   final _category = TextEditingController();
-  late MeasurementUnit _unit = ref.read(preferencesControllerProvider).defaultUnit;
+  late MeasurementUnit _unit = ref
+      .read(preferencesControllerProvider)
+      .defaultUnit;
   bool _busy = false;
 
   @override
@@ -42,13 +43,15 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
     final qty = double.tryParse(_qty.text.replaceAll(',', '.')) ?? 0;
     if (name.isEmpty || qty <= 0) return;
     setState(() => _busy = true);
-    await ref.read(shoppingListControllerProvider.notifier).addManualItem(
+    await ref
+        .read(shoppingListControllerProvider.notifier)
+        .addManualItem(
           ShoppingListItemDraft(
             name: name,
             quantity: qty,
             unit: _unit,
             category: _category.text.trim().isEmpty
-                ? 'Khác'
+                ? context.l10n.catOther
                 : _category.text.trim(),
           ),
         );
@@ -57,8 +60,9 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SheetBody(
-      title: 'Thêm món',
+      title: l10n.shoppingAddItem,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -67,7 +71,7 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
             controller: _name,
             autofocus: true,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(labelText: 'Tên món'),
+            decoration: InputDecoration(labelText: l10n.shoppingItemName),
           ),
           Gap.gapSm,
           Row(
@@ -75,19 +79,22 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
               Expanded(
                 child: TextField(
                   controller: _qty,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
                   ],
-                  decoration: const InputDecoration(labelText: 'Số lượng'),
+                  decoration: InputDecoration(
+                    labelText: l10n.pantryStatQuantity,
+                  ),
                 ),
               ),
               Gap.gapSm,
               Expanded(
                 child: DropdownButtonFormField<MeasurementUnit>(
                   initialValue: _unit,
-                  decoration: const InputDecoration(labelText: 'Đơn vị'),
+                  decoration: InputDecoration(labelText: l10n.reviewUnit),
                   items: [
                     for (final u in MeasurementUnit.values)
                       DropdownMenuItem(value: u, child: Text(u.label)),
@@ -101,14 +108,14 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
           TextField(
             controller: _category,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(
-              labelText: 'Danh mục (tùy chọn)',
-              hintText: 'Rau củ, Thịt & hải sản, …',
+            decoration: InputDecoration(
+              labelText: l10n.shoppingCategoryOptional,
+              hintText: l10n.shoppingCategoryHint,
             ),
           ),
           Gap.gapLg,
           PrimaryButton(
-            label: 'Thêm vào danh sách',
+            label: l10n.shoppingAddToList,
             loading: _busy,
             onPressed: _busy ? null : _submit,
           ),

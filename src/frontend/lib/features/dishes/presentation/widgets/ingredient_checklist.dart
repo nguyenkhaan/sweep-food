@@ -39,12 +39,16 @@ class _Row extends StatelessWidget {
         : (context.sweep.subtleFill, context.sweep.textTertiary);
 
     final (tagLabel, tagBg, tagFg) = switch ((available, ing.nearExpiry)) {
-      (true, true) => ('cận hạn', context.sweep.soon.bg, context.sweep.soon.fg),
+      (true, true) => (
+        context.l10n.checklistNearExpiry,
+        context.sweep.soon.bg,
+        context.sweep.soon.fg,
+      ),
       (false, _) => (
-          'cần mua',
-          context.sweep.subtleFill,
-          context.sweep.textSecondary,
-        ),
+        context.l10n.checklistToBuy,
+        context.sweep.subtleFill,
+        context.sweep.textSecondary,
+      ),
       _ => (null, Colors.transparent, Colors.transparent),
     };
 

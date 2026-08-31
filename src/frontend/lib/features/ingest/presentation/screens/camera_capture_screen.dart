@@ -16,22 +16,30 @@ import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
 import 'package:frontend/features/ingest/presentation/controllers/scan_controller.dart';
 import 'package:frontend/features/ingest/presentation/widgets/viewfinder_overlay.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 enum CameraScanMode {
-  label('Tem nhãn', ScanType.label),
-  receipt('Hóa đơn', ScanType.receipt);
+  label(ScanType.label),
+  receipt(ScanType.receipt);
 
-  const CameraScanMode(this.title, this.scanType);
+  const CameraScanMode(this.scanType);
 
-  final String title;
   final ScanType scanType;
+
+  String title(AppL10n l10n) => switch (this) {
+    CameraScanMode.label => l10n.camModeLabel,
+    CameraScanMode.receipt => l10n.camModeReceipt,
+  };
 }
 
 /// I-01 / I-04 — khung ngắm camera trực tiếp trong app; nút trắng chụp lại
 /// khung hình hiện tại rồi gửi OCR (không mở app máy ảnh của hệ thống).
 class CameraCaptureScreen extends ConsumerStatefulWidget {
-  const CameraCaptureScreen({this.initialMode = CameraScanMode.label, super.key});
+  const CameraCaptureScreen({
+    this.initialMode = CameraScanMode.label,
+    super.key,
+  });
 
   final CameraScanMode initialMode;
 
@@ -106,7 +114,7 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
     try {
       final cams = await availableCameras();
       if (cams.isEmpty) {
-        if (mounted) setState(() => _hint = 'Thiết bị không có máy ảnh.');
+        if (mounted) setState(() => _hint = context.l10n.camNoCamera);
         return;
       }
       final back = cams.firstWhere(
@@ -130,7 +138,7 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
         _hint = null;
       });
     } on Object catch (e) {
-      if (mounted) setState(() => _hint = 'Không mở được máy ảnh: $e');
+      if (mounted) setState(() => _hint = context.l10n.camOpenError('$e'));
     }
   }
 
@@ -142,19 +150,24 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
   Future<void> _toggleTorch() async {
     final c = _controller;
     if (c == null || !c.value.isInitialized) return;
+    final l10n = context.l10n;
     try {
       await c.setFlashMode(_torch ? FlashMode.off : FlashMode.torch);
       if (mounted) setState(() => _torch = !_torch);
     } on Object {
-      _snack('Đèn flash không khả dụng trên thiết bị này.');
+      _snack(l10n.camNoFlash);
     }
   }
 
   Future<void> _shoot() async {
     final c = _controller;
-    if (_busy || c == null || !c.value.isInitialized || c.value.isTakingPicture) {
+    if (_busy ||
+        c == null ||
+        !c.value.isInitialized ||
+        c.value.isTakingPicture) {
       return;
     }
+    final l10n = context.l10n;
     setState(() => _busy = true);
     try {
       final shot = await c.takePicture();
@@ -162,20 +175,21 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
     } on Object catch (e) {
       if (mounted) {
         setState(() => _busy = false);
-        _snack('Không chụp được: $e');
+        _snack(l10n.camShootError('$e'));
       }
     }
   }
 
   Future<void> _pickFromGallery() async {
     if (_busy) return;
+    final l10n = context.l10n;
     String? path;
     try {
       path = await ref
           .read(imageCaptureServiceProvider)
           .capture(source: ImageSource.gallery);
     } on Object catch (e) {
-      _snack('Không mở được thư viện ảnh: $e');
+      _snack(l10n.camGalleryError('$e'));
       return;
     }
     if (!mounted || path == null) return;
@@ -266,18 +280,18 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
             ),
           ),
           if (_busy)
-            const Positioned.fill(
+            Positioned.fill(
               child: ColoredBox(
                 color: Colors.black54,
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircularProgressIndicator(color: Colors.white),
-                      SizedBox(height: Gap.md),
+                      const CircularProgressIndicator(color: Colors.white),
+                      const SizedBox(height: Gap.md),
                       Text(
-                        'Đang đọc thông tin…',
-                        style: TextStyle(color: Colors.white),
+                        context.l10n.camReading,
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
@@ -329,13 +343,14 @@ class _Stage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final white70 = Colors.white.withValues(alpha: 0.8);
 
     Widget caption(String text) => Text(
-          text,
-          textAlign: TextAlign.center,
-          style: context.text.bodyMedium?.copyWith(color: white70),
-        );
+      text,
+      textAlign: TextAlign.center,
+      style: context.text.bodyMedium?.copyWith(color: white70),
+    );
 
     if (hint == _CameraCaptureScreenState._kStarting) {
       return Column(
@@ -346,10 +361,13 @@ class _Stage extends StatelessWidget {
           const SizedBox(
             width: 22,
             height: 22,
-            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+            child: CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 2,
+            ),
           ),
           Gap.gapSm,
-          caption('Đang mở máy ảnh…'),
+          caption(l10n.camOpening),
         ],
       );
     }
@@ -362,8 +380,8 @@ class _Stage extends StatelessWidget {
           Gap.gapLg,
           caption(
             mode == CameraScanMode.label
-                ? 'Đưa nhãn cân vào khung, giữ máy thẳng'
-                : 'Đưa toàn bộ hóa đơn vào khung',
+                ? l10n.camGuideLabel
+                : l10n.camGuideReceipt,
           ),
         ],
       );
@@ -377,16 +395,14 @@ class _Stage extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isPermission ? Icons.lock_outline_rounded : Icons.videocam_off_outlined,
+            isPermission
+                ? Icons.lock_outline_rounded
+                : Icons.videocam_off_outlined,
             color: white70,
             size: 40,
           ),
           Gap.gapMd,
-          caption(
-            isPermission
-                ? 'Cần quyền máy ảnh để quét trực tiếp.'
-                : hint!,
-          ),
+          caption(isPermission ? l10n.camPermissionNeeded : hint!),
           Gap.gapMd,
           Wrap(
             alignment: WrapAlignment.center,
@@ -401,7 +417,9 @@ class _Stage extends StatelessWidget {
                       : Icons.refresh_rounded,
                   size: 18,
                 ),
-                label: Text(isPermission ? 'Cấp quyền máy ảnh' : 'Thử lại'),
+                label: Text(
+                  isPermission ? l10n.camGrantPermission : l10n.commonRetry,
+                ),
               ),
               OutlinedButton.icon(
                 onPressed: onGallery,
@@ -410,7 +428,7 @@ class _Stage extends StatelessWidget {
                   foregroundColor: Colors.white,
                   side: const BorderSide(color: Colors.white54),
                 ),
-                label: const Text('Dùng ảnh có sẵn'),
+                label: Text(l10n.camUseGallery),
               ),
             ],
           ),
@@ -454,7 +472,7 @@ class _Topbar extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            'Quét ${mode.title.toLowerCase()}',
+            context.l10n.camScanTitle(mode.title(context.l10n).toLowerCase()),
             style: context.text.titleMedium?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -497,7 +515,7 @@ class _ModeSwitcher extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: ChoiceChip(
-            label: Text(m.title),
+            label: Text(m.title(context.l10n)),
             selected: selected,
             showCheckmark: false,
             selectedColor: Colors.white,
@@ -574,7 +592,7 @@ class _ActionBar extends StatelessWidget {
             child: SizedBox(
               width: 60,
               child: Text(
-                'Nhập tay',
+                context.l10n.chooserManual,
                 textAlign: TextAlign.center,
                 style: context.text.labelLarge?.copyWith(
                   color: Colors.white,

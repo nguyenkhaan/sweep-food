@@ -26,6 +26,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final state = ref.watch(receiptReviewControllerProvider(job));
     final controller = ref.read(receiptReviewControllerProvider(job).notifier);
     final sweep = context.sweep;
@@ -38,7 +39,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back_rounded),
         ),
-        title: Text('Hóa đơn — ${state.items.length} mục'),
+        title: Text(l10n.reviewReceiptTitle(state.items.length)),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 3),
@@ -75,7 +76,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
                   GestureDetector(
                     onTap: () => context.pop(),
                     child: Text(
-                      'Chụp lại',
+                      l10n.reviewRetake,
                       style: context.text.bodySmall?.copyWith(
                         color: BrandPalette.green700,
                         fontWeight: FontWeight.w600,
@@ -97,7 +98,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                     TextSpan(
-                      text: ' / ${state.items.length} mục được chọn',
+                      text: l10n.reviewSelectedOf(state.items.length),
                       style: TextStyle(color: sweep.textTertiary),
                     ),
                   ],
@@ -110,7 +111,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
                     ? controller.deselectAll
                     : controller.selectAll,
                 child: Text(
-                  allSelected ? 'Bỏ chọn tất cả' : 'Chọn tất cả',
+                  allSelected ? l10n.reviewDeselectAll : l10n.reviewSelectAll,
                   style: context.text.bodySmall?.copyWith(
                     color: BrandPalette.green700,
                     fontWeight: FontWeight.w600,
@@ -149,12 +150,12 @@ class ReceiptReviewScreen extends ConsumerWidget {
                       if (!context.mounted) return;
                       AppSnack.show(
                         context,
-                        'Đã thêm $count nguyên liệu vào kho!',
+                        context.l10n.scanAddedCountToPantry(count),
                       );
                       context.go(Routes.pantry);
                     } on Object catch (e) {
                       if (!context.mounted) return;
-                      AppSnack.show(context, 'Lỗi lưu nguyên liệu: $e');
+                      AppSnack.show(context, context.l10n.scanSaveError('$e'));
                     }
                   },
             style: ElevatedButton.styleFrom(
@@ -167,8 +168,8 @@ class ReceiptReviewScreen extends ConsumerWidget {
             ),
             child: Text(
               state.selectedCount > 0
-                  ? 'Thêm ${state.selectedCount} mục vào kho'
-                  : 'Chọn ít nhất 1 mục',
+                  ? l10n.reviewAddCount(state.selectedCount)
+                  : l10n.reviewPickAtLeastOne,
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
           ),
@@ -183,21 +184,24 @@ class ReceiptReviewScreen extends ConsumerWidget {
     ParsedItemDraft item,
     ReceiptReviewController controller,
   ) async {
+    final l10n = context.l10n;
     final nameController = TextEditingController(text: item.name);
     final qtyController = TextEditingController(
       text: item.quantity == 0 ? '' : item.quantity.toString(),
     );
     var selectedUnit = item.unit;
     var selectedTier = item.storageTier;
-    var selectedCategory = item.category.isEmpty ? 'Khác' : item.category;
+    var selectedCategory = item.category.isEmpty
+        ? l10n.catOther
+        : item.category;
 
-    const categories = [
-      'Rau củ',
-      'Thịt & Hải sản',
-      'Gia vị',
-      'Trứng & Sữa',
-      'Đồ khô',
-      'Khác',
+    final categories = [
+      l10n.catVegetables,
+      l10n.catMeatSeafood,
+      l10n.catSpices,
+      l10n.catDairyEgg,
+      l10n.catDryGoods,
+      l10n.catOther,
     ];
 
     await showModalBottomSheet<void>(
@@ -217,7 +221,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Chỉnh sửa nguyên liệu',
+                l10n.reviewEditItem,
                 style: context.text.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -225,9 +229,9 @@ class ReceiptReviewScreen extends ConsumerWidget {
               Gap.gapMd,
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Tên nguyên liệu',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.pantryFieldName,
+                  border: const OutlineInputBorder(),
                 ),
               ),
               Gap.gapSm,
@@ -238,9 +242,9 @@ class ReceiptReviewScreen extends ConsumerWidget {
                     child: TextField(
                       controller: qtyController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Số lượng',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.pantryStatQuantity,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -249,15 +253,17 @@ class ReceiptReviewScreen extends ConsumerWidget {
                     flex: 3,
                     child: DropdownButtonFormField<MeasurementUnit>(
                       initialValue: selectedUnit,
-                      decoration: const InputDecoration(
-                        labelText: 'Đơn vị',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.reviewUnit,
+                        border: const OutlineInputBorder(),
                       ),
                       items: MeasurementUnit.values
-                          .map((u) => DropdownMenuItem(
-                                value: u,
-                                child: Text(u.label),
-                              ))
+                          .map(
+                            (u) => DropdownMenuItem(
+                              value: u,
+                              child: Text(u.label),
+                            ),
+                          )
                           .toList(),
                       onChanged: (u) {
                         if (u != null) setState(() => selectedUnit = u);
@@ -269,9 +275,9 @@ class ReceiptReviewScreen extends ConsumerWidget {
               Gap.gapSm,
               DropdownButtonFormField<String>(
                 initialValue: selectedCategory,
-                decoration: const InputDecoration(
-                  labelText: 'Danh mục',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.reviewCategory,
+                  border: const OutlineInputBorder(),
                 ),
                 items: categories
                     .map((c) => DropdownMenuItem(value: c, child: Text(c)))
@@ -283,15 +289,17 @@ class ReceiptReviewScreen extends ConsumerWidget {
               Gap.gapSm,
               DropdownButtonFormField<StorageTier>(
                 initialValue: selectedTier,
-                decoration: const InputDecoration(
-                  labelText: 'Tầng bảo quản',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.reviewStorageTier,
+                  border: const OutlineInputBorder(),
                 ),
                 items: StorageTier.values
-                    .map((t) => DropdownMenuItem(
-                          value: t,
-                          child: Text(t.label),
-                        ))
+                    .map(
+                      (t) => DropdownMenuItem(
+                        value: t,
+                        child: Text(t.label(l10n)),
+                      ),
+                    )
                     .toList(),
                 onChanged: (t) {
                   if (t != null) setState(() => selectedTier = t);
@@ -309,7 +317,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
                       style: TextButton.styleFrom(
                         foregroundColor: BrandPalette.brick500,
                       ),
-                      child: const Text('Xóa mục này'),
+                      child: Text(l10n.reviewRemoveItem),
                     ),
                   ),
                   Expanded(
@@ -317,7 +325,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
                       onPressed: () {
                         final qty =
                             double.tryParse(qtyController.text.trim()) ??
-                                item.quantity;
+                            item.quantity;
                         controller.updateItem(
                           index,
                           item.copyWith(
@@ -335,7 +343,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
                         backgroundColor: BrandPalette.green700,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Lưu'),
+                      child: Text(l10n.commonSave),
                     ),
                   ),
                 ],

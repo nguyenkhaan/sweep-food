@@ -28,7 +28,10 @@ class TierChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.sweep.tier(_tierKind[tier]!);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: dense ? 7 : 10, vertical: dense ? 2 : 4),
+      padding: EdgeInsets.symmetric(
+        horizontal: dense ? 7 : 10,
+        vertical: dense ? 2 : 4,
+      ),
       decoration: BoxDecoration(
         color: c.bg,
         borderRadius: BorderRadius.circular(999),
@@ -39,7 +42,7 @@ class TierChip extends StatelessWidget {
           Icon(_tierIcon[tier], size: dense ? 11 : 13, color: c.fg),
           const SizedBox(width: 5),
           Text(
-            tier.shortLabel,
+            tier.shortLabel(context.l10n),
             style: context.text.labelMedium?.copyWith(
               color: c.fg,
               fontWeight: FontWeight.w600,

@@ -6,20 +6,25 @@ import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/core/media/media_providers.dart';
 import 'package:frontend/core/permissions/permission_service.dart';
 import 'package:frontend/features/ingest/presentation/screens/camera_capture_screen.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 import '../../helpers/media_fakes.dart';
 
 Widget _screen(List<Override> overrides) => ProviderScope(
-      overrides: [
-        imageCaptureServiceProvider
-            .overrideWithValue(FakeImageCaptureService(path: null)),
-        ...overrides,
-      ],
-      child: MaterialApp(
-        theme: AppTheme.light,
-        home: const CameraCaptureScreen(),
-      ),
-    );
+  overrides: [
+    imageCaptureServiceProvider.overrideWithValue(
+      FakeImageCaptureService(path: null),
+    ),
+    ...overrides,
+  ],
+  child: MaterialApp(
+    locale: const Locale('vi'),
+    supportedLocales: AppL10n.supportedLocales,
+    localizationsDelegates: AppL10n.localizationsDelegates,
+    theme: AppTheme.light,
+    home: const CameraCaptureScreen(),
+  ),
+);
 
 Future<void> _tick(WidgetTester tester) async {
   await tester.pump();
@@ -31,8 +36,9 @@ void main() {
   testWidgets('mounts with the scan chrome and no crash', (tester) async {
     await tester.pumpWidget(
       _screen([
-        permissionServiceProvider
-            .overrideWithValue(const GrantedPermissionService()),
+        permissionServiceProvider.overrideWithValue(
+          const GrantedPermissionService(),
+        ),
       ]),
     );
     await _tick(tester);
@@ -50,8 +56,9 @@ void main() {
   ) async {
     await tester.pumpWidget(
       _screen([
-        permissionServiceProvider
-            .overrideWithValue(const _DeniedPermissionService()),
+        permissionServiceProvider.overrideWithValue(
+          const _DeniedPermissionService(),
+        ),
       ]),
     );
     await _tick(tester);

@@ -3,13 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/features/pantry/presentation/screens/pantry_item_detail_screen.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 Widget _app(String id) => ProviderScope(
-      child: MaterialApp(
-        theme: AppTheme.light,
-        home: PantryItemDetailScreen(itemId: id),
-      ),
-    );
+  child: MaterialApp(
+    locale: const Locale('vi'),
+    supportedLocales: AppL10n.supportedLocales,
+    localizationsDelegates: AppL10n.localizationsDelegates,
+    theme: AppTheme.light,
+    home: PantryItemDetailScreen(itemId: id),
+  ),
+);
 
 Future<void> _settle(WidgetTester tester) async {
   await tester.pump();

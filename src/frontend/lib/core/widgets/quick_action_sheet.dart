@@ -53,12 +53,18 @@ class QuickActionSheet extends StatelessWidget {
                         color: context.colors.primaryContainer,
                         borderRadius: Radii.brSm,
                       ),
-                      child: Icon(a.icon, size: 17, color: context.colors.primary),
+                      child: Icon(
+                        a.icon,
+                        size: 17,
+                        color: context.colors.primary,
+                      ),
                     )
                   : null,
               title: Row(
                 children: [
-                  Flexible(child: Text(a.label, style: context.text.titleSmall)),
+                  Flexible(
+                    child: Text(a.label, style: context.text.titleSmall),
+                  ),
                   if (a.recommended) ...[
                     const SizedBox(width: 6),
                     _RecommendedTag(),
@@ -88,7 +94,7 @@ class _RecommendedTag extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
-        'Gợi ý',
+        context.l10n.commonRecommended,
         style: context.text.labelSmall?.copyWith(
           letterSpacing: 0,
           color: context.colors.primary,

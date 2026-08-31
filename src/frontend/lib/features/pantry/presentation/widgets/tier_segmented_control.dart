@@ -33,7 +33,9 @@ class TierSegmentedControl extends StatelessWidget {
           labelStyle: context.text.labelMedium?.copyWith(
             color: on ? context.colors.onPrimary : context.sweep.textSecondary,
           ),
-          side: BorderSide(color: on ? context.colors.primary : context.sweep.hairline),
+          side: BorderSide(
+            color: on ? context.colors.primary : context.sweep.hairline,
+          ),
         ),
       );
     }
@@ -44,8 +46,9 @@ class TierSegmentedControl extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: Gap.lg),
         children: [
-          chip(null, 'Tất cả'),
-          for (final t in StorageTier.values) chip(t, t.shortLabel),
+          chip(null, context.l10n.tierAll),
+          for (final t in StorageTier.values)
+            chip(t, t.shortLabel(context.l10n)),
         ],
       ),
     );

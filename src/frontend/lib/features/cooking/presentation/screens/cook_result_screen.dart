@@ -15,6 +15,7 @@ class CookResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(automaticallyImplyLeading: false),
       body: ListView(
@@ -37,7 +38,7 @@ class CookResultScreen extends StatelessWidget {
                   ),
                 ),
                 Gap.gapSm,
-                Text('Đã cập nhật kho', style: context.text.titleLarge),
+                Text(l10n.cookResultTitle, style: context.text.titleLarge),
               ],
             ),
           ),
@@ -55,7 +56,9 @@ class CookResultScreen extends StatelessWidget {
                 initialServings: result.leftoverServings,
               ),
               icon: const Icon(Icons.save_alt_rounded, size: 18),
-              label: Text('Lưu ${result.leftoverServings} phần ăn thừa'),
+              label: Text(
+                l10n.cookResultSaveLeftovers(result.leftoverServings),
+              ),
             ),
           ],
         ],
@@ -67,14 +70,14 @@ class CookResultScreen extends StatelessWidget {
             Expanded(
               child: OutlinedButton(
                 onPressed: () => context.go(Routes.pantry),
-                child: const Text('Xem kho'),
+                child: Text(l10n.cookResultViewPantry),
               ),
             ),
             const SizedBox(width: Gap.sm),
             Expanded(
               child: FilledButton(
                 onPressed: () => context.go(Routes.suggestions),
-                child: const Text('Xong'),
+                child: Text(l10n.commonDone),
               ),
             ),
           ],
@@ -91,9 +94,12 @@ class _SaveBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final kg = result.wasteAvoidedKg;
     final kgText = kg > 0
-        ? ' · tránh bỏ phí ~${kg.toStringAsFixed(1).replaceAll('.', ',')} kg thực phẩm'
+        ? l10n.cookResultWasteKgSuffix(
+            kg.toStringAsFixed(1).replaceAll('.', ','),
+          )
         : '';
     return Container(
       padding: const EdgeInsets.all(Gap.sm + 2),
@@ -118,9 +124,11 @@ class _SaveBanner extends StatelessWidget {
                   height: 1.4,
                 ),
                 children: [
-                  const TextSpan(text: 'Bạn vừa tận dụng '),
+                  TextSpan(text: l10n.cookResultUsedNearExpiryPrefix),
                   TextSpan(
-                    text: '${result.nearExpiryUsedCount} nguyên liệu cận hạn',
+                    text: l10n.cookResultUsedNearExpiryCount(
+                      result.nearExpiryUsedCount,
+                    ),
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
                   TextSpan(text: kgText),
@@ -141,6 +149,7 @@ class _ChangesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(Gap.md),
       decoration: BoxDecoration(
@@ -151,10 +160,7 @@ class _ChangesCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'THAY ĐỔI TRONG KHO',
-            style: context.text.labelSmall,
-          ),
+          Text(l10n.cookResultChangesHeader, style: context.text.labelSmall),
           Gap.gapXs,
           for (final (i, c) in result.changes.indexed)
             Padding(
@@ -164,9 +170,7 @@ class _ChangesCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Expanded(
-                    child: Text(c.name, style: context.text.bodyMedium),
-                  ),
+                  Expanded(child: Text(c.name, style: context.text.bodyMedium)),
                   Text(
                     c.beforeLabel,
                     style: context.text.bodyMedium?.copyWith(
@@ -202,7 +206,7 @@ class _ChangesCard extends StatelessWidget {
                   const SizedBox(width: Gap.xs),
                   Expanded(
                     child: Text(
-                      '${result.lowStockNames.join(", ")} sắp hết',
+                      l10n.cookResultLowStock(result.lowStockNames.join(', ')),
                       style: context.text.labelMedium?.copyWith(
                         color: context.sweep.soon.fg,
                         fontWeight: FontWeight.w600,
@@ -211,7 +215,7 @@ class _ChangesCard extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => context.go(Routes.shopping),
-                    child: const Text('+ Mua'),
+                    child: Text(l10n.commonBuyShort),
                   ),
                 ],
               ),

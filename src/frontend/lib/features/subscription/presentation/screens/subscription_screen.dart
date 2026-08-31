@@ -15,10 +15,11 @@ class SubscriptionScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final async = ref.watch(subscriptionControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Gói dịch vụ')),
+      appBar: AppBar(title: Text(l10n.settingsPlan)),
       body: AsyncValueWidget<Subscription>(
         value: async,
         data: (sub) => ListView(
@@ -34,15 +35,16 @@ class SubscriptionScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Bạn đang dùng',
+                    l10n.subCurrentPlan,
                     style: context.text.labelSmall?.copyWith(
-                      color: context.colors.onPrimaryContainer
-                          .withValues(alpha: 0.8),
+                      color: context.colors.onPrimaryContainer.withValues(
+                        alpha: 0.8,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    sub.tier.label,
+                    sub.tier.label(l10n),
                     style: context.text.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: context.colors.onPrimaryContainer,
@@ -78,8 +80,8 @@ class SubscriptionScreen extends ConsumerWidget {
             Gap.gapLg,
             PrimaryButton(
               label: sub.premiumInterestRegistered
-                  ? 'Đã đăng ký quan tâm Premium'
-                  : 'Quan tâm Premium — báo tôi khi ra mắt',
+                  ? l10n.subInterestRegistered
+                  : l10n.subInterestCta,
               icon: sub.premiumInterestRegistered ? Icons.check_rounded : null,
               onPressed: sub.premiumInterestRegistered
                   ? null
@@ -87,10 +89,7 @@ class SubscriptionScreen extends ConsumerWidget {
             ),
             Gap.gapMd,
             Text(
-              'Trong giai đoạn thử nghiệm, tất cả tính năng đang miễn phí. Sau '
-              'này một số tính năng nâng cao (đồng bộ nhiều thiết bị, chia sẻ tủ '
-              'bếp, báo cáo chi tiết) sẽ chuyển sang gói Premium — bạn sẽ được '
-              'báo trước.',
+              l10n.subDisclaimer,
               style: context.text.bodySmall?.copyWith(
                 color: context.sweep.textTertiary,
                 height: 1.5,

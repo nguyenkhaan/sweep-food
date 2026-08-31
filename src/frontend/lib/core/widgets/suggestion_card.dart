@@ -76,8 +76,10 @@ class SuggestionCard extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     meta,
-                    style: context.text.bodyMedium
-                        ?.copyWith(color: context.sweep.textTertiary, fontSize: 12),
+                    style: context.text.bodyMedium?.copyWith(
+                      color: context.sweep.textTertiary,
+                      fontSize: 12,
+                    ),
                   ),
                   const SizedBox(height: Gap.xs),
                   Wrap(
@@ -122,7 +124,7 @@ class _ScoreBadge extends StatelessWidget {
             ),
           ),
           Text(
-            'ĐIỂM',
+            context.l10n.scoreBadgeLabel,
             style: TextStyle(
               color: context.colors.onPrimary.withValues(alpha: 0.85),
               fontSize: 7,
@@ -144,21 +146,24 @@ class _Chip extends StatelessWidget {
   Widget build(BuildContext context) {
     final (bg, fg) = switch (chip.tone) {
       SuggestionChipTone.nearExpiry => (
-          context.sweep.expired.bg,
-          context.sweep.expired.fg,
-        ),
+        context.sweep.expired.bg,
+        context.sweep.expired.fg,
+      ),
       SuggestionChipTone.available => (
-          context.colors.primaryContainer,
-          context.colors.onPrimaryContainer,
-        ),
+        context.colors.primaryContainer,
+        context.colors.onPrimaryContainer,
+      ),
       SuggestionChipTone.toBuy => (
-          context.sweep.subtleFill,
-          context.sweep.textSecondary,
-        ),
+        context.sweep.subtleFill,
+        context.sweep.textSecondary,
+      ),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+      ),
       child: Text(
         chip.label,
         style: context.text.labelSmall?.copyWith(letterSpacing: 0, color: fg),

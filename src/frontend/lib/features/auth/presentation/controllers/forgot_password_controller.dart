@@ -1,5 +1,6 @@
 import 'package:frontend/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:frontend/features/auth/presentation/controllers/auth_form.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'forgot_password_controller.g.dart';
@@ -31,11 +32,11 @@ class ForgotPasswordController extends _$ForgotPasswordController {
   @override
   ForgotPasswordState build() => const ForgotPasswordState();
 
-  Future<void> submit(String email) async {
+  Future<void> submit(String email, AppL10n l10n) async {
     if (!isValidEmail(email)) {
       state = state.copyWith(
         form: state.form.copyWith(
-          fieldErrors: {'email': 'Email không hợp lệ'},
+          fieldErrors: {'email': l10n.authInvalidEmail},
         ),
       );
       return;
@@ -47,11 +48,15 @@ class ForgotPasswordController extends _$ForgotPasswordController {
         formError: null,
       ),
     );
-    final res =
-        await ref.read(authRepositoryProvider).requestPasswordReset(email);
+    final res = await ref
+        .read(authRepositoryProvider)
+        .requestPasswordReset(email);
     state = res.fold(
       (f) => state.copyWith(
-        form: state.form.copyWith(submitting: false, formError: f.message),
+        form: state.form.copyWith(
+          submitting: false,
+          formError: f.localizedMessage(l10n),
+        ),
       ),
       // Same confirmation whether or not the address exists (no account enum).
       (_) => state.copyWith(

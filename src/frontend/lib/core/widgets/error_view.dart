@@ -5,16 +5,20 @@ import 'package:frontend/core/utils/extensions/build_context_x.dart';
 
 /// Full-body error state with a retry button (spec 3.3).
 class ErrorView extends StatelessWidget {
-  const ErrorView({required this.message, this.onRetry, super.key});
+  const ErrorView({required String this.message, this.onRetry, super.key})
+    : failure = null;
 
-  ErrorView.fromFailure(Failure failure, {this.onRetry, super.key})
-      : message = failure.message;
+  const ErrorView.fromFailure(Failure this.failure, {this.onRetry, super.key})
+    : message = null;
 
-  final String message;
+  /// Explicit message; when null the localized [failure] text is shown.
+  final String? message;
+  final Failure? failure;
   final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
+    final message = this.message ?? failure!.localizedMessage(context.l10n);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(Gap.xl),
@@ -35,13 +39,17 @@ class ErrorView extends StatelessWidget {
               ),
             ),
             Gap.gapSm,
-            Text(message, style: context.text.titleSmall, textAlign: TextAlign.center),
+            Text(
+              message,
+              style: context.text.titleSmall,
+              textAlign: TextAlign.center,
+            ),
             if (onRetry != null) ...[
               Gap.gapMd,
               OutlinedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh_rounded, size: 18),
-                label: const Text('Thử lại'),
+                label: Text(context.l10n.commonRetry),
               ),
             ],
           ],

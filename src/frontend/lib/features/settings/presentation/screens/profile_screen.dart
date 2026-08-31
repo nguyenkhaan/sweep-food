@@ -12,10 +12,11 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final user = ref.watch(sessionControllerProvider).asData?.value?.user;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Hồ sơ & mật khẩu')),
+      appBar: AppBar(title: Text(l10n.settingsProfilePassword)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.lg, Gap.lg, Gap.xxl),
         children: [
@@ -34,30 +35,30 @@ class ProfileScreen extends ConsumerWidget {
           ),
           Gap.gapLg,
           SettingsGroup(
-            label: 'Thông tin',
+            label: l10n.profileGroupInfo,
             rows: [
               SettingsRow(
                 icon: Icons.badge_outlined,
-                label: 'Họ và tên',
+                label: l10n.authFullName,
                 trailing: user?.name ?? '—',
-                onTap: () => AppSnack.show(context, 'Sửa hồ sơ sẽ có ở bản sau.'),
+                onTap: () => AppSnack.show(context, l10n.profileEditSoon),
               ),
               SettingsRow(
                 icon: Icons.mail_outline_rounded,
-                label: 'Email',
+                label: l10n.authEmail,
                 trailing: user?.email ?? '—',
               ),
             ],
           ),
           Gap.gapMd,
           SettingsGroup(
-            label: 'Bảo mật',
+            label: l10n.profileGroupSecurity,
             rows: [
               SettingsRow(
                 icon: Icons.lock_outline_rounded,
-                label: 'Đổi mật khẩu',
+                label: l10n.profileChangePassword,
                 onTap: () =>
-                    AppSnack.show(context, 'Đổi mật khẩu sẽ có ở bản sau.'),
+                    AppSnack.show(context, l10n.profileChangePasswordSoon),
               ),
             ],
           ),
@@ -66,7 +67,7 @@ class ProfileScreen extends ConsumerWidget {
             rows: [
               SettingsRow(
                 icon: Icons.delete_outline_rounded,
-                label: 'Xóa tài khoản',
+                label: l10n.profileDeleteAccount,
                 danger: true,
                 onTap: () => _confirmDelete(context, ref),
               ),
@@ -78,31 +79,29 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Xóa tài khoản?'),
-        content: const Text(
-          'Toàn bộ dữ liệu tủ bếp sẽ bị xóa vĩnh viễn. Hành động này không thể '
-          'hoàn tác.',
-        ),
+        title: Text(l10n.profileDeleteConfirmTitle),
+        content: Text(l10n.profileDeleteConfirmBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Xóa'),
+            child: Text(l10n.commonDelete),
           ),
         ],
       ),
     );
     if ((ok ?? false) && context.mounted) {
-      AppSnack.show(context, 'Yêu cầu xóa tài khoản đã được ghi nhận.');
+      AppSnack.show(context, l10n.profileDeleteRequested);
       await ref.read(sessionControllerProvider.notifier).logOut();
     }
   }

@@ -51,7 +51,7 @@ final class RegisterControllerProvider
 }
 
 String _$registerControllerHash() =>
-    r'e5877a8a440bf6b11b45b77a3fc1ff57ebb58a1d';
+    r'82cd6d2aa14d5a6316106cfb3ba7d593bc5dfd91';
 
 /// Form state + submit for A-03. The "đồng ý điều khoản" checkbox is screen-local
 /// state and passed into [submit]; everything else rides the shared

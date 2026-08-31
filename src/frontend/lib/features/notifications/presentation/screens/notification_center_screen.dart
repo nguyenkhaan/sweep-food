@@ -12,6 +12,7 @@ import 'package:frontend/features/notifications/domain/entities/app_notification
 import 'package:frontend/features/notifications/presentation/controllers/notifications_controller.dart';
 import 'package:frontend/features/notifications/presentation/widgets/near_expiry_detail_sheet.dart';
 import 'package:frontend/features/notifications/presentation/widgets/notification_tile.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// T-01 Trung tâm thông báo — alerts grouped by day, unread dots, "đánh dấu đã
@@ -21,18 +22,20 @@ class NotificationCenterScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final async = ref.watch(notificationsControllerProvider);
     final hasUnread = ref.watch(unreadNotificationCountProvider) > 0;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thông báo'),
+        title: Text(l10n.notifTitle),
         actions: [
           if (hasUnread)
             TextButton(
-              onPressed: () =>
-                  ref.read(notificationsControllerProvider.notifier).markAllRead(),
-              child: const Text('Đánh dấu đã đọc'),
+              onPressed: () => ref
+                  .read(notificationsControllerProvider.notifier)
+                  .markAllRead(),
+              child: Text(l10n.notifMarkAllRead),
             ),
         ],
       ),
@@ -46,12 +49,11 @@ class NotificationCenterScreen extends ConsumerWidget {
             final groups = ref.watch(groupedNotificationsProvider);
             if (groups.isEmpty) {
               return ListView(
-                children: const [
-                  SizedBox(height: 80),
+                children: [
+                  const SizedBox(height: 80),
                   EmptyState(
-                    title: 'Chưa có thông báo',
-                    message:
-                        'Nhắc hạn sử dụng và tổng kết chống lãng phí sẽ xuất hiện ở đây.',
+                    title: l10n.notifEmptyTitle,
+                    message: l10n.notifEmptyBody,
                     icon: Icons.notifications_none_rounded,
                   ),
                 ],
@@ -69,7 +71,7 @@ class NotificationCenterScreen extends ConsumerWidget {
                       Gap.xs,
                     ),
                     child: Text(
-                      _dayLabel(g.day),
+                      _dayLabel(g.day, l10n),
                       style: context.text.labelSmall,
                     ),
                   ),
@@ -87,22 +89,21 @@ class NotificationCenterScreen extends ConsumerWidget {
     );
   }
 
-  static String _dayLabel(DateTime day) {
+  static String _dayLabel(DateTime day, AppL10n l10n) {
     final today = DateTime.now().dateOnly;
     final diff = today.difference(day).inDays;
     return switch (diff) {
-      0 => 'Hôm nay',
-      1 => 'Hôm qua',
+      0 => l10n.dayToday,
+      1 => l10n.dayYesterday,
       _ => day.ddMM,
     };
   }
 
   void _open(BuildContext context, WidgetRef ref, AppNotification n) {
     ref.read(notificationsControllerProvider.notifier).markRead(n.id);
-    ref.read(analyticsProvider).log(
-      AnalyticsEvents.notificationOpened,
-      {AnalyticsParams.source: n.type.wire},
-    );
+    ref.read(analyticsProvider).log(AnalyticsEvents.notificationOpened, {
+      AnalyticsParams.source: n.type.wire,
+    });
     switch (n.type) {
       case AppNotificationType.nearExpiry:
         if (n.pantryItemId != null) {

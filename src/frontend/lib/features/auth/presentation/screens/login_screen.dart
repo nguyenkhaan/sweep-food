@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/primary_button.dart';
 import 'package:frontend/features/auth/presentation/controllers/login_controller.dart';
 import 'package:frontend/features/auth/presentation/widgets/auth_form_error.dart';
@@ -30,15 +31,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
-    await ref.read(loginControllerProvider.notifier).submit(
+    await ref
+        .read(loginControllerProvider.notifier)
+        .submit(
           email: _email.text,
           password: _password.text,
+          l10n: context.l10n,
         );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final state = ref.watch(loginControllerProvider);
 
     return Scaffold(
@@ -48,20 +53,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           padding: const EdgeInsets.fromLTRB(Gap.xl, Gap.xs, Gap.xl, Gap.xl),
           children: [
             Text(
-              'Đăng nhập',
-              style: theme.textTheme.headlineSmall
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              l10n.authSignIn,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Gap.gapXxs,
             Text(
-              'Tiếp tục quản lý tủ bếp của bạn',
+              l10n.loginSubtitle,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             Gap.gapXl,
             AuthTextField(
-              label: 'Email',
+              label: l10n.authEmail,
               controller: _email,
               hintText: 'ban@email.com',
               prefixIcon: Icons.mail_outline_rounded,
@@ -72,13 +78,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
             Gap.gapMd,
             AuthTextField(
-              label: 'Mật khẩu',
+              label: l10n.authPassword,
               controller: _password,
               hintText: '••••••••',
               prefixIcon: Icons.lock_outline_rounded,
               obscureText: state.obscure,
-              onToggleObscure:
-                  ref.read(loginControllerProvider.notifier).toggleObscure,
+              onToggleObscure: ref
+                  .read(loginControllerProvider.notifier)
+                  .toggleObscure,
               textInputAction: TextInputAction.done,
               autofillHints: const [AutofillHints.password],
               onSubmitted: (_) => _submit(),
@@ -89,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => context.push(Routes.forgotPassword),
-                child: const Text('Quên mật khẩu?'),
+                child: Text(l10n.authForgotQ),
               ),
             ),
             if (state.formError != null) ...[
@@ -98,7 +105,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ],
             Gap.gapMd,
             PrimaryButton(
-              label: 'Đăng nhập',
+              label: l10n.authSignIn,
               loading: state.submitting,
               onPressed: state.submitting ? null : _submit,
             ),
@@ -106,14 +113,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Chưa có tài khoản? ',
-                  style: theme.textTheme.bodyMedium,
-                ),
+                Text(l10n.loginNoAccount, style: theme.textTheme.bodyMedium),
                 GestureDetector(
                   onTap: () => context.push(Routes.register),
                   child: Text(
-                    'Đăng ký',
+                    l10n.authSignUp,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -128,4 +132,3 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 }
-

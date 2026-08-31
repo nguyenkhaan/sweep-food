@@ -101,7 +101,7 @@ Quy tắc:
 - Screen/widget nói chuyện với **controller Riverpod** (`@riverpod`), không gọi Dio / prefs trực tiếp.
 - Feature chỉ chạm API qua **repository**; repository trả `Either<Failure, T>` (dùng helper `guard()`), controller đổi thành `AsyncValue` cho UI.
 - DTO (`*_dto.dart`, freezed + json) không đi thẳng vào UI — map về entity.
-- Chuỗi text: **hardcode tiếng Việt** trong widget (tách ra `.arb` ở M6).
+- Chuỗi text: qua **`context.l10n.<key>`** — key ở `lib/l10n/app_vi.arb` (nguồn) + `app_en.arb` (dịch), chạy `flutter gen-l10n`. Default `vi`; đổi English trong Cài đặt → Tùy chọn → Ngôn ngữ. Vài chuỗi data/nền còn tiếng Việt — xem M6.1 trong `IMPLEMENTATION_PLAN.md`.
 - Màu ngữ nghĩa (hạn dùng, tầng bảo quản) đọc qua `Theme.of(context).extension<SweepColors>()` (hoặc `context.sweep`).
 
 ## Kiểm tra trước khi tạo PR

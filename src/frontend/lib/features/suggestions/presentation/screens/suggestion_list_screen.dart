@@ -24,7 +24,7 @@ class SuggestionListScreen extends ConsumerWidget {
     final async = ref.watch(suggestionListControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Gợi ý cho bạn')),
+      appBar: AppBar(title: Text(context.l10n.suggestionsTitle)),
       body: Column(
         children: [
           const _FilterBar(),
@@ -35,8 +35,7 @@ class SuggestionListScreen extends ConsumerWidget {
                   ref.read(suggestionListControllerProvider.notifier).refresh(),
               child: AsyncValueWidget<List<DishSuggestion>>(
                 value: async,
-                onRetry: () =>
-                    ref.invalidate(suggestionListControllerProvider),
+                onRetry: () => ref.invalidate(suggestionListControllerProvider),
                 data: (items) => _List(items: items),
               ),
             ),
@@ -52,6 +51,7 @@ class _FilterBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final filter = ref.watch(suggestionFilterControllerProvider);
     final notifier = ref.read(suggestionFilterControllerProvider.notifier);
 
@@ -62,20 +62,20 @@ class _FilterBar extends ConsumerWidget {
         children: [
           for (final meal in MealType.values) ...[
             _Chip(
-              label: meal.label,
+              label: meal.label(l10n),
               selected: filter.mealType == meal,
               onTap: () => notifier.toggleMeal(meal),
             ),
             const SizedBox(width: Gap.xs),
           ],
           _Chip(
-            label: '≤ 30 phút',
+            label: l10n.suggestionsQuickCook,
             selected: filter.quickCookOnly,
             onTap: notifier.toggleQuickCook,
           ),
           const SizedBox(width: Gap.xs),
           _Chip(
-            label: DietaryPreference.moreVeg.label,
+            label: DietaryPreference.moreVeg.label(l10n),
             selected: filter.dietaryPreference == DietaryPreference.moreVeg,
             onTap: () => notifier.togglePreference(DietaryPreference.moreVeg),
           ),
@@ -105,7 +105,9 @@ class _Chip extends StatelessWidget {
       showCheckmark: false,
       selectedColor: context.colors.primary,
       labelStyle: context.text.labelMedium?.copyWith(
-        color: selected ? context.colors.onPrimary : context.sweep.textSecondary,
+        color: selected
+            ? context.colors.onPrimary
+            : context.sweep.textSecondary,
       ),
       side: BorderSide(
         color: selected ? context.colors.primary : context.sweep.hairline,
@@ -121,15 +123,16 @@ class _List extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     if (items.isEmpty) {
       return ListView(
         children: [
           const SizedBox(height: 80),
           EmptyState(
-            title: 'Chưa đủ nguyên liệu để gợi ý',
-            message: 'Thêm vài nguyên liệu vào kho để nhận 3–5 gợi ý món.',
+            title: l10n.suggestionsEmptyTitle,
+            message: l10n.suggestionsEmptyBody,
             icon: Icons.restaurant_menu_rounded,
-            actionLabel: 'Thêm nguyên liệu',
+            actionLabel: l10n.pantryAddIngredient,
             onAction: () => showAddEntryChooser(context),
           ),
         ],
@@ -142,7 +145,7 @@ class _List extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: Gap.sm),
           child: Text(
-            '${items.length} món hợp nhất với tủ bếp hiện tại · ưu tiên đồ cận hạn',
+            l10n.suggestionsCaption(items.length),
             style: context.text.labelSmall?.copyWith(
               letterSpacing: 0,
               color: context.sweep.textTertiary,
@@ -166,14 +169,15 @@ class _SuggestionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SuggestionCard(
           title: suggestion.dish.name,
           score: suggestion.score,
-          meta: suggestion.dish.shortMeta,
-          chips: suggestion.cardChips,
+          meta: suggestion.dish.shortMeta(l10n),
+          chips: suggestion.cardChips(l10n),
           onTap: () => context.push(
             '${Routes.suggestions}/dish/${suggestion.id}',
             extra: suggestion,
@@ -184,7 +188,7 @@ class _SuggestionTile extends StatelessWidget {
           child: TextButton.icon(
             onPressed: () => ScoreBreakdownSheet.show(context, suggestion),
             icon: const Icon(Icons.help_outline_rounded, size: 16),
-            label: const Text('Vì sao điểm này?'),
+            label: Text(context.l10n.suggestionsWhyScore),
           ),
         ),
       ],

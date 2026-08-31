@@ -19,11 +19,12 @@ class ShoppingListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final async = ref.watch(shoppingListControllerProvider);
     final showInStock = ref.watch(shoppingListShowInStockProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Danh sách mua sắm')),
+      appBar: AppBar(title: Text(l10n.shoppingTitle)),
       floatingActionButton: async.hasValue
           ? FloatingActionButton.extended(
               // Unique tag — see note on the Pantry FAB (shared IndexedStack
@@ -31,7 +32,7 @@ class ShoppingListScreen extends ConsumerWidget {
               heroTag: 'shopping_fab',
               onPressed: () => AddShoppingItemSheet.show(context),
               icon: const Icon(Icons.add_rounded),
-              label: const Text('Thêm món'),
+              label: Text(l10n.shoppingAddItem),
             )
           : null,
       body: RefreshIndicator(
@@ -46,11 +47,10 @@ class ShoppingListScreen extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 72),
                   EmptyState(
-                    title: 'Chưa có danh sách mua sắm',
-                    message:
-                        'Lập thực đơn tuần rồi tạo danh sách mua sắm chỉ với 1 chạm.',
+                    title: l10n.shoppingEmptyTitle,
+                    message: l10n.shoppingEmptyBody,
                     icon: Icons.shopping_cart_outlined,
-                    actionLabel: 'Lập thực đơn tuần',
+                    actionLabel: l10n.shoppingPlanWeek,
                     onAction: () => context.push(Routes.mealPlan),
                   ),
                 ],
@@ -80,9 +80,10 @@ class ShoppingListScreen extends ConsumerWidget {
                   onChanged: (_) => ref
                       .read(shoppingListShowInStockProvider.notifier)
                       .toggle(),
-                  title: const Text('Hiện nguyên liệu đã có trong kho'),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: Gap.lg),
+                  title: Text(l10n.shoppingShowInStock),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: Gap.lg,
+                  ),
                 ),
                 for (final entry in groups.entries) ...[
                   Padding(
@@ -105,8 +106,8 @@ class ShoppingListScreen extends ConsumerWidget {
                           .toggleChecked(item.id),
                       onDismissed: item.isManual
                           ? () => ref
-                              .read(shoppingListControllerProvider.notifier)
-                              .removeItem(item.id)
+                                .read(shoppingListControllerProvider.notifier)
+                                .removeItem(item.id)
                           : null,
                     ),
                 ],
@@ -116,13 +117,14 @@ class ShoppingListScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       Text(
-                        'Ước tính',
-                        style: context.text.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w700),
+                        l10n.shoppingEstimate,
+                        style: context.text.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       Gap.gapXs,
                       Text(
-                        '${list.toBuyCount} nguyên liệu cần mua',
+                        l10n.shoppingToBuyCount(list.toBuyCount),
                         style: context.text.bodySmall?.copyWith(
                           color: context.sweep.textTertiary,
                         ),
@@ -131,8 +133,9 @@ class ShoppingListScreen extends ConsumerWidget {
                       if (list.hasPriceData)
                         Text(
                           formatVndApprox(list.estTotalVnd),
-                          style: context.text.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w700),
+                          style: context.text.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                     ],
                   ),

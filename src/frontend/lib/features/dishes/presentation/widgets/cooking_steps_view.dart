@@ -52,7 +52,7 @@ class CookingStepsView extends StatelessWidget {
                       ),
                       if (step.durationMin != null)
                         Text(
-                          '⏱ ${step.durationLabel}',
+                          '⏱ ${step.durationLabel(context.l10n)}',
                           style: context.text.labelSmall?.copyWith(
                             letterSpacing: 0,
                             color: context.sweep.textTertiary,

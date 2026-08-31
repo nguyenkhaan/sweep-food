@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/features/ingest/presentation/screens/voice_review_screen.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 
 import '../../helpers/ingest_fixtures.dart';
 
@@ -16,6 +17,9 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          locale: const Locale('vi'),
+          supportedLocales: AppL10n.supportedLocales,
+          localizationsDelegates: AppL10n.localizationsDelegates,
           theme: AppTheme.light,
           home: VoiceReviewScreen(job: voiceScanJob()),
         ),

@@ -124,18 +124,19 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
       AppSnack.show(
         context,
         _isEditing
-            ? 'Đã cập nhật ${item.name}'
-            : 'Đã thêm ${item.name} vào kho',
+            ? context.l10n.pantryItemUpdated(item.name)
+            : context.l10n.pantryItemAdded(item.name),
       );
     } catch (_) {
       if (!mounted) return;
       setState(() => _busy = false);
-      AppSnack.show(context, 'Không lưu được. Kiểm tra lại thông tin.');
+      AppSnack.show(context, context.l10n.pantrySaveFailed);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final draft = ref.watch(addIngredientControllerProvider(_key));
     final showSuggestions =
         _nameFocus.hasFocus &&
@@ -144,17 +145,17 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Sửa nguyên liệu' : 'Thêm nguyên liệu'),
+        title: Text(_isEditing ? l10n.pantryEditTitle : l10n.pantryAddTitle),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
         children: [
-          const _Label('Tên nguyên liệu'),
+          _Label(l10n.pantryFieldName),
           TextField(
             controller: _nameCtrl,
             focusNode: _nameFocus,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(hintText: 'VD: Cà chua bi'),
+            decoration: InputDecoration(hintText: l10n.pantryFieldNameHint),
             onChanged: (v) {
               _ctrl.setName(v);
               setState(() => _query = v);
@@ -163,15 +164,15 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
           if (showSuggestions)
             _SuggestionList(query: _query, onPick: _pickIngredient),
           Gap.gapMd,
-          const _Label('Nhóm thực phẩm'),
+          _Label(l10n.pantryFieldCategory),
           TextField(
             controller: _categoryCtrl,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(hintText: 'VD: Rau củ'),
+            decoration: InputDecoration(hintText: l10n.pantryFieldCategoryHint),
             onChanged: _ctrl.setCategory,
           ),
           Gap.gapMd,
-          const _Label('Số lượng'),
+          _Label(l10n.pantryStatQuantity),
           Row(
             children: [
               _StepButton(
@@ -210,13 +211,13 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             ],
           ),
           Gap.gapMd,
-          const _Label('Nơi bảo quản'),
+          _Label(l10n.pantryFieldStorage),
           Wrap(
             spacing: Gap.xs,
             children: [
               for (final tier in StorageTier.values)
                 ChoiceChip(
-                  label: Text(tier.shortLabel),
+                  label: Text(tier.shortLabel(l10n)),
                   selected: draft.storageTier == tier,
                   onSelected: (_) => _ctrl.setTier(tier),
                 ),
@@ -227,7 +228,7 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             children: [
               Expanded(
                 child: _DateField(
-                  label: 'Ngày đóng gói / mua',
+                  label: l10n.pantryDetailPacked,
                   value: draft.packedDate,
                   onTap: () => _pickDate(
                     initial: draft.packedDate,
@@ -244,7 +245,7 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
               const SizedBox(width: Gap.sm),
               Expanded(
                 child: _DateField(
-                  label: 'Hạn sử dụng',
+                  label: l10n.pantryFieldExpiry,
                   value: draft.expiryDate,
                   onTap: () => _pickDate(
                     initial: draft.expiryDate,
@@ -258,7 +259,7 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             ],
           ),
           Gap.gapMd,
-          const _Label('Giá (tùy chọn)'),
+          _Label(l10n.pantryFieldPrice),
           TextField(
             controller: _priceCtrl,
             keyboardType: TextInputType.number,
@@ -269,7 +270,7 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
           ),
           Gap.gapXl,
           PrimaryButton(
-            label: _isEditing ? 'Lưu thay đổi' : 'Thêm vào kho',
+            label: _isEditing ? l10n.pantrySaveChanges : l10n.pantryAddToPantry,
             loading: _busy,
             onPressed: draft.isValid && !_busy ? _submit : null,
           ),
@@ -391,7 +392,7 @@ class _DateField extends StatelessWidget {
               : const Icon(Icons.event_outlined, size: 18),
         ),
         child: Text(
-          value?.ddMMyyyy ?? 'Chưa chọn',
+          value?.ddMMyyyy ?? context.l10n.commonNotChosen,
           style: value == null
               ? context.text.bodyMedium?.copyWith(
                   color: context.sweep.textTertiary,

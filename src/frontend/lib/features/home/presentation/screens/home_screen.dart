@@ -15,6 +15,7 @@ import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_
 import 'package:frontend/features/notifications/presentation/controllers/notifications_controller.dart';
 import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:frontend/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 /// H-01 Trang chủ / Dashboard.
@@ -30,7 +31,11 @@ class HomeScreen extends ConsumerWidget {
         titleSpacing: Gap.lg,
         title: Row(
           children: [
-            const Icon(Icons.eco_rounded, color: BrandPalette.green700, size: 24),
+            const Icon(
+              Icons.eco_rounded,
+              color: BrandPalette.green700,
+              size: 24,
+            ),
             const SizedBox(width: Gap.xs),
             Text(
               'SweepFood',
@@ -87,6 +92,7 @@ class _HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sweep = context.sweep;
+    final l10n = context.l10n;
 
     // Empty pantry → greeting + a single "add your first ingredient" CTA
     // (spec M2: "trỏ mock vào fixture kho rỗng để xem empty state").
@@ -97,11 +103,10 @@ class _HomeContent extends StatelessWidget {
           const _GreetingHeader(),
           const SizedBox(height: 56),
           EmptyState(
-            title: 'Kho của bạn đang trống',
-            message:
-                'Thêm vài nguyên liệu để nhận gợi ý món và nhắc hạn sử dụng.',
+            title: l10n.homeEmptyTitle,
+            message: l10n.homeEmptyBody,
             icon: Icons.kitchen_outlined,
-            actionLabel: 'Thêm nguyên liệu đầu tiên',
+            actionLabel: l10n.homeAddFirst,
             onAction: () =>
                 context.push('${Routes.pantry}/${Routes.addIngredient}'),
           ),
@@ -134,8 +139,8 @@ class _HomeContent extends StatelessWidget {
           children: [
             _DashboardTile(
               icon: Icons.kitchen_outlined,
-              title: 'Kho thực phẩm',
-              subtitle: '${data.summary.totalCount} nguyên liệu',
+              title: l10n.pantryTitle,
+              subtitle: l10n.ingredientCount(data.summary.totalCount),
               bgColor: context.colors.surfaceContainerLowest,
               iconBgColor: BrandPalette.green100,
               iconFgColor: BrandPalette.green700,
@@ -143,8 +148,8 @@ class _HomeContent extends StatelessWidget {
             ),
             _DashboardTile(
               icon: Icons.local_fire_department_outlined,
-              title: 'Cần dùng sớm',
-              subtitle: '${data.nearExpiryItems.length} nguyên liệu',
+              title: l10n.homeUseSoon,
+              subtitle: l10n.ingredientCount(data.nearExpiryItems.length),
               bgColor: BrandPalette.brick100,
               iconBgColor: context.colors.surface,
               iconFgColor: BrandPalette.brick500,
@@ -153,10 +158,10 @@ class _HomeContent extends StatelessWidget {
             ),
             _DashboardTile(
               icon: Icons.auto_awesome_outlined,
-              title: 'Gợi ý món',
+              title: l10n.homeTileSuggestDish,
               subtitle: data.suggestionCount > 0
-                  ? '${data.suggestionCount} món phù hợp'
-                  : 'Món hợp tủ bếp',
+                  ? l10n.homeSuggestionCount(data.suggestionCount)
+                  : l10n.homeSuggestFallback,
               bgColor: BrandPalette.green700,
               iconBgColor: Colors.white.withValues(alpha: 0.16),
               iconFgColor: Colors.white,
@@ -166,8 +171,8 @@ class _HomeContent extends StatelessWidget {
             ),
             _DashboardTile(
               icon: Icons.qr_code_scanner_rounded,
-              title: 'Thêm nhanh',
-              subtitle: 'Tem · Hóa đơn · Giọng nói',
+              title: l10n.homeQuickAdd,
+              subtitle: l10n.homeQuickAddSub,
               bgColor: BrandPalette.green100,
               iconBgColor: context.colors.surface,
               iconFgColor: BrandPalette.green700,
@@ -181,8 +186,8 @@ class _HomeContent extends StatelessWidget {
 
         // ── Section: Cần dùng sớm ──────────────────────────────────────────────
         SectionHeader(
-          title: 'Cần dùng sớm',
-          actionLabel: 'Xem tất cả',
+          title: l10n.homeUseSoon,
+          actionLabel: l10n.seeAll,
           onAction: () => context.go(Routes.pantry),
         ),
         Gap.gapSm,
@@ -203,7 +208,7 @@ class _HomeContent extends StatelessWidget {
                 const SizedBox(width: Gap.sm),
                 Expanded(
                   child: Text(
-                    'Không có nguyên liệu nào cận hạn. Tủ bếp của bạn rất tươi tốt!',
+                    l10n.homeNoNearExpiry,
                     style: context.text.bodyMedium?.copyWith(
                       color: sweep.textSecondary,
                     ),
@@ -225,10 +230,12 @@ class _HomeContent extends StatelessWidget {
                   width: 260,
                   child: PantryItemCard(
                     name: item.name,
-                    subtitle: '${item.quantityLabel} · ${item.storageTier.label}',
+                    subtitle:
+                        '${item.quantityLabel} · ${item.storageTier.label(l10n)}',
                     daysUntilExpiry: item.daysUntilExpiry,
                     tier: item.storageTier,
-                    onTap: () => context.push('${Routes.pantry}/item/${item.id}'),
+                    onTap: () =>
+                        context.push('${Routes.pantry}/item/${item.id}'),
                   ),
                 );
               },
@@ -238,14 +245,14 @@ class _HomeContent extends StatelessWidget {
 
         // ── Section: Gợi ý cho bạn ───────────────────────────────────────────
         SectionHeader(
-          title: 'Gợi ý cho bạn',
-          actionLabel: 'Xem tất cả',
+          title: l10n.suggestionsTitle,
+          actionLabel: l10n.seeAll,
           onAction: () => context.go(Routes.suggestions),
         ),
         Gap.gapSm,
         if (data.suggestions.isEmpty)
           Text(
-            'Chưa tải được gợi ý. Kéo xuống để làm mới.',
+            l10n.homeSuggestionsLoadFail,
             style: context.text.bodyMedium?.copyWith(
               color: sweep.textSecondary,
             ),
@@ -265,18 +272,19 @@ class _GreetingHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          _greeting(DateTime.now().hour),
+          _greeting(l10n, DateTime.now().hour),
           style: context.text.bodyMedium?.copyWith(
             color: context.sweep.textSecondary,
           ),
         ),
         const SizedBox(height: 2),
         Text(
-          'Hôm nay ăn gì?',
+          l10n.homeWhatToEat,
           style: context.text.headlineMedium?.copyWith(
             fontWeight: FontWeight.w700,
           ),
@@ -285,11 +293,11 @@ class _GreetingHeader extends StatelessWidget {
     );
   }
 
-  static String _greeting(int hour) {
-    if (hour < 11) return 'Chào buổi sáng';
-    if (hour < 14) return 'Chào buổi trưa';
-    if (hour < 18) return 'Chào buổi chiều';
-    return 'Chào buổi tối';
+  static String _greeting(AppL10n l10n, int hour) {
+    if (hour < 11) return l10n.greetingMorning;
+    if (hour < 14) return l10n.greetingNoon;
+    if (hour < 18) return l10n.greetingAfternoon;
+    return l10n.greetingEvening;
   }
 }
 
@@ -302,11 +310,12 @@ class _HomeSuggestionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SuggestionCard(
       title: suggestion.dish.name,
       score: suggestion.score,
-      meta: suggestion.dish.shortMeta,
-      chips: suggestion.cardChips,
+      meta: suggestion.dish.shortMeta(l10n),
+      chips: suggestion.cardChips(l10n),
       onTap: () => context.push(
         '${Routes.suggestions}/dish/${suggestion.id}',
         extra: suggestion,
@@ -344,8 +353,9 @@ class _DashboardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultSubColor =
-        textColor != null ? textColor!.withValues(alpha: 0.75) : context.sweep.textTertiary;
+    final defaultSubColor = textColor != null
+        ? textColor!.withValues(alpha: 0.75)
+        : context.sweep.textTertiary;
 
     return Material(
       color: bgColor,

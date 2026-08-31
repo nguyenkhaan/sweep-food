@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 
 /// The app's 5-tab bottom navigation bar.
 /// Order (plan.md §4): Trang chủ · Kho · Gợi ý · Mua sắm · Cá nhân.
@@ -15,16 +16,24 @@ class AppBottomNav extends StatelessWidget {
   final ValueChanged<int> onTap;
   final bool notificationBadge;
 
-  static const _items = [
-    (Icons.home_outlined, Icons.home_rounded, 'Trang chủ'),
-    (Icons.kitchen_outlined, Icons.kitchen_rounded, 'Kho'),
-    (Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, 'Gợi ý'),
-    (Icons.shopping_cart_outlined, Icons.shopping_cart_rounded, 'Mua sắm'),
-    (Icons.person_outline_rounded, Icons.person_rounded, 'Cá nhân'),
+  static const _icons = [
+    (Icons.home_outlined, Icons.home_rounded),
+    (Icons.kitchen_outlined, Icons.kitchen_rounded),
+    (Icons.auto_awesome_outlined, Icons.auto_awesome_rounded),
+    (Icons.shopping_cart_outlined, Icons.shopping_cart_rounded),
+    (Icons.person_outline_rounded, Icons.person_rounded),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final labels = [
+      l10n.navHome,
+      l10n.navPantry,
+      l10n.navSuggestions,
+      l10n.navShopping,
+      l10n.navProfile,
+    ];
     return DecoratedBox(
       decoration: BoxDecoration(
         border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
@@ -34,13 +43,13 @@ class AppBottomNav extends StatelessWidget {
         selectedIndex: currentIndex,
         onDestinationSelected: onTap,
         destinations: [
-          for (var i = 0; i < _items.length; i++)
+          for (var i = 0; i < _icons.length; i++)
             NavigationDestination(
               icon: (i == 0 && notificationBadge)
-                  ? Badge(smallSize: 7, child: Icon(_items[i].$1))
-                  : Icon(_items[i].$1),
-              selectedIcon: Icon(_items[i].$2),
-              label: _items[i].$3,
+                  ? Badge(smallSize: 7, child: Icon(_icons[i].$1))
+                  : Icon(_icons[i].$1),
+              selectedIcon: Icon(_icons[i].$2),
+              label: labels[i],
             ),
         ],
       ),

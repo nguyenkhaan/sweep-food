@@ -1,6 +1,7 @@
 import 'package:frontend/core/error/failure.dart';
 import 'package:frontend/features/auth/presentation/controllers/auth_form.dart';
 import 'package:frontend/features/auth/presentation/controllers/session_controller.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'login_controller.g.dart';
@@ -16,10 +17,14 @@ class LoginController extends _$LoginController {
   void toggleObscure() => state = state.copyWith(obscure: !state.obscure);
 
   /// Returns `true` on success so the screen can navigate.
-  Future<bool> submit({required String email, required String password}) async {
+  Future<bool> submit({
+    required String email,
+    required String password,
+    required AppL10n l10n,
+  }) async {
     final localErrors = <String, String>{
-      if (!isValidEmail(email)) 'email': 'Email không hợp lệ',
-      if (password.isEmpty) 'password': 'Nhập mật khẩu',
+      if (!isValidEmail(email)) 'email': l10n.authInvalidEmail,
+      if (password.isEmpty) 'password': l10n.authEnterPassword,
     };
     if (localErrors.isNotEmpty) {
       state = state.copyWith(fieldErrors: localErrors, formError: null);
@@ -37,13 +42,13 @@ class LoginController extends _$LoginController {
           .logIn(email: email, password: password);
       return true;
     } on Failure catch (f) {
-      state = state.copyWith(submitting: false, formError: f.message);
-      return false;
-    } catch (_) {
       state = state.copyWith(
         submitting: false,
-        formError: 'Đăng nhập không thành công. Thử lại nhé.',
+        formError: f.localizedMessage(l10n),
       );
+      return false;
+    } catch (_) {
+      state = state.copyWith(submitting: false, formError: l10n.loginFailed);
       return false;
     }
   }

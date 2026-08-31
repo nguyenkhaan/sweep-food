@@ -12,13 +12,18 @@ class MacroChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String g(double v) => '${v.round()}g';
+    final l10n = context.l10n;
+    String g(double v) => l10n.macroGrams(v.round());
     final rows = <(String, String, Color)>[
       if (showKcal)
-        ('Năng lượng', '${nutrition.energyKcal.round()} kcal', context.colors.onSurface),
-      ('Đạm', g(nutrition.proteinG), context.colors.primary),
-      ('Tinh bột', g(nutrition.carbG), context.sweep.soon.fg),
-      ('Chất béo', g(nutrition.lipidG), context.sweep.expired.fg),
+        (
+          l10n.macroEnergy,
+          l10n.macroKcal(nutrition.energyKcal.round()),
+          context.colors.onSurface,
+        ),
+      (l10n.macroProtein, g(nutrition.proteinG), context.colors.primary),
+      (l10n.macroCarb, g(nutrition.carbG), context.sweep.soon.fg),
+      (l10n.macroFat, g(nutrition.lipidG), context.sweep.expired.fg),
     ];
     return Wrap(
       spacing: 8,

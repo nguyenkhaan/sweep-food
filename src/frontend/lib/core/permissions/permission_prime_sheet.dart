@@ -43,24 +43,23 @@ Future<bool> ensureMediaPermission(
       ? await service.isCameraPermanentlyDenied()
       : await service.isMicrophonePermanentlyDenied();
   if (context.mounted) {
+    final l10n = context.l10n;
     ScaffoldMessenger.of(context).showSnackBar(
       permanently
           ? SnackBar(
               content: Text(
                 isCamera
-                    ? 'Hãy bật quyền Máy ảnh trong Cài đặt để quét.'
-                    : 'Hãy bật quyền Micro trong Cài đặt để nói.',
+                    ? l10n.permCameraSettingsHint
+                    : l10n.permMicSettingsHint,
               ),
               action: SnackBarAction(
-                label: 'Mở Cài đặt',
+                label: l10n.permOpenSettings,
                 onPressed: service.openSettings,
               ),
             )
           : SnackBar(
               content: Text(
-                isCamera
-                    ? 'Chưa cấp quyền Máy ảnh — hãy thử lại và chọn "Cho phép".'
-                    : 'Chưa cấp quyền Micro — hãy thử lại và chọn "Cho phép".',
+                isCamera ? l10n.permCameraRetryHint : l10n.permMicRetryHint,
               ),
             ),
     );
@@ -85,10 +84,7 @@ Future<bool?> showPermissionPrimeSheet(
 
 /// G-04 — Sheet giải thích quyền trước khi mở dialog hệ thống.
 class PermissionPrimeSheet extends StatelessWidget {
-  const PermissionPrimeSheet({
-    required this.kind,
-    super.key,
-  });
+  const PermissionPrimeSheet({required this.kind, super.key});
 
   final PermissionKind kind;
 
@@ -97,11 +93,10 @@ class PermissionPrimeSheet extends StatelessWidget {
     final cs = context.colors;
     final sweep = context.sweep;
 
+    final l10n = context.l10n;
     final isCamera = kind == PermissionKind.camera;
-    final title = isCamera ? 'Cho phép dùng máy ảnh' : 'Cho phép dùng micro';
-    final description = isCamera
-        ? 'SweepFood cần máy ảnh để quét tem nhãn và hóa đơn. Ảnh chỉ dùng để trích xuất thông tin nguyên liệu, không lưu lại nếu bạn không xác nhận.'
-        : 'SweepFood cần micro để nhận diện giọng nói khi bạn đọc danh sách nguyên liệu. Âm thanh chỉ được xử lý để bóc tách thông tin.';
+    final title = isCamera ? l10n.permCameraTitle : l10n.permMicTitle;
+    final description = isCamera ? l10n.permCameraDesc : l10n.permMicDesc;
     final iconData = isCamera ? Icons.camera_alt_outlined : Icons.mic_outlined;
 
     return DecoratedBox(
@@ -138,11 +133,7 @@ class PermissionPrimeSheet extends StatelessWidget {
                   color: BrandPalette.green100,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Icon(
-                  iconData,
-                  size: 30,
-                  color: BrandPalette.green700,
-                ),
+                child: Icon(iconData, size: 30, color: BrandPalette.green700),
               ),
               Gap.gapMd,
 
@@ -181,7 +172,7 @@ class PermissionPrimeSheet extends StatelessWidget {
                         borderRadius: Radii.brMd,
                       ),
                     ),
-                    child: const Text('Cho phép'),
+                    child: Text(l10n.commonAllow),
                   ),
                   Gap.gapXs,
                   TextButton(
@@ -190,7 +181,7 @@ class PermissionPrimeSheet extends StatelessWidget {
                       foregroundColor: sweep.textSecondary,
                       minimumSize: const Size.fromHeight(48),
                     ),
-                    child: const Text('Không phải bây giờ'),
+                    child: Text(l10n.commonNotNow),
                   ),
                 ],
               ),
@@ -198,7 +189,7 @@ class PermissionPrimeSheet extends StatelessWidget {
 
               // Fine print
               Text(
-                'Bạn có thể đổi trong Cài đặt bất cứ lúc nào.',
+                l10n.permFinePrint,
                 style: context.text.labelSmall?.copyWith(
                   color: sweep.textTertiary,
                 ),

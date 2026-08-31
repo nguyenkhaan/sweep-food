@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/utils/extensions/build_context_x.dart';
 
 /// Snackbar helpers with an optional "Hoàn tác" action (spec G-07).
 abstract final class AppSnack {
@@ -19,7 +20,10 @@ abstract final class AppSnack {
         SnackBar(
           content: Text(message),
           duration: const Duration(seconds: 4),
-          action: SnackBarAction(label: 'Hoàn tác', onPressed: onUndo),
+          action: SnackBarAction(
+            label: context.l10n.commonUndo,
+            onPressed: onUndo,
+          ),
         ),
       );
   }
