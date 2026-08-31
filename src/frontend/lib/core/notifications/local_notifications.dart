@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:frontend/core/utils/logger.dart';
-import 'package:frontend/features/settings/domain/entities/notification_preferences.dart';
+import 'package:sweepfood/core/utils/logger.dart';
+import 'package:sweepfood/features/settings/domain/entities/notification_preferences.dart';
 
 /// Thin wrapper over `flutter_local_notifications`. In the MVP this is how the
 /// near-expiry reminders reach the user — there's no server push (FCM is

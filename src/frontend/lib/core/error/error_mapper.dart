@@ -1,9 +1,9 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:frontend/core/error/app_exception.dart';
-import 'package:frontend/core/error/failure.dart';
+import 'package:sweepfood/core/error/app_exception.dart';
+import 'package:sweepfood/core/error/failure.dart';
 
 /// Turns an exception thrown by a data source into a [Failure].
 ///

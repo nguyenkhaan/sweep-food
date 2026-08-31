@@ -1,7 +1,7 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/reports/data/models/report_dto.dart';
-import 'package:frontend/features/reports/domain/entities/waste_reduction_summary.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/reports/data/models/report_dto.dart';
+import 'package:sweepfood/features/reports/domain/entities/waste_reduction_summary.dart';
 
 class ReportRemoteDataSource {
   ReportRemoteDataSource(this._api);

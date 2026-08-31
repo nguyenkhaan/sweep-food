@@ -1,6 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/core/utils/formatters/quantity_format.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/core/utils/formatters/quantity_format.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 part 'dish_ingredient.freezed.dart';
 

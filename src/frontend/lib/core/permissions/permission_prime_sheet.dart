@@ -1,13 +1,13 @@
-// lib/core/permissions/permission_prime_sheet.dart
+﻿// lib/core/permissions/permission_prime_sheet.dart
 // G-04 — Bottom sheet xin quyền trước khi gọi prompt hệ thống
 // Design: PermissionPrime.dc.html
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/permissions/permission_service.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/permissions/permission_service.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
 enum PermissionKind { camera, microphone }
 

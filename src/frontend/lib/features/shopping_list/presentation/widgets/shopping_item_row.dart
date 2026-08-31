@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list_item.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
 
 /// One checkable line on the shopping list (B-01).
 class ShoppingItemRow extends StatelessWidget {

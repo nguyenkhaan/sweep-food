@@ -1,6 +1,6 @@
-import 'package:frontend/features/catalog/data/repositories/ingredient_repository_impl.dart';
-import 'package:frontend/features/catalog/domain/entities/ingredient.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/catalog/data/repositories/ingredient_repository_impl.dart';
+import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
 
 part 'ingredient_search_controller.g.dart';
 

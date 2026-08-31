@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/locale_controller.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/app/theme/theme_mode_controller.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_bottom_sheet.dart';
-import 'package:frontend/features/settings/presentation/controllers/preferences_controller.dart';
-import 'package:frontend/features/settings/presentation/widgets/settings_group.dart';
-import 'package:frontend/l10n/app_localizations.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/app/locale_controller.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/app/theme/theme_mode_controller.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
+import 'package:sweepfood/features/settings/presentation/controllers/preferences_controller.dart';
+import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 /// P-03 Tùy chọn — dietary preference, default unit, language, theme.
 class PreferencesScreen extends ConsumerWidget {

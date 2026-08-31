@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
 /// Opens a themed modal bottom sheet (rounded top, drag handle, safe-area
 /// padded). Use for K-04, D-03/D-04/D-06, S-02, G-03, G-04…

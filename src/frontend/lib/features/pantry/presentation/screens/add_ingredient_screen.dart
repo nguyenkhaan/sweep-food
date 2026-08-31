@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/utils/extensions/date_time_x.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
-import 'package:frontend/features/catalog/domain/entities/ingredient.dart';
-import 'package:frontend/features/catalog/presentation/controllers/ingredient_search_controller.dart';
-import 'package:frontend/features/pantry/presentation/controllers/add_ingredient_controller.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
+import 'package:sweepfood/features/catalog/presentation/controllers/ingredient_search_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/add_ingredient_controller.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 /// K-03 — Thêm / Sửa nguyên liệu (thủ công).
 ///

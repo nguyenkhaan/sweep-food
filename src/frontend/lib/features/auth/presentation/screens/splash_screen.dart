@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/config/app_constants.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
 
 /// G-01 Splash. Purely visual: [appRedirect] routes on the moment
 /// `sessionControllerProvider` resolves (token check + `/auth/me`).

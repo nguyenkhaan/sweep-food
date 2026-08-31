@@ -1,10 +1,10 @@
-import 'package:frontend/core/network/api_result.dart';
-import 'package:frontend/core/network/network_providers.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/reports/data/datasources/report_remote_data_source.dart';
-import 'package:frontend/features/reports/domain/entities/waste_reduction_summary.dart';
-import 'package:frontend/features/reports/domain/repositories/report_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/api_result.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/reports/data/datasources/report_remote_data_source.dart';
+import 'package:sweepfood/features/reports/domain/entities/waste_reduction_summary.dart';
+import 'package:sweepfood/features/reports/domain/repositories/report_repository.dart';
 
 part 'report_repository_impl.g.dart';
 

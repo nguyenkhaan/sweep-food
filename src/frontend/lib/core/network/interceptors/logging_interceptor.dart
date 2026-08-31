@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:frontend/core/utils/logger.dart';
+﻿import 'package:dio/dio.dart';
+import 'package:sweepfood/core/utils/logger.dart';
 
 /// Compact request/response logging for the live [Dio] client.
 class LoggingInterceptor extends Interceptor {

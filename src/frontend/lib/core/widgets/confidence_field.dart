@@ -1,10 +1,10 @@
-// lib/core/widgets/confidence_field.dart
+﻿// lib/core/widgets/confidence_field.dart
 // Read-only field card used on the OCR review screens (I-03 / I-05).
 
 import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
 /// A labeled value the user taps to edit. When [needsReview] is set the border
 /// turns amber and a "cần kiểm tra" chip appears next to the label — the signal

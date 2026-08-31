@@ -1,6 +1,6 @@
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/l10n/app_localizations.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
+﻿import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 /// Which meal the user is cooking (S-01 filter).
 enum MealType {

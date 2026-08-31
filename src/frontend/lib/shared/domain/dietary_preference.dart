@@ -1,4 +1,4 @@
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// The user's meal-ranking preference (spec 6.3.4, N-01). Feeds the `P` term
 /// of the suggestion score. Chosen at onboarding, editable in Cài đặt → Tùy chọn.

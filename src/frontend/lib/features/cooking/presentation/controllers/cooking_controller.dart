@@ -1,8 +1,8 @@
-import 'package:frontend/features/cooking/data/repositories/cooking_repository_impl.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_confirmation.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/cooking/data/repositories/cooking_repository_impl.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 
 part 'cooking_controller.g.dart';
 

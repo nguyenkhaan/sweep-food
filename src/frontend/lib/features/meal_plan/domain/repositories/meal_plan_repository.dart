@@ -1,5 +1,5 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/meal_plan/domain/entities/meal_plan.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
 
 abstract interface class MealPlanRepository {
   /// `GET /meal-plans?weekStart=` (yyyy-MM-dd).

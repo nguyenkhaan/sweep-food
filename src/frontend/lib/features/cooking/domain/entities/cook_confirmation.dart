@@ -1,4 +1,4 @@
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// How much stock to deduct when a dish is marked cooked (D-03).
 enum CookMode {

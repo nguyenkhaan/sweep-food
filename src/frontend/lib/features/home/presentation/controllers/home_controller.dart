@@ -1,9 +1,9 @@
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_summary.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:frontend/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_summary.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 
 part 'home_controller.g.dart';
 

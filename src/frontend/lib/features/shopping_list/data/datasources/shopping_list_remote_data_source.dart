@@ -1,7 +1,7 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/shopping_list/data/models/shopping_list_dto.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list_item.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/shopping_list/data/models/shopping_list_dto.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
 
 /// Talks to `/shopping-lists`. Throws on failure — the repository maps.
 class ShoppingListRemoteDataSource {

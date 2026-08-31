@@ -1,8 +1,8 @@
-import 'package:fl_chart/fl_chart.dart';
+﻿import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/reports/domain/entities/waste_reduction_summary.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/reports/domain/entities/waste_reduction_summary.dart';
 
 /// R-01 weekly bars — "nguyên liệu cứu được theo tuần".
 class ReportBarChart extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// Storage advice shown in the near-expiry detail sheet (T-02). Category-keyed
 /// copy — sourced from FoodKeeper-style guidance (see P-06).

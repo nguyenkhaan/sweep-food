@@ -1,8 +1,8 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/l10n/app_localizations.dart';
-import 'package:frontend/shared/domain/expiry_status.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
+import 'package:sweepfood/shared/domain/expiry_status.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 part 'pantry_item.freezed.dart';
 

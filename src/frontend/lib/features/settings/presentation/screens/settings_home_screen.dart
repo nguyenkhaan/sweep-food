@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/locale_controller.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/auth/presentation/controllers/session_controller.dart';
-import 'package:frontend/features/settings/presentation/widgets/settings_group.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/locale_controller.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/session_controller.dart';
+import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
 
 /// P-01 Cá nhân — profile header, plan bar, grouped settings, sign out.
 class SettingsHomeScreen extends ConsumerWidget {

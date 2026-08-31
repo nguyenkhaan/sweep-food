@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/core/widgets/pantry_item_card.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/core/widgets/pantry_item_card.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 const _categoryIcon = <String, IconData>{
   'Rau lá': Icons.grass_rounded,

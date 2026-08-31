@@ -1,4 +1,4 @@
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// The four pantry storage tiers (spec 6.3.2). Order = suggestion priority
 /// (eatSoon first).

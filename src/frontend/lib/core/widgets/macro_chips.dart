@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/shared/domain/nutrition_info.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/shared/domain/nutrition_info.dart';
 
 /// Row of "Đạm 28g · Tinh bột 30g · Chất béo 14g" chips with colour dots that
 /// match [MacroRing].

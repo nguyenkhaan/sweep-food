@@ -1,11 +1,11 @@
-// lib/features/ingest/presentation/widgets/parsed_item_row.dart
+﻿// lib/features/ingest/presentation/widgets/parsed_item_row.dart
 // One parsed-item row on the receipt / voice review lists (I-05 / I-07).
 
 import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 
 /// Editable summary row for one [ParsedItemDraft].
 ///

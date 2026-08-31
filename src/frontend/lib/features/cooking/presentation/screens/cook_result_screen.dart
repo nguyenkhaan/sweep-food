@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
-import 'package:frontend/features/cooking/presentation/widgets/leftover_save_sheet.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/cooking/presentation/widgets/leftover_save_sheet.dart';
 
 /// D-05 / D-07 — "Đã cập nhật kho": before→after per ingredient plus the
 /// waste-avoided feedback. No money figure (spec: no price data).

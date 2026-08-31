@@ -1,7 +1,7 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
-import 'package:frontend/features/pantry/data/models/pantry_item_dto.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/pantry/data/models/pantry_item_dto.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 part 'cook_result_dto.freezed.dart';
 part 'cook_result_dto.g.dart';

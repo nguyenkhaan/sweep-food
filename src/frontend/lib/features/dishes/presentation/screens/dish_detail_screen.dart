@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/section_header.dart';
-import 'package:frontend/features/cooking/presentation/widgets/post_cook_confirm_sheet.dart';
-import 'package:frontend/features/dishes/domain/entities/dish.dart';
-import 'package:frontend/features/dishes/presentation/controllers/dish_detail_controller.dart';
-import 'package:frontend/features/dishes/presentation/widgets/cooking_steps_view.dart';
-import 'package:frontend/features/dishes/presentation/widgets/ingredient_checklist.dart';
-import 'package:frontend/features/nutrition/presentation/widgets/macro_breakdown.dart';
-import 'package:frontend/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/section_header.dart';
+import 'package:sweepfood/features/cooking/presentation/widgets/post_cook_confirm_sheet.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
+import 'package:sweepfood/features/dishes/presentation/controllers/dish_detail_controller.dart';
+import 'package:sweepfood/features/dishes/presentation/widgets/cooking_steps_view.dart';
+import 'package:sweepfood/features/dishes/presentation/widgets/ingredient_checklist.dart';
+import 'package:sweepfood/features/nutrition/presentation/widgets/macro_breakdown.dart';
+import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 
 /// D-01 — Chi tiết món. Reached from S-01 (`/suggestions/dish/:id`), optionally
 /// carrying its [DishSuggestion] via `extra` for the score badge.

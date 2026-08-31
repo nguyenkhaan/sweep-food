@@ -1,6 +1,6 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/meal_plan/data/models/meal_plan_dto.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/meal_plan/data/models/meal_plan_dto.dart';
 
 /// Talks to `/meal-plans`. Throws on failure — the repository maps.
 class MealPlanRemoteDataSource {

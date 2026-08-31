@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/core/error/error_mapper.dart';
-import 'package:frontend/core/error/failure.dart';
-import 'package:frontend/core/widgets/error_view.dart';
-import 'package:frontend/core/widgets/loading_skeleton.dart';
+import 'package:sweepfood/core/error/error_mapper.dart';
+import 'package:sweepfood/core/error/failure.dart';
+import 'package:sweepfood/core/widgets/error_view.dart';
+import 'package:sweepfood/core/widgets/loading_skeleton.dart';
 
 /// Renders an [AsyncValue]: [data] on success, a skeleton while loading, an
 /// [ErrorView] (with retry) on error. Keeps screens free of `.when(...)` noise.

@@ -1,6 +1,6 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/features/ingest/data/models/scan_job_dto.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/features/ingest/data/models/scan_job_dto.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
 
 /// Uploads captured media to `/scan/{label,receipt,voice}` and returns the
 /// normalized job. Throws on failure — the repository catches and maps.

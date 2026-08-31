@@ -3,11 +3,11 @@
 // Design: AddEntryChooser.dc.html
 
 import 'package:flutter/material.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
 /// Mở sheet này thay vì navigate — dùng [showAddEntryChooser].
 Future<void> showAddEntryChooser(BuildContext context) {

@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/locale_controller.dart';
-import 'package:frontend/app/router/app_router.dart';
-import 'package:frontend/app/theme/app_theme.dart';
-import 'package:frontend/app/theme/theme_mode_controller.dart';
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+import 'package:sweepfood/app/locale_controller.dart';
+import 'package:sweepfood/app/router/app_router.dart';
+import 'package:sweepfood/app/theme/app_theme.dart';
+import 'package:sweepfood/app/theme/theme_mode_controller.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// Root widget. Owns the [MaterialApp.router], theme + theme-mode, and locale.
 class SweepFoodApp extends ConsumerWidget {

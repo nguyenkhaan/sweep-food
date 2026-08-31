@@ -1,11 +1,11 @@
-import 'package:frontend/features/catalog/domain/entities/ingredient.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item_draft.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_item_controller.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_item_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 part 'add_ingredient_controller.g.dart';
 

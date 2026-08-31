@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/auth/presentation/controllers/session_controller.dart';
-import 'package:frontend/features/settings/domain/entities/pantry_member.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/session_controller.dart';
+import 'package:sweepfood/features/settings/domain/entities/pantry_member.dart';
 
 /// P-05 Chia sẻ tủ bếp — **"Sắp có"** in the MVP: a preview of the member list
 /// with a disabled invite and a nudge toward the paywall.

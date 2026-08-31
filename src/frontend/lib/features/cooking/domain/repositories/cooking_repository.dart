@@ -1,8 +1,8 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_confirmation.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
-import 'package:frontend/features/cooking/domain/entities/cooked_food.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 
 abstract interface class CookingRepository {
   /// Deduct stock for a cooked dish (`POST /dishes/{id}/cook`).

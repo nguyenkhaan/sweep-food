@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/app/theme/app_theme.dart';
-import 'package:frontend/core/media/media_providers.dart';
-import 'package:frontend/core/permissions/permission_service.dart';
-import 'package:frontend/features/ingest/presentation/screens/voice_capture_screen.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+import 'package:sweepfood/app/theme/app_theme.dart';
+import 'package:sweepfood/core/media/media_providers.dart';
+import 'package:sweepfood/core/permissions/permission_service.dart';
+import 'package:sweepfood/features/ingest/presentation/screens/voice_capture_screen.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 import '../../helpers/media_fakes.dart';
 

@@ -1,11 +1,11 @@
-import 'package:frontend/core/network/api_result.dart';
-import 'package:frontend/core/network/network_providers.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/meal_plan/data/datasources/meal_plan_remote_data_source.dart';
-import 'package:frontend/features/meal_plan/data/models/meal_plan_dto.dart';
-import 'package:frontend/features/meal_plan/domain/entities/meal_plan.dart';
-import 'package:frontend/features/meal_plan/domain/repositories/meal_plan_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/api_result.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/meal_plan/data/datasources/meal_plan_remote_data_source.dart';
+import 'package:sweepfood/features/meal_plan/data/models/meal_plan_dto.dart';
+import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
+import 'package:sweepfood/features/meal_plan/domain/repositories/meal_plan_repository.dart';
 
 part 'meal_plan_repository_impl.g.dart';
 

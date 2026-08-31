@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 part 'user.freezed.dart';
 

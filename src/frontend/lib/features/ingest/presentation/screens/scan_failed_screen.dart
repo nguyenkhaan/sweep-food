@@ -3,13 +3,13 @@
 // Design: ScanFailed.dc.html
 
 import 'package:flutter/material.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
-import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// I-09 — Không đọc được tem nhãn / hóa đơn / giọng nói.
 class ScanFailedScreen extends StatelessWidget {

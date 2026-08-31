@@ -1,9 +1,9 @@
-import 'package:frontend/core/analytics/analytics_events.dart';
-import 'package:frontend/core/analytics/analytics_provider.dart';
-import 'package:frontend/features/subscription/data/repositories/subscription_repository_impl.dart';
-import 'package:frontend/features/subscription/domain/entities/plan_option.dart';
-import 'package:frontend/features/subscription/presentation/controllers/subscription_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/analytics/analytics_events.dart';
+import 'package:sweepfood/core/analytics/analytics_provider.dart';
+import 'package:sweepfood/features/subscription/data/repositories/subscription_repository_impl.dart';
+import 'package:sweepfood/features/subscription/domain/entities/plan_option.dart';
+import 'package:sweepfood/features/subscription/presentation/controllers/subscription_controller.dart';
 
 part 'paywall_controller.g.dart';
 

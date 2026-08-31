@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 const _tierIcon = {
   StorageTier.eatSoon: Icons.local_fire_department_rounded,

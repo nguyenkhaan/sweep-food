@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/features/auth/presentation/controllers/session_controller.dart';
-import 'package:frontend/features/onboarding/presentation/controllers/onboarding_controller.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/session_controller.dart';
+import 'package:sweepfood/features/onboarding/presentation/controllers/onboarding_controller.dart';
 
 /// Routes reachable while signed out.
 const _authRoutes = {

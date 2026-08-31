@@ -1,6 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
 
 part 'scan_job.freezed.dart';
 

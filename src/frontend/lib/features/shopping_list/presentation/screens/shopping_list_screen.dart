@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/empty_state.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list.dart';
-import 'package:frontend/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
-import 'package:frontend/features/shopping_list/presentation/widgets/add_shopping_item_sheet.dart';
-import 'package:frontend/features/shopping_list/presentation/widgets/shopping_item_row.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
+import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
+import 'package:sweepfood/features/shopping_list/presentation/widgets/add_shopping_item_sheet.dart';
+import 'package:sweepfood/features/shopping_list/presentation/widgets/shopping_item_row.dart';
 
 /// B-01 Danh sách mua sắm — grouped by category, hide-in-stock toggle, check off,
 /// estimated total.

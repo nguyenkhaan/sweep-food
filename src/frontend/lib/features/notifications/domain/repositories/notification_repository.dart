@@ -1,5 +1,5 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/notifications/domain/entities/app_notification.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
 
 abstract interface class NotificationRepository {
   /// `GET /notifications` — newest first.

@@ -1,6 +1,6 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/auth/data/models/auth_dto.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/auth/data/models/auth_dto.dart';
 
 /// Talks to `/auth/*`. Throws on failure — the repository catches and maps.
 ///

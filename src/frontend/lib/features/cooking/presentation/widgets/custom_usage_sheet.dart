@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/utils/formatters/quantity_format.dart';
-import 'package:frontend/core/widgets/app_bottom_sheet.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_confirmation.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
-import 'package:frontend/features/cooking/presentation/controllers/cooking_controller.dart';
-import 'package:frontend/features/cooking/presentation/controllers/custom_usage_controller.dart';
-import 'package:frontend/features/dishes/domain/entities/dish.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/formatters/quantity_format.dart';
+import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
+import 'package:sweepfood/features/cooking/presentation/controllers/custom_usage_controller.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 
 /// D-04 — "Điều chỉnh lượng đã dùng". One slider per ingredient, then deducts
 /// the exact amounts and routes to the cook-result screen.

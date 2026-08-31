@@ -1,9 +1,9 @@
-import 'package:frontend/core/analytics/analytics_events.dart';
-import 'package:frontend/core/analytics/analytics_provider.dart';
-import 'package:frontend/features/meal_plan/data/repositories/meal_plan_repository_impl.dart';
-import 'package:frontend/features/meal_plan/domain/entities/meal_plan.dart';
-import 'package:frontend/features/meal_plan/domain/entities/meal_plan_entry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/analytics/analytics_events.dart';
+import 'package:sweepfood/core/analytics/analytics_provider.dart';
+import 'package:sweepfood/features/meal_plan/data/repositories/meal_plan_repository_impl.dart';
+import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
+import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan_entry.dart';
 
 part 'meal_plan_controller.g.dart';
 

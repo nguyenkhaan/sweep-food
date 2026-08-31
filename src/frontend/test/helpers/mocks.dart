@@ -1,12 +1,12 @@
 // test/helpers/mocks.dart
 // Shared mocktail doubles for the API client and repositories.
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/features/cooking/domain/repositories/cooking_repository.dart';
-import 'package:frontend/features/dishes/domain/repositories/dish_repository.dart';
-import 'package:frontend/features/ingest/domain/repositories/scan_repository.dart';
-import 'package:frontend/features/pantry/domain/repositories/pantry_repository.dart';
-import 'package:frontend/features/suggestions/domain/repositories/suggestion_repository.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/features/cooking/domain/repositories/cooking_repository.dart';
+import 'package:sweepfood/features/dishes/domain/repositories/dish_repository.dart';
+import 'package:sweepfood/features/ingest/domain/repositories/scan_repository.dart';
+import 'package:sweepfood/features/pantry/domain/repositories/pantry_repository.dart';
+import 'package:sweepfood/features/suggestions/domain/repositories/suggestion_repository.dart';
 
 class MockApiClient extends Mock implements ApiClient {}
 

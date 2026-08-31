@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/app.dart';
-import 'package:frontend/core/config/app_config.dart';
-import 'package:frontend/core/config/app_config_provider.dart';
-import 'package:frontend/core/storage/prefs.dart';
-import 'package:frontend/core/utils/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sweepfood/app/app.dart';
+import 'package:sweepfood/core/config/app_config.dart';
+import 'package:sweepfood/core/config/app_config_provider.dart';
+import 'package:sweepfood/core/storage/prefs.dart';
+import 'package:sweepfood/core/utils/logger.dart';
 
 /// Single async entry: load what must exist before the first frame, then run
 /// the app inside a guarded zone so uncaught errors are logged (not swallowed).

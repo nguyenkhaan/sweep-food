@@ -1,7 +1,7 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list_item.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 part 'shopping_list_dto.freezed.dart';
 part 'shopping_list_dto.g.dart';

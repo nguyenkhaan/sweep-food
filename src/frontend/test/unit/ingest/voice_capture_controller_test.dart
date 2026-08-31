@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/ingest/presentation/controllers/voice_capture_controller.dart';
-import 'package:frontend/features/pantry/data/repositories/pantry_repository_impl.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item_draft.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/ingest/presentation/controllers/voice_capture_controller.dart';
+import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 import '../../helpers/ingest_fixtures.dart';
 import '../../helpers/mocks.dart';

@@ -1,6 +1,6 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list_item.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
 
 abstract interface class ShoppingListRepository {
   /// The user's current list (`GET /shopping-lists`).

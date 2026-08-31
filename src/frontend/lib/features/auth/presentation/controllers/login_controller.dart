@@ -1,8 +1,8 @@
-import 'package:frontend/core/error/failure.dart';
-import 'package:frontend/features/auth/presentation/controllers/auth_form.dart';
-import 'package:frontend/features/auth/presentation/controllers/session_controller.dart';
-import 'package:frontend/l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/error/failure.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/auth_form.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/session_controller.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 part 'login_controller.g.dart';
 

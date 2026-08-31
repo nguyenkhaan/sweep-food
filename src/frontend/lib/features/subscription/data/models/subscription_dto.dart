@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/subscription/domain/entities/subscription.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/subscription/domain/entities/subscription.dart';
 
 part 'subscription_dto.freezed.dart';
 part 'subscription_dto.g.dart';

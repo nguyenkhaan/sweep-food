@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:frontend/core/network/api_client.dart';
+﻿import 'package:dio/dio.dart';
+import 'package:sweepfood/core/network/api_client.dart';
 
 /// [ApiClient] backed by Dio. Used when `AppConfig.backend == Backend.live`.
 /// Error handling is left to the caller (repositories catch `DioException`).

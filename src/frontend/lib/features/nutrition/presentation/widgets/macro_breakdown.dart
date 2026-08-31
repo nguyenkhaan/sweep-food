@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/macro_chips.dart';
-import 'package:frontend/core/widgets/macro_ring.dart';
-import 'package:frontend/shared/domain/nutrition_info.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/macro_chips.dart';
+import 'package:sweepfood/core/widgets/macro_ring.dart';
+import 'package:sweepfood/shared/domain/nutrition_info.dart';
 
 /// Reusable nutrition card: [MacroRing] + [MacroChips] + an estimate note.
 /// Used by dish detail (D-01) and later nutrition-goal screens.

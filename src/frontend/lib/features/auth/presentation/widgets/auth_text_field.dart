@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
 
 /// Labelled text field shared by the login / register / forgot-password forms
 /// (A-02..A-04). Renders a `label`, the field, and an optional inline error.

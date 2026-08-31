@@ -1,8 +1,8 @@
-// test/helpers/media_fakes.dart
+﻿// test/helpers/media_fakes.dart
 // Test doubles for the M4 media / permission services (no platform channels).
-import 'package:frontend/core/media/audio_recorder_service.dart';
-import 'package:frontend/core/media/image_capture_service.dart';
-import 'package:frontend/core/permissions/permission_service.dart';
+import 'package:sweepfood/core/media/audio_recorder_service.dart';
+import 'package:sweepfood/core/media/image_capture_service.dart';
+import 'package:sweepfood/core/permissions/permission_service.dart';
 
 /// Reports every permission as already granted.
 class GrantedPermissionService extends PermissionService {

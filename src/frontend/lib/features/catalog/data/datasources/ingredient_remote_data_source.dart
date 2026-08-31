@@ -1,6 +1,6 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/catalog/data/models/ingredient_dto.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/catalog/data/models/ingredient_dto.dart';
 
 class IngredientRemoteDataSource {
   IngredientRemoteDataSource(this._api);

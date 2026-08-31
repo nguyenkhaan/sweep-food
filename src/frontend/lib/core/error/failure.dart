@@ -1,4 +1,4 @@
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// A user-facing failure. Repositories return `Either<Failure, T>`; controllers
 /// turn a [Failure] into an [AsyncError] the UI renders via `AsyncValueWidget`.

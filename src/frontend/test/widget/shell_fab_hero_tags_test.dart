@@ -1,14 +1,14 @@
-// Regression: the 5 StatefulShellRoute branches stay mounted in one IndexedStack
+﻿// Regression: the 5 StatefulShellRoute branches stay mounted in one IndexedStack
 // subtree, so two default-tagged FloatingActionButtons (Pantry + Shopping) throw
 // "multiple heroes share the same tag" on any route transition. Each shell FAB
 // must carry a unique heroTag.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/app/theme/app_theme.dart';
-import 'package:frontend/features/pantry/presentation/screens/pantry_screen.dart';
-import 'package:frontend/features/shopping_list/presentation/screens/shopping_list_screen.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+import 'package:sweepfood/app/theme/app_theme.dart';
+import 'package:sweepfood/features/pantry/presentation/screens/pantry_screen.dart';
+import 'package:sweepfood/features/shopping_list/presentation/screens/shopping_list_screen.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 void main() {
   testWidgets('Pantry and Shopping FABs use distinct, non-null hero tags', (

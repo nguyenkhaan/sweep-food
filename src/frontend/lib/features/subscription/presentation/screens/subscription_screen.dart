@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
-import 'package:frontend/features/subscription/domain/entities/subscription.dart';
-import 'package:frontend/features/subscription/presentation/controllers/subscription_controller.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/subscription/domain/entities/subscription.dart';
+import 'package:sweepfood/features/subscription/presentation/controllers/subscription_controller.dart';
 
 /// P-02 Gói dịch vụ — current plan + a nudge to the interest-capture paywall.
 class SubscriptionScreen extends ConsumerWidget {

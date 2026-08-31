@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/core/widgets/app_bottom_nav.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/core/widgets/app_bottom_nav.dart';
 
 /// The persistent bottom-navigation frame hosting the 5 tab branches.
 /// Tab order (plan.md §4): Trang chủ · Kho · Gợi ý · Mua sắm · Cá nhân.

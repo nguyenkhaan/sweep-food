@@ -1,7 +1,7 @@
-import 'package:frontend/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:frontend/features/auth/presentation/controllers/auth_form.dart';
-import 'package:frontend/l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/auth_form.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 part 'forgot_password_controller.g.dart';
 

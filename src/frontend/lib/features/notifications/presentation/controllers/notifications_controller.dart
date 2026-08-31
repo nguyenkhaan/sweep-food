@@ -1,6 +1,6 @@
-import 'package:frontend/features/notifications/data/repositories/notification_repository_impl.dart';
-import 'package:frontend/features/notifications/domain/entities/app_notification.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
 
 part 'notifications_controller.g.dart';
 

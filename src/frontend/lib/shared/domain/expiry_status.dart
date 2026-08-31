@@ -1,6 +1,6 @@
-import 'package:frontend/app/theme/app_colors.dart' show ExpiryLevel;
+﻿import 'package:sweepfood/app/theme/app_colors.dart' show ExpiryLevel;
 
-export 'package:frontend/app/theme/app_colors.dart' show ExpiryLevel;
+export 'package:sweepfood/app/theme/app_colors.dart' show ExpiryLevel;
 
 /// Buckets days-until-expiry into the 4-level urgency scale used for badge
 /// colours, sort order and the waste-reduction count.

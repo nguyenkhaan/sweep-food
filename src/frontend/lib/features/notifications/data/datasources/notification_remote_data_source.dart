@@ -1,6 +1,6 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/notifications/data/models/app_notification_dto.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/notifications/data/models/app_notification_dto.dart';
 
 /// Talks to `/notifications`. Throws on failure — the repository maps.
 class NotificationRemoteDataSource {

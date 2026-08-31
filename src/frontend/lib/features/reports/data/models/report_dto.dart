@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/reports/domain/entities/waste_reduction_summary.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/reports/domain/entities/waste_reduction_summary.dart';
 
 part 'report_dto.freezed.dart';
 part 'report_dto.g.dart';

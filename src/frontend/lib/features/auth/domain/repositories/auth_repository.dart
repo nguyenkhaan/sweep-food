@@ -1,6 +1,6 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/auth/domain/entities/session.dart';
-import 'package:frontend/features/auth/domain/entities/user.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/auth/domain/entities/session.dart';
+import 'package:sweepfood/features/auth/domain/entities/user.dart';
 
 /// Auth surface used by [SessionController] and the auth-form controllers.
 ///

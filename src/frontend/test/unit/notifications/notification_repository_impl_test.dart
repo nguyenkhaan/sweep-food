@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/notifications/data/datasources/notification_remote_data_source.dart';
-import 'package:frontend/features/notifications/data/repositories/notification_repository_impl.dart';
-import 'package:frontend/features/notifications/domain/entities/app_notification.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/notifications/data/datasources/notification_remote_data_source.dart';
+import 'package:sweepfood/features/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
 
 class _MockApiClient extends Mock implements ApiClient {}
 

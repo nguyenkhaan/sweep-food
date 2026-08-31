@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_text_button.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
-import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
-import 'package:frontend/features/onboarding/domain/entities/onboarding_state.dart';
-import 'package:frontend/features/onboarding/presentation/controllers/onboarding_controller.dart';
-import 'package:frontend/features/onboarding/presentation/widgets/onboarding_progress.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_text_button.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
+import 'package:sweepfood/features/onboarding/domain/entities/onboarding_state.dart';
+import 'package:sweepfood/features/onboarding/presentation/controllers/onboarding_controller.dart';
+import 'package:sweepfood/features/onboarding/presentation/widgets/onboarding_progress.dart';
 
 /// A-06 Onboarding · Hướng dẫn nhập kho lần đầu. Both CTAs mark onboarding done;
 /// "Thêm nguyên liệu đầu tiên" drops the user into AddEntryChooser.

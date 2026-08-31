@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
 
 /// Form-level error banner for the auth forms (wrong credentials, "cần đồng ý
 /// điều khoản", server errors). Per-field 422 errors render inline on the field

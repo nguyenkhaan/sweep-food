@@ -1,8 +1,8 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/ingest/data/repositories/scan_repository_impl.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_job.dart';
-import 'package:frontend/features/ingest/domain/repositories/scan_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/ingest/data/repositories/scan_repository_impl.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/ingest/domain/repositories/scan_repository.dart';
 
 part 'scan_controller.g.dart';
 

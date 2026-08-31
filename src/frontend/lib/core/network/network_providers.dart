@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:frontend/core/config/app_config_provider.dart';
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/dio_api_client.dart';
-import 'package:frontend/core/network/interceptors/auth_interceptor.dart';
-import 'package:frontend/core/network/interceptors/logging_interceptor.dart';
-import 'package:frontend/core/network/mock_api_client.dart';
-import 'package:frontend/core/network/session_expired.dart';
-import 'package:frontend/core/storage/storage_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/config/app_config_provider.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/dio_api_client.dart';
+import 'package:sweepfood/core/network/interceptors/auth_interceptor.dart';
+import 'package:sweepfood/core/network/interceptors/logging_interceptor.dart';
+import 'package:sweepfood/core/network/mock_api_client.dart';
+import 'package:sweepfood/core/network/session_expired.dart';
+import 'package:sweepfood/core/storage/storage_providers.dart';
 
 part 'network_providers.g.dart';
 

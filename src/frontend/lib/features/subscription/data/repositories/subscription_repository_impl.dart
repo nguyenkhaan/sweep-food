@@ -1,10 +1,10 @@
-import 'package:frontend/core/network/api_result.dart';
-import 'package:frontend/core/network/network_providers.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/subscription/data/datasources/subscription_remote_data_source.dart';
-import 'package:frontend/features/subscription/domain/entities/subscription.dart';
-import 'package:frontend/features/subscription/domain/repositories/subscription_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/api_result.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/subscription/data/datasources/subscription_remote_data_source.dart';
+import 'package:sweepfood/features/subscription/domain/entities/subscription.dart';
+import 'package:sweepfood/features/subscription/domain/repositories/subscription_repository.dart';
 
 part 'subscription_repository_impl.g.dart';
 
