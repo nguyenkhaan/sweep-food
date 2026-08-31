@@ -1,0 +1,18 @@
+{
+  "job_id": "job_label_001",
+  "type": "label",
+  "status": "completed",
+  "raw_text": "Cà chua bi 500g ĐG: 05/09/2026 HSD: 12/09/2026 Giá: 18.000d",
+  "item": {
+    "name": "Cà chua bi",
+    "quantity": 500.0,
+    "unit": "g",
+    "price_vnd": 18000,
+    "packed_date": "2026-09-05T00:00:00Z",
+    "expiry_date": "2026-09-12T00:00:00Z",
+    "storage_tier": "fridge",
+    "category": "Rau củ",
+    "is_expiry_warn": true,
+    "field_count": 5
+  }
+}

@@ -12,6 +12,7 @@ import 'package:frontend/features/cooking/presentation/screens/cook_result_scree
 import 'package:frontend/features/dishes/presentation/screens/dish_detail_screen.dart';
 import 'package:frontend/features/home/presentation/screens/home_screen.dart';
 import 'package:frontend/features/ingest/presentation/screens/camera_capture_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/label_review_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/dietary_preference_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/onboarding_pantry_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/add_ingredient_screen.dart';
@@ -115,6 +116,13 @@ GoRouter appRouter(Ref ref) {
                           : CameraScanMode.label;
                       return CameraCaptureScreen(initialMode: initialMode);
                     },
+                  ),
+                  GoRoute(
+                    path: Routes.scanLabelReview, // '/pantry/scan/label-review'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => LabelReviewScreen(
+                      imagePath: state.extra as String?,
+                    ),
                   ),
                 ],
               ),
