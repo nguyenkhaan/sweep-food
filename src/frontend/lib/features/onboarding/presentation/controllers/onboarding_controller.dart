@@ -1,3 +1,5 @@
+import 'package:frontend/core/analytics/analytics_events.dart';
+import 'package:frontend/core/analytics/analytics_provider.dart';
 import 'package:frontend/core/config/app_constants.dart';
 import 'package:frontend/core/storage/prefs.dart';
 import 'package:frontend/shared/domain/dietary_preference.dart';
@@ -17,6 +19,7 @@ class OnboardingController extends _$OnboardingController {
 
   Future<void> complete() async {
     state = true;
+    ref.read(analyticsProvider).log(AnalyticsEvents.onboardingCompleted);
     await ref
         .read(sharedPreferencesProvider)
         .setBool(AppConstants.kOnboardingDone, true);
@@ -45,6 +48,9 @@ class DietaryPreferenceController extends _$DietaryPreferenceController {
 
   Future<void> set(DietaryPreference? preference) async {
     state = preference;
+    ref
+        .read(analyticsProvider)
+        .setUserProperty(AnalyticsUserProps.dietaryPreference, preference?.wire);
     final prefs = ref.read(sharedPreferencesProvider);
     if (preference == null) {
       await prefs.remove(AppConstants.kDietaryPreference);

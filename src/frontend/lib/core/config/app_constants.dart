@@ -19,6 +19,8 @@ abstract final class AppConstants {
   static const kDietaryPreference = 'pref.dietary_preference';
   static const kDefaultUnit = 'pref.default_unit';
   static const kOnboardingDone = 'pref.onboarding_done';
+  static const kNotificationPrefs = 'pref.notification_prefs';
+  static const kMealPlanWeekStart = 'pref.meal_plan_week_start';
 
   /// SecureStorage keys.
   static const kAccessToken = 'auth.access_token';

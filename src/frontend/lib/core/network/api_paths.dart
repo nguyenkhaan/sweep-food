@@ -44,6 +44,7 @@ abstract final class ApiPaths {
   static String mealPlan(String weekStart) => '/meal-plans/$weekStart';
 
   // Shopping list
+  static const shoppingLists = '/shopping-lists';
   static const shoppingListsGenerate = '/shopping-lists/generate';
   static String shoppingList(String id) => '/shopping-lists/$id';
   static String shoppingListItem(String listId, String itemId) =>

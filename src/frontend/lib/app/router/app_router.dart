@@ -17,13 +17,23 @@ import 'package:frontend/features/ingest/presentation/screens/receipt_review_scr
 import 'package:frontend/features/ingest/presentation/screens/scan_failed_screen.dart';
 import 'package:frontend/features/ingest/presentation/screens/voice_capture_screen.dart';
 import 'package:frontend/features/ingest/presentation/screens/voice_review_screen.dart';
+import 'package:frontend/features/meal_plan/presentation/screens/meal_plan_screen.dart';
+import 'package:frontend/features/notifications/presentation/screens/notification_center_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/dietary_preference_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/onboarding_pantry_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/add_ingredient_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/pantry_item_detail_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/pantry_screen.dart';
+import 'package:frontend/features/reports/presentation/screens/reports_screen.dart';
+import 'package:frontend/features/settings/presentation/screens/about_screen.dart';
+import 'package:frontend/features/settings/presentation/screens/notification_settings_screen.dart';
+import 'package:frontend/features/settings/presentation/screens/pantry_sharing_screen.dart';
+import 'package:frontend/features/settings/presentation/screens/preferences_screen.dart';
+import 'package:frontend/features/settings/presentation/screens/profile_screen.dart';
 import 'package:frontend/features/settings/presentation/screens/settings_home_screen.dart';
 import 'package:frontend/features/shopping_list/presentation/screens/shopping_list_screen.dart';
+import 'package:frontend/features/subscription/presentation/screens/paywall_screen.dart';
+import 'package:frontend/features/subscription/presentation/screens/subscription_screen.dart';
 import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:frontend/features/suggestions/presentation/screens/suggestion_list_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -198,6 +208,56 @@ GoRouter appRouter(Ref ref) {
         parentNavigatorKey: _rootKey,
         builder: (context, state) =>
             CookResultScreen(result: state.extra! as CookResult),
+      ),
+      GoRoute(
+        path: Routes.notifications,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const NotificationCenterScreen(),
+      ),
+      GoRoute(
+        path: Routes.mealPlan,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const MealPlanScreen(),
+      ),
+      GoRoute(
+        path: Routes.reports,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const ReportsScreen(),
+      ),
+      GoRoute(
+        path: Routes.paywall,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const PaywallScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsProfile,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsPreferences,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const PreferencesScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsNotifications,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const NotificationSettingsScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsPantrySharing,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const PantrySharingScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsSubscription,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const SubscriptionScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsAbout,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const AboutScreen(),
       ),
     ],
   );

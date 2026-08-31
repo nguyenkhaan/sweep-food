@@ -14,16 +14,16 @@ final receiptReviewControllerProvider = ReceiptReviewControllerFamily._();
 
 final class ReceiptReviewControllerProvider
     extends $NotifierProvider<ReceiptReviewController, ReceiptReviewState> {
-  ReceiptReviewControllerProvider._({
-    required ReceiptReviewControllerFamily super.from,
-    required String? super.argument,
-  }) : super(
-         retry: null,
-         name: r'receiptReviewControllerProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+  ReceiptReviewControllerProvider._(
+      {required ReceiptReviewControllerFamily super.from,
+      required String? super.argument})
+      : super(
+          retry: null,
+          name: r'receiptReviewControllerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$receiptReviewControllerHash();
@@ -64,23 +64,20 @@ String _$receiptReviewControllerHash() =>
 
 final class ReceiptReviewControllerFamily extends $Family
     with
-        $ClassFamilyOverride<
-          ReceiptReviewController,
-          ReceiptReviewState,
-          ReceiptReviewState,
-          ReceiptReviewState,
-          String?
-        > {
+        $ClassFamilyOverride<ReceiptReviewController, ReceiptReviewState,
+            ReceiptReviewState, ReceiptReviewState, String?> {
   ReceiptReviewControllerFamily._()
-    : super(
-        retry: null,
-        name: r'receiptReviewControllerProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
+      : super(
+          retry: null,
+          name: r'receiptReviewControllerProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
 
-  ReceiptReviewControllerProvider call({String? imagePath}) =>
+  ReceiptReviewControllerProvider call({
+    String? imagePath,
+  }) =>
       ReceiptReviewControllerProvider._(argument: imagePath, from: this);
 
   @override
@@ -91,19 +88,22 @@ abstract class _$ReceiptReviewController extends $Notifier<ReceiptReviewState> {
   late final _$args = ref.$arg as String?;
   String? get imagePath => _$args;
 
-  ReceiptReviewState build({String? imagePath});
+  ReceiptReviewState build({
+    String? imagePath,
+  });
   @$mustCallSuper
   @override
   void runBuild() {
     final ref = this.ref as $Ref<ReceiptReviewState, ReceiptReviewState>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<ReceiptReviewState, ReceiptReviewState>,
-              ReceiptReviewState,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, () => build(imagePath: _$args));
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<ReceiptReviewState, ReceiptReviewState>,
+        ReceiptReviewState,
+        Object?,
+        Object?>;
+    element.handleCreate(
+        ref,
+        () => build(
+              imagePath: _$args,
+            ));
   }
 }

@@ -1,1 +1,18 @@
-{ "_note": "mock fixture for waste-reduction report — fill from plan.md R-01 / api-contract" }
+{
+  "period": "month",
+  "period_label": "30 ngày qua",
+  "items_used_before_expiry": 12,
+  "waste_avoided_kg": 1.4,
+  "dishes_cooked": 18,
+  "weekly_bars": [
+    { "label": "T1", "value": 2 },
+    { "label": "T2", "value": 4 },
+    { "label": "T3", "value": 3 },
+    { "label": "T4", "value": 3 }
+  ],
+  "by_category": [
+    { "category": "Rau củ", "count": 5 },
+    { "category": "Thịt & cá", "count": 4 },
+    { "category": "Khác", "count": 3 }
+  ]
+}

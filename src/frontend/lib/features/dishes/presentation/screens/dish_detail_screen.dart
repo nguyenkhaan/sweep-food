@@ -11,6 +11,7 @@ import 'package:frontend/features/dishes/presentation/controllers/dish_detail_co
 import 'package:frontend/features/dishes/presentation/widgets/cooking_steps_view.dart';
 import 'package:frontend/features/dishes/presentation/widgets/ingredient_checklist.dart';
 import 'package:frontend/features/nutrition/presentation/widgets/macro_breakdown.dart';
+import 'package:frontend/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
 import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
 
 /// D-01 — Chi tiết món. Reached from S-01 (`/suggestions/dish/:id`), optionally
@@ -96,10 +97,18 @@ class _Body extends ConsumerWidget {
               if (dish.missingCount > 0) ...[
                 Gap.gapMd,
                 OutlinedButton.icon(
-                  onPressed: () => AppSnack.show(
-                    context,
-                    'Danh sách mua sắm sẽ có ở M5.',
-                  ),
+                  onPressed: () async {
+                    final added = await ref
+                        .read(shoppingListControllerProvider.notifier)
+                        .addMissingFromDish(dish);
+                    if (!context.mounted) return;
+                    AppSnack.show(
+                      context,
+                      added > 0
+                          ? 'Đã thêm $added nguyên liệu vào danh sách mua'
+                          : 'Danh sách mua chưa sẵn sàng — thử lại sau.',
+                    );
+                  },
                   icon: const Icon(Icons.add_shopping_cart_rounded, size: 18),
                   label: Text(
                     'Thêm ${dish.missingCount} nguyên liệu thiếu vào danh sách mua',

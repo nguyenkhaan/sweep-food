@@ -17,16 +17,16 @@ final labelReviewControllerProvider = LabelReviewControllerFamily._();
 final class LabelReviewControllerProvider
     extends $NotifierProvider<LabelReviewController, ParsedItemDraft> {
   /// Controller managing the state of the Label Review screen (I-03).
-  LabelReviewControllerProvider._({
-    required LabelReviewControllerFamily super.from,
-    required String? super.argument,
-  }) : super(
-         retry: null,
-         name: r'labelReviewControllerProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
+  LabelReviewControllerProvider._(
+      {required LabelReviewControllerFamily super.from,
+      required String? super.argument})
+      : super(
+          retry: null,
+          name: r'labelReviewControllerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
 
   @override
   String debugGetCreateSourceHash() => _$labelReviewControllerHash();
@@ -68,25 +68,22 @@ String _$labelReviewControllerHash() =>
 
 final class LabelReviewControllerFamily extends $Family
     with
-        $ClassFamilyOverride<
-          LabelReviewController,
-          ParsedItemDraft,
-          ParsedItemDraft,
-          ParsedItemDraft,
-          String?
-        > {
+        $ClassFamilyOverride<LabelReviewController, ParsedItemDraft,
+            ParsedItemDraft, ParsedItemDraft, String?> {
   LabelReviewControllerFamily._()
-    : super(
-        retry: null,
-        name: r'labelReviewControllerProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
+      : super(
+          retry: null,
+          name: r'labelReviewControllerProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
 
   /// Controller managing the state of the Label Review screen (I-03).
 
-  LabelReviewControllerProvider call({String? imagePath}) =>
+  LabelReviewControllerProvider call({
+    String? imagePath,
+  }) =>
       LabelReviewControllerProvider._(argument: imagePath, from: this);
 
   @override
@@ -99,19 +96,22 @@ abstract class _$LabelReviewController extends $Notifier<ParsedItemDraft> {
   late final _$args = ref.$arg as String?;
   String? get imagePath => _$args;
 
-  ParsedItemDraft build({String? imagePath});
+  ParsedItemDraft build({
+    String? imagePath,
+  });
   @$mustCallSuper
   @override
   void runBuild() {
     final ref = this.ref as $Ref<ParsedItemDraft, ParsedItemDraft>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<ParsedItemDraft, ParsedItemDraft>,
-              ParsedItemDraft,
-              Object?,
-              Object?
-            >;
-    element.handleCreate(ref, () => build(imagePath: _$args));
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<ParsedItemDraft, ParsedItemDraft>,
+        ParsedItemDraft,
+        Object?,
+        Object?>;
+    element.handleCreate(
+        ref,
+        () => build(
+              imagePath: _$args,
+            ));
   }
 }

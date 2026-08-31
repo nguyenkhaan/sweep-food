@@ -11,7 +11,9 @@ part of 'session_controller.dart';
 /// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
 /// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
 ///
-/// The router watches this (via `route_guards.dart`) to gate every route.
+/// The router watches this (via `route_guards.dart`) to gate every route. The
+/// form controllers (`login`/`register`) call in here and rethrow failures for
+/// the form to display — this notifier only ever moves to a resolved state.
 
 @ProviderFor(SessionController)
 final sessionControllerProvider = SessionControllerProvider._();
@@ -19,13 +21,17 @@ final sessionControllerProvider = SessionControllerProvider._();
 /// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
 /// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
 ///
-/// The router watches this (via `route_guards.dart`) to gate every route.
+/// The router watches this (via `route_guards.dart`) to gate every route. The
+/// form controllers (`login`/`register`) call in here and rethrow failures for
+/// the form to display — this notifier only ever moves to a resolved state.
 final class SessionControllerProvider
     extends $AsyncNotifierProvider<SessionController, Session?> {
   /// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
   /// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
   ///
-  /// The router watches this (via `route_guards.dart`) to gate every route.
+  /// The router watches this (via `route_guards.dart`) to gate every route. The
+  /// form controllers (`login`/`register`) call in here and rethrow failures for
+  /// the form to display — this notifier only ever moves to a resolved state.
   SessionControllerProvider._()
       : super(
           from: null,
@@ -45,12 +51,14 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'6e4ce59b874490c34a2f5ac51ec522a20a7be8b9';
+String _$sessionControllerHash() => r'f9fa9d79c6f34300e2e8ef3387889966fefbe43f';
 
 /// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
 /// signed in, `AsyncLoading` = still reviving a persisted session (Splash).
 ///
-/// The router watches this (via `route_guards.dart`) to gate every route.
+/// The router watches this (via `route_guards.dart`) to gate every route. The
+/// form controllers (`login`/`register`) call in here and rethrow failures for
+/// the form to display — this notifier only ever moves to a resolved state.
 
 abstract class _$SessionController extends $AsyncNotifier<Session?> {
   FutureOr<Session?> build();

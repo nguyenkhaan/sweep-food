@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
 import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
 import 'package:frontend/features/cooking/presentation/widgets/leftover_save_sheet.dart';
 import 'package:go_router/go_router.dart';
@@ -211,10 +210,7 @@ class _ChangesCard extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => AppSnack.show(
-                      context,
-                      'Danh sách mua sắm sẽ có ở M5.',
-                    ),
+                    onPressed: () => context.go(Routes.shopping),
                     child: const Text('+ Mua'),
                   ),
                 ],

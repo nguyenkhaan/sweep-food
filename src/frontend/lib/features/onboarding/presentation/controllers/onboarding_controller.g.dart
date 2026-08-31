@@ -51,7 +51,7 @@ final class OnboardingControllerProvider
 }
 
 String _$onboardingControllerHash() =>
-    r'd78243f07f2cd6c2e78d580e2e120426a355d428';
+    r'46e28a716242e5b75972570312da3571c246e757';
 
 /// Whether the user has finished (or skipped) onboarding. Persisted so it
 /// survives a logout/login on the same device. Watched by `route_guards.dart`:
@@ -113,7 +113,7 @@ final class DietaryPreferenceControllerProvider
 }
 
 String _$dietaryPreferenceControllerHash() =>
-    r'479324d8f7e21a10538a64cda22c9f8440cdf8d5';
+    r'2662bb7d4dca5a4fdf456209f238bee38fc15067';
 
 /// The persisted meal-ranking preference (N-01). Chosen at onboarding (A-05),
 /// later editable in Cài đặt → Tùy chọn. Feeds the `P` term of suggestion
