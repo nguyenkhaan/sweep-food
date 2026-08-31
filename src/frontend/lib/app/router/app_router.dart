@@ -11,6 +11,7 @@ import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
 import 'package:frontend/features/cooking/presentation/screens/cook_result_screen.dart';
 import 'package:frontend/features/dishes/presentation/screens/dish_detail_screen.dart';
 import 'package:frontend/features/home/presentation/screens/home_screen.dart';
+import 'package:frontend/features/ingest/presentation/screens/camera_capture_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/dietary_preference_screen.dart';
 import 'package:frontend/features/onboarding/presentation/screens/onboarding_pantry_screen.dart';
 import 'package:frontend/features/pantry/presentation/screens/add_ingredient_screen.dart';
@@ -103,6 +104,17 @@ GoRouter appRouter(Ref ref) {
                     builder: (context, state) => PantryItemDetailScreen(
                       itemId: state.pathParameters['id']!,
                     ),
+                  ),
+                  GoRoute(
+                    path: Routes.scanCamera, // '/pantry/scan/camera'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) {
+                      final modeQuery = state.uri.queryParameters['mode'];
+                      final initialMode = modeQuery == 'receipt'
+                          ? CameraScanMode.receipt
+                          : CameraScanMode.label;
+                      return CameraCaptureScreen(initialMode: initialMode);
+                    },
                   ),
                 ],
               ),

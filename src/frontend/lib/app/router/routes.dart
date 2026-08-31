@@ -20,6 +20,12 @@ abstract final class Routes {
   // Pantry sub-routes
   static const pantryItem = 'item/:id'; // relative to /pantry
   static const addIngredient = 'add'; // relative to /pantry
+  static const scanCamera = 'scan/camera'; // relative to /pantry
+  static const scanLabelReview = 'scan/label-review';
+  static const scanReceiptReview = 'scan/receipt-review';
+  static const scanVoiceCapture = 'scan/voice-capture';
+  static const scanVoiceReview = 'scan/voice-review';
+  static const scanFailed = 'scan/failed';
 
   // Suggestions / dishes
   static const dish = 'dish/:id'; // relative to /suggestions

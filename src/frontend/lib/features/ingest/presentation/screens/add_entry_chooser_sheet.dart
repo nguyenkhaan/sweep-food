@@ -86,8 +86,7 @@ class AddEntryChooserSheet extends StatelessWidget {
                     isPrimary: true,
                     onTap: () {
                       context.pop(); // đóng sheet
-                      // TODO M4: navigate sang CameraCaptureScreen (mode = label)
-                      // context.push('${Routes.pantry}/scan/camera?mode=label');
+                      context.push('${Routes.pantry}/${Routes.scanCamera}?mode=label');
                     },
                   ),
                   _OptionCard(
@@ -96,7 +95,7 @@ class AddEntryChooserSheet extends StatelessWidget {
                     subtitle: 'Chụp hóa đơn, thêm nhiều mục một lúc',
                     onTap: () {
                       context.pop();
-                      // TODO M4: navigate sang CameraCaptureScreen (mode = receipt)
+                      context.push('${Routes.pantry}/${Routes.scanCamera}?mode=receipt');
                     },
                   ),
                   _OptionCard(
