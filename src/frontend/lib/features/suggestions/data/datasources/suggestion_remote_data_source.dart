@@ -1,7 +1,7 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/suggestions/data/models/dish_suggestion_dto.dart';
-import 'package:frontend/features/suggestions/domain/entities/suggestion_request.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/suggestions/data/models/dish_suggestion_dto.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
 
 /// Talks to `/suggestions/dishes`. Throws on failure — the repo catches and maps.
 class SuggestionRemoteDataSource {

@@ -1,5 +1,5 @@
-import 'package:frontend/features/dishes/presentation/controllers/dish_detail_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/dishes/presentation/controllers/dish_detail_controller.dart';
 
 part 'custom_usage_controller.g.dart';
 

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/empty_state.dart';
-import 'package:frontend/core/widgets/suggestion_card.dart';
-import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:frontend/features/suggestions/domain/entities/suggestion_request.dart';
-import 'package:frontend/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
-import 'package:frontend/features/suggestions/presentation/widgets/score_breakdown_sheet.dart';
-import 'package:frontend/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/core/widgets/suggestion_card.dart';
+import 'package:sweepfood/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
+import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
+import 'package:sweepfood/features/suggestions/presentation/widgets/score_breakdown_sheet.dart';
+import 'package:sweepfood/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 /// S-01 — Gợi ý món. 3–5 scored dishes for the current pantry + quick filters.
 class SuggestionListScreen extends ConsumerWidget {

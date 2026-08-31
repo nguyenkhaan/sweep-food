@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/features/onboarding/domain/entities/onboarding_state.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/features/onboarding/domain/entities/onboarding_state.dart';
 
 /// The segmented progress bar at the top of the onboarding screens (A-05, A-06).
 class OnboardingProgress extends StatelessWidget {

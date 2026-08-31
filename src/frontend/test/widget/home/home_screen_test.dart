@@ -1,14 +1,14 @@
-// H-01 Home Dashboard: renders the dashboard from the mock fixtures, and shows
+﻿// H-01 Home Dashboard: renders the dashboard from the mock fixtures, and shows
 // the "add your first ingredient" CTA when the pantry is empty (spec M2).
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/app/theme/app_theme.dart';
-import 'package:frontend/core/widgets/suggestion_card.dart';
-import 'package:frontend/features/home/presentation/controllers/home_controller.dart';
-import 'package:frontend/features/home/presentation/screens/home_screen.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_summary.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+import 'package:sweepfood/app/theme/app_theme.dart';
+import 'package:sweepfood/core/widgets/suggestion_card.dart';
+import 'package:sweepfood/features/home/presentation/controllers/home_controller.dart';
+import 'package:sweepfood/features/home/presentation/screens/home_screen.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_summary.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 Future<void> _settle(WidgetTester tester) async {
   // Past the mock's ~320ms latency per hop (summary + list + suggestions).

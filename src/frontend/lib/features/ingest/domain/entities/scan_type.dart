@@ -1,5 +1,5 @@
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
+﻿import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 
 /// The three multimodal ingestion channels (M4). `wire` is the API/mock token.
 enum ScanType {

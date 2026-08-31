@@ -1,9 +1,9 @@
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/features/suggestions/data/repositories/suggestion_repository_impl.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:frontend/features/suggestions/domain/entities/suggestion_request.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/features/suggestions/data/repositories/suggestion_repository_impl.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 part 'suggestion_list_controller.g.dart';
 

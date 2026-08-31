@@ -1,5 +1,5 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_job.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 
 /// Contract for the multimodal ingestion channels (M4).
 ///

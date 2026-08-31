@@ -1,5 +1,5 @@
-import 'package:frontend/core/analytics/analytics_service.dart';
-import 'package:frontend/core/utils/logger.dart' as app_log;
+﻿import 'package:sweepfood/core/analytics/analytics_service.dart';
+import 'package:sweepfood/core/utils/logger.dart' as app_log;
 
 /// The only [AnalyticsService] wired in the MVP: it just logs. Swap for a
 /// Firebase-backed impl in M6 without touching call sites.

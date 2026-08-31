@@ -1,9 +1,9 @@
-import 'package:frontend/core/network/session_expired.dart';
-import 'package:frontend/core/storage/storage_providers.dart';
-import 'package:frontend/core/utils/logger.dart';
-import 'package:frontend/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:frontend/features/auth/domain/entities/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/session_expired.dart';
+import 'package:sweepfood/core/storage/storage_providers.dart';
+import 'package:sweepfood/core/utils/logger.dart';
+import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:sweepfood/features/auth/domain/entities/session.dart';
 
 part 'session_controller.g.dart';
 

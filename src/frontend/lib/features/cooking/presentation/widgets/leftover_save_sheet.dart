@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_bottom_sheet.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
-import 'package:frontend/features/cooking/domain/entities/cooked_food.dart';
-import 'package:frontend/features/cooking/presentation/controllers/leftover_controller.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
+import 'package:sweepfood/features/cooking/presentation/controllers/leftover_controller.dart';
 
 /// D-06 — "Còn dư món ăn?". Saves leftover portions as an "Ăn liền" batch with
 /// a use-by reminder.

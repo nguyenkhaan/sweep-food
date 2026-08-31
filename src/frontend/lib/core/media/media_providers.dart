@@ -1,6 +1,6 @@
-import 'package:frontend/core/media/audio_recorder_service.dart';
-import 'package:frontend/core/media/image_capture_service.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/media/audio_recorder_service.dart';
+import 'package:sweepfood/core/media/image_capture_service.dart';
 
 part 'media_providers.g.dart';
 

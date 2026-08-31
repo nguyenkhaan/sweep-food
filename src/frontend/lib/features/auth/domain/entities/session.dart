@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/auth/domain/entities/user.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/auth/domain/entities/user.dart';
 
 part 'session.freezed.dart';
 

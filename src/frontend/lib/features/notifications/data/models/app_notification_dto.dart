@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/notifications/domain/entities/app_notification.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
 
 part 'app_notification_dto.freezed.dart';
 part 'app_notification_dto.g.dart';

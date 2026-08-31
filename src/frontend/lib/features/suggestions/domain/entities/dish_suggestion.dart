@@ -1,6 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/dishes/domain/entities/dish.dart';
-import 'package:frontend/features/suggestions/domain/entities/score_breakdown.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/score_breakdown.dart';
 
 part 'dish_suggestion.freezed.dart';
 

@@ -1,6 +1,6 @@
-import 'package:frontend/core/widgets/suggestion_card.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:sweepfood/core/widgets/suggestion_card.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// Maps a [DishSuggestion] to the chip list of a [SuggestionCard].
 ///

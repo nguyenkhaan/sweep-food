@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/analytics/analytics_events.dart';
-import 'package:frontend/core/analytics/analytics_provider.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/utils/extensions/date_time_x.dart';
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/empty_state.dart';
-import 'package:frontend/features/notifications/domain/entities/app_notification.dart';
-import 'package:frontend/features/notifications/presentation/controllers/notifications_controller.dart';
-import 'package:frontend/features/notifications/presentation/widgets/near_expiry_detail_sheet.dart';
-import 'package:frontend/features/notifications/presentation/widgets/notification_tile.dart';
-import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/analytics/analytics_events.dart';
+import 'package:sweepfood/core/analytics/analytics_provider.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
+import 'package:sweepfood/features/notifications/presentation/controllers/notifications_controller.dart';
+import 'package:sweepfood/features/notifications/presentation/widgets/near_expiry_detail_sheet.dart';
+import 'package:sweepfood/features/notifications/presentation/widgets/notification_tile.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// T-01 Trung tâm thông báo — alerts grouped by day, unread dots, "đánh dấu đã
 /// đọc", tap → deep link.

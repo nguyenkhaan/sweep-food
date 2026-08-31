@@ -1,10 +1,10 @@
-// lib/core/widgets/waveform_recorder.dart
+﻿// lib/core/widgets/waveform_recorder.dart
 // Live mic-amplitude bar visualizer for voice capture (I-06).
 
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
 
 /// Renders a scrolling row of bars driven by a `0.0`–`1.0` amplitude [stream]
 /// (see `AudioRecorderService.amplitude`). When the stream is idle the bars

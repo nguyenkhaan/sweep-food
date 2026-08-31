@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/dishes/domain/entities/dish_ingredient.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish_ingredient.dart';
 
 /// D-01 ingredient rows: ✓ có sẵn / + cần mua, with a "cận hạn" or "cần mua" tag.
 class IngredientChecklist extends StatelessWidget {

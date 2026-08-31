@@ -1,10 +1,10 @@
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/core/storage/prefs.dart';
-import 'package:frontend/features/onboarding/presentation/controllers/onboarding_controller.dart';
-import 'package:frontend/features/settings/domain/entities/app_preferences.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/storage/prefs.dart';
+import 'package:sweepfood/features/onboarding/presentation/controllers/onboarding_controller.dart';
+import 'package:sweepfood/features/settings/domain/entities/app_preferences.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 part 'preferences_controller.g.dart';
 

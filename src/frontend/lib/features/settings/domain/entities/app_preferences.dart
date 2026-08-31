@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
+﻿import 'package:flutter/foundation.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 /// User-tunable app preferences (P-03). Stored locally in SharedPreferences —
 /// there's no server profile in the MVP. Theme mode lives in its own

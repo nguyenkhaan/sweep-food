@@ -7,13 +7,13 @@
 // Run: flutter test integration_test/core_loop_test.dart -d <device>
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_confirmation.dart';
-import 'package:frontend/features/cooking/presentation/controllers/cooking_controller.dart';
-import 'package:frontend/features/dishes/presentation/controllers/dish_detail_controller.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
-import 'package:frontend/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
+import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
+import 'package:sweepfood/features/dishes/presentation/controllers/dish_detail_controller.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
+import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

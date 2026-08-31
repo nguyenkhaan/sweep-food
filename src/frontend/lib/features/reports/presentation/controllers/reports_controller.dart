@@ -1,6 +1,6 @@
-import 'package:frontend/features/reports/data/repositories/report_repository_impl.dart';
-import 'package:frontend/features/reports/domain/entities/waste_reduction_summary.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/reports/data/repositories/report_repository_impl.dart';
+import 'package:sweepfood/features/reports/domain/entities/waste_reduction_summary.dart';
 
 part 'reports_controller.g.dart';
 

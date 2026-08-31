@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/error/failure.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/ingest/data/repositories/scan_repository_impl.dart';
-import 'package:frontend/features/ingest/presentation/controllers/scan_controller.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/error/failure.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/ingest/data/repositories/scan_repository_impl.dart';
+import 'package:sweepfood/features/ingest/presentation/controllers/scan_controller.dart';
 
 import '../../helpers/ingest_fixtures.dart';
 import '../../helpers/mocks.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_text_button.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_text_button.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
 
 /// A-01 Welcome / value prop — 3 slides on the app's three core values.
 class WelcomeScreen extends StatefulWidget {

@@ -1,7 +1,7 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/dishes/data/models/dish_dto.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:frontend/features/suggestions/domain/entities/score_breakdown.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/dishes/data/models/dish_dto.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/score_breakdown.dart';
 
 part 'dish_suggestion_dto.freezed.dart';
 part 'dish_suggestion_dto.g.dart';

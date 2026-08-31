@@ -1,8 +1,8 @@
-import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_job.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 
 part 'receipt_review_controller.g.dart';
 

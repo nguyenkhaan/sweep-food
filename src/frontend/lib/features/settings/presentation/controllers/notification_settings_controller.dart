@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/core/notifications/notification_providers.dart';
-import 'package:frontend/core/storage/prefs.dart';
-import 'package:frontend/features/settings/domain/entities/notification_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/notifications/notification_providers.dart';
+import 'package:sweepfood/core/storage/prefs.dart';
+import 'package:sweepfood/features/settings/domain/entities/notification_preferences.dart';
 
 part 'notification_settings_controller.g.dart';
 

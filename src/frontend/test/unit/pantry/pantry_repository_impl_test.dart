@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/pantry/data/datasources/pantry_remote_data_source.dart';
-import 'package:frontend/features/pantry/data/repositories/pantry_repository_impl.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item_draft.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/pantry/data/datasources/pantry_remote_data_source.dart';
+import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 class _MockApiClient extends Mock implements ApiClient {}
 

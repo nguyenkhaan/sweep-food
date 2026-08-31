@@ -1,5 +1,5 @@
-import 'package:frontend/core/error/error_mapper.dart';
-import 'package:frontend/core/utils/result.dart';
+﻿import 'package:sweepfood/core/error/error_mapper.dart';
+import 'package:sweepfood/core/utils/result.dart';
 
 /// Runs [body] (which calls a typed data source + maps DTO → entity) and wraps
 /// the outcome in a [Result]. Keeps repositories to one line per method:

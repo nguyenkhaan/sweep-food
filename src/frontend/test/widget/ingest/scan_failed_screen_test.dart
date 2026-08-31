@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/app/theme/app_theme.dart';
-import 'package:frontend/features/ingest/presentation/screens/scan_failed_screen.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+import 'package:sweepfood/app/theme/app_theme.dart';
+import 'package:sweepfood/features/ingest/presentation/screens/scan_failed_screen.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 void main() {
   testWidgets(

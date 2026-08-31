@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
-import 'package:frontend/features/subscription/domain/entities/plan_option.dart';
-import 'package:frontend/features/subscription/presentation/controllers/paywall_controller.dart';
-import 'package:frontend/features/subscription/presentation/widgets/plan_option_card.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/subscription/domain/entities/plan_option.dart';
+import 'package:sweepfood/features/subscription/presentation/controllers/paywall_controller.dart';
+import 'package:sweepfood/features/subscription/presentation/widgets/plan_option_card.dart';
 
 /// G-05 Paywall — MVP is interest capture only ("Nhận thông báo khi ra mắt").
 class PaywallScreen extends ConsumerWidget {

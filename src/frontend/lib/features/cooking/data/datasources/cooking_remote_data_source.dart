@@ -1,8 +1,8 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/cooking/data/models/cook_result_dto.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_confirmation.dart';
-import 'package:frontend/features/cooking/domain/entities/cooked_food.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/cooking/data/models/cook_result_dto.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
 
 /// Talks to `/dishes/{id}/cook` and `/pantry/cooked-food`. Throws on failure.
 class CookingRemoteDataSource {

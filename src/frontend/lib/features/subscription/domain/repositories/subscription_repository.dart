@@ -1,5 +1,5 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/subscription/domain/entities/subscription.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/subscription/domain/entities/subscription.dart';
 
 abstract interface class SubscriptionRepository {
   /// `GET /subscription` — current tier + perks.

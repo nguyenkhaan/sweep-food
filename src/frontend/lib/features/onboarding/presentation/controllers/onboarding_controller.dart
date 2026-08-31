@@ -1,9 +1,9 @@
-import 'package:frontend/core/analytics/analytics_events.dart';
-import 'package:frontend/core/analytics/analytics_provider.dart';
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/core/storage/prefs.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/analytics/analytics_events.dart';
+import 'package:sweepfood/core/analytics/analytics_provider.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/storage/prefs.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 part 'onboarding_controller.g.dart';
 

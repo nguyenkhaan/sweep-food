@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/utils/extensions/date_time_x.dart';
-import 'package:frontend/core/utils/formatters/expiry_text.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
-import 'package:frontend/core/widgets/empty_state.dart';
-import 'package:frontend/core/widgets/expiry_badge.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
-import 'package:frontend/core/widgets/secondary_button.dart';
-import 'package:frontend/core/widgets/tier_chip.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_item_controller.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
-import 'package:frontend/features/pantry/presentation/widgets/adjust_quantity_sheet.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
+import 'package:sweepfood/core/utils/formatters/expiry_text.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/core/widgets/expiry_badge.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/core/widgets/secondary_button.dart';
+import 'package:sweepfood/core/widgets/tier_chip.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_item_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/adjust_quantity_sheet.dart';
 
 /// K-02 — Chi tiết nguyên liệu.
 class PantryItemDetailScreen extends ConsumerStatefulWidget {

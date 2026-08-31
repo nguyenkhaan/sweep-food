@@ -1,7 +1,7 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/core/entitlements/entitlements.dart';
-import 'package:frontend/core/entitlements/entitlements_provider.dart';
+import 'package:sweepfood/core/entitlements/entitlements.dart';
+import 'package:sweepfood/core/entitlements/entitlements_provider.dart';
 
 /// Shows [child] when [feature] is allowed, otherwise [locked] (default: nothing).
 ///

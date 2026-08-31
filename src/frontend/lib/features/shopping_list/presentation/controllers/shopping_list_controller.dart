@@ -1,11 +1,11 @@
-import 'package:frontend/core/analytics/analytics_events.dart';
-import 'package:frontend/core/analytics/analytics_provider.dart';
-import 'package:frontend/features/dishes/domain/entities/dish.dart';
-import 'package:frontend/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list_item.dart';
-import 'package:frontend/l10n/app_localizations.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/analytics/analytics_events.dart';
+import 'package:sweepfood/core/analytics/analytics_provider.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
+import 'package:sweepfood/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 part 'shopping_list_controller.g.dart';
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
-import 'package:frontend/features/auth/presentation/controllers/forgot_password_controller.dart';
-import 'package:frontend/features/auth/presentation/widgets/auth_form_error.dart';
-import 'package:frontend/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/forgot_password_controller.dart';
+import 'package:sweepfood/features/auth/presentation/widgets/auth_form_error.dart';
+import 'package:sweepfood/features/auth/presentation/widgets/auth_text_field.dart';
 
 /// A-04 Quên mật khẩu `[S]` — form, then a "đã gửi" confirmation card.
 class ForgotPasswordScreen extends ConsumerStatefulWidget {

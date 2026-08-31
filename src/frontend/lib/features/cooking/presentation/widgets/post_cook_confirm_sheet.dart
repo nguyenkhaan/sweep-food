@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_bottom_sheet.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_confirmation.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
-import 'package:frontend/features/cooking/presentation/controllers/cooking_controller.dart';
-import 'package:frontend/features/cooking/presentation/widgets/custom_usage_sheet.dart';
-import 'package:frontend/features/dishes/domain/entities/dish.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
+import 'package:sweepfood/features/cooking/presentation/widgets/custom_usage_sheet.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 
 /// D-03 — "Bạn đã nấu …?". Pick a consumption mode; exact/half/all deduct stock
 /// straight away, "Tự điều chỉnh" opens the per-ingredient sheet (D-04).

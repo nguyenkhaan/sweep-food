@@ -1,6 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/nutrition_info.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/nutrition_info.dart';
 
 part 'ingredient.freezed.dart';
 

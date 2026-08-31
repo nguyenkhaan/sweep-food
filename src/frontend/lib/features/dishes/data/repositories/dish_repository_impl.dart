@@ -1,10 +1,10 @@
-import 'package:frontend/core/network/api_result.dart';
-import 'package:frontend/core/network/network_providers.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/dishes/data/datasources/dish_remote_data_source.dart';
-import 'package:frontend/features/dishes/domain/entities/dish.dart';
-import 'package:frontend/features/dishes/domain/repositories/dish_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/api_result.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/dishes/data/datasources/dish_remote_data_source.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
+import 'package:sweepfood/features/dishes/domain/repositories/dish_repository.dart';
 
 part 'dish_repository_impl.g.dart';
 

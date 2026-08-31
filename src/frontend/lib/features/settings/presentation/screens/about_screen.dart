@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
-import 'package:frontend/features/settings/presentation/widgets/settings_group.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
 
 /// P-06 Giới thiệu & dữ liệu — data sources + the estimate/health disclaimer.
 class AboutScreen extends StatelessWidget {

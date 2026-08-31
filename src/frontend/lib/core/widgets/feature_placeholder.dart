@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
 /// Temporary body for screens not yet implemented in the current milestone.
 /// Replace the whole screen when its milestone comes up (see IMPLEMENTATION_PLAN.md).

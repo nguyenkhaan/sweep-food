@@ -1,6 +1,6 @@
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 
 part 'pantry_item_controller.g.dart';
 

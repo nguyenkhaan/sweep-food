@@ -3,11 +3,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/config/app_config.dart';
-import 'package:frontend/core/config/app_config_provider.dart';
-import 'package:frontend/core/config/flavor.dart';
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/network_providers.dart';
+import 'package:sweepfood/core/config/app_config.dart';
+import 'package:sweepfood/core/config/app_config_provider.dart';
+import 'package:sweepfood/core/config/flavor.dart';
+import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
 
 /// A [ProviderContainer] with the given [overrides], auto-disposed after the test.
 ProviderContainer createContainer({List<Override> overrides = const []}) {
@@ -26,6 +26,7 @@ List<Override> apiOverrides(ApiClient client) => [
           apiBaseUrl: 'http://test/api/v1',
           premiumEnabled: false,
           nearExpiryDays: 3,
+          fcmEnabled: false,
         ),
       ),
     ];

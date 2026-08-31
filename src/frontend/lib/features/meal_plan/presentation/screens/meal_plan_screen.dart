@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/utils/extensions/date_time_x.dart';
-import 'package:frontend/core/widgets/app_bottom_sheet.dart';
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
-import 'package:frontend/features/meal_plan/domain/entities/meal_plan.dart';
-import 'package:frontend/features/meal_plan/domain/entities/meal_plan_entry.dart';
-import 'package:frontend/features/meal_plan/presentation/controllers/meal_plan_controller.dart';
-import 'package:frontend/features/meal_plan/presentation/widgets/meal_slot_cell.dart';
-import 'package:frontend/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
-import 'package:frontend/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:frontend/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
+import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
+import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan_entry.dart';
+import 'package:sweepfood/features/meal_plan/presentation/controllers/meal_plan_controller.dart';
+import 'package:sweepfood/features/meal_plan/presentation/widgets/meal_slot_cell.dart';
+import 'package:sweepfood/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
+import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 
 /// M-01 Thực đơn tuần — 7 days × (Sáng/Trưa/Tối), week nav, and
 /// "Tạo danh sách mua sắm".

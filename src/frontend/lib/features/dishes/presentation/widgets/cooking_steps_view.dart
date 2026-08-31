@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/dishes/domain/entities/cooking_step.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/dishes/domain/entities/cooking_step.dart';
 
 /// Numbered recipe steps (D-01 "Cách làm"). The full-screen immersive mode
 /// (D-02) is deferred past the MVP.

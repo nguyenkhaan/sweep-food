@@ -1,8 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
+﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 void main() {
   group('ParsedItemDraft', () {

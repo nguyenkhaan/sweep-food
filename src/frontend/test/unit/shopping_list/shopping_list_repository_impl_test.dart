@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/shopping_list/data/datasources/shopping_list_remote_data_source.dart';
-import 'package:frontend/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
-import 'package:frontend/features/shopping_list/domain/entities/shopping_list_item.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/shopping_list/data/datasources/shopping_list_remote_data_source.dart';
+import 'package:sweepfood/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 class _MockApiClient extends Mock implements ApiClient {}
 

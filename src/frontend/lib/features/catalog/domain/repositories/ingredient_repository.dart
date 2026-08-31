@@ -1,5 +1,5 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/catalog/domain/entities/ingredient.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
 
 abstract interface class IngredientRepository {
   /// Autocomplete search (K-03). Empty [query] returns a short "popular" list.

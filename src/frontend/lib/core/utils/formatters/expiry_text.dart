@@ -1,4 +1,4 @@
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// Relative expiry text for badges and list rows (spec: "còn 2 ngày" /
 /// "quá hạn 1 ngày" / "Hôm nay").

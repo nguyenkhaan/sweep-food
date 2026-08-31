@@ -1,10 +1,10 @@
-import 'package:frontend/core/network/api_result.dart';
-import 'package:frontend/core/network/network_providers.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/catalog/data/datasources/ingredient_remote_data_source.dart';
-import 'package:frontend/features/catalog/domain/entities/ingredient.dart';
-import 'package:frontend/features/catalog/domain/repositories/ingredient_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/api_result.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/catalog/data/datasources/ingredient_remote_data_source.dart';
+import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
+import 'package:sweepfood/features/catalog/domain/repositories/ingredient_repository.dart';
 
 part 'ingredient_repository_impl.g.dart';
 

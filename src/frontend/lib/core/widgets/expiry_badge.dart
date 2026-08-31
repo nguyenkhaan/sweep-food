@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/utils/formatters/expiry_text.dart';
-import 'package:frontend/shared/domain/expiry_status.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/formatters/expiry_text.dart';
+import 'package:sweepfood/shared/domain/expiry_status.dart';
 
 /// Pill showing expiry urgency + relative text ("Còn 1 ngày", "Quá hạn 2 ngày").
 /// Colour comes from the theme's [SweepColors] extension — never colour-only,

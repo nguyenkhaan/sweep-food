@@ -1,5 +1,5 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:frontend/core/config/app_constants.dart';
+﻿import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
 
 /// Thin wrapper over [FlutterSecureStorage] for the auth tokens. Nothing else
 /// belongs here — use SharedPreferences (`prefs.dart`) for non-secret prefs.

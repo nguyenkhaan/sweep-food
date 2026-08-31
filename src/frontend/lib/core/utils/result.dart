@@ -1,5 +1,5 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:frontend/core/error/failure.dart';
+﻿import 'package:fpdart/fpdart.dart';
+import 'package:sweepfood/core/error/failure.dart';
 
 export 'package:fpdart/fpdart.dart' show Either, Left, Right, Option, Some, None;
 

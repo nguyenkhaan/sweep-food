@@ -1,10 +1,10 @@
-import 'package:frontend/features/pantry/data/repositories/pantry_repository_impl.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item_draft.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_summary.dart';
-import 'package:frontend/features/pantry/domain/repositories/pantry_repository.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_summary.dart';
+import 'package:sweepfood/features/pantry/domain/repositories/pantry_repository.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 part 'pantry_list_controller.g.dart';
 

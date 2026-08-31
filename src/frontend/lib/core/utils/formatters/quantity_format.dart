@@ -1,4 +1,4 @@
-import 'package:frontend/shared/domain/measurement_unit.dart';
+﻿import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 /// "500 g", "1 bó", "3 quả", "1,5 kg". Drops a trailing `.0`, uses a comma
 /// decimal separator (vi convention).

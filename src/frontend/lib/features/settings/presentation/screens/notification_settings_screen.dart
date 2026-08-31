@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/settings/presentation/controllers/notification_settings_controller.dart';
-import 'package:frontend/features/settings/presentation/widgets/settings_group.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/settings/presentation/controllers/notification_settings_controller.dart';
+import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
 
 /// P-04 Cài đặt thông báo — per-type toggles + timing.
 class NotificationSettingsScreen extends ConsumerWidget {

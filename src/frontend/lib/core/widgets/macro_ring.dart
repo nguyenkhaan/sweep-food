@@ -1,8 +1,8 @@
-import 'dart:math' as math;
+﻿import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/shared/domain/nutrition_info.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/shared/domain/nutrition_info.dart';
 
 /// Donut showing kcal in the centre with protein / carb ring segments
 /// (dish detail, D-01). Pure [CustomPaint] — no chart library needed.

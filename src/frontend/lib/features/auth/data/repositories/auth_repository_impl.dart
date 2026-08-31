@@ -1,13 +1,13 @@
-import 'package:frontend/core/network/api_result.dart';
-import 'package:frontend/core/network/network_providers.dart';
-import 'package:frontend/core/storage/secure_storage.dart';
-import 'package:frontend/core/storage/storage_providers.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:frontend/features/auth/domain/entities/session.dart';
-import 'package:frontend/features/auth/domain/entities/user.dart';
-import 'package:frontend/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/api_result.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/core/storage/secure_storage.dart';
+import 'package:sweepfood/core/storage/storage_providers.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:sweepfood/features/auth/domain/entities/session.dart';
+import 'package:sweepfood/features/auth/domain/entities/user.dart';
+import 'package:sweepfood/features/auth/domain/repositories/auth_repository.dart';
 
 part 'auth_repository_impl.g.dart';
 

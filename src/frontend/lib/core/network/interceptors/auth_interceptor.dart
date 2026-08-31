@@ -1,6 +1,6 @@
-import 'package:dio/dio.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/core/storage/secure_storage.dart';
+﻿import 'package:dio/dio.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/core/storage/secure_storage.dart';
 
 /// Attaches the Bearer access token to every request and, on a 401, transparently
 /// refreshes it once before retrying.

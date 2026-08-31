@@ -1,5 +1,5 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 part 'waste_reduction_summary.freezed.dart';
 

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 extension BuildContextX on BuildContext {
   ThemeData get theme => Theme.of(this);

@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+﻿import 'package:flutter/foundation.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 enum PantryMemberRole { owner, editor }
 

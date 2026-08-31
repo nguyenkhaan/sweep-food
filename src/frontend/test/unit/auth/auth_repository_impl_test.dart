@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/error/failure.dart';
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/core/storage/secure_storage.dart';
-import 'package:frontend/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:frontend/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/error/failure.dart';
+import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/core/storage/secure_storage.dart';
+import 'package:sweepfood/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 class _MockApiClient extends Mock implements ApiClient {}
 

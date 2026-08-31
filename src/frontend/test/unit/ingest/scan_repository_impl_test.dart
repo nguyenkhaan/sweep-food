@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/error/failure.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/ingest/data/datasources/scan_remote_data_source.dart';
-import 'package:frontend/features/ingest/data/repositories/scan_repository_impl.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_job.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/error/failure.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/ingest/data/datasources/scan_remote_data_source.dart';
+import 'package:sweepfood/features/ingest/data/repositories/scan_repository_impl.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 import '../../helpers/mocks.dart';
 

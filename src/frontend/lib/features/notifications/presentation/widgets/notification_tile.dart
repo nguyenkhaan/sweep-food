@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/notifications/domain/entities/app_notification.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
 
 /// One row in the Trung tâm thông báo (T-01): tinted icon, title + body, time,
 /// and an unread dot.

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/empty_state.dart';
-import 'package:frontend/core/widgets/pantry_item_card.dart';
-import 'package:frontend/core/widgets/section_header.dart';
-import 'package:frontend/core/widgets/suggestion_card.dart';
-import 'package:frontend/core/widgets/waste_saved_pill.dart';
-import 'package:frontend/features/home/presentation/controllers/home_controller.dart';
-import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
-import 'package:frontend/features/notifications/presentation/controllers/notifications_controller.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:frontend/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
-import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/core/widgets/pantry_item_card.dart';
+import 'package:sweepfood/core/widgets/section_header.dart';
+import 'package:sweepfood/core/widgets/suggestion_card.dart';
+import 'package:sweepfood/core/widgets/waste_saved_pill.dart';
+import 'package:sweepfood/features/home/presentation/controllers/home_controller.dart';
+import 'package:sweepfood/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
+import 'package:sweepfood/features/notifications/presentation/controllers/notifications_controller.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 /// H-01 Trang chủ / Dashboard.
 class HomeScreen extends ConsumerWidget {

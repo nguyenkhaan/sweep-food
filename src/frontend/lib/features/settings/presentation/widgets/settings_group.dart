@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
 /// A labelled card of [SettingsRow]s — the building block of the Cài đặt screens.
 class SettingsGroup extends StatelessWidget {

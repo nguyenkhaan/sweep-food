@@ -1,10 +1,10 @@
-import 'package:frontend/core/network/api_result.dart';
-import 'package:frontend/core/network/network_providers.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/notifications/data/datasources/notification_remote_data_source.dart';
-import 'package:frontend/features/notifications/domain/entities/app_notification.dart';
-import 'package:frontend/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/api_result.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/notifications/data/datasources/notification_remote_data_source.dart';
+import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
+import 'package:sweepfood/features/notifications/domain/repositories/notification_repository.dart';
 
 part 'notification_repository_impl.g.dart';
 

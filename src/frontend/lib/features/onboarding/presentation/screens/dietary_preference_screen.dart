@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_text_button.dart';
-import 'package:frontend/core/widgets/primary_button.dart';
-import 'package:frontend/features/onboarding/domain/entities/onboarding_state.dart';
-import 'package:frontend/features/onboarding/presentation/controllers/onboarding_controller.dart';
-import 'package:frontend/features/onboarding/presentation/widgets/onboarding_progress.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_text_button.dart';
+import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/onboarding/domain/entities/onboarding_state.dart';
+import 'package:sweepfood/features/onboarding/presentation/controllers/onboarding_controller.dart';
+import 'package:sweepfood/features/onboarding/presentation/widgets/onboarding_progress.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 /// A-05 Onboarding · Ưu tiên dinh dưỡng (N-01). Skippable.
 class DietaryPreferenceScreen extends ConsumerStatefulWidget {

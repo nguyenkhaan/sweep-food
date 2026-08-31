@@ -1,10 +1,10 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/pantry/data/models/pantry_item_dto.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item_draft.dart';
-import 'package:frontend/features/pantry/domain/repositories/pantry_repository.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/pantry/data/models/pantry_item_dto.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
+import 'package:sweepfood/features/pantry/domain/repositories/pantry_repository.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 /// Talks to `/pantry/*`. Throws on failure — the repository catches and maps.
 class PantryRemoteDataSource {

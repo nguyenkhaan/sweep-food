@@ -1,4 +1,4 @@
-import 'package:frontend/bootstrap.dart';
+﻿import 'package:sweepfood/bootstrap.dart';
 
 /// Entry point. All init lives in [bootstrap].
 ///

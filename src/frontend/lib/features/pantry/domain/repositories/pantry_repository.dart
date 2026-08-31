@@ -1,10 +1,10 @@
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item_draft.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_summary.dart';
-import 'package:frontend/l10n/app_localizations.dart';
-import 'package:frontend/shared/domain/paginated.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_summary.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
+import 'package:sweepfood/shared/domain/paginated.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 /// How the pantry list is sorted (K-01).
 enum PantrySort {

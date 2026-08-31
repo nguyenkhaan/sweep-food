@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/config/app_config_provider.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_search_field.dart';
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/empty_state.dart';
-import 'package:frontend/core/widgets/section_header.dart';
-import 'package:frontend/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/features/pantry/domain/repositories/pantry_repository.dart';
-import 'package:frontend/features/pantry/presentation/controllers/pantry_list_controller.dart';
-import 'package:frontend/features/pantry/presentation/widgets/pantry_item_tile.dart';
-import 'package:frontend/features/pantry/presentation/widgets/tier_segmented_control.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/config/app_config_provider.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_search_field.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/core/widgets/section_header.dart';
+import 'package:sweepfood/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/repositories/pantry_repository.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/pantry_item_tile.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/tier_segmented_control.dart';
 
 /// K-01 — Kho thực phẩm.
 class PantryScreen extends ConsumerWidget {

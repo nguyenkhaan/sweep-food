@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/subscription/domain/entities/plan_option.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/subscription/domain/entities/plan_option.dart';
 
 /// A selectable plan row on the paywall (G-05). Disabled + faded when
 /// `plan.comingSoon`.

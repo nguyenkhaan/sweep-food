@@ -6,16 +6,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/media/audio_recorder_service.dart';
-import 'package:frontend/core/media/media_providers.dart';
-import 'package:frontend/core/permissions/permission_prime_sheet.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/waveform_recorder.dart';
-import 'package:frontend/features/ingest/presentation/controllers/scan_controller.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/media/audio_recorder_service.dart';
+import 'package:sweepfood/core/media/media_providers.dart';
+import 'package:sweepfood/core/permissions/permission_prime_sheet.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/waveform_recorder.dart';
+import 'package:sweepfood/features/ingest/presentation/controllers/scan_controller.dart';
 
 /// I-06 — Thu âm giọng nói để thêm nguyên liệu.
 class VoiceCaptureScreen extends ConsumerStatefulWidget {

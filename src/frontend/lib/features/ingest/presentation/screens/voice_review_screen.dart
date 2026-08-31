@@ -4,16 +4,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/app_snackbar.dart';
-import 'package:frontend/features/ingest/domain/entities/parsed_item_draft.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_job.dart';
-import 'package:frontend/features/ingest/presentation/controllers/voice_capture_controller.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/ingest/presentation/controllers/voice_capture_controller.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 /// I-07 — Kiểm tra & chỉnh sửa danh sách bóc tách từ giọng nói.
 class VoiceReviewScreen extends ConsumerWidget {

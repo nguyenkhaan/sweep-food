@@ -1,12 +1,12 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/core/error/app_exception.dart';
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/core/utils/logger.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/error/app_exception.dart';
+import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/core/utils/logger.dart';
 
 /// [ApiClient] that serves canned JSON from `assets/mock/*.json` with a small
 /// artificial delay. Used when `AppConfig.backend == Backend.mock`.

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/expiry_badge.dart';
-import 'package:frontend/shared/domain/expiry_status.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/expiry_badge.dart';
+import 'package:sweepfood/shared/domain/expiry_status.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 /// Pantry list row (K-01, H-01 "Cần dùng sớm").
 ///

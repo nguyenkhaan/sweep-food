@@ -1,6 +1,6 @@
-import 'package:frontend/features/dishes/data/repositories/dish_repository_impl.dart';
-import 'package:frontend/features/dishes/domain/entities/dish.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/dishes/data/repositories/dish_repository_impl.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 
 part 'dish_detail_controller.g.dart';
 

@@ -5,19 +5,19 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/router/routes.dart';
-import 'package:frontend/app/theme/app_colors.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/media/image_capture_service.dart';
-import 'package:frontend/core/media/media_providers.dart';
-import 'package:frontend/core/permissions/permission_prime_sheet.dart';
-import 'package:frontend/core/permissions/permission_service.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
-import 'package:frontend/features/ingest/presentation/controllers/scan_controller.dart';
-import 'package:frontend/features/ingest/presentation/widgets/viewfinder_overlay.dart';
-import 'package:frontend/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/media/image_capture_service.dart';
+import 'package:sweepfood/core/media/media_providers.dart';
+import 'package:sweepfood/core/permissions/permission_prime_sheet.dart';
+import 'package:sweepfood/core/permissions/permission_service.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
+import 'package:sweepfood/features/ingest/presentation/controllers/scan_controller.dart';
+import 'package:sweepfood/features/ingest/presentation/widgets/viewfinder_overlay.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 enum CameraScanMode {
   label(ScanType.label),

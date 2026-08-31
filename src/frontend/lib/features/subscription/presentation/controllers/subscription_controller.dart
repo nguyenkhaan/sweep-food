@@ -1,6 +1,6 @@
-import 'package:frontend/features/subscription/data/repositories/subscription_repository_impl.dart';
-import 'package:frontend/features/subscription/domain/entities/subscription.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/features/subscription/data/repositories/subscription_repository_impl.dart';
+import 'package:sweepfood/features/subscription/domain/entities/subscription.dart';
 
 part 'subscription_controller.g.dart';
 

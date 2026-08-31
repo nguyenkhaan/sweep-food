@@ -1,8 +1,8 @@
-// lib/features/ingest/presentation/widgets/viewfinder_overlay.dart
+﻿// lib/features/ingest/presentation/widgets/viewfinder_overlay.dart
 // Camera frame guide overlay (I-01 / I-04)
 
 import 'package:flutter/material.dart';
-import 'package:frontend/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_colors.dart';
 
 /// Rounded corner-bracket guide drawn over the camera preview. [portrait] uses
 /// a tall frame (receipts); otherwise a wide frame (weight labels).

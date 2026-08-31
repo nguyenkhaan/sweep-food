@@ -1,5 +1,5 @@
-import 'package:frontend/core/config/app_config.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/config/app_config.dart';
 
 part 'app_config_provider.g.dart';
 

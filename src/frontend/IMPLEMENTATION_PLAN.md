@@ -17,7 +17,7 @@
 | **M3 — Gợi ý + Món + Nấu (vòng lặp lõi)** | ✅ Xong     |
 | **M4 — Nhập liệu đa phương thức** | ✅ Xong     |
 | **M5 — Auth + Onboarding + phần còn lại** | ✅ Xong     |
-| **M6.1 — i18n (tách chuỗi → `AppL10n`)** | ✅ fXong    |
+| **M6.1 — i18n (tách chuỗi → `AppL10n`)** | ✅ Xong    |
 | M6.2 — api-contract, live-swap, FCM, build, đổi tên package | ⬜ Chưa     |
 
 ### M0 đã hoàn thành (2026-08-30)

@@ -1,15 +1,15 @@
-import 'package:frontend/core/network/api_result.dart';
-import 'package:frontend/core/network/network_providers.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/cooking/data/datasources/cooking_remote_data_source.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_confirmation.dart';
-import 'package:frontend/features/cooking/domain/entities/cook_result.dart';
-import 'package:frontend/features/cooking/domain/entities/cooked_food.dart';
-import 'package:frontend/features/cooking/domain/repositories/cooking_repository.dart';
-import 'package:frontend/features/pantry/domain/entities/pantry_item.dart';
-import 'package:frontend/shared/domain/measurement_unit.dart';
-import 'package:frontend/shared/domain/storage_tier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/api_result.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/cooking/data/datasources/cooking_remote_data_source.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
+import 'package:sweepfood/features/cooking/domain/repositories/cooking_repository.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
+import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 part 'cooking_repository_impl.g.dart';
 

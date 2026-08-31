@@ -1,8 +1,8 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/dishes/domain/entities/cooking_step.dart';
-import 'package:frontend/features/dishes/domain/entities/dish_ingredient.dart';
-import 'package:frontend/l10n/app_localizations.dart';
-import 'package:frontend/shared/domain/nutrition_info.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/dishes/domain/entities/cooking_step.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish_ingredient.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
+import 'package:sweepfood/shared/domain/nutrition_info.dart';
 
 part 'dish.freezed.dart';
 

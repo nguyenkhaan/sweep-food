@@ -1,11 +1,11 @@
-// Smoke test: S-01 renders the ranked list from the mock fixture, and the
+﻿// Smoke test: S-01 renders the ranked list from the mock fixture, and the
 // score-breakdown sheet (S-02) opens.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/app/theme/app_theme.dart';
-import 'package:frontend/features/suggestions/presentation/screens/suggestion_list_screen.dart';
-import 'package:frontend/l10n/app_localizations.dart';
+import 'package:sweepfood/app/theme/app_theme.dart';
+import 'package:sweepfood/features/suggestions/presentation/screens/suggestion_list_screen.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
 void main() {
   testWidgets('renders ranked cards and opens the score-breakdown sheet', (

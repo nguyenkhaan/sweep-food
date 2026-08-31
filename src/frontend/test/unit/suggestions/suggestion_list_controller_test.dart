@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/core/utils/result.dart';
-import 'package:frontend/features/suggestions/data/datasources/suggestion_remote_data_source.dart';
-import 'package:frontend/features/suggestions/data/repositories/suggestion_repository_impl.dart';
-import 'package:frontend/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:frontend/features/suggestions/domain/entities/suggestion_request.dart';
-import 'package:frontend/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/suggestions/data/datasources/suggestion_remote_data_source.dart';
+import 'package:sweepfood/features/suggestions/data/repositories/suggestion_repository_impl.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
+import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 
 import '../../helpers/mocks.dart';
 import '../../helpers/test_providers.dart';

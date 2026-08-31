@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/app/theme/app_spacing.dart';
-import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:frontend/core/widgets/async_value_widget.dart';
-import 'package:frontend/core/widgets/empty_state.dart';
-import 'package:frontend/features/reports/domain/entities/waste_reduction_summary.dart';
-import 'package:frontend/features/reports/presentation/controllers/reports_controller.dart';
-import 'package:frontend/features/reports/presentation/widgets/period_selector.dart';
-import 'package:frontend/features/reports/presentation/widgets/report_bar_chart.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/features/reports/domain/entities/waste_reduction_summary.dart';
+import 'package:sweepfood/features/reports/presentation/controllers/reports_controller.dart';
+import 'package:sweepfood/features/reports/presentation/widgets/period_selector.dart';
+import 'package:sweepfood/features/reports/presentation/widgets/report_bar_chart.dart';
 
 /// R-01 Báo cáo chống lãng phí — ingredients used before expiry, kg avoided,
 /// dishes cooked. No money (price data unavailable).

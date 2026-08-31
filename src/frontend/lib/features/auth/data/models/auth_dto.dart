@@ -1,7 +1,7 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:frontend/features/auth/domain/entities/session.dart';
-import 'package:frontend/features/auth/domain/entities/user.dart';
-import 'package:frontend/shared/domain/dietary_preference.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/auth/domain/entities/session.dart';
+import 'package:sweepfood/features/auth/domain/entities/user.dart';
+import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 part 'auth_dto.freezed.dart';
 part 'auth_dto.g.dart';

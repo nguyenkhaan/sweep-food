@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/core/config/app_constants.dart';
-import 'package:frontend/core/storage/prefs.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/storage/prefs.dart';
 
 part 'theme_mode_controller.g.dart';
 

@@ -1,6 +1,6 @@
-import 'package:frontend/core/network/api_client.dart';
-import 'package:frontend/core/network/api_paths.dart';
-import 'package:frontend/features/subscription/data/models/subscription_dto.dart';
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/subscription/data/models/subscription_dto.dart';
 
 class SubscriptionRemoteDataSource {
   SubscriptionRemoteDataSource(this._api);

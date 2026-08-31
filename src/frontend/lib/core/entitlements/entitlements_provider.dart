@@ -1,6 +1,6 @@
-import 'package:frontend/core/entitlements/entitlements.dart';
-import 'package:frontend/core/entitlements/premium_flag.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/entitlements/entitlements.dart';
+import 'package:sweepfood/core/entitlements/premium_flag.dart';
 
 part 'entitlements_provider.g.dart';
 
