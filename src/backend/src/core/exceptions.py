@@ -99,20 +99,30 @@ async def validation_exception_handler(
     request: Request,
     exception: Exception,
 ) -> JSONResponse:
-    """Return a useful but non-sensitive response for request validation failures."""
-    detail = "Request validation failed."
+    """Return field-specific, non-sensitive request validation feedback."""
+    detail = "Input is invalid."
     if isinstance(exception, RequestValidationError):
         is_email_error = any(
-            error.get("loc") == ("body", "email")
-            for error in exception.errors()
+            error.get("loc") == ("body", "email") for error in exception.errors()
         )
         if is_email_error:
             detail = "Email must be valid"
+        else:
+            detail = _format_validation_errors(exception)
     return create_error_response(
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         detail=detail,
         path=request.url.path,
     )
+
+
+def _format_validation_errors(exception: RequestValidationError) -> str:
+    """Format validation locations and messages without returning submitted values."""
+    details = [
+        f"{'.'.join(str(part) for part in error['loc'])}: {error['msg']}"
+        for error in exception.errors()
+    ]
+    return "; ".join(details) or "Input is invalid."
 
 
 async def otp_domain_exception_handler(
@@ -152,6 +162,8 @@ async def unhandled_exception_handler(
 def register_exception_handlers(application: FastAPI) -> None:
     """Register all application exception handlers on a FastAPI instance."""
     application.add_exception_handler(StarletteHTTPException, http_exception_handler)
-    application.add_exception_handler(RequestValidationError, validation_exception_handler)
+    application.add_exception_handler(
+        RequestValidationError, validation_exception_handler
+    )
     application.add_exception_handler(OTPDomainError, otp_domain_exception_handler)
     application.add_exception_handler(Exception, unhandled_exception_handler)

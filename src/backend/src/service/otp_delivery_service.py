@@ -1,3 +1,5 @@
+"""Shared request and error contracts for OTP delivery providers."""
+
 from dataclasses import dataclass
 from typing import Protocol
 

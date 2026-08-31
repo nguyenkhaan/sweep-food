@@ -6,7 +6,7 @@
 
 ## 1. Goal
 
-Deliver a production-shaped FastAPI MVP for one user to manage a personal food inventory by batch, receive expiry reminders, obtain explainable database-backed recipe recommendations, cook with FEFO stock deduction, and generate a shopping list.
+Deliver a production-shaped FastAPI MVP for one user to manage a personal food inventory by batch, receive expiry reminders, obtain explainable database-backed recipe recommendations, turn checked generated shopping items into ledgered inventory, and cook with FEFO stock deduction.
 
 The plan deliberately separates product-ready paths from experimental integrations:
 
@@ -153,10 +153,10 @@ Database documentation and migrations are sequential. Feature slices may run in 
 | 5.1 | Recommendation-run/event and meal-plan migrations/models | Phases 3–4 |
 | 5.2 | `RecommendationProvider` contract and rule-based MVP implementation of `E/A/P/U` scoring | 5.1, 4.5 |
 | 5.3 | Recommendation endpoint returning three to five ranked recipes and score explanations | 5.2 |
-| 5.4 | Meal plan selection APIs and favorite recipe/menu APIs | 5.1, 3.3 |
-| 5.5 | Shopping-list generation, manual item management, and inventory subtraction | 5.4, 4.4 |
+| 5.4 | Meal plan selection APIs with recipe, schedule, and serving count; favorite recipe/menu APIs | 5.1, 3.3 |
+| 5.5 | Shopping-list generation, manual item management, inventory subtraction, and idempotent checked-purchase inventory creation | 5.4, 4.4 |
 
-**Checkpoint:** Inventory changes affect recommendation rank; each recommendation explains its score; a selected plan yields a de-duplicated shopping list.
+**Checkpoint:** Inventory changes affect recommendation rank; each recommendation explains its score; a selected plan yields a de-duplicated shopping list; checking a generated purchase creates one traceable inventory batch and `INITIAL_STOCK` ledger entry.
 
 ### Phase 6 — Cooking, Consumption, and Leftovers
 
@@ -165,12 +165,12 @@ Database documentation and migrations are sequential. Feature slices may run in 
 | Step | Deliverable | Depends on |
 |---|---|---|
 | 6.1 | Cooking-session and consumption-record migrations/models | Phases 4–5 |
-| 6.2 | Cooking preview API with scaled recipe, FEFO proposal, missing quantities, and warnings | 6.1, 4.5 |
-| 6.3 | Idempotent atomic cooking completion for exact, half, use-all-matched, and custom consumption | 6.2 |
+| 6.2 | Meal-plan-item cooking preview API deriving recipe/servings, FEFO proposal, missing quantities, and warnings | 6.1, 4.5 |
+| 6.3 | Derive recipe/servings from an owned meal-plan item, require sufficient current FEFO inventory before creating a cooking session, then complete idempotently for exact, half, use-all-matched, and custom consumption | 6.2 |
 | 6.4 | Cooked-leftover creation and cooking-history APIs | 6.3 |
 | 6.5 | Transaction, retry, and concurrent-completion tests | 6.3–6.4 |
 
-**Checkpoint:** Repeating completion with one idempotency key consumes stock once; insufficient stock produces no partial write; leftovers are new traceable batches.
+**Checkpoint:** A cooking session is not created when its required inventory is insufficient; repeating completion with one idempotency key consumes stock once; insufficient stock produces no partial write; leftovers are new traceable batches.
 
 ### Phase 7 — Notifications and Background Processing
 

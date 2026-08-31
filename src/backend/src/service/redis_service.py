@@ -1,5 +1,8 @@
+"""Asynchronous Redis client lifecycle and primitive operations."""
+
 from redis.asyncio import Redis, from_url
 from redis.exceptions import RedisError
+
 
 class RedisService:
     """Manage one asynchronous Redis client for application services."""

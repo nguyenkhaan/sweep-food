@@ -20,10 +20,21 @@ config.set_main_option("sqlalchemy.url", build_async_database_url(DATABASE_URL))
 target_metadata = Base.metadata
 
 
+def _get_database_url() -> str:
+    """Return the Alembic database URL after verifying it is configured."""
+    configured_url = config.get_main_option("sqlalchemy.url")
+    if configured_url is None:
+        raise RuntimeError("Alembic database URL must be configured")
+    return configured_url
+
+
+database_url = _get_database_url()
+
+
 def run_migrations_offline() -> None:
     """Run migrations without creating an application database connection."""
     context.configure(
-        url=config.get_main_option("sqlalchemy.url"),
+        url=database_url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -44,7 +55,7 @@ def do_run_migrations(connection: Connection) -> None:
 async def run_async_migrations() -> None:
     """Create an async engine only for this migration command."""
     connectable: AsyncEngine = create_async_engine(
-        config.get_main_option("sqlalchemy.url"),
+        database_url,
         pool_pre_ping=True,
     )
 
