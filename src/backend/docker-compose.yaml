@@ -33,6 +33,27 @@ services:
     networks:
       - backend_network
 
+  notification_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["arq", "src.worker.notification_worker.WorkerSettings"]
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      WIREMOCK_URL: http://wiremock:8080
+      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/firebase_service_account
+    secrets:
+      - firebase_service_account
+    depends_on:
+      redis:
+        condition: service_healthy
+      wiremock:
+        condition: service_healthy
+    networks:
+      - backend_network
+
   redis:
     image: redis:7.4-alpine
     command: ["redis-server", "--appendonly", "yes"]
@@ -73,6 +94,10 @@ services:
 volumes:
   redis_data:
     name: sweep_food_backend_redis_data
+
+secrets:
+  firebase_service_account:
+    file: ${FIREBASE_SERVICE_ACCOUNT_FILE:-./firebase-service-account.json}
 
 networks:
   backend_network:

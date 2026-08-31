@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import CheckConstraint, DateTime, Float, ForeignKey, String
+from sqlalchemy import CheckConstraint, DateTime, Float, ForeignKey, Index, String
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -30,6 +30,7 @@ class InventoryBatchModel(TimestampedUUIDModel):
         ),
         CheckConstraint("initial_quantity > 0"),
         CheckConstraint("current_quantity >= 0"),
+        Index("ix_inventory_batches_status_expires_at", "status", "expires_at"),
     )
 
     user_id: Mapped[UUID] = mapped_column(

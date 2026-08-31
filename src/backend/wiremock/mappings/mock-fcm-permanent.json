@@ -1,0 +1,24 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "urlPath": "/mock/fcm",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": {
+          "expression": "$.message.fid",
+          "equalTo": "permanent-fcm-token"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "status": "rejected"
+    }
+  }
+}

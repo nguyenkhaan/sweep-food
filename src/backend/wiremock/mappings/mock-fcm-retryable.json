@@ -1,0 +1,24 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "urlPath": "/mock/fcm",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": {
+          "expression": "$.message.fid",
+          "equalTo": "retryable-fcm-token"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 503,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "status": "unavailable"
+    }
+  }
+}

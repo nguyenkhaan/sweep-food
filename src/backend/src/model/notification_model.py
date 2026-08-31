@@ -3,7 +3,15 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, UniqueConstraint, text
+from sqlalchemy import (
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    UniqueConstraint,
+    text,
+)
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
@@ -21,7 +29,15 @@ class NotificationModel(TimestampedUUIDModel):
     """Scheduled, delivered, and read notification record."""
 
     __tablename__ = "notifications"
-    __table_args__ = (UniqueConstraint("deduplication_key"),)
+    __table_args__ = (
+        UniqueConstraint("deduplication_key"),
+        Index("ix_notifications_user_created_at", "user_id", "created_at"),
+        Index(
+            "ix_notifications_delivery_scheduled",
+            "delivery_status",
+            "scheduled_at",
+        ),
+    )
 
     user_id: Mapped[UUID] = mapped_column(
         PostgreSQLUUID(as_uuid=True),

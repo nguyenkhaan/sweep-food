@@ -1,0 +1,16 @@
+{
+  "priority": 10,
+  "request": {
+    "method": "POST",
+    "urlPath": "/mock/fcm"
+  },
+  "response": {
+    "status": 202,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "message_id": "mock-fcm-message-id"
+    }
+  }
+}

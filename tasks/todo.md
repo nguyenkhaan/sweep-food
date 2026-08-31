@@ -598,14 +598,14 @@
 
 **Acceptance criteria:**
 
-- [ ] Leftover is a new `COOKED_FOOD` batch linked to the completed session.
-- [ ] It participates in inventory lifecycle and notification queries.
-- [ ] Raw ingredients are not recreated from a leftover.
+- [x] Leftover is a new `COOKED_FOOD` batch linked to the completed session.
+- [x] It participates in inventory lifecycle and notification queries.
+- [x] Raw ingredients are not recreated from a leftover.
 
 **Verification:**
 
-- [ ] API tests create/read leftover and verify source traceability.
-- [ ] Cooking history includes actual consumed batches/quantities.
+- [x] API tests create/read leftover and verify source traceability.
+- [x] Cooking history includes actual consumed batches/quantities.
 
 **Dependencies:** Task 6.3.  
 **Files likely touched:** `src/backend/src/module/cooking/*`, `src/backend/src/module/inventory/*`, tests  
