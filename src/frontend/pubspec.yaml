@@ -35,7 +35,8 @@ dependencies:
   flutter_secure_storage: any
 
   # Media / multimodal input
-  image_picker: any
+  camera: any             # live in-app viewfinder for label / receipt scan (I-01/I-04)
+  image_picker: any       # gallery fallback + (deferred) crop entry
   image_cropper: any
   permission_handler: any
   path_provider: any

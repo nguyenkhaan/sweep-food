@@ -8,7 +8,6 @@ import 'package:frontend/app/theme/app_colors.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/permissions/permission_service.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
-import 'package:go_router/go_router.dart';
 
 enum PermissionKind { camera, microphone }
 
@@ -173,7 +172,7 @@ class PermissionPrimeSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ElevatedButton(
-                    onPressed: () => context.pop(true),
+                    onPressed: () => Navigator.of(context).pop(true),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: BrandPalette.green700,
                       foregroundColor: Colors.white,
@@ -186,7 +185,7 @@ class PermissionPrimeSheet extends StatelessWidget {
                   ),
                   Gap.gapXs,
                   TextButton(
-                    onPressed: () => context.pop(false),
+                    onPressed: () => Navigator.of(context).pop(false),
                     style: TextButton.styleFrom(
                       foregroundColor: sweep.textSecondary,
                       minimumSize: const Size.fromHeight(48),

@@ -6,29 +6,60 @@ part 'permission_service.g.dart';
 /// Wraps `permission_handler` for the Camera and Microphone permissions used by
 /// the multimodal input flow (M4). Notification permission is handled in
 /// `core/notifications/local_notifications.dart`.
+///
+/// Every call is guarded: a missing plugin (widget tests) or a channel error
+/// degrades to "not granted" instead of throwing out of the priming flow.
 class PermissionService {
   const PermissionService();
 
-  Future<bool> hasCameraPermission() async =>
-      (await ph.Permission.camera.status).isGranted;
+  Future<bool> hasCameraPermission() => _isGranted(ph.Permission.camera);
 
-  Future<bool> requestCameraPermission() async =>
-      (await ph.Permission.camera.request()).isGranted;
+  Future<bool> requestCameraPermission() => _request(ph.Permission.camera);
 
-  Future<bool> isCameraPermanentlyDenied() async =>
-      (await ph.Permission.camera.status).isPermanentlyDenied;
+  Future<bool> isCameraPermanentlyDenied() =>
+      _isPermanentlyDenied(ph.Permission.camera);
 
-  Future<bool> hasMicrophonePermission() async =>
-      (await ph.Permission.microphone.status).isGranted;
+  Future<bool> hasMicrophonePermission() =>
+      _isGranted(ph.Permission.microphone);
 
-  Future<bool> requestMicrophonePermission() async =>
-      (await ph.Permission.microphone.request()).isGranted;
+  Future<bool> requestMicrophonePermission() =>
+      _request(ph.Permission.microphone);
 
-  Future<bool> isMicrophonePermanentlyDenied() async =>
-      (await ph.Permission.microphone.status).isPermanentlyDenied;
+  Future<bool> isMicrophonePermanentlyDenied() =>
+      _isPermanentlyDenied(ph.Permission.microphone);
 
   /// Opens the OS app-settings page (for a permanently denied permission).
-  Future<bool> openSettings() => ph.openAppSettings();
+  Future<bool> openSettings() async {
+    try {
+      return await ph.openAppSettings();
+    } on Object {
+      return false;
+    }
+  }
+
+  Future<bool> _isGranted(ph.Permission p) async {
+    try {
+      return (await p.status).isGranted;
+    } on Object {
+      return false;
+    }
+  }
+
+  Future<bool> _request(ph.Permission p) async {
+    try {
+      return (await p.request()).isGranted;
+    } on Object {
+      return false;
+    }
+  }
+
+  Future<bool> _isPermanentlyDenied(ph.Permission p) async {
+    try {
+      return (await p.status).isPermanentlyDenied;
+    } on Object {
+      return false;
+    }
+  }
 }
 
 @riverpod

@@ -2,6 +2,7 @@
 // I-01 Quét tem nhãn & I-04 Quét hóa đơn
 // Design: CameraCapture.dc.html
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/app/router/routes.dart';
@@ -10,6 +11,7 @@ import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/media/image_capture_service.dart';
 import 'package:frontend/core/media/media_providers.dart';
 import 'package:frontend/core/permissions/permission_prime_sheet.dart';
+import 'package:frontend/core/permissions/permission_service.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/features/ingest/domain/entities/scan_type.dart';
 import 'package:frontend/features/ingest/presentation/controllers/scan_controller.dart';
@@ -26,7 +28,8 @@ enum CameraScanMode {
   final ScanType scanType;
 }
 
-/// I-01 / I-04 — chụp ảnh tem nhãn / hóa đơn, gửi OCR, rồi mở màn kiểm tra.
+/// I-01 / I-04 — khung ngắm camera trực tiếp trong app; nút trắng chụp lại
+/// khung hình hiện tại rồi gửi OCR (không mở app máy ảnh của hệ thống).
 class CameraCaptureScreen extends ConsumerStatefulWidget {
   const CameraCaptureScreen({this.initialMode = CameraScanMode.label, super.key});
 
@@ -37,47 +40,151 @@ class CameraCaptureScreen extends ConsumerStatefulWidget {
       _CameraCaptureScreenState();
 }
 
-class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen> {
+class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
+    with WidgetsBindingObserver {
   late CameraScanMode _mode = widget.initialMode;
-  bool _flashOn = false;
+  CameraController? _controller;
+  bool _torch = false;
   bool _busy = false;
 
-  Future<void> _capture(ImageSource source) async {
-    if (_busy) return;
+  /// `null` while starting / when the preview is live;
+  /// `'permission'` when the OS permission was refused;
+  /// any other string is a start-up error to show with a retry.
+  String? _hint = _kStarting;
+  static const _kStarting = '__starting__';
 
-    if (source == ImageSource.camera) {
+  bool get _previewReady =>
+      _controller != null && _controller!.value.isInitialized;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _start());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final c = _controller;
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      _controller = null;
+      c?.dispose();
+      if (mounted) setState(() => _hint = _kStarting);
+    } else if (state == AppLifecycleState.resumed && c == null) {
+      _start();
+    }
+  }
+
+  Future<void> _start() async {
+    final perms = ref.read(permissionServiceProvider);
+    final alreadyGranted = await perms.hasCameraPermission();
+    if (!mounted) return;
+    if (!alreadyGranted) {
       final ok = await ensureMediaPermission(
         context,
         ref,
         PermissionKind.camera,
       );
-      if (!ok || !mounted) return;
+      if (!mounted) return;
+      if (!ok) {
+        setState(() => _hint = 'permission');
+        return;
+      }
     }
+    await _openCamera();
+  }
 
-    String? path;
+  Future<void> _openCamera() async {
     try {
-      // Crop (I-02) is deferred to M6 — needs a UCropActivity in the Android
-      // manifest. Camera / gallery → straight to the review screen for now.
-      path = await ref
-          .read(imageCaptureServiceProvider)
-          .capture(source: source);
+      final cams = await availableCameras();
+      if (cams.isEmpty) {
+        if (mounted) setState(() => _hint = 'Thiết bị không có máy ảnh.');
+        return;
+      }
+      final back = cams.firstWhere(
+        (c) => c.lensDirection == CameraLensDirection.back,
+        orElse: () => cams.first,
+      );
+      final controller = CameraController(
+        back,
+        ResolutionPreset.high,
+        enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+      );
+      await controller.initialize();
+      if (!mounted) {
+        await controller.dispose();
+        return;
+      }
+      setState(() {
+        _controller = controller;
+        _torch = false;
+        _hint = null;
+      });
+    } on Object catch (e) {
+      if (mounted) setState(() => _hint = 'Không mở được máy ảnh: $e');
+    }
+  }
+
+  void _snack(String msg) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  }
+
+  Future<void> _toggleTorch() async {
+    final c = _controller;
+    if (c == null || !c.value.isInitialized) return;
+    try {
+      await c.setFlashMode(_torch ? FlashMode.off : FlashMode.torch);
+      if (mounted) setState(() => _torch = !_torch);
+    } on Object {
+      _snack('Đèn flash không khả dụng trên thiết bị này.');
+    }
+  }
+
+  Future<void> _shoot() async {
+    final c = _controller;
+    if (_busy || c == null || !c.value.isInitialized || c.value.isTakingPicture) {
+      return;
+    }
+    setState(() => _busy = true);
+    try {
+      final shot = await c.takePicture();
+      await _process(shot.path);
     } on Object catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              source == ImageSource.camera
-                  ? 'Không mở được máy ảnh: $e'
-                  : 'Không mở được thư viện ảnh: $e',
-            ),
-          ),
-        );
+        setState(() => _busy = false);
+        _snack('Không chụp được: $e');
       }
+    }
+  }
+
+  Future<void> _pickFromGallery() async {
+    if (_busy) return;
+    String? path;
+    try {
+      path = await ref
+          .read(imageCaptureServiceProvider)
+          .capture(source: ImageSource.gallery);
+    } on Object catch (e) {
+      _snack('Không mở được thư viện ảnh: $e');
       return;
     }
     if (!mounted || path == null) return;
-
     setState(() => _busy = true);
+    await _process(path);
+  }
+
+  /// Shared: send [path] to OCR, then route to the review / failed screen.
+  Future<void> _process(String path) async {
     try {
       final notifier = ref.read(scanControllerProvider.notifier);
       final job = _mode == CameraScanMode.label
@@ -85,7 +192,10 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen> {
           : await notifier.scanReceipt(path);
       if (!mounted) return;
       if (job.isFailed || !job.hasItems) {
-        context.push('${Routes.pantry}/${Routes.scanFailed}', extra: _mode.scanType);
+        context.push(
+          '${Routes.pantry}/${Routes.scanFailed}',
+          extra: _mode.scanType,
+        );
         return;
       }
       final route = _mode == CameraScanMode.label
@@ -108,34 +218,34 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0B0D0B),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (_previewReady)
+            _CoverPreview(controller: _controller!)
+          else
+            const ColoredBox(color: Color(0xFF0B0D0B)),
+          // Slight scrim so the white chrome stays legible over the preview.
+          const DecoratedBox(decoration: BoxDecoration(color: Colors.black26)),
+          SafeArea(
+            child: Column(
               children: [
                 _Topbar(
                   mode: _mode,
-                  flashOn: _flashOn,
+                  torchOn: _torch,
+                  torchEnabled: _previewReady,
                   onClose: () => context.pop(),
-                  onToggleFlash: () => setState(() => _flashOn = !_flashOn),
+                  onToggleTorch: _toggleTorch,
                 ),
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ViewfinderOverlay(
-                        portrait: _mode == CameraScanMode.receipt,
-                      ),
-                      Gap.gapLg,
-                      Text(
-                        _mode == CameraScanMode.label
-                            ? 'Đưa nhãn cân vào khung, giữ máy thẳng'
-                            : 'Đưa toàn bộ hóa đơn vào khung',
-                        style: context.text.bodyMedium?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.8),
-                        ),
-                      ),
-                    ],
+                  child: Center(
+                    child: _Stage(
+                      mode: _mode,
+                      hint: _hint,
+                      onGrant: _start,
+                      onRetry: _start,
+                      onGallery: _pickFromGallery,
+                    ),
                   ),
                 ),
                 _ModeSwitcher(
@@ -144,8 +254,9 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen> {
                 ),
                 Gap.gapMd,
                 _ActionBar(
-                  onGallery: () => _capture(ImageSource.gallery),
-                  onShutter: () => _capture(ImageSource.camera),
+                  canShoot: _previewReady && !_busy,
+                  onGallery: _pickFromGallery,
+                  onShutter: _shoot,
                   onManual: () {
                     context.pop();
                     context.push('${Routes.pantry}/${Routes.addIngredient}');
@@ -153,8 +264,10 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen> {
                 ),
               ],
             ),
-            if (_busy)
-              const ColoredBox(
+          ),
+          if (_busy)
+            const Positioned.fill(
+              child: ColoredBox(
                 color: Colors.black54,
                 child: Center(
                   child: Column(
@@ -170,8 +283,138 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen> {
                   ),
                 ),
               ),
-          ],
-        ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Full-bleed live preview, scaled to cover the screen (portrait-safe).
+class _CoverPreview extends StatelessWidget {
+  const _CoverPreview({required this.controller});
+
+  final CameraController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    var scale = size.aspectRatio * controller.value.aspectRatio;
+    if (scale < 1) scale = 1 / scale;
+    return ClipRect(
+      child: Transform.scale(
+        scale: scale,
+        alignment: Alignment.center,
+        child: Center(child: CameraPreview(controller)),
+      ),
+    );
+  }
+}
+
+/// The centre area: guide frame + status text / permission + retry affordances.
+class _Stage extends StatelessWidget {
+  const _Stage({
+    required this.mode,
+    required this.hint,
+    required this.onGrant,
+    required this.onRetry,
+    required this.onGallery,
+  });
+
+  final CameraScanMode mode;
+  final String? hint;
+  final VoidCallback onGrant;
+  final VoidCallback onRetry;
+  final VoidCallback onGallery;
+
+  @override
+  Widget build(BuildContext context) {
+    final white70 = Colors.white.withValues(alpha: 0.8);
+
+    Widget caption(String text) => Text(
+          text,
+          textAlign: TextAlign.center,
+          style: context.text.bodyMedium?.copyWith(color: white70),
+        );
+
+    if (hint == _CameraCaptureScreenState._kStarting) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ViewfinderOverlay(portrait: mode == CameraScanMode.receipt),
+          Gap.gapLg,
+          const SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+          ),
+          Gap.gapSm,
+          caption('Đang mở máy ảnh…'),
+        ],
+      );
+    }
+
+    if (hint == null) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ViewfinderOverlay(portrait: mode == CameraScanMode.receipt),
+          Gap.gapLg,
+          caption(
+            mode == CameraScanMode.label
+                ? 'Đưa nhãn cân vào khung, giữ máy thẳng'
+                : 'Đưa toàn bộ hóa đơn vào khung',
+          ),
+        ],
+      );
+    }
+
+    // Error / permission state.
+    final isPermission = hint == 'permission';
+    return Padding(
+      padding: const EdgeInsets.all(Gap.xl),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isPermission ? Icons.lock_outline_rounded : Icons.videocam_off_outlined,
+            color: white70,
+            size: 40,
+          ),
+          Gap.gapMd,
+          caption(
+            isPermission
+                ? 'Cần quyền máy ảnh để quét trực tiếp.'
+                : hint!,
+          ),
+          Gap.gapMd,
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: Gap.sm,
+            runSpacing: Gap.xs,
+            children: [
+              FilledButton.icon(
+                onPressed: isPermission ? onGrant : onRetry,
+                icon: Icon(
+                  isPermission
+                      ? Icons.lock_open_rounded
+                      : Icons.refresh_rounded,
+                  size: 18,
+                ),
+                label: Text(isPermission ? 'Cấp quyền máy ảnh' : 'Thử lại'),
+              ),
+              OutlinedButton.icon(
+                onPressed: onGallery,
+                icon: const Icon(Icons.photo_library_outlined, size: 18),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.white54),
+                ),
+                label: const Text('Dùng ảnh có sẵn'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -180,15 +423,17 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen> {
 class _Topbar extends StatelessWidget {
   const _Topbar({
     required this.mode,
-    required this.flashOn,
+    required this.torchOn,
+    required this.torchEnabled,
     required this.onClose,
-    required this.onToggleFlash,
+    required this.onToggleTorch,
   });
 
   final CameraScanMode mode;
-  final bool flashOn;
+  final bool torchOn;
+  final bool torchEnabled;
   final VoidCallback onClose;
-  final VoidCallback onToggleFlash;
+  final VoidCallback onToggleTorch;
 
   @override
   Widget build(BuildContext context) {
@@ -217,17 +462,17 @@ class _Topbar extends StatelessWidget {
           ),
           const Spacer(),
           IconButton(
-            onPressed: onToggleFlash,
+            onPressed: torchEnabled ? onToggleTorch : null,
             style: IconButton.styleFrom(
               backgroundColor: Colors.white.withValues(alpha: 0.12),
-              foregroundColor:
-                  flashOn ? BrandPalette.green300 : Colors.white,
+              foregroundColor: torchOn ? BrandPalette.green300 : Colors.white,
+              disabledForegroundColor: Colors.white24,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
             icon: Icon(
-              flashOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+              torchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
               size: 20,
             ),
           ),
@@ -256,9 +501,9 @@ class _ModeSwitcher extends StatelessWidget {
             selected: selected,
             showCheckmark: false,
             selectedColor: Colors.white,
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.black.withValues(alpha: 0.35),
             labelStyle: TextStyle(
-              color: selected ? const Color(0xFF0B0D0B) : Colors.white54,
+              color: selected ? const Color(0xFF0B0D0B) : Colors.white70,
               fontWeight: FontWeight.w600,
               fontSize: 13,
             ),
@@ -274,11 +519,13 @@ class _ModeSwitcher extends StatelessWidget {
 
 class _ActionBar extends StatelessWidget {
   const _ActionBar({
+    required this.canShoot,
     required this.onGallery,
     required this.onShutter,
     required this.onManual,
   });
 
+  final bool canShoot;
   final VoidCallback onGallery;
   final VoidCallback onShutter;
   final VoidCallback onManual;
@@ -304,16 +551,20 @@ class _ActionBar extends StatelessWidget {
             icon: const Icon(Icons.photo_library_outlined),
           ),
           GestureDetector(
-            onTap: onShutter,
-            child: Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.35),
-                  width: 5,
+            behavior: HitTestBehavior.opaque,
+            onTap: canShoot ? onShutter : null,
+            child: Opacity(
+              opacity: canShoot ? 1 : 0.4,
+              child: Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.35),
+                    width: 5,
+                  ),
                 ),
               ),
             ),
