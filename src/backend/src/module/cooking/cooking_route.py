@@ -25,8 +25,8 @@ cooking_router = APIRouter(prefix="/cooking", tags=["cooking"])
     response_model=CookingPreviewResponseDTO,
     summary="Preview cooking allocation",
     description=(
-        "Scale a recipe and propose FEFO batch deductions without writing inventory, "
-        "ledger, or cooking-session data."
+        "Derive recipe and servings from an owned meal-plan item, then propose FEFO "
+        "batch deductions without writing inventory, ledger, or cooking-session data."
     ),
 )
 async def post_cooking_preview(
@@ -34,7 +34,7 @@ async def post_cooking_preview(
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
     service: Annotated[CookingService, Depends(get_cooking_service)],
 ) -> CookingPreviewResponseDTO:
-    """Return an ownership-safe, read-only cooking proposal."""
+    """Return an ownership-safe, read-only preview for one planned meal."""
     return await service.preview(user.user_id, body)
 
 
@@ -44,8 +44,9 @@ async def post_cooking_preview(
     status_code=status.HTTP_201_CREATED,
     summary="Create a planned cooking session",
     description=(
-        "Create a user-owned cooking session without deducting inventory. "
-        "Use the returned session ID when confirming completion."
+        "Derive recipe and servings from an owned meal-plan item, then create a "
+        "cooking session without deducting inventory. Use the returned session ID "
+        "when confirming completion."
     ),
 )
 async def post_cooking_session(

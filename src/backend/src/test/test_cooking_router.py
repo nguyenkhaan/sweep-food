@@ -35,13 +35,13 @@ class FakeCookingService:
     async def preview(
         self,
         _user_id: UUID,
-        request: CookingPreviewRequestDTO,
+        _request: CookingPreviewRequestDTO,
     ) -> CookingPreviewResponseDTO:
         """Return the minimal response shape expected by the route contract."""
         return CookingPreviewResponseDTO(
-            recipe_id=request.recipe_id,
+            recipe_id=RECIPE_ID,
             recipe_name="Seeded recipe",
-            servings=request.servings,
+            servings=2.0,
             scaled_ingredients=[],
             proposed_deductions=[],
             missing_ingredients=[],
@@ -66,7 +66,7 @@ class FakeCookingService:
             id=SESSION_ID,
             recipe_id=RECIPE_ID,
             meal_plan_item_id=request.meal_plan_item_id,
-            servings=request.servings,
+            servings=2.0,
             status=CookingSessionStatus.PLANNED,
             consumption_mode=None,
             nutrition_snapshot={},
@@ -117,7 +117,7 @@ async def test_cooking_preview_route_is_authenticated_and_returns_preview(
     try:
         response = await api_client.post(
             "/api/cooking/preview",
-            json={"recipe_id": str(RECIPE_ID), "servings": 2},
+            json={"meal_plan_item_id": str(MEAL_PLAN_ITEM_ID)},
         )
     finally:
         app.dependency_overrides.pop(get_cooking_service, None)
@@ -126,6 +126,43 @@ async def test_cooking_preview_route_is_authenticated_and_returns_preview(
     assert response.status_code == 200
     assert response.json()["recipe_id"] == str(RECIPE_ID)
     assert response.json()["servings"] == 2.0
+
+
+@pytest.mark.anyio
+async def test_cooking_preview_rejects_recipe_and_servings_in_its_request(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """Preview accepts the plan-item identifier only, preventing duplicate inputs."""
+    fake_service = FakeCookingService()
+
+    async def get_fake_cooking_service() -> FakeCookingService:
+        """Avoid database access while request validation is exercised."""
+        return fake_service
+
+    async def get_authenticated_user() -> AuthenticatedUser:
+        """Provide a valid current user for the protected preview route."""
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    app.dependency_overrides[get_cooking_service] = get_fake_cooking_service
+    app.dependency_overrides[require_authentication] = get_authenticated_user
+    try:
+        response = await api_client.post(
+            "/api/cooking/preview",
+            json={
+                "meal_plan_item_id": str(MEAL_PLAN_ITEM_ID),
+                "recipe_id": str(RECIPE_ID),
+                "servings": 2,
+            },
+        )
+    finally:
+        app.dependency_overrides.pop(get_cooking_service, None)
+        app.dependency_overrides.pop(require_authentication, None)
+
+    assert response.status_code == 422
+    assert response.json()["detail"] == (
+        "body.recipe_id: Extra inputs are not permitted; "
+        "body.servings: Extra inputs are not permitted"
+    )
 
 
 @pytest.mark.anyio
@@ -176,7 +213,7 @@ async def test_cooking_session_routes_create_and_complete_a_session(
     try:
         create_response = await api_client.post(
             "/api/cooking/sessions",
-            json={"meal_plan_item_id": str(MEAL_PLAN_ITEM_ID), "servings": 2},
+            json={"meal_plan_item_id": str(MEAL_PLAN_ITEM_ID)},
         )
         completion_response = await api_client.post(
             f"/api/cooking/sessions/{SESSION_ID}/complete",
@@ -219,7 +256,7 @@ async def test_cooking_session_creation_requires_a_meal_plan_item(
     try:
         response = await api_client.post(
             "/api/cooking/sessions",
-            json={"recipe_id": str(RECIPE_ID), "servings": 2},
+            json={},
         )
     finally:
         app.dependency_overrides.pop(get_cooking_service, None)
@@ -227,6 +264,43 @@ async def test_cooking_session_creation_requires_a_meal_plan_item(
 
     assert response.status_code == 422
     assert response.json()["detail"] == "body.meal_plan_item_id: Field required"
+
+
+@pytest.mark.anyio
+async def test_cooking_session_creation_rejects_recipe_and_servings(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """The plan item is the sole source for a session's recipe and servings."""
+    fake_service = FakeCookingService()
+
+    async def get_fake_cooking_service() -> FakeCookingService:
+        """Avoid database access while request validation is exercised."""
+        return fake_service
+
+    async def get_authenticated_user() -> AuthenticatedUser:
+        """Provide a valid current user for the protected creation route."""
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    app.dependency_overrides[get_cooking_service] = get_fake_cooking_service
+    app.dependency_overrides[require_authentication] = get_authenticated_user
+    try:
+        response = await api_client.post(
+            "/api/cooking/sessions",
+            json={
+                "meal_plan_item_id": str(MEAL_PLAN_ITEM_ID),
+                "recipe_id": str(RECIPE_ID),
+                "servings": 2,
+            },
+        )
+    finally:
+        app.dependency_overrides.pop(get_cooking_service, None)
+        app.dependency_overrides.pop(require_authentication, None)
+
+    assert response.status_code == 422
+    assert response.json()["detail"] == (
+        "body.recipe_id: Extra inputs are not permitted; "
+        "body.servings: Extra inputs are not permitted"
+    )
 
 
 @pytest.mark.anyio

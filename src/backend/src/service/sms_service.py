@@ -1,3 +1,5 @@
+"""WireMock-backed SMS delivery adapter for backend-owned OTPs."""
+
 import json
 
 import httpx
@@ -12,17 +14,10 @@ from src.service.otp_delivery_service import (
     OTPDeliveryTimeoutError,
 )
 
-"""
-Thong thuong viec gui OTP se ton tai 2 luong: 
-1. Provider tao OTP 
-- App chi can yeu cau gui OTP den so nay, provider se thuc hien sinh OTP, sau do gui den client lan app 
-- Bi phu thuoc vao ben provider 
-2. Backend tu tao OTP  
-- Backend se tu tao OTP, sau do provider chi nhan noi dung va tien hanh chuyen tiep SMS/email den noi phu hop 
 
-
-"""
 class WireMockSMSService(OTPDeliveryService):
+    """Deliver backend-generated OTP messages through the WireMock contract."""
+
     def __init__(
         self,
         base_url: str = WIREMOCK_URL,

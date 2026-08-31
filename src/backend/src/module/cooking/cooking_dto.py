@@ -1,4 +1,4 @@
-"""Request and response DTOs for read-only cooking previews."""
+"""Request and response DTOs for cooking APIs."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from src.model.enum_model import (
     CookingConsumptionMode,
@@ -16,10 +16,11 @@ from src.model.enum_model import (
 
 
 class CookingPreviewRequestDTO(BaseModel):
-    """Select a recipe and serving count for a read-only cooking preview."""
+    """Select one planned meal for a read-only cooking preview."""
 
-    recipe_id: UUID
-    servings: float = Field(gt=0)
+    model_config = ConfigDict(extra="forbid")
+
+    meal_plan_item_id: UUID
 
 
 class ScaledRecipeIngredientDTO(BaseModel):
@@ -99,8 +100,9 @@ class CookingPreviewResponseDTO(BaseModel):
 class CreateCookingSessionRequestDTO(BaseModel):
     """Create a planned cooking session before any inventory deduction."""
 
+    model_config = ConfigDict(extra="forbid")
+
     meal_plan_item_id: UUID
-    servings: float = Field(gt=0)
 
 
 class CookingSessionDTO(BaseModel):

@@ -2,7 +2,6 @@
 # uv run -m src.seed
 import asyncio
 import hashlib
-import os
 from collections.abc import Sequence
 from datetime import UTC, date, datetime, timedelta
 from uuid import UUID, uuid5
