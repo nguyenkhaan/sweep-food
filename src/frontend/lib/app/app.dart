@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/app/locale_controller.dart';
 import 'package:frontend/app/router/app_router.dart';
 import 'package:frontend/app/theme/app_theme.dart';
 import 'package:frontend/app/theme/theme_mode_controller.dart';
@@ -14,6 +15,7 @@ class SweepFoodApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeControllerProvider);
+    final locale = ref.watch(localeControllerProvider);
 
     return MaterialApp.router(
       title: AppConstants.appName,
@@ -22,9 +24,10 @@ class SweepFoodApp extends ConsumerWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
-      // MVP ships Vietnamese only; `app_en.arb` is a skeleton for later. Strings
-      // live in `lib/l10n/*.arb` — reach them via `context.l10n` / `AppL10n.of`.
-      locale: const Locale('vi'),
+      // Strings live in `lib/l10n/*.arb` (reach them via `context.l10n`).
+      // Defaults to `vi`; English is opt-in via Cài đặt → Tùy chọn → Ngôn ngữ.
+      // Some data-layer strings still fall back to `vi` — see M6.1 in the plan.
+      locale: locale,
       supportedLocales: AppL10n.supportedLocales,
       localizationsDelegates: AppL10n.localizationsDelegates,
     );

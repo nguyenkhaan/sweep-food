@@ -1669,11 +1669,17 @@ abstract class AppL10n {
   /// **'Ngôn ngữ'**
   String get prefsLanguage;
 
-  /// No description provided for @prefsLanguageValue.
+  /// No description provided for @langVi.
   ///
   /// In vi, this message translates to:
   /// **'Tiếng Việt'**
-  String get prefsLanguageValue;
+  String get langVi;
+
+  /// No description provided for @langEn.
+  ///
+  /// In vi, this message translates to:
+  /// **'English'**
+  String get langEn;
 
   /// No description provided for @prefsTheme.
   ///

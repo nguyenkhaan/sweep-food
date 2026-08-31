@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/app/locale_controller.dart';
 import 'package:frontend/app/router/routes.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
@@ -15,6 +16,7 @@ class SettingsHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final user = ref.watch(sessionControllerProvider).asData?.value?.user;
+    final langCode = ref.watch(localeControllerProvider).languageCode;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.navProfile)),
@@ -85,7 +87,8 @@ class SettingsHomeScreen extends ConsumerWidget {
               SettingsRow(
                 icon: Icons.language_rounded,
                 label: l10n.prefsLanguage,
-                trailing: l10n.prefsLanguageValue,
+                trailing: langCode == 'en' ? l10n.langEn : l10n.langVi,
+                onTap: () => context.push(Routes.settingsPreferences),
               ),
             ],
           ),

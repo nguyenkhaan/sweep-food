@@ -16,6 +16,7 @@ abstract final class AppConstants {
 
   /// SharedPreferences keys.
   static const kThemeMode = 'pref.theme_mode';
+  static const kLocale = 'pref.locale';
   static const kDietaryPreference = 'pref.dietary_preference';
   static const kDefaultUnit = 'pref.default_unit';
   static const kOnboardingDone = 'pref.onboarding_done';

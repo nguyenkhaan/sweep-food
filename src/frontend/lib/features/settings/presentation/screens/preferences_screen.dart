@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/app/locale_controller.dart';
 import 'package:frontend/app/theme/app_spacing.dart';
 import 'package:frontend/app/theme/theme_mode_controller.dart';
 import 'package:frontend/core/utils/extensions/build_context_x.dart';
 import 'package:frontend/core/widgets/app_bottom_sheet.dart';
 import 'package:frontend/features/settings/presentation/controllers/preferences_controller.dart';
 import 'package:frontend/features/settings/presentation/widgets/settings_group.dart';
+import 'package:frontend/l10n/app_localizations.dart';
 import 'package:frontend/shared/domain/dietary_preference.dart';
 import 'package:frontend/shared/domain/measurement_unit.dart';
 
@@ -25,6 +27,7 @@ class PreferencesScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final prefs = ref.watch(preferencesControllerProvider);
     final themeMode = ref.watch(themeModeControllerProvider);
+    final locale = ref.watch(localeControllerProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.prefsTitle)),
@@ -60,7 +63,8 @@ class PreferencesScreen extends ConsumerWidget {
               SettingsRow(
                 icon: Icons.language_rounded,
                 label: l10n.prefsLanguage,
-                trailing: l10n.prefsLanguageValue,
+                trailing: _localeLabel(l10n, locale),
+                onTap: () => _pickLanguage(context, ref),
               ),
               SettingsRow(
                 icon: Icons.brightness_6_outlined,
@@ -145,6 +149,27 @@ class PreferencesScreen extends ConsumerWidget {
     );
     if (selected != null) {
       await ref.read(themeModeControllerProvider.notifier).set(selected);
+    }
+  }
+
+  static String _localeLabel(AppL10n l10n, Locale locale) =>
+      locale.languageCode == 'en' ? l10n.langEn : l10n.langVi;
+
+  Future<void> _pickLanguage(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
+    final selected = await showAppBottomSheet<Locale>(
+      context,
+      builder: (_) => _OptionSheet<Locale>(
+        title: l10n.prefsLanguage,
+        options: [
+          (value: const Locale('vi'), label: l10n.langVi, subtitle: null),
+          (value: const Locale('en'), label: l10n.langEn, subtitle: null),
+        ],
+        current: ref.read(localeControllerProvider),
+      ),
+    );
+    if (selected != null) {
+      await ref.read(localeControllerProvider.notifier).set(selected);
     }
   }
 }

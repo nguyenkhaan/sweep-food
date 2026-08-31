@@ -904,7 +904,10 @@ class AppL10nEn extends AppL10n {
   String get prefsLanguage => 'Language';
 
   @override
-  String get prefsLanguageValue => 'Tiếng Việt';
+  String get langVi => 'Tiếng Việt';
+
+  @override
+  String get langEn => 'English';
 
   @override
   String get prefsTheme => 'Theme';
