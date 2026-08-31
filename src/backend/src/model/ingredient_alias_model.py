@@ -1,12 +1,16 @@
 """Ingredient alias database model."""
 
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import ForeignKey, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.model.base import CreatedAtUUIDModel
+
+if TYPE_CHECKING:
+    from src.model.master_ingredient_model import MasterIngredientModel
 
 
 class IngredientAliasModel(CreatedAtUUIDModel):
@@ -22,3 +26,6 @@ class IngredientAliasModel(CreatedAtUUIDModel):
     )
     alias: Mapped[str] = mapped_column(String, nullable=False)
     normalized_alias: Mapped[str] = mapped_column(String, nullable=False)
+    master_ingredient: Mapped["MasterIngredientModel"] = relationship(
+        back_populates="aliases",
+    )

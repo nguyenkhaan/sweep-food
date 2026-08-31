@@ -17,6 +17,12 @@
 - `ingredient_aliases.normalized_alias` is unique. It maps a user/provider synonym to exactly one master ingredient.
 - A shelf-life rule targets exactly one master ingredient or one category. Ingredient-level rules take precedence over category-level rules. The seed data must not contain duplicate target/storage-mode rules.
 - `recipe_ingredients.required_quantity` and `recipes.default_servings` must be greater than zero.
+- Catalog quantity and nutrition values use `NUMERIC(12,3)`; recipe default servings use
+  `NUMERIC(6,2)`. ORM code uses Python `Decimal` for those fields.
+- Category names, recipe names, and master ingredient names within a category are unique
+  case-insensitively through functional `lower(...)` indexes.
+- Shelf-life day values are non-negative, `max_days >= min_days`, `default_days` lies in
+  that range, and the scope must match its sole ingredient or category target.
 - Unit compatibility is inferred from `MeasurementUnit`: `GRAM`/`KG` are mass; `ML`/`LITER` are volume; `PIECE`/`PACK`/`OTHER` do not have automatic cross-unit conversion.
 
 ## Inventory, FEFO, and Ledger Rules

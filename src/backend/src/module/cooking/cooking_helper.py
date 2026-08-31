@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from decimal import Decimal
 from uuid import UUID
 
 from fastapi import HTTPException, status
@@ -218,14 +219,16 @@ class CookingHelper:
         servings: float,
     ) -> CookingPreviewResponseDTO:
         """Build a read-only, serving-scaled FEFO preview response."""
-        scale = servings / recipe.default_servings
+        scale = _serving_scale(servings, recipe.default_servings)
         now = datetime.now(UTC)
         scaled_ingredients: list[ScaledRecipeIngredientDTO] = []
         deductions: list[ProposedBatchDeductionDTO] = []
         missing_ingredients: list[MissingIngredientDTO] = []
         warnings: list[CookingPreviewWarningDTO] = []
         for recipe_ingredient, ingredient in recipe_ingredients:
-            required_quantity = recipe_ingredient.required_quantity * scale
+            required_quantity = float(
+                _as_decimal(recipe_ingredient.required_quantity) * scale,
+            )
             scaled_ingredients.append(
                 ScaledRecipeIngredientDTO(
                     recipe_ingredient_id=recipe_ingredient.id,
@@ -318,7 +321,8 @@ class CookingHelper:
             return cooking_session.nutrition_snapshot
         nutrition = self.scale_nutrition(
             recipe,
-            cooking_session.servings / recipe.default_servings * 0.5,
+            _serving_scale(cooking_session.servings, recipe.default_servings)
+            * Decimal("0.5"),
         )
         return nutrition.model_dump()
 
@@ -347,7 +351,7 @@ class CookingHelper:
         )
 
     @staticmethod
-    def scale_nutrition(recipe: RecipeModel, scale: float) -> NutritionEstimateDTO:
+    def scale_nutrition(recipe: RecipeModel, scale: Decimal) -> NutritionEstimateDTO:
         """Scale denormalized recipe nutrition for the requested servings."""
         return NutritionEstimateDTO(
             calories=_scale_optional_value(recipe.total_calories, scale),
@@ -369,15 +373,16 @@ class CookingHelper:
         locked_batches: list[InventoryBatchModel],
         consumption_mode: CookingConsumptionMode,
     ) -> list[ResolvedConsumption]:
-        mode_multiplier = (
-            0.5 if consumption_mode is CookingConsumptionMode.HALF else 1.0
+        scale = _serving_scale(cooking_session.servings, recipe.default_servings) * (
+            Decimal("0.5")
+            if consumption_mode is CookingConsumptionMode.HALF
+            else Decimal(1)
         )
-        scale = cooking_session.servings / recipe.default_servings * mode_multiplier
         now = datetime.now(UTC)
         resolved: list[ResolvedConsumption] = []
         for recipe_ingredient, ingredient in recipe_ingredients:
             allocation_result = self.fefo_service.allocate(
-                recipe_ingredient.required_quantity * scale,
+                float(_as_decimal(recipe_ingredient.required_quantity) * scale),
                 recipe_ingredient.unit,
                 self._to_fefo_candidates(locked_batches, ingredient.id),
                 now,
@@ -545,11 +550,31 @@ class CookingHelper:
         return warnings
 
 
-def _scale_optional_value(value: float | None, scale: float) -> float | None:
+def _as_decimal(value: Decimal | float) -> Decimal:
+    """Normalize legacy floats and database Numeric values for calculation."""
+    return Decimal(str(value))
+
+
+def _serving_scale(
+    servings: float,
+    default_servings: Decimal | float,
+) -> Decimal:
+    """Return the precise multiplier for a current public float serving value."""
+    return Decimal(str(servings)) / _as_decimal(default_servings)
+
+
+def _scale_optional_value(
+    value: Decimal | float | None,
+    scale: Decimal,
+) -> float | None:
     """Scale a nullable denormalized nutrition field."""
-    return value * scale if value is not None else None
+    if value is None:
+        return None
+    return float(_as_decimal(value) * scale)
 
 
-def _scale_json_nutrient(value: object, scale: float) -> object:
+def _scale_json_nutrient(value: object, scale: Decimal) -> object:
     """Scale numeric supplemental nutrients while retaining other metadata."""
-    return value * scale if isinstance(value, (int, float)) else value
+    if isinstance(value, (int, float, Decimal)):
+        return float(_as_decimal(value) * scale)
+    return value

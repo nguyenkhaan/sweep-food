@@ -1,5 +1,6 @@
 """Database orchestration for cooking previews and session completion."""
 
+from decimal import Decimal
 from uuid import UUID
 
 from sqlalchemy import select
@@ -107,7 +108,8 @@ class CookingService:
                 )
             nutrition_snapshot = self.helper.scale_nutrition(
                 recipe,
-                meal_plan_item.servings / recipe.default_servings,
+                Decimal(str(meal_plan_item.servings))
+                / Decimal(str(recipe.default_servings)),
             ).model_dump()
             cooking_session = CookingSessionModel(
                 user_id=user_id,

@@ -185,12 +185,12 @@ table master_ingredients {
   category_id string  // ingredient_categories.id
   default_media_url string // nullable
   canonical_unit MeasurementUnit
-  calories float // nullable, per 100 g where applicable
-  protein_g float // nullable
-  fat_g float // nullable
-  carbs_g float // nullable
-  sugar_g float // nullable
-  sodium_mg float // nullable
+  calories decimal(12,3) // nullable, per 100 g where applicable
+  protein_g decimal(12,3) // nullable
+  fat_g decimal(12,3) // nullable
+  carbs_g decimal(12,3) // nullable
+  sugar_g decimal(12,3) // nullable
+  sodium_mg decimal(12,3) // nullable
   other_nutrients jsonb
   default_storage_mode StorageMode // nullable
   created_at datetime
@@ -225,14 +225,14 @@ table recipes {
   description string
   instructions jsonb
   media_url string // nullable
-  default_servings float
+  default_servings decimal(6,2)
   estimated_cooking_minutes integer
   estimated_cost float // nullable
-  total_calories float // nullable
-  total_protein_g float // nullable
-  total_fat_g float // nullable
-  total_carbs_g float // nullable
-  total_sugar_g float // nullable
+  total_calories decimal(12,3) // nullable
+  total_protein_g decimal(12,3) // nullable
+  total_fat_g decimal(12,3) // nullable
+  total_carbs_g decimal(12,3) // nullable
+  total_sugar_g decimal(12,3) // nullable
   other_nutrients jsonb
   tags jsonb
   created_at datetime
@@ -243,7 +243,7 @@ table recipe_ingredients {
   id string PK // uuid
   recipe_id string  // recipes.id
   master_ingredient_id string  // master_ingredients.id
-  required_quantity float
+  required_quantity decimal(12,3)
   unit MeasurementUnit
   is_optional boolean
   preparation_note string // nullable
