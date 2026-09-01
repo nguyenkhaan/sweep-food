@@ -44,7 +44,10 @@ abstract final class ApiPaths {
   static String scanJob(String id) => '/scan/jobs/$id';
   static String scanJobConfirm(String id) => '/scan/jobs/$id/confirm';
 
-  // Suggestions / dishes
+  // Recipes (real backend) — the Dish detail screen reads from here.
+  static String recipe(String id) => '/recipes/$id';
+
+  // Suggestions / dishes (still frontend-assumed / mock)
   static const suggestions = '/suggestions/dishes';
   static String dish(String id) => '/dishes/$id';
   static String cookDish(String id) => '/dishes/$id/cook';

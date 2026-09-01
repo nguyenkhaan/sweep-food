@@ -37,7 +37,7 @@ class MockApiClient implements ApiClient {
     ApiPaths.pantryItems: 'pantry_items',
     ApiPaths.pantrySummary: 'pantry_summary',
     ApiPaths.suggestions: 'suggestions',
-    '/dishes/': 'dish',
+    '/recipes/': 'recipe',
     ApiPaths.mealPlans: 'meal_plan',
     '/shopping-lists': 'shopping_list',
     ApiPaths.notifications: 'notifications',
