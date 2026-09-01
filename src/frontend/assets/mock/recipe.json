@@ -1,0 +1,92 @@
+{
+  "id": "d1",
+  "name": "Salad bơ ức gà",
+  "description": "Salad trộn nhẹ, nhiều đạm.",
+  "media_url": null,
+  "default_servings": 2.0,
+  "estimated_cooking_minutes": 25,
+  "estimated_cost": 60000.0,
+  "tags": { "values": ["quick", "high-protein"] },
+  "servings": 2.0,
+  "instructions": {
+    "steps": [
+      "Luộc hoặc áp chảo ức gà chín tới, để nguội rồi xé sợi.",
+      "Bơ cắt lát, cà chua bi bổ đôi, xà lách rửa sạch để ráo.",
+      "Pha nước trộn: dầu ô liu, nước cốt chanh, mật ong, muối, tiêu.",
+      "Cho tất cả vào tô, rưới nước trộn, đảo nhẹ và dùng ngay."
+    ]
+  },
+  "nutrition": {
+    "calories": 640.0,
+    "protein_g": 56.0,
+    "fat_g": 28.0,
+    "carbs_g": 60.0,
+    "sugar_g": 12.0,
+    "other_nutrients": {}
+  },
+  "ingredients": [
+    {
+      "recipe_ingredient_id": "ri1",
+      "master_ingredient_id": "i-avocado",
+      "name": "Bơ",
+      "required_quantity": 1.0,
+      "unit": "PIECE",
+      "is_optional": false,
+      "preparation_note": "cắt lát"
+    },
+    {
+      "recipe_ingredient_id": "ri2",
+      "master_ingredient_id": "i5",
+      "name": "Ức gà",
+      "required_quantity": 200.0,
+      "unit": "GRAM",
+      "is_optional": false,
+      "preparation_note": null
+    },
+    {
+      "recipe_ingredient_id": "ri3",
+      "master_ingredient_id": "i1",
+      "name": "Cà chua bi",
+      "required_quantity": 100.0,
+      "unit": "GRAM",
+      "is_optional": false,
+      "preparation_note": "bổ đôi"
+    },
+    {
+      "recipe_ingredient_id": "ri4",
+      "master_ingredient_id": "i-lettuce",
+      "name": "Xà lách",
+      "required_quantity": 150.0,
+      "unit": "GRAM",
+      "is_optional": false,
+      "preparation_note": null
+    },
+    {
+      "recipe_ingredient_id": "ri5",
+      "master_ingredient_id": "i-olive-oil",
+      "name": "Dầu ô liu",
+      "required_quantity": 15.0,
+      "unit": "ML",
+      "is_optional": true,
+      "preparation_note": null
+    },
+    {
+      "recipe_ingredient_id": "ri6",
+      "master_ingredient_id": "i10",
+      "name": "Nước cốt chanh",
+      "required_quantity": 10.0,
+      "unit": "ML",
+      "is_optional": true,
+      "preparation_note": null
+    },
+    {
+      "recipe_ingredient_id": "ri7",
+      "master_ingredient_id": "i-honey",
+      "name": "Mật ong",
+      "required_quantity": 10.0,
+      "unit": "ML",
+      "is_optional": true,
+      "preparation_note": null
+    }
+  ]
+}
