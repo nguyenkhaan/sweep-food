@@ -47,7 +47,7 @@
 | 0 | Data Contract and Database Redesign | `Done` | PRD approved | User approved `DATABASE.txt`; data model maps all MVP data/invariants |
 | 1 | Runtime Foundation and Development Environment | `Done` | Phase 0 checkpoint complete | User-confirmed checkpoint: API, Alembic path, Redis/WireMock, test harness, and Phase 1 quality evidence are available |
 | 2 | Identity, Authentication, and User Preferences | `In progress` | Phase 1 checkpoint complete | Phone/password sign-in; OTP-gated registration, recovery, sensitive changes; sessions, roles, and ownership checks pass |
-| 3 | Catalog, Seed Pipeline, and Recipe Read APIs | `Not started` | Phase 0 and 1 checkpoints complete | Disposable Neon branch migrates/seeds repeatedly; read APIs work |
+| 3 | Catalog, Seed Pipeline, and Recipe Read APIs | `Done` | Phase 0 and 1 checkpoints complete | User confirmed Phase 3 completion; catalog and recipe read APIs are implemented |
 | 4 | Inventory, Shelf Life, and FEFO | `Not started` | Phase 3 checkpoint complete | Manual batches, ledger, expiry logic, and concurrency-safe FEFO work |
 | 5 | Recommendations, Meal Selection, and Shopping Lists | `Not started` | Phases 3 and 4 checkpoints complete | Explainable inventory-sensitive recommendations, serving-aware meal plans, and checked-purchase inventory creation work |
 | 6 | Cooking, Consumption, and Leftovers | `In progress` | User-authorized reprioritization; complete relational database is available | Cooking completion is verified; leftovers and history are implemented and covered by 10 focused tests. Phase checkpoint remains pending. |
@@ -83,11 +83,11 @@
 
 ### Phase 3 — Catalog and Seed Data
 
-- [ ] 3.1 Add catalog and recipe migrations/models
-- [ ] 3.2 Build the single idempotent seed entry point
-- [ ] 3.3 Implement catalog and recipe read APIs
-- [ ] 3.4 Curate and validate the initial seed dataset
-- [ ] Phase 3 checkpoint
+- [x] 3.1 Add catalog and recipe migrations/models
+- [x] 3.2 Build the single idempotent seed entry point
+- [x] 3.3 Implement catalog and recipe read APIs
+- [x] 3.4 Curate and validate the initial seed dataset
+- [x] Phase 3 checkpoint
 
 ### Phase 4 — Inventory and FEFO
 
@@ -167,6 +167,16 @@
 | 2.3 Add SMS/email delivery adapters and WireMock contracts | `Done` | Task 2.2 | WireMock SMS and Mailpit-backed, template-based email delivery are verified locally; delivery remains provider-adapter based. |
 | 2.4 Deliver registration, phone/password sign-in, and session APIs | `Done` | Tasks 2.1–2.3 | Database is at `20260830_0003 (head)`; auth/OTP/JWT/session tests pass, WireMock contract is verified against the healthy container, and logout revocation blocks refresh-token reuse. |
 | 2.5 Add profile, verified-email, and authorization policies | `Done` | Task 2.4 | Added protected `users` module: minimal JWT identity, profile read/update, email verification/change, and phone change APIs. No migration was needed; all tests pass (`63 passed, 1 skipped`) and focused Ruff, mypy, and Pylint checks pass. |
+
+### Phase 3 Work
+
+| Task | Status | Dependencies | Evidence / next action |
+|---|---|---|---|
+| 3.1 Add catalog and recipe migrations/models | `Done` | Phase 1 checkpoint, Phase 0 checkpoint | User confirmed Phase 3 completion. |
+| 3.2 Build the single idempotent seed entry point | `Done` | 3.1 | User confirmed Phase 3 completion. |
+| 3.3 Implement catalog and recipe read APIs | `Done` | 3.1–3.2, 2.5 | Authenticated read-only ingredient and recipe endpoints are implemented, including search/filtering/pagination, aliases, and serving-scaled recipe nutrition. |
+| 3.4 Curate and validate the initial seed dataset | `Done` | 3.2 | User confirmed Phase 3 completion. |
+| Phase 3 checkpoint | `Done` | 3.1–3.4 | User confirmed Phase 3 completion. |
 
 ### Phase 6 Work
 
@@ -251,6 +261,7 @@
 | 2026-08-31 | Task 6.3 | `Ready` → `Done` | Implemented `POST /api/cooking/sessions` and `POST /api/cooking/sessions/{session_id}/complete`. Session creation validates stock and returns 409 when missing. Completion locks session and batches, executes FEFO deduction, writes consumptions and ledger in one transaction, and uses idempotency headers. Added integrity-error mapping test. Full suite: 85 passed, 1 skipped. Ruff, mypy, pylint: 10.00/10. |
 | 2026-08-31 | Task 6.4 | `Ready` → `Done` | Verified cooked-leftover creation and cooking-history APIs. Completed sessions create `COOKED_FOOD` batches linked by `source_cooking_session_id`, with a `LEFTOVER_CREATED` ledger entry; history list/detail expose actual consumption rows and linked leftovers. Focused test suite: 10 passed. |
 | 2026-08-31 | Task 7.1 | `Ready` → `In progress` | Started the authenticated Android FCM device-registration and owned notification API slice using test-driven development. Firebase credentials remain environment-backed and the service-account JSON is ignored by Git. |
+| 2026-09-01 | Phase 3 | `Not started` → `Done` | User confirmed Tasks 3.1–3.4 and the Phase 3 checkpoint are complete. |
 
 ## Verification Evidence
 

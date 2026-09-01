@@ -13,11 +13,9 @@ from src.model.cooking_session_model import CookingSessionModel
 from src.model.enum_model import (
     CookingConsumptionMode,
     CookingSessionStatus,
-    InventoryBatchStatus,
     InventoryLedgerEventType,
 )
 from src.model.inventory_batch_model import InventoryBatchModel
-from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
@@ -35,6 +33,11 @@ from src.module.cooking.cooking_dto import (
     ProposedBatchDeductionDTO,
     ScaledRecipeIngredientDTO,
     UpdatedInventoryBatchDTO,
+)
+from src.module.inventory.inventory_service import (
+    InventoryConflictError,
+    InventoryQuantityChange,
+    apply_quantity_change,
 )
 from src.service.fefo_service import (
     FEFOAllocation,
@@ -159,13 +162,6 @@ class CookingHelper:
         updated_batches: list[UpdatedInventoryBatchDTO] = []
         for resolved_consumption in resolved_consumptions:
             batch = batch_by_id[resolved_consumption.inventory_batch_id]
-            quantity_before = batch.current_quantity
-            quantity_after = quantity_before - resolved_consumption.quantity
-            if quantity_after < -_QUANTITY_EPSILON:
-                raise InsufficientInventoryError()
-            batch.current_quantity = max(0.0, quantity_after)
-            if batch.current_quantity <= _QUANTITY_EPSILON:
-                batch.status = InventoryBatchStatus.DEPLETED
             self.db_session.add(
                 CookingConsumptionModel(
                     cooking_session_id=cooking_session.id,
@@ -175,19 +171,21 @@ class CookingHelper:
                     unit=batch.unit,
                 )
             )
-            self.db_session.add(
-                InventoryLedgerEntryModel(
-                    user_id=cooking_session.user_id,
-                    inventory_batch_id=batch.id,
-                    event_type=InventoryLedgerEventType.COOKING_CONSUMPTION,
-                    quantity_before=quantity_before,
-                    quantity_delta=-resolved_consumption.quantity,
-                    quantity_after=batch.current_quantity,
-                    unit=batch.unit,
-                    cooking_session_id=cooking_session.id,
-                    idempotency_key=cooking_session.idempotency_key,
+            try:
+                apply_quantity_change(
+                    self.db_session,
+                    batch,
+                    InventoryQuantityChange(
+                        user_id=cooking_session.user_id,
+                        quantity_delta=-resolved_consumption.quantity,
+                        event_type=InventoryLedgerEventType.COOKING_CONSUMPTION,
+                        cooking_session_id=cooking_session.id,
+                        idempotency_key=cooking_session.idempotency_key,
+                        reason="Cooking session completion",
+                    ),
                 )
-            )
+            except InventoryConflictError as error:
+                raise InsufficientInventoryError() from error
             consumption_dtos.append(
                 CookingConsumptionDTO(
                     recipe_ingredient_id=resolved_consumption.recipe_ingredient_id,

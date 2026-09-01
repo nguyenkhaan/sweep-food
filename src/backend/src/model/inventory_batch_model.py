@@ -28,9 +28,45 @@ class InventoryBatchModel(TimestampedUUIDModel):
             "(master_ingredient_id IS NULL) <> (custom_name IS NULL)",
             name="inventory_batch_exactly_one_identity",
         ),
-        CheckConstraint("initial_quantity > 0"),
-        CheckConstraint("current_quantity >= 0"),
+        CheckConstraint(
+            "initial_quantity > 0", name="inventory_batch_initial_positive"
+        ),
+        CheckConstraint(
+            "current_quantity >= 0",
+            name="inventory_batch_current_nonnegative",
+        ),
+        CheckConstraint(
+            "(status = 'ACTIVE' AND current_quantity > 0 AND archived_at IS NULL) "
+            "OR (status IN ('DEPLETED', 'DISCARDED') "
+            "AND current_quantity = 0 AND archived_at IS NULL) "
+            "OR (status = 'ARCHIVED' AND archived_at IS NOT NULL)",
+            name="inventory_batch_status_quantity_consistent",
+        ),
+        CheckConstraint(
+            "(batch_type = 'RAW_INGREDIENT' AND source = 'MANUAL' "
+            "AND source_cooking_session_id IS NULL) "
+            "OR (batch_type = 'COOKED_FOOD' AND source = 'LEFTOVER' "
+            "AND source_cooking_session_id IS NOT NULL)",
+            name="inventory_batch_source_type_consistent",
+        ),
         Index("ix_inventory_batches_status_expires_at", "status", "expires_at"),
+        Index(
+            "ix_inventory_batches_user_fefo",
+            "user_id",
+            "status",
+            "expires_at",
+            "created_at",
+        ),
+        Index(
+            "ix_inventory_batches_user_ingredient",
+            "user_id",
+            "master_ingredient_id",
+        ),
+        Index(
+            "ix_inventory_batches_user_storage",
+            "user_id",
+            "storage_mode",
+        ),
     )
 
     user_id: Mapped[UUID] = mapped_column(
