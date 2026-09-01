@@ -1,5 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
@@ -41,12 +43,19 @@ class ProfileScreen extends ConsumerWidget {
                 icon: Icons.badge_outlined,
                 label: l10n.authFullName,
                 trailing: user?.name ?? '—',
-                onTap: () => AppSnack.show(context, l10n.profileEditSoon),
+                onTap: () => context.push(Routes.settingsEditProfile),
               ),
               SettingsRow(
                 icon: Icons.mail_outline_rounded,
                 label: l10n.authEmail,
                 trailing: user?.email ?? '—',
+                onTap: () => context.push(Routes.settingsChangeEmail),
+              ),
+              SettingsRow(
+                icon: Icons.phone_outlined,
+                label: l10n.authPhone,
+                trailing: user?.phone ?? '—',
+                onTap: () => context.push(Routes.settingsChangePhone),
               ),
             ],
           ),
@@ -57,8 +66,7 @@ class ProfileScreen extends ConsumerWidget {
               SettingsRow(
                 icon: Icons.lock_outline_rounded,
                 label: l10n.profileChangePassword,
-                onTap: () =>
-                    AppSnack.show(context, l10n.profileChangePasswordSoon),
+                onTap: () => context.push(Routes.settingsChangePassword),
               ),
             ],
           ),

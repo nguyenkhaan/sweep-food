@@ -2905,6 +2905,138 @@ abstract class AppL10n {
   /// **'Yêu cầu xóa tài khoản đã được ghi nhận.'**
   String get profileDeleteRequested;
 
+  /// No description provided for @accountInfoSection.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thông tin'**
+  String get accountInfoSection;
+
+  /// No description provided for @accountSecuritySection.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bảo mật'**
+  String get accountSecuritySection;
+
+  /// No description provided for @accountSendCode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gửi mã'**
+  String get accountSendCode;
+
+  /// No description provided for @accountVerifyCta.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xác nhận'**
+  String get accountVerifyCta;
+
+  /// No description provided for @editProfileTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sửa hồ sơ'**
+  String get editProfileTitle;
+
+  /// No description provided for @editProfileNameLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Họ và tên'**
+  String get editProfileNameLabel;
+
+  /// No description provided for @editProfileSaved.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã cập nhật hồ sơ.'**
+  String get editProfileSaved;
+
+  /// No description provided for @changePasswordTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đổi mật khẩu'**
+  String get changePasswordTitle;
+
+  /// No description provided for @changePasswordIntro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chúng tôi sẽ gửi mã xác thực 6 chữ số tới số {phone}.'**
+  String changePasswordIntro(String phone);
+
+  /// No description provided for @changePasswordOtpHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập mã xác thực và mật khẩu mới.'**
+  String get changePasswordOtpHint;
+
+  /// No description provided for @changePasswordNewLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mật khẩu mới'**
+  String get changePasswordNewLabel;
+
+  /// No description provided for @changePasswordDone.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã đổi mật khẩu. Vui lòng đăng nhập lại.'**
+  String get changePasswordDone;
+
+  /// No description provided for @changeEmailTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đổi email'**
+  String get changeEmailTitle;
+
+  /// No description provided for @changeEmailIntro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập email mới. Mã xác thực sẽ được gửi tới địa chỉ đó.'**
+  String get changeEmailIntro;
+
+  /// No description provided for @changeEmailNewLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Email mới'**
+  String get changeEmailNewLabel;
+
+  /// No description provided for @changeEmailOtpHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập mã đã gửi tới {email}.'**
+  String changeEmailOtpHint(String email);
+
+  /// No description provided for @changeEmailDone.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã cập nhật email.'**
+  String get changeEmailDone;
+
+  /// No description provided for @changePhoneTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đổi số điện thoại'**
+  String get changePhoneTitle;
+
+  /// No description provided for @changePhoneIntro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập số điện thoại mới. Mã xác thực sẽ được gửi tới số đó.'**
+  String get changePhoneIntro;
+
+  /// No description provided for @changePhoneNewLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số điện thoại mới'**
+  String get changePhoneNewLabel;
+
+  /// No description provided for @changePhoneOtpHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhập mã đã gửi tới {phone}.'**
+  String changePhoneOtpHint(String phone);
+
+  /// No description provided for @changePhoneDone.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã cập nhật số điện thoại.'**
+  String get changePhoneDone;
+
   /// No description provided for @minutesLabel.
   ///
   /// In vi, this message translates to:

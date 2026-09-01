@@ -4,6 +4,7 @@ import 'package:sweepfood/core/storage/storage_providers.dart';
 import 'package:sweepfood/core/utils/logger.dart';
 import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:sweepfood/features/auth/domain/entities/session.dart';
+import 'package:sweepfood/features/auth/domain/entities/user.dart';
 
 part 'session_controller.g.dart';
 
@@ -76,6 +77,25 @@ class SessionController extends _$SessionController {
   Future<void> logOut() async {
     await ref.read(authRepositoryProvider).logout();
     state = const AsyncData(null);
+  }
+
+  /// Swap the cached [User] on the live session after a profile / email / phone
+  /// change. No-op when signed out.
+  void applyUpdatedUser(User user) {
+    final session = currentSession;
+    if (session != null) {
+      state = AsyncData(session.copyWith(user: user));
+    }
+  }
+
+  /// Re-fetch `GET /users/profile` and refresh the cached user. Used after a
+  /// verified email or phone change, where the server is the source of truth.
+  Future<void> refreshProfile() async {
+    final res = await ref.read(authRepositoryProvider).me();
+    res.fold(
+      (failure) => log.w('Profile refresh failed: ${failure.message}'),
+      applyUpdatedUser,
+    );
   }
 
   Future<void> _onExpired() async {

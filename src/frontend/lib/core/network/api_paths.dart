@@ -20,6 +20,10 @@ abstract final class ApiPaths {
   // Current user
   static const me = '/users/me';
   static const profile = '/users/profile';
+  static const meEmailRequest = '/users/me/email/request-verification';
+  static const meEmailVerify = '/users/me/email/verify';
+  static const mePhoneRequest = '/users/me/phone/request-change';
+  static const mePhoneConfirm = '/users/me/phone/confirm-change';
 
   // Catalog
   static const ingredients = '/ingredients';

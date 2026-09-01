@@ -18,7 +18,15 @@
 | **M4 — Nhập liệu đa phương thức** | ✅ Xong     |
 | **M5 — Auth + Onboarding + phần còn lại** | ✅ Xong     |
 | **M6.1 — i18n (tách chuỗi → `AppL10n`)** | ✅ Xong    |
-| M6.2 — api-contract, live-swap, FCM, build, đổi tên package | ⬜ Chưa     |
+| M6.2 — api-contract, live-swap, FCM, build, đổi tên package | 🔨 Đang làm |
+
+### M6.2 — Nối API thật (đang làm)
+
+Nối `DioApiClient` với BE thật, "xong đến đâu nối đến đó". `config/live.json` (`BACKEND=live`, `http://127.0.0.1:4000/api` cho USB + `adb reverse`).
+
+- **Auth core** (đăng ký 2 bước / đăng nhập / OTP / refresh / logout / khôi phục phiên) — ✅ đã nối + verify live từ trước (`test/live/auth_live_test.dart`).
+- **Quản lý tài khoản (2026-09-01)** — ✅ nối + verify live. `features/auth/` thêm 7 method repo/datasource: `updateProfile` (`PATCH /users/profile`), đổi mật khẩu khi đã đăng nhập (`POST /auth/password/change` → `verify/change-password purpose=CHANGE_PASSWORD`, BE thu hồi session → app tự đăng xuất), đổi email (`/users/me/email/request-verification` → `/verify`), đổi SĐT (`/users/me/phone/request-change` → `/confirm-change`). `session_controller` thêm `applyUpdatedUser` / `refreshProfile`. 4 controller + 4 screen mới trong `features/settings/presentation/screens/` (`edit_profile`, `change_password`, `change_email`, `change_phone`); `profile_screen` bỏ 3 stub "sắp có" + thêm hàng SĐT; +4 route `/settings/profile/{edit,password,email,phone}`; +26 l10n key. Test: `test/unit/auth/account_management_test.dart` (9), `test/live/auth_live_test.dart` +4 roundtrip → **7/7 live pass**.
+- **Chưa nối:** Catalog/Ingredients, Recipes, Notifications, Inventory, Extractions (xem bảng ưu tiên). Suggestions/MealPlan/Shopping/Reports/Subscription chờ BE Phase 5.
 
 ### M0 đã hoàn thành (2026-08-30)
 

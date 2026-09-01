@@ -104,6 +104,56 @@ class AuthRepositoryImpl implements AuthRepository {
     return token != null && token.isNotEmpty;
   }
 
+  @override
+  Future<Result<User>> updateProfile({
+    String? name,
+    Map<String, dynamic>? preferences,
+  }) =>
+      runGuarded(
+        () async => (await _remote.updateProfile(
+          name: name,
+          preferences: preferences,
+        ))
+            .toEntity(),
+      );
+
+  @override
+  Future<Result<int>> requestPasswordChange() => runGuarded(
+        () async => (await _remote.requestPasswordChange()).expiresInSeconds,
+      );
+
+  @override
+  Future<Result<void>> confirmPasswordChange({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) =>
+      guardVoid(
+        () => _remote.confirmPasswordChange(
+          phone: phone,
+          otp: otp,
+          newPassword: newPassword,
+        ),
+      );
+
+  @override
+  Future<Result<int>> requestEmailChange(String email) => runGuarded(
+        () async => (await _remote.requestEmailChange(email)).expiresInSeconds,
+      );
+
+  @override
+  Future<Result<void>> confirmEmailChange(String otp) =>
+      guardVoid(() => _remote.confirmEmailChange(otp));
+
+  @override
+  Future<Result<int>> requestPhoneChange(String phone) => runGuarded(
+        () async => (await _remote.requestPhoneChange(phone)).expiresInSeconds,
+      );
+
+  @override
+  Future<Result<void>> confirmPhoneChange(String otp) =>
+      guardVoid(() => _remote.confirmPhoneChange(otp));
+
   /// Sign in, persist the token pair, then fetch the profile to build a
   /// self-contained [Session] (the login response carries no user block).
   Future<Session> _loginAndBuildSession({

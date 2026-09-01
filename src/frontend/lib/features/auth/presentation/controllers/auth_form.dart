@@ -59,5 +59,11 @@ bool isValidPhone(String raw) => _e164Re.hasMatch(normalizePhoneE164(raw));
 /// Plan.md §9 / design copy: "Ít nhất 8 ký tự".
 bool isValidPassword(String value) => value.length >= 8;
 
+final _emailRe = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+/// Whether [raw], once trimmed and lower-cased, matches the backend's email
+/// rule (`^[^@\s]+@[^@\s]+\.[^@\s]+$`).
+bool isValidEmail(String raw) => _emailRe.hasMatch(raw.trim().toLowerCase());
+
 /// The backend OTP is always six digits.
 bool isValidOtp(String value) => RegExp(r'^\d{6}$').hasMatch(value.trim());

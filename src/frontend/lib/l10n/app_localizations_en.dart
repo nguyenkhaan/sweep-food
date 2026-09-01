@@ -1584,6 +1584,81 @@ class AppL10nEn extends AppL10n {
       'Your account deletion request has been recorded.';
 
   @override
+  String get accountInfoSection => 'Info';
+
+  @override
+  String get accountSecuritySection => 'Security';
+
+  @override
+  String get accountSendCode => 'Send code';
+
+  @override
+  String get accountVerifyCta => 'Confirm';
+
+  @override
+  String get editProfileTitle => 'Edit profile';
+
+  @override
+  String get editProfileNameLabel => 'Full name';
+
+  @override
+  String get editProfileSaved => 'Profile updated.';
+
+  @override
+  String get changePasswordTitle => 'Change password';
+
+  @override
+  String changePasswordIntro(String phone) {
+    return 'We\'ll send a 6-digit verification code to $phone.';
+  }
+
+  @override
+  String get changePasswordOtpHint =>
+      'Enter the verification code and your new password.';
+
+  @override
+  String get changePasswordNewLabel => 'New password';
+
+  @override
+  String get changePasswordDone => 'Password changed. Please sign in again.';
+
+  @override
+  String get changeEmailTitle => 'Change email';
+
+  @override
+  String get changeEmailIntro =>
+      'Enter your new email. A verification code will be sent there.';
+
+  @override
+  String get changeEmailNewLabel => 'New email';
+
+  @override
+  String changeEmailOtpHint(String email) {
+    return 'Enter the code sent to $email.';
+  }
+
+  @override
+  String get changeEmailDone => 'Email updated.';
+
+  @override
+  String get changePhoneTitle => 'Change phone number';
+
+  @override
+  String get changePhoneIntro =>
+      'Enter your new phone number. A verification code will be sent there.';
+
+  @override
+  String get changePhoneNewLabel => 'New phone number';
+
+  @override
+  String changePhoneOtpHint(String phone) {
+    return 'Enter the code sent to $phone.';
+  }
+
+  @override
+  String get changePhoneDone => 'Phone number updated.';
+
+  @override
   String minutesLabel(int minutes) {
     return '$minutes min';
   }

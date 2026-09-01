@@ -1573,6 +1573,80 @@ class AppL10nVi extends AppL10n {
       'Yêu cầu xóa tài khoản đã được ghi nhận.';
 
   @override
+  String get accountInfoSection => 'Thông tin';
+
+  @override
+  String get accountSecuritySection => 'Bảo mật';
+
+  @override
+  String get accountSendCode => 'Gửi mã';
+
+  @override
+  String get accountVerifyCta => 'Xác nhận';
+
+  @override
+  String get editProfileTitle => 'Sửa hồ sơ';
+
+  @override
+  String get editProfileNameLabel => 'Họ và tên';
+
+  @override
+  String get editProfileSaved => 'Đã cập nhật hồ sơ.';
+
+  @override
+  String get changePasswordTitle => 'Đổi mật khẩu';
+
+  @override
+  String changePasswordIntro(String phone) {
+    return 'Chúng tôi sẽ gửi mã xác thực 6 chữ số tới số $phone.';
+  }
+
+  @override
+  String get changePasswordOtpHint => 'Nhập mã xác thực và mật khẩu mới.';
+
+  @override
+  String get changePasswordNewLabel => 'Mật khẩu mới';
+
+  @override
+  String get changePasswordDone => 'Đã đổi mật khẩu. Vui lòng đăng nhập lại.';
+
+  @override
+  String get changeEmailTitle => 'Đổi email';
+
+  @override
+  String get changeEmailIntro =>
+      'Nhập email mới. Mã xác thực sẽ được gửi tới địa chỉ đó.';
+
+  @override
+  String get changeEmailNewLabel => 'Email mới';
+
+  @override
+  String changeEmailOtpHint(String email) {
+    return 'Nhập mã đã gửi tới $email.';
+  }
+
+  @override
+  String get changeEmailDone => 'Đã cập nhật email.';
+
+  @override
+  String get changePhoneTitle => 'Đổi số điện thoại';
+
+  @override
+  String get changePhoneIntro =>
+      'Nhập số điện thoại mới. Mã xác thực sẽ được gửi tới số đó.';
+
+  @override
+  String get changePhoneNewLabel => 'Số điện thoại mới';
+
+  @override
+  String changePhoneOtpHint(String phone) {
+    return 'Nhập mã đã gửi tới $phone.';
+  }
+
+  @override
+  String get changePhoneDone => 'Đã cập nhật số điện thoại.';
+
+  @override
   String minutesLabel(int minutes) {
     return '$minutes phút';
   }
