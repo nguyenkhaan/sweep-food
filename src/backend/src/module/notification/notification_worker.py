@@ -1,3 +1,5 @@
+"""Redis-backed ARQ worker bootstrap for the notification module."""
+
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import ClassVar, TypeVar, cast

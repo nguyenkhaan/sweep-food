@@ -46,12 +46,12 @@ def test_wiremock_fcm_fixtures(
     if not wiremock_is_available:
         pytest.skip("WireMock is not running at the configured WIREMOCK_URL.")
 
-    def send(fid: str) -> httpx.Response:
+    def send(token: str) -> httpx.Response:
         return wiremock_http_client.post(
             "/mock/fcm",
             json={
                 "message": {
-                    "fid": fid,
+                    "token": token,
                     "notification": {"title": "Expiry", "body": "Milk expires."},
                     "data": {"batch_id": "batch-1"},
                 }

@@ -37,7 +37,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["arq", "src.worker.notification_worker.WorkerSettings"]
+    command: ["arq", "src.module.notification.notification_worker.WorkerSettings"]
     env_file:
       - .env
     environment:
