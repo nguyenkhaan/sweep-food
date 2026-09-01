@@ -3,6 +3,7 @@
 from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from decimal import Decimal
 from uuid import UUID
 
 from fastapi import HTTPException, status
@@ -34,6 +35,12 @@ from src.module.inventory.inventory_dto import (
     InventoryBatchDTO,
     InventoryBatchListQueryDTO,
     InventoryBatchListResponseDTO,
+    InventoryLedgerEntryDTO,
+    InventoryQuantityCommand,
+    InventoryQuantityCommandRequestDTO,
+    InventoryQuantityCommandResponseDTO,
+    InventorySummaryItemDTO,
+    InventorySummaryResponseDTO,
     UpdateInventoryBatchRequestDTO,
 )
 from src.service.shelf_life_service import (
@@ -45,7 +52,12 @@ from src.service.shelf_life_service import (
     calculate_freshness,
     resolve_expiration,
 )
-from src.service.unit_conversion_service import are_units_compatible
+from src.service.unit_conversion_service import (
+    UnitGroup,
+    are_units_compatible,
+    convert_quantity,
+    unit_group,
+)
 
 _DEFAULT_WARNING_DAYS = 3
 
@@ -103,6 +115,13 @@ class InventoryUnitMismatchError(HTTPException):
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="Unit is incompatible with the master ingredient",
         )
+
+
+class InventoryQuantityConflictError(HTTPException):
+    """Reject a command that cannot be applied to the current batch balance."""
+
+    def __init__(self, detail: str) -> None:
+        super().__init__(status_code=status.HTTP_409_CONFLICT, detail=detail)
 
 
 class InventoryService:
@@ -252,6 +271,225 @@ class InventoryService:
             except SQLAlchemyError:
                 await self.db_session.rollback()
                 raise
+
+    async def get_summary(self, user_id: UUID) -> InventorySummaryResponseDTO:
+        """Aggregate only active owned batches while preserving each batch response."""
+        warning_days = await self._warning_days(user_id)
+        batches = list(
+            (
+                await self.db_session.execute(
+                    self._batch_statement()
+                    .where(
+                        InventoryBatchModel.user_id == user_id,
+                        InventoryBatchModel.status == InventoryBatchStatus.ACTIVE,
+                    )
+                    .order_by(
+                        InventoryBatchModel.created_at.desc(),
+                        InventoryBatchModel.id.desc(),
+                    ),
+                )
+            )
+            .scalars()
+            .all()
+        )
+        rules = await self._get_rules_for_batches(batches)
+        groups: dict[tuple[str, str], list[InventoryBatchModel]] = {}
+        for batch in batches:
+            groups.setdefault(self._summary_key(batch), []).append(batch)
+        items = [
+            await self._summary_item(batches_for_group, rules, warning_days)
+            for batches_for_group in groups.values()
+        ]
+        return InventorySummaryResponseDTO(items=items, total_batches=len(batches))
+
+    async def apply_quantity_command(
+        self,
+        user_id: UUID,
+        batch_id: UUID,
+        idempotency_key: str,
+        request: InventoryQuantityCommandRequestDTO,
+    ) -> InventoryQuantityCommandResponseDTO:
+        """Atomically append one valid quantity change, or return its prior retry."""
+        event_type = self._command_event_type(request)
+        batch = await self._get_owned_batch(user_id, batch_id)
+        existing = await self._get_idempotent_ledger_entry(
+            user_id,
+            batch_id,
+            idempotency_key,
+            event_type,
+        )
+        if existing is not None:
+            return await self._command_response(batch, existing)
+        if batch.status in {
+            InventoryBatchStatus.ARCHIVED,
+            InventoryBatchStatus.DISCARDED,
+        }:
+            raise InventoryQuantityConflictError(
+                "Quantity commands cannot modify an archived or discarded batch",
+            )
+        delta = self._command_delta(batch, request)
+        quantity_after = batch.current_quantity + delta
+        if quantity_after < 0:
+            raise InventoryQuantityConflictError(
+                "Inventory quantity cannot become negative",
+            )
+        batch.current_quantity = quantity_after
+        batch.status = self._status_after_command(request, quantity_after)
+        ledger_entry = InventoryLedgerEntryModel(
+            user_id=user_id,
+            inventory_batch_id=batch.id,
+            event_type=event_type,
+            quantity_before=quantity_after - delta,
+            quantity_delta=delta,
+            quantity_after=quantity_after,
+            unit=batch.unit,
+            idempotency_key=idempotency_key,
+        )
+        try:
+            self.db_session.add(ledger_entry)
+            await self.db_session.commit()
+        except SQLAlchemyError:
+            await self.db_session.rollback()
+            raise
+        await self.db_session.refresh(batch, attribute_names=["updated_at"])
+        await self.db_session.refresh(ledger_entry)
+        return await self._command_response(batch, ledger_entry)
+
+    @staticmethod
+    def _summary_key(batch: InventoryBatchModel) -> tuple[str, str]:
+        """Keep distinct ingredient identities and incompatible unit families apart."""
+        identity = (
+            f"ingredient:{batch.master_ingredient_id}"
+            if batch.master_ingredient_id is not None
+            else f"custom:{batch.custom_name}"
+        )
+        group = unit_group(batch.unit)
+        return identity, group.value if group is not None else batch.unit.value
+
+    async def _summary_item(
+        self,
+        batches: list[InventoryBatchModel],
+        rules: list[ShelfLifeRule],
+        warning_days: int,
+    ) -> InventorySummaryItemDTO:
+        """Convert a compatible group to its documented base unit with batch detail."""
+        first_batch = batches[0]
+        group = unit_group(first_batch.unit)
+        summary_unit = self._summary_unit(first_batch.unit, group)
+        quantity = sum(
+            (
+                convert_quantity(
+                    Decimal(str(batch.current_quantity)),
+                    batch.unit,
+                    summary_unit,
+                )
+                for batch in batches
+            ),
+            start=Decimal(0),
+        )
+        batch_dtos = [
+            await self._to_dto(batch, rules=rules, warning_days=warning_days)
+            for batch in batches
+        ]
+        first_dto = batch_dtos[0]
+        return InventorySummaryItemDTO(
+            master_ingredient=first_dto.master_ingredient,
+            custom_name=first_dto.custom_name,
+            quantity=float(quantity),
+            unit=summary_unit,
+            batches=batch_dtos,
+        )
+
+    @staticmethod
+    def _summary_unit(
+        unit: MeasurementUnit,
+        group: UnitGroup | None,
+    ) -> MeasurementUnit:
+        """Return a stable base unit for an automatically compatible group."""
+        if group is UnitGroup.MASS:
+            return MeasurementUnit.GRAM
+        if group is UnitGroup.VOLUME:
+            return MeasurementUnit.ML
+        return unit
+
+    @staticmethod
+    def _command_event_type(
+        request: InventoryQuantityCommandRequestDTO,
+    ) -> InventoryLedgerEventType:
+        """Map explicit commands to the existing immutable ledger vocabulary."""
+        if request.command is InventoryQuantityCommand.ADJUST:
+            if request.event_type is None:
+                raise ValueError("ADJUST requires an event type")
+            return request.event_type
+        if request.command is InventoryQuantityCommand.DISCARD:
+            return InventoryLedgerEventType.DISCARDED
+        return InventoryLedgerEventType.MANUAL_ADJUSTMENT
+
+    @staticmethod
+    def _command_delta(
+        batch: InventoryBatchModel,
+        request: InventoryQuantityCommandRequestDTO,
+    ) -> float:
+        """Derive each command's one allowed balance delta before mutating state."""
+        if request.command is InventoryQuantityCommand.ADJUST:
+            if request.quantity_delta is None:
+                raise ValueError("ADJUST requires a quantity delta")
+            return request.quantity_delta
+        if request.command is InventoryQuantityCommand.CONSUME:
+            if request.quantity is None:
+                raise ValueError("CONSUME requires a quantity")
+            return -request.quantity
+        return -batch.current_quantity
+
+    @staticmethod
+    def _status_after_command(
+        request: InventoryQuantityCommandRequestDTO,
+        quantity_after: float,
+    ) -> InventoryBatchStatus:
+        """Apply the documented depleted and discarded lifecycle semantics."""
+        if request.command is InventoryQuantityCommand.DISCARD:
+            return InventoryBatchStatus.DISCARDED
+        if quantity_after == 0:
+            return InventoryBatchStatus.DEPLETED
+        return InventoryBatchStatus.ACTIVE
+
+    async def _get_idempotent_ledger_entry(
+        self,
+        user_id: UUID,
+        batch_id: UUID,
+        idempotency_key: str,
+        event_type: InventoryLedgerEventType,
+    ) -> InventoryLedgerEntryModel | None:
+        """Find the exact existing ledger operation defined by the DB uniqueness scope."""
+        entry = await self.db_session.scalar(
+            select(InventoryLedgerEntryModel).where(
+                InventoryLedgerEntryModel.user_id == user_id,
+                InventoryLedgerEntryModel.inventory_batch_id == batch_id,
+                InventoryLedgerEntryModel.idempotency_key == idempotency_key,
+                InventoryLedgerEntryModel.event_type == event_type,
+            ),
+        )
+        return entry
+
+    async def _command_response(
+        self,
+        batch: InventoryBatchModel,
+        ledger_entry: InventoryLedgerEntryModel,
+    ) -> InventoryQuantityCommandResponseDTO:
+        """Map a command outcome and its immutable audit row to the public response."""
+        return InventoryQuantityCommandResponseDTO(
+            batch=await self._to_dto(batch),
+            ledger_entry=InventoryLedgerEntryDTO(
+                id=ledger_entry.id,
+                event_type=ledger_entry.event_type,
+                quantity_before=ledger_entry.quantity_before,
+                quantity_delta=ledger_entry.quantity_delta,
+                quantity_after=ledger_entry.quantity_after,
+                unit=ledger_entry.unit,
+                idempotency_key=ledger_entry.idempotency_key,
+                created_at=ledger_entry.created_at,
+            ),
+        )
 
     def _list_filters(
         self,

@@ -387,14 +387,14 @@
 
 **Acceptance criteria:**
 
-- [ ] Summary groups compatible active quantities without erasing batch detail.
-- [ ] Every adjustment has a reason/event type and resulting ledger entry.
-- [ ] Discard/depletion updates batch status consistently.
+- [x] Summary groups compatible active quantities without erasing batch detail.
+- [x] Every adjustment has a reason/event type and resulting ledger entry.
+- [x] Discard/depletion updates batch status consistently.
 
 **Verification:**
 
-- [ ] Tests compare aggregate totals with batch/ledger data.
-- [ ] Adjustment retry with one idempotency key does not duplicate a ledger event.
+- [x] Tests compare aggregate totals with batch/ledger data.
+- [x] Adjustment retry with one idempotency key does not duplicate a ledger event.
 
 **Dependencies:** Task 4.3.  
 **Files likely touched:** `src/backend/src/module/inventory/*`, tests  

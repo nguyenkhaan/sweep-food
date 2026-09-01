@@ -1,6 +1,7 @@
 """Request and response DTOs for manual inventory batch management."""
 
 from datetime import UTC, datetime
+from enum import Enum
 from typing import Annotated
 from uuid import UUID
 
@@ -9,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 from src.model.enum_model import (
     ExpirationSource,
     InventoryBatchStatus,
+    InventoryLedgerEventType,
     MeasurementUnit,
     ShelfLifeRuleScope,
     StorageMode,
@@ -154,6 +156,54 @@ class UpdateInventoryBatchRequestDTO(_StrictRequestDTO):
         return self
 
 
+class InventoryQuantityCommand(str, Enum):
+    """Explicit Task 4.4 quantity operations for one concrete batch."""
+
+    ADJUST = "ADJUST"
+    CONSUME = "CONSUME"
+    DISCARD = "DISCARD"
+
+
+class InventoryQuantityCommandRequestDTO(_StrictRequestDTO):
+    """A deliberately non-generic inventory quantity mutation command.
+
+    Adjustment requests must identify their ledger event type.  Consume and discard
+    use their fixed ledger semantics so callers cannot mislabel those operations.
+    """
+
+    command: InventoryQuantityCommand
+    quantity_delta: Annotated[float | None, Field(allow_inf_nan=False)] = None
+    quantity: Annotated[float | None, Field(allow_inf_nan=False)] = None
+    event_type: InventoryLedgerEventType | None = None
+
+    @model_validator(mode="after")
+    def validate_command_shape(self) -> "InventoryQuantityCommandRequestDTO":
+        """Require only the quantity and event context meaningful to each command."""
+        if self.command is InventoryQuantityCommand.ADJUST:
+            if self.quantity_delta is None or self.quantity_delta == 0:
+                raise ValueError("ADJUST requires a non-zero quantity_delta")
+            if self.quantity is not None:
+                raise ValueError("ADJUST does not accept quantity")
+            if self.event_type not in {
+                InventoryLedgerEventType.MANUAL_ADJUSTMENT,
+                InventoryLedgerEventType.CORRECTION,
+            }:
+                raise ValueError(
+                    "ADJUST requires event_type MANUAL_ADJUSTMENT or CORRECTION",
+                )
+        elif self.command is InventoryQuantityCommand.CONSUME:
+            if self.quantity is None or self.quantity <= 0:
+                raise ValueError("CONSUME requires a positive quantity")
+            if self.quantity_delta is not None or self.event_type is not None:
+                raise ValueError("CONSUME accepts only quantity")
+        else:
+            if self.quantity is not None or self.quantity_delta is not None:
+                raise ValueError("DISCARD does not accept a quantity")
+            if self.event_type is not None:
+                raise ValueError("DISCARD does not accept event_type")
+        return self
+
+
 class IngredientIdentityDTO(BaseModel):
     """A concise public catalog identity embedded in a batch response."""
 
@@ -240,3 +290,40 @@ class InventoryBatchListQueryDTO(BaseModel):
         ):
             raise ValueError("expires_from must not be after expires_to")
         return self
+
+
+class InventoryLedgerEntryDTO(BaseModel):
+    """Public immutable audit details for one completed quantity command."""
+
+    id: UUID
+    event_type: InventoryLedgerEventType
+    quantity_before: float
+    quantity_delta: float
+    quantity_after: float
+    unit: MeasurementUnit
+    idempotency_key: str | None
+    created_at: datetime
+
+
+class InventoryQuantityCommandResponseDTO(BaseModel):
+    """The batch state and corresponding immutable ledger row for a command."""
+
+    batch: InventoryBatchDTO
+    ledger_entry: InventoryLedgerEntryDTO
+
+
+class InventorySummaryItemDTO(BaseModel):
+    """Compatible active quantity total while retaining every source batch."""
+
+    master_ingredient: IngredientIdentityDTO | None
+    custom_name: str | None
+    quantity: float
+    unit: MeasurementUnit
+    batches: list[InventoryBatchDTO]
+
+
+class InventorySummaryResponseDTO(BaseModel):
+    """Ownership-filtered active inventory aggregates and their batch detail."""
+
+    items: list[InventorySummaryItemDTO]
+    total_batches: int

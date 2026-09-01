@@ -6,6 +6,7 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 
 ### Added
 
+- Inventory summary and idempotent batch-quantity command APIs for aggregate active stock and explicit adjust, consume, and discard operations with immutable ledger records.
 - Catalog and recipe schema hardening migration with lossless Numeric conversions,
   case-insensitive catalog uniqueness, lookup indexes, and shelf-life validation.
 - Backend Product Requirements Document defining the approved Sweep Food MVP scope.

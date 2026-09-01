@@ -148,6 +148,56 @@ def _response_datetime(value: str) -> datetime:
     return datetime.fromisoformat(value)
 
 
+async def _create_batch_id(
+    api_client: httpx.AsyncClient,
+    payload: dict[str, object],
+) -> str:
+    """Create one valid batch and return its API identifier for focused tests."""
+    response = await api_client.post("/api/inventory/batches", json=payload)
+    assert response.status_code == 201
+    batch_id = response.json()["id"]
+    assert isinstance(batch_id, str)
+    return batch_id
+
+
+def _assert_task_44_openapi_contract(
+    paths: dict[str, object],
+    schemas: dict[str, dict[str, object]],
+) -> None:
+    """Verify the public summary and idempotent quantity-command additions."""
+    adjustment_path = cast(
+        dict[str, object],
+        paths["/api/inventory/batches/{batch_id}/adjustments"],
+    )
+    summary_path = cast(dict[str, object], paths["/api/inventory/summary"])
+    assert set(adjustment_path) == {"post"}
+    assert set(summary_path) == {"get"}
+    for operation in (adjustment_path["post"], summary_path["get"]):
+        operation_details = cast(dict[str, object], operation)
+        assert operation_details["security"] == [{"BearerAuth": []}]
+    adjustment_operation = cast(dict[str, object], adjustment_path["post"])
+    parameters = cast(list[dict[str, object]], adjustment_operation["parameters"])
+    assert {parameter["name"] for parameter in parameters} == {
+        "batch_id",
+        "Idempotency-Key",
+    }
+    command_properties = cast(
+        dict[str, object],
+        schemas["InventoryQuantityCommandRequestDTO"]["properties"],
+    )
+    assert set(command_properties) == {
+        "command",
+        "quantity_delta",
+        "quantity",
+        "event_type",
+    }
+    summary_properties = cast(
+        dict[str, object],
+        schemas["InventorySummaryResponseDTO"]["properties"],
+    )
+    assert set(summary_properties) == {"items", "total_batches"}
+
+
 @pytest.mark.anyio
 async def test_manual_batch_crud_expiration_filters_and_pagination(
     api_client: httpx.AsyncClient,
@@ -365,9 +415,209 @@ async def test_manual_batch_rejects_invalid_inputs_and_cross_user_access(
             {"json": {"note": "no"}},
         ),
         ("delete", f"/api/inventory/batches/{foreign_batch.id}", {}),
+        (
+            "post",
+            f"/api/inventory/batches/{foreign_batch.id}/adjustments",
+            {
+                "headers": {"Idempotency-Key": "foreign-adjustment"},
+                "json": {
+                    "command": "ADJUST",
+                    "quantity_delta": 1,
+                    "event_type": "MANUAL_ADJUSTMENT",
+                },
+            },
+        ),
     ):
         response = await getattr(api_client, method)(url, **kwargs)
         assert response.status_code == 404
+
+
+@pytest.mark.anyio
+async def test_inventory_summary_aggregates_compatible_batches_without_hiding_detail(
+    api_client: httpx.AsyncClient,
+    inventory_api: InventoryAPIContext,
+) -> None:
+    """Sum only compatible active batches and retain their identities and detail."""
+    kilogram_id = await _create_batch_id(
+        api_client,
+        _manual_payload(inventory_api["ingredient_id"], quantity=1.5),
+    )
+    gram_id = await _create_batch_id(
+        api_client,
+        _manual_payload(inventory_api["ingredient_id"], quantity=250, unit="GRAM"),
+    )
+    await _create_batch_id(
+        api_client,
+        {
+            "custom_name": "Curry paste",
+            "quantity": 3,
+            "unit": "PACK",
+            "storage_mode": "DRY_SHELF",
+        },
+    )
+    await _create_batch_id(
+        api_client,
+        {
+            "custom_name": "Curry paste",
+            "quantity": 2,
+            "unit": "PIECE",
+            "storage_mode": "DRY_SHELF",
+        },
+    )
+
+    foreign_batch = InventoryBatchModel(
+        user_id=OTHER_USER_ID,
+        custom_name="Other user's summary batch",
+        batch_type=InventoryBatchType.RAW_INGREDIENT,
+        initial_quantity=4,
+        current_quantity=4,
+        unit=MeasurementUnit.PIECE,
+        storage_mode=StorageMode.DRY_SHELF,
+        status=InventoryBatchStatus.ACTIVE,
+        expiration_source=ExpirationSource.UNKNOWN,
+        source=InventorySource.MANUAL,
+    )
+    inventory_api["session"].add(foreign_batch)
+    await inventory_api["session"].flush()
+
+    summary = await api_client.get("/api/inventory/summary")
+    assert summary.status_code == 200
+    summary_items = summary.json()["items"]
+    master_summary = next(
+        item
+        for item in summary_items
+        if item["master_ingredient"] is not None
+        and item["master_ingredient"]["id"] == inventory_api["ingredient_id"]
+    )
+    assert master_summary["quantity"] == 1750
+    assert master_summary["unit"] == "GRAM"
+    assert {batch["id"] for batch in master_summary["batches"]} == {
+        kilogram_id,
+        gram_id,
+    }
+    curry_summaries = [
+        item for item in summary_items if item["custom_name"] == "Curry paste"
+    ]
+    assert {(item["quantity"], item["unit"]) for item in curry_summaries} == {
+        (3, "PACK"),
+        (2, "PIECE"),
+    }
+    assert summary.json()["total_batches"] == 4
+
+
+@pytest.mark.anyio
+async def test_manual_adjustment_is_idempotent_and_rejects_insufficient_quantity(
+    api_client: httpx.AsyncClient,
+    inventory_api: InventoryAPIContext,
+) -> None:
+    """Record before/delta/after values once and leave insufficient stock untouched."""
+    batch_id = await _create_batch_id(
+        api_client,
+        _manual_payload(inventory_api["ingredient_id"], quantity=1.5),
+    )
+    adjustment_url = f"/api/inventory/batches/{batch_id}/adjustments"
+    payload = {
+        "command": "ADJUST",
+        "quantity_delta": 0.5,
+        "event_type": "MANUAL_ADJUSTMENT",
+    }
+    headers = {"Idempotency-Key": "manual-adjustment-once"}
+    adjustment = await api_client.post(
+        adjustment_url,
+        json=payload,
+        headers=headers,
+    )
+    retry = await api_client.post(
+        adjustment_url,
+        json=payload,
+        headers=headers,
+    )
+    assert adjustment.status_code == 200
+    assert retry.status_code == 200
+    assert adjustment.json() == retry.json()
+    assert adjustment.json()["batch"]["current_quantity"] == 2
+    assert adjustment.json()["ledger_entry"] == {
+        "id": adjustment.json()["ledger_entry"]["id"],
+        "event_type": "MANUAL_ADJUSTMENT",
+        "quantity_before": 1.5,
+        "quantity_delta": 0.5,
+        "quantity_after": 2,
+        "unit": "KG",
+        "idempotency_key": "manual-adjustment-once",
+        "created_at": adjustment.json()["ledger_entry"]["created_at"],
+    }
+    idempotent_entries = list(
+        (
+            await inventory_api["session"].execute(
+                select(InventoryLedgerEntryModel).where(
+                    InventoryLedgerEntryModel.idempotency_key
+                    == "manual-adjustment-once",
+                ),
+            )
+        )
+        .scalars()
+        .all()
+    )
+    assert len(idempotent_entries) == 1
+    insufficient = await api_client.post(
+        adjustment_url,
+        json={"command": "CONSUME", "quantity": 3},
+        headers={"Idempotency-Key": "too-much"},
+    )
+    assert insufficient.status_code == 409
+    assert (await api_client.get(adjustment_url.rsplit("/adjustments", 1)[0])).json()[
+        "current_quantity"
+    ] == 2
+
+    patch_bypass = await api_client.patch(
+        adjustment_url.rsplit("/adjustments", 1)[0],
+        json={"current_quantity": 99},
+    )
+    assert patch_bypass.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_consume_and_discard_create_correct_ledger_rows_and_statuses(
+    api_client: httpx.AsyncClient,
+    inventory_api: InventoryAPIContext,
+) -> None:
+    """Use command-specific ledger/status semantics for depletion and discard."""
+    gram_id = await _create_batch_id(
+        api_client,
+        _manual_payload(inventory_api["ingredient_id"], quantity=250, unit="GRAM"),
+    )
+    pack_id = await _create_batch_id(
+        api_client,
+        {
+            "custom_name": "Curry paste",
+            "quantity": 3,
+            "unit": "PACK",
+            "storage_mode": "DRY_SHELF",
+        },
+    )
+    consume = await api_client.post(
+        f"/api/inventory/batches/{gram_id}/adjustments",
+        json={"command": "CONSUME", "quantity": 250},
+        headers={"Idempotency-Key": "consume-all"},
+    )
+    assert consume.status_code == 200
+    assert consume.json()["ledger_entry"]["event_type"] == "MANUAL_ADJUSTMENT"
+    assert consume.json()["ledger_entry"]["quantity_before"] == 250
+    assert consume.json()["ledger_entry"]["quantity_delta"] == -250
+    assert consume.json()["ledger_entry"]["quantity_after"] == 0
+    assert consume.json()["batch"]["status"] == "DEPLETED"
+
+    discard = await api_client.post(
+        f"/api/inventory/batches/{pack_id}/adjustments",
+        json={"command": "DISCARD"},
+        headers={"Idempotency-Key": "discard-pack"},
+    )
+    assert discard.status_code == 200
+    assert discard.json()["ledger_entry"]["event_type"] == "DISCARDED"
+    assert discard.json()["ledger_entry"]["quantity_before"] == 3
+    assert discard.json()["ledger_entry"]["quantity_delta"] == -3
+    assert discard.json()["ledger_entry"]["quantity_after"] == 0
+    assert discard.json()["batch"]["status"] == "DISCARDED"
 
 
 @pytest.mark.anyio
@@ -460,3 +710,4 @@ def test_inventory_openapi_documents_crud_request_response_and_filters() -> None
         "freshness_state",
         "applied_shelf_life_rule",
     }
+    _assert_task_44_openapi_contract(paths, schemas)
