@@ -452,6 +452,8 @@ class InventoryService:
             idempotency_key,
         )
 
+    # Each argument is retained in the immutable ledger record for this mutation.
+    # pylint: disable-next=too-many-arguments,too-many-positional-arguments
     async def _change_quantity(
         self,
         user_id: UUID,
@@ -488,6 +490,7 @@ class InventoryService:
                 ),
             )
             await self.db_session.commit()
+            await self.db_session.refresh(batch)
             return await self._to_batch_dto(batch)
         except IntegrityError as error:
             await self.db_session.rollback()
