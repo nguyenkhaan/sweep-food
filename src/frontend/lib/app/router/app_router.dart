@@ -6,7 +6,9 @@ import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/shell/app_shell.dart';
 import 'package:sweepfood/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/login_screen.dart';
+import 'package:sweepfood/features/auth/presentation/screens/otp_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/register_screen.dart';
+import 'package:sweepfood/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/splash_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
@@ -78,8 +80,17 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
+        path: Routes.verifyOtp,
+        builder: (context, state) => OtpScreen(args: state.extra as OtpArgs?),
+      ),
+      GoRoute(
         path: Routes.forgotPassword,
         builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: Routes.resetPassword,
+        builder: (context, state) =>
+            ResetPasswordScreen(args: state.extra as ResetPasswordArgs?),
       ),
       GoRoute(
         path: Routes.onboardingDiet,

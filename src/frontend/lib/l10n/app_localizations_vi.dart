@@ -1220,6 +1220,38 @@ class AppL10nVi extends AppL10n {
   String get authPasswordTooShort => 'Ít nhất 8 ký tự';
 
   @override
+  String get authPhone => 'Số điện thoại';
+
+  @override
+  String get authInvalidPhone => 'Số điện thoại không hợp lệ';
+
+  @override
+  String get authOtpTitle => 'Nhập mã xác thực';
+
+  @override
+  String authOtpSubtitle(String phone) {
+    return 'Mã gồm 6 chữ số đã được gửi tới $phone.';
+  }
+
+  @override
+  String get authOtpLabel => 'Mã xác thực';
+
+  @override
+  String get authOtpInvalid => 'Mã gồm 6 chữ số';
+
+  @override
+  String get authOtpConfirm => 'Xác nhận';
+
+  @override
+  String get authOtpResendCta => 'Gửi lại mã';
+
+  @override
+  String get authOtpResent => 'Đã gửi lại mã.';
+
+  @override
+  String get authOtpMissingArgs => 'Thiếu thông tin. Quay lại và thử lại.';
+
+  @override
   String get welcomeSlide1Title => 'Biến nguyên liệu đang có thành bữa ăn';
 
   @override
@@ -1278,13 +1310,33 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get forgotSubtitle =>
-      'Nhập email tài khoản, chúng tôi sẽ gửi liên kết đặt lại mật khẩu.';
+      'Nhập số điện thoại tài khoản, chúng tôi sẽ gửi mã đặt lại mật khẩu.';
 
   @override
   String get forgotSendLink => 'Gửi liên kết';
 
   @override
+  String get forgotSendCode => 'Gửi mã';
+
+  @override
   String get forgotBackToLogin => 'Quay lại đăng nhập';
+
+  @override
+  String get resetPasswordTitle => 'Đặt lại mật khẩu';
+
+  @override
+  String resetPasswordSubtitle(String phone) {
+    return 'Nhập mã đã gửi tới $phone và mật khẩu mới.';
+  }
+
+  @override
+  String get resetPasswordNewLabel => 'Mật khẩu mới';
+
+  @override
+  String get resetPasswordCta => 'Đặt lại mật khẩu';
+
+  @override
+  String get resetPasswordDone => 'Đã đặt lại mật khẩu. Đăng nhập lại nhé.';
 
   @override
   String forgotSentTo(String email) {

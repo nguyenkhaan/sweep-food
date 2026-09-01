@@ -50,7 +50,7 @@ final class LoginControllerProvider
   }
 }
 
-String _$loginControllerHash() => r'3ed8af0b4a40c0c96386051a4e5f378f38747832';
+String _$loginControllerHash() => r'64c263797a1c753131146b620d6ba8b730e5d2f2';
 
 /// Form state + submit for A-02. UI keeps the text in [TextEditingController]s;
 /// this holds only what needs to survive a rebuild (obscure toggle, in-flight

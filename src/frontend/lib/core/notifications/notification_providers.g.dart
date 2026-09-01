@@ -113,17 +113,17 @@ final class LocalNotificationsProvider
 String _$localNotificationsHash() =>
     r'8dba3e59c378aeb07fe2444e5a7fef9ff5e5ad54';
 
-/// FCM — no-op until M6 (see [FcmService]).
+/// FCM service — active when config.fcmEnabled is true.
 
 @ProviderFor(fcmService)
 final fcmServiceProvider = FcmServiceProvider._();
 
-/// FCM — no-op until M6 (see [FcmService]).
+/// FCM service — active when config.fcmEnabled is true.
 
 final class FcmServiceProvider
     extends $FunctionalProvider<FcmService, FcmService, FcmService>
     with $Provider<FcmService> {
-  /// FCM — no-op until M6 (see [FcmService]).
+  /// FCM service — active when config.fcmEnabled is true.
   FcmServiceProvider._()
     : super(
         from: null,
@@ -157,4 +157,4 @@ final class FcmServiceProvider
   }
 }
 
-String _$fcmServiceHash() => r'52a55b21750e81c6b4af8b365a7fbdcb73ad97ab';
+String _$fcmServiceHash() => r'a987a2da80c99f3e649aa1962f3a59680be02a1b';

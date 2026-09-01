@@ -19,29 +19,35 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _name = TextEditingController();
-  final _email = TextEditingController();
+  final _phone = TextEditingController();
   final _password = TextEditingController();
   bool _agree = false;
 
   @override
   void dispose() {
     _name.dispose();
-    _email.dispose();
+    _phone.dispose();
     _password.dispose();
     super.dispose();
   }
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
-    await ref
+    final phone = await ref
         .read(registerControllerProvider.notifier)
         .submit(
           name: _name.text,
-          email: _email.text,
+          phone: _phone.text,
           password: _password.text,
           agreedToTerms: _agree,
           l10n: context.l10n,
         );
+    if (phone != null && mounted) {
+      context.push(
+        Routes.verifyOtp,
+        extra: (phone: phone, password: _password.text),
+      );
+    }
   }
 
   @override
@@ -82,14 +88,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             ),
             Gap.gapMd,
             AuthTextField(
-              label: l10n.authEmail,
-              controller: _email,
-              hintText: 'ban@email.com',
-              prefixIcon: Icons.mail_outline_rounded,
-              keyboardType: TextInputType.emailAddress,
+              label: l10n.authPhone,
+              controller: _phone,
+              hintText: '0901 234 567',
+              prefixIcon: Icons.phone_outlined,
+              keyboardType: TextInputType.phone,
               textInputAction: TextInputAction.next,
-              autofillHints: const [AutofillHints.email],
-              errorText: state.fieldErrors['email'],
+              autofillHints: const [AutofillHints.telephoneNumber],
+              errorText: state.fieldErrors['phone'],
             ),
             Gap.gapMd,
             AuthTextField(

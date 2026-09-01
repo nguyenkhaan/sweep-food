@@ -18,12 +18,12 @@ class LoginController extends _$LoginController {
 
   /// Returns `true` on success so the screen can navigate.
   Future<bool> submit({
-    required String email,
+    required String phone,
     required String password,
     required AppL10n l10n,
   }) async {
     final localErrors = <String, String>{
-      if (!isValidEmail(email)) 'email': l10n.authInvalidEmail,
+      if (!isValidPhone(phone)) 'phone': l10n.authInvalidPhone,
       if (password.isEmpty) 'password': l10n.authEnterPassword,
     };
     if (localErrors.isNotEmpty) {
@@ -37,9 +37,10 @@ class LoginController extends _$LoginController {
       formError: null,
     );
     try {
-      await ref
-          .read(sessionControllerProvider.notifier)
-          .logIn(email: email, password: password);
+      await ref.read(sessionControllerProvider.notifier).logIn(
+            phone: normalizePhoneE164(phone),
+            password: password,
+          );
       return true;
     } on Failure catch (f) {
       state = state.copyWith(
