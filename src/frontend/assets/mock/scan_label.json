@@ -1,0 +1,18 @@
+{
+  "job_id": "job_label_001",
+  "type": "label",
+  "status": "completed",
+  "raw_text": "CA CHUA BI\nKL tinh: 500 g\nNSX .. HSD ..\nGia: 18.000 d",
+  "field_count": 5,
+  "item": {
+    "name": "Cà chua bi",
+    "category": "Rau củ",
+    "quantity": 500.0,
+    "unit": "g",
+    "storage_tier": "fridge",
+    "packed_date": "{{today-2}}",
+    "expiry_date": "{{today+5}}",
+    "price_vnd": 18000,
+    "is_expiry_warn": true
+  }
+}

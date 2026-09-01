@@ -6,6 +6,8 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 
 ### Added
 
+- Catalog and recipe schema hardening migration with lossless Numeric conversions,
+  case-insensitive catalog uniqueness, lookup indexes, and shelf-life validation.
 - Backend Product Requirements Document defining the approved Sweep Food MVP scope.
 - Phase-based implementation plan and task checklist for the backend MVP.
 - Neon PostgreSQL as the managed system of record for the backend.

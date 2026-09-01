@@ -1,1 +1,65 @@
-{ "_note": "mock fixture for dish — fill from plan.md §9 / api-contract.md" }
+{
+  "id": "d1",
+  "name": "Salad bơ ức gà",
+  "servings": 2,
+  "prep_time_min": 15,
+  "cook_time_min": 10,
+  "cuisine": "món trộn",
+  "difficulty": "Dễ",
+  "image_url": null,
+  "nutrition_per_serving": {
+    "energy_kcal": 320,
+    "protein_g": 28,
+    "carb_g": 30,
+    "lipid_g": 14
+  },
+  "ingredients": [
+    {
+      "name": "Bơ",
+      "quantity": 1,
+      "unit": "qua",
+      "available_in_pantry": true,
+      "near_expiry": true
+    },
+    {
+      "name": "Ức gà",
+      "quantity": 200,
+      "unit": "g",
+      "available_in_pantry": true,
+      "near_expiry": true,
+      "pantry_item_id": "p3"
+    },
+    {
+      "name": "Cà chua bi",
+      "quantity": 100,
+      "unit": "g",
+      "available_in_pantry": true,
+      "near_expiry": true,
+      "pantry_item_id": "p2"
+    },
+    {
+      "name": "Xà lách",
+      "quantity": 150,
+      "unit": "g",
+      "available_in_pantry": false,
+      "missing_qty": 150
+    },
+    {
+      "name": "Dầu ô liu",
+      "quantity": 1,
+      "unit": "thia",
+      "available_in_pantry": false,
+      "missing_qty": 1
+    },
+    { "name": "Muối", "quantity": 1, "unit": "thia", "is_seasoning": true },
+    { "name": "Tiêu", "quantity": 1, "unit": "thia", "is_seasoning": true },
+    { "name": "Nước cốt chanh", "quantity": 1, "unit": "thia", "is_seasoning": true },
+    { "name": "Mật ong", "quantity": 1, "unit": "thia", "is_seasoning": true }
+  ],
+  "steps": [
+    { "order": 1, "text": "Luộc hoặc áp chảo ức gà chín tới, để nguội rồi xé sợi.", "duration_min": 12 },
+    { "order": 2, "text": "Bơ cắt lát, cà chua bi bổ đôi, xà lách rửa sạch để ráo." },
+    { "order": 3, "text": "Pha nước trộn: dầu ô liu, nước cốt chanh, mật ong, muối, tiêu." },
+    { "order": 4, "text": "Cho tất cả vào tô, rưới nước trộn, đảo nhẹ và dùng ngay." }
+  ]
+}

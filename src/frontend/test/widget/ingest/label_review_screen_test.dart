@@ -1,0 +1,38 @@
+﻿import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:sweepfood/app/theme/app_theme.dart';
+import 'package:sweepfood/features/ingest/presentation/screens/label_review_screen.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
+
+import '../../helpers/ingest_fixtures.dart';
+
+void main() {
+  testWidgets(
+    'LabelReviewScreen renders OCR parsed fields and warning badges',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1000, 2400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            locale: const Locale('vi'),
+            supportedLocales: AppL10n.supportedLocales,
+            localizationsDelegates: AppL10n.localizationsDelegates,
+            theme: AppTheme.light,
+            home: LabelReviewScreen(job: labelScanJob()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Kiểm tra thông tin'), findsOneWidget);
+      expect(find.text('Cà chua bi'), findsOneWidget);
+      expect(find.text('500 g'), findsOneWidget);
+      expect(find.text('Cần kiểm tra'), findsOneWidget);
+      expect(find.text('Tầng bảo quản'), findsOneWidget);
+      expect(find.text('Thêm vào kho'), findsOneWidget);
+    },
+  );
+}

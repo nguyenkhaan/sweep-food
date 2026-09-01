@@ -1,0 +1,11 @@
+{
+  "user": {
+    "id": "u1",
+    "name": "Nguyễn Văn A",
+    "email": "ban@email.com",
+    "dietary_preference": null,
+    "avatar_url": null
+  },
+  "access_token": "mock-access-token",
+  "refresh_token": "mock-refresh-token"
+}

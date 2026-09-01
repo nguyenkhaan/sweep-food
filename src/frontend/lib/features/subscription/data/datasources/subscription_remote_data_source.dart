@@ -1,3 +1,23 @@
-// lib/features/subscription/data/datasources/subscription_remote_data_source.dart
-// GET /subscription, POST premium-interest
-// TODO: implement — structure only. See ../plan.md and the design canvas.
+﻿import 'package:sweepfood/core/network/api_client.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/subscription/data/models/subscription_dto.dart';
+
+class SubscriptionRemoteDataSource {
+  SubscriptionRemoteDataSource(this._api);
+
+  final ApiClient _api;
+
+  Future<SubscriptionDto> current() async {
+    final json = await _api.get(ApiPaths.subscription);
+    return SubscriptionDto.fromJson(json as Map<String, dynamic>);
+  }
+
+  Future<void> registerPremiumInterest({String? planId, String? email}) =>
+      _api.post(
+        ApiPaths.premiumInterest,
+        body: {
+          if (planId != null) 'plan_id': planId,
+          if (email != null) 'email': email,
+        },
+      );
+}

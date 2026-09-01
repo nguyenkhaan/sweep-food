@@ -1,3 +1,10 @@
-// lib/features/meal_plan/domain/repositories/meal_plan_repository.dart
-// MealPlanRepository interface
-// TODO: implement — structure only. See ../plan.md and the design canvas.
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
+
+abstract interface class MealPlanRepository {
+  /// `GET /meal-plans?weekStart=` (yyyy-MM-dd).
+  Future<Result<MealPlan>> forWeek(DateTime weekStart);
+
+  /// `PUT /meal-plans/{weekStart}` — the frontend sends the whole plan.
+  Future<Result<MealPlan>> save(MealPlan plan);
+}

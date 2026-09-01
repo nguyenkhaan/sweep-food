@@ -1,10 +1,10 @@
-name: frontend
+name: sweepfood
 description: "SweepFood - Trợ lý quản lý nguyên liệu và gợi ý bữa ăn thông minh"
 publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.5.0
+  sdk: ^3.8.0
 
 # NOTE: versions left loose (`any`) for the scaffold phase; pubspec.lock pins the
 # resolved set. Tighten to caret ranges once the stack is exercised (plan.md §3).
@@ -35,11 +35,16 @@ dependencies:
   flutter_secure_storage: any
 
   # Media / multimodal input
-  image_picker: any
+  camera: any             # live in-app viewfinder for label / receipt scan (I-01/I-04)
+  image_picker: any       # gallery fallback + (deferred) crop entry
   image_cropper: any
   permission_handler: any
   path_provider: any
-  # record: any            # voice capture — enable when wiring I-06
+  # record: any            # voice capture (I-06): AudioRecorderService is written
+  #                        # against this API but the cached record_web (1.1.9) is
+  #                        # incompatible with record_platform_interface >=1.5.0 and
+  #                        # breaks `flutter build web`. Re-enable once the record
+  #                        # stack realigns (needs network to resolve a fixed set).
   # just_audio: any        # playback preview for voice review
 
   # Notifications

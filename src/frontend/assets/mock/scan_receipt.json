@@ -1,0 +1,64 @@
+{
+  "job_id": "job_receipt_001",
+  "type": "receipt",
+  "status": "completed",
+  "store_name": "Bách Hóa Xanh",
+  "purchase_date": "{{today}}",
+  "raw_text": "BACH HOA XANH\n1. Ca chua bi 500g 18.000d\n2. Trung ga 10 qua 32.000d\n3. Thit ba chi 300g 45.000d\n4. Sua tuoi 1L 36.000d\n5. Hanh la 1 bo 5.000d\n6. Dau an 1 chai 42.000d",
+  "items": [
+    {
+      "name": "Cà chua bi",
+      "category": "Rau củ",
+      "quantity": 500.0,
+      "unit": "g",
+      "storage_tier": "fridge",
+      "price_vnd": 18000,
+      "is_expiry_warn": false
+    },
+    {
+      "name": "Trứng gà",
+      "category": "Trứng & Sữa",
+      "quantity": 10.0,
+      "unit": "qua",
+      "storage_tier": "fridge",
+      "price_vnd": 32000,
+      "is_expiry_warn": false
+    },
+    {
+      "name": "Thịt ba chỉ",
+      "category": "Thịt & Hải sản",
+      "quantity": 300.0,
+      "unit": "g",
+      "storage_tier": "fridge",
+      "price_vnd": 45000,
+      "is_expiry_warn": true
+    },
+    {
+      "name": "Sữa tươi",
+      "category": "Trứng & Sữa",
+      "quantity": 1.0,
+      "unit": "l",
+      "storage_tier": "fridge",
+      "price_vnd": 36000,
+      "is_expiry_warn": false
+    },
+    {
+      "name": "Hành lá",
+      "category": "Rau củ",
+      "quantity": 1.0,
+      "unit": "bo",
+      "storage_tier": "fridge",
+      "price_vnd": 5000,
+      "is_expiry_warn": true
+    },
+    {
+      "name": "Dầu ăn",
+      "category": "Gia vị",
+      "quantity": 1.0,
+      "unit": "chai",
+      "storage_tier": "pantryShelf",
+      "price_vnd": 42000,
+      "is_expiry_warn": false
+    }
+  ]
+}

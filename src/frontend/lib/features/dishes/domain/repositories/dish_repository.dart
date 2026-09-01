@@ -1,3 +1,7 @@
-// lib/features/dishes/domain/repositories/dish_repository.dart
-// DishRepository interface
-// TODO: implement — structure only. See ../plan.md and the design canvas.
+﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
+
+abstract interface class DishRepository {
+  /// Full recipe for the detail screen (`GET /dishes/{id}`).
+  Future<Result<Dish>> getById(String id);
+}
