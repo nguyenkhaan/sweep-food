@@ -56,4 +56,41 @@ abstract interface class AuthRepository {
 
   /// Whether a persisted access token exists (no network call).
   Future<bool> hasStoredSession();
+
+  // --- Account management (authenticated) ----------------------------------
+
+  /// `PATCH /users/profile` — update the display name and/or preferences.
+  /// Returns the refreshed [User].
+  Future<Result<User>> updateProfile({
+    String? name,
+    Map<String, dynamic>? preferences,
+  });
+
+  /// `POST /auth/password/change` — sends a `CHANGE_PASSWORD` OTP to the
+  /// signed-in user's phone. Returns the OTP lifetime in seconds.
+  Future<Result<int>> requestPasswordChange();
+
+  /// `POST /auth/verify/change-password` with `purpose: CHANGE_PASSWORD` —
+  /// consumes [otp], sets [newPassword], and revokes every session server-side
+  /// (the caller must sign in again afterwards).
+  Future<Result<void>> confirmPasswordChange({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  });
+
+  /// `POST /users/me/email/request-verification` — sends an OTP to [email].
+  /// Returns the OTP lifetime in seconds.
+  Future<Result<int>> requestEmailChange(String email);
+
+  /// `POST /users/me/email/verify` — verifies [otp] for the pending email.
+  Future<Result<void>> confirmEmailChange(String otp);
+
+  /// `POST /users/me/phone/request-change` — sends an OTP to [phone] (E.164).
+  /// Returns the OTP lifetime in seconds.
+  Future<Result<int>> requestPhoneChange(String phone);
+
+  /// `POST /users/me/phone/confirm-change` — verifies [otp] for the pending
+  /// phone number.
+  Future<Result<void>> confirmPhoneChange(String otp);
 }

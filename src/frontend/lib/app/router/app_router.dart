@@ -32,6 +32,10 @@ import 'package:sweepfood/features/pantry/presentation/screens/pantry_item_detai
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_screen.dart';
 import 'package:sweepfood/features/reports/presentation/screens/reports_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/about_screen.dart';
+import 'package:sweepfood/features/settings/presentation/screens/change_email_screen.dart';
+import 'package:sweepfood/features/settings/presentation/screens/change_password_screen.dart';
+import 'package:sweepfood/features/settings/presentation/screens/change_phone_screen.dart';
+import 'package:sweepfood/features/settings/presentation/screens/edit_profile_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/notification_settings_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/pantry_sharing_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/preferences_screen.dart';
@@ -252,6 +256,26 @@ GoRouter appRouter(Ref ref) {
         path: Routes.settingsProfile,
         parentNavigatorKey: _rootKey,
         builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsEditProfile,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const EditProfileScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsChangePassword,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsChangeEmail,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const ChangeEmailScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsChangePhone,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const ChangePhoneScreen(),
       ),
       GoRoute(
         path: Routes.settingsPreferences,

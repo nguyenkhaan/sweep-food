@@ -97,4 +97,74 @@ class AuthRemoteDataSource {
         ApiPaths.logout,
         body: {if (refreshToken != null) 'refresh_token': refreshToken},
       );
+
+  // --- Account management (authenticated) ------------------------------------
+
+  /// `PATCH /users/profile` — update the display name and/or preferences map.
+  Future<UserProfileDto> updateProfile({
+    String? name,
+    Map<String, dynamic>? preferences,
+  }) async {
+    final json = await _api.patch(
+      ApiPaths.profile,
+      body: {
+        if (name != null) 'name': name,
+        if (preferences != null) 'preferences': preferences,
+      },
+    );
+    return UserProfileDto.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// `POST /auth/password/change` — authenticated; issues a `CHANGE_PASSWORD`
+  /// OTP to the caller's phone. Returns `{ otp, expires_in_seconds }`.
+  Future<OtpIssueDto> requestPasswordChange() async {
+    final json = await _api.post(ApiPaths.passwordChange);
+    return OtpIssueDto.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// `POST /auth/verify/change-password` with `purpose: CHANGE_PASSWORD` —
+  /// consumes [otp], sets [newPassword], and revokes sessions server-side.
+  /// Plain-text / `{ message }` response — nothing to decode.
+  Future<void> confirmPasswordChange({
+    required String phone,
+    required String otp,
+    required String newPassword,
+  }) =>
+      _api.post(
+        ApiPaths.verifyChangePassword,
+        body: {
+          'phone': phone,
+          'otp': otp,
+          'purpose': 'CHANGE_PASSWORD',
+          'new_password': newPassword,
+        },
+      );
+
+  /// `POST /users/me/email/request-verification` — sends an OTP to [email].
+  Future<OtpIssueDto> requestEmailChange(String email) async {
+    final json = await _api.post(
+      ApiPaths.meEmailRequest,
+      body: {'email': email},
+    );
+    return OtpIssueDto.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// `POST /users/me/email/verify` — verifies [otp] for the pending email.
+  /// Plain-text response — nothing to decode.
+  Future<void> confirmEmailChange(String otp) =>
+      _api.post(ApiPaths.meEmailVerify, body: {'otp': otp});
+
+  /// `POST /users/me/phone/request-change` — sends an OTP to [phone] (E.164).
+  Future<OtpIssueDto> requestPhoneChange(String phone) async {
+    final json = await _api.post(
+      ApiPaths.mePhoneRequest,
+      body: {'phone': phone},
+    );
+    return OtpIssueDto.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// `POST /users/me/phone/confirm-change` — verifies [otp] for the pending
+  /// phone. Plain-text response — nothing to decode.
+  Future<void> confirmPhoneChange(String otp) =>
+      _api.post(ApiPaths.mePhoneConfirm, body: {'otp': otp});
 }
