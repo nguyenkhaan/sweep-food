@@ -1,19 +1,19 @@
-"""initial digram
+"""initial diagram
 
-Revision ID: 446cf3ac3439
+Revision ID: 2ca31dd74ae1
 Revises: 
-Create Date: 2026-08-31 14:42:44.144571
+Create Date: 2026-09-01 16:19:33.719950
 """
 
 from collections.abc import Sequence
 
+from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
-from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = '446cf3ac3439'
+revision: str = '2ca31dd74ae1'
 down_revision: str | Sequence[str] | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -27,30 +27,31 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('uq_ingredient_categories_name_lower', 'ingredient_categories', [sa.literal_column('lower(name)')], unique=True)
     op.create_table('recipes',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('instructions', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
     sa.Column('media_url', sa.String(), nullable=True),
-    sa.Column('default_servings', sa.Float(), nullable=False),
+    sa.Column('default_servings', sa.Numeric(precision=6, scale=2), nullable=False),
     sa.Column('estimated_cooking_minutes', sa.Integer(), nullable=False),
     sa.Column('estimated_cost', sa.Float(), nullable=True),
-    sa.Column('total_calories', sa.Float(), nullable=True),
-    sa.Column('total_protein_g', sa.Float(), nullable=True),
-    sa.Column('total_fat_g', sa.Float(), nullable=True),
-    sa.Column('total_carbs_g', sa.Float(), nullable=True),
-    sa.Column('total_sugar_g', sa.Float(), nullable=True),
+    sa.Column('total_calories', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('total_protein_g', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('total_fat_g', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('total_carbs_g', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('total_sugar_g', sa.Numeric(precision=12, scale=3), nullable=True),
     sa.Column('other_nutrients', postgresql.JSONB(astext_type=sa.Text()), server_default=sa.text("'{}'::jsonb"), nullable=False),
     sa.Column('tags', postgresql.JSONB(astext_type=sa.Text()), server_default=sa.text("'{}'::jsonb"), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name')
+    sa.CheckConstraint('default_servings > 0', name='recipe_default_servings_positive'),
+    sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('uq_recipes_name_lower', 'recipes', [sa.literal_column('lower(name)')], unique=True)
     op.create_table('users',
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('phone_e164', sa.String(), nullable=False),
@@ -99,6 +100,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('fcm_token_hash')
     )
+    op.create_index('ix_device_registrations_user_enabled', 'device_registrations', ['user_id', 'is_enabled'], unique=False)
     op.create_table('favorite_menus',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
@@ -125,12 +127,12 @@ def upgrade() -> None:
     sa.Column('category_id', sa.UUID(), nullable=False),
     sa.Column('default_media_url', sa.String(), nullable=True),
     sa.Column('canonical_unit', sa.Enum('KG', 'GRAM', 'LITER', 'ML', 'PIECE', 'PACK', 'OTHER', name='measurement_unit'), nullable=False),
-    sa.Column('calories', sa.Float(), nullable=True),
-    sa.Column('protein_g', sa.Float(), nullable=True),
-    sa.Column('fat_g', sa.Float(), nullable=True),
-    sa.Column('carbs_g', sa.Float(), nullable=True),
-    sa.Column('sugar_g', sa.Float(), nullable=True),
-    sa.Column('sodium_mg', sa.Float(), nullable=True),
+    sa.Column('calories', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('protein_g', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('fat_g', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('carbs_g', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('sugar_g', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('sodium_mg', sa.Numeric(precision=12, scale=3), nullable=True),
     sa.Column('other_nutrients', postgresql.JSONB(astext_type=sa.Text()), server_default=sa.text("'{}'::jsonb"), nullable=False),
     sa.Column('default_storage_mode', sa.Enum('ROOM_TEMPERATURE', 'REFRIGERATED', 'FROZEN', 'DRY_SHELF', name='storage_mode'), nullable=True),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
@@ -139,6 +141,8 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['category_id'], ['ingredient_categories.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('ix_master_ingredients_category_id', 'master_ingredients', ['category_id'], unique=False)
+    op.create_index('uq_master_ingredients_category_name_lower', 'master_ingredients', ['category_id', sa.literal_column('lower(name)')], unique=True)
     op.create_table('meal_plans',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('name', sa.String(), nullable=True),
@@ -217,7 +221,7 @@ def upgrade() -> None:
     op.create_table('recipe_ingredients',
     sa.Column('recipe_id', sa.UUID(), nullable=False),
     sa.Column('master_ingredient_id', sa.UUID(), nullable=False),
-    sa.Column('required_quantity', sa.Float(), nullable=False),
+    sa.Column('required_quantity', sa.Numeric(precision=12, scale=3), nullable=False),
     sa.Column('unit', sa.Enum('KG', 'GRAM', 'LITER', 'ML', 'PIECE', 'PACK', 'OTHER', name='measurement_unit'), nullable=False),
     sa.Column('is_optional', sa.Boolean(), nullable=False),
     sa.Column('preparation_note', sa.String(), nullable=True),
@@ -228,6 +232,8 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['recipe_id'], ['recipes.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('ix_recipe_ingredients_master_ingredient_id', 'recipe_ingredients', ['master_ingredient_id'], unique=False)
+    op.create_index('ix_recipe_ingredients_recipe_id', 'recipe_ingredients', ['recipe_id'], unique=False)
     op.create_table('recommendation_items',
     sa.Column('recommendation_run_id', sa.UUID(), nullable=False),
     sa.Column('recipe_id', sa.UUID(), nullable=False),
@@ -256,7 +262,13 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint("(scope = 'INGREDIENT'::shelf_life_rule_scope AND master_ingredient_id IS NOT NULL AND category_id IS NULL) OR (scope = 'CATEGORY'::shelf_life_rule_scope AND category_id IS NOT NULL AND master_ingredient_id IS NULL)", name='shelf_life_rule_scope_matches_target'),
     sa.CheckConstraint('(master_ingredient_id IS NULL) <> (category_id IS NULL)', name='shelf_life_rule_exactly_one_target'),
+    sa.CheckConstraint('default_days >= 0', name='shelf_life_rule_default_days_nonnegative'),
+    sa.CheckConstraint('default_days BETWEEN min_days AND max_days', name='shelf_life_rule_default_days_in_range'),
+    sa.CheckConstraint('max_days >= 0', name='shelf_life_rule_max_days_nonnegative'),
+    sa.CheckConstraint('max_days >= min_days', name='shelf_life_rule_max_days_at_least_min_days'),
+    sa.CheckConstraint('min_days >= 0', name='shelf_life_rule_min_days_nonnegative'),
     sa.ForeignKeyConstraint(['category_id'], ['ingredient_categories.id'], ),
     sa.ForeignKeyConstraint(['master_ingredient_id'], ['master_ingredients.id'], ),
     sa.PrimaryKeyConstraint('id'),
@@ -348,6 +360,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('ix_inventory_batches_status_expires_at', 'inventory_batches', ['status', 'expires_at'], unique=False)
     op.create_table('cooking_consumptions',
     sa.Column('cooking_session_id', sa.UUID(), nullable=False),
     sa.Column('recipe_ingredient_id', sa.UUID(), nullable=True),
@@ -401,20 +414,27 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('deduplication_key')
     )
+    op.create_index('ix_notifications_delivery_scheduled', 'notifications', ['delivery_status', 'scheduled_at'], unique=False)
+    op.create_index('ix_notifications_user_created_at', 'notifications', ['user_id', 'created_at'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index('ix_notifications_user_created_at', table_name='notifications')
+    op.drop_index('ix_notifications_delivery_scheduled', table_name='notifications')
     op.drop_table('notifications')
     op.drop_table('inventory_ledger_entries')
     op.drop_table('cooking_consumptions')
+    op.drop_index('ix_inventory_batches_status_expires_at', table_name='inventory_batches')
     op.drop_table('inventory_batches')
     op.drop_table('shopping_list_items')
     op.drop_table('cooking_sessions')
     op.drop_table('shopping_lists')
     op.drop_table('shelf_life_rules')
     op.drop_table('recommendation_items')
+    op.drop_index('ix_recipe_ingredients_recipe_id', table_name='recipe_ingredients')
+    op.drop_index('ix_recipe_ingredients_master_ingredient_id', table_name='recipe_ingredients')
     op.drop_table('recipe_ingredients')
     op.drop_table('meal_plan_items')
     op.drop_table('ingredient_aliases')
@@ -422,14 +442,19 @@ def downgrade() -> None:
     op.drop_table('user_notification_preferences')
     op.drop_table('recommendation_runs')
     op.drop_table('meal_plans')
+    op.drop_index('uq_master_ingredients_category_name_lower', table_name='master_ingredients')
+    op.drop_index('ix_master_ingredients_category_id', table_name='master_ingredients')
     op.drop_table('master_ingredients')
     op.drop_table('favorite_recipes')
     op.drop_table('favorite_menus')
+    op.drop_index('ix_device_registrations_user_enabled', table_name='device_registrations')
     op.drop_table('device_registrations')
     op.drop_index('ix_auth_sessions_user_id_expires_at', table_name='auth_sessions')
     op.drop_index('ix_auth_sessions_token_family_id', table_name='auth_sessions')
     op.drop_table('auth_sessions')
     op.drop_table('users')
+    op.drop_index('uq_recipes_name_lower', table_name='recipes')
     op.drop_table('recipes')
+    op.drop_index('uq_ingredient_categories_name_lower', table_name='ingredient_categories')
     op.drop_table('ingredient_categories')
     # ### end Alembic commands ###

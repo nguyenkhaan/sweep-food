@@ -2,8 +2,7 @@
 
 import pytest
 
-from src.service.fcm_service import WireMockFCMClient
-from src.worker.notification_worker import (
+from src.module.notification.notification_worker import (
     WorkerSettings,
     build_daily_expiration_cron,
     build_worker_fcm_service,
@@ -13,6 +12,7 @@ from src.worker.notification_worker import (
     load_notification_job_settings,
     notification_worker_health,
 )
+from src.service.fcm_service import WireMockFCMClient
 
 
 @pytest.mark.anyio

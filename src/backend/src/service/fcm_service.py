@@ -106,7 +106,7 @@ class WireMockFCMClient:
         notification = message.notification
         payload = {
             "message": {
-                "fid": message.fid,
+                "token": message.token,
                 "notification": {
                     "title": notification.title if notification is not None else None,
                     "body": notification.body if notification is not None else None,
@@ -158,7 +158,7 @@ class FCMService:
     ) -> FCMDeliveryResult:
         """Send one Android notification with an FCM-compatible data payload."""
         message = messaging.Message(
-            fid=token,
+            token=token,
             notification=messaging.Notification(title=title, body=body),
             data={key: self._stringify(value) for key, value in data.items()},
             android=messaging.AndroidConfig(
@@ -181,7 +181,7 @@ class FCMService:
     ) -> FCMDeliveryResult:
         """Send one browser notification through Firebase Web Push."""
         message = messaging.Message(
-            fid=token,
+            token=token,
             data={key: self._stringify(value) for key, value in data.items()},
             webpush=messaging.WebpushConfig(
                 notification=messaging.WebpushNotification(

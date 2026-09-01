@@ -6,7 +6,7 @@
     "bodyPatterns": [
       {
         "matchesJsonPath": {
-          "expression": "$.message.fid",
+          "expression": "$.message.token",
           "equalTo": "invalid-fcm-token"
         }
       }

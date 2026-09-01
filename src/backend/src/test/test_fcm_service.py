@@ -48,7 +48,8 @@ async def test_fcm_service_sends_notification_and_string_data_payload() -> None:
         message_id="projects/sweep-food/messages/test-message-id"
     )
     message = client.messages[0]
-    assert message.fid == "android-registration-token-123456789"
+    assert message.token == "android-registration-token-123456789"
+    assert message.fid is None
     assert message.notification is not None
     assert message.notification.title == "Food expires soon"
     assert message.data == {"batch_id": "batch-1", "days_remaining": "1"}
@@ -69,7 +70,8 @@ async def test_fcm_service_sends_web_notification() -> None:
 
     assert result.message_id == "projects/sweep-food/messages/test-message-id"
     message = client.messages[0]
-    assert message.fid == "web-registration-token-123456789"
+    assert message.token == "web-registration-token-123456789"
+    assert message.fid is None
     assert message.webpush is not None
     assert message.webpush.notification is not None
     assert message.webpush.notification.title == "Food expires soon"
@@ -126,7 +128,7 @@ def test_firebase_error_mapping_distinguishes_delivery_outcomes() -> None:
 def build_wiremock_message() -> messaging.Message:
     """Build one message used to exercise the local provider contract."""
     return messaging.Message(
-        fid="android-registration-token-123456789",
+        token="android-registration-token-123456789",
         notification=messaging.Notification(title="Expiry", body="Milk expires."),
         data={"batch_id": "batch-1"},
     )

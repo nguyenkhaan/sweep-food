@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime, timedelta
+from decimal import Decimal
 from typing import cast
 from uuid import UUID
 
@@ -313,6 +314,35 @@ async def test_create_session_derives_recipe_from_an_owned_meal_plan_item() -> N
     assert database.rollback_count == 0
     assert isinstance(database.added[0], CookingSessionModel)
     assert database.added[0].servings == 4.0
+
+
+@pytest.mark.anyio
+async def test_create_session_supports_decimal_backed_recipe_values() -> None:
+    """Keep the meal-plan-only contract compatible with Numeric recipe fields."""
+    recipe_ingredient, ingredient = build_recipe_ingredient()
+    recipe = build_recipe()
+    recipe.default_servings = Decimal("2.00")
+    recipe.total_calories = Decimal("122.000")
+    recipe_ingredient.required_quantity = Decimal("500.000")
+    database = FakeDatabaseSession(
+        results=[
+            FakeScalarResult(build_meal_plan_item(servings=4.0)),
+            FakeScalarResult(recipe),
+            FakeIngredientResult([(recipe_ingredient, ingredient)]),
+            FakeBatchResult([build_batch()]),
+        ],
+    )
+    service = CookingService(cast(AsyncSession, database), FEFOService())
+
+    response = await service.create_session(
+        USER_ID,
+        CreateCookingSessionRequestDTO(meal_plan_item_id=MEAL_PLAN_ITEM_ID),
+    )
+
+    assert response.meal_plan_item_id == MEAL_PLAN_ITEM_ID
+    assert response.servings == 4.0
+    created_session = cast(CookingSessionModel, database.added[0])
+    assert created_session.nutrition_snapshot["calories"] == 244.0
 
 
 @pytest.mark.anyio
