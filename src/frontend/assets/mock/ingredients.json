@@ -3,79 +3,85 @@
     {
       "id": "i1",
       "name": "Cà chua bi",
-      "category": "Rau củ",
-      "default_unit": "g",
-      "reference_shelf_life_days": 5,
-      "nutrition_per_100g": { "energy_kcal": 18, "protein_g": 0.9, "carb_g": 3.9, "lipid_g": 0.2 }
+      "category": { "id": "c-veg", "name": "Rau củ" },
+      "default_unit": "GRAM",
+      "default_storage_mode": "REFRIGERATED",
+      "aliases": ["Cà chua cherry"]
     },
     {
       "id": "i2",
       "name": "Trứng gà",
-      "category": "Đạm",
-      "default_unit": "qua",
-      "reference_shelf_life_days": 21,
-      "nutrition_per_100g": { "energy_kcal": 155, "protein_g": 13, "carb_g": 1.1, "lipid_g": 11 }
+      "category": { "id": "c-protein", "name": "Đạm" },
+      "default_unit": "PIECE",
+      "default_storage_mode": "REFRIGERATED",
+      "aliases": []
     },
     {
       "id": "i3",
       "name": "Hành lá",
-      "category": "Rau gia vị",
-      "default_unit": "bo",
-      "reference_shelf_life_days": 5
+      "category": { "id": "c-herb", "name": "Rau gia vị" },
+      "default_unit": "PIECE",
+      "default_storage_mode": "REFRIGERATED",
+      "aliases": []
     },
     {
       "id": "i4",
       "name": "Thịt ba chỉ",
-      "category": "Thịt",
-      "default_unit": "g",
-      "reference_shelf_life_days": 3,
-      "nutrition_per_100g": { "energy_kcal": 518, "protein_g": 9, "carb_g": 0, "lipid_g": 53 }
+      "category": { "id": "c-meat", "name": "Thịt" },
+      "default_unit": "GRAM",
+      "default_storage_mode": "REFRIGERATED",
+      "aliases": ["Thịt heo ba rọi"]
     },
     {
       "id": "i5",
       "name": "Ức gà",
-      "category": "Thịt",
-      "default_unit": "g",
-      "reference_shelf_life_days": 3,
-      "nutrition_per_100g": { "energy_kcal": 165, "protein_g": 31, "carb_g": 0, "lipid_g": 3.6 }
+      "category": { "id": "c-meat", "name": "Thịt" },
+      "default_unit": "GRAM",
+      "default_storage_mode": "REFRIGERATED",
+      "aliases": ["Lườn gà"]
     },
     {
       "id": "i6",
       "name": "Cải bó xôi",
-      "category": "Rau lá",
-      "default_unit": "bo",
-      "reference_shelf_life_days": 4,
-      "nutrition_per_100g": { "energy_kcal": 23, "protein_g": 2.9, "carb_g": 3.6, "lipid_g": 0.4 }
+      "category": { "id": "c-veg", "name": "Rau lá" },
+      "default_unit": "GRAM",
+      "default_storage_mode": "REFRIGERATED",
+      "aliases": ["Rau bina"]
     },
     {
       "id": "i7",
       "name": "Sữa tươi",
-      "category": "Sữa",
-      "default_unit": "ml",
-      "reference_shelf_life_days": 7,
-      "nutrition_per_100g": { "energy_kcal": 61, "protein_g": 3.2, "carb_g": 4.8, "lipid_g": 3.3 }
+      "category": { "id": "c-dairy", "name": "Sữa" },
+      "default_unit": "ML",
+      "default_storage_mode": "REFRIGERATED",
+      "aliases": []
     },
     {
       "id": "i8",
       "name": "Cá hồi",
-      "category": "Hải sản",
-      "default_unit": "g",
-      "reference_shelf_life_days": 2,
-      "nutrition_per_100g": { "energy_kcal": 208, "protein_g": 20, "carb_g": 0, "lipid_g": 13 }
+      "category": { "id": "c-seafood", "name": "Hải sản" },
+      "default_unit": "GRAM",
+      "default_storage_mode": "REFRIGERATED",
+      "aliases": []
     },
     {
       "id": "i9",
       "name": "Gạo",
-      "category": "Ngũ cốc",
-      "default_unit": "kg",
-      "reference_shelf_life_days": 365
+      "category": { "id": "c-grain", "name": "Ngũ cốc" },
+      "default_unit": "KG",
+      "default_storage_mode": "DRY_SHELF",
+      "aliases": ["Gạo trắng"]
     },
     {
       "id": "i10",
       "name": "Nước mắm",
-      "category": "Gia vị",
-      "default_unit": "ml",
-      "reference_shelf_life_days": 720
+      "category": { "id": "c-condiment", "name": "Gia vị" },
+      "default_unit": "ML",
+      "default_storage_mode": "DRY_SHELF",
+      "aliases": []
     }
-  ]
+  ],
+  "total": 10,
+  "page": 1,
+  "per_page": 20
 }

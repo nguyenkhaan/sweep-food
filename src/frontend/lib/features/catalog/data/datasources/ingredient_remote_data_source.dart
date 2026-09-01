@@ -8,9 +8,12 @@ class IngredientRemoteDataSource {
   final ApiClient _api;
 
   Future<List<IngredientDto>> search(String query) async {
+    // Backend: `GET /ingredients?q=&category=&page=&per_page=` →
+    // `{ items, total, page, per_page }`. We only need the first page for
+    // autocomplete.
     final json = await _api.get(
       ApiPaths.ingredients,
-      query: {if (query.trim().isNotEmpty) 'query': query.trim()},
+      query: {if (query.trim().isNotEmpty) 'q': query.trim()},
     );
     final list = (json is Map ? json['items'] : json) as List<dynamic>;
     return list
