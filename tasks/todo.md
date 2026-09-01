@@ -330,14 +330,14 @@
 
 **Acceptance criteria:**
 
-- [ ] A batch references either a master ingredient or a custom name.
-- [ ] Current quantity cannot become negative; depleted status is consistent with zero quantity.
-- [ ] Ledger rows retain before/delta/after quantities and operation context.
+- [x] A batch references either a master ingredient or a custom name.
+- [x] Current quantity cannot become negative; depleted status is consistent with zero quantity.
+- [x] Ledger rows retain before/delta/after quantities and operation context.
 
 **Verification:**
 
-- [ ] Database constraint tests reject invalid batches.
-- [ ] Ledger persistence test proves prior entries cannot be silently edited.
+- [x] Database constraint tests reject invalid batches.
+- [x] Ledger persistence test proves prior entries cannot be silently edited.
 
 **Dependencies:** Phase 3 checkpoint.  
 **Files likely touched:** migrations, `src/backend/src/model/*`, tests  

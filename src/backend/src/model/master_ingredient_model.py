@@ -16,6 +16,7 @@ from src.model.enum_model import MeasurementUnit, StorageMode
 if TYPE_CHECKING:
     from src.model.ingredient_alias_model import IngredientAliasModel
     from src.model.ingredient_category_model import IngredientCategoryModel
+    from src.model.inventory_batch_model import InventoryBatchModel
     from src.model.recipe_ingredient_model import RecipeIngredientModel
     from src.model.shelf_life_rule_model import ShelfLifeRuleModel
 
@@ -72,5 +73,8 @@ class MasterIngredientModel(TimestampedUUIDModel):
         back_populates="master_ingredient",
     )
     recipe_ingredients: Mapped[list["RecipeIngredientModel"]] = relationship(
+        back_populates="master_ingredient",
+    )
+    inventory_batches: Mapped[list["InventoryBatchModel"]] = relationship(
         back_populates="master_ingredient",
     )

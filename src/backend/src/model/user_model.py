@@ -1,14 +1,19 @@
 """User account database model."""
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import CheckConstraint, DateTime, String, text
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.model.base import TimestampedUUIDModel
 from src.model.enum_model import AccountStatus, UserRole
+
+if TYPE_CHECKING:
+    from src.model.inventory_batch_model import InventoryBatchModel
+    from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 
 
 class UserModel(TimestampedUUIDModel):
@@ -49,4 +54,10 @@ class UserModel(TimestampedUUIDModel):
         default=dict,
         server_default=text("'{}'::jsonb"),
         nullable=False,
+    )
+    inventory_batches: Mapped[list["InventoryBatchModel"]] = relationship(
+        back_populates="user",
+    )
+    inventory_ledger_entries: Mapped[list["InventoryLedgerEntryModel"]] = relationship(
+        back_populates="user",
     )

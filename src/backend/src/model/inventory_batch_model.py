@@ -1,12 +1,21 @@
 """Inventory batch database model."""
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import CheckConstraint, DateTime, Float, ForeignKey, String
+from sqlalchemy import (
+    CheckConstraint,
+    DateTime,
+    Float,
+    ForeignKey,
+    Index,
+    String,
+    UniqueConstraint,
+)
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.model.base import TimestampedUUIDModel
 from src.model.enum_model import (
@@ -17,6 +26,11 @@ from src.model.enum_model import (
     MeasurementUnit,
     StorageMode,
 )
+
+if TYPE_CHECKING:
+    from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
+    from src.model.master_ingredient_model import MasterIngredientModel
+    from src.model.user_model import UserModel
 
 
 class InventoryBatchModel(TimestampedUUIDModel):
@@ -30,6 +44,54 @@ class InventoryBatchModel(TimestampedUUIDModel):
         ),
         CheckConstraint("initial_quantity > 0"),
         CheckConstraint("current_quantity >= 0"),
+        CheckConstraint(
+            "custom_name IS NULL OR btrim(custom_name) <> ''",
+            name="inventory_batch_custom_name_nonblank",
+        ),
+        CheckConstraint(
+            "status <> 'ACTIVE'::inventory_batch_status OR current_quantity > 0",
+            name="inventory_batch_active_quantity_positive",
+        ),
+        CheckConstraint(
+            "status <> 'DEPLETED'::inventory_batch_status OR current_quantity = 0",
+            name="inventory_batch_depleted_quantity_zero",
+        ),
+        CheckConstraint(
+            "(expiration_source = 'UNKNOWN'::expiration_source AND expires_at IS NULL) "
+            "OR (expiration_source <> 'UNKNOWN'::expiration_source "
+            "AND expires_at IS NOT NULL)",
+            name="inventory_batch_expiration_source_matches_date",
+        ),
+        CheckConstraint(
+            "(source = 'MANUAL'::inventory_source "
+            "AND source_cooking_session_id IS NULL) "
+            "OR (source = 'LEFTOVER'::inventory_source "
+            "AND batch_type = 'COOKED_FOOD'::inventory_batch_type "
+            "AND source_cooking_session_id IS NOT NULL)",
+            name="inventory_batch_source_matches_cooking_session",
+        ),
+        UniqueConstraint(
+            "id",
+            "user_id",
+            name="uq_inventory_batches_id_user_id",
+        ),
+        Index(
+            "ix_inventory_batches_user_status_expires_at_created_at",
+            "user_id",
+            "status",
+            "expires_at",
+            "created_at",
+        ),
+        Index(
+            "ix_inventory_batches_user_master_ingredient_id",
+            "user_id",
+            "master_ingredient_id",
+        ),
+        Index(
+            "ix_inventory_batches_user_storage_mode",
+            "user_id",
+            "storage_mode",
+        ),
     )
 
     user_id: Mapped[UUID] = mapped_column(
@@ -91,4 +153,12 @@ class InventoryBatchModel(TimestampedUUIDModel):
     )
     archived_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
+    )
+    user: Mapped["UserModel"] = relationship(back_populates="inventory_batches")
+    master_ingredient: Mapped["MasterIngredientModel | None"] = relationship(
+        back_populates="inventory_batches",
+    )
+    ledger_entries: Mapped[list["InventoryLedgerEntryModel"]] = relationship(
+        back_populates="inventory_batch",
+        foreign_keys="InventoryLedgerEntryModel.inventory_batch_id",
     )
