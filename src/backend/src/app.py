@@ -17,6 +17,7 @@ from src.module.extractions.extraction_route import extraction_router
 from src.module.health.health_router import health_router
 from src.module.inventory.inventory_router import inventory_router
 from src.module.notification.notification_router import notification_router
+from src.module.recommendations.recommendation_router import recommendation_router
 from src.module.recipes.recipe_router import recipe_router
 from src.module.user.user_router import user_router
 from src.service.redis_service import redis_service
@@ -63,6 +64,7 @@ def create_app() -> FastAPI:
     application.include_router(auth_router, prefix=API_PREFIX)
     application.include_router(catalog_router, prefix=API_PREFIX)
     application.include_router(recipe_router, prefix=API_PREFIX)
+    application.include_router(recommendation_router, prefix=API_PREFIX)
     application.include_router(cooking_router, prefix=API_PREFIX)
     application.include_router(inventory_router, prefix=API_PREFIX)
     application.include_router(extraction_router, prefix=API_PREFIX)
