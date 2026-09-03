@@ -1,15 +1,20 @@
 """Shopping-list item database model."""
 
+from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import CheckConstraint, Float, ForeignKey, String, text
+from sqlalchemy import CheckConstraint, Float, ForeignKey, Index, String, text
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.model.base import TimestampedUUIDModel
 from src.model.enum_model import MeasurementUnit
+
+if TYPE_CHECKING:
+    from src.model.master_ingredient_model import MasterIngredientModel
+    from src.model.shopping_list_model import ShoppingListModel
 
 
 class ShoppingListItemModel(TimestampedUUIDModel):
@@ -24,6 +29,12 @@ class ShoppingListItemModel(TimestampedUUIDModel):
         CheckConstraint("required_quantity > 0"),
         CheckConstraint("available_quantity >= 0"),
         CheckConstraint("missing_quantity >= 0"),
+        CheckConstraint(
+            "custom_name IS NULL OR btrim(custom_name) <> ''",
+            name="shopping_item_custom_name_nonblank",
+        ),
+        Index("ix_shopping_list_items_list_id", "shopping_list_id"),
+        Index("ix_shopping_list_items_master_ingredient_id", "master_ingredient_id"),
     )
 
     shopping_list_id: Mapped[UUID] = mapped_column(
@@ -51,4 +62,8 @@ class ShoppingListItemModel(TimestampedUUIDModel):
         default=dict,
         server_default=text("'{}'::jsonb"),
         nullable=False,
+    )
+    shopping_list: Mapped["ShoppingListModel"] = relationship(back_populates="items")
+    master_ingredient: Mapped["MasterIngredientModel | None"] = relationship(
+        back_populates="shopping_list_items",
     )

@@ -54,9 +54,7 @@ def _batch(
         custom_name=f"Concurrency ingredient {uuid4().hex}",
         batch_type=InventoryBatchType.RAW_INGREDIENT,
         initial_quantity=quantity,
-        current_quantity=(
-            quantity if current_quantity is None else current_quantity
-        ),
+        current_quantity=(quantity if current_quantity is None else current_quantity),
         unit=MeasurementUnit.GRAM,
         storage_mode=StorageMode.REFRIGERATED,
         status=InventoryBatchStatus.ACTIVE,
@@ -147,7 +145,7 @@ async def test_concurrent_adjustments_never_double_consume(
         batch_id = batch.id
 
     async def deduct(idempotency_key: str) -> object:
-        async with AsyncSession(database_engine) as session:
+        async with AsyncSession(database_engine, expire_on_commit=False) as session:
             service = InventoryService(session)
             return await service.adjust_batch(
                 user_id,
