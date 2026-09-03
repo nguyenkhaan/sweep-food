@@ -1,143 +1,81 @@
-"""Read-only loading and orchestration for recommendation providers."""
+"""Catalog-backed mock response for the future recommendation AI boundary."""
 
-from datetime import UTC, datetime
-from decimal import Decimal
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.model.enum_model import InventoryBatchStatus, InventoryBatchType
-from src.model.inventory_batch_model import InventoryBatchModel
-from src.model.master_ingredient_model import MasterIngredientModel
-from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
-from src.model.user_model import UserModel
-from src.module.recommendations.recommendation_provider import (
-    InventorySnapshot,
-    InventorySnapshotBatch,
-    RankedRecommendation,
-    RecipeIngredientCandidate,
-    RecommendationCandidate,
-    RecommendationCriteria,
-    RecommendationProvider,
-    RecommendationRequest,
-    UserRecommendationContext,
+from src.module.recommendations.recommendation_dto import (
+    MockRecommendationAnalysisDTO,
+    RecommendationItemDTO,
+    RecommendationListResponseDTO,
+    RecommendationRequestDTO,
+    RecommendationScoreComponentsDTO,
 )
 
 
-class RecommendationUserNotFoundError(LookupError):
-    """Raised when no user can own the requested recommendation evaluation."""
-
-
 class RecommendationService:
-    """Load live ORM data once, then call an interchangeable provider contract."""
+    """Return deterministic mock rankings using real seeded recipe identities."""
 
-    def __init__(
-        self, db_session: AsyncSession, provider: RecommendationProvider
-    ) -> None:
+    def __init__(self, db_session: AsyncSession) -> None:
         self.db_session = db_session
-        self.provider = provider
 
     async def recommend(
         self,
-        user_id: UUID,
-        criteria: RecommendationCriteria,
-        limit: int,
-        now: datetime | None = None,
-    ) -> list[RankedRecommendation]:
-        """Rank real seeded recipes against current inventory without any writes."""
-        evaluation_time = now or datetime.now(UTC)
-        user = await self._find_user(user_id)
-        candidates = await self._load_candidates()
-        inventory_snapshot = await self._load_inventory_snapshot(user_id)
-        return self.provider.recommend(
-            RecommendationRequest(
-                user_context=UserRecommendationContext(
-                    user_id=user.id,
-                    preferences=user.preferences,
+        _user_id: UUID,
+        body: RecommendationRequestDTO,
+    ) -> RecommendationListResponseDTO:
+        """Read up to five recipes without persisting the user's free-text request."""
+        result = await self.db_session.execute(
+            select(RecipeModel)
+            .order_by(func.lower(RecipeModel.name), RecipeModel.id)
+            .limit(5),
+        )
+        recipes = list(result.scalars().all())
+        return RecommendationListResponseDTO(
+            request=body.request,
+            analysis=MockRecommendationAnalysisDTO(
+                intent="meal_recommendation",
+                summary=(
+                    "Mock analysis is active while the production AI provider "
+                    "is being integrated."
                 ),
-                inventory_snapshot=inventory_snapshot,
-                candidate_recipes=candidates,
-                criteria=criteria,
-                limit=limit,
-                now=evaluation_time,
+                is_mock=True,
             ),
+            items=[self._to_item(recipe, rank) for rank, recipe in enumerate(recipes, 1)],
         )
 
-    async def _find_user(self, user_id: UUID) -> UserModel:
-        result = await self.db_session.execute(
-            select(UserModel).where(UserModel.id == user_id),
+    @staticmethod
+    def _to_item(recipe: RecipeModel, rank: int) -> RecommendationItemDTO:
+        """Map one real catalog recipe to a stable mock ranking response."""
+        expiration_utilization = max(0.5, 0.9 - (rank - 1) * 0.08)
+        availability = max(0.5, 0.85 - (rank - 1) * 0.07)
+        preference_fit = 0.75
+        purchase_minimization = max(0.5, 0.8 - (rank - 1) * 0.05)
+        score = (
+            0.4 * expiration_utilization
+            + 0.3 * availability
+            + 0.2 * preference_fit
+            + 0.1 * purchase_minimization
         )
-        user = result.scalar_one_or_none()
-        if user is None:
-            raise RecommendationUserNotFoundError()
-        return user
-
-    async def _load_candidates(self) -> list[RecommendationCandidate]:
-        result = await self.db_session.execute(
-            select(RecipeModel, RecipeIngredientModel, MasterIngredientModel)
-            .join(
-                RecipeIngredientModel,
-                RecipeIngredientModel.recipe_id == RecipeModel.id,
-            )
-            .join(
-                MasterIngredientModel,
-                MasterIngredientModel.id == RecipeIngredientModel.master_ingredient_id,
-            )
-            .order_by(
-                RecipeModel.id,
-                RecipeIngredientModel.created_at,
-                RecipeIngredientModel.id,
+        return RecommendationItemDTO(
+            recipe_id=recipe.id,
+            recipe_name=recipe.name,
+            rank=rank,
+            score=round(score, 3),
+            score_components=RecommendationScoreComponentsDTO(
+                expiration_utilization=expiration_utilization,
+                availability=availability,
+                preference_fit=preference_fit,
+                purchase_minimization=purchase_minimization,
             ),
-        )
-        grouped: dict[UUID, tuple[RecipeModel, list[RecipeIngredientCandidate]]] = {}
-        for recipe, recipe_ingredient, ingredient in result.tuples().all():
-            current = grouped.get(recipe.id)
-            if current is None:
-                current = (recipe, [])
-                grouped[recipe.id] = current
-            current[1].append(
-                RecipeIngredientCandidate(
-                    master_ingredient_id=ingredient.id,
-                    name=ingredient.name,
-                    required_quantity=recipe_ingredient.required_quantity,
-                    unit=recipe_ingredient.unit,
-                    is_optional=recipe_ingredient.is_optional,
-                )
-            )
-        return [
-            RecommendationCandidate(
-                recipe_id=recipe.id,
-                name=recipe.name,
-                default_servings=recipe.default_servings,
-                estimated_cooking_minutes=recipe.estimated_cooking_minutes,
-                ingredients=tuple(ingredients),
-            )
-            for recipe, ingredients in grouped.values()
-        ]
-
-    async def _load_inventory_snapshot(self, user_id: UUID) -> InventorySnapshot:
-        result = await self.db_session.execute(
-            select(InventoryBatchModel).where(
-                InventoryBatchModel.user_id == user_id,
-                InventoryBatchModel.batch_type == InventoryBatchType.RAW_INGREDIENT,
-                InventoryBatchModel.status == InventoryBatchStatus.ACTIVE,
-                InventoryBatchModel.current_quantity > 0,
-                InventoryBatchModel.master_ingredient_id.is_not(None),
+            missing_ingredients=[],
+            near_expiry_ingredients=[],
+            explanation=(
+                "Mock score preserves the E/A/P/U response contract; live inventory "
+                "analysis will be supplied by the production AI provider."
             ),
-        )
-        return InventorySnapshot(
-            batches=tuple(
-                InventorySnapshotBatch(
-                    batch_id=batch.id,
-                    master_ingredient_id=batch.master_ingredient_id,
-                    current_quantity=Decimal(str(batch.current_quantity)),
-                    unit=batch.unit,
-                    expires_at=batch.expires_at,
-                    created_at=batch.created_at,
-                )
-                for batch in result.scalars().all()
-                if batch.master_ingredient_id is not None
-            ),
+            provider="MOCK",
+            model_version="mock-v1",
         )

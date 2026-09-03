@@ -1,1 +1,1 @@
-"""Recommendation domain contracts and provider implementations."""
+"""Authenticated recipe recommendation API module."""

@@ -33,10 +33,10 @@
 
 | Field | Value |
 |---|---|
-| Active phase | Phase 7 — Notifications and Background Processing |
-| Active task | Task 7.1 — Add device and notification persistence/API (`In progress`) |
-| Next task | Task 7.2 — Bootstrap worker/scheduler and FCM adapter |
-| Next required action | Implement authenticated Android FCM device registration and owned notification list/read APIs with tests. |
+| Active phase | Phase 5 — Recommendations, Meal Selection, and Shopping Lists |
+| Active task | Phase 5 API implementation (`In progress`) |
+| Next task | Run disposable-PostgreSQL shopping transaction tests and reconcile the frontend API contract. |
+| Next required action | Verify batch-plus-ledger check-off atomically against `TEST_DATABASE_URL`; do not claim the Phase 5 checkpoint before that verification. |
 | Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
 | Current blocker | None |
 
@@ -49,7 +49,7 @@
 | 2 | Identity, Authentication, and User Preferences | `In progress` | Phase 1 checkpoint complete | Phone/password sign-in; OTP-gated registration, recovery, sensitive changes; sessions, roles, and ownership checks pass |
 | 3 | Catalog, Seed Pipeline, and Recipe Read APIs | `Done` | Phase 0 and 1 checkpoints complete | User confirmed Phase 3 completion; catalog and recipe read APIs are implemented |
 | 4 | Inventory, Shelf Life, and FEFO | `Not started` | Phase 3 checkpoint complete | Manual batches, ledger, expiry logic, and concurrency-safe FEFO work |
-| 5 | Recommendations, Meal Selection, and Shopping Lists | `Not started` | Phases 3 and 4 checkpoints complete | Explainable inventory-sensitive recommendations, serving-aware meal plans, and checked-purchase inventory creation work |
+| 5 | Recommendations, Meal Selection, and Shopping Lists | `In progress` | Phases 3 and 4 checkpoints complete | Mock authenticated recommendation boundary; persistent meal/favorite/shopping APIs; verified batch-plus-ledger check-off |
 | 6 | Cooking, Consumption, and Leftovers | `In progress` | User-authorized reprioritization; complete relational database is available | Cooking completion is verified; leftovers and history are implemented and covered by 10 focused tests. Phase checkpoint remains pending. |
 | 7 | Notifications and Background Processing | `In progress` | Phase 2 and inventory prerequisites complete | Task 7.1 implementation and verification are in progress |
 | 8 | Experimental OCR, ASR, and Barcode | `Done` | Phase 1 checkpoint complete | Extraction modules with shared DTO, mock providers, media validation, and 129 passing tests; no inventory persistence |
@@ -178,6 +178,14 @@
 | 3.4 Curate and validate the initial seed dataset | `Done` | 3.2 | User confirmed Phase 3 completion. |
 | Phase 3 checkpoint | `Done` | 3.1–3.4 | User confirmed Phase 3 completion. |
 
+### Phase 5 Work
+
+| Task | Status | Dependencies | Evidence / next action |
+|---|---|---|---|
+| 5.3 Mock recommendation boundary | `In progress` | User-approved revised scope | Authenticated `POST /api/recommendations` accepts only `request: str`, returns catalog-backed mock rankings, and does not persist raw text or inventory changes. Production AI inference remains intentionally deferred. |
+| 5.4 Meal plans and favourite recipes | `In progress` | Existing planning models | PostgreSQL-backed meal-plan create/read/item mutation and recipe favourite add/remove routes are implemented with ownership predicates. Named favourite-menu APIs remain unimplemented. |
+| 5.5 Shopping list generation and editing | `In progress` | Existing inventory models/services | Generation uses planned recipes, serving scale, compatible-unit merging, and non-expired active stock. Check-off locks the item, stages an inventory batch and `INITIAL_STOCK` ledger entry in the same session, then records the batch ID in metadata. Disposable-PostgreSQL transaction coverage remains pending. |
+
 ### Phase 6 Work
 
 | Task | Status | Dependencies | Evidence / next action |
@@ -262,6 +270,7 @@
 | 2026-08-31 | Task 6.4 | `Ready` → `Done` | Verified cooked-leftover creation and cooking-history APIs. Completed sessions create `COOKED_FOOD` batches linked by `source_cooking_session_id`, with a `LEFTOVER_CREATED` ledger entry; history list/detail expose actual consumption rows and linked leftovers. Focused test suite: 10 passed. |
 | 2026-08-31 | Task 7.1 | `Ready` → `In progress` | Started the authenticated Android FCM device-registration and owned notification API slice using test-driven development. Firebase credentials remain environment-backed and the service-account JSON is ignored by Git. |
 | 2026-09-01 | Phase 3 | `Not started` → `Done` | User confirmed Tasks 3.1–3.4 and the Phase 3 checkpoint are complete. |
+| 2026-09-03 | Phase 5 API modules | `Not started` → `In progress` | Added the Phase 5 API specification; restored the authenticated mock recommendation boundary; added database-backed meal-plan, favourite-recipe, and shopping-list modules. Focused router tests: 22 passed; inventory/planning regression: 12 passed, 3 skipped without disposable `TEST_DATABASE_URL`; Ruff and Pylint passed. |
 
 ## Verification Evidence
 

@@ -1,4 +1,4 @@
-"""Authenticated recommendation API contract route."""
+"""Authenticated mock recommendation route."""
 
 from typing import Annotated
 
@@ -6,34 +6,22 @@ from fastapi import APIRouter, Depends
 
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.module.recommendations.recommendation_dependency import (
-    get_recommendation_response_service,
+    get_recommendation_service,
 )
 from src.module.recommendations.recommendation_dto import (
     RecommendationListResponseDTO,
     RecommendationRequestDTO,
 )
-from src.module.recommendations.recommendation_mock_service import (
-    RecommendationResponseService,
-)
+from src.module.recommendations.recommendation_service import RecommendationService
 
 recommendation_router = APIRouter(prefix="/recommendations", tags=["recommendations"])
 
 
-@recommendation_router.post(
-    "",
-    response_model=RecommendationListResponseDTO,
-    summary="Return ranked recipe recommendations",
-    description=(
-        "Return three to five explainable ranked recipes for the authenticated user."
-    ),
-)
+@recommendation_router.post("", response_model=RecommendationListResponseDTO)
 async def post_recommendations(
     body: RecommendationRequestDTO,
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
-    service: Annotated[
-        RecommendationResponseService,
-        Depends(get_recommendation_response_service),
-    ],
+    service: Annotated[RecommendationService, Depends(get_recommendation_service)],
 ) -> RecommendationListResponseDTO:
-    """Return the currently configured recommendation response adapter result."""
-    return await service.recommend(user, body)
+    """Return catalog-backed mock results for one authenticated user request."""
+    return await service.recommend(user.user_id, body)

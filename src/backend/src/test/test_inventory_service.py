@@ -196,7 +196,12 @@ async def test_create_catalog_batch_uses_ingredient_shelf_life_rule() -> None:
         default_days=4,
     )
     database = FakeDatabaseSession(
-        [FakeResult(None), FakeResult(ingredient), FakeResult([rule])]
+        [
+            FakeResult(None),
+            FakeResult(ingredient),
+            FakeResult([rule]),
+            FakeResult(ingredient),
+        ]
     )
     service = InventoryService(cast(AsyncSession, database))
 
