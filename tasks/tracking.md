@@ -183,7 +183,7 @@
 | Task | Status | Dependencies | Evidence / next action |
 |---|---|---|---|
 | 5.3 Mock recommendation boundary | `In progress` | User-approved revised scope | Authenticated `POST /api/recommendations` accepts only `request: str`, returns catalog-backed mock rankings, and does not persist raw text or inventory changes. Production AI inference remains intentionally deferred. |
-| 5.4 Meal plans and favourite recipes | `In progress` | Existing planning models | PostgreSQL-backed meal-plan create/read/item mutation and recipe favourite add/remove routes are implemented with ownership predicates. Named favourite-menu APIs remain unimplemented. |
+| 5.4 Meal plans and favourite recipes | `In progress` | Existing planning models | PostgreSQL-backed meal-plan create/read/item mutation and recipe favourites are implemented with ownership predicates, including saved-recipe reads and named favourite-menu CRUD/item management. |
 | 5.5 Shopping list generation and editing | `In progress` | Existing inventory models/services | Generation uses planned recipes, serving scale, compatible-unit merging, and non-expired active stock. Check-off locks the item, stages an inventory batch and `INITIAL_STOCK` ledger entry in the same session, then records the batch ID in metadata. Disposable-PostgreSQL transaction coverage remains pending. |
 
 ### Phase 6 Work

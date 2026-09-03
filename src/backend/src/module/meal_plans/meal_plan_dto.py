@@ -3,7 +3,7 @@
 from datetime import date
 from math import isfinite
 from uuid import UUID
-
+from datetime import datetime 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from src.model.enum_model import MealPlanItemStatus, MealSlot
@@ -84,6 +84,15 @@ class MealPlanItemDTO(BaseModel):
     servings: float
     status: MealPlanItemStatus
 
+
+class MealPlanViewDTO(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    name: str | None
+    starts_on: date
+    ends_on: date
+    created_at: datetime
+    updated_at: datetime
 
 class MealPlanDTO(BaseModel):
     """Public state of a user's meal plan and its ordered slots."""

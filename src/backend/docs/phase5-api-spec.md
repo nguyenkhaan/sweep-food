@@ -38,10 +38,26 @@ All paths are under `/api` and require a bearer access token.
 - `DELETE /meal-plans/{meal_plan_id}/items/{item_id}`
 - `PUT /recipes/{recipe_id}/favorite`
 - `DELETE /recipes/{recipe_id}/favorite`
+- `GET /favorite-recipes`
+- `POST /favorite-menus`
+- `GET /favorite-menus`
+- `GET /favorite-menus/{favorite_menu_id}`
+- `PATCH /favorite-menus/{favorite_menu_id}`
+- `DELETE /favorite-menus/{favorite_menu_id}`
+- `POST /favorite-menus/{favorite_menu_id}/items`
+- `PATCH /favorite-menus/{favorite_menu_id}/items/{item_id}`
+- `DELETE /favorite-menus/{favorite_menu_id}/items/{item_id}`
 
 The meal-plan item request contains a seeded `recipe_id`, a date inside the
 plan range, a `meal_slot`, positive `servings`, and optional
 `recommendation_run_id`.  Every lookup constrains by the authenticated owner.
+
+`GET /favorite-recipes` and `GET /favorite-menus` accept `limit` (default 20,
+maximum 100) and `offset` (default 0), returning `items`, `total`, `limit`,
+and `offset`. `GET /favorite-menus/{favorite_menu_id}` returns the complete
+menu and all of its recipe entries. Menu items have no editable columns beyond
+`recipe_id`, so a `PATCH` replaces the referenced recipe while preserving the
+item identity.
 
 ### Shopping lists
 
