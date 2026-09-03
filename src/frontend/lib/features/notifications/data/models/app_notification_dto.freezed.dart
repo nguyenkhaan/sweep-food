@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppNotificationDto {
 
- String get id; String get type; String get title; String get body;@JsonKey(name: 'created_at') DateTime get createdAt; bool get read;@JsonKey(name: 'pantry_item_id') String? get pantryItemId;@JsonKey(name: 'dish_ids') List<String> get dishIds;
+@JsonKey(name: 'notification_id') String get id; String get type; String get title; String get body;@JsonKey(name: 'created_at') DateTime get createdAt; String get status;@JsonKey(name: 'inventory_batch_id') String? get inventoryBatchId;
 /// Create a copy of AppNotificationDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AppNotificationDtoCopyWith<AppNotificationDto> get copyWith => _$AppNotificatio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppNotificationDto&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.read, read) || other.read == read)&&(identical(other.pantryItemId, pantryItemId) || other.pantryItemId == pantryItemId)&&const DeepCollectionEquality().equals(other.dishIds, dishIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppNotificationDto&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.inventoryBatchId, inventoryBatchId) || other.inventoryBatchId == inventoryBatchId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,title,body,createdAt,read,pantryItemId,const DeepCollectionEquality().hash(dishIds));
+int get hashCode => Object.hash(runtimeType,id,type,title,body,createdAt,status,inventoryBatchId);
 
 @override
 String toString() {
-  return 'AppNotificationDto(id: $id, type: $type, title: $title, body: $body, createdAt: $createdAt, read: $read, pantryItemId: $pantryItemId, dishIds: $dishIds)';
+  return 'AppNotificationDto(id: $id, type: $type, title: $title, body: $body, createdAt: $createdAt, status: $status, inventoryBatchId: $inventoryBatchId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AppNotificationDtoCopyWith<$Res>  {
   factory $AppNotificationDtoCopyWith(AppNotificationDto value, $Res Function(AppNotificationDto) _then) = _$AppNotificationDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String type, String title, String body,@JsonKey(name: 'created_at') DateTime createdAt, bool read,@JsonKey(name: 'pantry_item_id') String? pantryItemId,@JsonKey(name: 'dish_ids') List<String> dishIds
+@JsonKey(name: 'notification_id') String id, String type, String title, String body,@JsonKey(name: 'created_at') DateTime createdAt, String status,@JsonKey(name: 'inventory_batch_id') String? inventoryBatchId
 });
 
 
@@ -65,17 +65,16 @@ class _$AppNotificationDtoCopyWithImpl<$Res>
 
 /// Create a copy of AppNotificationDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? body = null,Object? createdAt = null,Object? read = null,Object? pantryItemId = freezed,Object? dishIds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? body = null,Object? createdAt = null,Object? status = null,Object? inventoryBatchId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,read: null == read ? _self.read : read // ignore: cast_nullable_to_non_nullable
-as bool,pantryItemId: freezed == pantryItemId ? _self.pantryItemId : pantryItemId // ignore: cast_nullable_to_non_nullable
-as String?,dishIds: null == dishIds ? _self.dishIds : dishIds // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as DateTime,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,inventoryBatchId: freezed == inventoryBatchId ? _self.inventoryBatchId : inventoryBatchId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -160,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String type,  String title,  String body, @JsonKey(name: 'created_at')  DateTime createdAt,  bool read, @JsonKey(name: 'pantry_item_id')  String? pantryItemId, @JsonKey(name: 'dish_ids')  List<String> dishIds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'notification_id')  String id,  String type,  String title,  String body, @JsonKey(name: 'created_at')  DateTime createdAt,  String status, @JsonKey(name: 'inventory_batch_id')  String? inventoryBatchId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppNotificationDto() when $default != null:
-return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that.read,_that.pantryItemId,_that.dishIds);case _:
+return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that.status,_that.inventoryBatchId);case _:
   return orElse();
 
 }
@@ -181,10 +180,10 @@ return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String type,  String title,  String body, @JsonKey(name: 'created_at')  DateTime createdAt,  bool read, @JsonKey(name: 'pantry_item_id')  String? pantryItemId, @JsonKey(name: 'dish_ids')  List<String> dishIds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'notification_id')  String id,  String type,  String title,  String body, @JsonKey(name: 'created_at')  DateTime createdAt,  String status, @JsonKey(name: 'inventory_batch_id')  String? inventoryBatchId)  $default,) {final _that = this;
 switch (_that) {
 case _AppNotificationDto():
-return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that.read,_that.pantryItemId,_that.dishIds);case _:
+return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that.status,_that.inventoryBatchId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +200,10 @@ return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String type,  String title,  String body, @JsonKey(name: 'created_at')  DateTime createdAt,  bool read, @JsonKey(name: 'pantry_item_id')  String? pantryItemId, @JsonKey(name: 'dish_ids')  List<String> dishIds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'notification_id')  String id,  String type,  String title,  String body, @JsonKey(name: 'created_at')  DateTime createdAt,  String status, @JsonKey(name: 'inventory_batch_id')  String? inventoryBatchId)?  $default,) {final _that = this;
 switch (_that) {
 case _AppNotificationDto() when $default != null:
-return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that.read,_that.pantryItemId,_that.dishIds);case _:
+return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that.status,_that.inventoryBatchId);case _:
   return null;
 
 }
@@ -216,23 +215,16 @@ return $default(_that.id,_that.type,_that.title,_that.body,_that.createdAt,_that
 @JsonSerializable()
 
 class _AppNotificationDto extends AppNotificationDto {
-  const _AppNotificationDto({required this.id, required this.type, required this.title, required this.body, @JsonKey(name: 'created_at') required this.createdAt, this.read = false, @JsonKey(name: 'pantry_item_id') this.pantryItemId, @JsonKey(name: 'dish_ids') final  List<String> dishIds = const <String>[]}): _dishIds = dishIds,super._();
+  const _AppNotificationDto({@JsonKey(name: 'notification_id') required this.id, required this.type, required this.title, required this.body, @JsonKey(name: 'created_at') required this.createdAt, this.status = 'UNREAD', @JsonKey(name: 'inventory_batch_id') this.inventoryBatchId}): super._();
   factory _AppNotificationDto.fromJson(Map<String, dynamic> json) => _$AppNotificationDtoFromJson(json);
 
-@override final  String id;
+@override@JsonKey(name: 'notification_id') final  String id;
 @override final  String type;
 @override final  String title;
 @override final  String body;
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
-@override@JsonKey() final  bool read;
-@override@JsonKey(name: 'pantry_item_id') final  String? pantryItemId;
- final  List<String> _dishIds;
-@override@JsonKey(name: 'dish_ids') List<String> get dishIds {
-  if (_dishIds is EqualUnmodifiableListView) return _dishIds;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_dishIds);
-}
-
+@override@JsonKey() final  String status;
+@override@JsonKey(name: 'inventory_batch_id') final  String? inventoryBatchId;
 
 /// Create a copy of AppNotificationDto
 /// with the given fields replaced by the non-null parameter values.
@@ -247,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppNotificationDto&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.read, read) || other.read == read)&&(identical(other.pantryItemId, pantryItemId) || other.pantryItemId == pantryItemId)&&const DeepCollectionEquality().equals(other._dishIds, _dishIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppNotificationDto&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.inventoryBatchId, inventoryBatchId) || other.inventoryBatchId == inventoryBatchId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,type,title,body,createdAt,read,pantryItemId,const DeepCollectionEquality().hash(_dishIds));
+int get hashCode => Object.hash(runtimeType,id,type,title,body,createdAt,status,inventoryBatchId);
 
 @override
 String toString() {
-  return 'AppNotificationDto(id: $id, type: $type, title: $title, body: $body, createdAt: $createdAt, read: $read, pantryItemId: $pantryItemId, dishIds: $dishIds)';
+  return 'AppNotificationDto(id: $id, type: $type, title: $title, body: $body, createdAt: $createdAt, status: $status, inventoryBatchId: $inventoryBatchId)';
 }
 
 
@@ -267,7 +259,7 @@ abstract mixin class _$AppNotificationDtoCopyWith<$Res> implements $AppNotificat
   factory _$AppNotificationDtoCopyWith(_AppNotificationDto value, $Res Function(_AppNotificationDto) _then) = __$AppNotificationDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String type, String title, String body,@JsonKey(name: 'created_at') DateTime createdAt, bool read,@JsonKey(name: 'pantry_item_id') String? pantryItemId,@JsonKey(name: 'dish_ids') List<String> dishIds
+@JsonKey(name: 'notification_id') String id, String type, String title, String body,@JsonKey(name: 'created_at') DateTime createdAt, String status,@JsonKey(name: 'inventory_batch_id') String? inventoryBatchId
 });
 
 
@@ -284,17 +276,16 @@ class __$AppNotificationDtoCopyWithImpl<$Res>
 
 /// Create a copy of AppNotificationDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? title = null,Object? body = null,Object? createdAt = null,Object? read = null,Object? pantryItemId = freezed,Object? dishIds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? title = null,Object? body = null,Object? createdAt = null,Object? status = null,Object? inventoryBatchId = freezed,}) {
   return _then(_AppNotificationDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,read: null == read ? _self.read : read // ignore: cast_nullable_to_non_nullable
-as bool,pantryItemId: freezed == pantryItemId ? _self.pantryItemId : pantryItemId // ignore: cast_nullable_to_non_nullable
-as String?,dishIds: null == dishIds ? _self._dishIds : dishIds // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as DateTime,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,inventoryBatchId: freezed == inventoryBatchId ? _self.inventoryBatchId : inventoryBatchId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

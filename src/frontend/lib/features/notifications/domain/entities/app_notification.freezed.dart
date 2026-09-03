@@ -14,8 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppNotification {
 
- String get id; AppNotificationType get type; String get title; String get body; DateTime get createdAt; bool get read;/// Deep-link targets (set by type). `pantryItemId` for near-expiry,
-/// `dishIds` for "xem món gợi ý".
+ String get id; AppNotificationType get type; String get title; String get body; DateTime get createdAt; bool get read;/// Deep-link targets (set by type). `pantryItemId` for near-expiry (the
+/// backend sends it as `inventory_batch_id`), `dishIds` for "xem món gợi ý"
+/// (mock only — the backend has no dish links yet).
  String? get pantryItemId; List<String> get dishIds;
 /// Create a copy of AppNotification
 /// with the given fields replaced by the non-null parameter values.
@@ -224,8 +225,9 @@ class _AppNotification extends AppNotification {
 @override final  String body;
 @override final  DateTime createdAt;
 @override@JsonKey() final  bool read;
-/// Deep-link targets (set by type). `pantryItemId` for near-expiry,
-/// `dishIds` for "xem món gợi ý".
+/// Deep-link targets (set by type). `pantryItemId` for near-expiry (the
+/// backend sends it as `inventory_batch_id`), `dishIds` for "xem món gợi ý"
+/// (mock only — the backend has no dish links yet).
 @override final  String? pantryItemId;
  final  List<String> _dishIds;
 @override@JsonKey() List<String> get dishIds {

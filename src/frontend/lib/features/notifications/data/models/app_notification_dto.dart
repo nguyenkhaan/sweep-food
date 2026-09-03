@@ -4,19 +4,24 @@ import 'package:sweepfood/features/notifications/domain/entities/app_notificatio
 part 'app_notification_dto.freezed.dart';
 part 'app_notification_dto.g.dart';
 
+/// Mirrors the backend `NotificationResponseDTO` (`GET /api/notifications`,
+/// `PATCH /api/notifications/{id}` — see `src/backend/src/module/notification`).
+///
+/// The backend keys the id as `notification_id`, tracks a tri-state `status`
+/// (`UNREAD` / `READ` / `DISMISSED`) instead of a `read` bool, and links the
+/// affected batch as `inventory_batch_id`.
 @freezed
 abstract class AppNotificationDto with _$AppNotificationDto {
   const AppNotificationDto._();
 
   const factory AppNotificationDto({
-    required String id,
+    @JsonKey(name: 'notification_id') required String id,
     required String type,
     required String title,
     required String body,
     @JsonKey(name: 'created_at') required DateTime createdAt,
-    @Default(false) bool read,
-    @JsonKey(name: 'pantry_item_id') String? pantryItemId,
-    @JsonKey(name: 'dish_ids') @Default(<String>[]) List<String> dishIds,
+    @Default('UNREAD') String status,
+    @JsonKey(name: 'inventory_batch_id') String? inventoryBatchId,
   }) = _AppNotificationDto;
 
   factory AppNotificationDto.fromJson(Map<String, dynamic> json) =>
@@ -27,9 +32,9 @@ abstract class AppNotificationDto with _$AppNotificationDto {
         type: AppNotificationType.fromWire(type),
         title: title,
         body: body,
-        createdAt: createdAt,
-        read: read,
-        pantryItemId: pantryItemId,
-        dishIds: dishIds,
+        createdAt: createdAt.toLocal(),
+        read: status.toUpperCase() != 'UNREAD',
+        pantryItemId: inventoryBatchId,
+        dishIds: const [],
       );
 }

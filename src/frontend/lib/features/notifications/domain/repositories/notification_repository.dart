@@ -2,12 +2,12 @@
 import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
 
 abstract interface class NotificationRepository {
-  /// `GET /notifications` — newest first.
+  /// `GET /notifications` — newest first (one backend page).
   Future<Result<List<AppNotification>>> list();
 
-  /// `POST /notifications/{id}/read`.
+  /// `PATCH /notifications/{id}` with `{ status: "READ" }`.
   Future<Result<void>> markRead(String id);
 
-  /// Marks every notification read (client fans out over [markRead] in the mock).
+  /// Marks every notification read (client fans out over [markRead]).
   Future<Result<void>> markAllRead(Iterable<String> ids);
 }

@@ -8,28 +8,22 @@ part of 'app_notification_dto.dart';
 
 _AppNotificationDto _$AppNotificationDtoFromJson(Map<String, dynamic> json) =>
     _AppNotificationDto(
-      id: json['id'] as String,
+      id: json['notification_id'] as String,
       type: json['type'] as String,
       title: json['title'] as String,
       body: json['body'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
-      read: json['read'] as bool? ?? false,
-      pantryItemId: json['pantry_item_id'] as String?,
-      dishIds:
-          (json['dish_ids'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const <String>[],
+      status: json['status'] as String? ?? 'UNREAD',
+      inventoryBatchId: json['inventory_batch_id'] as String?,
     );
 
 Map<String, dynamic> _$AppNotificationDtoToJson(_AppNotificationDto instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'notification_id': instance.id,
       'type': instance.type,
       'title': instance.title,
       'body': instance.body,
       'created_at': instance.createdAt.toIso8601String(),
-      'read': instance.read,
-      'pantry_item_id': instance.pantryItemId,
-      'dish_ids': instance.dishIds,
+      'status': instance.status,
+      'inventory_batch_id': instance.inventoryBatchId,
     };
