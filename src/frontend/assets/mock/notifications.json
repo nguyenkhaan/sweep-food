@@ -1,48 +1,48 @@
 {
   "items": [
     {
-      "id": "n1",
-      "type": "near_expiry",
+      "notification_id": "n1",
+      "type": "EXPIRES_TODAY",
       "title": "Cải bó xôi cần dùng hôm nay",
       "body": "Xem món gợi ý dùng ngay nguyên liệu này",
       "created_at": "{{todayT08:00}}",
-      "read": false,
-      "pantry_item_id": "p1",
-      "dish_ids": ["d1"]
+      "status": "UNREAD",
+      "inventory_batch_id": "p1"
     },
     {
-      "id": "n2",
-      "type": "near_expiry",
+      "notification_id": "n2",
+      "type": "EXPIRING_SOON",
       "title": "Cà chua bi còn 1 ngày",
       "body": "Ưu tiên dùng trước khi hỏng",
       "created_at": "{{todayT08:00}}",
-      "read": false,
-      "pantry_item_id": "p2"
+      "status": "UNREAD",
+      "inventory_batch_id": "p2"
     },
     {
-      "id": "n3",
+      "notification_id": "n3",
       "type": "waste_win",
       "title": "Tuần này bạn đã dùng 3 nguyên liệu trước hạn",
       "body": "Giảm được lượng thực phẩm bỏ phí",
       "created_at": "{{today-1T19:00}}",
-      "read": true
+      "status": "READ"
     },
     {
-      "id": "n4",
-      "type": "near_expiry",
-      "title": "Sữa tươi còn 3 ngày",
+      "notification_id": "n4",
+      "type": "LEFTOVER_REMINDER",
+      "title": "Cơm rang còn 3 ngày",
       "body": "Nằm trong ngăn mát",
       "created_at": "{{today-1T08:00}}",
-      "read": true,
-      "pantry_item_id": "p5"
+      "status": "READ",
+      "inventory_batch_id": "p5"
     },
     {
-      "id": "n5",
+      "notification_id": "n5",
       "type": "meal_plan_ready",
       "title": "Thực đơn tuần mới đã sẵn sàng",
       "body": "Tạo danh sách mua sắm chỉ với 1 chạm",
       "created_at": "{{today-1T07:30}}",
-      "read": true
+      "status": "READ"
     }
-  ]
+  ],
+  "next_before": null
 }
