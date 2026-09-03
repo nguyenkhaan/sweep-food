@@ -3,7 +3,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.module.meal_plans.meal_plan_dependency import get_meal_plan_service
@@ -28,6 +28,15 @@ async def post_meal_plan(
     """Create one owned, bounded meal plan."""
     return await service.create(user.user_id, body)
 
+@meal_plan_router.get("/") 
+async def get_all_meal_plan(
+
+    user : Annotated[AuthenticatedUser , Depends(require_authentication)], 
+    service : Annotated[MealPlanService , Depends(get_meal_plan_service)], 
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
+    offset: Annotated[int, Query(ge=0)] = 0,
+): 
+    return (await service.get_all(user.user_id , limit , offset))
 
 @meal_plan_router.get("/{meal_plan_id}", response_model=MealPlanDTO)
 async def get_meal_plan(

@@ -4,6 +4,7 @@ from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy import select
+from sqlalchemy import exc
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,6 +18,7 @@ from src.module.meal_plans.meal_plan_dto import (
     CreateMealPlanRequestDTO,
     MealPlanDTO,
     MealPlanItemDTO,
+    MealPlanViewDTO,
     UpdateMealPlanItemRequestDTO,
 )
 
@@ -98,7 +100,26 @@ class MealPlanService:
         except SQLAlchemyError:
             await self.db_session.rollback()
             raise
+    async def get_all(self , user_id: UUID, limit : int, offset : int) -> list[MealPlanViewDTO]: 
+        try: 
+            meal_plans = (await self.db_session.execute(
+                select(MealPlanModel).where(MealPlanModel.user_id == user_id)
+                .limit(limit) 
+                .offset(offset) 
+            )).scalars().all() 
+            return [
+                MealPlanViewDTO(
+                    id = meal.id, 
+                    name = meal.name, 
+                    starts_on = meal.starts_on, 
+                    ends_on = meal.ends_on, 
+                    created_at = meal.created_at, 
+                    updated_at = meal.updated_at
+                ) for meal in meal_plans 
+            ]
 
+        except SQLAlchemyError: 
+            raise 
     async def add_item(
         self,
         user_id: UUID,
