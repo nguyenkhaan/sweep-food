@@ -101,6 +101,7 @@ class FakeDatabaseSession:
         self.results = results
         self.added: list[object] = []
         self.statements: list[object] = []
+        self.refreshed: list[object] = []
         self.commit_count = 0
         self.rollback_count = 0
 
@@ -127,6 +128,10 @@ class FakeDatabaseSession:
     async def commit(self) -> None:
         """Record a committed transaction."""
         self.commit_count += 1
+
+    async def refresh(self, instance: object) -> None:
+        """Record the explicit post-commit ORM refresh."""
+        self.refreshed.append(instance)
 
     async def rollback(self) -> None:
         """Record a rolled-back transaction."""
@@ -191,7 +196,12 @@ async def test_create_catalog_batch_uses_ingredient_shelf_life_rule() -> None:
         default_days=4,
     )
     database = FakeDatabaseSession(
-        [FakeResult(None), FakeResult(ingredient), FakeResult([rule])]
+        [
+            FakeResult(None),
+            FakeResult(ingredient),
+            FakeResult([rule]),
+            FakeResult(ingredient),
+        ]
     )
     service = InventoryService(cast(AsyncSession, database))
 
@@ -394,6 +404,7 @@ async def test_adjustment_locks_current_batch_and_keeps_ledger_in_sync() -> None
     assert ledger.quantity_delta == -2.0
     assert ledger.quantity_after == 0.0
     assert database.commit_count == 1
+    assert database.refreshed == [batch]
     locked_statement = cast(Select[tuple[InventoryBatchModel]], database.statements[1])
     compiled = str(locked_statement)
     assert "FOR UPDATE" in compiled

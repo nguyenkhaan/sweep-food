@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from src.model.ingredient_category_model import IngredientCategoryModel
     from src.model.recipe_ingredient_model import RecipeIngredientModel
     from src.model.shelf_life_rule_model import ShelfLifeRuleModel
+    from src.model.shopping_list_item_model import ShoppingListItemModel
 
 
 class MasterIngredientModel(TimestampedUUIDModel):
@@ -72,5 +73,8 @@ class MasterIngredientModel(TimestampedUUIDModel):
         back_populates="master_ingredient",
     )
     recipe_ingredients: Mapped[list["RecipeIngredientModel"]] = relationship(
+        back_populates="master_ingredient",
+    )
+    shopping_list_items: Mapped[list["ShoppingListItemModel"]] = relationship(
         back_populates="master_ingredient",
     )

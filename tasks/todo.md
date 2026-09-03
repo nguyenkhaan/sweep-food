@@ -467,6 +467,10 @@
 
 ### Task 5.3: Expose and persist recommendations
 
+BLOCKED pending AI service
+Temporary authenticated recommendation API contract stub implemented and verified.
+Full-suite monolithic run remains intermittently blocked by unrelated Neon catalog fixture latency.
+
 **Description:** Implement the recommendation endpoint, result persistence, and score-explanation contract.
 
 **Acceptance criteria:**

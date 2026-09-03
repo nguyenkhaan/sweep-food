@@ -161,72 +161,14 @@ class InventoryService:
     ) -> InventoryBatchDTO:
         """Create one manual batch with an INITIAL_STOCK ledger entry."""
         try:
-            existing = await self._find_idempotent_batch(
+            batch = await self.stage_batch(
                 user_id,
+                body,
                 idempotency_key,
-                InventoryLedgerEventType.INITIAL_STOCK,
-            )
-            if existing is not None:
-                return await self._to_batch_dto(existing)
-
-            ingredient = await self._find_ingredient(body.master_ingredient_id)
-            rules = await self._find_shelf_life_rules(
-                ingredient,
-                body.storage_mode,
-            )
-            rule = (
-                choose_shelf_life_rule(
-                    rules,
-                    master_ingredient_id=ingredient.id,
-                )
-                if ingredient is not None
-                else None
-            )
-            now = datetime.now(_PRODUCT_TIMEZONE)
-            expires_at, expiration_source = resolve_expiration(
-                manufacturer_expires_at=body.expires_at,
-                stored_at=body.stored_at,
-                purchased_at=body.purchased_at,
-                shelf_life_days=rule.default_days if rule is not None else None,
-                now=now,
-            )
-            batch = InventoryBatchModel(
-                user_id=user_id,
-                master_ingredient_id=body.master_ingredient_id,
-                custom_name=body.custom_name,
-                batch_type=InventoryBatchType.RAW_INGREDIENT,
-                initial_quantity=body.quantity,
-                current_quantity=body.quantity,
-                unit=body.unit,
-                storage_mode=body.storage_mode,
-                status=InventoryBatchStatus.ACTIVE,
-                purchased_at=body.purchased_at,
-                packaged_at=body.packaged_at,
-                stored_at=body.stored_at,
-                expires_at=expires_at,
-                expiration_source=expiration_source,
-                unit_cost=body.unit_cost,
-                note=body.note,
-                media_url=body.media_url,
-                source=InventorySource.MANUAL,
-            )
-            self.db_session.add(batch)
-            await self.db_session.flush()
-            self.db_session.add(
-                InventoryLedgerEntryModel(
-                    user_id=user_id,
-                    inventory_batch_id=batch.id,
-                    event_type=InventoryLedgerEventType.INITIAL_STOCK,
-                    quantity_before=0.0,
-                    quantity_delta=body.quantity,
-                    quantity_after=body.quantity,
-                    unit=body.unit,
-                    idempotency_key=idempotency_key,
-                    reason="Manual batch creation",
-                )
+                reason="Manual batch creation",
             )
             await self.db_session.commit()
-            return self._map_batch(batch, ingredient.name if ingredient else None)
+            return await self._to_batch_dto(batch)
         except IntegrityError as error:
             await self.db_session.rollback()
             existing = await self._find_idempotent_batch(
@@ -242,6 +184,75 @@ class InventoryService:
         except (HTTPException, SQLAlchemyError):
             await self.db_session.rollback()
             raise
+
+    async def stage_batch(
+        self,
+        user_id: UUID,
+        body: CreateInventoryBatchRequestDTO,
+        idempotency_key: str,
+        *,
+        reason: str,
+    ) -> InventoryBatchModel:
+        """Stage initial stock without committing a caller-owned transaction."""
+        existing = await self._find_idempotent_batch(
+            user_id,
+            idempotency_key,
+            InventoryLedgerEventType.INITIAL_STOCK,
+        )
+        if existing is not None:
+            return existing
+
+        ingredient = await self._find_ingredient(body.master_ingredient_id)
+        rules = await self._find_shelf_life_rules(ingredient, body.storage_mode)
+        rule = (
+            choose_shelf_life_rule(rules, master_ingredient_id=ingredient.id)
+            if ingredient is not None
+            else None
+        )
+        now = datetime.now(_PRODUCT_TIMEZONE)
+        expires_at, expiration_source = resolve_expiration(
+            manufacturer_expires_at=body.expires_at,
+            stored_at=body.stored_at,
+            purchased_at=body.purchased_at,
+            shelf_life_days=rule.default_days if rule is not None else None,
+            now=now,
+        )
+        batch = InventoryBatchModel(
+            user_id=user_id,
+            master_ingredient_id=body.master_ingredient_id,
+            custom_name=body.custom_name,
+            batch_type=InventoryBatchType.RAW_INGREDIENT,
+            initial_quantity=body.quantity,
+            current_quantity=body.quantity,
+            unit=body.unit,
+            storage_mode=body.storage_mode,
+            status=InventoryBatchStatus.ACTIVE,
+            purchased_at=body.purchased_at,
+            packaged_at=body.packaged_at,
+            stored_at=body.stored_at,
+            expires_at=expires_at,
+            expiration_source=expiration_source,
+            unit_cost=body.unit_cost,
+            note=body.note,
+            media_url=body.media_url,
+            source=InventorySource.MANUAL,
+        )
+        self.db_session.add(batch)
+        await self.db_session.flush()
+        self.db_session.add(
+            InventoryLedgerEntryModel(
+                user_id=user_id,
+                inventory_batch_id=batch.id,
+                event_type=InventoryLedgerEventType.INITIAL_STOCK,
+                quantity_before=0.0,
+                quantity_delta=body.quantity,
+                quantity_after=body.quantity,
+                unit=body.unit,
+                idempotency_key=idempotency_key,
+                reason=reason,
+            )
+        )
+        return batch
 
     async def list_batches(
         self,
@@ -452,6 +463,8 @@ class InventoryService:
             idempotency_key,
         )
 
+    # Each argument is retained in the immutable ledger record for this mutation.
+    # pylint: disable-next=too-many-arguments,too-many-positional-arguments
     async def _change_quantity(
         self,
         user_id: UUID,
@@ -488,6 +501,7 @@ class InventoryService:
                 ),
             )
             await self.db_session.commit()
+            await self.db_session.refresh(batch)
             return await self._to_batch_dto(batch)
         except IntegrityError as error:
             await self.db_session.rollback()

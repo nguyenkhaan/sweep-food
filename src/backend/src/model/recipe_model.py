@@ -10,7 +10,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.model.base import TimestampedUUIDModel
 
 if TYPE_CHECKING:
+    from src.model.favorite_menu_item_model import FavoriteMenuItemModel
+    from src.model.favorite_recipe_model import FavoriteRecipeModel
+    from src.model.meal_plan_item_model import MealPlanItemModel
     from src.model.recipe_ingredient_model import RecipeIngredientModel
+    from src.model.recommendation_item_model import RecommendationItemModel
 
 
 class RecipeModel(TimestampedUUIDModel):
@@ -53,5 +57,17 @@ class RecipeModel(TimestampedUUIDModel):
         nullable=False,
     )
     recipe_ingredients: Mapped[list["RecipeIngredientModel"]] = relationship(
+        back_populates="recipe",
+    )
+    recommendation_items: Mapped[list["RecommendationItemModel"]] = relationship(
+        back_populates="recipe",
+    )
+    meal_plan_items: Mapped[list["MealPlanItemModel"]] = relationship(
+        back_populates="recipe",
+    )
+    favorite_recipes: Mapped[list["FavoriteRecipeModel"]] = relationship(
+        back_populates="recipe",
+    )
+    favorite_menu_items: Mapped[list["FavoriteMenuItemModel"]] = relationship(
         back_populates="recipe",
     )
