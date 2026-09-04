@@ -1,109 +1,801 @@
 {
-  "pages": [
-    { "id": "page-foundations", "name": "Nền tảng & Components" },
-    { "id": "page-screens", "name": "Màn hình" },
-    { "id": "page-auth", "name": "Auth & Onboarding" },
-    { "id": "page-ingest", "name": "Nhập liệu" },
-    { "id": "page-cook", "name": "Gợi ý & Nấu ăn" },
-    { "id": "page-more", "name": "Thông báo · Mua sắm · Premium" },
-    { "id": "page-settings", "name": "Cài đặt & Toàn cục" }
-  ],
   "artboards": [
-    { "file": "Foundations.dc.html", "title": "Nền tảng", "page": "page-foundations", "x": 0, "y": 0, "w": 980, "h": 1980 },
-    { "file": "Components.dc.html", "title": "Components", "page": "page-foundations", "x": 1090, "y": 0, "w": 1110, "h": 2520 },
-
-    { "file": "Main.dc.html", "title": "Trang chủ (H-01) · Sáng", "page": "page-screens", "x": 0, "y": 0, "w": 400, "h": 1320 },
-    { "file": "MainDark.dc.html", "title": "Trang chủ (H-01) · Tối", "page": "page-screens", "x": 0, "y": 1480, "w": 400, "h": 1320 },
-    { "file": "Pantry.dc.html", "title": "Kho (K-01) · Sáng", "page": "page-screens", "x": 520, "y": 0, "w": 400, "h": 1240 },
-    { "file": "PantryDark.dc.html", "title": "Kho (K-01) · Tối", "page": "page-screens", "x": 520, "y": 1480, "w": 400, "h": 1240 },
-    { "file": "PantryDetail.dc.html", "title": "Chi tiết nguyên liệu (K-02) · Sáng", "page": "page-screens", "x": 1040, "y": 0, "w": 400, "h": 1160 },
-    { "file": "PantryDetailDark.dc.html", "title": "Chi tiết nguyên liệu (K-02) · Tối", "page": "page-screens", "x": 1040, "y": 1480, "w": 400, "h": 1160 },
-    { "file": "AddIngredient.dc.html", "title": "Thêm / Sửa nguyên liệu (K-03) · Sáng", "page": "page-screens", "x": 1560, "y": 0, "w": 400, "h": 1000 },
-    { "file": "AddIngredientDark.dc.html", "title": "Thêm / Sửa nguyên liệu (K-03) · Tối", "page": "page-screens", "x": 1560, "y": 1480, "w": 400, "h": 1000 },
-    { "file": "AdjustQuantity.dc.html", "title": "Điều chỉnh số lượng (K-04) · Sáng", "page": "page-screens", "x": 2080, "y": 0, "w": 400, "h": 740 },
-    { "file": "AdjustQuantityDark.dc.html", "title": "Điều chỉnh số lượng (K-04) · Tối", "page": "page-screens", "x": 2080, "y": 1480, "w": 400, "h": 740 },
-    { "file": "AddEntryChooser.dc.html", "title": "Chọn cách nhập (G-03) · Sáng", "page": "page-screens", "x": 2600, "y": 0, "w": 400, "h": 740 },
-    { "file": "AddEntryChooserDark.dc.html", "title": "Chọn cách nhập (G-03) · Tối", "page": "page-screens", "x": 2600, "y": 1480, "w": 400, "h": 740 },
-
-    { "file": "Welcome.dc.html", "title": "Chào mừng (A-01) · Sáng", "page": "page-auth", "x": 0, "y": 0, "w": 400, "h": 860 },
-    { "file": "WelcomeDark.dc.html", "title": "Chào mừng (A-01) · Tối", "page": "page-auth", "x": 0, "y": 1020, "w": 400, "h": 860 },
-    { "file": "Login.dc.html", "title": "Đăng nhập (A-02) · Sáng", "page": "page-auth", "x": 520, "y": 0, "w": 400, "h": 860 },
-    { "file": "LoginDark.dc.html", "title": "Đăng nhập (A-02) · Tối", "page": "page-auth", "x": 520, "y": 1020, "w": 400, "h": 860 },
-    { "file": "Register.dc.html", "title": "Đăng ký (A-03) · Sáng", "page": "page-auth", "x": 1040, "y": 0, "w": 400, "h": 860 },
-    { "file": "RegisterDark.dc.html", "title": "Đăng ký (A-03) · Tối", "page": "page-auth", "x": 1040, "y": 1020, "w": 400, "h": 860 },
-    { "file": "ForgotPassword.dc.html", "title": "Quên mật khẩu (A-04) · Sáng", "page": "page-auth", "x": 1560, "y": 0, "w": 400, "h": 860 },
-    { "file": "ForgotPasswordDark.dc.html", "title": "Quên mật khẩu (A-04) · Tối", "page": "page-auth", "x": 1560, "y": 1020, "w": 400, "h": 860 },
-    { "file": "DietaryPreference.dc.html", "title": "Ưu tiên dinh dưỡng (A-05) · Sáng", "page": "page-auth", "x": 2080, "y": 0, "w": 400, "h": 860 },
-    { "file": "DietaryPreferenceDark.dc.html", "title": "Ưu tiên dinh dưỡng (A-05) · Tối", "page": "page-auth", "x": 2080, "y": 1020, "w": 400, "h": 860 },
-    { "file": "OnboardingPantry.dc.html", "title": "Hướng dẫn nhập kho (A-06) · Sáng", "page": "page-auth", "x": 2600, "y": 0, "w": 400, "h": 860 },
-    { "file": "OnboardingPantryDark.dc.html", "title": "Hướng dẫn nhập kho (A-06) · Tối", "page": "page-auth", "x": 2600, "y": 1020, "w": 400, "h": 860 },
-
-    { "file": "CameraCapture.dc.html", "title": "Camera quét (I-01 / I-04)", "page": "page-ingest", "x": 0, "y": 0, "w": 400, "h": 808 },
-    { "file": "LabelReview.dc.html", "title": "Review tem nhãn (I-03) · Sáng", "page": "page-ingest", "x": 520, "y": 0, "w": 400, "h": 780 },
-    { "file": "LabelReviewDark.dc.html", "title": "Review tem nhãn (I-03) · Tối", "page": "page-ingest", "x": 520, "y": 1480, "w": 400, "h": 780 },
-    { "file": "ReceiptReview.dc.html", "title": "Review hóa đơn (I-05) · Sáng", "page": "page-ingest", "x": 1040, "y": 0, "w": 400, "h": 820 },
-    { "file": "ReceiptReviewDark.dc.html", "title": "Review hóa đơn (I-05) · Tối", "page": "page-ingest", "x": 1040, "y": 1480, "w": 400, "h": 820 },
-    { "file": "VoiceCapture.dc.html", "title": "Ghi âm (I-06) · Sáng", "page": "page-ingest", "x": 1560, "y": 0, "w": 400, "h": 784 },
-    { "file": "VoiceCaptureDark.dc.html", "title": "Ghi âm (I-06) · Tối", "page": "page-ingest", "x": 1560, "y": 1480, "w": 400, "h": 784 },
-    { "file": "VoiceReview.dc.html", "title": "Review giọng nói (I-07) · Sáng", "page": "page-ingest", "x": 2080, "y": 0, "w": 400, "h": 660 },
-    { "file": "VoiceReviewDark.dc.html", "title": "Review giọng nói (I-07) · Tối", "page": "page-ingest", "x": 2080, "y": 1480, "w": 400, "h": 660 },
-    { "file": "QuotaReached.dc.html", "title": "Hết lượt quét (I-08) · Sáng", "page": "page-ingest", "x": 2600, "y": 0, "w": 400, "h": 620 },
-    { "file": "QuotaReachedDark.dc.html", "title": "Hết lượt quét (I-08) · Tối", "page": "page-ingest", "x": 2600, "y": 1480, "w": 400, "h": 620 },
-    { "file": "ScanFailed.dc.html", "title": "Quét lỗi (I-09) · Sáng", "page": "page-ingest", "x": 3120, "y": 0, "w": 400, "h": 740 },
-    { "file": "ScanFailedDark.dc.html", "title": "Quét lỗi (I-09) · Tối", "page": "page-ingest", "x": 3120, "y": 1480, "w": 400, "h": 740 },
-
-    { "file": "SuggestionList.dc.html", "title": "Gợi ý món (S-01) · Sáng", "page": "page-cook", "x": 0, "y": 0, "w": 400, "h": 1240 },
-    { "file": "SuggestionListDark.dc.html", "title": "Gợi ý món (S-01) · Tối", "page": "page-cook", "x": 0, "y": 1700, "w": 400, "h": 1240 },
-    { "file": "ScoreBreakdown.dc.html", "title": "Giải thích điểm (S-02) · Sáng", "page": "page-cook", "x": 520, "y": 0, "w": 400, "h": 700 },
-    { "file": "ScoreBreakdownDark.dc.html", "title": "Giải thích điểm (S-02) · Tối", "page": "page-cook", "x": 520, "y": 1700, "w": 400, "h": 700 },
-    { "file": "DishDetail.dc.html", "title": "Chi tiết món (D-01) · Sáng", "page": "page-cook", "x": 1040, "y": 0, "w": 400, "h": 1580 },
-    { "file": "DishDetailDark.dc.html", "title": "Chi tiết món (D-01) · Tối", "page": "page-cook", "x": 1040, "y": 1700, "w": 400, "h": 1580 },
-    { "file": "PostCookConfirm.dc.html", "title": "Xác nhận sau nấu (D-03) · Sáng", "page": "page-cook", "x": 1560, "y": 0, "w": 400, "h": 700 },
-    { "file": "PostCookConfirmDark.dc.html", "title": "Xác nhận sau nấu (D-03) · Tối", "page": "page-cook", "x": 1560, "y": 1700, "w": 400, "h": 700 },
-    { "file": "CustomUsage.dc.html", "title": "Tự điều chỉnh lượng (D-04) · Sáng", "page": "page-cook", "x": 2080, "y": 0, "w": 400, "h": 700 },
-    { "file": "CustomUsageDark.dc.html", "title": "Tự điều chỉnh lượng (D-04) · Tối", "page": "page-cook", "x": 2080, "y": 1700, "w": 400, "h": 700 },
-    { "file": "LeftoverSave.dc.html", "title": "Lưu phần thừa (D-06) · Sáng", "page": "page-cook", "x": 2600, "y": 0, "w": 400, "h": 660 },
-    { "file": "LeftoverSaveDark.dc.html", "title": "Lưu phần thừa (D-06) · Tối", "page": "page-cook", "x": 2600, "y": 1700, "w": 400, "h": 660 },
-    { "file": "CookResult.dc.html", "title": "Trừ kho & tiết kiệm (D-05/D-07) · Sáng", "page": "page-cook", "x": 3120, "y": 0, "w": 400, "h": 780 },
-    { "file": "CookResultDark.dc.html", "title": "Trừ kho & tiết kiệm (D-05/D-07) · Tối", "page": "page-cook", "x": 3120, "y": 1700, "w": 400, "h": 780 },
-
-    { "file": "NotificationCenter.dc.html", "title": "Trung tâm thông báo (T-01) · Sáng", "page": "page-more", "x": 0, "y": 0, "w": 400, "h": 620 },
-    { "file": "NotificationCenterDark.dc.html", "title": "Trung tâm thông báo (T-01) · Tối", "page": "page-more", "x": 0, "y": 1480, "w": 400, "h": 620 },
-    { "file": "NearExpiryDetail.dc.html", "title": "Chi tiết cảnh báo cận hạn (T-02) · Sáng", "page": "page-more", "x": 520, "y": 0, "w": 400, "h": 660 },
-    { "file": "NearExpiryDetailDark.dc.html", "title": "Chi tiết cảnh báo cận hạn (T-02) · Tối", "page": "page-more", "x": 520, "y": 1480, "w": 400, "h": 660 },
-    { "file": "ShoppingList.dc.html", "title": "Danh sách mua sắm (B-01) · Sáng", "page": "page-more", "x": 1040, "y": 0, "w": 400, "h": 660 },
-    { "file": "ShoppingListDark.dc.html", "title": "Danh sách mua sắm (B-01) · Tối", "page": "page-more", "x": 1040, "y": 1480, "w": 400, "h": 660 },
-    { "file": "MealPlan.dc.html", "title": "Thực đơn tuần (M-01) · Sáng", "page": "page-more", "x": 1560, "y": 0, "w": 400, "h": 740 },
-    { "file": "MealPlanDark.dc.html", "title": "Thực đơn tuần (M-01) · Tối", "page": "page-more", "x": 1560, "y": 1480, "w": 400, "h": 740 },
-    { "file": "Paywall.dc.html", "title": "Paywall (G-05) · Sáng", "page": "page-more", "x": 2080, "y": 0, "w": 400, "h": 800 },
-    { "file": "PaywallDark.dc.html", "title": "Paywall (G-05) · Tối", "page": "page-more", "x": 2080, "y": 1480, "w": 400, "h": 800 },
-    { "file": "Reports.dc.html", "title": "Báo cáo (R-01/R-02) · Sáng", "page": "page-more", "x": 2600, "y": 0, "w": 400, "h": 720 },
-    { "file": "ReportsDark.dc.html", "title": "Báo cáo (R-01/R-02) · Tối", "page": "page-more", "x": 2600, "y": 1480, "w": 400, "h": 720 },
-
-    { "file": "Splash.dc.html", "title": "Splash (G-01)", "page": "page-settings", "x": 0, "y": 0, "w": 400, "h": 808 },
-    { "file": "PermissionPrime.dc.html", "title": "Xin quyền (G-04) · Sáng", "page": "page-settings", "x": 520, "y": 0, "w": 400, "h": 620 },
-    { "file": "PermissionPrimeDark.dc.html", "title": "Xin quyền (G-04) · Tối", "page": "page-settings", "x": 520, "y": 1480, "w": 400, "h": 620 },
-    { "file": "SettingsHome.dc.html", "title": "Cá nhân (P-01) · Sáng", "page": "page-settings", "x": 1040, "y": 0, "w": 400, "h": 1040 },
-    { "file": "SettingsHomeDark.dc.html", "title": "Cá nhân (P-01) · Tối", "page": "page-settings", "x": 1040, "y": 1480, "w": 400, "h": 1040 },
-    { "file": "Subscription.dc.html", "title": "Gói dịch vụ (P-02) · Sáng", "page": "page-settings", "x": 1560, "y": 0, "w": 400, "h": 620 },
-    { "file": "SubscriptionDark.dc.html", "title": "Gói dịch vụ (P-02) · Tối", "page": "page-settings", "x": 1560, "y": 1480, "w": 400, "h": 620 },
-    { "file": "Preferences.dc.html", "title": "Tùy chọn (P-03) · Sáng", "page": "page-settings", "x": 2080, "y": 0, "w": 400, "h": 620 },
-    { "file": "PreferencesDark.dc.html", "title": "Tùy chọn (P-03) · Tối", "page": "page-settings", "x": 2080, "y": 1480, "w": 400, "h": 620 },
-    { "file": "NotificationSettings.dc.html", "title": "Cài đặt thông báo (P-04) · Sáng", "page": "page-settings", "x": 2600, "y": 0, "w": 400, "h": 680 },
-    { "file": "NotificationSettingsDark.dc.html", "title": "Cài đặt thông báo (P-04) · Tối", "page": "page-settings", "x": 2600, "y": 1480, "w": 400, "h": 680 },
-    { "file": "PantrySharing.dc.html", "title": "Chia sẻ tủ bếp (P-05) · Sáng", "page": "page-settings", "x": 3120, "y": 0, "w": 400, "h": 640 },
-    { "file": "PantrySharingDark.dc.html", "title": "Chia sẻ tủ bếp (P-05) · Tối", "page": "page-settings", "x": 3120, "y": 1480, "w": 400, "h": 640 },
-    { "file": "About.dc.html", "title": "Giới thiệu & dữ liệu (P-06) · Sáng", "page": "page-settings", "x": 3640, "y": 0, "w": 400, "h": 800 },
-    { "file": "AboutDark.dc.html", "title": "Giới thiệu & dữ liệu (P-06) · Tối", "page": "page-settings", "x": 3640, "y": 1480, "w": 400, "h": 800 }
+    {
+      "file": "Foundations.dc.html",
+      "title": "Nền tảng",
+      "x": 0,
+      "y": 0,
+      "w": 980,
+      "h": 1980
+    },
+    {
+      "file": "Components.dc.html",
+      "title": "Components",
+      "x": 1090,
+      "y": 0,
+      "w": 1110,
+      "h": 2520
+    },
+    {
+      "file": "Main.dc.html",
+      "title": "Trang chủ (H-01) · Sáng",
+      "x": 0,
+      "y": 3600,
+      "w": 400,
+      "h": 1320
+    },
+    {
+      "file": "MainDark.dc.html",
+      "title": "Trang chủ (H-01) · Tối",
+      "x": 0,
+      "y": 5080,
+      "w": 400,
+      "h": 1320
+    },
+    {
+      "file": "Pantry.dc.html",
+      "title": "Kho (K-01) · Sáng",
+      "x": 520,
+      "y": 3600,
+      "w": 400,
+      "h": 1240
+    },
+    {
+      "file": "PantryDark.dc.html",
+      "title": "Kho (K-01) · Tối",
+      "x": 520,
+      "y": 5080,
+      "w": 400,
+      "h": 1240
+    },
+    {
+      "file": "PantryDetail.dc.html",
+      "title": "Chi tiết nguyên liệu (K-02) · Sáng",
+      "x": 1040,
+      "y": 3600,
+      "w": 400,
+      "h": 1160
+    },
+    {
+      "file": "PantryDetailDark.dc.html",
+      "title": "Chi tiết nguyên liệu (K-02) · Tối",
+      "x": 1040,
+      "y": 5080,
+      "w": 400,
+      "h": 1160
+    },
+    {
+      "file": "AddIngredient.dc.html",
+      "title": "Thêm / Sửa nguyên liệu (K-03) · Sáng",
+      "x": 1560,
+      "y": 3600,
+      "w": 400,
+      "h": 1000
+    },
+    {
+      "file": "AddIngredientDark.dc.html",
+      "title": "Thêm / Sửa nguyên liệu (K-03) · Tối",
+      "x": 1560,
+      "y": 5080,
+      "w": 400,
+      "h": 1000
+    },
+    {
+      "file": "AdjustQuantity.dc.html",
+      "title": "Điều chỉnh số lượng (K-04) · Sáng",
+      "x": 2080,
+      "y": 3600,
+      "w": 400,
+      "h": 740
+    },
+    {
+      "file": "AdjustQuantityDark.dc.html",
+      "title": "Điều chỉnh số lượng (K-04) · Tối",
+      "x": 2080,
+      "y": 5080,
+      "w": 400,
+      "h": 740
+    },
+    {
+      "file": "AddEntryChooser.dc.html",
+      "title": "Chọn cách nhập (G-03) · Sáng",
+      "x": 2600,
+      "y": 3600,
+      "w": 400,
+      "h": 740
+    },
+    {
+      "file": "AddEntryChooserDark.dc.html",
+      "title": "Chọn cách nhập (G-03) · Tối",
+      "x": 2600,
+      "y": 5080,
+      "w": 400,
+      "h": 740
+    },
+    {
+      "file": "Welcome.dc.html",
+      "title": "Chào mừng (A-01) · Sáng",
+      "x": 0,
+      "y": 7200,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "WelcomeDark.dc.html",
+      "title": "Chào mừng (A-01) · Tối",
+      "x": 0,
+      "y": 8220,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "Login.dc.html",
+      "title": "Đăng nhập (A-02) · Sáng",
+      "x": 520,
+      "y": 7200,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "LoginDark.dc.html",
+      "title": "Đăng nhập (A-02) · Tối",
+      "x": 520,
+      "y": 8220,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "Register.dc.html",
+      "title": "Đăng ký (A-03) · Sáng",
+      "x": 1040,
+      "y": 7200,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "RegisterDark.dc.html",
+      "title": "Đăng ký (A-03) · Tối",
+      "x": 1040,
+      "y": 8220,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "ForgotPassword.dc.html",
+      "title": "Quên mật khẩu (A-04) · Sáng",
+      "x": 1560,
+      "y": 7200,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "ForgotPasswordDark.dc.html",
+      "title": "Quên mật khẩu (A-04) · Tối",
+      "x": 1560,
+      "y": 8220,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "DietaryPreference.dc.html",
+      "title": "Ưu tiên dinh dưỡng (A-05) · Sáng",
+      "x": 2080,
+      "y": 7200,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "DietaryPreferenceDark.dc.html",
+      "title": "Ưu tiên dinh dưỡng (A-05) · Tối",
+      "x": 2080,
+      "y": 8220,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "OnboardingPantry.dc.html",
+      "title": "Hướng dẫn nhập kho (A-06) · Sáng",
+      "x": 2600,
+      "y": 7200,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "OnboardingPantryDark.dc.html",
+      "title": "Hướng dẫn nhập kho (A-06) · Tối",
+      "x": 2600,
+      "y": 8220,
+      "w": 400,
+      "h": 860
+    },
+    {
+      "file": "CameraCapture.dc.html",
+      "title": "Camera quét (I-01 / I-04)",
+      "x": 0,
+      "y": 9900,
+      "w": 400,
+      "h": 808
+    },
+    {
+      "file": "LabelReview.dc.html",
+      "title": "Review tem nhãn (I-03) · Sáng",
+      "x": 520,
+      "y": 9900,
+      "w": 400,
+      "h": 780
+    },
+    {
+      "file": "LabelReviewDark.dc.html",
+      "title": "Review tem nhãn (I-03) · Tối",
+      "x": 520,
+      "y": 11380,
+      "w": 400,
+      "h": 780
+    },
+    {
+      "file": "ReceiptReview.dc.html",
+      "title": "Review hóa đơn (I-05) · Sáng",
+      "x": 1040,
+      "y": 9900,
+      "w": 400,
+      "h": 820
+    },
+    {
+      "file": "ReceiptReviewDark.dc.html",
+      "title": "Review hóa đơn (I-05) · Tối",
+      "x": 1040,
+      "y": 11380,
+      "w": 400,
+      "h": 820
+    },
+    {
+      "file": "VoiceCapture.dc.html",
+      "title": "Ghi âm (I-06) · Sáng",
+      "x": 1560,
+      "y": 9900,
+      "w": 400,
+      "h": 784
+    },
+    {
+      "file": "VoiceCaptureDark.dc.html",
+      "title": "Ghi âm (I-06) · Tối",
+      "x": 1560,
+      "y": 11380,
+      "w": 400,
+      "h": 784
+    },
+    {
+      "file": "VoiceReview.dc.html",
+      "title": "Review giọng nói (I-07) · Sáng",
+      "x": 2080,
+      "y": 9900,
+      "w": 400,
+      "h": 660
+    },
+    {
+      "file": "VoiceReviewDark.dc.html",
+      "title": "Review giọng nói (I-07) · Tối",
+      "x": 2080,
+      "y": 11380,
+      "w": 400,
+      "h": 660
+    },
+    {
+      "file": "ScanFailed.dc.html",
+      "title": "Quét lỗi (I-09) · Sáng",
+      "x": 3120,
+      "y": 9900,
+      "w": 400,
+      "h": 740
+    },
+    {
+      "file": "ScanFailedDark.dc.html",
+      "title": "Quét lỗi (I-09) · Tối",
+      "x": 3120,
+      "y": 11380,
+      "w": 400,
+      "h": 740
+    },
+    {
+      "file": "SuggestionList.dc.html",
+      "title": "Gợi ý món (S-01) · Sáng",
+      "x": 0,
+      "y": 12800,
+      "w": 400,
+      "h": 1240
+    },
+    {
+      "file": "SuggestionListDark.dc.html",
+      "title": "Gợi ý món (S-01) · Tối",
+      "x": 0,
+      "y": 14500,
+      "w": 400,
+      "h": 1240
+    },
+    {
+      "file": "ScoreBreakdown.dc.html",
+      "title": "Giải thích điểm (S-02) · Sáng",
+      "x": 520,
+      "y": 12800,
+      "w": 400,
+      "h": 700
+    },
+    {
+      "file": "ScoreBreakdownDark.dc.html",
+      "title": "Giải thích điểm (S-02) · Tối",
+      "x": 520,
+      "y": 14500,
+      "w": 400,
+      "h": 700
+    },
+    {
+      "file": "DishDetail.dc.html",
+      "title": "Chi tiết món (D-01) · Sáng",
+      "x": 1040,
+      "y": 12800,
+      "w": 400,
+      "h": 1580
+    },
+    {
+      "file": "DishDetailDark.dc.html",
+      "title": "Chi tiết món (D-01) · Tối",
+      "x": 1040,
+      "y": 14500,
+      "w": 400,
+      "h": 1580
+    },
+    {
+      "file": "PostCookConfirm.dc.html",
+      "title": "Xác nhận sau nấu (D-03) · Sáng",
+      "x": 1560,
+      "y": 12800,
+      "w": 400,
+      "h": 700
+    },
+    {
+      "file": "PostCookConfirmDark.dc.html",
+      "title": "Xác nhận sau nấu (D-03) · Tối",
+      "x": 1560,
+      "y": 14500,
+      "w": 400,
+      "h": 700
+    },
+    {
+      "file": "CustomUsage.dc.html",
+      "title": "Tự điều chỉnh lượng (D-04) · Sáng",
+      "x": 2080,
+      "y": 12800,
+      "w": 400,
+      "h": 700
+    },
+    {
+      "file": "CustomUsageDark.dc.html",
+      "title": "Tự điều chỉnh lượng (D-04) · Tối",
+      "x": 2080,
+      "y": 14500,
+      "w": 400,
+      "h": 700
+    },
+    {
+      "file": "LeftoverSave.dc.html",
+      "title": "Lưu phần thừa (D-06) · Sáng",
+      "x": 2600,
+      "y": 12800,
+      "w": 400,
+      "h": 660
+    },
+    {
+      "file": "LeftoverSaveDark.dc.html",
+      "title": "Lưu phần thừa (D-06) · Tối",
+      "x": 2600,
+      "y": 14500,
+      "w": 400,
+      "h": 660
+    },
+    {
+      "file": "CookResult.dc.html",
+      "title": "Trừ kho & tiết kiệm (D-05/D-07) · Sáng",
+      "x": 3120,
+      "y": 12800,
+      "w": 400,
+      "h": 780
+    },
+    {
+      "file": "CookResultDark.dc.html",
+      "title": "Trừ kho & tiết kiệm (D-05/D-07) · Tối",
+      "x": 3120,
+      "y": 14500,
+      "w": 400,
+      "h": 780
+    },
+    {
+      "file": "NotificationCenter.dc.html",
+      "title": "Trung tâm thông báo (T-01) · Sáng",
+      "x": 0,
+      "y": 16800,
+      "w": 400,
+      "h": 620
+    },
+    {
+      "file": "NotificationCenterDark.dc.html",
+      "title": "Trung tâm thông báo (T-01) · Tối",
+      "x": 0,
+      "y": 18280,
+      "w": 400,
+      "h": 620
+    },
+    {
+      "file": "NearExpiryDetail.dc.html",
+      "title": "Chi tiết cảnh báo cận hạn (T-02) · Sáng",
+      "x": 520,
+      "y": 16800,
+      "w": 400,
+      "h": 660
+    },
+    {
+      "file": "NearExpiryDetailDark.dc.html",
+      "title": "Chi tiết cảnh báo cận hạn (T-02) · Tối",
+      "x": 520,
+      "y": 18280,
+      "w": 400,
+      "h": 660
+    },
+    {
+      "file": "ShoppingList.dc.html",
+      "title": "Danh sách mua sắm (B-01) · Sáng",
+      "x": 1040,
+      "y": 16800,
+      "w": 400,
+      "h": 660
+    },
+    {
+      "file": "ShoppingListDark.dc.html",
+      "title": "Danh sách mua sắm (B-01) · Tối",
+      "x": 1040,
+      "y": 18280,
+      "w": 400,
+      "h": 660
+    },
+    {
+      "file": "MealPlan.dc.html",
+      "title": "Thực đơn tuần (M-01) · Sáng",
+      "x": 1560,
+      "y": 16800,
+      "w": 400,
+      "h": 740
+    },
+    {
+      "file": "MealPlanDark.dc.html",
+      "title": "Thực đơn tuần (M-01) · Tối",
+      "x": 1560,
+      "y": 18280,
+      "w": 400,
+      "h": 740
+    },
+    {
+      "file": "Paywall.dc.html",
+      "title": "Paywall (G-05) · Sáng",
+      "x": 2080,
+      "y": 16800,
+      "w": 400,
+      "h": 800
+    },
+    {
+      "file": "PaywallDark.dc.html",
+      "title": "Paywall (G-05) · Tối",
+      "x": 2080,
+      "y": 18280,
+      "w": 400,
+      "h": 800
+    },
+    {
+      "file": "Reports.dc.html",
+      "title": "Báo cáo (R-01/R-02) · Sáng",
+      "x": 2600,
+      "y": 16800,
+      "w": 400,
+      "h": 720
+    },
+    {
+      "file": "ReportsDark.dc.html",
+      "title": "Báo cáo (R-01/R-02) · Tối",
+      "x": 2600,
+      "y": 18280,
+      "w": 400,
+      "h": 720
+    },
+    {
+      "file": "Splash.dc.html",
+      "title": "Splash (G-01)",
+      "x": 0,
+      "y": 19600,
+      "w": 400,
+      "h": 808
+    },
+    {
+      "file": "PermissionPrime.dc.html",
+      "title": "Xin quyền (G-04) · Sáng",
+      "x": 520,
+      "y": 19600,
+      "w": 400,
+      "h": 620
+    },
+    {
+      "file": "PermissionPrimeDark.dc.html",
+      "title": "Xin quyền (G-04) · Tối",
+      "x": 520,
+      "y": 21080,
+      "w": 400,
+      "h": 620
+    },
+    {
+      "file": "SettingsHome.dc.html",
+      "title": "Cá nhân (P-01) · Sáng",
+      "x": 1040,
+      "y": 19600,
+      "w": 400,
+      "h": 1040
+    },
+    {
+      "file": "SettingsHomeDark.dc.html",
+      "title": "Cá nhân (P-01) · Tối",
+      "x": 1040,
+      "y": 21080,
+      "w": 400,
+      "h": 1040
+    },
+    {
+      "file": "Subscription.dc.html",
+      "title": "Gói dịch vụ (P-02) · Sáng",
+      "x": 1560,
+      "y": 19600,
+      "w": 400,
+      "h": 620
+    },
+    {
+      "file": "SubscriptionDark.dc.html",
+      "title": "Gói dịch vụ (P-02) · Tối",
+      "x": 1560,
+      "y": 21080,
+      "w": 400,
+      "h": 620
+    },
+    {
+      "file": "Preferences.dc.html",
+      "title": "Tùy chọn (P-03) · Sáng",
+      "x": 2080,
+      "y": 19600,
+      "w": 400,
+      "h": 620
+    },
+    {
+      "file": "PreferencesDark.dc.html",
+      "title": "Tùy chọn (P-03) · Tối",
+      "x": 2080,
+      "y": 21080,
+      "w": 400,
+      "h": 620
+    },
+    {
+      "file": "NotificationSettings.dc.html",
+      "title": "Cài đặt thông báo (P-04) · Sáng",
+      "x": 2600,
+      "y": 19600,
+      "w": 400,
+      "h": 680
+    },
+    {
+      "file": "NotificationSettingsDark.dc.html",
+      "title": "Cài đặt thông báo (P-04) · Tối",
+      "x": 2600,
+      "y": 21080,
+      "w": 400,
+      "h": 680
+    },
+    {
+      "file": "PantrySharing.dc.html",
+      "title": "Chia sẻ tủ bếp (P-05) · Sáng",
+      "x": 3120,
+      "y": 19600,
+      "w": 400,
+      "h": 640
+    },
+    {
+      "file": "PantrySharingDark.dc.html",
+      "title": "Chia sẻ tủ bếp (P-05) · Tối",
+      "x": 3120,
+      "y": 21080,
+      "w": 400,
+      "h": 640
+    },
+    {
+      "file": "About.dc.html",
+      "title": "Giới thiệu & dữ liệu (P-06) · Sáng",
+      "x": 3640,
+      "y": 19600,
+      "w": 400,
+      "h": 800
+    },
+    {
+      "file": "AboutDark.dc.html",
+      "title": "Giới thiệu & dữ liệu (P-06) · Tối",
+      "x": 3640,
+      "y": 21080,
+      "w": 400,
+      "h": 800
+    },
+    {
+      "file": "Otp.dc.html",
+      "title": "Nhập mã xác thực (A-03 b2) · Sáng",
+      "x": 3120,
+      "y": 7200,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "OtpDark.dc.html",
+      "title": "Nhập mã xác thực (A-03 b2) · Tối",
+      "x": 3120,
+      "y": 8220,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ResetPassword.dc.html",
+      "title": "Đặt lại mật khẩu (A-04 b2) · Sáng",
+      "x": 3640,
+      "y": 7200,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ResetPasswordDark.dc.html",
+      "title": "Đặt lại mật khẩu (A-04 b2) · Tối",
+      "x": 3640,
+      "y": 8220,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "Profile.dc.html",
+      "title": "Hồ sơ & mật khẩu (P-01a) · Sáng",
+      "x": 0,
+      "y": 22420,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ProfileDark.dc.html",
+      "title": "Hồ sơ & mật khẩu (P-01a) · Tối",
+      "x": 0,
+      "y": 23440,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "EditProfile.dc.html",
+      "title": "Sửa hồ sơ · Sáng",
+      "x": 520,
+      "y": 22420,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "EditProfileDark.dc.html",
+      "title": "Sửa hồ sơ · Tối",
+      "x": 520,
+      "y": 23440,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ChangePassword.dc.html",
+      "title": "Đổi mật khẩu · Sáng",
+      "x": 1040,
+      "y": 22420,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ChangePasswordDark.dc.html",
+      "title": "Đổi mật khẩu · Tối",
+      "x": 1040,
+      "y": 23440,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ChangeEmail.dc.html",
+      "title": "Đổi email · Sáng",
+      "x": 1560,
+      "y": 22420,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ChangeEmailDark.dc.html",
+      "title": "Đổi email · Tối",
+      "x": 1560,
+      "y": 23440,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ChangePhone.dc.html",
+      "title": "Đổi số điện thoại · Sáng",
+      "x": 2080,
+      "y": 22420,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "ChangePhoneDark.dc.html",
+      "title": "Đổi số điện thoại · Tối",
+      "x": 2080,
+      "y": 23440,
+      "w": 400,
+      "h": 900
+    }
   ],
   "annotations": [
-    { "id": "note-foundations", "page": "page-foundations", "x": 0, "y": -140, "w": 560, "text": "Nền tảng: tokens từ palette bạn gửi + chế độ tối. Components: khối tái dùng cho mọi màn hình." },
-    { "id": "note-screens", "page": "page-screens", "x": 0, "y": -160, "w": 700, "text": "Hàng trên = Sáng, hàng dưới = Tối. Đã có: Trang chủ (H-01), Kho (K-01→K-04), Chọn cách nhập (G-03)." },
-    { "id": "note-auth", "page": "page-auth", "x": 0, "y": -150, "w": 700, "text": "Luồng Auth & Onboarding (A-01→A-06). Hàng trên Sáng, hàng dưới Tối. Giả định: email/mật khẩu + tùy chọn Google (xác nhận sau)." },
-    { "id": "note-ingest", "page": "page-ingest", "x": 0, "y": -150, "w": 720, "text": "Luồng nhập liệu (I-01→I-09). Camera nền tối cố định, có tab Tem/Hóa đơn. Màn cắt/chỉnh ảnh (I-02) dùng cropper chuẩn, chưa dựng riêng." },
-    { "id": "note-cook", "page": "page-cook", "x": 0, "y": -160, "w": 720, "text": "Gợi ý & Nấu ăn: S-01, S-02, D-01, D-03, D-04, D-06, D-05/D-07. Hàng trên Sáng, hàng dưới Tối." },
-    { "id": "note-more", "page": "page-more", "x": 0, "y": -170, "w": 760, "text": "Thông báo (T-01, T-02), Mua sắm (B-01), Thực đơn tuần (M-01), Báo cáo (R-01), Paywall (G-05).\nQUYẾT ĐỊNH: bản MVP mở HẾT tính năng — không gating, không giới hạn 40 nguyên liệu / 10 lượt quét. Đã bỏ nhãn Premium khỏi Thực đơn/Báo cáo. Paywall = trang thu thập quan tâm (giá 'dự kiến', nút 'Nhận thông báo khi ra mắt').\nĐÃ BỎ tính năng 'tiền tiết kiệm' (OCR quét không lấy được giá nguyên liệu). Thay bằng chỉ số chống lãng phí: số nguyên liệu dùng trước hạn + kg tránh bỏ phí. Báo cáo chi tiêu (R-02) hoãn. Không còn màn SavingsExplainer." },
-    { "id": "note-settings", "page": "page-settings", "x": 0, "y": -160, "w": 740, "text": "Cài đặt & Toàn cục. G-01 Splash (nền xanh cố định), G-04 xin quyền (mẫu máy ảnh — tái dùng cho micro/thông báo), P-01→P-06 nhóm Cài đặt.\nMVP mở hết tính năng: P-01 banner + P-02 đổi sang 'bản đầy đủ miễn phí', mục Premium/Chia sẻ tủ bếp ghi 'Sắp có'. Hàng trên Sáng, hàng dưới Tối." }
+    {
+      "id": "note-foundations",
+      "x": 0,
+      "y": -140,
+      "w": 560,
+      "text": "Nền tảng: tokens từ palette bạn gửi + chế độ tối. Components: khối tái dùng cho mọi màn hình."
+    },
+    {
+      "id": "note-screens",
+      "x": 0,
+      "y": 3440,
+      "w": 700,
+      "text": "Hàng trên = Sáng, hàng dưới = Tối. Đã có: Trang chủ (H-01), Kho (K-01→K-04), Chọn cách nhập (G-03)."
+    },
+    {
+      "id": "note-auth",
+      "x": 0,
+      "y": 7050,
+      "w": 700,
+      "text": "Luồng Auth & Onboarding (A-01→A-06). Hàng trên Sáng, hàng dưới Tối. Giả định: email/mật khẩu + tùy chọn Google (xác nhận sau)."
+    },
+    {
+      "id": "note-ingest",
+      "x": 0,
+      "y": 9750,
+      "w": 720,
+      "text": "Luồng nhập liệu (I-01→I-09). Camera nền tối cố định, có tab Tem/Hóa đơn. Màn cắt/chỉnh ảnh (I-02) dùng cropper chuẩn, chưa dựng riêng."
+    },
+    {
+      "id": "note-cook",
+      "x": 0,
+      "y": 12640,
+      "w": 720,
+      "text": "Gợi ý & Nấu ăn: S-01, S-02, D-01, D-03, D-04, D-06, D-05/D-07. Hàng trên Sáng, hàng dưới Tối."
+    },
+    {
+      "id": "note-more",
+      "x": 0,
+      "y": 16630,
+      "w": 760,
+      "text": "Thông báo (T-01, T-02), Mua sắm (B-01), Thực đơn tuần (M-01), Báo cáo (R-01), Paywall (G-05).\nQUYẾT ĐỊNH: bản MVP mở HẾT tính năng — không gating, không giới hạn 40 nguyên liệu / 10 lượt quét. Đã bỏ nhãn Premium khỏi Thực đơn/Báo cáo. Paywall = trang thu thập quan tâm (giá 'dự kiến', nút 'Nhận thông báo khi ra mắt').\nĐÃ BỎ tính năng 'tiền tiết kiệm' (OCR quét không lấy được giá nguyên liệu). Thay bằng chỉ số chống lãng phí: số nguyên liệu dùng trước hạn + kg tránh bỏ phí. Báo cáo chi tiêu (R-02) hoãn. Không còn màn SavingsExplainer."
+    },
+    {
+      "id": "note-settings",
+      "x": 0,
+      "y": 19440,
+      "w": 740,
+      "text": "Cài đặt & Toàn cục. G-01 Splash (nền xanh cố định), G-04 xin quyền (mẫu máy ảnh — tái dùng cho micro/thông báo), P-01→P-06 nhóm Cài đặt.\nMVP mở hết tính năng: P-01 banner + P-02 đổi sang 'bản đầy đủ miễn phí', mục Premium/Chia sẻ tủ bếp ghi 'Sắp có'. Hàng trên Sáng, hàng dưới Tối."
+    },
+    {
+      "id": "note-account",
+      "x": 0,
+      "y": 22270,
+      "w": 760,
+      "text": "Quản lý tài khoản (P-01a + 4 màn con) — thêm sau canvas gốc để khớp app: điều hướng từ Cá nhân → 'Hồ sơ & mật khẩu'. Đổi mật khẩu / email / SĐT đều là luồng OTP 2 bước (artboard hiện trạng thái nhập OTP)."
+    }
   ],
-  "launch": { "view": "canvas", "page": "page-settings" }
+  "launch": {
+    "view": "canvas"
+  }
 }
