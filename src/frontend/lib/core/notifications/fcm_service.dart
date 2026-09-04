@@ -1,93 +1,121 @@
-/// Firebase Cloud Messaging service — fully implemented, guarded by
-/// [AppConfig.fcmEnabled].
-///
-/// ## Enabling FCM
-/// 1. Run `flutterfire configure` to get `google-services.json` (Android) and
-///    `GoogleService-Info.plist` (iOS).
-/// 2. Commit those files (they are safe; they don't contain private keys).
-/// 3. Uncomment `firebase_core` and `firebase_messaging` in `pubspec.yaml`.
-/// 4. Set `FCM_ENABLED=true` in the relevant `config/*.json` file.
-/// 5. Replace the stub implementations below with the real ones (shown as
-///    comments).
-///
-/// Until then the class is a documented no-op and [LocalNotifications] handles
-/// reminders.
-class FcmService {
-  const FcmService({required this.enabled});
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:sweepfood/core/utils/logger.dart';
 
-  /// Whether FCM is actually active. False until `flutterfire configure` has
-  /// been run and `FCM_ENABLED=true` is passed via `--dart-define`.
+/// Thin wrapper over Firebase Cloud Messaging.
+///
+/// Android-only: the project ships `android/app/google-services.json` (no
+/// `flutterfire configure`), so `Firebase.initializeApp()` is called with no
+/// options and reads the native config. Every method is guarded — on web, or
+/// when Firebase / Play Services are unavailable, calls become no-ops and
+/// [getToken] returns `null` so the caller never has to special-case it.
+///
+/// This class knows nothing about the backend; [PushRegistrar] owns the
+/// register/unregister lifecycle against `/users/me/devices`.
+class FcmService {
+  FcmService({required this.enabled});
+
+  /// Mirrors `AppConfig.fcmEnabled`. When false the whole class is inert.
   final bool enabled;
 
-  /// Initialises Firebase, requests notification permission, registers FCM
-  /// handlers, and returns the current device token (or null on failure /
-  /// when [enabled] is false).
-  ///
-  /// Call once from [main] after [WidgetsFlutterBinding.ensureInitialized].
-  Future<String?> initAndGetToken() async {
-    if (!enabled) return null;
+  bool _initialised = false;
 
-    // --- Enable when firebase_messaging is added to pubspec.yaml ---
-    //
-    // await Firebase.initializeApp(
-    //   options: DefaultFirebaseOptions.currentPlatform,
-    // );
-    //
-    // // Foreground message handler.
-    // FirebaseMessaging.onMessage.listen(_onForeground);
-    //
-    // // Background / terminated handler (top-level function required by FCM).
-    // FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
-    //
-    // // Deep-link routing when the app is opened from a notification.
-    // FirebaseMessaging.onMessageOpenedApp.listen(_onOpened);
-    //
-    // // Request permission (Android 13+ and iOS).
-    // await FirebaseMessaging.instance.requestPermission(
-    //   alert: true,
-    //   badge: true,
-    //   sound: true,
-    // );
-    //
-    // return FirebaseMessaging.instance.getToken();
+  bool get _usable => enabled && !kIsWeb;
 
-    return null; // remove when FCM is active
+  /// Initialise Firebase (once) and ask the OS for notification permission.
+  /// Safe to call repeatedly.
+  Future<void> initialize() async {
+    if (!_usable || _initialised) return;
+    try {
+      if (Firebase.apps.isEmpty) {
+        await Firebase.initializeApp();
+      }
+      await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      _initialised = true;
+    } catch (e, st) {
+      log.w('FcmService.initialize skipped', error: e, stackTrace: st);
+    }
   }
 
-  /// Deletes the FCM token so the device stops receiving push notifications.
-  /// Call on logout.
+  /// The current registration token, or `null` when unavailable.
+  Future<String?> getToken() async {
+    if (!_usable) return null;
+    try {
+      await initialize();
+      return await FirebaseMessaging.instance.getToken();
+    } catch (e) {
+      log.w('FcmService.getToken failed: $e');
+      return null;
+    }
+  }
+
+  /// Emits a fresh token whenever FCM rotates it.
+  Stream<String> get onTokenRefresh {
+    if (!_usable) return const Stream<String>.empty();
+    try {
+      return FirebaseMessaging.instance.onTokenRefresh;
+    } catch (_) {
+      return const Stream<String>.empty();
+    }
+  }
+
+  /// Messages received while the app is in the foreground.
+  Stream<RemoteMessage> get onMessage {
+    if (!_usable) return const Stream<RemoteMessage>.empty();
+    return FirebaseMessaging.onMessage;
+  }
+
+  /// The user tapped a notification and the app was already running.
+  Stream<RemoteMessage> get onMessageOpenedApp {
+    if (!_usable) return const Stream<RemoteMessage>.empty();
+    return FirebaseMessaging.onMessageOpenedApp;
+  }
+
+  /// The notification that cold-started the app, if any.
+  Future<RemoteMessage?> getInitialMessage() async {
+    if (!_usable) return null;
+    try {
+      await initialize();
+      return await FirebaseMessaging.instance.getInitialMessage();
+    } catch (e) {
+      log.w('FcmService.getInitialMessage failed: $e');
+      return null;
+    }
+  }
+
+  /// Drop the token so the device stops receiving push (call on logout).
   Future<void> deleteToken() async {
-    if (!enabled) return;
-
-    // --- Enable when firebase_messaging is added to pubspec.yaml ---
-    // await FirebaseMessaging.instance.deleteToken();
+    if (!_usable) return;
+    try {
+      await FirebaseMessaging.instance.deleteToken();
+    } catch (e) {
+      log.w('FcmService.deleteToken failed: $e');
+    }
   }
-
-  // ---------------------------------------------------------------------------
-  // Private helpers (uncomment together with the firebase_messaging block above)
-  // ---------------------------------------------------------------------------
-
-  // void _onForeground(RemoteMessage message) {
-  //   // Show a local notification while the app is in the foreground.
-  //   final n = message.notification;
-  //   if (n == null) return;
-  //   // Forward to LocalNotifications so the existing channel is reused.
-  // }
-
-  // void _onOpened(RemoteMessage message) {
-  //   // Navigate to the relevant screen.  The router reads message.data keys:
-  //   //   pantry_item_id  → /pantry/items/<id>
-  //   //   dish_id         → /dishes/<id>
-  // }
 }
 
-// Top-level function required by firebase_messaging for background handling.
-// Must remain at the top level (not inside the class).
-//
-// @pragma('vm:entry-point')
-// Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
-//   await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-//   );
-//   // Optionally show a local notification.
-// }
+/// Background / terminated message handler. Must be a top-level function and
+/// carry the `vm:entry-point` pragma so the FCM isolate can find it.
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  try {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp();
+    }
+  } catch (e) {
+    log.w('background handler init failed: $e');
+  }
+  // Android renders `message.notification` on the default channel by itself;
+  // nothing else to do here for the MVP.
+}

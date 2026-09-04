@@ -3,5 +3,6 @@
   "API_BASE_URL": "https://api.sweepfood.example/api",
   "BACKEND": "live",
   "PREMIUM_ENABLED": false,
-  "NEAR_EXPIRY_DAYS": 3
+  "NEAR_EXPIRY_DAYS": 3,
+  "FCM_ENABLED": true
 }

@@ -64,8 +64,8 @@ abstract final class ApiPaths {
       '/shopping-lists/$listId/items/$itemId';
 
   // Devices / notifications
-  static const devices = '/devices';
-  static String device(String token) => '/devices/$token';
+  static const devices = '/users/me/devices';
+  static String device(String deviceId) => '/users/me/devices/$deviceId';
   static const notifications = '/notifications';
   static String notification(String id) => '/notifications/$id';
 

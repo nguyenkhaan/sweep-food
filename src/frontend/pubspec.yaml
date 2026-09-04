@@ -49,8 +49,8 @@ dependencies:
 
   # Notifications
   flutter_local_notifications: any
-  # firebase_core: any     # enable after `flutterfire configure`
-  # firebase_messaging: any
+  firebase_core: ^4.14.0       # Android FCM via google-services.json (no flutterfire configure)
+  firebase_messaging: ^16.6.0
 
   # UI & charts
   flutter_svg: any

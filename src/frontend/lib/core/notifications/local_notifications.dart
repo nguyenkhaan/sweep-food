@@ -84,6 +84,29 @@ class LocalNotifications {
     }
   }
 
+  /// Render an FCM notification that arrived while the app was in the
+  /// foreground (Android does not show those automatically). Reuses the expiry
+  /// channel; [data] is passed through as the tap payload.
+  Future<void> showPush({
+    required String title,
+    required String body,
+    Map<String, String>? data,
+  }) async {
+    if (kIsWeb || (title.isEmpty && body.isEmpty)) return;
+    try {
+      final batchId = data?['inventory_batch_id'] ?? data?['pantry_item_id'];
+      await _plugin.show(
+        (data?['notification_id'] ?? '$title$body').hashCode,
+        title,
+        body,
+        _details,
+        payload: batchId != null ? 'pantry_item:$batchId' : 'notification',
+      );
+    } catch (e) {
+      log.w('showPush failed: $e');
+    }
+  }
+
   /// Re-arm the recurring near-expiry digest from [prefs].
   ///
   /// MVP: cancels the existing schedule and logs the intent. Exact-time daily

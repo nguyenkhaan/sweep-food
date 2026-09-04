@@ -3,5 +3,6 @@
   "API_BASE_URL": "http://10.0.2.2:4000/api",
   "BACKEND": "mock",
   "PREMIUM_ENABLED": false,
-  "NEAR_EXPIRY_DAYS": 3
+  "NEAR_EXPIRY_DAYS": 3,
+  "FCM_ENABLED": false
 }
