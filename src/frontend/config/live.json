@@ -4,5 +4,5 @@
   "BACKEND": "live",
   "PREMIUM_ENABLED": false,
   "NEAR_EXPIRY_DAYS": 3,
-  "FCM_ENABLED": false
+  "FCM_ENABLED": true
 }

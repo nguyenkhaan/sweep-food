@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/core/network/session_expired.dart';
+import 'package:sweepfood/core/notifications/push_registrar.dart';
 import 'package:sweepfood/core/storage/storage_providers.dart';
 import 'package:sweepfood/core/utils/logger.dart';
 import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
@@ -32,6 +33,7 @@ class SessionController extends _$SessionController {
       },
       (user) async {
         final store = ref.read(secureStoreProvider);
+        _syncPush();
         return Session(
           user: user,
           accessToken: await store.readAccessToken() ?? '',
@@ -39,6 +41,12 @@ class SessionController extends _$SessionController {
         );
       },
     );
+  }
+
+  /// Fire-and-forget: register this device's FCM token with the backend. Never
+  /// blocks or fails the auth flow.
+  void _syncPush() {
+    ref.read(pushRegistrarProvider).syncForSession();
   }
 
   Session? get currentSession => state.asData?.value;
@@ -52,7 +60,10 @@ class SessionController extends _$SessionController {
         .login(phone: phone, password: password);
     res.fold(
       (failure) => throw failure,
-      (session) => state = AsyncData(session),
+      (session) {
+        state = AsyncData(session);
+        _syncPush();
+      },
     );
   }
 
@@ -70,11 +81,16 @@ class SessionController extends _$SessionController {
         );
     res.fold(
       (failure) => throw failure,
-      (session) => state = AsyncData(session),
+      (session) {
+        state = AsyncData(session);
+        _syncPush();
+      },
     );
   }
 
   Future<void> logOut() async {
+    // Unregister the device while the access token is still valid.
+    await ref.read(pushRegistrarProvider).clear();
     await ref.read(authRepositoryProvider).logout();
     state = const AsyncData(null);
   }
@@ -99,6 +115,7 @@ class SessionController extends _$SessionController {
   }
 
   Future<void> _onExpired() async {
+    await ref.read(pushRegistrarProvider).clear();
     await ref.read(secureStoreProvider).clear();
     state = const AsyncData(null);
   }
