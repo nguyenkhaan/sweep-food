@@ -1,4 +1,4 @@
-﻿// Smoke test: S-01 renders the ranked list from the mock fixture, and the
+// Smoke test: S-01 renders the ranked list from the mock fixture, and the
 // score-breakdown sheet (S-02) opens.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

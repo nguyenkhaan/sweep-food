@@ -27,7 +27,9 @@ import 'package:sweepfood/features/meal_plan/presentation/screens/meal_plan_scre
 import 'package:sweepfood/features/notifications/presentation/screens/notification_center_screen.dart';
 import 'package:sweepfood/features/onboarding/presentation/screens/dietary_preference_screen.dart';
 import 'package:sweepfood/features/onboarding/presentation/screens/onboarding_pantry_screen.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/add_ingredient_screen.dart';
+import 'package:sweepfood/features/pantry/presentation/screens/cookable_recipes_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_item_detail_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_screen.dart';
 import 'package:sweepfood/features/reports/presentation/screens/reports_screen.dart';
@@ -135,6 +137,14 @@ GoRouter appRouter(Ref ref) {
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) => PantryItemDetailScreen(
                       itemId: state.pathParameters['id']!,
+                    ),
+                  ),
+                  GoRoute(
+                    path: Routes.cookableRecipes, // '/pantry/recipes'
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => CookableRecipesScreen(
+                      selectedItems: (state.extra as List<PantryItem>?) ??
+                          const <PantryItem>[],
                     ),
                   ),
                   GoRoute(

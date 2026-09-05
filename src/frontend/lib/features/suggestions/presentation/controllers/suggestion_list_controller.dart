@@ -16,17 +16,20 @@ class SuggestionFilter {
     this.mealType,
     this.quickCookOnly = false,
     this.dietaryPreference,
+    this.prompt = '',
   });
 
   /// `null` = "Tất cả".
   final MealType? mealType;
   final bool quickCookOnly;
   final DietaryPreference? dietaryPreference;
+  final String prompt;
 
   SuggestionFilter copyWith({
     MealType? mealType,
     bool? quickCookOnly,
     DietaryPreference? dietaryPreference,
+    String? prompt,
     bool clearMealType = false,
     bool clearDietaryPreference = false,
   }) {
@@ -36,6 +39,7 @@ class SuggestionFilter {
       dietaryPreference: clearDietaryPreference
           ? null
           : dietaryPreference ?? this.dietaryPreference,
+      prompt: prompt ?? this.prompt,
     );
   }
 
@@ -55,6 +59,10 @@ class SuggestionFilterController extends _$SuggestionFilterController {
   // `dietaryPreferenceControllerProvider` (onboarding A-05 / Cài đặt N-01).
   // Deferred so the suggestions test harness can add a SharedPreferences
   // override first.
+
+  void setPrompt(String prompt) => state = state.copyWith(prompt: prompt);
+
+  void clearPrompt() => state = state.copyWith(prompt: '');
 
   void toggleMeal(MealType meal) => state = state.mealType == meal
       ? state.copyWith(clearMealType: true)
@@ -78,7 +86,21 @@ class SuggestionListController extends _$SuggestionListController {
     final filter = ref.watch(suggestionFilterControllerProvider);
     final res =
         await ref.watch(suggestionRepositoryProvider).fetch(filter.toRequest());
-    return res.fold((f) => throw f, (list) => list);
+    return res.fold(
+      (f) => throw f,
+      (list) {
+        final q = filter.prompt.trim().toLowerCase();
+        if (q.isEmpty) return list;
+        final keywords =
+            q.split(RegExp(r'\s+')).where((k) => k.isNotEmpty).toList();
+        return list.where((item) {
+          final text =
+              '${item.dish.name} ${item.dish.cuisine} ${item.nearExpiryIngredients.join(" ")}'
+                  .toLowerCase();
+          return text.contains(q) || keywords.every((k) => text.contains(k));
+        }).toList();
+      },
+    );
   }
 
   Future<void> refresh() =>
