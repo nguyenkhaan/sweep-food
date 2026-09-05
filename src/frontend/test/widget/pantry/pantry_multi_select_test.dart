@@ -26,8 +26,19 @@ void main() {
             GoRoute(
               path: Routes.cookableRecipes,
               builder: (context, state) {
-                final items = (state.extra as List<PantryItem>?) ?? [];
-                return CookableRecipesScreen(selectedItems: items);
+                if (state.extra is ({List<PantryItem> items, String prompt})) {
+                  final record =
+                      state.extra as ({List<PantryItem> items, String prompt});
+                  return CookableRecipesScreen(
+                    selectedItems: record.items,
+                    initialPrompt: record.prompt,
+                  );
+                } else if (state.extra is List<PantryItem>) {
+                  return CookableRecipesScreen(
+                    selectedItems: state.extra as List<PantryItem>,
+                  );
+                }
+                return const CookableRecipesScreen(selectedItems: []);
               },
             ),
           ],
@@ -63,9 +74,26 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    // Bottom action bar appears
+    // Bottom action bar appears with AI button
     expect(find.text('Đã chọn 1'), findsOneWidget);
+    expect(find.text('AI Yêu cầu'), findsOneWidget);
     expect(find.text('Xem công thức'), findsOneWidget);
+
+    // Prompt input is hidden initially
+    expect(find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText?.contains('Yêu cầu món') == true), findsNothing);
+
+    // Tap AI Yêu cầu to expand prompt input
+    await tester.tap(find.text('AI Yêu cầu'));
+    await tester.pumpAndSettle();
+
+    final promptField = find.byWidgetPredicate(
+      (w) => w is TextField && w.decoration?.hintText?.contains('Yêu cầu món') == true,
+    );
+    expect(promptField, findsOneWidget);
+
+    // Enter prompt "Thanh đạm"
+    await tester.enterText(promptField, 'Thanh đạm');
+    await tester.pumpAndSettle();
 
     // Select second item
     await tester.tap(find.byType(Checkbox).at(1));
@@ -77,9 +105,10 @@ void main() {
     await tester.tap(find.text('Xem công thức'));
     await tester.pumpAndSettle();
 
-    // CookableRecipesScreen opened
+    // CookableRecipesScreen opened with active prompt chip
     expect(find.byType(CookableRecipesScreen), findsOneWidget);
     expect(find.text('Công thức có thể nấu'), findsOneWidget);
+    expect(find.text('Yêu cầu: Thanh đạm'), findsOneWidget);
 
     // Back to PantryScreen
     router.pop();

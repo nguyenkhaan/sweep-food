@@ -142,10 +142,22 @@ GoRouter appRouter(Ref ref) {
                   GoRoute(
                     path: Routes.cookableRecipes, // '/pantry/recipes'
                     parentNavigatorKey: _rootKey,
-                    builder: (context, state) => CookableRecipesScreen(
-                      selectedItems: (state.extra as List<PantryItem>?) ??
-                          const <PantryItem>[],
-                    ),
+                    builder: (context, state) {
+                      if (state.extra is ({List<PantryItem> items, String prompt})) {
+                        final record = state.extra as ({List<PantryItem> items, String prompt});
+                        return CookableRecipesScreen(
+                          selectedItems: record.items,
+                          initialPrompt: record.prompt,
+                        );
+                      } else if (state.extra is List<PantryItem>) {
+                        return CookableRecipesScreen(
+                          selectedItems: state.extra as List<PantryItem>,
+                        );
+                      }
+                      return const CookableRecipesScreen(
+                        selectedItems: <PantryItem>[],
+                      );
+                    },
                   ),
                   GoRoute(
                     path: Routes.scanCamera, // '/pantry/scan/camera'

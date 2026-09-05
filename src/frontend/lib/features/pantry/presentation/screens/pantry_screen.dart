@@ -26,11 +26,28 @@ class PantryScreen extends ConsumerStatefulWidget {
 
 class _PantryScreenState extends ConsumerState<PantryScreen> {
   final Set<String> _selectedIds = {};
+  bool _showPromptInput = false;
+  late final TextEditingController _promptController;
+
+  @override
+  void initState() {
+    super.initState();
+    _promptController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _promptController.dispose();
+    super.dispose();
+  }
 
   void _toggleSelect(String id) {
     setState(() {
       if (_selectedIds.contains(id)) {
         _selectedIds.remove(id);
+        if (_selectedIds.isEmpty) {
+          _showPromptInput = false;
+        }
       } else {
         _selectedIds.add(id);
       }
@@ -83,60 +100,173 @@ class _PantryScreenState extends ConsumerState<PantryScreen> {
       bottomNavigationBar: _selectedIds.isEmpty
           ? null
           : SafeArea(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Gap.lg,
-                  vertical: Gap.sm,
-                ),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.fromLTRB(Gap.md, Gap.sm, Gap.md, Gap.sm),
                 decoration: BoxDecoration(
                   color: context.colors.surfaceContainerLowest,
                   border: Border(top: BorderSide(color: context.sweep.hairline)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.06),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 10,
                       offset: const Offset(0, -4),
                     ),
                   ],
                 ),
-                child: Row(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
-                      'Đã chọn ${_selectedIds.length}',
-                      style: context.text.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
+                    if (_showPromptInput) ...[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _promptController,
+                              style: context.text.bodyMedium,
+                              decoration: InputDecoration(
+                                hintText:
+                                    'Yêu cầu món (VD: ít dầu mỡ, món canh...)',
+                                hintStyle: context.text.bodySmall?.copyWith(
+                                  color: context.sweep.textTertiary,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.auto_awesome,
+                                  size: 18,
+                                  color: context.colors.primary,
+                                ),
+                                suffixIcon: _promptController.text.isNotEmpty
+                                    ? IconButton(
+                                        icon: const Icon(Icons.clear_rounded,
+                                            size: 16),
+                                        onPressed: () {
+                                          setState(() => _promptController.clear());
+                                        },
+                                      )
+                                    : null,
+                                filled: true,
+                                fillColor: context.sweep.subtleFill,
+                                isDense: true,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: Gap.sm,
+                                  vertical: Gap.xs,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: Radii.brMd,
+                                  borderSide: BorderSide(
+                                    color: context.sweep.hairline,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: Radii.brMd,
+                                  borderSide: BorderSide(
+                                    color: context.sweep.hairline,
+                                  ),
+                                ),
+                              ),
+                              onChanged: (_) => setState(() {}),
+                            ),
+                          ),
+                          const SizedBox(width: Gap.xs),
+                          IconButton(
+                            icon: const Icon(Icons.close_rounded, size: 20),
+                            tooltip: 'Đóng',
+                            onPressed: () =>
+                                setState(() => _showPromptInput = false),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(width: Gap.xs),
-                    TextButton(
-                      onPressed: () => setState(() => _selectedIds.clear()),
-                      child: const Text('Bỏ chọn'),
-                    ),
-                    const Spacer(),
-                    FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        minimumSize: Size.zero,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Gap.md,
-                          vertical: Gap.sm,
+                      const Divider(height: Gap.md),
+                    ],
+                    Row(
+                      children: [
+                        Text(
+                          'Đã chọn ${_selectedIds.length}',
+                          style: context.text.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      onPressed: () {
-                        final all = ref
-                                .read(pantryListControllerProvider)
-                                .asData
-                                ?.value ??
-                            [];
-                        final selectedItems = all
-                            .where((i) => _selectedIds.contains(i.id))
-                            .toList();
-                        context.push(
-                          '${Routes.pantry}/${Routes.cookableRecipes}',
-                          extra: selectedItems,
-                        );
-                      },
-                      icon: const Icon(Icons.restaurant_menu_rounded, size: 18),
-                      label: const Text('Xem công thức'),
+                        const SizedBox(width: Gap.xs),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedIds.clear();
+                              _showPromptInput = false;
+                            });
+                          },
+                          child: const Text('Bỏ chọn'),
+                        ),
+                        const Spacer(),
+                        OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: Size.zero,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Gap.sm,
+                              vertical: Gap.sm,
+                            ),
+                            side: BorderSide(
+                              color: _showPromptInput ||
+                                      _promptController.text.isNotEmpty
+                                  ? context.colors.primary
+                                  : context.sweep.hairline,
+                            ),
+                            backgroundColor: _showPromptInput ||
+                                    _promptController.text.isNotEmpty
+                                ? context.colors.primaryContainer
+                                    .withValues(alpha: 0.3)
+                                : null,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _showPromptInput = !_showPromptInput;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.auto_awesome,
+                            size: 16,
+                            color: context.colors.primary,
+                          ),
+                          label: Text(
+                            'AI Yêu cầu',
+                            style: context.text.labelMedium?.copyWith(
+                              color: context.colors.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: Gap.xs),
+                        FilledButton.icon(
+                          style: FilledButton.styleFrom(
+                            minimumSize: Size.zero,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Gap.md,
+                              vertical: Gap.sm,
+                            ),
+                          ),
+                          onPressed: () {
+                            final all = ref
+                                    .read(pantryListControllerProvider)
+                                    .asData
+                                    ?.value ??
+                                [];
+                            final selectedItems = all
+                                .where((i) => _selectedIds.contains(i.id))
+                                .toList();
+                            final prompt = _promptController.text.trim();
+                            context.push(
+                              '${Routes.pantry}/${Routes.cookableRecipes}',
+                              extra: (
+                                items: selectedItems,
+                                prompt: prompt,
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.restaurant_menu_rounded,
+                              size: 18),
+                          label: const Text('Xem công thức'),
+                        ),
+                      ],
                     ),
                   ],
                 ),

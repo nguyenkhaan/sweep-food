@@ -47,10 +47,12 @@ class MissingIngredientItem {
 class CookableRecipesScreen extends ConsumerStatefulWidget {
   const CookableRecipesScreen({
     required this.selectedItems,
+    this.initialPrompt = '',
     super.key,
   });
 
   final List<PantryItem> selectedItems;
+  final String initialPrompt;
 
   @override
   ConsumerState<CookableRecipesScreen> createState() =>
@@ -59,6 +61,13 @@ class CookableRecipesScreen extends ConsumerStatefulWidget {
 
 class _CookableRecipesScreenState extends ConsumerState<CookableRecipesScreen> {
   bool _adding = false;
+  late String _activePrompt;
+
+  @override
+  void initState() {
+    super.initState();
+    _activePrompt = widget.initialPrompt.trim();
+  }
 
   static final List<({
     String dishId,
@@ -177,6 +186,17 @@ class _CookableRecipesScreenState extends ConsumerState<CookableRecipesScreen> {
       return [];
     }
 
+    if (_activePrompt.isNotEmpty) {
+      final promptWords = _activePrompt.toLowerCase().split(RegExp(r'\s+'));
+      final filtered = matches.where((m) {
+        final content = '${m.dishName} ${m.meta} ${m.matchedIngredients.join(' ')} ${m.missingIngredients.map((e) => e.name).join(' ')}'.toLowerCase();
+        return promptWords.any((w) => w.isNotEmpty && content.contains(w));
+      }).toList();
+      if (filtered.isNotEmpty) {
+        return filtered;
+      }
+    }
+
     matches.sort(
       (a, b) => b.matchedIngredients.length.compareTo(a.matchedIngredients.length),
     );
@@ -185,7 +205,9 @@ class _CookableRecipesScreenState extends ConsumerState<CookableRecipesScreen> {
       final selectedLabels = widget.selectedItems.map((e) => e.name).toList();
       matches.add(RecipeMatchItem(
         dishId: 'd1',
-        dishName: 'Món xào/nấu tổng hợp',
+        dishName: _activePrompt.isNotEmpty
+            ? 'Món nấu theo yêu cầu: $_activePrompt'
+            : 'Món xào/nấu tổng hợp',
         meta: '15 phút · Dễ · 2 khẩu phần',
         matchedIngredients: selectedLabels,
         missingIngredients: const [
@@ -362,6 +384,37 @@ class _CookableRecipesScreenState extends ConsumerState<CookableRecipesScreen> {
                       ),
                   ],
                 ),
+                if (_activePrompt.isNotEmpty) ...[
+                  Gap.gapXs,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Chip(
+                      avatar: Icon(
+                        Icons.auto_awesome,
+                        size: 16,
+                        color: context.colors.primary,
+                      ),
+                      label: Text(
+                        'Yêu cầu: $_activePrompt',
+                        style: context.text.bodySmall?.copyWith(
+                          color: context.colors.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      deleteIcon: const Icon(Icons.close_rounded, size: 16),
+                      onDeleted: () {
+                        setState(() {
+                          _activePrompt = '';
+                        });
+                      },
+                      backgroundColor: context.colors.primaryContainer.withValues(alpha: 0.3),
+                      side: BorderSide(color: context.colors.primary),
+                      visualDensity: VisualDensity.compact,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                ],
                 Gap.gapSm,
                 Text(
                   'Tìm thấy ${matches.length} công thức phù hợp',

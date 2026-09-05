@@ -176,13 +176,31 @@
     </div>
   </div>
 
-  <div class="multibar" style="position:sticky;bottom:72px;margin:0 14px 10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:10px 14px;display:flex;align-items:center;gap:10px;z-index:25">
-    <div style="font-size:13px;font-weight:600;color:var(--ink)">Đã chọn 2 món</div>
-    <div style="font-size:12px;color:var(--ink-3);cursor:pointer">Bỏ chọn</div>
-    <button style="margin-left:auto;background:var(--green-700);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
-      Xem công thức
-    </button>
+  <div class="multibar" style="position:sticky;bottom:72px;margin:0 14px 10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.12);padding:10px 14px;display:flex;flex-direction:column;gap:10px;z-index:25">
+    <!-- Collapsible AI Prompt Container (Option 2) -->
+    <div id="aiPromptBox" style="border-bottom:1px solid var(--line);padding-bottom:10px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px;background:var(--subtle);border-radius:10px;padding:6px 10px;border:1px solid var(--line)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green-700)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4Z"/><path d="M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7Z"/></svg>
+        <input type="text" placeholder="Yêu cầu món (VD: ít dầu mỡ, món canh, cho trẻ em...)" style="flex:1;background:transparent;border:none;outline:none;font-size:12px;color:var(--ink);font-family:inherit" value="Món canh thanh đạm">
+        <span style="font-size:11px;color:var(--ink-3);cursor:pointer">✕</span>
+      </div>
+    </div>
+
+    <!-- Actions Row -->
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="font-size:13px;font-weight:600;color:var(--ink)">Đã chọn 2 món</div>
+      <div style="font-size:12px;color:var(--ink-3);cursor:pointer">Bỏ chọn</div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <button title="Thêm yêu cầu món ăn với AI" style="background:var(--subtle);color:var(--green-800);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;cursor:pointer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4Z"/><path d="M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7Z"/></svg>
+          AI Yêu cầu
+        </button>
+        <button style="background:var(--green-700);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;cursor:pointer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          Xem công thức
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="bottomnav">
