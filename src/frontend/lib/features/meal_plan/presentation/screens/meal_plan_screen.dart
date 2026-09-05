@@ -130,6 +130,7 @@ class MealPlanScreen extends ConsumerWidget {
           date: day,
           slot: slot,
           dishId: picked.id,
+          servings: picked.dish.servings.toDouble(),
           dishName: picked.dish.name,
           dishImageUrl: picked.dish.imageUrl,
         );

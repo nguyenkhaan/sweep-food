@@ -66,18 +66,24 @@ abstract class _$MealPlanWeekStart extends $Notifier<DateTime> {
   }
 }
 
-/// M-01 weekly grid. Re-fetches when the week changes; assign / clear update
-/// optimistically and persist via `PUT /meal-plans/{weekStart}`.
+/// M-01 weekly grid. Re-fetches when the week changes. Assigning an empty
+/// cell creates a new `meal-plans/{id}/items` row; re-assigning a filled one
+/// PATCHes the existing item instead (keeps its id/status); clearing DELETEs
+/// it. Failures roll back by refetching from the server.
 
 @ProviderFor(MealPlanController)
 final mealPlanControllerProvider = MealPlanControllerProvider._();
 
-/// M-01 weekly grid. Re-fetches when the week changes; assign / clear update
-/// optimistically and persist via `PUT /meal-plans/{weekStart}`.
+/// M-01 weekly grid. Re-fetches when the week changes. Assigning an empty
+/// cell creates a new `meal-plans/{id}/items` row; re-assigning a filled one
+/// PATCHes the existing item instead (keeps its id/status); clearing DELETEs
+/// it. Failures roll back by refetching from the server.
 final class MealPlanControllerProvider
     extends $AsyncNotifierProvider<MealPlanController, MealPlan> {
-  /// M-01 weekly grid. Re-fetches when the week changes; assign / clear update
-  /// optimistically and persist via `PUT /meal-plans/{weekStart}`.
+  /// M-01 weekly grid. Re-fetches when the week changes. Assigning an empty
+  /// cell creates a new `meal-plans/{id}/items` row; re-assigning a filled one
+  /// PATCHes the existing item instead (keeps its id/status); clearing DELETEs
+  /// it. Failures roll back by refetching from the server.
   MealPlanControllerProvider._()
     : super(
         from: null,
@@ -98,10 +104,12 @@ final class MealPlanControllerProvider
 }
 
 String _$mealPlanControllerHash() =>
-    r'f40939e2ffaf8ae06895ba0299103716dbfac80a';
+    r'ddbe502115aae7ce06214833a856656157e2f003';
 
-/// M-01 weekly grid. Re-fetches when the week changes; assign / clear update
-/// optimistically and persist via `PUT /meal-plans/{weekStart}`.
+/// M-01 weekly grid. Re-fetches when the week changes. Assigning an empty
+/// cell creates a new `meal-plans/{id}/items` row; re-assigning a filled one
+/// PATCHes the existing item instead (keeps its id/status); clearing DELETEs
+/// it. Failures roll back by refetching from the server.
 
 abstract class _$MealPlanController extends $AsyncNotifier<MealPlan> {
   FutureOr<MealPlan> build();

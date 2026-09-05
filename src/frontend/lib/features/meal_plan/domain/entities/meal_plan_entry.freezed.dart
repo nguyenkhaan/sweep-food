@@ -14,7 +14,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MealPlanEntry {
 
- DateTime get date; MealSlot get slot; String get dishId; String? get dishName; String? get dishImageUrl;
+ String get id; DateTime get date; MealSlot get slot; String get dishId; double get servings; MealPlanItemStatus get status; String? get dishName;/// Known only for the lifetime of the session the dish was assigned in —
+/// the backend item has no image field, so this is lost on reload
+/// (nothing currently renders it; see IMPLEMENTATION_PLAN.md).
+ String? get dishImageUrl;
 /// Create a copy of MealPlanEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +28,16 @@ $MealPlanEntryCopyWith<MealPlanEntry> get copyWith => _$MealPlanEntryCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlanEntry&&(identical(other.date, date) || other.date == date)&&(identical(other.slot, slot) || other.slot == slot)&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&(identical(other.dishImageUrl, dishImageUrl) || other.dishImageUrl == dishImageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlanEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.date, date) || other.date == date)&&(identical(other.slot, slot) || other.slot == slot)&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.servings, servings) || other.servings == servings)&&(identical(other.status, status) || other.status == status)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&(identical(other.dishImageUrl, dishImageUrl) || other.dishImageUrl == dishImageUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,slot,dishId,dishName,dishImageUrl);
+int get hashCode => Object.hash(runtimeType,id,date,slot,dishId,servings,status,dishName,dishImageUrl);
 
 @override
 String toString() {
-  return 'MealPlanEntry(date: $date, slot: $slot, dishId: $dishId, dishName: $dishName, dishImageUrl: $dishImageUrl)';
+  return 'MealPlanEntry(id: $id, date: $date, slot: $slot, dishId: $dishId, servings: $servings, status: $status, dishName: $dishName, dishImageUrl: $dishImageUrl)';
 }
 
 
@@ -45,7 +48,7 @@ abstract mixin class $MealPlanEntryCopyWith<$Res>  {
   factory $MealPlanEntryCopyWith(MealPlanEntry value, $Res Function(MealPlanEntry) _then) = _$MealPlanEntryCopyWithImpl;
 @useResult
 $Res call({
- DateTime date, MealSlot slot, String dishId, String? dishName, String? dishImageUrl
+ String id, DateTime date, MealSlot slot, String dishId, double servings, MealPlanItemStatus status, String? dishName, String? dishImageUrl
 });
 
 
@@ -62,12 +65,15 @@ class _$MealPlanEntryCopyWithImpl<$Res>
 
 /// Create a copy of MealPlanEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? slot = null,Object? dishId = null,Object? dishName = freezed,Object? dishImageUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? date = null,Object? slot = null,Object? dishId = null,Object? servings = null,Object? status = null,Object? dishName = freezed,Object? dishImageUrl = freezed,}) {
   return _then(_self.copyWith(
-date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,slot: null == slot ? _self.slot : slot // ignore: cast_nullable_to_non_nullable
 as MealSlot,dishId: null == dishId ? _self.dishId : dishId // ignore: cast_nullable_to_non_nullable
-as String,dishName: freezed == dishName ? _self.dishName : dishName // ignore: cast_nullable_to_non_nullable
+as String,servings: null == servings ? _self.servings : servings // ignore: cast_nullable_to_non_nullable
+as double,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as MealPlanItemStatus,dishName: freezed == dishName ? _self.dishName : dishName // ignore: cast_nullable_to_non_nullable
 as String?,dishImageUrl: freezed == dishImageUrl ? _self.dishImageUrl : dishImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -154,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime date,  MealSlot slot,  String dishId,  String? dishName,  String? dishImageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime date,  MealSlot slot,  String dishId,  double servings,  MealPlanItemStatus status,  String? dishName,  String? dishImageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MealPlanEntry() when $default != null:
-return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImageUrl);case _:
+return $default(_that.id,_that.date,_that.slot,_that.dishId,_that.servings,_that.status,_that.dishName,_that.dishImageUrl);case _:
   return orElse();
 
 }
@@ -175,10 +181,10 @@ return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImag
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime date,  MealSlot slot,  String dishId,  String? dishName,  String? dishImageUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime date,  MealSlot slot,  String dishId,  double servings,  MealPlanItemStatus status,  String? dishName,  String? dishImageUrl)  $default,) {final _that = this;
 switch (_that) {
 case _MealPlanEntry():
-return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImageUrl);case _:
+return $default(_that.id,_that.date,_that.slot,_that.dishId,_that.servings,_that.status,_that.dishName,_that.dishImageUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +201,10 @@ return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImag
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime date,  MealSlot slot,  String dishId,  String? dishName,  String? dishImageUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime date,  MealSlot slot,  String dishId,  double servings,  MealPlanItemStatus status,  String? dishName,  String? dishImageUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _MealPlanEntry() when $default != null:
-return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImageUrl);case _:
+return $default(_that.id,_that.date,_that.slot,_that.dishId,_that.servings,_that.status,_that.dishName,_that.dishImageUrl);case _:
   return null;
 
 }
@@ -210,13 +216,19 @@ return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImag
 
 
 class _MealPlanEntry extends MealPlanEntry {
-  const _MealPlanEntry({required this.date, required this.slot, required this.dishId, this.dishName, this.dishImageUrl}): super._();
+  const _MealPlanEntry({required this.id, required this.date, required this.slot, required this.dishId, required this.servings, this.status = MealPlanItemStatus.planned, this.dishName, this.dishImageUrl}): super._();
   
 
+@override final  String id;
 @override final  DateTime date;
 @override final  MealSlot slot;
 @override final  String dishId;
+@override final  double servings;
+@override@JsonKey() final  MealPlanItemStatus status;
 @override final  String? dishName;
+/// Known only for the lifetime of the session the dish was assigned in —
+/// the backend item has no image field, so this is lost on reload
+/// (nothing currently renders it; see IMPLEMENTATION_PLAN.md).
 @override final  String? dishImageUrl;
 
 /// Create a copy of MealPlanEntry
@@ -229,16 +241,16 @@ _$MealPlanEntryCopyWith<_MealPlanEntry> get copyWith => __$MealPlanEntryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlanEntry&&(identical(other.date, date) || other.date == date)&&(identical(other.slot, slot) || other.slot == slot)&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&(identical(other.dishImageUrl, dishImageUrl) || other.dishImageUrl == dishImageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlanEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.date, date) || other.date == date)&&(identical(other.slot, slot) || other.slot == slot)&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.servings, servings) || other.servings == servings)&&(identical(other.status, status) || other.status == status)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&(identical(other.dishImageUrl, dishImageUrl) || other.dishImageUrl == dishImageUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,date,slot,dishId,dishName,dishImageUrl);
+int get hashCode => Object.hash(runtimeType,id,date,slot,dishId,servings,status,dishName,dishImageUrl);
 
 @override
 String toString() {
-  return 'MealPlanEntry(date: $date, slot: $slot, dishId: $dishId, dishName: $dishName, dishImageUrl: $dishImageUrl)';
+  return 'MealPlanEntry(id: $id, date: $date, slot: $slot, dishId: $dishId, servings: $servings, status: $status, dishName: $dishName, dishImageUrl: $dishImageUrl)';
 }
 
 
@@ -249,7 +261,7 @@ abstract mixin class _$MealPlanEntryCopyWith<$Res> implements $MealPlanEntryCopy
   factory _$MealPlanEntryCopyWith(_MealPlanEntry value, $Res Function(_MealPlanEntry) _then) = __$MealPlanEntryCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime date, MealSlot slot, String dishId, String? dishName, String? dishImageUrl
+ String id, DateTime date, MealSlot slot, String dishId, double servings, MealPlanItemStatus status, String? dishName, String? dishImageUrl
 });
 
 
@@ -266,12 +278,15 @@ class __$MealPlanEntryCopyWithImpl<$Res>
 
 /// Create a copy of MealPlanEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? slot = null,Object? dishId = null,Object? dishName = freezed,Object? dishImageUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? date = null,Object? slot = null,Object? dishId = null,Object? servings = null,Object? status = null,Object? dishName = freezed,Object? dishImageUrl = freezed,}) {
   return _then(_MealPlanEntry(
-date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,slot: null == slot ? _self.slot : slot // ignore: cast_nullable_to_non_nullable
 as MealSlot,dishId: null == dishId ? _self.dishId : dishId // ignore: cast_nullable_to_non_nullable
-as String,dishName: freezed == dishName ? _self.dishName : dishName // ignore: cast_nullable_to_non_nullable
+as String,servings: null == servings ? _self.servings : servings // ignore: cast_nullable_to_non_nullable
+as double,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as MealPlanItemStatus,dishName: freezed == dishName ? _self.dishName : dishName // ignore: cast_nullable_to_non_nullable
 as String?,dishImageUrl: freezed == dishImageUrl ? _self.dishImageUrl : dishImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

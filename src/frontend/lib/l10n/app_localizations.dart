@@ -361,6 +361,12 @@ abstract class AppL10n {
   /// **'Tối'**
   String get mealSlotDinner;
 
+  /// No description provided for @mealSlotSnack.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ăn vặt'**
+  String get mealSlotSnack;
+
   /// No description provided for @mealTypeBreakfast.
   ///
   /// In vi, this message translates to:

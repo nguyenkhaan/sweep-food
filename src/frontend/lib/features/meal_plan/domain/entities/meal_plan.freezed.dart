@@ -14,7 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MealPlan {
 
- DateTime get weekStart; List<MealPlanEntry> get entries;
+ DateTime get weekStart; List<MealPlanEntry> get entries;/// The backend plan id backing this week (null only in tests that build a
+/// [MealPlan] directly) — needed by Shopping List's `generate {meal_plan_id}`.
+ String? get id;
 /// Create a copy of MealPlan
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +27,16 @@ $MealPlanCopyWith<MealPlan> get copyWith => _$MealPlanCopyWithImpl<MealPlan>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlan&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&const DeepCollectionEquality().equals(other.entries, entries));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlan&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&const DeepCollectionEquality().equals(other.entries, entries)&&(identical(other.id, id) || other.id == id));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,weekStart,const DeepCollectionEquality().hash(entries));
+int get hashCode => Object.hash(runtimeType,weekStart,const DeepCollectionEquality().hash(entries),id);
 
 @override
 String toString() {
-  return 'MealPlan(weekStart: $weekStart, entries: $entries)';
+  return 'MealPlan(weekStart: $weekStart, entries: $entries, id: $id)';
 }
 
 
@@ -45,7 +47,7 @@ abstract mixin class $MealPlanCopyWith<$Res>  {
   factory $MealPlanCopyWith(MealPlan value, $Res Function(MealPlan) _then) = _$MealPlanCopyWithImpl;
 @useResult
 $Res call({
- DateTime weekStart, List<MealPlanEntry> entries
+ DateTime weekStart, List<MealPlanEntry> entries, String? id
 });
 
 
@@ -62,11 +64,12 @@ class _$MealPlanCopyWithImpl<$Res>
 
 /// Create a copy of MealPlan
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? weekStart = null,Object? entries = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? weekStart = null,Object? entries = null,Object? id = freezed,}) {
   return _then(_self.copyWith(
 weekStart: null == weekStart ? _self.weekStart : weekStart // ignore: cast_nullable_to_non_nullable
 as DateTime,entries: null == entries ? _self.entries : entries // ignore: cast_nullable_to_non_nullable
-as List<MealPlanEntry>,
+as List<MealPlanEntry>,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -151,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime weekStart,  List<MealPlanEntry> entries)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime weekStart,  List<MealPlanEntry> entries,  String? id)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MealPlan() when $default != null:
-return $default(_that.weekStart,_that.entries);case _:
+return $default(_that.weekStart,_that.entries,_that.id);case _:
   return orElse();
 
 }
@@ -172,10 +175,10 @@ return $default(_that.weekStart,_that.entries);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime weekStart,  List<MealPlanEntry> entries)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime weekStart,  List<MealPlanEntry> entries,  String? id)  $default,) {final _that = this;
 switch (_that) {
 case _MealPlan():
-return $default(_that.weekStart,_that.entries);case _:
+return $default(_that.weekStart,_that.entries,_that.id);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +195,10 @@ return $default(_that.weekStart,_that.entries);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime weekStart,  List<MealPlanEntry> entries)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime weekStart,  List<MealPlanEntry> entries,  String? id)?  $default,) {final _that = this;
 switch (_that) {
 case _MealPlan() when $default != null:
-return $default(_that.weekStart,_that.entries);case _:
+return $default(_that.weekStart,_that.entries,_that.id);case _:
   return null;
 
 }
@@ -207,7 +210,7 @@ return $default(_that.weekStart,_that.entries);case _:
 
 
 class _MealPlan extends MealPlan {
-  const _MealPlan({required this.weekStart, final  List<MealPlanEntry> entries = const <MealPlanEntry>[]}): _entries = entries,super._();
+  const _MealPlan({required this.weekStart, final  List<MealPlanEntry> entries = const <MealPlanEntry>[], this.id}): _entries = entries,super._();
   
 
 @override final  DateTime weekStart;
@@ -218,6 +221,9 @@ class _MealPlan extends MealPlan {
   return EqualUnmodifiableListView(_entries);
 }
 
+/// The backend plan id backing this week (null only in tests that build a
+/// [MealPlan] directly) — needed by Shopping List's `generate {meal_plan_id}`.
+@override final  String? id;
 
 /// Create a copy of MealPlan
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +235,16 @@ _$MealPlanCopyWith<_MealPlan> get copyWith => __$MealPlanCopyWithImpl<_MealPlan>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlan&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&const DeepCollectionEquality().equals(other._entries, _entries));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlan&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&const DeepCollectionEquality().equals(other._entries, _entries)&&(identical(other.id, id) || other.id == id));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,weekStart,const DeepCollectionEquality().hash(_entries));
+int get hashCode => Object.hash(runtimeType,weekStart,const DeepCollectionEquality().hash(_entries),id);
 
 @override
 String toString() {
-  return 'MealPlan(weekStart: $weekStart, entries: $entries)';
+  return 'MealPlan(weekStart: $weekStart, entries: $entries, id: $id)';
 }
 
 
@@ -249,7 +255,7 @@ abstract mixin class _$MealPlanCopyWith<$Res> implements $MealPlanCopyWith<$Res>
   factory _$MealPlanCopyWith(_MealPlan value, $Res Function(_MealPlan) _then) = __$MealPlanCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime weekStart, List<MealPlanEntry> entries
+ DateTime weekStart, List<MealPlanEntry> entries, String? id
 });
 
 
@@ -266,11 +272,12 @@ class __$MealPlanCopyWithImpl<$Res>
 
 /// Create a copy of MealPlan
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? weekStart = null,Object? entries = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? weekStart = null,Object? entries = null,Object? id = freezed,}) {
   return _then(_MealPlan(
 weekStart: null == weekStart ? _self.weekStart : weekStart // ignore: cast_nullable_to_non_nullable
 as DateTime,entries: null == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
-as List<MealPlanEntry>,
+as List<MealPlanEntry>,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

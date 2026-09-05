@@ -11,6 +11,10 @@ abstract class MealPlan with _$MealPlan {
   const factory MealPlan({
     required DateTime weekStart,
     @Default(<MealPlanEntry>[]) List<MealPlanEntry> entries,
+
+    /// The backend plan id backing this week (null only in tests that build a
+    /// [MealPlan] directly) — needed by Shopping List's `generate {meal_plan_id}`.
+    String? id,
   }) = _MealPlan;
 
   /// The Monday of the week containing [d].

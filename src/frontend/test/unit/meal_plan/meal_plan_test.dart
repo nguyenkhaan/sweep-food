@@ -22,13 +22,25 @@ void main() {
     var plan = MealPlan(weekStart: monday);
 
     plan = plan.withEntry(
-      MealPlanEntry(date: monday, slot: MealSlot.lunch, dishId: 'd1'),
+      MealPlanEntry(
+        id: 'item-1',
+        date: monday,
+        slot: MealSlot.lunch,
+        dishId: 'd1',
+        servings: 2,
+      ),
     );
     expect(plan.entryAt(monday, MealSlot.lunch)?.dishId, 'd1');
 
     // Same cell → replace, not append.
     plan = plan.withEntry(
-      MealPlanEntry(date: monday, slot: MealSlot.lunch, dishId: 'd2'),
+      MealPlanEntry(
+        id: 'item-1',
+        date: monday,
+        slot: MealSlot.lunch,
+        dishId: 'd2',
+        servings: 2,
+      ),
     );
     expect(plan.filledCount, 1);
     expect(plan.entryAt(monday, MealSlot.lunch)?.dishId, 'd2');

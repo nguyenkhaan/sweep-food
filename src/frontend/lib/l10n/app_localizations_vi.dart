@@ -141,6 +141,9 @@ class AppL10nVi extends AppL10n {
   String get mealSlotDinner => 'Tối';
 
   @override
+  String get mealSlotSnack => 'Ăn vặt';
+
+  @override
   String get mealTypeBreakfast => 'Bữa sáng';
 
   @override

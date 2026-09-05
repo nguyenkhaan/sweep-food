@@ -141,6 +141,9 @@ class AppL10nEn extends AppL10n {
   String get mealSlotDinner => 'Dinner';
 
   @override
+  String get mealSlotSnack => 'Snack';
+
+  @override
   String get mealTypeBreakfast => 'Breakfast';
 
   @override

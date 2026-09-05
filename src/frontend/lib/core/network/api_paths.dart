@@ -61,9 +61,14 @@ abstract final class ApiPaths {
   static String dish(String id) => '/dishes/$id';
   static String cookDish(String id) => '/dishes/$id/cook';
 
-  // Meal plan
-  static const mealPlans = '/meal-plans';
-  static String mealPlan(String weekStart) => '/meal-plans/$weekStart';
+  // Meal plans (real backend) — no "current week" concept; FE creates/finds a
+  // plan per viewed week and manages items individually. See api-contract.md §7.
+  static const mealPlans = '/meal-plans'; // POST create (no trailing slash)
+  static const mealPlansList = '/meal-plans/'; // GET list (trailing slash)
+  static String mealPlan(String id) => '/meal-plans/$id';
+  static String mealPlanItems(String planId) => '/meal-plans/$planId/items';
+  static String mealPlanItem(String planId, String itemId) =>
+      '/meal-plans/$planId/items/$itemId';
 
   // Shopping list
   static const shoppingLists = '/shopping-lists';

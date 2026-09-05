@@ -18,8 +18,10 @@ class MealPlanWeekStart extends _$MealPlanWeekStart {
   void thisWeek() => state = MealPlan.weekStartOf(DateTime.now());
 }
 
-/// M-01 weekly grid. Re-fetches when the week changes; assign / clear update
-/// optimistically and persist via `PUT /meal-plans/{weekStart}`.
+/// M-01 weekly grid. Re-fetches when the week changes. Assigning an empty
+/// cell creates a new `meal-plans/{id}/items` row; re-assigning a filled one
+/// PATCHes the existing item instead (keeps its id/status); clearing DELETEs
+/// it. Failures roll back by refetching from the server.
 @riverpod
 class MealPlanController extends _$MealPlanController {
   @override
@@ -33,35 +35,55 @@ class MealPlanController extends _$MealPlanController {
     required DateTime date,
     required MealSlot slot,
     required String dishId,
+    required double servings,
     String? dishName,
     String? dishImageUrl,
   }) async {
     final plan = state.asData?.value;
     if (plan == null) return;
-    final next = plan.withEntry(
-      MealPlanEntry(
-        date: date,
-        slot: slot,
-        dishId: dishId,
-        dishName: dishName,
-        dishImageUrl: dishImageUrl,
-      ),
-    );
-    state = AsyncData(next);
+    final existing = plan.entryAt(date, slot);
+
     ref.read(analyticsProvider).log(
       AnalyticsEvents.mealPlanEntryAdded,
       {AnalyticsParams.dishId: dishId},
     );
-    final res = await ref.read(mealPlanRepositoryProvider).save(next);
-    res.fold((_) => ref.invalidateSelf(), (_) {});
+
+    final repo = ref.read(mealPlanRepositoryProvider);
+    final res = existing == null
+        ? await repo.addEntry(
+            weekStart: plan.weekStart,
+            date: date,
+            slot: slot,
+            dishId: dishId,
+            servings: servings,
+            dishName: dishName,
+            dishImageUrl: dishImageUrl,
+          )
+        : await repo.updateEntry(
+            weekStart: plan.weekStart,
+            itemId: existing.id,
+            dishId: dishId,
+            servings: servings,
+            dishName: dishName,
+            dishImageUrl: dishImageUrl,
+          );
+
+    res.fold(
+      (_) => ref.invalidateSelf(),
+      (entry) => state = AsyncData(plan.withEntry(entry)),
+    );
   }
 
   Future<void> clear(DateTime date, MealSlot slot) async {
     final plan = state.asData?.value;
     if (plan == null) return;
-    final next = plan.withoutEntry(date, slot);
-    state = AsyncData(next);
-    final res = await ref.read(mealPlanRepositoryProvider).save(next);
+    final entry = plan.entryAt(date, slot);
+    if (entry == null) return;
+
+    state = AsyncData(plan.withoutEntry(date, slot)); // optimistic
+    final res = await ref
+        .read(mealPlanRepositoryProvider)
+        .removeEntry(weekStart: plan.weekStart, itemId: entry.id);
     res.fold((_) => ref.invalidateSelf(), (_) {});
   }
 }

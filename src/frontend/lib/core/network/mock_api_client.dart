@@ -37,7 +37,6 @@ class MockApiClient implements ApiClient {
     ApiPaths.inventoryBatches: 'inventory_batches',
     ApiPaths.suggestions: 'suggestions',
     '/recipes/': 'recipe',
-    ApiPaths.mealPlans: 'meal_plan',
     '/shopping-lists': 'shopping_list',
     ApiPaths.notifications: 'notifications',
     ApiPaths.subscription: 'subscription',
@@ -191,6 +190,70 @@ class MockApiClient implements ApiClient {
     return rest.split('/').first;
   }
 
+  // --- Meal plan emulation --------------------------------------------------
+  //
+  // The backend has no "current week" / seed-data concept — plans and items
+  // are plain CRUD, same as a fresh backend user would see. Kept as an
+  // in-memory list for the mock session (starts empty, not persisted).
+
+  final _mealPlans = <Map<String, dynamic>>[];
+  static final _mealPlanItemPath = RegExp(r'^/meal-plans/([^/]+)/items/([^/]+)$');
+
+  Map<String, dynamic> _findMealPlan(String id) => _mealPlans.firstWhere(
+        (p) => p['id'] == id,
+        orElse: () => throw MockFixtureException('Không có meal plan "$id"'),
+      );
+
+  Map<String, dynamic> _createMealPlan(Map<String, dynamic> body) {
+    final plan = {
+      'id': 'mock-plan-${_autoId++}',
+      'name': body['name'],
+      'starts_on': body['starts_on'],
+      'ends_on': body['ends_on'],
+      'items': <Map<String, dynamic>>[],
+    };
+    _mealPlans.add(plan);
+    return plan;
+  }
+
+  Map<String, dynamic> _createMealPlanItem(
+    String planId,
+    Map<String, dynamic> body,
+  ) {
+    final item = {
+      'id': 'mock-item-${_autoId++}',
+      'recipe_id': body['recipe_id'],
+      'recipe_name': null,
+      'planned_for': body['planned_for'],
+      'meal_slot': body['meal_slot'],
+      'servings': body['servings'],
+      'status': 'PLANNED',
+    };
+    (_findMealPlan(planId)['items'] as List).add(item);
+    return item;
+  }
+
+  Map<String, dynamic> _updateMealPlanItem(
+    String planId,
+    String itemId,
+    Map<String, dynamic> body,
+  ) {
+    final items = (_findMealPlan(planId)['items'] as List)
+        .cast<Map<String, dynamic>>();
+    final idx = items.indexWhere((i) => i['id'] == itemId);
+    if (idx < 0) {
+      throw MockFixtureException('Không có meal-plan item "$itemId"');
+    }
+    final updated = {...items[idx], ...body};
+    items[idx] = updated;
+    return updated;
+  }
+
+  void _deleteMealPlanItem(String planId, String itemId) {
+    (_findMealPlan(planId)['items'] as List)
+        .removeWhere((i) => (i as Map)['id'] == itemId);
+  }
+
   // ---------------------------------------------------------------------------
 
   @override
@@ -199,6 +262,17 @@ class MockApiClient implements ApiClient {
     log.d('MOCK GET $path ${query ?? ''}');
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null) return _inventoryBatchById(batchId);
+    if (path == ApiPaths.mealPlansList) {
+      return {
+        'items': _mealPlans,
+        'total': _mealPlans.length,
+        'limit': 200,
+        'offset': 0,
+      };
+    }
+    if (path.startsWith('${ApiPaths.mealPlans}/')) {
+      return _clone(_findMealPlan(path.substring('${ApiPaths.mealPlans}/'.length)));
+    }
     return _clone(await _load(path));
   }
 
@@ -213,6 +287,13 @@ class MockApiClient implements ApiClient {
     log.d('MOCK POST $path');
     if (path == _inventoryBatchesPath) {
       return _createInventoryBatch(body as Map<String, dynamic>);
+    }
+    if (path == ApiPaths.mealPlans) {
+      return _createMealPlan(body as Map<String, dynamic>);
+    }
+    if (path.startsWith('${ApiPaths.mealPlans}/') && path.endsWith('/items')) {
+      final planId = path.split('/')[2];
+      return _createMealPlanItem(planId, body as Map<String, dynamic>);
     }
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null && path.endsWith('/adjustments')) {
@@ -270,6 +351,14 @@ class MockApiClient implements ApiClient {
       final b = Map<String, dynamic>.from(body! as Map)..remove('reason');
       return _mutateInventoryBatch(batchId, (batch) => batch..addAll(b));
     }
+    final itemMatch = _mealPlanItemPath.firstMatch(path);
+    if (itemMatch != null) {
+      return _updateMealPlanItem(
+        itemMatch.group(1)!,
+        itemMatch.group(2)!,
+        body! as Map<String, dynamic>,
+      );
+    }
     return _echo(body);
   }
 
@@ -289,6 +378,11 @@ class MockApiClient implements ApiClient {
           ..['status'] = 'ARCHIVED'
           ..['archived_at'] = DateTime.now().toIso8601String(),
       );
+      return null;
+    }
+    final itemMatch = _mealPlanItemPath.firstMatch(path);
+    if (itemMatch != null) {
+      _deleteMealPlanItem(itemMatch.group(1)!, itemMatch.group(2)!);
     }
     return null;
   }
