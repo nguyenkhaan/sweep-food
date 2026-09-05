@@ -21,7 +21,6 @@ class CookingController extends _$CookingController {
     CookConfirmation confirmation, {
     String? dishName,
   }) async {
-    final pantry = ref.read(pantryListControllerProvider.notifier);
     final res = await ref.read(cookingRepositoryProvider).cook(confirmation);
     return res.fold(
       (f) => throw f,
@@ -30,10 +29,12 @@ class CookingController extends _$CookingController {
           dishId: raw.dishId.isEmpty ? confirmation.dishId : raw.dishId,
           dishName: raw.dishName.isEmpty ? (dishName ?? '') : raw.dishName,
         );
-        pantry.applyCookChanges(
-          updated: result.updatedPantryItems,
-          depletedIds: result.depletedItemIds,
-        );
+        ref
+            .read(pantryListControllerProvider.notifier)
+            .applyCookChanges(
+              updated: result.updatedPantryItems,
+              depletedIds: result.depletedItemIds,
+            );
         state = result;
         return result;
       },

@@ -1,11 +1,12 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
 import 'package:sweepfood/core/widgets/section_header.dart';
-import 'package:sweepfood/features/cooking/presentation/widgets/post_cook_confirm_sheet.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
+import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 import 'package:sweepfood/features/dishes/presentation/controllers/dish_detail_controller.dart';
 import 'package:sweepfood/features/dishes/presentation/widgets/cooking_steps_view.dart';
@@ -234,10 +235,44 @@ class _ServingsRow extends StatelessWidget {
   }
 }
 
-class _CookBar extends StatelessWidget {
+class _CookBar extends ConsumerStatefulWidget {
   const _CookBar({required this.dish});
 
   final Dish dish;
+
+  @override
+  ConsumerState<_CookBar> createState() => _CookBarState();
+}
+
+class _CookBarState extends ConsumerState<_CookBar> {
+  bool _busy = false;
+
+  Future<void> _handleCook() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await ref.read(cookingControllerProvider.notifier).confirm(
+        CookConfirmation(
+          dishId: widget.dish.id,
+          mode: CookMode.exact,
+          servingsCooked: widget.dish.servings,
+        ),
+        dishName: widget.dish.name,
+      );
+      if (mounted) {
+        AppSnack.show(
+          context,
+          'Đã ghi nhận nấu ${widget.dish.name}! Kho đã được tự động cập nhật.',
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        AppSnack.show(context, 'Có lỗi khi cập nhật kho: $e');
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,9 +281,15 @@ class _CookBar extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: FilledButton.icon(
-          onPressed: () => PostCookConfirmSheet.show(context, dish: dish),
-          icon: const Icon(Icons.restaurant_menu_rounded, size: 18),
-          label: Text(context.l10n.dishCookedThis),
+          onPressed: _busy ? null : _handleCook,
+          icon: _busy
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.restaurant_menu_rounded, size: 18),
+          label: Text(_busy ? 'Đang cập nhật kho...' : context.l10n.dishCookedThis),
         ),
       ),
     );

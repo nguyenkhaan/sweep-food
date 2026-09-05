@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#B7E4C7;--green-700:#40916C;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--warn:#E29377;--warn-bg:#3A241C;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    a{color:var(--green-800);text-decoration:none}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;min-height:844px;position:relative}
+    .topbar{display:flex;align-items:center;gap:12px;padding:16px 20px 8px}
+    .backbtn{width:38px;height:38px;border-radius:12px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .selected-bar{padding:8px 20px;display:flex;flex-direction:column;gap:6px}
+    .selected-chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+    .sel-chip{font-size:12px;font-weight:600;background:var(--green-100);color:var(--green-800);border-radius:999px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+    .list{display:flex;flex-direction:column;gap:14px;padding:12px 20px 100px}
+    .rcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,.4)}
+    .rcard-head{display:flex;align-items:flex-start;gap:10px}
+    .rcard-head .ic{width:38px;height:38px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--green-800);flex:none}
+    .rcard-head .info{flex:1}
+    .rcard-head .title{font-size:15px;font-weight:700}
+    .rcard-head .meta{font-size:12px;color:var(--ink-3);margin-top:2px}
+    .status-badge{font-size:11px;font-weight:700;border-radius:999px;padding:3px 9px;display:inline-flex;align-items:center}
+    .status-badge.ok{background:var(--green-100);color:var(--green-800)}
+    .status-badge.missing{background:var(--warn-bg);color:var(--warn)}
+    .matched-box{font-size:12px;color:var(--green-800);background:rgba(64,145,108,0.12);padding:6px 10px;border-radius:8px}
+    .missing-box{background:var(--fill);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px}
+    .missing-title{font-size:11px;font-weight:700;color:var(--ink-2);text-transform:uppercase;letter-spacing:0.04em}
+    .missing-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink)}
+    .missing-item .dot{width:6px;height:6px;border-radius:50%;background:var(--warn)}
+    .missing-item .qty{margin-left:auto;color:var(--ink-3);font-size:11px}
+    .rcard-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px;margin-top:2px}
+    .view-recipe{font-size:12px;font-weight:600;color:var(--green-800);display:flex;align-items:center;gap:4px;cursor:pointer}
+    .add-to-cart{font-size:11px;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 10px;color:var(--ink-2);cursor:pointer;display:flex;align-items:center;gap:4px}
+    .sticky-bottom{position:fixed;bottom:0;width:390px;background:var(--surface);border-top:1px solid var(--line);padding:12px 20px;box-shadow:0 -4px 16px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .add-all-btn{flex:1;height:46px;background:var(--green-700);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <div class="backbtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </div>
+    <h1>Công thức có thể nấu</h1>
+  </div>
+
+  <div class="selected-bar">
+    <div style="font-size:12px;color:var(--ink-3)">Đang chọn 2 nguyên liệu từ kho:</div>
+    <div class="selected-chips">
+      <span class="sel-chip">✓ Cải bó xôi</span>
+      <span class="sel-chip">✓ Cà chua bi</span>
+    </div>
+  </div>
+
+  <div class="list">
+    <!-- Recipe 1 -->
+    <div class="rcard">
+      <div class="rcard-head">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg></div>
+        <div class="info">
+          <div class="title">Canh chua cá lóc</div>
+          <div class="meta">35 phút · Trung bình · 3 khẩu phần</div>
+        </div>
+        <span class="status-badge missing">Thiếu 3 món</span>
+      </div>
+
+      <div class="matched-box">
+        Đã có: Cà chua bi, Cải bó xôi
+      </div>
+
+      <div class="missing-box">
+        <div class="missing-title">Nguyên liệu còn thiếu:</div>
+        <div class="missing-item">
+          <span class="dot"></span>
+          <span>Cá lóc</span>
+          <span class="qty">300g</span>
+        </div>
+        <div class="missing-item">
+          <span class="dot"></span>
+          <span>Đậu bắp</span>
+          <span class="qty">50g</span>
+        </div>
+        <div class="missing-item">
+          <span class="dot"></span>
+          <span>Giá đỗ</span>
+          <span class="qty">100g</span>
+        </div>
+      </div>
+
+      <div class="rcard-foot">
+        <div class="view-recipe">
+          Xem chi tiết món
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <button class="add-to-cart">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          Thêm thiếu vào mua
+        </button>
+      </div>
+    </div>
+
+    <!-- Recipe 2 -->
+    <div class="rcard">
+      <div class="rcard-head">
+        <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8Z"/></svg></div>
+        <div class="info">
+          <div class="title">Canh cải thịt băm</div>
+          <div class="meta">20 phút · Dễ · 2 khẩu phần</div>
+        </div>
+        <span class="status-badge missing">Thiếu 2 món</span>
+      </div>
+
+      <div class="matched-box">
+        Đã có: Cải bó xôi
+      </div>
+
+      <div class="missing-box">
+        <div class="missing-title">Nguyên liệu còn thiếu:</div>
+        <div class="missing-item">
+          <span class="dot"></span>
+          <span>Thịt nạc xay</span>
+          <span class="qty">150g</span>
+        </div>
+        <div class="missing-item">
+          <span class="dot"></span>
+          <span>Hành tím</span>
+          <span class="qty">2 củ</span>
+        </div>
+      </div>
+
+      <div class="rcard-foot">
+        <div class="view-recipe">
+          Xem chi tiết món
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+        <button class="add-to-cart">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          Thêm thiếu vào mua
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky-bottom">
+    <button class="add-all-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+      Thêm tất cả nguyên liệu thiếu vào giỏ mua
+    </button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
