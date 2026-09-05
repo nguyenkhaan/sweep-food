@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
@@ -34,8 +34,7 @@ class MockApiClient implements ApiClient {
   /// to exercise the sign-in flow.
   static final Map<String, String> _fixtures = {
     ApiPaths.ingredients: 'ingredients',
-    ApiPaths.pantryItems: 'pantry_items',
-    ApiPaths.pantrySummary: 'pantry_summary',
+    ApiPaths.inventoryBatches: 'inventory_batches',
     ApiPaths.suggestions: 'suggestions',
     '/recipes/': 'recipe',
     ApiPaths.mealPlans: 'meal_plan',
@@ -74,12 +73,12 @@ class MockApiClient implements ApiClient {
   }
 
   Future<dynamic> _loadKey(String key) async {
-    if (_cache.containsKey(key)) return _clone(_cache[key]);
+    if (_cache.containsKey(key)) return _cache[key];
     try {
       final raw = _fillDates(await rootBundle.loadString('assets/mock/$key.json'));
       final decoded = jsonDecode(raw);
       _cache[key] = decoded;
-      return _clone(decoded);
+      return decoded;
     } catch (e) {
       throw MockFixtureException('Fixture "assets/mock/$key.json" lỗi: $e');
     }
@@ -112,11 +111,95 @@ class MockApiClient implements ApiClient {
     return body;
   }
 
+  // --- Inventory batch emulation -------------------------------------------
+  //
+  // `/inventory/batches` mutations (create/adjust/consume/move/patch/delete)
+  // need to keep returning a full batch shape (PantryItemDto has several
+  // required fields), not a plain echo of the request body. This mirrors just
+  // enough of the real quantity/status bookkeeping for the mock to stay usable
+  // for browsing/demoing the pantry without a backend.
+
+  static const _inventoryBatchesPath = ApiPaths.inventoryBatches;
+
+  Future<List<Map<String, dynamic>>> _inventoryItems() async {
+    final doc = await _loadKey('inventory_batches') as Map<String, dynamic>;
+    return (doc['items'] as List).cast<Map<String, dynamic>>();
+  }
+
+  Future<Map<String, dynamic>> _inventoryBatchById(String id) async {
+    final items = await _inventoryItems();
+    return _clone(
+      items.firstWhere(
+        (i) => i['id'] == id,
+        orElse: () =>
+            throw MockFixtureException('Không có inventory batch "$id"'),
+      ),
+    ) as Map<String, dynamic>;
+  }
+
+  /// Applies [apply] to the cached batch and writes it back so later GETs see it.
+  Future<Map<String, dynamic>> _mutateInventoryBatch(
+    String id,
+    Map<String, dynamic> Function(Map<String, dynamic> batch) apply,
+  ) async {
+    final items = await _inventoryItems();
+    final idx = items.indexWhere((i) => i['id'] == id);
+    if (idx < 0) {
+      throw MockFixtureException('Không có inventory batch "$id"');
+    }
+    final updated = apply(Map<String, dynamic>.from(items[idx]));
+    updated['updated_at'] = DateTime.now().toIso8601String();
+    items[idx] = updated;
+    return _clone(updated) as Map<String, dynamic>;
+  }
+
+  Map<String, dynamic> _createInventoryBatch(Map<String, dynamic> body) {
+    final now = DateTime.now().toIso8601String();
+    final quantity = body['quantity'];
+    return {
+      'id': 'mock-${_autoId++}',
+      'master_ingredient_id': body['master_ingredient_id'],
+      'custom_name': body['custom_name'],
+      'ingredient_name': body['custom_name'] ?? 'Nguyên liệu',
+      'batch_type': 'RAW_INGREDIENT',
+      'initial_quantity': quantity,
+      'current_quantity': quantity,
+      'unit': body['unit'],
+      'storage_mode': body['storage_mode'],
+      'status': 'ACTIVE',
+      'purchased_at': body['purchased_at'],
+      'packaged_at': body['packaged_at'],
+      'stored_at': body['stored_at'],
+      'expires_at': body['expires_at'],
+      'expiration_source': body['expires_at'] != null ? 'MANUFACTURER' : 'UNKNOWN',
+      'unit_cost': body['unit_cost'],
+      'note': body['note'],
+      'media_url': body['media_url'],
+      'source': 'MANUAL',
+      'source_cooking_session_id': null,
+      'created_at': now,
+      'updated_at': now,
+      'archived_at': null,
+    };
+  }
+
+  /// `/inventory/batches/{id}[/action]` → the `{id}` segment, or null when the
+  /// path is the bare collection.
+  String? _inventoryBatchIdFromPath(String path) {
+    if (!path.startsWith('$_inventoryBatchesPath/')) return null;
+    final rest = path.substring('$_inventoryBatchesPath/'.length);
+    return rest.split('/').first;
+  }
+
+  // ---------------------------------------------------------------------------
+
   @override
   Future<dynamic> get(String path, {Map<String, dynamic>? query}) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK GET $path ${query ?? ''}');
-    return _load(path);
+    final batchId = _inventoryBatchIdFromPath(path);
+    if (batchId != null) return _inventoryBatchById(batchId);
+    return _clone(await _load(path));
   }
 
   @override
@@ -124,11 +207,46 @@ class MockApiClient implements ApiClient {
     String path, {
     Object? body,
     Map<String, dynamic>? query,
+    Map<String, String>? headers,
   }) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK POST $path');
+    if (path == _inventoryBatchesPath) {
+      return _createInventoryBatch(body as Map<String, dynamic>);
+    }
+    final batchId = _inventoryBatchIdFromPath(path);
+    if (batchId != null && path.endsWith('/adjustments')) {
+      final b = body as Map<String, dynamic>;
+      return _mutateInventoryBatch(batchId, (batch) {
+        final delta = b['event_type'] == 'DISCARDED'
+            ? -(batch['current_quantity'] as num)
+            : (b['quantity_delta'] as num);
+        final next = (batch['current_quantity'] as num) + delta;
+        batch['current_quantity'] = next < 0 ? 0 : next;
+        batch['status'] = next <= 0
+            ? (b['event_type'] == 'DISCARDED' ? 'DISCARDED' : 'DEPLETED')
+            : 'ACTIVE';
+        return batch;
+      });
+    }
+    if (batchId != null && path.endsWith('/consume')) {
+      final b = body as Map<String, dynamic>;
+      return _mutateInventoryBatch(batchId, (batch) {
+        final next = (batch['current_quantity'] as num) - (b['quantity'] as num);
+        batch['current_quantity'] = next < 0 ? 0 : next;
+        batch['status'] = next <= 0 ? 'DEPLETED' : 'ACTIVE';
+        return batch;
+      });
+    }
+    if (batchId != null && path.endsWith('/move')) {
+      final b = body as Map<String, dynamic>;
+      return _mutateInventoryBatch(
+        batchId,
+        (batch) => batch..['storage_mode'] = b['storage_mode'],
+      );
+    }
     final fixture = _postFixtureKey(path);
-    if (fixture != null) return _loadKey(fixture);
+    if (fixture != null) return _clone(await _loadKey(fixture));
     return _echo(body);
   }
 
@@ -140,16 +258,38 @@ class MockApiClient implements ApiClient {
   }
 
   @override
-  Future<dynamic> patch(String path, {Object? body}) async {
+  Future<dynamic> patch(
+    String path, {
+    Object? body,
+    Map<String, String>? headers,
+  }) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK PATCH $path');
+    final batchId = _inventoryBatchIdFromPath(path);
+    if (batchId != null) {
+      final b = Map<String, dynamic>.from(body! as Map)..remove('reason');
+      return _mutateInventoryBatch(batchId, (batch) => batch..addAll(b));
+    }
     return _echo(body);
   }
 
   @override
-  Future<dynamic> delete(String path, {Object? body}) async {
+  Future<dynamic> delete(
+    String path, {
+    Object? body,
+    Map<String, String>? headers,
+  }) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK DELETE $path');
+    final batchId = _inventoryBatchIdFromPath(path);
+    if (batchId != null) {
+      await _mutateInventoryBatch(
+        batchId,
+        (batch) => batch
+          ..['status'] = 'ARCHIVED'
+          ..['archived_at'] = DateTime.now().toIso8601String(),
+      );
+    }
     return null;
   }
 
@@ -162,6 +302,6 @@ class MockApiClient implements ApiClient {
     await Future<void>.delayed(_latency * 2);
     log.d('MOCK MULTIPART $path (${files.length} file)');
     // Scan endpoints return a canned ScanJob fixture in M4.
-    return _load(path);
+    return _clone(await _load(path));
   }
 }

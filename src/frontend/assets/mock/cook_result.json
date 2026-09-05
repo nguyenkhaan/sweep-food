@@ -11,7 +11,7 @@
       "before": 300,
       "after": 100,
       "near_expiry_used": true,
-      "pantry_item_id": "p3"
+      "pantry_item_id": "b3"
     },
     {
       "name": "Cà chua bi",
@@ -19,36 +19,36 @@
       "before": 500,
       "after": 400,
       "near_expiry_used": true,
-      "pantry_item_id": "p2"
+      "pantry_item_id": "b2"
     }
   ],
   "updated_pantry_items": [
     {
-      "id": "p3",
-      "name": "Ức gà",
-      "category": "Thịt",
-      "quantity": 100,
+      "id": "b3",
+      "custom_name": "Ức gà",
+      "ingredient_name": "Ức gà",
+      "current_quantity": 100,
       "unit": "g",
-      "storage_tier": "fridge",
-      "added_at": "{{today-1}}",
-      "source": "label_scan",
-      "status": "active",
-      "expiry_date": "{{today+2}}",
-      "price_vnd": 45000
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-1}}",
+      "expires_at": "{{today+2}}",
+      "unit_cost": 45000
     },
     {
-      "id": "p2",
-      "name": "Cà chua bi",
-      "category": "Rau củ",
-      "quantity": 400,
+      "id": "b2",
+      "custom_name": "Cà chua bi",
+      "ingredient_name": "Cà chua bi",
+      "current_quantity": 400,
       "unit": "g",
-      "storage_tier": "fridge",
-      "added_at": "{{today-3}}",
-      "source": "receipt_scan",
-      "status": "active",
-      "packed_date": "{{today-3}}",
-      "expiry_date": "{{today+1}}",
-      "price_vnd": 18000
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-3}}",
+      "packaged_at": "{{today-3}}",
+      "expires_at": "{{today+1}}",
+      "unit_cost": 18000
     }
   ]
 }

@@ -33,8 +33,8 @@ void main() {
 
     // Pantry starts from the fixture.
     final before = await container.read(pantryListControllerProvider.future);
-    expect(qty(before, 'p3'), 300); // Ức gà
-    expect(qty(before, 'p2'), 500); // Cà chua bi
+    expect(qty(before, 'b3'), 300); // Ức gà
+    expect(qty(before, 'b2'), 500); // Cà chua bi
 
     // Suggestions come back ranked; the top pick is "Salad bơ ức gà" (d1).
     final suggestions =
@@ -65,7 +65,7 @@ void main() {
 
     // The loaded pantry list now reflects the deduction.
     final after = container.read(pantryListControllerProvider).requireValue;
-    expect(qty(after, 'p3'), 100); // 300 -> 100
-    expect(qty(after, 'p2'), 400); // 500 -> 400
+    expect(qty(after, 'b3'), 100); // 300 -> 100
+    expect(qty(after, 'b2'), 400); // 500 -> 400
   });
 }

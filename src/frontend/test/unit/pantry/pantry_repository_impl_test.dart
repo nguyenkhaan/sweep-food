@@ -21,25 +21,28 @@ void main() {
   });
 
   group('list()', () {
-    test('maps the API payload to PantryItem entities', () async {
+    test('maps the /inventory/batches payload to PantryItem entities', () async {
       when(
-        () => api.get(ApiPaths.pantryItems, query: any(named: 'query')),
+        () => api.get(ApiPaths.inventoryBatches, query: any(named: 'query')),
       ).thenAnswer(
         (_) async => {
           'items': [
             {
-              'id': 'p1',
-              'name': 'Cà chua bi',
-              'category': 'Rau củ',
-              'quantity': 250.0,
-              'unit': 'g',
-              'storage_tier': 'fridge',
-              'added_at': '2026-08-30T00:00:00.000',
-              'source': 'manual',
-              'status': 'active',
-              'expiry_date': '2026-09-02T00:00:00.000',
+              'id': 'batch-1',
+              'custom_name': 'Cà chua bi',
+              'ingredient_name': 'Cà chua bi',
+              'current_quantity': 250.0,
+              'unit': 'GRAM',
+              'storage_mode': 'REFRIGERATED',
+              'status': 'ACTIVE',
+              'source': 'MANUAL',
+              'created_at': '2026-08-30T00:00:00.000Z',
+              'expires_at': '2026-09-02T00:00:00.000Z',
             },
           ],
+          'total': 1,
+          'page': 1,
+          'per_page': 100,
         },
       );
 
@@ -58,7 +61,7 @@ void main() {
 
     test('returns a Failure (Left) when the client throws', () async {
       when(
-        () => api.get(ApiPaths.pantryItems, query: any(named: 'query')),
+        () => api.get(ApiPaths.inventoryBatches, query: any(named: 'query')),
       ).thenThrow(Exception('network down'));
 
       final res = await repo.list();
@@ -68,39 +71,92 @@ void main() {
   });
 
   group('add()', () {
-    test('sends a snake_case body and maps the echoed item back', () async {
-      when(
-        () => api.post(ApiPaths.pantryItems, body: any(named: 'body')),
-      ).thenAnswer((invocation) async {
-        final body = invocation.namedArguments[#body]! as Map<String, dynamic>;
-        return {...body, 'id': 'new-1', 'added_at': '2026-08-30T00:00:00.000'};
-      });
+    test(
+      'sends a snake_case batch body with an Idempotency-Key and maps the response back',
+      () async {
+        when(
+          () => api.post(
+            ApiPaths.inventoryBatches,
+            body: any(named: 'body'),
+            headers: any(named: 'headers'),
+          ),
+        ).thenAnswer((invocation) async {
+          final body =
+              invocation.namedArguments[#body]! as Map<String, dynamic>;
+          return {
+            'id': 'new-1',
+            'custom_name': body['custom_name'],
+            'ingredient_name': body['custom_name'],
+            'current_quantity': body['quantity'],
+            'unit': body['unit'],
+            'storage_mode': body['storage_mode'],
+            'status': 'ACTIVE',
+            'source': 'MANUAL',
+            'created_at': '2026-08-30T00:00:00.000Z',
+          };
+        });
 
-      final res = await repo.add(
-        const PantryItemDraft(
-          name: 'Trứng gà',
-          category: 'Đạm',
-          quantity: 10,
-          unit: MeasurementUnit.fruit,
-          storageTier: StorageTier.fridge,
+        final res = await repo.add(
+          const PantryItemDraft(
+            name: 'Trứng gà',
+            category: 'Đạm',
+            quantity: 10,
+            unit: MeasurementUnit.fruit,
+            storageTier: StorageTier.fridge,
+          ),
+        );
+
+        final item = res.fold((f) => fail('expected Right, got $f'), (r) => r);
+        expect(item.id, 'new-1');
+        expect(item.name, 'Trứng gà');
+        // The backend has no "quả" unit — collapses to OTHER on write, which
+        // falls back to gram on read (documented limitation).
+        expect(item.unit, MeasurementUnit.gram);
+
+        final captured = verify(
+          () => api.post(
+            ApiPaths.inventoryBatches,
+            body: captureAny(named: 'body'),
+            headers: captureAny(named: 'headers'),
+          ),
+        ).captured;
+        final body = captured[0] as Map<String, dynamic>;
+        final headers = captured[1] as Map<String, String>;
+        expect(body['storage_mode'], 'REFRIGERATED');
+        expect(body['unit'], 'OTHER');
+        expect(body['custom_name'], 'Trứng gà');
+        expect(headers['Idempotency-Key'], isNotEmpty);
+      },
+    );
+  });
+
+  group('consume()', () {
+    test('posts to /adjustments-consume and maps the updated batch', () async {
+      when(
+        () => api.post(
+          ApiPaths.inventoryBatchConsume('batch-1'),
+          body: any(named: 'body'),
+          headers: any(named: 'headers'),
         ),
+      ).thenAnswer(
+        (_) async => {
+          'id': 'batch-1',
+          'custom_name': 'Cà chua bi',
+          'ingredient_name': 'Cà chua bi',
+          'current_quantity': 0.0,
+          'unit': 'GRAM',
+          'storage_mode': 'REFRIGERATED',
+          'status': 'DEPLETED',
+          'source': 'MANUAL',
+          'created_at': '2026-08-30T00:00:00.000Z',
+        },
       );
 
-      final item = res.fold((f) => fail('expected Right, got $f'), (r) => r);
-      expect(item.id, 'new-1');
-      expect(item.name, 'Trứng gà');
-      expect(item.unit, MeasurementUnit.fruit);
+      final res = await repo.consume('batch-1', quantityUsed: 250);
 
-      final body =
-          verify(
-                () => api.post(
-                  ApiPaths.pantryItems,
-                  body: captureAny(named: 'body'),
-                ),
-              ).captured.single
-              as Map<String, dynamic>;
-      expect(body['storage_tier'], 'fridge');
-      expect(body['unit'], 'qua');
+      final item = res.fold((f) => fail('expected Right, got $f'), (r) => r);
+      expect(item.status, PantryItemStatus.used);
+      expect(item.quantity, 0.0);
     });
   });
 }

@@ -9,67 +9,41 @@ part of 'pantry_item_dto.dart';
 _PantryItemDto _$PantryItemDtoFromJson(Map<String, dynamic> json) =>
     _PantryItemDto(
       id: json['id'] as String,
-      name: json['name'] as String,
-      category: json['category'] as String,
-      quantity: (json['quantity'] as num).toDouble(),
+      masterIngredientId: json['master_ingredient_id'] as String?,
+      customName: json['custom_name'] as String?,
+      ingredientName: json['ingredient_name'] as String,
+      currentQuantity: (json['current_quantity'] as num).toDouble(),
       unit: json['unit'] as String,
-      storageTier: json['storage_tier'] as String,
-      addedAt: DateTime.parse(json['added_at'] as String),
-      source: json['source'] as String,
-      status: json['status'] as String? ?? 'active',
-      ingredientId: json['ingredient_id'] as String?,
-      packedDate: json['packed_date'] == null
+      storageMode: json['storage_mode'] as String,
+      status: json['status'] as String? ?? 'ACTIVE',
+      source: json['source'] as String? ?? 'MANUAL',
+      purchasedAt: json['purchased_at'] == null
           ? null
-          : DateTime.parse(json['packed_date'] as String),
-      expiryDate: json['expiry_date'] == null
+          : DateTime.parse(json['purchased_at'] as String),
+      packagedAt: json['packaged_at'] == null
           ? null
-          : DateTime.parse(json['expiry_date'] as String),
-      referenceShelfLifeDays: (json['reference_shelf_life_days'] as num?)
-          ?.toInt(),
-      priceVnd: (json['price_vnd'] as num?)?.toInt(),
+          : DateTime.parse(json['packaged_at'] as String),
+      expiresAt: json['expires_at'] == null
+          ? null
+          : DateTime.parse(json['expires_at'] as String),
+      unitCost: json['unit_cost'] as num?,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$PantryItemDtoToJson(_PantryItemDto instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
-      'category': instance.category,
-      'quantity': instance.quantity,
+      'master_ingredient_id': instance.masterIngredientId,
+      'custom_name': instance.customName,
+      'ingredient_name': instance.ingredientName,
+      'current_quantity': instance.currentQuantity,
       'unit': instance.unit,
-      'storage_tier': instance.storageTier,
-      'added_at': instance.addedAt.toIso8601String(),
-      'source': instance.source,
+      'storage_mode': instance.storageMode,
       'status': instance.status,
-      'ingredient_id': instance.ingredientId,
-      'packed_date': instance.packedDate?.toIso8601String(),
-      'expiry_date': instance.expiryDate?.toIso8601String(),
-      'reference_shelf_life_days': instance.referenceShelfLifeDays,
-      'price_vnd': instance.priceVnd,
-    };
-
-_PantrySummaryDto _$PantrySummaryDtoFromJson(Map<String, dynamic> json) =>
-    _PantrySummaryDto(
-      totalCount: (json['total_count'] as num).toInt(),
-      countByTier:
-          (json['count_by_tier'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, (e as num).toInt()),
-          ) ??
-          const {},
-      nearExpiry:
-          (json['near_expiry'] as List<dynamic>?)
-              ?.map((e) => PantryItemDto.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-      wasteReductionCount:
-          (json['waste_reduction_count'] as num?)?.toInt() ?? 0,
-      wasteAvoidedKg: (json['waste_avoided_kg'] as num?)?.toDouble(),
-    );
-
-Map<String, dynamic> _$PantrySummaryDtoToJson(_PantrySummaryDto instance) =>
-    <String, dynamic>{
-      'total_count': instance.totalCount,
-      'count_by_tier': instance.countByTier,
-      'near_expiry': instance.nearExpiry,
-      'waste_reduction_count': instance.wasteReductionCount,
-      'waste_avoided_kg': instance.wasteAvoidedKg,
+      'source': instance.source,
+      'purchased_at': instance.purchasedAt?.toIso8601String(),
+      'packaged_at': instance.packagedAt?.toIso8601String(),
+      'expires_at': instance.expiresAt?.toIso8601String(),
+      'unit_cost': instance.unitCost,
+      'created_at': instance.createdAt.toIso8601String(),
     };

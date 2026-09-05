@@ -29,12 +29,21 @@ abstract final class ApiPaths {
   static const ingredients = '/ingredients';
   static String ingredient(String id) => '/ingredients/$id';
 
-  // Pantry
-  static const pantryItems = '/pantry/items';
-  static const pantryItemsBatch = '/pantry/items:batch';
-  static String pantryItem(String id) => '/pantry/items/$id';
-  static String pantryItemConsume(String id) => '/pantry/items/$id/consume';
-  static const pantrySummary = '/pantry/summary';
+  // Inventory (real backend) — pantry screen reads/writes here. See
+  // api-contract.md §2.
+  static const inventoryBatches = '/inventory/batches';
+  static String inventoryBatch(String id) => '/inventory/batches/$id';
+  static String inventoryBatchAdjustments(String id) =>
+      '/inventory/batches/$id/adjustments';
+  static String inventoryBatchConsume(String id) =>
+      '/inventory/batches/$id/consume';
+  static String inventoryBatchMove(String id) =>
+      '/inventory/batches/$id/move';
+  static String inventoryBatchLedger(String id) =>
+      '/inventory/batches/$id/ledger';
+
+  // TODO(Group D — Cooking): replace with the real leftover-creation endpoint
+  // (`POST /cooking/sessions/{id}/leftovers`) once cooking is wired.
   static const cookedFood = '/pantry/cooked-food';
 
   // Scan / ingest

@@ -170,7 +170,8 @@ Map<StorageTier?, int> pantryTierCounts(Ref ref) {
   return counts;
 }
 
-/// `GET /pantry/summary` (Home dashboard; also invalidated after mutations).
+/// Dashboard summary, computed client-side from the batch list (Home
+/// dashboard; also invalidated after mutations).
 @riverpod
 Future<PantrySummary> pantrySummary(Ref ref) async {
   final res = await ref.watch(pantryRepositoryProvider).summary();

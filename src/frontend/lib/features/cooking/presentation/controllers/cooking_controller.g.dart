@@ -59,7 +59,7 @@ final class CookingControllerProvider
   }
 }
 
-String _$cookingControllerHash() => r'c7ced4071b67725f0ee917aa45864b9148317dab';
+String _$cookingControllerHash() => r'83564a661f3311990b9643beb18385987fceb17b';
 
 /// Drives the post-cook flow: confirm → deduct stock → expose the [CookResult]
 /// for the D-05 / D-07 screen. Applying the result also refreshes the pantry

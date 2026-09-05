@@ -1,0 +1,133 @@
+{
+  "items": [
+    {
+      "id": "b1",
+      "custom_name": "Cải bó xôi",
+      "ingredient_name": "Cải bó xôi",
+      "current_quantity": 1,
+      "unit": "bo",
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-2}}",
+      "expires_at": "{{today}}",
+      "unit_cost": 12000
+    },
+    {
+      "id": "b2",
+      "custom_name": "Cà chua bi",
+      "ingredient_name": "Cà chua bi",
+      "current_quantity": 500,
+      "unit": "g",
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-3}}",
+      "packaged_at": "{{today-3}}",
+      "expires_at": "{{today+1}}",
+      "unit_cost": 18000
+    },
+    {
+      "id": "b3",
+      "custom_name": "Ức gà",
+      "ingredient_name": "Ức gà",
+      "current_quantity": 300,
+      "unit": "g",
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-1}}",
+      "expires_at": "{{today+2}}",
+      "unit_cost": 45000
+    },
+    {
+      "id": "b4",
+      "custom_name": "Sữa tươi",
+      "ingredient_name": "Sữa tươi",
+      "current_quantity": 1,
+      "unit": "l",
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-4}}",
+      "expires_at": "{{today+3}}"
+    },
+    {
+      "id": "b5",
+      "custom_name": "Đậu hũ non",
+      "ingredient_name": "Đậu hũ non",
+      "current_quantity": 2,
+      "unit": "hop",
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-2}}",
+      "expires_at": "{{today+4}}"
+    },
+    {
+      "id": "b6",
+      "custom_name": "Trứng gà",
+      "ingredient_name": "Trứng gà",
+      "current_quantity": 10,
+      "unit": "qua",
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-5}}",
+      "expires_at": "{{today+12}}",
+      "unit_cost": 32000
+    },
+    {
+      "id": "b7",
+      "custom_name": "Cá hồi phi lê",
+      "ingredient_name": "Cá hồi phi lê",
+      "current_quantity": 400,
+      "unit": "g",
+      "storage_mode": "FROZEN",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-6}}",
+      "expires_at": "{{today+45}}",
+      "unit_cost": 120000
+    },
+    {
+      "id": "b8",
+      "custom_name": "Gạo ST25",
+      "ingredient_name": "Gạo ST25",
+      "current_quantity": 5,
+      "unit": "kg",
+      "storage_mode": "DRY_SHELF",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-20}}",
+      "expires_at": "{{today+240}}"
+    },
+    {
+      "id": "b9",
+      "custom_name": "Nước mắm",
+      "ingredient_name": "Nước mắm",
+      "current_quantity": 500,
+      "unit": "ml",
+      "storage_mode": "DRY_SHELF",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-30}}",
+      "expires_at": "{{today+365}}"
+    },
+    {
+      "id": "b10",
+      "custom_name": "Rau muống",
+      "ingredient_name": "Rau muống",
+      "current_quantity": 1,
+      "unit": "bo",
+      "storage_mode": "ROOM_TEMPERATURE",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today}}",
+      "expires_at": "{{today}}"
+    }
+  ],
+  "total": 10,
+  "page": 1,
+  "per_page": 100
+}
