@@ -35,7 +35,8 @@ Nối `DioApiClient` với BE thật, "xong đến đâu nối đến đó". `co
 - **Shopping Lists (2026-09-05)** — ✅ nối + **verify live** (`test/live/shopping_list_live_test.dart`, 5/5 pass), không phát sinh lỗi mới.
 - **Cooking (2026-09-05)** — ✅ nối + **verify live** (`test/live/cooking_live_test.dart`, 3/3 pass, quyết định UX auto-tạo meal-plan-item ẩn vẫn chưa được BE xác nhận). 1 lỗi thiết kế DTO phát hiện khi verify live, đã sửa — xem mục D.
 - **Favorites (2026-09-05)** — ✅ đã triển khai hoàn thiện Clean Architecture & nối API thật + MockApiClient + unit / widget / live tests (`test/live/favorites_live_test.dart`) — xem mục F.
-- **Chưa nối:** Extractions. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
+- **Extractions (2026-09-05)** — ✅ đã nối API thật & mapping ExtractionResponse / InvoiceExtractionResponse / BarcodeExtractionResponse + MockApiClient + unit / widget / live tests (`test/live/extractions_live_test.dart`) — xem mục G.
+- **Tất cả các mục A, B, C, D, E, F, G đã hoàn thành nối API và có test đầy đủ.**
 
 ### M6.2 — Việc còn lại, theo `docs/api-contract.md` M7 (2026-09-05)
 
@@ -139,9 +140,25 @@ Thứ tự đề xuất: **Inventory trước** (nền tảng — unblock "in pa
 
 #### G. Extractions — `features/ingest/data/*`
 
-- [ ] Path: `/scan/label|receipt|voice` → `/extractions/ocr/label|ocr/invoice|asr`; barcode là **query param** `?barcode=`, không phải upload.
-- [ ] `ScanJobDto` đổi theo envelope `ExtractionResponse`/`InvoiceExtractionResponse`/`BarcodeExtractionResponse` (`request_id, status, provider, raw_text, fields, confidence, warnings, persisted`) — field tên khác hẳn (`fields.ingredient_name` không phải `parsed.name`).
-- [ ] "Xác nhận vào kho" sau review = gọi `POST /inventory/batches` từng dòng (phụ thuộc mục A xong trước) — không có endpoint "confirm hàng loạt".
+> ✅ **Đã hoàn thành & nối API (2026-09-05).** Đồng bộ backend api-contract §11, Clean Architecture, dung nạp đa định dạng envelope, có unit tests, widget tests, và live test.
+
+- [x] Path: `/scan/label|receipt|voice` → `/extractions/ocr/label|ocr/invoice|asr`; barcode là **query param** `POST /extractions/barcode?barcode=`, không phải upload file. Cập nhật `ApiPaths` và `ScanType.endpoint`.
+- [x] `ScanJobDto` hỗ trợ dung nạp cả envelope mới của BE (`ExtractionResponse`, `InvoiceExtractionResponse`, `BarcodeExtractionResponse` với `request_id`, `status`, `provider`, `raw_text`, `fields`, `confidence`, `warnings`, `persisted`) và envelope legacy của mock fixture.
+  - OCR label / ASR: map `fields.ingredient_name`, `quantity`, `unit` qua `MeasurementUnit.fromWire`, `packaged_at`, `expires_at`, `price`, và cờ `isExpiryWarn` khi `confidence['expires_at'] < 0.8`.
+  - Invoice OCR: map `vendor_name`, `invoice_date`, và danh sách `fields.line_items`.
+  - Barcode lookup: map `product_name`, `brand`, `category`, `ingredient_name`, `quantity`, `unit`, `price`.
+- [x] Data Layer & Repository:
+  - `ScanRemoteDataSource` hỗ trợ `submit(type, mediaPath, transcript)` và `lookupBarcode(barcode)`.
+  - `ScanRepository` và `ScanRepositoryImpl` thêm `lookupBarcode(barcode)`.
+  - `ScanController` thêm `lookupBarcode(barcode)`.
+  - `MockApiClient` hỗ trợ mocking cho `/extractions/ocr/label`, `/extractions/ocr/invoice`, `/extractions/asr`, và `/extractions/barcode?barcode=`.
+- [x] "Xác nhận vào kho" sau review:
+  - Giữ nguyên luồng xác nhận vào kho gọi `PantryListController.add()` (`POST /inventory/batches` qua Milestone A) cho từng item draft đã review — không phụ thuộc batch confirm từ server extraction.
+- [x] Test đầy đủ:
+  - Unit tests: `test/unit/ingest/scan_repository_impl_test.dart` (4 tests), `scan_controller_test.dart` (3 tests), `label_review_controller_test.dart` (3 tests), `receipt_review_controller_test.dart` (4 tests), `voice_capture_controller_test.dart` (3 tests), `parsed_item_draft_test.dart` (4 tests).
+  - Widget tests: `test/widget/ingest/*` (all 10 widget tests pass).
+  - Live test: `test/live/extractions_live_test.dart` (4 tests covering label, invoice, asr, barcode).
+  - Toàn bộ 123 tests pass 100%, `flutter analyze` 0 issues.
 
 ### M0 đã hoàn thành (2026-08-30)
 

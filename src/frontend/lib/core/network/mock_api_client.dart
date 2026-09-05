@@ -43,7 +43,10 @@ class MockApiClient implements ApiClient {
     ApiPaths.reportsWasteReduction: 'waste_reduction_report',
     ApiPaths.favoriteRecipes: 'favorite_recipes',
     ApiPaths.favoriteMenus: 'favorite_menus',
-    // M4 multimodal ingestion — `postMultipart` returns these canned ScanJobs.
+    // M4 multimodal ingestion / Section G Extractions — `postMultipart` returns these canned ScanJobs.
+    ApiPaths.extractionOcrLabel: 'scan_label',
+    ApiPaths.extractionOcrInvoice: 'scan_receipt',
+    ApiPaths.extractionAsr: 'scan_voice',
     ApiPaths.scanLabel: 'scan_label',
     ApiPaths.scanReceipt: 'scan_receipt',
     ApiPaths.scanVoice: 'scan_voice',
@@ -725,6 +728,31 @@ class MockApiClient implements ApiClient {
         batchId,
         (batch) => batch..['storage_mode'] = b['storage_mode'],
       );
+    }
+    if (path.startsWith('/extractions/barcode')) {
+      final uri = Uri.parse(path);
+      final barcode = uri.queryParameters['barcode'] ?? '8934567890123';
+      return {
+        'request_id': 'req-barcode-mock',
+        'status': 'SUCCEEDED',
+        'provider': 'MOCK_BARCODE',
+        'raw_text': 'Product found for barcode $barcode',
+        'fields': {
+          'barcode': barcode,
+          'product_name': 'Sữa tươi tiệt trùng',
+          'brand': 'Vinamilk',
+          'category': 'Trứng & Sữa',
+          'ingredient_name': 'Sữa tươi',
+          'quantity': 1.0,
+          'unit': 'LITER',
+          'expires_at': null,
+          'price': 35000.0,
+          'currency': 'VND',
+        },
+        'confidence': {'product_name': 0.90},
+        'warnings': <String>[],
+        'persisted': false,
+      };
     }
     final fixture = _postFixtureKey(path);
     if (fixture != null) return _clone(await _loadKey(fixture));

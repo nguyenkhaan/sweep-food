@@ -51,7 +51,14 @@ abstract final class ApiPaths {
   static String cookingSessionLeftovers(String id) =>
       '/cooking/sessions/$id/leftovers';
 
-  // Scan / ingest
+  // Extractions (real backend) — see api-contract.md §11
+  static const extractionOcrLabel = '/extractions/ocr/label';
+  static const extractionOcrInvoice = '/extractions/ocr/invoice';
+  static const extractionAsr = '/extractions/asr';
+  static String extractionBarcode(String barcode) =>
+      '/extractions/barcode?barcode=$barcode';
+
+  // Scan / ingest (legacy paths, kept for compatibility)
   static const scanLabel = '/scan/label';
   static const scanReceipt = '/scan/receipt';
   static const scanVoice = '/scan/voice';

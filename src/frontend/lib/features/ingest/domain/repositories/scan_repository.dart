@@ -1,4 +1,4 @@
-﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 
 /// Contract for the multimodal ingestion channels (M4).
@@ -16,4 +16,7 @@ abstract interface class ScanRepository {
   /// Transcribe a spoken ingredient list (I-06 → I-07). Either an [audioPath]
   /// or a already-recognized [transcript] may be supplied.
   Future<Result<ScanJob>> scanVoice({String? audioPath, String? transcript});
+
+  /// Look up product information by barcode value (api-contract.md §11).
+  Future<Result<ScanJob>> lookupBarcode(String barcode);
 }

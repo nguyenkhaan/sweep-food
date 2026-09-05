@@ -38,7 +38,7 @@ final class FavoriteRecipesControllerProvider
 }
 
 String _$favoriteRecipesControllerHash() =>
-    r'29d89c2d8b36e2a501d1b139b3e6b51124820a10';
+    r'd1d5b7e758a74dfc6653019acb8769659ab2c429';
 
 abstract class _$FavoriteRecipesController
     extends $AsyncNotifier<List<FavoriteRecipe>> {
@@ -121,7 +121,7 @@ final class IsRecipeFavoriteProvider
   }
 }
 
-String _$isRecipeFavoriteHash() => r'd74662b04f25d4a32fe47437dd809217fefb5fab';
+String _$isRecipeFavoriteHash() => r'6386617d3c1ec23dd8800d1165b0b4070d430d6b';
 
 final class IsRecipeFavoriteFamily extends $Family
     with $FunctionalFamilyOverride<bool, String> {
