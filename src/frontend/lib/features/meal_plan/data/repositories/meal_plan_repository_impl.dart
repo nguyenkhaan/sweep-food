@@ -19,7 +19,7 @@ MealPlanRepository mealPlanRepository(Ref ref) => MealPlanRepositoryImpl(
 /// id (scanning `GET /meal-plans/` for a `starts_on` match, creating one if
 /// none exists) and caches the mapping in memory for the app session.
 ///
-/// Known limitation: the scan only looks at the first 200 plans (most
+/// Known limitation: the scan only looks at the first 100 plans (most
 /// recent-first, per backend default ordering) — a long-time user with more
 /// plans than that could get a duplicate plan created for an old week. Not
 /// persisted across app restarts either; every session re-resolves from

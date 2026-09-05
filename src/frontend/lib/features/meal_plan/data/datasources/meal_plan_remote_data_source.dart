@@ -16,10 +16,11 @@ class MealPlanRemoteDataSource {
       '${d.day.toString().padLeft(2, '0')}';
 
   /// No backend equivalent of "list all my plans, most recent first" beyond
-  /// this — fetched with a generous `limit` so a returning user's current
-  /// week is very likely on the first page (see repository for the caveat).
+  /// this — fetched at the backend's max page size so a returning user's
+  /// current week is very likely on the first page (see repository for the
+  /// caveat).
   Future<List<MealPlanDto>> listPlans() async {
-    final json = await _api.get(ApiPaths.mealPlansList, query: {'limit': 200});
+    final json = await _api.get(ApiPaths.mealPlansList, query: {'limit': 100});
     final items = (json is Map ? json['items'] : json) as List<dynamic>;
     return items
         .map((e) => MealPlanDto.fromJson(e as Map<String, dynamic>))

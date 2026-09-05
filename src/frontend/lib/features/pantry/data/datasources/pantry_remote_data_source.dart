@@ -75,6 +75,7 @@ class PantryRemoteDataSource {
         if (draft.expiryDate != null)
           'expires_at': draft.expiryDate!.toUtc().toIso8601String(),
         if (draft.priceVnd != null) 'unit_cost': draft.priceVnd,
+        'reason': 'Cập nhật từ ứng dụng',
       },
       headers: _idempotencyHeaders(),
     );
@@ -93,7 +94,10 @@ class PantryRemoteDataSource {
         ApiPaths.inventoryBatch(id),
         headers: {
           'Idempotency-Key': Idempotency.newKey(),
-          'X-Reason': 'Người dùng xóa khỏi kho',
+          // HTTP header values must be ASCII — unlike JSON body fields, this
+          // can't carry Vietnamese text (a non-ASCII header throws at the Dio
+          // layer, surfacing as an unmapped UnknownFailure).
+          'X-Reason': 'User deleted from inventory',
         },
       );
 

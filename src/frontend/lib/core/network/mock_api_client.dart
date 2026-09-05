@@ -479,18 +479,20 @@ class MockApiClient implements ApiClient {
     return session;
   }
 
-  Map<String, dynamic> _createLeftoverBatch(Map<String, dynamic> body) {
+  /// Matches the real backend's narrower `CookedLeftoverResponseDTO` shape
+  /// (not a general inventory batch — see `cooked_leftover_dto.dart`).
+  Map<String, dynamic> _createLeftoverBatch(
+    String sessionId,
+    Map<String, dynamic> body,
+  ) {
     final now = DateTime.now().toIso8601String();
     return {
-      'id': 'mock-${_autoId++}',
-      'master_ingredient_id': null,
-      'custom_name': 'Món đã nấu',
-      'ingredient_name': 'Món đã nấu',
-      'current_quantity': body['quantity'],
+      'batch_id': 'mock-${_autoId++}',
+      'cooking_session_id': sessionId,
+      'batch_type': 'COOKED_FOOD',
+      'quantity': body['quantity'],
       'unit': body['unit'],
       'storage_mode': body['storage_mode'] ?? 'REFRIGERATED',
-      'status': 'ACTIVE',
-      'source': 'LEFTOVER',
       'expires_at': body['expires_at'],
       'created_at': now,
     };
@@ -558,7 +560,8 @@ class MockApiClient implements ApiClient {
       return _completeCookingSession(sessionId, body as Map<String, dynamic>);
     }
     if (path.startsWith('${ApiPaths.cookingSessions}/') && path.endsWith('/leftovers')) {
-      return _createLeftoverBatch(body as Map<String, dynamic>);
+      final sessionId = path.split('/')[3];
+      return _createLeftoverBatch(sessionId, body as Map<String, dynamic>);
     }
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null && path.endsWith('/adjustments')) {

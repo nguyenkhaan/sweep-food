@@ -1,10 +1,10 @@
 import 'package:sweepfood/core/network/api_client.dart';
 import 'package:sweepfood/core/network/api_paths.dart';
 import 'package:sweepfood/core/utils/idempotency.dart';
+import 'package:sweepfood/features/cooking/data/models/cooked_leftover_dto.dart';
 import 'package:sweepfood/features/cooking/data/models/cooking_preview_dto.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
-import 'package:sweepfood/features/pantry/data/models/pantry_item_dto.dart';
 
 /// Talks to `/cooking/*`. Throws on failure — the repository maps.
 /// See `docs/api-contract.md` §6.
@@ -48,11 +48,11 @@ class CookingRemoteDataSource {
         headers: {'Idempotency-Key': Idempotency.newKey()},
       );
 
-  Future<PantryItemDto> saveLeftover(CookedFood food) async {
+  Future<CookedLeftoverDto> saveLeftover(CookedFood food) async {
     final json = await _api.post(
       ApiPaths.cookingSessionLeftovers(food.sessionId),
       body: food.toBody(),
     );
-    return PantryItemDto.fromJson(json as Map<String, dynamic>);
+    return CookedLeftoverDto.fromJson(json as Map<String, dynamic>);
   }
 }

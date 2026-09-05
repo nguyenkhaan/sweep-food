@@ -59,7 +59,7 @@ final class CookingControllerProvider
   }
 }
 
-String _$cookingControllerHash() => r'28c3a7707c11f9e541307a786f9cfbe5e6f6fc37';
+String _$cookingControllerHash() => r'3c32390a0b1659c4cc0a0ab57a51f09640c4f83b';
 
 /// Drives the post-cook flow: preview → session → complete → expose the
 /// [CookResult] for the D-05 / D-07 screen. Applying the result also

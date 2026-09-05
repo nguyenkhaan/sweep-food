@@ -40,6 +40,6 @@ class CookingRepositoryImpl implements CookingRepository {
 
   @override
   Future<Result<PantryItem>> saveLeftover(CookedFood food) => runGuarded(
-        () async => (await _remote.saveLeftover(food)).toEntity(),
+        () async => (await _remote.saveLeftover(food)).toEntity(food.dishName),
       );
 }
