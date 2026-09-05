@@ -37,7 +37,6 @@ class MockApiClient implements ApiClient {
     ApiPaths.inventoryBatches: 'inventory_batches',
     ApiPaths.suggestions: 'suggestions',
     '/recipes/': 'recipe',
-    '/shopping-lists': 'shopping_list',
     ApiPaths.notifications: 'notifications',
     ApiPaths.subscription: 'subscription',
     ApiPaths.reportsWasteReduction: 'waste_reduction_report',
@@ -52,7 +51,6 @@ class MockApiClient implements ApiClient {
   /// `/cook` suffix covers `POST /dishes/{id}/cook`.
   static final Map<String, String> _postFixtures = {
     ApiPaths.suggestions: 'suggestions',
-    ApiPaths.shoppingListsGenerate: 'shopping_list',
   };
 
   String? _postFixtureKey(String path) {
@@ -254,6 +252,97 @@ class MockApiClient implements ApiClient {
         .removeWhere((i) => (i as Map)['id'] == itemId);
   }
 
+  // --- Shopping list emulation -----------------------------------------------
+  //
+  // The backend has no "list all" / "active list" endpoint — only
+  // generate-from-plan and read-by-id. `generate` seeds a fresh list from a
+  // canned item set (the mock has no real recipe-ingredient data to compute
+  // quantities from the actual plan); reads/writes after that operate on the
+  // in-memory copy so check/add/delete persist for the session.
+
+  final _shoppingLists = <Map<String, dynamic>>[];
+  static final _shoppingListItemPath =
+      RegExp(r'^/shopping-lists/([^/]+)/items/([^/]+)$');
+
+  Map<String, dynamic> _findShoppingList(String id) => _shoppingLists.firstWhere(
+        (l) => l['id'] == id,
+        orElse: () =>
+            throw MockFixtureException('Không có shopping list "$id"'),
+      );
+
+  Future<Map<String, dynamic>> _generateShoppingList(
+    Map<String, dynamic>? body,
+  ) async {
+    final seed = await _loadKey('shopping_list') as Map<String, dynamic>;
+    final items = (seed['items'] as List)
+        .map((e) => {...e as Map<String, dynamic>, 'id': 'mock-sli-${_autoId++}'})
+        .toList();
+    final list = {
+      'id': 'mock-list-${_autoId++}',
+      'meal_plan_id': body?['meal_plan_id'],
+      'status': 'ACTIVE',
+      'generated_at': DateTime.now().toIso8601String(),
+      'items': items,
+    };
+    _shoppingLists.add(list);
+    return list;
+  }
+
+  Map<String, dynamic> _createShoppingListItem(
+    String listId,
+    Map<String, dynamic> body,
+  ) {
+    final quantity = body['quantity'];
+    final item = {
+      'id': 'mock-sli-${_autoId++}',
+      'master_ingredient_id': body['master_ingredient_id'],
+      'custom_name': body['custom_name'],
+      'name': body['custom_name'] ?? 'Món mới',
+      'required_quantity': quantity,
+      'available_quantity': 0,
+      'missing_quantity': quantity,
+      'unit': body['unit'],
+      'estimated_cost': body['estimated_cost'],
+      'is_checked': false,
+      'is_generated': false,
+      'source_recipe_ids': <String>[],
+      'inventory_batch_id': null,
+    };
+    (_findShoppingList(listId)['items'] as List).add(item);
+    return item;
+  }
+
+  Map<String, dynamic> _updateShoppingListItem(
+    String listId,
+    String itemId,
+    Map<String, dynamic> body,
+  ) {
+    final items = (_findShoppingList(listId)['items'] as List)
+        .cast<Map<String, dynamic>>();
+    final idx = items.indexWhere((i) => i['id'] == itemId);
+    if (idx < 0) {
+      throw MockFixtureException('Không có shopping-list item "$itemId"');
+    }
+    final updated = Map<String, dynamic>.from(items[idx]);
+    if (body.containsKey('checked')) updated['is_checked'] = body['checked'];
+    if (body.containsKey('quantity')) {
+      updated['missing_quantity'] = body['quantity'];
+    }
+    if (body.containsKey('estimated_cost')) {
+      updated['estimated_cost'] = body['estimated_cost'];
+    }
+    if (body['purchase'] != null) {
+      updated['inventory_batch_id'] = 'mock-${_autoId++}';
+    }
+    items[idx] = updated;
+    return updated;
+  }
+
+  void _deleteShoppingListItem(String listId, String itemId) {
+    (_findShoppingList(listId)['items'] as List)
+        .removeWhere((i) => (i as Map)['id'] == itemId);
+  }
+
   // ---------------------------------------------------------------------------
 
   @override
@@ -272,6 +361,9 @@ class MockApiClient implements ApiClient {
     }
     if (path.startsWith('${ApiPaths.mealPlans}/')) {
       return _clone(_findMealPlan(path.substring('${ApiPaths.mealPlans}/'.length)));
+    }
+    if (path.startsWith('/shopping-lists/') && !path.contains('/items')) {
+      return _clone(_findShoppingList(path.substring('/shopping-lists/'.length)));
     }
     return _clone(await _load(path));
   }
@@ -294,6 +386,13 @@ class MockApiClient implements ApiClient {
     if (path.startsWith('${ApiPaths.mealPlans}/') && path.endsWith('/items')) {
       final planId = path.split('/')[2];
       return _createMealPlanItem(planId, body as Map<String, dynamic>);
+    }
+    if (path == ApiPaths.shoppingListsGenerate) {
+      return _generateShoppingList(body as Map<String, dynamic>?);
+    }
+    if (path.startsWith('/shopping-lists/') && path.endsWith('/items')) {
+      final listId = path.split('/')[2];
+      return _createShoppingListItem(listId, body as Map<String, dynamic>);
     }
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null && path.endsWith('/adjustments')) {
@@ -359,6 +458,14 @@ class MockApiClient implements ApiClient {
         body! as Map<String, dynamic>,
       );
     }
+    final shoppingItemMatch = _shoppingListItemPath.firstMatch(path);
+    if (shoppingItemMatch != null) {
+      return _updateShoppingListItem(
+        shoppingItemMatch.group(1)!,
+        shoppingItemMatch.group(2)!,
+        body! as Map<String, dynamic>,
+      );
+    }
     return _echo(body);
   }
 
@@ -383,6 +490,11 @@ class MockApiClient implements ApiClient {
     final itemMatch = _mealPlanItemPath.firstMatch(path);
     if (itemMatch != null) {
       _deleteMealPlanItem(itemMatch.group(1)!, itemMatch.group(2)!);
+      return null;
+    }
+    final shoppingItemMatch = _shoppingListItemPath.firstMatch(path);
+    if (shoppingItemMatch != null) {
+      _deleteShoppingListItem(shoppingItemMatch.group(1)!, shoppingItemMatch.group(2)!);
     }
     return null;
   }

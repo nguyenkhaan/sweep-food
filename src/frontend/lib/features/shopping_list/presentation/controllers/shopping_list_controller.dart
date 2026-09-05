@@ -1,10 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/core/analytics/analytics_events.dart';
 import 'package:sweepfood/core/analytics/analytics_provider.dart';
+import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 import 'package:sweepfood/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
 import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
 import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_purchase_draft.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
 
 part 'shopping_list_controller.g.dart';
@@ -17,12 +19,15 @@ class ShoppingListShowInStock extends _$ShoppingListShowInStock {
   void toggle() => state = !state;
 }
 
-/// B-01. Loads the current list; check-off / add / remove update optimistically
-/// and roll back on failure.
+/// B-01. The backend has no "current list" endpoint — [build] reads whichever
+/// list id was locally remembered from the last successful [generateFromWeek]
+/// call, and `null` when the user hasn't generated one yet (the screen shows
+/// the same empty-state either way). Check-off / add / remove update
+/// optimistically and roll back on failure.
 @riverpod
 class ShoppingListController extends _$ShoppingListController {
   @override
-  Future<ShoppingList> build() async {
+  Future<ShoppingList?> build() async {
     final res = await ref.watch(shoppingListRepositoryProvider).current();
     return res.fold((f) => throw f, (list) => list);
   }
@@ -31,7 +36,19 @@ class ShoppingListController extends _$ShoppingListController {
 
   Future<void> refresh() => ref.refresh(shoppingListControllerProvider.future);
 
-  Future<void> toggleChecked(String itemId) async {
+  /// M-01's "Tạo danh sách mua sắm" button.
+  Future<Result<ShoppingList>> generateFromWeek(String mealPlanId) async {
+    final res = await ref
+        .read(shoppingListRepositoryProvider)
+        .generate(mealPlanId: mealPlanId);
+    res.fold((_) {}, (list) => state = AsyncData(list));
+    return res;
+  }
+
+  /// Checking an item requires [purchase] (the backend uses it to create the
+  /// resulting inventory batch); un-checking must omit it. The caller decides
+  /// which applies by checking `item.checked` before calling this.
+  Future<void> toggleChecked(String itemId, {ShoppingPurchaseDraft? purchase}) async {
     final list = _list;
     if (list == null) return;
     final item = list.items.firstWhere((i) => i.id == itemId);
@@ -46,7 +63,12 @@ class ShoppingListController extends _$ShoppingListController {
     );
     final res = await ref
         .read(shoppingListRepositoryProvider)
-        .setChecked(listId: list.id, itemId: itemId, checked: next);
+        .setChecked(
+          listId: list.id,
+          itemId: itemId,
+          checked: next,
+          purchase: next ? purchase : null,
+        );
     res.fold((_) => ref.invalidateSelf(), (_) {});
   }
 
@@ -79,7 +101,10 @@ class ShoppingListController extends _$ShoppingListController {
     res.fold((_) => ref.invalidateSelf(), (_) {});
   }
 
-  /// D-01 "Thêm phần thiếu vào danh sách mua". Returns how many lines were added.
+  /// D-01 "Thêm phần thiếu vào danh sách mua". Returns how many lines were
+  /// added. Added lines lose their recipe association — the backend's manual
+  /// add-item endpoint has no field for it (only `generate` produces
+  /// `source_recipe_ids`).
   Future<int> addMissingFromDish(Dish dish, AppL10n l10n) async {
     final list = _list;
     if (list == null) return 0;
@@ -91,13 +116,7 @@ class ShoppingListController extends _$ShoppingListController {
           .read(shoppingListRepositoryProvider)
           .addItem(
             listId: list.id,
-            draft: ShoppingListItemDraft(
-              name: ing.name,
-              quantity: qty,
-              unit: ing.unit,
-              category: l10n.shoppingFromRecipe,
-              fromDishIds: [dish.id],
-            ),
+            draft: ShoppingListItemDraft(name: ing.name, quantity: qty, unit: ing.unit),
           );
       res.fold((_) {}, (item) {
         final cur = _list ?? list;

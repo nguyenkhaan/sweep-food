@@ -67,18 +67,27 @@ abstract class _$ShoppingListShowInStock extends $Notifier<bool> {
   }
 }
 
-/// B-01. Loads the current list; check-off / add / remove update optimistically
-/// and roll back on failure.
+/// B-01. The backend has no "current list" endpoint — [build] reads whichever
+/// list id was locally remembered from the last successful [generateFromWeek]
+/// call, and `null` when the user hasn't generated one yet (the screen shows
+/// the same empty-state either way). Check-off / add / remove update
+/// optimistically and roll back on failure.
 
 @ProviderFor(ShoppingListController)
 final shoppingListControllerProvider = ShoppingListControllerProvider._();
 
-/// B-01. Loads the current list; check-off / add / remove update optimistically
-/// and roll back on failure.
+/// B-01. The backend has no "current list" endpoint — [build] reads whichever
+/// list id was locally remembered from the last successful [generateFromWeek]
+/// call, and `null` when the user hasn't generated one yet (the screen shows
+/// the same empty-state either way). Check-off / add / remove update
+/// optimistically and roll back on failure.
 final class ShoppingListControllerProvider
-    extends $AsyncNotifierProvider<ShoppingListController, ShoppingList> {
-  /// B-01. Loads the current list; check-off / add / remove update optimistically
-  /// and roll back on failure.
+    extends $AsyncNotifierProvider<ShoppingListController, ShoppingList?> {
+  /// B-01. The backend has no "current list" endpoint — [build] reads whichever
+  /// list id was locally remembered from the last successful [generateFromWeek]
+  /// call, and `null` when the user hasn't generated one yet (the screen shows
+  /// the same empty-state either way). Check-off / add / remove update
+  /// optimistically and roll back on failure.
   ShoppingListControllerProvider._()
     : super(
         from: null,
@@ -99,22 +108,25 @@ final class ShoppingListControllerProvider
 }
 
 String _$shoppingListControllerHash() =>
-    r'6d84632be7f6893027279e8981a1164acfc46198';
+    r'78b0292bcc55cba16183208f454b90aa0418000d';
 
-/// B-01. Loads the current list; check-off / add / remove update optimistically
-/// and roll back on failure.
+/// B-01. The backend has no "current list" endpoint — [build] reads whichever
+/// list id was locally remembered from the last successful [generateFromWeek]
+/// call, and `null` when the user hasn't generated one yet (the screen shows
+/// the same empty-state either way). Check-off / add / remove update
+/// optimistically and roll back on failure.
 
-abstract class _$ShoppingListController extends $AsyncNotifier<ShoppingList> {
-  FutureOr<ShoppingList> build();
+abstract class _$ShoppingListController extends $AsyncNotifier<ShoppingList?> {
+  FutureOr<ShoppingList?> build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<AsyncValue<ShoppingList>, ShoppingList>;
+    final ref = this.ref as $Ref<AsyncValue<ShoppingList?>, ShoppingList?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<ShoppingList>, ShoppingList>,
-              AsyncValue<ShoppingList>,
+              AnyNotifier<AsyncValue<ShoppingList?>, ShoppingList?>,
+              AsyncValue<ShoppingList?>,
               Object?,
               Object?
             >;

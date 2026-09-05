@@ -1,86 +1,92 @@
 {
-  "id": "sl1",
-  "source_label": "Từ thực đơn tuần này · 8 món · đối chiếu với tủ bếp",
   "items": [
     {
-      "id": "sli1",
       "name": "Xà lách",
-      "quantity": 150,
-      "unit": "g",
-      "category": "Rau củ",
-      "checked": false,
-      "already_in_pantry": false,
-      "est_price_vnd": 12000
+      "required_quantity": 150,
+      "available_quantity": 0,
+      "missing_quantity": 150,
+      "unit": "GRAM",
+      "estimated_cost": 12000,
+      "is_checked": false,
+      "is_generated": true,
+      "source_recipe_ids": ["d1"]
     },
     {
-      "id": "sli2",
       "name": "Hành lá",
-      "quantity": 1,
-      "unit": "bo",
-      "category": "Rau củ",
-      "checked": true,
-      "already_in_pantry": false,
-      "est_price_vnd": 5000
+      "required_quantity": 1,
+      "available_quantity": 0,
+      "missing_quantity": 1,
+      "unit": "PIECE",
+      "estimated_cost": 5000,
+      "is_checked": true,
+      "is_generated": true,
+      "source_recipe_ids": ["d1"]
     },
     {
-      "id": "sli3",
       "name": "Chanh",
-      "quantity": 3,
-      "unit": "qua",
-      "category": "Rau củ",
-      "checked": false,
-      "already_in_pantry": false,
-      "est_price_vnd": 9000
+      "required_quantity": 3,
+      "available_quantity": 0,
+      "missing_quantity": 3,
+      "unit": "PIECE",
+      "estimated_cost": 9000,
+      "is_checked": false,
+      "is_generated": true,
+      "source_recipe_ids": ["d1"]
     },
     {
-      "id": "sli4",
       "name": "Cá lóc",
-      "quantity": 500,
-      "unit": "g",
-      "category": "Thịt & hải sản",
-      "checked": false,
-      "already_in_pantry": false,
-      "est_price_vnd": 70000
+      "required_quantity": 500,
+      "available_quantity": 0,
+      "missing_quantity": 500,
+      "unit": "GRAM",
+      "estimated_cost": 70000,
+      "is_checked": false,
+      "is_generated": true,
+      "source_recipe_ids": ["d1"]
     },
     {
-      "id": "sli5",
       "name": "Thịt băm",
-      "quantity": 200,
-      "unit": "g",
-      "category": "Thịt & hải sản",
-      "checked": false,
-      "already_in_pantry": false,
-      "est_price_vnd": 35000
+      "required_quantity": 200,
+      "available_quantity": 0,
+      "missing_quantity": 200,
+      "unit": "GRAM",
+      "estimated_cost": 35000,
+      "is_checked": false,
+      "is_generated": true,
+      "source_recipe_ids": ["d1"]
     },
     {
-      "id": "sli6",
       "name": "Dầu ô liu",
-      "quantity": 1,
-      "unit": "chai",
-      "category": "Gia vị & khác",
-      "checked": false,
-      "already_in_pantry": false,
-      "est_price_vnd": 45000
+      "required_quantity": 1,
+      "available_quantity": 0,
+      "missing_quantity": 1,
+      "unit": "PIECE",
+      "estimated_cost": 45000,
+      "is_checked": false,
+      "is_generated": true,
+      "source_recipe_ids": ["d1"]
     },
     {
-      "id": "sli7",
       "name": "Me chua",
-      "quantity": 1,
-      "unit": "goi",
-      "category": "Gia vị & khác",
-      "checked": false,
-      "already_in_pantry": false,
-      "est_price_vnd": 9000
+      "required_quantity": 1,
+      "available_quantity": 0,
+      "missing_quantity": 1,
+      "unit": "PACK",
+      "estimated_cost": 9000,
+      "is_checked": false,
+      "is_generated": true,
+      "source_recipe_ids": ["d1"]
     },
     {
-      "id": "sli8",
       "name": "Trứng gà",
-      "quantity": 6,
-      "unit": "qua",
-      "category": "Thịt & hải sản",
-      "checked": false,
-      "already_in_pantry": true,
-      "est_price_vnd": 18000
+      "required_quantity": 6,
+      "available_quantity": 6,
+      "missing_quantity": 0,
+      "unit": "PIECE",
+      "estimated_cost": 18000,
+      "is_checked": false,
+      "is_generated": true,
+      "source_recipe_ids": ["d1"]
     }
   ]
 }

@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/core/utils/formatters/quantity_format.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
@@ -19,35 +19,38 @@ abstract class ShoppingListItem with _$ShoppingListItem {
     @Default(false) bool checked,
     @Default(false) bool alreadyInPantry,
     @Default(<String>[]) List<String> fromDishIds,
+    @Default(true) bool isGenerated,
     int? estPriceVnd,
   }) = _ShoppingListItem;
 
   String get quantityLabel => formatQuantity(quantity, unit);
 
-  bool get isManual => fromDishIds.isEmpty;
+  /// Added through the manual "thêm món" flow rather than `generate` — the
+  /// backend has no per-item recipe link for these (only generated items keep
+  /// `source_recipe_ids`).
+  bool get isManual => !isGenerated;
 }
 
-/// Write payload for "thêm món thủ công" (B-02) / "thêm phần thiếu" from D-01.
+/// Write payload for "thêm món thủ công" (B-02). The backend's create-item
+/// endpoint only accepts `custom_name`/`quantity`/`unit`/`estimated_cost` —
+/// no category or recipe association (see IMPLEMENTATION_PLAN.md).
 class ShoppingListItemDraft {
   const ShoppingListItemDraft({
     required this.name,
     required this.quantity,
     required this.unit,
-    this.category = 'Khác',
-    this.fromDishIds = const [],
+    this.estPriceVnd,
   });
 
   final String name;
   final double quantity;
   final MeasurementUnit unit;
-  final String category;
-  final List<String> fromDishIds;
+  final int? estPriceVnd;
 
   Map<String, dynamic> toBody() => {
-        'name': name.trim(),
+        'custom_name': name.trim(),
         'quantity': quantity,
-        'unit': unit.wire,
-        'category': category,
-        if (fromDishIds.isNotEmpty) 'from_dish_ids': fromDishIds,
+        'unit': unit.backendWire,
+        if (estPriceVnd != null) 'estimated_cost': estPriceVnd,
       };
 }

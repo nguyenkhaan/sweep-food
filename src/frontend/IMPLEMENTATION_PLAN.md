@@ -32,7 +32,8 @@ Nối `DioApiClient` với BE thật, "xong đến đâu nối đến đó". `co
 - **Notifications (2026-09-03)** — ✅ nối + verify live. `GET /notifications` + `PATCH /notifications/{id} {status}`. `app_notification_dto.dart` theo `NotificationResponseDTO`: `id`←`notification_id`, `read:bool`←`status` (UNREAD/READ/DISMISSED; dismissed = đã đọc), `pantryItemId`←`inventory_batch_id`, `created_at.toLocal()`. `AppNotificationType.fromWire` nhận thêm token BE (`EXPIRING_SOON`/`EXPIRES_TODAY`/`EXPIRED`/`LEFTOVER_REMINDER`→`nearExpiry`). `markRead` đổi `POST /{id}/read`→`PATCH /{id} {status:"READ"}`. Mock `notifications.json` đổi shape BE. Deep-link near-expiry vẫn tra pantry mock (chờ Inventory) → sheet hiện "không tìm thấy", không crash. Không phân trang (`next_before` bỏ qua). Test: `test/unit/notifications/notification_repository_impl_test.dart` (5), `test/live/notification_live_test.dart` → **2/2 live pass**.
 - **Inventory (2026-09-05)** — ✅ nối (mock+unit xanh; chưa verify live — xem mục A bên dưới cho chi tiết + giới hạn đã biết). Deep-link near-expiry giờ tra đúng vào `/inventory/batches` đã load, không còn "not found".
 - **Meal Plans (2026-09-05)** — ✅ nối (mock+unit xanh; chưa verify live — xem mục B bên dưới).
-- **Chưa nối:** Extractions, Cooking, Shopping Lists, Recommendations, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
+- **Shopping Lists (2026-09-05)** — ✅ nối (mock+unit xanh; chưa verify live — xem mục C bên dưới).
+- **Chưa nối:** Extractions, Cooking, Recommendations, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
 
 ### M6.2 — Việc còn lại, theo `docs/api-contract.md` M7 (2026-09-05)
 
@@ -62,15 +63,18 @@ Thứ tự đề xuất: **Inventory trước** (nền tảng — unblock "in pa
 - [x] `MealSlot` thêm `snack` (`SNACK`), đổi toàn bộ `wire` sang token BE (`BREAKFAST|LUNCH|DINNER|SNACK`) — không còn giá trị FE cũ (`breakfast/lunch/dinner`).
 - [x] `dish_image_url`: **không gọi `GET /recipes/{id}` bổ sung** — BE không có field ảnh cho item nên dù gọi thêm cũng không có gì để lấy; `MealSlotCell` hiện tại cũng không hiển thị ảnh (chỉ tên món), nên field này chỉ còn ý nghĩa "biết được trong phiên vừa gán", mất khi tải lại. Ghi rõ đây là giới hạn chấp nhận được cho tới khi có UI thật sự cần hiển thị ảnh.
 - [ ] **Chưa làm:** gửi `recommendation_run_id` khi gán từ 1 gợi ý (BE nhận field này nhưng `DishSuggestion` hiện chưa có — phụ thuộc mục E/Recommendations chưa nối) — bỏ qua field cho tới khi Recommendations nối thật.
-- [x] Thêm `MealPlan.id` (id của plan tuần đang xem, nullable) — cần cho mục C (`generate {meal_plan_id}`); `meal_plan_screen.dart` vẫn gọi `generate(mealPlanId: 'current')` (giá trị giả) — sửa thật ở mục C.
+- [x] Thêm `MealPlan.id` (id của plan tuần đang xem, nullable) — dùng cho mục C (`generate {meal_plan_id}`); `meal_plan_screen.dart` giờ lấy id thật từ `mealPlanControllerProvider` thay vì `'current'`.
 
 #### C. Shopping Lists — `features/shopping_list/data/*`
 
-- [ ] Bỏ giả định `GET /shopping-lists` ("danh sách hiện tại") — route không tồn tại. Lưu `listId` cục bộ (SharedPreferences) từ response `generate`, hoặc hiện empty-state "Tạo danh sách từ Thực đơn tuần" cho tới khi có `listId`.
-- [ ] `generate` cần `meal_plan_id` (không phải `week_start`) — phụ thuộc mục B xong trước.
-- [ ] Thêm header `Idempotency-Key` cho mọi lệnh ghi (generate/add/patch/delete item).
-- [ ] Tick 1 item generated ("đã mua") phải mở 1 form nhỏ thu thập `purchase: {storage_mode, purchased_at?, expires_at?, unit_cost?, note?}` rồi mới gửi `PATCH {checked:true, purchase:{...}}` — hiện `PATCH {checked:true}` không đủ field, BE sẽ từ chối. Đây là bước tạo inventory batch thật, cần UI mới (không có trong design canvas hiện tại).
-- [ ] Field rename: `quantity`→`missing_quantity`/`required_quantity`, `checked`→`is_checked`, `fromDishIds`→`source_recipe_ids`; không có `category` (FE tự nhóm nếu cần).
+> ✅ **Đã nối (2026-09-05, nhánh `feat/fe-be-sync`).**
+
+- [x] Bỏ giả định `GET /shopping-lists`. `ShoppingListController.build()` giờ trả `ShoppingList?` — `null` khi chưa từng `generate` (đọc `pref.active_shopping_list_id` từ SharedPreferences, lưu lại sau mỗi `generate` thành công). Màn hình dùng chung nhánh empty-state sẵn có cho cả "chưa có list" và "list rỗng"; FAB "Thêm món" chỉ hiện khi đã có list (trước đây có thể bấm dù chưa có list nào — 1 bug tiềm ẩn giờ đã chặn).
+- [x] `generate` giờ nhận `meal_plan_id` thật (từ `MealPlan.id`, mục B) thay vì chuỗi giả `'current'`.
+- [x] Thêm header `Idempotency-Key` cho mọi lệnh ghi (generate/add/patch/delete item), dùng lại `Idempotency.newKey()` từ mục A.
+- [x] Tick 1 item "đã mua" mở `PurchaseDetailSheet` (màn hình mới: chọn tầng bảo quản + HSD tùy chọn + giá tùy chọn) trước khi gửi `PATCH {checked:true, purchase:{...}}`; bỏ tick gửi `PATCH {checked:false}` không kèm `purchase` (BE cấm). Áp dụng cho **mọi** item (không chỉ item generated) — hợp lý hơn vì bất kỳ item nào được tick cũng cần tạo inventory batch.
+- [x] Field rename: `quantity`→đọc từ `missing_quantity`, `checked`→`is_checked`, `fromDishIds`→`source_recipe_ids`. `category` không tồn tại ở BE — `ShoppingListItem.category` giờ suy ra từ `is_generated` (`"Từ công thức"`/`"Khác"`) thay vì lưu tự do; ô nhập "Danh mục (tùy chọn)" đã bỏ khỏi `AddShoppingItemSheet` vì không còn tác dụng.
+- [x] `ShoppingListItemDraft` (thêm món thủ công / D-01 "thêm phần thiếu") bỏ `category`/`fromDishIds` — BE create-item chỉ nhận `custom_name, quantity, unit, estimated_cost?`. **Regression đã biết:** item thêm từ D-01 "nguyên liệu còn thiếu" giờ không còn giữ liên kết tới công thức nguồn (luôn `is_generated:false` vì dùng chung endpoint thêm thủ công) — mất phân nhóm "Từ công thức" cho các dòng này.
 
 #### D. Cooking — `features/cooking/*`, `features/dishes/presentation/screens/dish_detail_screen.dart`
 

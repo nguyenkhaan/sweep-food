@@ -12,7 +12,6 @@ import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
 import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan_entry.dart';
 import 'package:sweepfood/features/meal_plan/presentation/controllers/meal_plan_controller.dart';
 import 'package:sweepfood/features/meal_plan/presentation/widgets/meal_slot_cell.dart';
-import 'package:sweepfood/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
 import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
@@ -142,15 +141,16 @@ class MealPlanScreen extends ConsumerWidget {
   ) async {
     final messenger = ScaffoldMessenger.of(context);
     final l10n = context.l10n;
+    final planId = ref.read(mealPlanControllerProvider).asData?.value.id;
+    if (planId == null) return;
     final res = await ref
-        .read(shoppingListRepositoryProvider)
-        .generate(mealPlanId: 'current');
+        .read(shoppingListControllerProvider.notifier)
+        .generateFromWeek(planId);
     res.fold(
       (f) => messenger.showSnackBar(
         SnackBar(content: Text(f.localizedMessage(l10n))),
       ),
       (_) {
-        ref.invalidate(shoppingListControllerProvider);
         if (context.mounted) context.go(Routes.shopping);
       },
     );

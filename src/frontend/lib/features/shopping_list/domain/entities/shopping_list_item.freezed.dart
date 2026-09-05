@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShoppingListItem {
 
- String get id; String get name; double get quantity; MeasurementUnit get unit; String get category; bool get checked; bool get alreadyInPantry; List<String> get fromDishIds; int? get estPriceVnd;
+ String get id; String get name; double get quantity; MeasurementUnit get unit; String get category; bool get checked; bool get alreadyInPantry; List<String> get fromDishIds; bool get isGenerated; int? get estPriceVnd;
 /// Create a copy of ShoppingListItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ShoppingListItemCopyWith<ShoppingListItem> get copyWith => _$ShoppingListItemCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShoppingListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.checked, checked) || other.checked == checked)&&(identical(other.alreadyInPantry, alreadyInPantry) || other.alreadyInPantry == alreadyInPantry)&&const DeepCollectionEquality().equals(other.fromDishIds, fromDishIds)&&(identical(other.estPriceVnd, estPriceVnd) || other.estPriceVnd == estPriceVnd));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShoppingListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.checked, checked) || other.checked == checked)&&(identical(other.alreadyInPantry, alreadyInPantry) || other.alreadyInPantry == alreadyInPantry)&&const DeepCollectionEquality().equals(other.fromDishIds, fromDishIds)&&(identical(other.isGenerated, isGenerated) || other.isGenerated == isGenerated)&&(identical(other.estPriceVnd, estPriceVnd) || other.estPriceVnd == estPriceVnd));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,quantity,unit,category,checked,alreadyInPantry,const DeepCollectionEquality().hash(fromDishIds),estPriceVnd);
+int get hashCode => Object.hash(runtimeType,id,name,quantity,unit,category,checked,alreadyInPantry,const DeepCollectionEquality().hash(fromDishIds),isGenerated,estPriceVnd);
 
 @override
 String toString() {
-  return 'ShoppingListItem(id: $id, name: $name, quantity: $quantity, unit: $unit, category: $category, checked: $checked, alreadyInPantry: $alreadyInPantry, fromDishIds: $fromDishIds, estPriceVnd: $estPriceVnd)';
+  return 'ShoppingListItem(id: $id, name: $name, quantity: $quantity, unit: $unit, category: $category, checked: $checked, alreadyInPantry: $alreadyInPantry, fromDishIds: $fromDishIds, isGenerated: $isGenerated, estPriceVnd: $estPriceVnd)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ShoppingListItemCopyWith<$Res>  {
   factory $ShoppingListItemCopyWith(ShoppingListItem value, $Res Function(ShoppingListItem) _then) = _$ShoppingListItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, double quantity, MeasurementUnit unit, String category, bool checked, bool alreadyInPantry, List<String> fromDishIds, int? estPriceVnd
+ String id, String name, double quantity, MeasurementUnit unit, String category, bool checked, bool alreadyInPantry, List<String> fromDishIds, bool isGenerated, int? estPriceVnd
 });
 
 
@@ -62,7 +62,7 @@ class _$ShoppingListItemCopyWithImpl<$Res>
 
 /// Create a copy of ShoppingListItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? quantity = null,Object? unit = null,Object? category = null,Object? checked = null,Object? alreadyInPantry = null,Object? fromDishIds = null,Object? estPriceVnd = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? quantity = null,Object? unit = null,Object? category = null,Object? checked = null,Object? alreadyInPantry = null,Object? fromDishIds = null,Object? isGenerated = null,Object? estPriceVnd = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -72,7 +72,8 @@ as MeasurementUnit,category: null == category ? _self.category : category // ign
 as String,checked: null == checked ? _self.checked : checked // ignore: cast_nullable_to_non_nullable
 as bool,alreadyInPantry: null == alreadyInPantry ? _self.alreadyInPantry : alreadyInPantry // ignore: cast_nullable_to_non_nullable
 as bool,fromDishIds: null == fromDishIds ? _self.fromDishIds : fromDishIds // ignore: cast_nullable_to_non_nullable
-as List<String>,estPriceVnd: freezed == estPriceVnd ? _self.estPriceVnd : estPriceVnd // ignore: cast_nullable_to_non_nullable
+as List<String>,isGenerated: null == isGenerated ? _self.isGenerated : isGenerated // ignore: cast_nullable_to_non_nullable
+as bool,estPriceVnd: freezed == estPriceVnd ? _self.estPriceVnd : estPriceVnd // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  double quantity,  MeasurementUnit unit,  String category,  bool checked,  bool alreadyInPantry,  List<String> fromDishIds,  int? estPriceVnd)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  double quantity,  MeasurementUnit unit,  String category,  bool checked,  bool alreadyInPantry,  List<String> fromDishIds,  bool isGenerated,  int? estPriceVnd)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShoppingListItem() when $default != null:
-return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.checked,_that.alreadyInPantry,_that.fromDishIds,_that.estPriceVnd);case _:
+return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.checked,_that.alreadyInPantry,_that.fromDishIds,_that.isGenerated,_that.estPriceVnd);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  double quantity,  MeasurementUnit unit,  String category,  bool checked,  bool alreadyInPantry,  List<String> fromDishIds,  int? estPriceVnd)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  double quantity,  MeasurementUnit unit,  String category,  bool checked,  bool alreadyInPantry,  List<String> fromDishIds,  bool isGenerated,  int? estPriceVnd)  $default,) {final _that = this;
 switch (_that) {
 case _ShoppingListItem():
-return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.checked,_that.alreadyInPantry,_that.fromDishIds,_that.estPriceVnd);case _:
+return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.checked,_that.alreadyInPantry,_that.fromDishIds,_that.isGenerated,_that.estPriceVnd);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  double quantity,  MeasurementUnit unit,  String category,  bool checked,  bool alreadyInPantry,  List<String> fromDishIds,  int? estPriceVnd)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  double quantity,  MeasurementUnit unit,  String category,  bool checked,  bool alreadyInPantry,  List<String> fromDishIds,  bool isGenerated,  int? estPriceVnd)?  $default,) {final _that = this;
 switch (_that) {
 case _ShoppingListItem() when $default != null:
-return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.checked,_that.alreadyInPantry,_that.fromDishIds,_that.estPriceVnd);case _:
+return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.checked,_that.alreadyInPantry,_that.fromDishIds,_that.isGenerated,_that.estPriceVnd);case _:
   return null;
 
 }
@@ -214,7 +215,7 @@ return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_th
 
 
 class _ShoppingListItem extends ShoppingListItem {
-  const _ShoppingListItem({required this.id, required this.name, required this.quantity, required this.unit, required this.category, this.checked = false, this.alreadyInPantry = false, final  List<String> fromDishIds = const <String>[], this.estPriceVnd}): _fromDishIds = fromDishIds,super._();
+  const _ShoppingListItem({required this.id, required this.name, required this.quantity, required this.unit, required this.category, this.checked = false, this.alreadyInPantry = false, final  List<String> fromDishIds = const <String>[], this.isGenerated = true, this.estPriceVnd}): _fromDishIds = fromDishIds,super._();
   
 
 @override final  String id;
@@ -231,6 +232,7 @@ class _ShoppingListItem extends ShoppingListItem {
   return EqualUnmodifiableListView(_fromDishIds);
 }
 
+@override@JsonKey() final  bool isGenerated;
 @override final  int? estPriceVnd;
 
 /// Create a copy of ShoppingListItem
@@ -243,16 +245,16 @@ _$ShoppingListItemCopyWith<_ShoppingListItem> get copyWith => __$ShoppingListIte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShoppingListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.checked, checked) || other.checked == checked)&&(identical(other.alreadyInPantry, alreadyInPantry) || other.alreadyInPantry == alreadyInPantry)&&const DeepCollectionEquality().equals(other._fromDishIds, _fromDishIds)&&(identical(other.estPriceVnd, estPriceVnd) || other.estPriceVnd == estPriceVnd));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShoppingListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.checked, checked) || other.checked == checked)&&(identical(other.alreadyInPantry, alreadyInPantry) || other.alreadyInPantry == alreadyInPantry)&&const DeepCollectionEquality().equals(other._fromDishIds, _fromDishIds)&&(identical(other.isGenerated, isGenerated) || other.isGenerated == isGenerated)&&(identical(other.estPriceVnd, estPriceVnd) || other.estPriceVnd == estPriceVnd));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,quantity,unit,category,checked,alreadyInPantry,const DeepCollectionEquality().hash(_fromDishIds),estPriceVnd);
+int get hashCode => Object.hash(runtimeType,id,name,quantity,unit,category,checked,alreadyInPantry,const DeepCollectionEquality().hash(_fromDishIds),isGenerated,estPriceVnd);
 
 @override
 String toString() {
-  return 'ShoppingListItem(id: $id, name: $name, quantity: $quantity, unit: $unit, category: $category, checked: $checked, alreadyInPantry: $alreadyInPantry, fromDishIds: $fromDishIds, estPriceVnd: $estPriceVnd)';
+  return 'ShoppingListItem(id: $id, name: $name, quantity: $quantity, unit: $unit, category: $category, checked: $checked, alreadyInPantry: $alreadyInPantry, fromDishIds: $fromDishIds, isGenerated: $isGenerated, estPriceVnd: $estPriceVnd)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$ShoppingListItemCopyWith<$Res> implements $ShoppingListIt
   factory _$ShoppingListItemCopyWith(_ShoppingListItem value, $Res Function(_ShoppingListItem) _then) = __$ShoppingListItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, double quantity, MeasurementUnit unit, String category, bool checked, bool alreadyInPantry, List<String> fromDishIds, int? estPriceVnd
+ String id, String name, double quantity, MeasurementUnit unit, String category, bool checked, bool alreadyInPantry, List<String> fromDishIds, bool isGenerated, int? estPriceVnd
 });
 
 
@@ -280,7 +282,7 @@ class __$ShoppingListItemCopyWithImpl<$Res>
 
 /// Create a copy of ShoppingListItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? quantity = null,Object? unit = null,Object? category = null,Object? checked = null,Object? alreadyInPantry = null,Object? fromDishIds = null,Object? estPriceVnd = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? quantity = null,Object? unit = null,Object? category = null,Object? checked = null,Object? alreadyInPantry = null,Object? fromDishIds = null,Object? isGenerated = null,Object? estPriceVnd = freezed,}) {
   return _then(_ShoppingListItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -290,7 +292,8 @@ as MeasurementUnit,category: null == category ? _self.category : category // ign
 as String,checked: null == checked ? _self.checked : checked // ignore: cast_nullable_to_non_nullable
 as bool,alreadyInPantry: null == alreadyInPantry ? _self.alreadyInPantry : alreadyInPantry // ignore: cast_nullable_to_non_nullable
 as bool,fromDishIds: null == fromDishIds ? _self._fromDishIds : fromDishIds // ignore: cast_nullable_to_non_nullable
-as List<String>,estPriceVnd: freezed == estPriceVnd ? _self.estPriceVnd : estPriceVnd // ignore: cast_nullable_to_non_nullable
+as List<String>,isGenerated: null == isGenerated ? _self.isGenerated : isGenerated // ignore: cast_nullable_to_non_nullable
+as bool,estPriceVnd: freezed == estPriceVnd ? _self.estPriceVnd : estPriceVnd // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }

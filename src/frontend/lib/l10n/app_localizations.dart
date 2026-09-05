@@ -3115,18 +3115,6 @@ abstract class AppL10n {
   /// **'Tên món'**
   String get shoppingItemName;
 
-  /// No description provided for @shoppingCategoryOptional.
-  ///
-  /// In vi, this message translates to:
-  /// **'Danh mục (tùy chọn)'**
-  String get shoppingCategoryOptional;
-
-  /// No description provided for @shoppingCategoryHint.
-  ///
-  /// In vi, this message translates to:
-  /// **'Rau củ, Thịt & hải sản, …'**
-  String get shoppingCategoryHint;
-
   /// No description provided for @shoppingAddToList.
   ///
   /// In vi, this message translates to:
@@ -3144,6 +3132,36 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Từ công thức'**
   String get shoppingFromRecipe;
+
+  /// No description provided for @shoppingPurchaseTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xác nhận đã mua'**
+  String get shoppingPurchaseTitle;
+
+  /// No description provided for @shoppingPurchaseSubtitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thông tin này giúp lưu vào kho ngay khi bạn tick đã mua.'**
+  String get shoppingPurchaseSubtitle;
+
+  /// No description provided for @shoppingPurchaseExpiryPick.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn hạn sử dụng'**
+  String get shoppingPurchaseExpiryPick;
+
+  /// No description provided for @shoppingPurchasePriceLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giá (VNĐ, tùy chọn)'**
+  String get shoppingPurchasePriceLabel;
+
+  /// No description provided for @shoppingPurchaseConfirm.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xác nhận'**
+  String get shoppingPurchaseConfirm;
 
   /// No description provided for @subCurrentPlan.
   ///

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShoppingListItemDto {
 
- String get id; String get name; double get quantity; String get unit; String get category;@JsonKey(name: 'checked') bool get isChecked;@JsonKey(name: 'already_in_pantry') bool get alreadyInPantry;@JsonKey(name: 'from_dish_ids') List<String> get fromDishIds;@JsonKey(name: 'est_price_vnd') int? get estPriceVnd;
+ String get id;@JsonKey(name: 'master_ingredient_id') String? get masterIngredientId;@JsonKey(name: 'custom_name') String? get customName; String get name;@JsonKey(name: 'required_quantity') double get requiredQuantity;@JsonKey(name: 'available_quantity') double get availableQuantity;@JsonKey(name: 'missing_quantity') double get missingQuantity; String get unit;@JsonKey(name: 'estimated_cost') num? get estimatedCost;@JsonKey(name: 'is_checked') bool get isChecked;@JsonKey(name: 'is_generated') bool get isGenerated;@JsonKey(name: 'source_recipe_ids') List<String> get sourceRecipeIds;@JsonKey(name: 'inventory_batch_id') String? get inventoryBatchId;
 /// Create a copy of ShoppingListItemDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ShoppingListItemDtoCopyWith<ShoppingListItemDto> get copyWith => _$ShoppingList
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShoppingListItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.isChecked, isChecked) || other.isChecked == isChecked)&&(identical(other.alreadyInPantry, alreadyInPantry) || other.alreadyInPantry == alreadyInPantry)&&const DeepCollectionEquality().equals(other.fromDishIds, fromDishIds)&&(identical(other.estPriceVnd, estPriceVnd) || other.estPriceVnd == estPriceVnd));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShoppingListItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.masterIngredientId, masterIngredientId) || other.masterIngredientId == masterIngredientId)&&(identical(other.customName, customName) || other.customName == customName)&&(identical(other.name, name) || other.name == name)&&(identical(other.requiredQuantity, requiredQuantity) || other.requiredQuantity == requiredQuantity)&&(identical(other.availableQuantity, availableQuantity) || other.availableQuantity == availableQuantity)&&(identical(other.missingQuantity, missingQuantity) || other.missingQuantity == missingQuantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.estimatedCost, estimatedCost) || other.estimatedCost == estimatedCost)&&(identical(other.isChecked, isChecked) || other.isChecked == isChecked)&&(identical(other.isGenerated, isGenerated) || other.isGenerated == isGenerated)&&const DeepCollectionEquality().equals(other.sourceRecipeIds, sourceRecipeIds)&&(identical(other.inventoryBatchId, inventoryBatchId) || other.inventoryBatchId == inventoryBatchId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,quantity,unit,category,isChecked,alreadyInPantry,const DeepCollectionEquality().hash(fromDishIds),estPriceVnd);
+int get hashCode => Object.hash(runtimeType,id,masterIngredientId,customName,name,requiredQuantity,availableQuantity,missingQuantity,unit,estimatedCost,isChecked,isGenerated,const DeepCollectionEquality().hash(sourceRecipeIds),inventoryBatchId);
 
 @override
 String toString() {
-  return 'ShoppingListItemDto(id: $id, name: $name, quantity: $quantity, unit: $unit, category: $category, isChecked: $isChecked, alreadyInPantry: $alreadyInPantry, fromDishIds: $fromDishIds, estPriceVnd: $estPriceVnd)';
+  return 'ShoppingListItemDto(id: $id, masterIngredientId: $masterIngredientId, customName: $customName, name: $name, requiredQuantity: $requiredQuantity, availableQuantity: $availableQuantity, missingQuantity: $missingQuantity, unit: $unit, estimatedCost: $estimatedCost, isChecked: $isChecked, isGenerated: $isGenerated, sourceRecipeIds: $sourceRecipeIds, inventoryBatchId: $inventoryBatchId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ShoppingListItemDtoCopyWith<$Res>  {
   factory $ShoppingListItemDtoCopyWith(ShoppingListItemDto value, $Res Function(ShoppingListItemDto) _then) = _$ShoppingListItemDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, double quantity, String unit, String category,@JsonKey(name: 'checked') bool isChecked,@JsonKey(name: 'already_in_pantry') bool alreadyInPantry,@JsonKey(name: 'from_dish_ids') List<String> fromDishIds,@JsonKey(name: 'est_price_vnd') int? estPriceVnd
+ String id,@JsonKey(name: 'master_ingredient_id') String? masterIngredientId,@JsonKey(name: 'custom_name') String? customName, String name,@JsonKey(name: 'required_quantity') double requiredQuantity,@JsonKey(name: 'available_quantity') double availableQuantity,@JsonKey(name: 'missing_quantity') double missingQuantity, String unit,@JsonKey(name: 'estimated_cost') num? estimatedCost,@JsonKey(name: 'is_checked') bool isChecked,@JsonKey(name: 'is_generated') bool isGenerated,@JsonKey(name: 'source_recipe_ids') List<String> sourceRecipeIds,@JsonKey(name: 'inventory_batch_id') String? inventoryBatchId
 });
 
 
@@ -65,18 +65,22 @@ class _$ShoppingListItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of ShoppingListItemDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? quantity = null,Object? unit = null,Object? category = null,Object? isChecked = null,Object? alreadyInPantry = null,Object? fromDishIds = null,Object? estPriceVnd = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? masterIngredientId = freezed,Object? customName = freezed,Object? name = null,Object? requiredQuantity = null,Object? availableQuantity = null,Object? missingQuantity = null,Object? unit = null,Object? estimatedCost = freezed,Object? isChecked = null,Object? isGenerated = null,Object? sourceRecipeIds = null,Object? inventoryBatchId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as String,masterIngredientId: freezed == masterIngredientId ? _self.masterIngredientId : masterIngredientId // ignore: cast_nullable_to_non_nullable
+as String?,customName: freezed == customName ? _self.customName : customName // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,requiredQuantity: null == requiredQuantity ? _self.requiredQuantity : requiredQuantity // ignore: cast_nullable_to_non_nullable
+as double,availableQuantity: null == availableQuantity ? _self.availableQuantity : availableQuantity // ignore: cast_nullable_to_non_nullable
+as double,missingQuantity: null == missingQuantity ? _self.missingQuantity : missingQuantity // ignore: cast_nullable_to_non_nullable
 as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
-as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
-as String,isChecked: null == isChecked ? _self.isChecked : isChecked // ignore: cast_nullable_to_non_nullable
-as bool,alreadyInPantry: null == alreadyInPantry ? _self.alreadyInPantry : alreadyInPantry // ignore: cast_nullable_to_non_nullable
-as bool,fromDishIds: null == fromDishIds ? _self.fromDishIds : fromDishIds // ignore: cast_nullable_to_non_nullable
-as List<String>,estPriceVnd: freezed == estPriceVnd ? _self.estPriceVnd : estPriceVnd // ignore: cast_nullable_to_non_nullable
-as int?,
+as String,estimatedCost: freezed == estimatedCost ? _self.estimatedCost : estimatedCost // ignore: cast_nullable_to_non_nullable
+as num?,isChecked: null == isChecked ? _self.isChecked : isChecked // ignore: cast_nullable_to_non_nullable
+as bool,isGenerated: null == isGenerated ? _self.isGenerated : isGenerated // ignore: cast_nullable_to_non_nullable
+as bool,sourceRecipeIds: null == sourceRecipeIds ? _self.sourceRecipeIds : sourceRecipeIds // ignore: cast_nullable_to_non_nullable
+as List<String>,inventoryBatchId: freezed == inventoryBatchId ? _self.inventoryBatchId : inventoryBatchId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -161,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  double quantity,  String unit,  String category, @JsonKey(name: 'checked')  bool isChecked, @JsonKey(name: 'already_in_pantry')  bool alreadyInPantry, @JsonKey(name: 'from_dish_ids')  List<String> fromDishIds, @JsonKey(name: 'est_price_vnd')  int? estPriceVnd)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'master_ingredient_id')  String? masterIngredientId, @JsonKey(name: 'custom_name')  String? customName,  String name, @JsonKey(name: 'required_quantity')  double requiredQuantity, @JsonKey(name: 'available_quantity')  double availableQuantity, @JsonKey(name: 'missing_quantity')  double missingQuantity,  String unit, @JsonKey(name: 'estimated_cost')  num? estimatedCost, @JsonKey(name: 'is_checked')  bool isChecked, @JsonKey(name: 'is_generated')  bool isGenerated, @JsonKey(name: 'source_recipe_ids')  List<String> sourceRecipeIds, @JsonKey(name: 'inventory_batch_id')  String? inventoryBatchId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShoppingListItemDto() when $default != null:
-return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.isChecked,_that.alreadyInPantry,_that.fromDishIds,_that.estPriceVnd);case _:
+return $default(_that.id,_that.masterIngredientId,_that.customName,_that.name,_that.requiredQuantity,_that.availableQuantity,_that.missingQuantity,_that.unit,_that.estimatedCost,_that.isChecked,_that.isGenerated,_that.sourceRecipeIds,_that.inventoryBatchId);case _:
   return orElse();
 
 }
@@ -182,10 +186,10 @@ return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  double quantity,  String unit,  String category, @JsonKey(name: 'checked')  bool isChecked, @JsonKey(name: 'already_in_pantry')  bool alreadyInPantry, @JsonKey(name: 'from_dish_ids')  List<String> fromDishIds, @JsonKey(name: 'est_price_vnd')  int? estPriceVnd)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'master_ingredient_id')  String? masterIngredientId, @JsonKey(name: 'custom_name')  String? customName,  String name, @JsonKey(name: 'required_quantity')  double requiredQuantity, @JsonKey(name: 'available_quantity')  double availableQuantity, @JsonKey(name: 'missing_quantity')  double missingQuantity,  String unit, @JsonKey(name: 'estimated_cost')  num? estimatedCost, @JsonKey(name: 'is_checked')  bool isChecked, @JsonKey(name: 'is_generated')  bool isGenerated, @JsonKey(name: 'source_recipe_ids')  List<String> sourceRecipeIds, @JsonKey(name: 'inventory_batch_id')  String? inventoryBatchId)  $default,) {final _that = this;
 switch (_that) {
 case _ShoppingListItemDto():
-return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.isChecked,_that.alreadyInPantry,_that.fromDishIds,_that.estPriceVnd);case _:
+return $default(_that.id,_that.masterIngredientId,_that.customName,_that.name,_that.requiredQuantity,_that.availableQuantity,_that.missingQuantity,_that.unit,_that.estimatedCost,_that.isChecked,_that.isGenerated,_that.sourceRecipeIds,_that.inventoryBatchId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +206,10 @@ return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  double quantity,  String unit,  String category, @JsonKey(name: 'checked')  bool isChecked, @JsonKey(name: 'already_in_pantry')  bool alreadyInPantry, @JsonKey(name: 'from_dish_ids')  List<String> fromDishIds, @JsonKey(name: 'est_price_vnd')  int? estPriceVnd)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'master_ingredient_id')  String? masterIngredientId, @JsonKey(name: 'custom_name')  String? customName,  String name, @JsonKey(name: 'required_quantity')  double requiredQuantity, @JsonKey(name: 'available_quantity')  double availableQuantity, @JsonKey(name: 'missing_quantity')  double missingQuantity,  String unit, @JsonKey(name: 'estimated_cost')  num? estimatedCost, @JsonKey(name: 'is_checked')  bool isChecked, @JsonKey(name: 'is_generated')  bool isGenerated, @JsonKey(name: 'source_recipe_ids')  List<String> sourceRecipeIds, @JsonKey(name: 'inventory_batch_id')  String? inventoryBatchId)?  $default,) {final _that = this;
 switch (_that) {
 case _ShoppingListItemDto() when $default != null:
-return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_that.isChecked,_that.alreadyInPantry,_that.fromDishIds,_that.estPriceVnd);case _:
+return $default(_that.id,_that.masterIngredientId,_that.customName,_that.name,_that.requiredQuantity,_that.availableQuantity,_that.missingQuantity,_that.unit,_that.estimatedCost,_that.isChecked,_that.isGenerated,_that.sourceRecipeIds,_that.inventoryBatchId);case _:
   return null;
 
 }
@@ -217,24 +221,28 @@ return $default(_that.id,_that.name,_that.quantity,_that.unit,_that.category,_th
 @JsonSerializable()
 
 class _ShoppingListItemDto extends ShoppingListItemDto {
-  const _ShoppingListItemDto({required this.id, required this.name, required this.quantity, required this.unit, this.category = 'Khác', @JsonKey(name: 'checked') this.isChecked = false, @JsonKey(name: 'already_in_pantry') this.alreadyInPantry = false, @JsonKey(name: 'from_dish_ids') final  List<String> fromDishIds = const <String>[], @JsonKey(name: 'est_price_vnd') this.estPriceVnd}): _fromDishIds = fromDishIds,super._();
+  const _ShoppingListItemDto({required this.id, @JsonKey(name: 'master_ingredient_id') this.masterIngredientId, @JsonKey(name: 'custom_name') this.customName, required this.name, @JsonKey(name: 'required_quantity') this.requiredQuantity = 0, @JsonKey(name: 'available_quantity') this.availableQuantity = 0, @JsonKey(name: 'missing_quantity') this.missingQuantity = 0, required this.unit, @JsonKey(name: 'estimated_cost') this.estimatedCost, @JsonKey(name: 'is_checked') this.isChecked = false, @JsonKey(name: 'is_generated') this.isGenerated = true, @JsonKey(name: 'source_recipe_ids') final  List<String> sourceRecipeIds = const <String>[], @JsonKey(name: 'inventory_batch_id') this.inventoryBatchId}): _sourceRecipeIds = sourceRecipeIds,super._();
   factory _ShoppingListItemDto.fromJson(Map<String, dynamic> json) => _$ShoppingListItemDtoFromJson(json);
 
 @override final  String id;
+@override@JsonKey(name: 'master_ingredient_id') final  String? masterIngredientId;
+@override@JsonKey(name: 'custom_name') final  String? customName;
 @override final  String name;
-@override final  double quantity;
+@override@JsonKey(name: 'required_quantity') final  double requiredQuantity;
+@override@JsonKey(name: 'available_quantity') final  double availableQuantity;
+@override@JsonKey(name: 'missing_quantity') final  double missingQuantity;
 @override final  String unit;
-@override@JsonKey() final  String category;
-@override@JsonKey(name: 'checked') final  bool isChecked;
-@override@JsonKey(name: 'already_in_pantry') final  bool alreadyInPantry;
- final  List<String> _fromDishIds;
-@override@JsonKey(name: 'from_dish_ids') List<String> get fromDishIds {
-  if (_fromDishIds is EqualUnmodifiableListView) return _fromDishIds;
+@override@JsonKey(name: 'estimated_cost') final  num? estimatedCost;
+@override@JsonKey(name: 'is_checked') final  bool isChecked;
+@override@JsonKey(name: 'is_generated') final  bool isGenerated;
+ final  List<String> _sourceRecipeIds;
+@override@JsonKey(name: 'source_recipe_ids') List<String> get sourceRecipeIds {
+  if (_sourceRecipeIds is EqualUnmodifiableListView) return _sourceRecipeIds;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_fromDishIds);
+  return EqualUnmodifiableListView(_sourceRecipeIds);
 }
 
-@override@JsonKey(name: 'est_price_vnd') final  int? estPriceVnd;
+@override@JsonKey(name: 'inventory_batch_id') final  String? inventoryBatchId;
 
 /// Create a copy of ShoppingListItemDto
 /// with the given fields replaced by the non-null parameter values.
@@ -249,16 +257,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShoppingListItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.category, category) || other.category == category)&&(identical(other.isChecked, isChecked) || other.isChecked == isChecked)&&(identical(other.alreadyInPantry, alreadyInPantry) || other.alreadyInPantry == alreadyInPantry)&&const DeepCollectionEquality().equals(other._fromDishIds, _fromDishIds)&&(identical(other.estPriceVnd, estPriceVnd) || other.estPriceVnd == estPriceVnd));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShoppingListItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.masterIngredientId, masterIngredientId) || other.masterIngredientId == masterIngredientId)&&(identical(other.customName, customName) || other.customName == customName)&&(identical(other.name, name) || other.name == name)&&(identical(other.requiredQuantity, requiredQuantity) || other.requiredQuantity == requiredQuantity)&&(identical(other.availableQuantity, availableQuantity) || other.availableQuantity == availableQuantity)&&(identical(other.missingQuantity, missingQuantity) || other.missingQuantity == missingQuantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.estimatedCost, estimatedCost) || other.estimatedCost == estimatedCost)&&(identical(other.isChecked, isChecked) || other.isChecked == isChecked)&&(identical(other.isGenerated, isGenerated) || other.isGenerated == isGenerated)&&const DeepCollectionEquality().equals(other._sourceRecipeIds, _sourceRecipeIds)&&(identical(other.inventoryBatchId, inventoryBatchId) || other.inventoryBatchId == inventoryBatchId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,quantity,unit,category,isChecked,alreadyInPantry,const DeepCollectionEquality().hash(_fromDishIds),estPriceVnd);
+int get hashCode => Object.hash(runtimeType,id,masterIngredientId,customName,name,requiredQuantity,availableQuantity,missingQuantity,unit,estimatedCost,isChecked,isGenerated,const DeepCollectionEquality().hash(_sourceRecipeIds),inventoryBatchId);
 
 @override
 String toString() {
-  return 'ShoppingListItemDto(id: $id, name: $name, quantity: $quantity, unit: $unit, category: $category, isChecked: $isChecked, alreadyInPantry: $alreadyInPantry, fromDishIds: $fromDishIds, estPriceVnd: $estPriceVnd)';
+  return 'ShoppingListItemDto(id: $id, masterIngredientId: $masterIngredientId, customName: $customName, name: $name, requiredQuantity: $requiredQuantity, availableQuantity: $availableQuantity, missingQuantity: $missingQuantity, unit: $unit, estimatedCost: $estimatedCost, isChecked: $isChecked, isGenerated: $isGenerated, sourceRecipeIds: $sourceRecipeIds, inventoryBatchId: $inventoryBatchId)';
 }
 
 
@@ -269,7 +277,7 @@ abstract mixin class _$ShoppingListItemDtoCopyWith<$Res> implements $ShoppingLis
   factory _$ShoppingListItemDtoCopyWith(_ShoppingListItemDto value, $Res Function(_ShoppingListItemDto) _then) = __$ShoppingListItemDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, double quantity, String unit, String category,@JsonKey(name: 'checked') bool isChecked,@JsonKey(name: 'already_in_pantry') bool alreadyInPantry,@JsonKey(name: 'from_dish_ids') List<String> fromDishIds,@JsonKey(name: 'est_price_vnd') int? estPriceVnd
+ String id,@JsonKey(name: 'master_ingredient_id') String? masterIngredientId,@JsonKey(name: 'custom_name') String? customName, String name,@JsonKey(name: 'required_quantity') double requiredQuantity,@JsonKey(name: 'available_quantity') double availableQuantity,@JsonKey(name: 'missing_quantity') double missingQuantity, String unit,@JsonKey(name: 'estimated_cost') num? estimatedCost,@JsonKey(name: 'is_checked') bool isChecked,@JsonKey(name: 'is_generated') bool isGenerated,@JsonKey(name: 'source_recipe_ids') List<String> sourceRecipeIds,@JsonKey(name: 'inventory_batch_id') String? inventoryBatchId
 });
 
 
@@ -286,18 +294,22 @@ class __$ShoppingListItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of ShoppingListItemDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? quantity = null,Object? unit = null,Object? category = null,Object? isChecked = null,Object? alreadyInPantry = null,Object? fromDishIds = null,Object? estPriceVnd = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? masterIngredientId = freezed,Object? customName = freezed,Object? name = null,Object? requiredQuantity = null,Object? availableQuantity = null,Object? missingQuantity = null,Object? unit = null,Object? estimatedCost = freezed,Object? isChecked = null,Object? isGenerated = null,Object? sourceRecipeIds = null,Object? inventoryBatchId = freezed,}) {
   return _then(_ShoppingListItemDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as String,masterIngredientId: freezed == masterIngredientId ? _self.masterIngredientId : masterIngredientId // ignore: cast_nullable_to_non_nullable
+as String?,customName: freezed == customName ? _self.customName : customName // ignore: cast_nullable_to_non_nullable
+as String?,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,requiredQuantity: null == requiredQuantity ? _self.requiredQuantity : requiredQuantity // ignore: cast_nullable_to_non_nullable
+as double,availableQuantity: null == availableQuantity ? _self.availableQuantity : availableQuantity // ignore: cast_nullable_to_non_nullable
+as double,missingQuantity: null == missingQuantity ? _self.missingQuantity : missingQuantity // ignore: cast_nullable_to_non_nullable
 as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
-as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
-as String,isChecked: null == isChecked ? _self.isChecked : isChecked // ignore: cast_nullable_to_non_nullable
-as bool,alreadyInPantry: null == alreadyInPantry ? _self.alreadyInPantry : alreadyInPantry // ignore: cast_nullable_to_non_nullable
-as bool,fromDishIds: null == fromDishIds ? _self._fromDishIds : fromDishIds // ignore: cast_nullable_to_non_nullable
-as List<String>,estPriceVnd: freezed == estPriceVnd ? _self.estPriceVnd : estPriceVnd // ignore: cast_nullable_to_non_nullable
-as int?,
+as String,estimatedCost: freezed == estimatedCost ? _self.estimatedCost : estimatedCost // ignore: cast_nullable_to_non_nullable
+as num?,isChecked: null == isChecked ? _self.isChecked : isChecked // ignore: cast_nullable_to_non_nullable
+as bool,isGenerated: null == isGenerated ? _self.isGenerated : isGenerated // ignore: cast_nullable_to_non_nullable
+as bool,sourceRecipeIds: null == sourceRecipeIds ? _self._sourceRecipeIds : sourceRecipeIds // ignore: cast_nullable_to_non_nullable
+as List<String>,inventoryBatchId: freezed == inventoryBatchId ? _self.inventoryBatchId : inventoryBatchId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -308,7 +320,7 @@ as int?,
 /// @nodoc
 mixin _$ShoppingListDto {
 
- String get id;@JsonKey(name: 'source_label') String? get sourceLabel; List<ShoppingListItemDto> get items;
+ String get id;@JsonKey(name: 'meal_plan_id') String? get mealPlanId; String get status;@JsonKey(name: 'generated_at') DateTime? get generatedAt; List<ShoppingListItemDto> get items;
 /// Create a copy of ShoppingListDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -321,16 +333,16 @@ $ShoppingListDtoCopyWith<ShoppingListDto> get copyWith => _$ShoppingListDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShoppingListDto&&(identical(other.id, id) || other.id == id)&&(identical(other.sourceLabel, sourceLabel) || other.sourceLabel == sourceLabel)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ShoppingListDto&&(identical(other.id, id) || other.id == id)&&(identical(other.mealPlanId, mealPlanId) || other.mealPlanId == mealPlanId)&&(identical(other.status, status) || other.status == status)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,sourceLabel,const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,id,mealPlanId,status,generatedAt,const DeepCollectionEquality().hash(items));
 
 @override
 String toString() {
-  return 'ShoppingListDto(id: $id, sourceLabel: $sourceLabel, items: $items)';
+  return 'ShoppingListDto(id: $id, mealPlanId: $mealPlanId, status: $status, generatedAt: $generatedAt, items: $items)';
 }
 
 
@@ -341,7 +353,7 @@ abstract mixin class $ShoppingListDtoCopyWith<$Res>  {
   factory $ShoppingListDtoCopyWith(ShoppingListDto value, $Res Function(ShoppingListDto) _then) = _$ShoppingListDtoCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'source_label') String? sourceLabel, List<ShoppingListItemDto> items
+ String id,@JsonKey(name: 'meal_plan_id') String? mealPlanId, String status,@JsonKey(name: 'generated_at') DateTime? generatedAt, List<ShoppingListItemDto> items
 });
 
 
@@ -358,11 +370,13 @@ class _$ShoppingListDtoCopyWithImpl<$Res>
 
 /// Create a copy of ShoppingListDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? sourceLabel = freezed,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? mealPlanId = freezed,Object? status = null,Object? generatedAt = freezed,Object? items = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,sourceLabel: freezed == sourceLabel ? _self.sourceLabel : sourceLabel // ignore: cast_nullable_to_non_nullable
-as String?,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as String,mealPlanId: freezed == mealPlanId ? _self.mealPlanId : mealPlanId // ignore: cast_nullable_to_non_nullable
+as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,generatedAt: freezed == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<ShoppingListItemDto>,
   ));
 }
@@ -448,10 +462,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'source_label')  String? sourceLabel,  List<ShoppingListItemDto> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'meal_plan_id')  String? mealPlanId,  String status, @JsonKey(name: 'generated_at')  DateTime? generatedAt,  List<ShoppingListItemDto> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShoppingListDto() when $default != null:
-return $default(_that.id,_that.sourceLabel,_that.items);case _:
+return $default(_that.id,_that.mealPlanId,_that.status,_that.generatedAt,_that.items);case _:
   return orElse();
 
 }
@@ -469,10 +483,10 @@ return $default(_that.id,_that.sourceLabel,_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'source_label')  String? sourceLabel,  List<ShoppingListItemDto> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'meal_plan_id')  String? mealPlanId,  String status, @JsonKey(name: 'generated_at')  DateTime? generatedAt,  List<ShoppingListItemDto> items)  $default,) {final _that = this;
 switch (_that) {
 case _ShoppingListDto():
-return $default(_that.id,_that.sourceLabel,_that.items);case _:
+return $default(_that.id,_that.mealPlanId,_that.status,_that.generatedAt,_that.items);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -489,10 +503,10 @@ return $default(_that.id,_that.sourceLabel,_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'source_label')  String? sourceLabel,  List<ShoppingListItemDto> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'meal_plan_id')  String? mealPlanId,  String status, @JsonKey(name: 'generated_at')  DateTime? generatedAt,  List<ShoppingListItemDto> items)?  $default,) {final _that = this;
 switch (_that) {
 case _ShoppingListDto() when $default != null:
-return $default(_that.id,_that.sourceLabel,_that.items);case _:
+return $default(_that.id,_that.mealPlanId,_that.status,_that.generatedAt,_that.items);case _:
   return null;
 
 }
@@ -504,11 +518,13 @@ return $default(_that.id,_that.sourceLabel,_that.items);case _:
 @JsonSerializable()
 
 class _ShoppingListDto extends ShoppingListDto {
-  const _ShoppingListDto({required this.id, @JsonKey(name: 'source_label') this.sourceLabel, final  List<ShoppingListItemDto> items = const <ShoppingListItemDto>[]}): _items = items,super._();
+  const _ShoppingListDto({required this.id, @JsonKey(name: 'meal_plan_id') this.mealPlanId, this.status = 'ACTIVE', @JsonKey(name: 'generated_at') this.generatedAt, final  List<ShoppingListItemDto> items = const <ShoppingListItemDto>[]}): _items = items,super._();
   factory _ShoppingListDto.fromJson(Map<String, dynamic> json) => _$ShoppingListDtoFromJson(json);
 
 @override final  String id;
-@override@JsonKey(name: 'source_label') final  String? sourceLabel;
+@override@JsonKey(name: 'meal_plan_id') final  String? mealPlanId;
+@override@JsonKey() final  String status;
+@override@JsonKey(name: 'generated_at') final  DateTime? generatedAt;
  final  List<ShoppingListItemDto> _items;
 @override@JsonKey() List<ShoppingListItemDto> get items {
   if (_items is EqualUnmodifiableListView) return _items;
@@ -530,16 +546,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShoppingListDto&&(identical(other.id, id) || other.id == id)&&(identical(other.sourceLabel, sourceLabel) || other.sourceLabel == sourceLabel)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ShoppingListDto&&(identical(other.id, id) || other.id == id)&&(identical(other.mealPlanId, mealPlanId) || other.mealPlanId == mealPlanId)&&(identical(other.status, status) || other.status == status)&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,sourceLabel,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,id,mealPlanId,status,generatedAt,const DeepCollectionEquality().hash(_items));
 
 @override
 String toString() {
-  return 'ShoppingListDto(id: $id, sourceLabel: $sourceLabel, items: $items)';
+  return 'ShoppingListDto(id: $id, mealPlanId: $mealPlanId, status: $status, generatedAt: $generatedAt, items: $items)';
 }
 
 
@@ -550,7 +566,7 @@ abstract mixin class _$ShoppingListDtoCopyWith<$Res> implements $ShoppingListDto
   factory _$ShoppingListDtoCopyWith(_ShoppingListDto value, $Res Function(_ShoppingListDto) _then) = __$ShoppingListDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'source_label') String? sourceLabel, List<ShoppingListItemDto> items
+ String id,@JsonKey(name: 'meal_plan_id') String? mealPlanId, String status,@JsonKey(name: 'generated_at') DateTime? generatedAt, List<ShoppingListItemDto> items
 });
 
 
@@ -567,11 +583,13 @@ class __$ShoppingListDtoCopyWithImpl<$Res>
 
 /// Create a copy of ShoppingListDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? sourceLabel = freezed,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? mealPlanId = freezed,Object? status = null,Object? generatedAt = freezed,Object? items = null,}) {
   return _then(_ShoppingListDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,sourceLabel: freezed == sourceLabel ? _self.sourceLabel : sourceLabel // ignore: cast_nullable_to_non_nullable
-as String?,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as String,mealPlanId: freezed == mealPlanId ? _self.mealPlanId : mealPlanId // ignore: cast_nullable_to_non_nullable
+as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,generatedAt: freezed == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<ShoppingListItemDto>,
   ));
 }

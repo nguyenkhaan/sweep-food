@@ -1695,12 +1695,6 @@ class AppL10nVi extends AppL10n {
   String get shoppingItemName => 'Tên món';
 
   @override
-  String get shoppingCategoryOptional => 'Danh mục (tùy chọn)';
-
-  @override
-  String get shoppingCategoryHint => 'Rau củ, Thịt & hải sản, …';
-
-  @override
   String get shoppingAddToList => 'Thêm vào danh sách';
 
   @override
@@ -1708,6 +1702,22 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get shoppingFromRecipe => 'Từ công thức';
+
+  @override
+  String get shoppingPurchaseTitle => 'Xác nhận đã mua';
+
+  @override
+  String get shoppingPurchaseSubtitle =>
+      'Thông tin này giúp lưu vào kho ngay khi bạn tick đã mua.';
+
+  @override
+  String get shoppingPurchaseExpiryPick => 'Chọn hạn sử dụng';
+
+  @override
+  String get shoppingPurchasePriceLabel => 'Giá (VNĐ, tùy chọn)';
+
+  @override
+  String get shoppingPurchaseConfirm => 'Xác nhận';
 
   @override
   String get subCurrentPlan => 'Bạn đang dùng';

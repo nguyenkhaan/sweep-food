@@ -70,10 +70,12 @@ abstract final class ApiPaths {
   static String mealPlanItem(String planId, String itemId) =>
       '/meal-plans/$planId/items/$itemId';
 
-  // Shopping list
-  static const shoppingLists = '/shopping-lists';
+  // Shopping lists (real backend) — no "list all" / "active list" endpoint;
+  // FE remembers the last generated list id locally. See api-contract.md §8.
   static const shoppingListsGenerate = '/shopping-lists/generate';
   static String shoppingList(String id) => '/shopping-lists/$id';
+  static String shoppingListItems(String listId) =>
+      '/shopping-lists/$listId/items';
   static String shoppingListItem(String listId, String itemId) =>
       '/shopping-lists/$listId/items/$itemId';
 

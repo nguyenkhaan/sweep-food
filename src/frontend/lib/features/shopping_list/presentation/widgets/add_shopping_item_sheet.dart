@@ -24,7 +24,6 @@ class AddShoppingItemSheet extends ConsumerStatefulWidget {
 class _State extends ConsumerState<AddShoppingItemSheet> {
   final _name = TextEditingController();
   final _qty = TextEditingController(text: '1');
-  final _category = TextEditingController();
   late MeasurementUnit _unit = ref
       .read(preferencesControllerProvider)
       .defaultUnit;
@@ -34,7 +33,6 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
   void dispose() {
     _name.dispose();
     _qty.dispose();
-    _category.dispose();
     super.dispose();
   }
 
@@ -45,16 +43,7 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
     setState(() => _busy = true);
     await ref
         .read(shoppingListControllerProvider.notifier)
-        .addManualItem(
-          ShoppingListItemDraft(
-            name: name,
-            quantity: qty,
-            unit: _unit,
-            category: _category.text.trim().isEmpty
-                ? context.l10n.catOther
-                : _category.text.trim(),
-          ),
-        );
+        .addManualItem(ShoppingListItemDraft(name: name, quantity: qty, unit: _unit));
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -103,15 +92,6 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
                 ),
               ),
             ],
-          ),
-          Gap.gapSm,
-          TextField(
-            controller: _category,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              labelText: l10n.shoppingCategoryOptional,
-              hintText: l10n.shoppingCategoryHint,
-            ),
           ),
           Gap.gapLg,
           PrimaryButton(

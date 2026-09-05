@@ -251,7 +251,6 @@ class _CookableRecipesScreenState extends ConsumerState<CookableRecipesScreen> {
             name: item.name,
             quantity: item.quantity,
             unit: item.unit,
-            category: 'Từ kho đồ',
           ),
         );
       }
