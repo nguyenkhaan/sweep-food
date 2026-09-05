@@ -47,14 +47,12 @@ class MockApiClient implements ApiClient {
   };
 
   /// Read-shaped POST endpoints that return a canned fixture instead of echoing
-  /// the request body (dish scoring, cook result). Matched exact-or-prefix; the
-  /// `/cook` suffix covers `POST /dishes/{id}/cook`.
+  /// the request body (dish scoring). Matched exact-or-prefix.
   static final Map<String, String> _postFixtures = {
     ApiPaths.suggestions: 'suggestions',
   };
 
   String? _postFixtureKey(String path) {
-    if (path.endsWith('/cook')) return 'cook_result';
     for (final e in _postFixtures.entries) {
       if (path == e.key || path.startsWith(e.key)) return e.value;
     }
@@ -343,6 +341,161 @@ class MockApiClient implements ApiClient {
         .removeWhere((i) => (i as Map)['id'] == itemId);
   }
 
+  // --- Cooking emulation -------------------------------------------------
+  //
+  // The backend's 3-step flow always goes through a meal-plan item. The mock
+  // resolves the item's recipe against the single canned `recipe.json`
+  // fixture and matches its ingredients against the cached inventory batches
+  // by name (best-effort — no real catalog to join master_ingredient_id
+  // against here).
+
+  final _cookingSessions = <Map<String, dynamic>>[];
+
+  Map<String, dynamic>? _findMealPlanItem(String itemId) {
+    for (final plan in _mealPlans) {
+      for (final item in (plan['items'] as List).cast<Map<String, dynamic>>()) {
+        if (item['id'] == itemId) return item;
+      }
+    }
+    return null;
+  }
+
+  /// Matches `recipe.json`'s ingredients against the cached inventory batches
+  /// by name. Shared by preview (read-only) and complete (which also applies
+  /// the deduction), so a later re-fetch of the pantry stays consistent with
+  /// what preview already showed the user.
+  Future<({List<Map<String, dynamic>> proposed, List<Map<String, dynamic>> missing})>
+      _matchIngredients(
+    Map<String, dynamic> recipe,
+    List<Map<String, dynamic>> batches,
+  ) async {
+    final proposed = <Map<String, dynamic>>[];
+    final missing = <Map<String, dynamic>>[];
+    for (final ing in (recipe['ingredients'] as List).cast<Map<String, dynamic>>()) {
+      final ingName = (ing['name'] as String).toLowerCase();
+      final match = batches.cast<Map<String, dynamic>?>().firstWhere(
+            (b) =>
+                (b!['ingredient_name'] as String?)?.toLowerCase() == ingName ||
+                (b['custom_name'] as String?)?.toLowerCase() == ingName,
+            orElse: () => null,
+          );
+      if (match != null) {
+        proposed.add({
+          'recipe_ingredient_id': ing['recipe_ingredient_id'],
+          'master_ingredient_id': ing['master_ingredient_id'],
+          'batch_id': match['id'],
+          'quantity': ing['required_quantity'],
+          'unit': ing['unit'],
+        });
+      } else if (ing['is_optional'] != true) {
+        missing.add({
+          'recipe_ingredient_id': ing['recipe_ingredient_id'],
+          'ingredient_name': ing['name'],
+          'missing_quantity': ing['required_quantity'],
+          'unit': ing['unit'],
+        });
+      }
+    }
+    return (proposed: proposed, missing: missing);
+  }
+
+  Future<Map<String, dynamic>> _cookingPreview(Map<String, dynamic> body) async {
+    final itemId = body['meal_plan_item_id'] as String;
+    final item = _findMealPlanItem(itemId);
+    if (item == null) {
+      throw MockFixtureException('Không có meal-plan item "$itemId"');
+    }
+    final recipe = await _loadKey('recipe') as Map<String, dynamic>;
+    final matched = await _matchIngredients(recipe, await _inventoryItems());
+    return {
+      'recipe_id': recipe['id'],
+      'recipe_name': recipe['name'],
+      'servings': item['servings'],
+      'proposed_deductions': matched.proposed,
+      'missing_ingredients': matched.missing,
+    };
+  }
+
+  Map<String, dynamic> _createCookingSession(Map<String, dynamic> body) {
+    final session = {
+      'id': 'mock-session-${_autoId++}',
+      'meal_plan_item_id': body['meal_plan_item_id'],
+      'status': 'PLANNED',
+    };
+    _cookingSessions.add(session);
+    return session;
+  }
+
+  /// Applies the same deduction the client already displayed (see
+  /// `CookingController._buildResult`) to the cached inventory batches, so a
+  /// later re-fetch of the pantry doesn't "snap back" to un-deducted
+  /// quantities.
+  Future<Map<String, dynamic>> _completeCookingSession(
+    String sessionId,
+    Map<String, dynamic> body,
+  ) async {
+    final session = _cookingSessions.firstWhere(
+      (s) => s['id'] == sessionId,
+      orElse: () =>
+          throw MockFixtureException('Không có cooking session "$sessionId"'),
+    );
+    session['status'] = 'COMPLETED';
+
+    final item = _findMealPlanItem(session['meal_plan_item_id'] as String);
+    if (item == null) return session;
+    final recipe = await _loadKey('recipe') as Map<String, dynamic>;
+    final items = await _inventoryItems();
+    final matched = await _matchIngredients(recipe, items);
+
+    final mode = body['consumption_mode'] as String?;
+    final consumptions =
+        (body['consumptions'] as List?)?.cast<Map<String, dynamic>>();
+
+    for (final d in matched.proposed) {
+      final idx = items.indexWhere((b) => b['id'] == d['batch_id']);
+      if (idx < 0) continue;
+      final batch = items[idx];
+      final current = (batch['current_quantity'] as num).toDouble();
+      final proposedQty = (d['quantity'] as num).toDouble();
+      final used = switch (mode) {
+        'HALF' => proposedQty / 2,
+        'USE_ALL_MATCHED' => current,
+        'CUSTOM' => (consumptions
+                    ?.firstWhere(
+                      (c) =>
+                          c['inventory_batch_id'] == d['batch_id'] &&
+                          c['recipe_ingredient_id'] == d['recipe_ingredient_id'],
+                      orElse: () => const {},
+                    )['quantity'] as num?)
+                ?.toDouble() ??
+            proposedQty,
+        _ => proposedQty, // EXACT
+      };
+      final next = (current - used).clamp(0, double.infinity);
+      batch['current_quantity'] = next;
+      batch['status'] = next <= 0 ? 'DEPLETED' : 'ACTIVE';
+      batch['updated_at'] = DateTime.now().toIso8601String();
+    }
+    return session;
+  }
+
+  Map<String, dynamic> _createLeftoverBatch(Map<String, dynamic> body) {
+    final now = DateTime.now().toIso8601String();
+    return {
+      'id': 'mock-${_autoId++}',
+      'master_ingredient_id': null,
+      'custom_name': 'Món đã nấu',
+      'ingredient_name': 'Món đã nấu',
+      'current_quantity': body['quantity'],
+      'unit': body['unit'],
+      'storage_mode': body['storage_mode'] ?? 'REFRIGERATED',
+      'status': 'ACTIVE',
+      'source': 'LEFTOVER',
+      'expires_at': body['expires_at'],
+      'created_at': now,
+    };
+  }
+
   // ---------------------------------------------------------------------------
 
   @override
@@ -393,6 +546,19 @@ class MockApiClient implements ApiClient {
     if (path.startsWith('/shopping-lists/') && path.endsWith('/items')) {
       final listId = path.split('/')[2];
       return _createShoppingListItem(listId, body as Map<String, dynamic>);
+    }
+    if (path == ApiPaths.cookingPreview) {
+      return _cookingPreview(body as Map<String, dynamic>);
+    }
+    if (path == ApiPaths.cookingSessions) {
+      return _createCookingSession(body as Map<String, dynamic>);
+    }
+    if (path.startsWith('${ApiPaths.cookingSessions}/') && path.endsWith('/complete')) {
+      final sessionId = path.split('/')[3];
+      return _completeCookingSession(sessionId, body as Map<String, dynamic>);
+    }
+    if (path.startsWith('${ApiPaths.cookingSessions}/') && path.endsWith('/leftovers')) {
+      return _createLeftoverBatch(body as Map<String, dynamic>);
     }
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null && path.endsWith('/adjustments')) {

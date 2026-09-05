@@ -8,9 +8,9 @@ part of 'cooking_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Drives the post-cook flow: confirm → deduct stock → expose the [CookResult]
-/// for the D-05 / D-07 screen. Applying the result also refreshes the pantry
-/// list + summary, so the Home waste count picks it up.
+/// Drives the post-cook flow: preview → session → complete → expose the
+/// [CookResult] for the D-05 / D-07 screen. Applying the result also
+/// refreshes the pantry list, so the Home waste count picks it up.
 ///
 /// Kept alive: the confirming widget (a bottom sheet) only `read`s this, so an
 /// auto-dispose provider would be torn down mid-request.
@@ -18,17 +18,17 @@ part of 'cooking_controller.dart';
 @ProviderFor(CookingController)
 final cookingControllerProvider = CookingControllerProvider._();
 
-/// Drives the post-cook flow: confirm → deduct stock → expose the [CookResult]
-/// for the D-05 / D-07 screen. Applying the result also refreshes the pantry
-/// list + summary, so the Home waste count picks it up.
+/// Drives the post-cook flow: preview → session → complete → expose the
+/// [CookResult] for the D-05 / D-07 screen. Applying the result also
+/// refreshes the pantry list, so the Home waste count picks it up.
 ///
 /// Kept alive: the confirming widget (a bottom sheet) only `read`s this, so an
 /// auto-dispose provider would be torn down mid-request.
 final class CookingControllerProvider
     extends $NotifierProvider<CookingController, CookResult?> {
-  /// Drives the post-cook flow: confirm → deduct stock → expose the [CookResult]
-  /// for the D-05 / D-07 screen. Applying the result also refreshes the pantry
-  /// list + summary, so the Home waste count picks it up.
+  /// Drives the post-cook flow: preview → session → complete → expose the
+  /// [CookResult] for the D-05 / D-07 screen. Applying the result also
+  /// refreshes the pantry list, so the Home waste count picks it up.
   ///
   /// Kept alive: the confirming widget (a bottom sheet) only `read`s this, so an
   /// auto-dispose provider would be torn down mid-request.
@@ -59,11 +59,11 @@ final class CookingControllerProvider
   }
 }
 
-String _$cookingControllerHash() => r'83564a661f3311990b9643beb18385987fceb17b';
+String _$cookingControllerHash() => r'28c3a7707c11f9e541307a786f9cfbe5e6f6fc37';
 
-/// Drives the post-cook flow: confirm → deduct stock → expose the [CookResult]
-/// for the D-05 / D-07 screen. Applying the result also refreshes the pantry
-/// list + summary, so the Home waste count picks it up.
+/// Drives the post-cook flow: preview → session → complete → expose the
+/// [CookResult] for the D-05 / D-07 screen. Applying the result also
+/// refreshes the pantry list, so the Home waste count picks it up.
 ///
 /// Kept alive: the confirming widget (a bottom sheet) only `read`s this, so an
 /// auto-dispose provider would be torn down mid-request.

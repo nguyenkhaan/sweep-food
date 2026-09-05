@@ -380,9 +380,7 @@ class AppL10nEn extends AppL10n {
   String get cookResultTitle => 'Pantry updated';
 
   @override
-  String cookResultSaveLeftovers(int count) {
-    return 'Save $count leftover servings';
-  }
+  String get cookResultSaveLeftovers => 'Save leftovers';
 
   @override
   String get cookResultViewPantry => 'View pantry';

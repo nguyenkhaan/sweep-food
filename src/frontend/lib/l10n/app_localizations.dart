@@ -766,8 +766,8 @@ abstract class AppL10n {
   /// No description provided for @cookResultSaveLeftovers.
   ///
   /// In vi, this message translates to:
-  /// **'Lưu {count} phần ăn thừa'**
-  String cookResultSaveLeftovers(int count);
+  /// **'Lưu phần ăn thừa'**
+  String get cookResultSaveLeftovers;
 
   /// No description provided for @cookResultViewPantry.
   ///

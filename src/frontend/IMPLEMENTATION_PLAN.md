@@ -33,7 +33,8 @@ Nối `DioApiClient` với BE thật, "xong đến đâu nối đến đó". `co
 - **Inventory (2026-09-05)** — ✅ nối (mock+unit xanh; chưa verify live — xem mục A bên dưới cho chi tiết + giới hạn đã biết). Deep-link near-expiry giờ tra đúng vào `/inventory/batches` đã load, không còn "not found".
 - **Meal Plans (2026-09-05)** — ✅ nối (mock+unit xanh; chưa verify live — xem mục B bên dưới).
 - **Shopping Lists (2026-09-05)** — ✅ nối (mock+unit xanh; chưa verify live — xem mục C bên dưới).
-- **Chưa nối:** Extractions, Cooking, Recommendations, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
+- **Cooking (2026-09-05)** — ✅ nối (mock+unit xanh; chưa verify live — xem mục D bên dưới, có 1 quyết định UX tạm thời chưa được BE xác nhận).
+- **Chưa nối:** Extractions, Recommendations, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
 
 ### M6.2 — Việc còn lại, theo `docs/api-contract.md` M7 (2026-09-05)
 
@@ -78,10 +79,17 @@ Thứ tự đề xuất: **Inventory trước** (nền tảng — unblock "in pa
 
 #### D. Cooking — `features/cooking/*`, `features/dishes/presentation/screens/dish_detail_screen.dart`
 
-- [ ] `cooking_remote_data_source` đổi từ `/dishes/{id}/cook` sang luồng 3 bước thật: `POST /cooking/preview` → `POST /cooking/sessions` → `POST /cooking/sessions/{id}/complete` (header `Idempotency-Key`).
-- [ ] **Cả hai đều cần `meal_plan_item_id`** — nút "Đã nấu món này" ở Dish detail (hiện gọi thẳng, bỏ qua bước chọn chế độ tiêu thụ, xem PR #45) phải tạo/tìm 1 meal-plan item trước khi gọi cooking. Cần quyết định UX: tự động tạo 1 plan "hôm nay" ẩn, hay bắt buộc user thêm vào Thực đơn tuần trước khi nấu? → đã hỏi BE ở mục 3 bảng "Ghi chú cho Backend" trong api-contract, chờ xác nhận trước khi code.
-- [ ] Khôi phục sheet chọn chế độ tiêu thụ (`PostCookConfirmSheet`: `EXACT/HALF/USE_ALL_MATCHED/CUSTOM`) trước khi gọi `/complete` — BE bắt buộc chọn mode, `USE_ALL_MATCHED`/`CUSTOM` cần mảng `consumptions` khớp batch cụ thể (lấy từ `preview`).
-- [ ] Leftover: `POST /cooking/sessions/{id}/leftovers` thay vì `/pantry/cooked-food`.
+> ✅ **Đã nối (2026-09-05, nhánh `feat/fe-be-sync`).** Luồng 3 bước thật, xem chi tiết + giả định bên dưới trước khi verify live.
+
+- [x] `cooking_remote_data_source` đổi từ `/dishes/{id}/cook` sang `POST /cooking/preview` → `POST /cooking/sessions` → `POST /cooking/sessions/{id}/complete` (`Idempotency-Key` trên `complete`). Xoá hẳn `cook_result_dto.dart`/`cook_result.json` (không còn dùng).
+- [x] **Quyết định tạm về câu hỏi mở với BE** (chưa có xác nhận chính thức — xem api-contract.md mục "Ghi chú cho Backend" #3): nút "Đã nấu món này" ở Dish detail **tự động tạo 1 meal-plan item ẩn trong plan của tuần hiện tại** (`CookingController.previewForDish` → `MealPlanRepository.forWeek` + `addEntry`, slot suy từ giờ trong ngày) rồi mới gọi preview/sessions. Đây là giả định sản phẩm chưa được BE duyệt — nếu BE xác nhận cách này vi phạm ràng buộc thống kê/báo cáo, cần đổi UX (bắt buộc qua Thực đơn tuần trước).
+- [x] Khôi phục `PostCookConfirmSheet` (`EXACT/HALF/USE_ALL_MATCHED/CUSTOM`) + `CustomUsageSheet` — nhưng **2 sheet này vẫn chưa được gắn vào điều hướng nào** (trước khi sửa cũng vậy — `PostCookConfirmSheet` chưa từng được gọi ở đâu, nút "Đã nấu món này" luôn đi thẳng `EXACT`). Đã sửa cho đúng kiến trúc mới (nhận `CookingPreview` đã fetch sẵn thay vì `Dish`) để sẵn sàng khi có UI gọi tới, nhưng việc gắn vào 1 màn hình thật (vd: nút "..." hoặc long-press) là việc mới, ngoài phạm vi lần này.
+- [x] `CUSTOM` mode: BE cần `consumptions: [{recipe_ingredient_id, inventory_batch_id, quantity}]` theo batch cụ thể, không theo tên nguyên liệu như FE cũ (`DishIngredient` không có `recipe_ingredient_id`). `CustomUsageController`/`CustomUsageSheet` viết lại để lấy danh sách batch từ `preview.proposedDeductions` (1 slider/batch, tên tra qua pantry list đang load bằng `batchId`).
+- [x] Leftover: `POST /cooking/sessions/{id}/leftovers` thay vì `/pantry/cooked-food`. BE muốn `quantity`+`unit` (không phải `servings`) — `CookedFood` gửi `quantity: servings, unit: 'PIECE'` (giữ nguyên UI chọn số khẩu phần, chỉ đổi tên gọi khi lên API). Response giờ là `InventoryBatch` đầy đủ — dùng lại `PantryItemDto` (mục A) thay vì tự dựng `PantryItem` như cũ.
+- [ ] **Chưa làm / giới hạn đã biết:**
+  - BE không công bố response body của `POST .../complete` → `CookResult.changes/updatedPantryItems/nearExpiryUsedCount/wasteAvoidedGrams` được **tính phía client** từ `preview.proposedDeductions` đối chiếu với pantry list đang tải (xem `CookingController._buildResult`). `HALF`/`USE_ALL_MATCHED` là suy đoán hợp lý (nửa lượng đề xuất / dùng hết batch khớp), không đảm bảo khớp 100% với BE thật — sau khi complete, app tự `refresh()` lại pantry list ở nền để tự sửa sai lệch, không chặn UI.
+  - `leftoverServings` (đếm phần dư dự đoán) bỏ khỏi `CookResult` — không còn nguồn dữ liệu để tính. Nút "Lưu phần ăn thừa" ở màn kết quả nấu giờ **luôn hiện** (trước đây chỉ hiện khi có dự đoán dư) và mặc định gợi ý 1 khẩu phần, người dùng tự điều chỉnh.
+  - Trước khi tạo session, FE tự chặn khi `preview.hasMissingIngredients` (không gọi `/cooking/sessions` nếu thiếu nguyên liệu, tránh chắc chắn nhận `409`) — nút "Đã nấu món này" hiện thông báo tên nguyên liệu thiếu thay vì thử và lỗi.
 
 #### E. Recommendations — `features/suggestions/*`
 

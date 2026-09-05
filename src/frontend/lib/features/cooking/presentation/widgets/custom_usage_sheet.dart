@@ -9,21 +9,32 @@ import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cooking_preview.dart';
 import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
 import 'package:sweepfood/features/cooking/presentation/controllers/custom_usage_controller.dart';
-import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 
-/// D-04 — "Điều chỉnh lượng đã dùng". One slider per ingredient, then deducts
-/// the exact amounts and routes to the cook-result screen.
+/// D-04 — "Điều chỉnh lượng đã dùng". One slider per matched batch (a recipe
+/// ingredient can be split across more than one), then deducts the exact
+/// amounts and routes to the cook-result screen.
 class CustomUsageSheet extends ConsumerStatefulWidget {
-  const CustomUsageSheet({required this.dish, super.key});
+  const CustomUsageSheet({
+    required this.preview,
+    required this.dishName,
+    super.key,
+  });
 
-  final Dish dish;
+  final CookingPreview preview;
+  final String dishName;
 
-  static Future<void> show(BuildContext context, {required Dish dish}) async {
+  static Future<void> show(
+    BuildContext context, {
+    required CookingPreview preview,
+    required String dishName,
+  }) async {
     final result = await showAppBottomSheet<CookResult>(
       context,
-      builder: (_) => CustomUsageSheet(dish: dish),
+      builder: (_) => CustomUsageSheet(preview: preview, dishName: dishName),
     );
     if (result != null && context.mounted) {
       context.push(Routes.cookResult, extra: result);
@@ -40,17 +51,22 @@ class _State extends ConsumerState<CustomUsageSheet> {
   Future<void> _confirm() async {
     setState(() => _busy = true);
     try {
-      final usage = ref.read(customUsageControllerProvider(widget.dish.id));
+      final usage = ref.read(customUsageControllerProvider(widget.preview));
+      final consumptions = [
+        for (final d in widget.preview.proposedDeductions)
+          ConsumptionLine(
+            recipeIngredientId: d.recipeIngredientId,
+            batchId: d.batchId,
+            quantity: usage['${d.recipeIngredientId}|${d.batchId}'] ?? d.quantity,
+          ),
+      ];
       final result = await ref
           .read(cookingControllerProvider.notifier)
           .confirm(
-            CookConfirmation(
-              dishId: widget.dish.id,
-              mode: CookMode.custom,
-              servingsCooked: widget.dish.servings,
-              customUsage: usage,
-            ),
-            dishName: widget.dish.name,
+            preview: widget.preview,
+            mode: CookMode.custom,
+            dishName: widget.dishName,
+            consumptions: consumptions,
           );
       if (mounted) Navigator.of(context).pop(result);
     } catch (_) {
@@ -62,9 +78,12 @@ class _State extends ConsumerState<CustomUsageSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final dishId = widget.dish.id;
-    final usage = ref.watch(customUsageControllerProvider(dishId));
-    final notifier = ref.read(customUsageControllerProvider(dishId).notifier);
+    final preview = widget.preview;
+    final usage = ref.watch(customUsageControllerProvider(preview));
+    final notifier = ref.read(customUsageControllerProvider(preview).notifier);
+    final pantryItems =
+        ref.watch(pantryListControllerProvider).asData?.value ?? const [];
+    final byId = {for (final i in pantryItems) i.id: i};
 
     return SheetBody(
       title: context.l10n.customUsageTitle,
@@ -72,37 +91,43 @@ class _State extends ConsumerState<CustomUsageSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          for (final ing in widget.dish.mainIngredients)
+          for (final d in preview.proposedDeductions)
             Padding(
               padding: const EdgeInsets.only(bottom: Gap.sm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+              child: Builder(
+                builder: (context) {
+                  final item = byId[d.batchId];
+                  final name = item?.name ?? context.l10n.catOther;
+                  final key = '${d.recipeIngredientId}|${d.batchId}';
+                  final value = (usage[key] ?? d.quantity).clamp(
+                    0.0,
+                    d.quantity == 0 ? 1.0 : d.quantity,
+                  );
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(ing.name, style: context.text.titleSmall),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(name, style: context.text.titleSmall),
+                          ),
+                          Text(
+                            '${formatQuantity(value, d.unit)}'
+                            ' / ${formatQuantity(d.quantity, d.unit)}',
+                            style: context.text.labelMedium?.copyWith(
+                              color: context.sweep.textSecondary,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '${formatQuantity(usage[ing.name] ?? ing.quantity, ing.unit)}'
-                        ' / ${formatQuantity(ing.quantity, ing.unit)}',
-                        style: context.text.labelMedium?.copyWith(
-                          color: context.sweep.textSecondary,
-                        ),
+                      Slider(
+                        value: value,
+                        max: d.quantity == 0 ? 1 : d.quantity,
+                        onChanged: _busy ? null : (v) => notifier.setUsage(d, v),
                       ),
                     ],
-                  ),
-                  Slider(
-                    value: (usage[ing.name] ?? ing.quantity).clamp(
-                      0.0,
-                      ing.quantity == 0 ? 1.0 : ing.quantity,
-                    ),
-                    max: ing.quantity == 0 ? 1 : ing.quantity,
-                    onChanged: _busy
-                        ? null
-                        : (v) => notifier.setUsage(ing.name, v),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           Gap.gapXs,

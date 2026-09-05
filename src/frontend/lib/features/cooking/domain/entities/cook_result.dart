@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/core/utils/formatters/quantity_format.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
@@ -28,8 +28,18 @@ abstract class PantryChange with _$PantryChange {
   String get afterLabel => formatQuantity(after, unit);
 }
 
-/// Result of `POST /dishes/{id}/cook` — what changed in the pantry plus the
-/// waste-avoided feedback (D-05 / D-07). No money figure (spec: no price data).
+/// Result of completing a cooking session (D-05 / D-07): what changed in the
+/// pantry plus the waste-avoided feedback. No money figure (spec: no price
+/// data).
+///
+/// The backend doesn't document a response body for `POST
+/// /cooking/sessions/{id}/complete`, so [changes]/[updatedPantryItems]/
+/// [depletedItemIds]/[nearExpiryUsedCount]/[wasteAvoidedGrams] are computed
+/// client-side from the `preview` step's `proposed_deductions` cross-referenced
+/// against the pantry list already loaded in the app — see
+/// `CookingController._buildResult`. `HALF`/`USE_ALL_MATCHED` math is a
+/// best-effort mirror of what the backend is assumed to do; the pantry list is
+/// also refreshed from the server right after, so any drift self-heals.
 @freezed
 abstract class CookResult with _$CookResult {
   const CookResult._();
@@ -37,6 +47,7 @@ abstract class CookResult with _$CookResult {
   const factory CookResult({
     @Default('') String dishId,
     @Default('') String dishName,
+    @Default('') String sessionId,
     @Default(<PantryChange>[]) List<PantryChange> changes,
 
     /// Post-cook state of the touched pantry items, for the list to splice in.
@@ -47,9 +58,6 @@ abstract class CookResult with _$CookResult {
 
     @Default(0) int nearExpiryUsedCount,
     @Default(0) double wasteAvoidedGrams,
-
-    /// Servings cooked but not eaten — offered as a leftover to save (D-06).
-    @Default(0) int leftoverServings,
   }) = _CookResult;
 
   double get wasteAvoidedKg => wasteAvoidedGrams / 1000;

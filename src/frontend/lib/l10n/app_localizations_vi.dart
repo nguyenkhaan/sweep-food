@@ -377,9 +377,7 @@ class AppL10nVi extends AppL10n {
   String get cookResultTitle => 'Đã cập nhật kho';
 
   @override
-  String cookResultSaveLeftovers(int count) {
-    return 'Lưu $count phần ăn thừa';
-  }
+  String get cookResultSaveLeftovers => 'Lưu phần ăn thừa';
 
   @override
   String get cookResultViewPantry => 'Xem kho';

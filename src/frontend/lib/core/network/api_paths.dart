@@ -42,9 +42,14 @@ abstract final class ApiPaths {
   static String inventoryBatchLedger(String id) =>
       '/inventory/batches/$id/ledger';
 
-  // TODO(Group D — Cooking): replace with the real leftover-creation endpoint
-  // (`POST /cooking/sessions/{id}/leftovers`) once cooking is wired.
-  static const cookedFood = '/pantry/cooked-food';
+  // Cooking (real backend) — the 3-step flow: preview -> session -> complete.
+  // Always requires a meal_plan_item_id. See api-contract.md §6.
+  static const cookingPreview = '/cooking/preview';
+  static const cookingSessions = '/cooking/sessions';
+  static String cookingSessionComplete(String id) =>
+      '/cooking/sessions/$id/complete';
+  static String cookingSessionLeftovers(String id) =>
+      '/cooking/sessions/$id/leftovers';
 
   // Scan / ingest
   static const scanLabel = '/scan/label';
@@ -56,10 +61,8 @@ abstract final class ApiPaths {
   // Recipes (real backend) — the Dish detail screen reads from here.
   static String recipe(String id) => '/recipes/$id';
 
-  // Suggestions / dishes (still frontend-assumed / mock)
+  // Suggestions (still frontend-assumed / mock)
   static const suggestions = '/suggestions/dishes';
-  static String dish(String id) => '/dishes/$id';
-  static String cookDish(String id) => '/dishes/$id/cook';
 
   // Meal plans (real backend) — no "current week" concept; FE creates/finds a
   // plan per viewed week and manages items individually. See api-contract.md §7.

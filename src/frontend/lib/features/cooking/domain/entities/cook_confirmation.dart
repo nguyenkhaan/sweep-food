@@ -1,11 +1,12 @@
-﻿import 'package:sweepfood/l10n/app_localizations.dart';
+import 'package:sweepfood/l10n/app_localizations.dart';
 
-/// How much stock to deduct when a dish is marked cooked (D-03).
+/// How much stock to deduct when a dish is marked cooked (D-03). Matches the
+/// backend's `CookingConsumptionMode`.
 enum CookMode {
-  exact('exact'),
-  half('half'),
-  all('all'),
-  custom('custom');
+  exact('EXACT'),
+  half('HALF'),
+  all('USE_ALL_MATCHED'),
+  custom('CUSTOM');
 
   const CookMode(this.wire);
   final String wire;
@@ -25,25 +26,24 @@ enum CookMode {
   };
 }
 
-/// Body for `POST /dishes/{id}/cook`.
-class CookConfirmation {
-  const CookConfirmation({
-    required this.dishId,
-    required this.mode,
-    required this.servingsCooked,
-    this.customUsage = const {},
+/// One line of `POST /cooking/sessions/{id}/complete`'s `consumptions` array —
+/// only sent for [CookMode.custom] (quantity required there) and
+/// [CookMode.all] doesn't need it at all; `EXACT`/`HALF` let the backend
+/// compute from its own proposed deductions.
+class ConsumptionLine {
+  const ConsumptionLine({
+    required this.recipeIngredientId,
+    required this.batchId,
+    this.quantity,
   });
 
-  final String dishId;
-  final CookMode mode;
-  final int servingsCooked;
-
-  /// Only for [CookMode.custom]: ingredient name → actual quantity used.
-  final Map<String, double> customUsage;
+  final String recipeIngredientId;
+  final String batchId;
+  final double? quantity;
 
   Map<String, dynamic> toBody() => {
-    'mode': mode.wire,
-    'servings_cooked': servingsCooked,
-    if (mode == CookMode.custom) 'custom_usage': customUsage,
-  };
+        'recipe_ingredient_id': recipeIngredientId,
+        'inventory_batch_id': batchId,
+        if (quantity != null) 'quantity': quantity,
+      };
 }

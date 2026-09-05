@@ -49,19 +49,19 @@ void main() {
     expect(dish.steps, isNotEmpty);
 
     // "Đã nấu" with exact amounts.
-    final result = await container
-        .read(cookingControllerProvider.notifier)
-        .confirm(
-          const CookConfirmation(
-            dishId: 'd1',
-            mode: CookMode.exact,
-            servingsCooked: 2,
-          ),
-          dishName: dish.name,
-        );
+    final cooking = container.read(cookingControllerProvider.notifier);
+    final preview = await cooking.previewForDish(dishId: 'd1', servings: 2);
+    final result = await cooking.confirm(
+      preview: preview,
+      mode: CookMode.exact,
+      dishName: dish.name,
+    );
 
-    expect(result.nearExpiryUsedCount, 3);
-    expect(result.wasteAvoidedKg, closeTo(0.4, 0.001));
+    // Matched against inventory_batches.json by name: Ức gà (b3) and Cà chua
+    // bi (b2) — both near-expiry. "Bơ"/"Xà lách" have no matching batch, so
+    // they land in missing_ingredients instead of contributing here.
+    expect(result.nearExpiryUsedCount, 2);
+    expect(result.wasteAvoidedKg, closeTo(0.3, 0.001));
 
     // The loaded pantry list now reflects the deduction.
     final after = container.read(pantryListControllerProvider).requireValue;

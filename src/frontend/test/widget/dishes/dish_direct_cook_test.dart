@@ -32,10 +32,12 @@ void main() {
     expect(find.text('Salad bơ ức gà'), findsWidgets);
     expect(find.text('Đã nấu món này'), findsOneWidget);
 
-    // Tap "Đã nấu món này"
+    // Tap "Đã nấu món này". The direct-cook flow now chains several
+    // sequential mock round trips (resolve/create today's meal-plan item,
+    // preview, create session, complete) before the snackbar appears.
     await tester.tap(find.text('Đã nấu món này'));
     await tester.pump();
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 20; i++) {
       await tester.pump(const Duration(milliseconds: 300));
     }
 

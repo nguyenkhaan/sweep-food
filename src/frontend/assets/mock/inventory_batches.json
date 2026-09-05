@@ -125,9 +125,33 @@
       "source": "MANUAL",
       "created_at": "{{today}}",
       "expires_at": "{{today}}"
+    },
+    {
+      "id": "b11",
+      "custom_name": "Bơ",
+      "ingredient_name": "Bơ",
+      "current_quantity": 3,
+      "unit": "qua",
+      "storage_mode": "ROOM_TEMPERATURE",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-1}}",
+      "expires_at": "{{today+10}}"
+    },
+    {
+      "id": "b12",
+      "custom_name": "Xà lách",
+      "ingredient_name": "Xà lách",
+      "current_quantity": 300,
+      "unit": "g",
+      "storage_mode": "REFRIGERATED",
+      "status": "ACTIVE",
+      "source": "MANUAL",
+      "created_at": "{{today-1}}",
+      "expires_at": "{{today+10}}"
     }
   ],
-  "total": 10,
+  "total": 12,
   "page": 1,
   "per_page": 100
 }

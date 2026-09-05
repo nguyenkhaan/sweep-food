@@ -46,21 +46,17 @@ class CookResultScreen extends StatelessWidget {
           if (result.nearExpiryUsedCount > 0) _SaveBanner(result: result),
           Gap.gapMd,
           _ChangesCard(result: result),
-          if (result.leftoverServings > 0) ...[
-            Gap.gapMd,
-            OutlinedButton.icon(
-              onPressed: () => LeftoverSaveSheet.show(
-                context,
-                dishId: result.dishId,
-                dishName: result.dishName,
-                initialServings: result.leftoverServings,
-              ),
-              icon: const Icon(Icons.save_alt_rounded, size: 18),
-              label: Text(
-                l10n.cookResultSaveLeftovers(result.leftoverServings),
-              ),
+          Gap.gapMd,
+          OutlinedButton.icon(
+            onPressed: () => LeftoverSaveSheet.show(
+              context,
+              sessionId: result.sessionId,
+              dishName: result.dishName,
+              initialServings: 1,
             ),
-          ],
+            icon: const Icon(Icons.save_alt_rounded, size: 18),
+            label: Text(l10n.cookResultSaveLeftovers),
+          ),
         ],
       ),
       bottomNavigationBar: SafeArea(
