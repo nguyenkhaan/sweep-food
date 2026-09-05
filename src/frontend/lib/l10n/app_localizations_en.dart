@@ -1788,4 +1788,10 @@ class AppL10nEn extends AppL10n {
   @override
   String get paywallFinePrint =>
       'No charge yet · pricing & plans are still being validated';
+
+  @override
+  String get favoritesTitle => 'Favorites & Menus';
+
+  @override
+  String get favAddToMenuTitle => 'Add to saved menu';
 }

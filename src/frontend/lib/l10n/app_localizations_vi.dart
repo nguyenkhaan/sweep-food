@@ -1776,4 +1776,10 @@ class AppL10nVi extends AppL10n {
   @override
   String get paywallFinePrint =>
       'Chưa tính phí · giá & gói đang trong giai đoạn kiểm chứng';
+
+  @override
+  String get favoritesTitle => 'Món & thực đơn yêu thích';
+
+  @override
+  String get favAddToMenuTitle => 'Thêm vào thực đơn mẫu';
 }

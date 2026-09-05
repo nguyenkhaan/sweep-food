@@ -652,5 +652,8 @@
   "paywallBenefit6": "Pantry sharing for up to 4 people",
   "paywallSubmitted": "Got it — thank you!",
   "paywallNotifyMe": "Notify me at launch",
-  "paywallFinePrint": "No charge yet · pricing & plans are still being validated"
+  "paywallFinePrint": "No charge yet · pricing & plans are still being validated",
+
+  "favoritesTitle": "Favorites & Menus",
+  "favAddToMenuTitle": "Add to saved menu"
 }

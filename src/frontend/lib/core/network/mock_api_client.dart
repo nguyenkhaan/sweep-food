@@ -41,6 +41,8 @@ class MockApiClient implements ApiClient {
     ApiPaths.notifications: 'notifications',
     ApiPaths.subscription: 'subscription',
     ApiPaths.reportsWasteReduction: 'waste_reduction_report',
+    ApiPaths.favoriteRecipes: 'favorite_recipes',
+    ApiPaths.favoriteMenus: 'favorite_menus',
     // M4 multimodal ingestion — `postMultipart` returns these canned ScanJobs.
     ApiPaths.scanLabel: 'scan_label',
     ApiPaths.scanReceipt: 'scan_receipt',
@@ -343,6 +345,82 @@ class MockApiClient implements ApiClient {
         .removeWhere((i) => (i as Map)['id'] == itemId);
   }
 
+  // --- Favorites emulation --------------------------------------------------
+  final _favoriteRecipeIds = <String>{'d1'};
+  final _favoriteMenus = <Map<String, dynamic>>[
+    {
+      'id': 'mock-menu-1',
+      'name': 'Bữa cơm gia đình',
+      'description': 'Các món canh và mặn quen thuộc',
+      'item_count': 1,
+      'items': <Map<String, dynamic>>[
+        {
+          'id': 'mock-fav-item-1',
+          'recipe_id': 'd1',
+          'recipe_name': 'Canh chua cá lóc',
+          'recipe_image_url': null,
+          'created_at': '2026-03-01T08:00:00Z',
+        },
+      ],
+      'created_at': '2026-03-01T08:00:00Z',
+      'updated_at': '2026-03-01T08:00:00Z',
+    },
+  ];
+
+  Map<String, dynamic> _findFavoriteMenu(String id) => _favoriteMenus.firstWhere(
+        (m) => m['id'] == id,
+        orElse: () => throw MockFixtureException('Không có favorite menu "$id"'),
+      );
+
+  Map<String, dynamic> _createFavoriteMenu(Map<String, dynamic> body) {
+    final now = DateTime.now().toIso8601String();
+    final menu = {
+      'id': 'mock-fav-menu-${_autoId++}',
+      'name': body['name'],
+      'description': body['description'],
+      'item_count': 0,
+      'items': <Map<String, dynamic>>[],
+      'created_at': now,
+      'updated_at': now,
+    };
+    _favoriteMenus.add(menu);
+    return menu;
+  }
+
+  Map<String, dynamic> _updateFavoriteMenu(String menuId, Map<String, dynamic> body) {
+    final menu = _findFavoriteMenu(menuId);
+    if (body.containsKey('name')) menu['name'] = body['name'];
+    if (body.containsKey('description')) menu['description'] = body['description'];
+    menu['updated_at'] = DateTime.now().toIso8601String();
+    return menu;
+  }
+
+  void _deleteFavoriteMenu(String menuId) {
+    _favoriteMenus.removeWhere((m) => m['id'] == menuId);
+  }
+
+  Map<String, dynamic> _addFavoriteMenuItem(String menuId, Map<String, dynamic> body) {
+    final menu = _findFavoriteMenu(menuId);
+    final recipeId = body['recipe_id'] as String;
+    final item = {
+      'id': 'mock-fav-item-${_autoId++}',
+      'recipe_id': recipeId,
+      'recipe_name': recipeId == 'd1' ? 'Canh chua cá lóc' : 'Món ngon #$recipeId',
+      'recipe_image_url': null,
+      'created_at': DateTime.now().toIso8601String(),
+    };
+    (menu['items'] as List).add(item);
+    menu['item_count'] = (menu['items'] as List).length;
+    return item;
+  }
+
+  void _deleteFavoriteMenuItem(String menuId, String itemId) {
+    final menu = _findFavoriteMenu(menuId);
+    (menu['items'] as List).removeWhere((i) => (i as Map)['id'] == itemId);
+    menu['item_count'] = (menu['items'] as List).length;
+  }
+
+
   // --- Cooking emulation -------------------------------------------------
   //
   // The backend's 3-step flow always goes through a meal-plan item. The mock
@@ -522,6 +600,37 @@ class MockApiClient implements ApiClient {
     if (path.startsWith('/shopping-lists/') && !path.contains('/items')) {
       return _clone(_findShoppingList(path.substring('/shopping-lists/'.length)));
     }
+    if (path == ApiPaths.favoriteRecipes) {
+      final items = _favoriteRecipeIds.map((id) => {
+        'recipe_id': id,
+        'recipe_name': id == 'd1' ? 'Canh chua cá lóc' : 'Món ngon #$id',
+        'recipe_image_url': null,
+        'favorited_at': '2026-03-01T08:00:00Z',
+      }).toList();
+      return {
+        'items': items,
+        'total': items.length,
+        'limit': 50,
+        'offset': 0,
+      };
+    }
+    if (path == ApiPaths.favoriteMenus) {
+      final items = _favoriteMenus.map((m) => {
+        'id': m['id'],
+        'name': m['name'],
+        'description': m['description'],
+        'item_count': (m['items'] as List).length,
+        'created_at': m['created_at'],
+        'updated_at': m['updated_at'],
+      }).toList();
+      return {
+        'items': items,
+      };
+    }
+    if (path.startsWith('${ApiPaths.favoriteMenus}/')) {
+      final menuId = path.substring('${ApiPaths.favoriteMenus}/'.length);
+      return _clone(_findFavoriteMenu(menuId));
+    }
     if (path.startsWith('/recipes/')) {
       final doc = await _loadKey('recipe') as Map<String, dynamic>;
       final recipeId = path.substring('/recipes/'.length);
@@ -564,6 +673,13 @@ class MockApiClient implements ApiClient {
     if (path.startsWith('/shopping-lists/') && path.endsWith('/items')) {
       final listId = path.split('/')[2];
       return _createShoppingListItem(listId, body as Map<String, dynamic>);
+    }
+    if (path == ApiPaths.favoriteMenus) {
+      return _createFavoriteMenu(body as Map<String, dynamic>);
+    }
+    if (path.startsWith('${ApiPaths.favoriteMenus}/') && path.endsWith('/items')) {
+      final menuId = path.split('/')[2];
+      return _addFavoriteMenuItem(menuId, body as Map<String, dynamic>);
     }
     if (path == ApiPaths.cookingPreview) {
       return _cookingPreview(body as Map<String, dynamic>);
@@ -619,6 +735,11 @@ class MockApiClient implements ApiClient {
   Future<dynamic> put(String path, {Object? body}) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK PUT $path');
+    if (path.startsWith('/recipes/') && path.endsWith('/favorite')) {
+      final recipeId = path.split('/')[2];
+      _favoriteRecipeIds.add(recipeId);
+      return {'recipe_id': recipeId, 'is_favorite': true};
+    }
     return _echo(body);
   }
 
@@ -630,6 +751,10 @@ class MockApiClient implements ApiClient {
   }) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK PATCH $path');
+    if (path.startsWith('${ApiPaths.favoriteMenus}/')) {
+      final menuId = path.substring('${ApiPaths.favoriteMenus}/'.length);
+      return _updateFavoriteMenu(menuId, body! as Map<String, dynamic>);
+    }
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null) {
       final b = Map<String, dynamic>.from(body! as Map)..remove('reason');
@@ -662,6 +787,23 @@ class MockApiClient implements ApiClient {
   }) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK DELETE $path');
+    if (path.startsWith('/recipes/') && path.endsWith('/favorite')) {
+      final recipeId = path.split('/')[2];
+      _favoriteRecipeIds.remove(recipeId);
+      return null;
+    }
+    if (path.startsWith('${ApiPaths.favoriteMenus}/') && path.contains('/items/')) {
+      final parts = path.split('/');
+      final menuId = parts[2];
+      final itemId = parts[4];
+      _deleteFavoriteMenuItem(menuId, itemId);
+      return null;
+    }
+    if (path.startsWith('${ApiPaths.favoriteMenus}/')) {
+      final menuId = path.substring('${ApiPaths.favoriteMenus}/'.length);
+      _deleteFavoriteMenu(menuId);
+      return null;
+    }
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null) {
       await _mutateInventoryBatch(

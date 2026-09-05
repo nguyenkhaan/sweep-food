@@ -34,8 +34,8 @@ Nối `DioApiClient` với BE thật, "xong đến đâu nối đến đó". `co
 - **Meal Plans (2026-09-05)** — ✅ nối + **verify live** (`test/live/meal_plan_live_test.dart`, 3/3 pass). 1 lỗi FE phát hiện khi verify live, đã sửa — xem mục B.
 - **Shopping Lists (2026-09-05)** — ✅ nối + **verify live** (`test/live/shopping_list_live_test.dart`, 5/5 pass), không phát sinh lỗi mới.
 - **Cooking (2026-09-05)** — ✅ nối + **verify live** (`test/live/cooking_live_test.dart`, 3/3 pass, quyết định UX auto-tạo meal-plan-item ẩn vẫn chưa được BE xác nhận). 1 lỗi thiết kế DTO phát hiện khi verify live, đã sửa — xem mục D.
-- **Recommendations (2026-09-05)** — ✅ đã nối API thật `POST /recommendations` + parallel fetch `GET /recipes/{id}` + có test live (`test/live/recommendations_live_test.dart`, 2/2 tests) — xem mục E.
-- **Chưa nối:** Extractions, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
+- **Favorites (2026-09-05)** — ✅ đã triển khai hoàn thiện Clean Architecture & nối API thật + MockApiClient + unit / widget / live tests (`test/live/favorites_live_test.dart`) — xem mục F.
+- **Chưa nối:** Extractions. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
 
 ### M6.2 — Việc còn lại, theo `docs/api-contract.md` M7 (2026-09-05)
 
@@ -112,9 +112,30 @@ Thứ tự đề xuất: **Inventory trước** (nền tảng — unblock "in pa
 
 #### F. Favorites — feature mới hoàn toàn `features/favorites/*`
 
-- [ ] Chưa có trong FE — tạo mới theo Clean Architecture chuẩn của repo (`data/datasources`, `data/repositories`, `domain/entities`, `domain/repositories`, `presentation/controllers`, `presentation/screens`).
-- [ ] API: `PUT/DELETE /recipes/{id}/favorite`, `GET /favorite-recipes`, CRUD `/favorite-menus` + `/favorite-menus/{id}/items`.
-- [ ] Cần thiết kế UI (chưa có artboard) — nút "Lưu công thức" ở Dish detail + màn danh sách yêu thích + màn quản lý menu yêu thích.
+> ✅ **Đã hoàn thành & nối API (2026-09-05).** Đầy đủ Clean Architecture, đồng bộ backend api-contract §9, hỗ trợ mock in-memory, có unit tests, widget tests, và live test.
+
+- [x] Tạo mới theo Clean Architecture chuẩn của repo:
+  - `domain/entities`: `favorite_recipe.dart`, `favorite_menu.dart` (`FavoriteMenu`, `FavoriteMenuItem`, `FavoriteMenuDetail`).
+  - `domain/repositories`: `favorite_repository.dart`.
+  - `data/models`: `favorite_dto.dart` (`FavoriteRecipeDto`, `FavoriteRecipeListDto`, `FavoriteMenuDto`, `FavoriteMenuListDto`, `FavoriteMenuItemDto`, `FavoriteMenuDetailDto`).
+  - `data/datasources`: `favorite_remote_data_source.dart`.
+  - `data/repositories`: `favorite_repository_impl.dart`.
+  - `presentation/controllers`: `favorite_recipes_controller.dart` (`FavoriteRecipesController`, `isRecipeFavoriteProvider`), `favorite_menus_controller.dart` (`FavoriteMenusController`, `FavoriteMenuDetailController`).
+  - `presentation/screens`: `favorites_screen.dart` (2 tabs: Món yêu thích, Thực đơn mẫu), `favorite_menu_detail_screen.dart`.
+  - `presentation/widgets`: `create_edit_menu_dialog.dart`, `add_to_menu_sheet.dart`.
+- [x] API: `PUT/DELETE /recipes/{id}/favorite`, `GET /favorite-recipes`, CRUD `/favorite-menus` + `/favorite-menus/{id}/items`.
+- [x] UI entry points:
+  - Dish detail (`dish_detail_screen.dart`): Nút tim yêu thích trên AppBar toggle `isRecipeFavoriteProvider` + Menu "Thêm vào thực đơn mẫu..." mở `AddToMenuSheet`.
+  - Settings (`settings_home_screen.dart`): Dòng "Món & thực đơn yêu thích" mở `Routes.favorites`.
+- [x] Mock & Routing:
+  - Thêm routes `Routes.favorites` (`/favorites`) và `Routes.favoriteMenuDetail` (`/favorites/menu/:id`) trong `app_router.dart`.
+  - MockApiClient giả lập toàn bộ lifecycle của favorites (lưu id yêu thích, menu CRUD, item menu CRUD).
+- [x] Test đầy đủ:
+  - Unit tests: `test/unit/favorites/favorite_repository_impl_test.dart` (8 tests).
+  - Controller tests: `test/unit/favorites/favorite_controllers_test.dart` (3 test suites).
+  - Widget tests: `test/widget/favorites/favorites_screen_test.dart` (1 test).
+  - Live tests: `test/live/favorites_live_test.dart` (Lifecycle toggle + CRUD menu + add/remove item).
+  - Toàn bộ 121 tests pass 100%, `flutter analyze` 0 issues.
 
 #### G. Extractions — `features/ingest/data/*`
 

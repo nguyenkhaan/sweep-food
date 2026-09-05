@@ -39,6 +39,8 @@ abstract final class Routes {
   static const paywall = '/paywall';
   static const reports = '/reports';
   static const mealPlan = '/meal-plan';
+  static const favorites = '/favorites';
+  static const favoriteMenuDetail = '/favorites/menu/:id';
   static const settingsPreferences = '/settings/preferences';
   static const settingsNotifications = '/settings/notifications';
   static const settingsPantrySharing = '/settings/pantry-sharing';

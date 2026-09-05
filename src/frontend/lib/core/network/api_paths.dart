@@ -60,6 +60,15 @@ abstract final class ApiPaths {
 
   // Recipes (real backend) — the Dish detail screen reads from here.
   static String recipe(String id) => '/recipes/$id';
+  static String recipeFavorite(String id) => '/recipes/$id/favorite';
+
+  // Favorites (real backend) — see api-contract.md §9
+  static const favoriteRecipes = '/favorite-recipes';
+  static const favoriteMenus = '/favorite-menus';
+  static String favoriteMenu(String id) => '/favorite-menus/$id';
+  static String favoriteMenuItems(String menuId) => '/favorite-menus/$menuId/items';
+  static String favoriteMenuItem(String menuId, String itemId) =>
+      '/favorite-menus/$menuId/items/$itemId';
 
   // Recommendations (real backend mock boundary: POST /recommendations {request: string})
   static const recommendations = '/recommendations';

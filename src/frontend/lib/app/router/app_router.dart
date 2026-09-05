@@ -14,6 +14,8 @@ import 'package:sweepfood/features/auth/presentation/screens/welcome_screen.dart
 import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
 import 'package:sweepfood/features/cooking/presentation/screens/cook_result_screen.dart';
 import 'package:sweepfood/features/dishes/presentation/screens/dish_detail_screen.dart';
+import 'package:sweepfood/features/favorites/presentation/screens/favorite_menu_detail_screen.dart';
+import 'package:sweepfood/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sweepfood/features/home/presentation/screens/home_screen.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
@@ -263,6 +265,18 @@ GoRouter appRouter(Ref ref) {
         path: Routes.mealPlan,
         parentNavigatorKey: _rootKey,
         builder: (context, state) => const MealPlanScreen(),
+      ),
+      GoRoute(
+        path: Routes.favorites,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const FavoritesScreen(),
+      ),
+      GoRoute(
+        path: Routes.favoriteMenuDetail,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => FavoriteMenuDetailScreen(
+          menuId: state.pathParameters['id']!,
+        ),
       ),
       GoRoute(
         path: Routes.reports,
