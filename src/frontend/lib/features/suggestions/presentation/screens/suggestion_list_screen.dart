@@ -16,55 +16,17 @@ import 'package:sweepfood/features/suggestions/presentation/widgets/suggestion_c
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 /// S-01 — Gợi ý món. 3–5 scored dishes for the current pantry + quick filters.
-class SuggestionListScreen extends ConsumerStatefulWidget {
+class SuggestionListScreen extends ConsumerWidget {
   const SuggestionListScreen({super.key});
 
   @override
-  ConsumerState<SuggestionListScreen> createState() =>
-      _SuggestionListScreenState();
-}
-
-class _SuggestionListScreenState extends ConsumerState<SuggestionListScreen> {
-  bool _showPrompt = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(suggestionListControllerProvider);
-    final promptText = ref.watch(suggestionFilterControllerProvider).prompt;
-    final isPromptActive = promptText.isNotEmpty || _showPrompt;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.suggestionsTitle),
         actions: [
-          IconButton(
-            tooltip: 'AI Gợi ý prompt',
-            style: IconButton.styleFrom(
-              backgroundColor: isPromptActive
-                  ? context.colors.primary.withValues(alpha: 0.15)
-                  : context.sweep.subtleFill,
-              shape: RoundedRectangleBorder(
-                borderRadius: Radii.brMd,
-                side: BorderSide(
-                  color: isPromptActive
-                      ? context.colors.primary
-                      : context.sweep.hairline,
-                ),
-              ),
-            ),
-            icon: Icon(
-              Icons.auto_awesome_rounded,
-              color: isPromptActive
-                  ? context.colors.primary
-                  : context.colors.onSurfaceVariant,
-            ),
-            onPressed: () {
-              setState(() {
-                _showPrompt = !_showPrompt;
-              });
-            },
-          ),
-          const SizedBox(width: Gap.xs),
           IconButton(
             tooltip: 'Bộ lọc',
             style: IconButton.styleFrom(
@@ -85,9 +47,6 @@ class _SuggestionListScreenState extends ConsumerState<SuggestionListScreen> {
       ),
       body: Column(
         children: [
-          if (isPromptActive) ...[
-            const _RecipePromptBar(),
-          ],
           const _FilterBar(),
           Gap.gapXs,
           Expanded(
@@ -107,159 +66,7 @@ class _SuggestionListScreenState extends ConsumerState<SuggestionListScreen> {
   }
 }
 
-class _RecipePromptBar extends ConsumerStatefulWidget {
-  const _RecipePromptBar();
 
-  @override
-  ConsumerState<_RecipePromptBar> createState() => _RecipePromptBarState();
-}
-
-class _RecipePromptBarState extends ConsumerState<_RecipePromptBar> {
-  late final TextEditingController _controller;
-
-  static const _quickPrompts = [
-    'Thanh đạm',
-    'Ít dầu mỡ',
-    'Nhanh gọn',
-    'Món canh',
-    'Món xào',
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(
-      text: ref.read(suggestionFilterControllerProvider).prompt,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _submitPrompt(String val) {
-    ref.read(suggestionFilterControllerProvider.notifier).setPrompt(val.trim());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final currentPrompt = ref.watch(suggestionFilterControllerProvider).prompt;
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xs),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            controller: _controller,
-            textInputAction: TextInputAction.search,
-            onSubmitted: _submitPrompt,
-            decoration: InputDecoration(
-              hintText: 'Nhập gợi ý prompt (VD: canh chua, ít dầu, gà...)...',
-              prefixIcon: const Icon(Icons.auto_awesome_rounded, size: 20),
-              suffixIcon: _controller.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear_rounded, size: 18),
-                      onPressed: () {
-                        _controller.clear();
-                        ref
-                            .read(suggestionFilterControllerProvider.notifier)
-                            .clearPrompt();
-                        setState(() {});
-                      },
-                    )
-                  : null,
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: Gap.md,
-                vertical: Gap.sm,
-              ),
-              filled: true,
-              fillColor: context.sweep.subtleFill,
-              border: const OutlineInputBorder(
-                borderRadius: Radii.brMd,
-                borderSide: BorderSide.none,
-              ),
-            ),
-            onChanged: (val) {
-              setState(() {});
-              _submitPrompt(val);
-            },
-          ),
-          const SizedBox(height: 6),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (final p in _quickPrompts) ...[
-                  InkWell(
-                    onTap: () {
-                      if (currentPrompt == p) {
-                        _controller.clear();
-                        ref
-                            .read(suggestionFilterControllerProvider.notifier)
-                            .clearPrompt();
-                      } else {
-                        _controller.text = p;
-                        _submitPrompt(p);
-                      }
-                      setState(() {});
-                    },
-                    borderRadius: BorderRadius.circular(Radii.pill),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: currentPrompt == p
-                            ? context.colors.primary.withValues(alpha: 0.12)
-                            : context.sweep.subtleFill,
-                        borderRadius: BorderRadius.circular(Radii.pill),
-                        border: Border.all(
-                          color: currentPrompt == p
-                              ? context.colors.primary
-                              : context.sweep.hairline,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.bolt_rounded,
-                            size: 14,
-                            color: currentPrompt == p
-                                ? context.colors.primary
-                                : context.sweep.textSecondary,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            p,
-                            style: context.text.labelSmall?.copyWith(
-                              color: currentPrompt == p
-                                  ? context.colors.primary
-                                  : context.sweep.textSecondary,
-                              fontWeight: currentPrompt == p
-                                  ? FontWeight.w600
-                                  : FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: Gap.xs),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _FilterBar extends ConsumerWidget {
   const _FilterBar();
