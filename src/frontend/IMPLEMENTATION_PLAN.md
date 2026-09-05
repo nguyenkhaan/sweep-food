@@ -30,7 +30,66 @@ Nối `DioApiClient` với BE thật, "xong đến đâu nối đến đó". `co
 - **Recipes / Dish detail (2026-09-01)** — ✅ nối + verify live. `dish_remote_data_source.getById` đổi từ `/dishes/{id}` (mock) sang `GET /recipes/{id}` thật. DTO mới `recipe_dto.dart` (không đụng `dish_dto.dart` — file đó vẫn phục vụ `dish` nhúng trong suggestions/mock) map vào entity `Dish` sẵn có: `nutrition` BE là **tổng đã scale theo servings** → chia lại cho servings ra per-serving; `instructions.steps[]` (string) → `CookingStep`; `is_optional` → `isSeasoning`; không có `cuisine`/`difficulty`/`prep_time` → để rỗng/0 (đã báo BE tách prep/cook sau); không có pantry cross-ref → mọi nguyên liệu `availableInPantry:false`. Mock `assets/mock/dish.json` xoá, thay `recipe.json` theo shape BE. Test: `test/unit/dishes/recipe_dto_test.dart` (6), `test/live/recipe_live_test.dart` → **2/2 live pass**.
 - **FCM / Push (2026-09-04)** — ✅ triển khai đầy đủ + verify trên máy thật (SM A245F). `firebase_core`/`firebase_messaging` bật trong pubspec; `android/app/google-services.json` (project `delivery-application-664d6`, client `com.example.sweepfood`); Gradle plugin `com.google.gms.google-services`; `minSdk≥23`; `POST_NOTIFICATIONS` + `default_notification_channel_id` trong manifest. `core/notifications/fcm_service.dart` = wrapper thật (init Firebase Android không cần `firebase_options.dart`, xin quyền, token, refresh, foreground/opened/initial streams) + background handler top-level. `core/notifications/push_registrar.dart` (mới) điều phối: sau login → token → `POST /users/me/devices` (lưu `device_id`), token refresh → đăng ký lại, foreground msg → `LocalNotifications.showPush`, tap → deep-link, logout → `DELETE /users/me/devices/{id}` + `deleteToken` (best-effort, không chặn auth). `session_controller` gọi `syncForSession`/`clear`. `bootstrap` init Firebase (guard `!kIsWeb && fcmEnabled`). `device_remote_data_source` → `/users/me/devices` (xoá theo `device_id`) + `DeviceRepository`. `config`: `FCM_ENABLED` true cho live/prod, false cho dev. Test: `test/unit/notifications/device_repository_impl_test.dart` (3), `test/live/device_live_test.dart` (2), `integration_test/fcm_device_test.dart` (on-device: token→register→BE gửi push, Firebase trả `message_id`). Verify thủ công: push hiện ở tray, tap mở app. **BE cần**: `src/backend/firebase-service-account.json` (key của cùng project) + rebuild image `api` (`docker compose build api`); `notification_worker` (compose service riêng) để quét hạn tự động.
 - **Notifications (2026-09-03)** — ✅ nối + verify live. `GET /notifications` + `PATCH /notifications/{id} {status}`. `app_notification_dto.dart` theo `NotificationResponseDTO`: `id`←`notification_id`, `read:bool`←`status` (UNREAD/READ/DISMISSED; dismissed = đã đọc), `pantryItemId`←`inventory_batch_id`, `created_at.toLocal()`. `AppNotificationType.fromWire` nhận thêm token BE (`EXPIRING_SOON`/`EXPIRES_TODAY`/`EXPIRED`/`LEFTOVER_REMINDER`→`nearExpiry`). `markRead` đổi `POST /{id}/read`→`PATCH /{id} {status:"READ"}`. Mock `notifications.json` đổi shape BE. Deep-link near-expiry vẫn tra pantry mock (chờ Inventory) → sheet hiện "không tìm thấy", không crash. Không phân trang (`next_before` bỏ qua). Test: `test/unit/notifications/notification_repository_impl_test.dart` (5), `test/live/notification_live_test.dart` → **2/2 live pass**.
-- **Chưa nối:** Inventory, Extractions (xem bảng ưu tiên). Suggestions/MealPlan/Shopping/Favorites: BE Phase 5 đã có endpoint nhưng gap lớn (recommendation còn mock; meal-plan khác abstraction "tuần"; shopping thiếu `GET /shopping-lists` + cần form purchase; favorites chưa có feature FE) — hoãn.
+- **Chưa nối:** Inventory, Extractions, Cooking, Meal Plans, Shopping Lists, Recommendations, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
+
+### M6.2 — Việc còn lại, theo `docs/api-contract.md` M7 (2026-09-05)
+
+Thứ tự đề xuất: **Inventory trước** (nền tảng — unblock "in pantry" ở recipe, check-off shopping tạo batch, cooking trừ kho), rồi **Meal Plans**, rồi **Shopping Lists** (phụ thuộc Meal Plans có `meal_plan_id`), rồi **Cooking** (phụ thuộc Meal Plans có `meal_plan_item_id`), rồi **Recommendations**, rồi **Favorites** (feature mới), cuối cùng **Extractions**.
+
+#### A. Inventory — thay toàn bộ `features/pantry/data/*` (việc lớn nhất)
+
+- [ ] `api_paths.dart`: `/pantry/items*` → `/inventory/batches`, `/inventory/summary`, `/inventory/ledger`.
+- [ ] `pantry_item_dto.dart` viết lại theo `InventoryBatchDTO` (§10 contract): `id, master_ingredient_id, custom_name, ingredient_name, batch_type, initial_quantity, current_quantity, unit, storage_mode, status, purchased_at, packaged_at, stored_at, expires_at, expiration_source, freshness, unit_cost, note, media_url, source, source_cooking_session_id`.
+- [ ] Chốt mapping `StorageMode` (`ROOM_TEMPERATURE|REFRIGERATED|FROZEN|DRY_SHELF`) ↔ `StorageTier` FE (`fridge|freezer|pantry|immediate`) — BE không có khái niệm "dùng ngay/immediate", cần quyết định UX (gộp vào `ROOM_TEMPERATURE`? thêm cờ riêng ở FE?).
+- [ ] Thêm helper sinh `Idempotency-Key` (UUID) cho `ApiClient.post/patch/delete` — hiện `ApiClient` chưa cho truyền header tuỳ ý per-request, cần mở rộng interface.
+- [ ] Tạo batch: `POST /inventory/batches` — form "Thêm nguyên liệu" cần đủ field trên (không chỉ tên/số lượng/đơn vị/tầng như hiện tại).
+- [ ] Sửa/xoá: `PATCH` chỉ đổi metadata (không đổi số lượng/tên) — sửa số lượng phải qua `adjustments`/`consume`; xoá cần header `X-Reason`.
+- [ ] `GET /inventory/summary` gộp theo ingredient, **không có** tổng theo tầng / "sắp hết hạn" / "kg tránh lãng phí" — Home + Pantry summary phải tự tính từ danh sách batch (`GET /inventory/batches`) ở client.
+- [ ] `pantry_repository`/`pantry_list_controller`/`add_ingredient_*`/`adjust_quantity_sheet` cập nhật theo shape mới; `assets/mock/pantry_items.json` + `pantry_summary.json` đổi sang shape BE.
+- [ ] Xác nhận lại `near_expiry_detail_sheet` (dùng `inventory_batch_id` từ Notifications, hiện đang "not found" vì tra pantry mock).
+
+#### B. Meal Plans — feature gần như viết mới `features/meal_plan/*`
+
+- [ ] Bỏ mô hình "tuần hiện tại + PUT cả plan"; thêm khái niệm `mealPlanId` (tạo 1 lần bằng `POST /meal-plans {starts_on, ends_on}` bao trọn tuần đang xem, hoặc tìm qua `GET /meal-plans/`).
+- [ ] CRUD item riêng lẻ: `POST/PATCH/DELETE /meal-plans/{id}/items/{item_id}` thay vì gửi cả `MealPlanDto`.
+- [ ] `MealSlot` thêm `SNACK` (BE có 4 giá trị: `BREAKFAST|LUNCH|DINNER|SNACK`, FE hiện 3).
+- [ ] `MealPlanItemDTO` không có `dish_image_url` — chỉ `recipe_id`/`recipe_name`; cần gọi thêm `GET /recipes/{id}` nếu muốn hiện ảnh trong ô lịch.
+- [ ] Khi chọn 1 recommendation vào lịch, gửi kèm `recommendation_run_id` (BE cho phép truyền, hiện FE không có field này).
+
+#### C. Shopping Lists — `features/shopping_list/data/*`
+
+- [ ] Bỏ giả định `GET /shopping-lists` ("danh sách hiện tại") — route không tồn tại. Lưu `listId` cục bộ (SharedPreferences) từ response `generate`, hoặc hiện empty-state "Tạo danh sách từ Thực đơn tuần" cho tới khi có `listId`.
+- [ ] `generate` cần `meal_plan_id` (không phải `week_start`) — phụ thuộc mục B xong trước.
+- [ ] Thêm header `Idempotency-Key` cho mọi lệnh ghi (generate/add/patch/delete item).
+- [ ] Tick 1 item generated ("đã mua") phải mở 1 form nhỏ thu thập `purchase: {storage_mode, purchased_at?, expires_at?, unit_cost?, note?}` rồi mới gửi `PATCH {checked:true, purchase:{...}}` — hiện `PATCH {checked:true}` không đủ field, BE sẽ từ chối. Đây là bước tạo inventory batch thật, cần UI mới (không có trong design canvas hiện tại).
+- [ ] Field rename: `quantity`→`missing_quantity`/`required_quantity`, `checked`→`is_checked`, `fromDishIds`→`source_recipe_ids`; không có `category` (FE tự nhóm nếu cần).
+
+#### D. Cooking — `features/cooking/*`, `features/dishes/presentation/screens/dish_detail_screen.dart`
+
+- [ ] `cooking_remote_data_source` đổi từ `/dishes/{id}/cook` sang luồng 3 bước thật: `POST /cooking/preview` → `POST /cooking/sessions` → `POST /cooking/sessions/{id}/complete` (header `Idempotency-Key`).
+- [ ] **Cả hai đều cần `meal_plan_item_id`** — nút "Đã nấu món này" ở Dish detail (hiện gọi thẳng, bỏ qua bước chọn chế độ tiêu thụ, xem PR #45) phải tạo/tìm 1 meal-plan item trước khi gọi cooking. Cần quyết định UX: tự động tạo 1 plan "hôm nay" ẩn, hay bắt buộc user thêm vào Thực đơn tuần trước khi nấu? → đã hỏi BE ở mục 3 bảng "Ghi chú cho Backend" trong api-contract, chờ xác nhận trước khi code.
+- [ ] Khôi phục sheet chọn chế độ tiêu thụ (`PostCookConfirmSheet`: `EXACT/HALF/USE_ALL_MATCHED/CUSTOM`) trước khi gọi `/complete` — BE bắt buộc chọn mode, `USE_ALL_MATCHED`/`CUSTOM` cần mảng `consumptions` khớp batch cụ thể (lấy từ `preview`).
+- [ ] Leftover: `POST /cooking/sessions/{id}/leftovers` thay vì `/pantry/cooked-food`.
+
+#### E. Recommendations — `features/suggestions/*`
+
+- [ ] `suggestion_remote_data_source` đổi `POST /suggestions/dishes` → `POST /recommendations {request: string}`.
+- [ ] Bỏ filter cấu trúc (`meal_type`, `max_time_min`...) khỏi request — BE chỉ nhận 1 chuỗi tự do; FE tự ghép câu từ filter UI thành text nếu muốn giữ chip lọc, hoặc bỏ chip và chỉ còn ô nhập tự do.
+- [ ] Response chỉ có `recipe_id`+`recipe_name`+score — **không nhúng recipe đầy đủ**; phải gọi thêm `GET /recipes/{recipe_id}` cho từng item để có ảnh/thời gian/dinh dưỡng hiện trên card (N+1 — cân nhắc gọi song song, hoặc giới hạn hiện đủ khi tap vào chi tiết).
+- [ ] `score_components` map trực tiếp `e/a/p/u` — đổi tên field cho khớp (`expiration_utilization→e`, `availability→a`, `preference_fit→p`, `purchase_minimization→u`).
+- [ ] Đánh dấu rõ trên UI đây là **kết quả từ mock provider** (`analysis.is_mock`) cho tới khi BE có scoring thật theo inventory — tránh gây hiểu lầm là "AI" hoàn chỉnh (xem `CookableRecipesScreen` hiện đang hard-code, không gọi API nào — cân nhắc thay bằng luồng này).
+
+#### F. Favorites — feature mới hoàn toàn `features/favorites/*`
+
+- [ ] Chưa có trong FE — tạo mới theo Clean Architecture chuẩn của repo (`data/datasources`, `data/repositories`, `domain/entities`, `domain/repositories`, `presentation/controllers`, `presentation/screens`).
+- [ ] API: `PUT/DELETE /recipes/{id}/favorite`, `GET /favorite-recipes`, CRUD `/favorite-menus` + `/favorite-menus/{id}/items`.
+- [ ] Cần thiết kế UI (chưa có artboard) — nút "Lưu công thức" ở Dish detail + màn danh sách yêu thích + màn quản lý menu yêu thích.
+
+#### G. Extractions — `features/ingest/data/*`
+
+- [ ] Path: `/scan/label|receipt|voice` → `/extractions/ocr/label|ocr/invoice|asr`; barcode là **query param** `?barcode=`, không phải upload.
+- [ ] `ScanJobDto` đổi theo envelope `ExtractionResponse`/`InvoiceExtractionResponse`/`BarcodeExtractionResponse` (`request_id, status, provider, raw_text, fields, confidence, warnings, persisted`) — field tên khác hẳn (`fields.ingredient_name` không phải `parsed.name`).
+- [ ] "Xác nhận vào kho" sau review = gọi `POST /inventory/batches` từng dòng (phụ thuộc mục A xong trước) — không có endpoint "confirm hàng loạt".
 
 ### M0 đã hoàn thành (2026-08-30)
 
