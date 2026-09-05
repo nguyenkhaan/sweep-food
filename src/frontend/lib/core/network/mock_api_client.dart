@@ -35,7 +35,8 @@ class MockApiClient implements ApiClient {
   static final Map<String, String> _fixtures = {
     ApiPaths.ingredients: 'ingredients',
     ApiPaths.inventoryBatches: 'inventory_batches',
-    ApiPaths.suggestions: 'suggestions',
+    ApiPaths.recommendations: 'recommendations',
+    ApiPaths.suggestions: 'recommendations',
     '/recipes/': 'recipe',
     ApiPaths.notifications: 'notifications',
     ApiPaths.subscription: 'subscription',
@@ -49,7 +50,8 @@ class MockApiClient implements ApiClient {
   /// Read-shaped POST endpoints that return a canned fixture instead of echoing
   /// the request body (dish scoring). Matched exact-or-prefix.
   static final Map<String, String> _postFixtures = {
-    ApiPaths.suggestions: 'suggestions',
+    ApiPaths.recommendations: 'recommendations',
+    ApiPaths.suggestions: 'recommendations',
   };
 
   String? _postFixtureKey(String path) {
@@ -519,6 +521,20 @@ class MockApiClient implements ApiClient {
     }
     if (path.startsWith('/shopping-lists/') && !path.contains('/items')) {
       return _clone(_findShoppingList(path.substring('/shopping-lists/'.length)));
+    }
+    if (path.startsWith('/recipes/')) {
+      final doc = await _loadKey('recipe') as Map<String, dynamic>;
+      final recipeId = path.substring('/recipes/'.length);
+      final recipe = Map<String, dynamic>.from(doc);
+      recipe['id'] = recipeId;
+      if (recipeId == 'd2') {
+        recipe['name'] = 'Canh chua cá lóc';
+      } else if (recipeId == 'd3') {
+        recipe['name'] = 'Trứng chiên hành lá';
+      } else if (recipeId == 'd4') {
+        recipe['name'] = 'Thịt ba chỉ rang cháy cạnh';
+      }
+      return _clone(recipe);
     }
     return _clone(await _load(path));
   }

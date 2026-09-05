@@ -18,7 +18,9 @@ mixin _$DishSuggestion {
  List<String> get nearExpiryIngredients;/// Share of the dish's ingredients already in the pantry (`0..1`).
  double get availabilityRatio;/// How many ingredients still need buying.
  int get toBuyCount;/// Server-provided score override; falls back to [breakdown.scoreOutOf100].
- int? get scoreOverride;
+ int? get scoreOverride;/// Human-readable explanation from recommendation engine / mock provider.
+ String? get explanation;/// True if the score and ranking are from a mock provider (`analysis.is_mock`).
+ bool get isMock;
 /// Create a copy of DishSuggestion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +31,16 @@ $DishSuggestionCopyWith<DishSuggestion> get copyWith => _$DishSuggestionCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DishSuggestion&&(identical(other.dish, dish) || other.dish == dish)&&(identical(other.breakdown, breakdown) || other.breakdown == breakdown)&&const DeepCollectionEquality().equals(other.nearExpiryIngredients, nearExpiryIngredients)&&(identical(other.availabilityRatio, availabilityRatio) || other.availabilityRatio == availabilityRatio)&&(identical(other.toBuyCount, toBuyCount) || other.toBuyCount == toBuyCount)&&(identical(other.scoreOverride, scoreOverride) || other.scoreOverride == scoreOverride));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DishSuggestion&&(identical(other.dish, dish) || other.dish == dish)&&(identical(other.breakdown, breakdown) || other.breakdown == breakdown)&&const DeepCollectionEquality().equals(other.nearExpiryIngredients, nearExpiryIngredients)&&(identical(other.availabilityRatio, availabilityRatio) || other.availabilityRatio == availabilityRatio)&&(identical(other.toBuyCount, toBuyCount) || other.toBuyCount == toBuyCount)&&(identical(other.scoreOverride, scoreOverride) || other.scoreOverride == scoreOverride)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.isMock, isMock) || other.isMock == isMock));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,dish,breakdown,const DeepCollectionEquality().hash(nearExpiryIngredients),availabilityRatio,toBuyCount,scoreOverride);
+int get hashCode => Object.hash(runtimeType,dish,breakdown,const DeepCollectionEquality().hash(nearExpiryIngredients),availabilityRatio,toBuyCount,scoreOverride,explanation,isMock);
 
 @override
 String toString() {
-  return 'DishSuggestion(dish: $dish, breakdown: $breakdown, nearExpiryIngredients: $nearExpiryIngredients, availabilityRatio: $availabilityRatio, toBuyCount: $toBuyCount, scoreOverride: $scoreOverride)';
+  return 'DishSuggestion(dish: $dish, breakdown: $breakdown, nearExpiryIngredients: $nearExpiryIngredients, availabilityRatio: $availabilityRatio, toBuyCount: $toBuyCount, scoreOverride: $scoreOverride, explanation: $explanation, isMock: $isMock)';
 }
 
 
@@ -49,7 +51,7 @@ abstract mixin class $DishSuggestionCopyWith<$Res>  {
   factory $DishSuggestionCopyWith(DishSuggestion value, $Res Function(DishSuggestion) _then) = _$DishSuggestionCopyWithImpl;
 @useResult
 $Res call({
- Dish dish, ScoreBreakdown breakdown, List<String> nearExpiryIngredients, double availabilityRatio, int toBuyCount, int? scoreOverride
+ Dish dish, ScoreBreakdown breakdown, List<String> nearExpiryIngredients, double availabilityRatio, int toBuyCount, int? scoreOverride, String? explanation, bool isMock
 });
 
 
@@ -66,7 +68,7 @@ class _$DishSuggestionCopyWithImpl<$Res>
 
 /// Create a copy of DishSuggestion
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? dish = null,Object? breakdown = null,Object? nearExpiryIngredients = null,Object? availabilityRatio = null,Object? toBuyCount = null,Object? scoreOverride = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? dish = null,Object? breakdown = null,Object? nearExpiryIngredients = null,Object? availabilityRatio = null,Object? toBuyCount = null,Object? scoreOverride = freezed,Object? explanation = freezed,Object? isMock = null,}) {
   return _then(_self.copyWith(
 dish: null == dish ? _self.dish : dish // ignore: cast_nullable_to_non_nullable
 as Dish,breakdown: null == breakdown ? _self.breakdown : breakdown // ignore: cast_nullable_to_non_nullable
@@ -74,7 +76,9 @@ as ScoreBreakdown,nearExpiryIngredients: null == nearExpiryIngredients ? _self.n
 as List<String>,availabilityRatio: null == availabilityRatio ? _self.availabilityRatio : availabilityRatio // ignore: cast_nullable_to_non_nullable
 as double,toBuyCount: null == toBuyCount ? _self.toBuyCount : toBuyCount // ignore: cast_nullable_to_non_nullable
 as int,scoreOverride: freezed == scoreOverride ? _self.scoreOverride : scoreOverride // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,explanation: freezed == explanation ? _self.explanation : explanation // ignore: cast_nullable_to_non_nullable
+as String?,isMock: null == isMock ? _self.isMock : isMock // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of DishSuggestion
@@ -177,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Dish dish,  ScoreBreakdown breakdown,  List<String> nearExpiryIngredients,  double availabilityRatio,  int toBuyCount,  int? scoreOverride)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Dish dish,  ScoreBreakdown breakdown,  List<String> nearExpiryIngredients,  double availabilityRatio,  int toBuyCount,  int? scoreOverride,  String? explanation,  bool isMock)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DishSuggestion() when $default != null:
-return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.availabilityRatio,_that.toBuyCount,_that.scoreOverride);case _:
+return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.availabilityRatio,_that.toBuyCount,_that.scoreOverride,_that.explanation,_that.isMock);case _:
   return orElse();
 
 }
@@ -198,10 +202,10 @@ return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.ava
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Dish dish,  ScoreBreakdown breakdown,  List<String> nearExpiryIngredients,  double availabilityRatio,  int toBuyCount,  int? scoreOverride)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Dish dish,  ScoreBreakdown breakdown,  List<String> nearExpiryIngredients,  double availabilityRatio,  int toBuyCount,  int? scoreOverride,  String? explanation,  bool isMock)  $default,) {final _that = this;
 switch (_that) {
 case _DishSuggestion():
-return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.availabilityRatio,_that.toBuyCount,_that.scoreOverride);case _:
+return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.availabilityRatio,_that.toBuyCount,_that.scoreOverride,_that.explanation,_that.isMock);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -218,10 +222,10 @@ return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.ava
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Dish dish,  ScoreBreakdown breakdown,  List<String> nearExpiryIngredients,  double availabilityRatio,  int toBuyCount,  int? scoreOverride)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Dish dish,  ScoreBreakdown breakdown,  List<String> nearExpiryIngredients,  double availabilityRatio,  int toBuyCount,  int? scoreOverride,  String? explanation,  bool isMock)?  $default,) {final _that = this;
 switch (_that) {
 case _DishSuggestion() when $default != null:
-return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.availabilityRatio,_that.toBuyCount,_that.scoreOverride);case _:
+return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.availabilityRatio,_that.toBuyCount,_that.scoreOverride,_that.explanation,_that.isMock);case _:
   return null;
 
 }
@@ -233,7 +237,7 @@ return $default(_that.dish,_that.breakdown,_that.nearExpiryIngredients,_that.ava
 
 
 class _DishSuggestion extends DishSuggestion {
-  const _DishSuggestion({required this.dish, required this.breakdown, final  List<String> nearExpiryIngredients = const <String>[], this.availabilityRatio = 0, this.toBuyCount = 0, this.scoreOverride}): _nearExpiryIngredients = nearExpiryIngredients,super._();
+  const _DishSuggestion({required this.dish, required this.breakdown, final  List<String> nearExpiryIngredients = const <String>[], this.availabilityRatio = 0, this.toBuyCount = 0, this.scoreOverride, this.explanation, this.isMock = false}): _nearExpiryIngredients = nearExpiryIngredients,super._();
   
 
 @override final  Dish dish;
@@ -253,6 +257,10 @@ class _DishSuggestion extends DishSuggestion {
 @override@JsonKey() final  int toBuyCount;
 /// Server-provided score override; falls back to [breakdown.scoreOutOf100].
 @override final  int? scoreOverride;
+/// Human-readable explanation from recommendation engine / mock provider.
+@override final  String? explanation;
+/// True if the score and ranking are from a mock provider (`analysis.is_mock`).
+@override@JsonKey() final  bool isMock;
 
 /// Create a copy of DishSuggestion
 /// with the given fields replaced by the non-null parameter values.
@@ -264,16 +272,16 @@ _$DishSuggestionCopyWith<_DishSuggestion> get copyWith => __$DishSuggestionCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DishSuggestion&&(identical(other.dish, dish) || other.dish == dish)&&(identical(other.breakdown, breakdown) || other.breakdown == breakdown)&&const DeepCollectionEquality().equals(other._nearExpiryIngredients, _nearExpiryIngredients)&&(identical(other.availabilityRatio, availabilityRatio) || other.availabilityRatio == availabilityRatio)&&(identical(other.toBuyCount, toBuyCount) || other.toBuyCount == toBuyCount)&&(identical(other.scoreOverride, scoreOverride) || other.scoreOverride == scoreOverride));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DishSuggestion&&(identical(other.dish, dish) || other.dish == dish)&&(identical(other.breakdown, breakdown) || other.breakdown == breakdown)&&const DeepCollectionEquality().equals(other._nearExpiryIngredients, _nearExpiryIngredients)&&(identical(other.availabilityRatio, availabilityRatio) || other.availabilityRatio == availabilityRatio)&&(identical(other.toBuyCount, toBuyCount) || other.toBuyCount == toBuyCount)&&(identical(other.scoreOverride, scoreOverride) || other.scoreOverride == scoreOverride)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.isMock, isMock) || other.isMock == isMock));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,dish,breakdown,const DeepCollectionEquality().hash(_nearExpiryIngredients),availabilityRatio,toBuyCount,scoreOverride);
+int get hashCode => Object.hash(runtimeType,dish,breakdown,const DeepCollectionEquality().hash(_nearExpiryIngredients),availabilityRatio,toBuyCount,scoreOverride,explanation,isMock);
 
 @override
 String toString() {
-  return 'DishSuggestion(dish: $dish, breakdown: $breakdown, nearExpiryIngredients: $nearExpiryIngredients, availabilityRatio: $availabilityRatio, toBuyCount: $toBuyCount, scoreOverride: $scoreOverride)';
+  return 'DishSuggestion(dish: $dish, breakdown: $breakdown, nearExpiryIngredients: $nearExpiryIngredients, availabilityRatio: $availabilityRatio, toBuyCount: $toBuyCount, scoreOverride: $scoreOverride, explanation: $explanation, isMock: $isMock)';
 }
 
 
@@ -284,7 +292,7 @@ abstract mixin class _$DishSuggestionCopyWith<$Res> implements $DishSuggestionCo
   factory _$DishSuggestionCopyWith(_DishSuggestion value, $Res Function(_DishSuggestion) _then) = __$DishSuggestionCopyWithImpl;
 @override @useResult
 $Res call({
- Dish dish, ScoreBreakdown breakdown, List<String> nearExpiryIngredients, double availabilityRatio, int toBuyCount, int? scoreOverride
+ Dish dish, ScoreBreakdown breakdown, List<String> nearExpiryIngredients, double availabilityRatio, int toBuyCount, int? scoreOverride, String? explanation, bool isMock
 });
 
 
@@ -301,7 +309,7 @@ class __$DishSuggestionCopyWithImpl<$Res>
 
 /// Create a copy of DishSuggestion
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? dish = null,Object? breakdown = null,Object? nearExpiryIngredients = null,Object? availabilityRatio = null,Object? toBuyCount = null,Object? scoreOverride = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? dish = null,Object? breakdown = null,Object? nearExpiryIngredients = null,Object? availabilityRatio = null,Object? toBuyCount = null,Object? scoreOverride = freezed,Object? explanation = freezed,Object? isMock = null,}) {
   return _then(_DishSuggestion(
 dish: null == dish ? _self.dish : dish // ignore: cast_nullable_to_non_nullable
 as Dish,breakdown: null == breakdown ? _self.breakdown : breakdown // ignore: cast_nullable_to_non_nullable
@@ -309,7 +317,9 @@ as ScoreBreakdown,nearExpiryIngredients: null == nearExpiryIngredients ? _self._
 as List<String>,availabilityRatio: null == availabilityRatio ? _self.availabilityRatio : availabilityRatio // ignore: cast_nullable_to_non_nullable
 as double,toBuyCount: null == toBuyCount ? _self.toBuyCount : toBuyCount // ignore: cast_nullable_to_non_nullable
 as int,scoreOverride: freezed == scoreOverride ? _self.scoreOverride : scoreOverride // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,explanation: freezed == explanation ? _self.explanation : explanation // ignore: cast_nullable_to_non_nullable
+as String?,isMock: null == isMock ? _self.isMock : isMock // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

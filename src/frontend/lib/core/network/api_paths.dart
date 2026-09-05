@@ -61,7 +61,10 @@ abstract final class ApiPaths {
   // Recipes (real backend) — the Dish detail screen reads from here.
   static String recipe(String id) => '/recipes/$id';
 
-  // Suggestions (still frontend-assumed / mock)
+  // Recommendations (real backend mock boundary: POST /recommendations {request: string})
+  static const recommendations = '/recommendations';
+
+  // Suggestions (legacy path, kept for backward compatibility)
   static const suggestions = '/suggestions/dishes';
 
   // Meal plans (real backend) — no "current week" concept; FE creates/finds a

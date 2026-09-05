@@ -55,4 +55,4 @@ final class SuggestionRepositoryProvider
 }
 
 String _$suggestionRepositoryHash() =>
-    r'6e770971690eddaf5015a50c4f8933e32136f7d4';
+    r'ae1f45dbcf0cd8657185af2bbb3cc70ae4fb0c22';

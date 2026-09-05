@@ -34,7 +34,8 @@ Nối `DioApiClient` với BE thật, "xong đến đâu nối đến đó". `co
 - **Meal Plans (2026-09-05)** — ✅ nối + **verify live** (`test/live/meal_plan_live_test.dart`, 3/3 pass). 1 lỗi FE phát hiện khi verify live, đã sửa — xem mục B.
 - **Shopping Lists (2026-09-05)** — ✅ nối + **verify live** (`test/live/shopping_list_live_test.dart`, 5/5 pass), không phát sinh lỗi mới.
 - **Cooking (2026-09-05)** — ✅ nối + **verify live** (`test/live/cooking_live_test.dart`, 3/3 pass, quyết định UX auto-tạo meal-plan-item ẩn vẫn chưa được BE xác nhận). 1 lỗi thiết kế DTO phát hiện khi verify live, đã sửa — xem mục D.
-- **Chưa nối:** Extractions, Recommendations, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
+- **Recommendations (2026-09-05)** — ✅ đã nối API thật `POST /recommendations` + parallel fetch `GET /recipes/{id}` + có test live (`test/live/recommendations_live_test.dart`, 2/2 tests) — xem mục E.
+- **Chưa nối:** Extractions, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
 
 ### M6.2 — Việc còn lại, theo `docs/api-contract.md` M7 (2026-09-05)
 
@@ -100,11 +101,14 @@ Thứ tự đề xuất: **Inventory trước** (nền tảng — unblock "in pa
 
 #### E. Recommendations — `features/suggestions/*`
 
-- [ ] `suggestion_remote_data_source` đổi `POST /suggestions/dishes` → `POST /recommendations {request: string}`.
-- [ ] Bỏ filter cấu trúc (`meal_type`, `max_time_min`...) khỏi request — BE chỉ nhận 1 chuỗi tự do; FE tự ghép câu từ filter UI thành text nếu muốn giữ chip lọc, hoặc bỏ chip và chỉ còn ô nhập tự do.
-- [ ] Response chỉ có `recipe_id`+`recipe_name`+score — **không nhúng recipe đầy đủ**; phải gọi thêm `GET /recipes/{recipe_id}` cho từng item để có ảnh/thời gian/dinh dưỡng hiện trên card (N+1 — cân nhắc gọi song song, hoặc giới hạn hiện đủ khi tap vào chi tiết).
-- [ ] `score_components` map trực tiếp `e/a/p/u` — đổi tên field cho khớp (`expiration_utilization→e`, `availability→a`, `preference_fit→p`, `purchase_minimization→u`).
-- [ ] Đánh dấu rõ trên UI đây là **kết quả từ mock provider** (`analysis.is_mock`) cho tới khi BE có scoring thật theo inventory — tránh gây hiểu lầm là "AI" hoàn chỉnh (xem `CookableRecipesScreen` hiện đang hard-code, không gọi API nào — cân nhắc thay bằng luồng này).
+> ✅ **Đã nối API (2026-09-05).** Đã chuyển hoàn toàn sang `POST /recommendations {request: string}` theo đúng API contract của BE, kèm N+1 parallel fetch qua `GET /recipes/{id}` và có test live riêng.
+
+- [x] `suggestion_remote_data_source` đổi `POST /suggestions/dishes` → `POST /recommendations {request: string}`.
+- [x] Bỏ filter cấu trúc (`meal_type`, `max_time_min`...) khỏi request — BE chỉ nhận 1 chuỗi tự do (`{request: string}`, 1..1000 ký tự); `SuggestionRequest` tự ghép câu từ prompt và filter UI (`MealType`, `maxCookTimeMin`, `dietaryPreference`) thành chuỗi tự nhiên (mặc định `'Gợi ý món ăn hôm nay'`).
+- [x] Response chỉ có `recipe_id`+`recipe_name`+score — **không nhúng recipe đầy đủ**; `SuggestionRepositoryImpl` gọi song song `GET /recipes/{recipe_id}` (`Future.wait`) cho từng item qua `DishRemoteDataSource` để nạp đầy đủ thực thể `Dish` (ảnh, thời gian, dinh dưỡng, nguyên liệu), có fallback an toàn nếu chưa tìm thấy recipe.
+- [x] `score_components` map trực tiếp `e/a/p/u` — DTO `recommendation_dto.dart` map chuẩn xác `expiration_utilization→e`, `availability→a`, `preference_fit→p`, `purchase_minimization→u`.
+- [x] Đánh dấu rõ trên UI đây là **kết quả từ mock provider** (`analysis.is_mock`): `SuggestionListScreen` hiện thanh thông báo trạng thái thử nghiệm và `ScoreBreakdownSheet` hiển thị banner cảnh báo mock AI cùng giải thích chi tiết `suggestion.explanation`.
+- [x] **Verify & Tests (2026-09-05)**: Viết bộ test đơn vị chi tiết (`test/unit/suggestions/suggestion_list_controller_test.dart`), test tích hợp live (`test/live/recommendations_live_test.dart`), mock fixture chuẩn backend `assets/mock/recommendations.json`. Toàn bộ 107 tests pass 100%, `flutter analyze` 0 issues.
 
 #### F. Favorites — feature mới hoàn toàn `features/favorites/*`
 

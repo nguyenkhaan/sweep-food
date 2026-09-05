@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/score_breakdown.dart';
 
@@ -24,6 +24,12 @@ abstract class DishSuggestion with _$DishSuggestion {
 
     /// Server-provided score override; falls back to [breakdown.scoreOutOf100].
     int? scoreOverride,
+
+    /// Human-readable explanation from recommendation engine / mock provider.
+    String? explanation,
+
+    /// True if the score and ranking are from a mock provider (`analysis.is_mock`).
+    @Default(false) bool isMock,
   }) = _DishSuggestion;
 
   String get id => dish.id;
