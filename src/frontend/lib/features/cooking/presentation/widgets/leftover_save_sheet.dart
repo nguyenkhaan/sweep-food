@@ -11,25 +11,25 @@ import 'package:sweepfood/features/cooking/presentation/controllers/leftover_con
 /// a use-by reminder.
 class LeftoverSaveSheet extends ConsumerStatefulWidget {
   const LeftoverSaveSheet({
-    required this.dishId,
+    required this.sessionId,
     required this.dishName,
     required this.initialServings,
     super.key,
   });
 
-  final String dishId;
+  final String sessionId;
   final String dishName;
   final int initialServings;
 
   static Future<void> show(
     BuildContext context, {
-    required String dishId,
+    required String sessionId,
     required String dishName,
     required int initialServings,
   }) => showAppBottomSheet(
     context,
     builder: (_) => LeftoverSaveSheet(
-      dishId: dishId,
+      sessionId: sessionId,
       dishName: dishName,
       initialServings: initialServings < 1 ? 1 : initialServings,
     ),
@@ -51,7 +51,7 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
           .read(leftoverControllerProvider.notifier)
           .save(
             CookedFood(
-              dishId: widget.dishId,
+              sessionId: widget.sessionId,
               dishName: widget.dishName,
               servings: _servings,
               reminderInDays: _reminderDays,

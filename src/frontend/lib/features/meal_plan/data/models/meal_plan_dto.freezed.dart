@@ -13,42 +13,42 @@ part of 'meal_plan_dto.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$MealPlanEntryDto {
+mixin _$MealPlanItemDto {
 
- DateTime get date; String get slot;@JsonKey(name: 'dish_id') String get dishId;@JsonKey(name: 'dish_name') String? get dishName;@JsonKey(name: 'dish_image_url') String? get dishImageUrl;
-/// Create a copy of MealPlanEntryDto
+ String get id;@JsonKey(name: 'recipe_id') String get recipeId;@JsonKey(name: 'recipe_name') String? get recipeName;@JsonKey(name: 'planned_for') DateTime get plannedFor;@JsonKey(name: 'meal_slot') String get mealSlot; double get servings; String get status;
+/// Create a copy of MealPlanItemDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$MealPlanEntryDtoCopyWith<MealPlanEntryDto> get copyWith => _$MealPlanEntryDtoCopyWithImpl<MealPlanEntryDto>(this as MealPlanEntryDto, _$identity);
+$MealPlanItemDtoCopyWith<MealPlanItemDto> get copyWith => _$MealPlanItemDtoCopyWithImpl<MealPlanItemDto>(this as MealPlanItemDto, _$identity);
 
-  /// Serializes this MealPlanEntryDto to a JSON map.
+  /// Serializes this MealPlanItemDto to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlanEntryDto&&(identical(other.date, date) || other.date == date)&&(identical(other.slot, slot) || other.slot == slot)&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&(identical(other.dishImageUrl, dishImageUrl) || other.dishImageUrl == dishImageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlanItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.plannedFor, plannedFor) || other.plannedFor == plannedFor)&&(identical(other.mealSlot, mealSlot) || other.mealSlot == mealSlot)&&(identical(other.servings, servings) || other.servings == servings)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,slot,dishId,dishName,dishImageUrl);
+int get hashCode => Object.hash(runtimeType,id,recipeId,recipeName,plannedFor,mealSlot,servings,status);
 
 @override
 String toString() {
-  return 'MealPlanEntryDto(date: $date, slot: $slot, dishId: $dishId, dishName: $dishName, dishImageUrl: $dishImageUrl)';
+  return 'MealPlanItemDto(id: $id, recipeId: $recipeId, recipeName: $recipeName, plannedFor: $plannedFor, mealSlot: $mealSlot, servings: $servings, status: $status)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $MealPlanEntryDtoCopyWith<$Res>  {
-  factory $MealPlanEntryDtoCopyWith(MealPlanEntryDto value, $Res Function(MealPlanEntryDto) _then) = _$MealPlanEntryDtoCopyWithImpl;
+abstract mixin class $MealPlanItemDtoCopyWith<$Res>  {
+  factory $MealPlanItemDtoCopyWith(MealPlanItemDto value, $Res Function(MealPlanItemDto) _then) = _$MealPlanItemDtoCopyWithImpl;
 @useResult
 $Res call({
- DateTime date, String slot,@JsonKey(name: 'dish_id') String dishId,@JsonKey(name: 'dish_name') String? dishName,@JsonKey(name: 'dish_image_url') String? dishImageUrl
+ String id,@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String? recipeName,@JsonKey(name: 'planned_for') DateTime plannedFor,@JsonKey(name: 'meal_slot') String mealSlot, double servings, String status
 });
 
 
@@ -56,31 +56,33 @@ $Res call({
 
 }
 /// @nodoc
-class _$MealPlanEntryDtoCopyWithImpl<$Res>
-    implements $MealPlanEntryDtoCopyWith<$Res> {
-  _$MealPlanEntryDtoCopyWithImpl(this._self, this._then);
+class _$MealPlanItemDtoCopyWithImpl<$Res>
+    implements $MealPlanItemDtoCopyWith<$Res> {
+  _$MealPlanItemDtoCopyWithImpl(this._self, this._then);
 
-  final MealPlanEntryDto _self;
-  final $Res Function(MealPlanEntryDto) _then;
+  final MealPlanItemDto _self;
+  final $Res Function(MealPlanItemDto) _then;
 
-/// Create a copy of MealPlanEntryDto
+/// Create a copy of MealPlanItemDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? slot = null,Object? dishId = null,Object? dishName = freezed,Object? dishImageUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? recipeId = null,Object? recipeName = freezed,Object? plannedFor = null,Object? mealSlot = null,Object? servings = null,Object? status = null,}) {
   return _then(_self.copyWith(
-date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime,slot: null == slot ? _self.slot : slot // ignore: cast_nullable_to_non_nullable
-as String,dishId: null == dishId ? _self.dishId : dishId // ignore: cast_nullable_to_non_nullable
-as String,dishName: freezed == dishName ? _self.dishName : dishName // ignore: cast_nullable_to_non_nullable
-as String?,dishImageUrl: freezed == dishImageUrl ? _self.dishImageUrl : dishImageUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,recipeId: null == recipeId ? _self.recipeId : recipeId // ignore: cast_nullable_to_non_nullable
+as String,recipeName: freezed == recipeName ? _self.recipeName : recipeName // ignore: cast_nullable_to_non_nullable
+as String?,plannedFor: null == plannedFor ? _self.plannedFor : plannedFor // ignore: cast_nullable_to_non_nullable
+as DateTime,mealSlot: null == mealSlot ? _self.mealSlot : mealSlot // ignore: cast_nullable_to_non_nullable
+as String,servings: null == servings ? _self.servings : servings // ignore: cast_nullable_to_non_nullable
+as double,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
 }
 
 
-/// Adds pattern-matching-related methods to [MealPlanEntryDto].
-extension MealPlanEntryDtoPatterns on MealPlanEntryDto {
+/// Adds pattern-matching-related methods to [MealPlanItemDto].
+extension MealPlanItemDtoPatterns on MealPlanItemDto {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -93,10 +95,10 @@ extension MealPlanEntryDtoPatterns on MealPlanEntryDto {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MealPlanEntryDto value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MealPlanItemDto value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _MealPlanEntryDto() when $default != null:
+case _MealPlanItemDto() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -115,10 +117,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MealPlanEntryDto value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MealPlanItemDto value)  $default,){
 final _that = this;
 switch (_that) {
-case _MealPlanEntryDto():
+case _MealPlanItemDto():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -136,10 +138,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MealPlanEntryDto value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MealPlanItemDto value)?  $default,){
 final _that = this;
 switch (_that) {
-case _MealPlanEntryDto() when $default != null:
+case _MealPlanItemDto() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -157,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime date,  String slot, @JsonKey(name: 'dish_id')  String dishId, @JsonKey(name: 'dish_name')  String? dishName, @JsonKey(name: 'dish_image_url')  String? dishImageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String? recipeName, @JsonKey(name: 'planned_for')  DateTime plannedFor, @JsonKey(name: 'meal_slot')  String mealSlot,  double servings,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _MealPlanEntryDto() when $default != null:
-return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImageUrl);case _:
+case _MealPlanItemDto() when $default != null:
+return $default(_that.id,_that.recipeId,_that.recipeName,_that.plannedFor,_that.mealSlot,_that.servings,_that.status);case _:
   return orElse();
 
 }
@@ -178,10 +180,10 @@ return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImag
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime date,  String slot, @JsonKey(name: 'dish_id')  String dishId, @JsonKey(name: 'dish_name')  String? dishName, @JsonKey(name: 'dish_image_url')  String? dishImageUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String? recipeName, @JsonKey(name: 'planned_for')  DateTime plannedFor, @JsonKey(name: 'meal_slot')  String mealSlot,  double servings,  String status)  $default,) {final _that = this;
 switch (_that) {
-case _MealPlanEntryDto():
-return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImageUrl);case _:
+case _MealPlanItemDto():
+return $default(_that.id,_that.recipeId,_that.recipeName,_that.plannedFor,_that.mealSlot,_that.servings,_that.status);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +200,10 @@ return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImag
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime date,  String slot, @JsonKey(name: 'dish_id')  String dishId, @JsonKey(name: 'dish_name')  String? dishName, @JsonKey(name: 'dish_image_url')  String? dishImageUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String? recipeName, @JsonKey(name: 'planned_for')  DateTime plannedFor, @JsonKey(name: 'meal_slot')  String mealSlot,  double servings,  String status)?  $default,) {final _that = this;
 switch (_that) {
-case _MealPlanEntryDto() when $default != null:
-return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImageUrl);case _:
+case _MealPlanItemDto() when $default != null:
+return $default(_that.id,_that.recipeId,_that.recipeName,_that.plannedFor,_that.mealSlot,_that.servings,_that.status);case _:
   return null;
 
 }
@@ -212,50 +214,52 @@ return $default(_that.date,_that.slot,_that.dishId,_that.dishName,_that.dishImag
 /// @nodoc
 @JsonSerializable()
 
-class _MealPlanEntryDto extends MealPlanEntryDto {
-  const _MealPlanEntryDto({required this.date, required this.slot, @JsonKey(name: 'dish_id') required this.dishId, @JsonKey(name: 'dish_name') this.dishName, @JsonKey(name: 'dish_image_url') this.dishImageUrl}): super._();
-  factory _MealPlanEntryDto.fromJson(Map<String, dynamic> json) => _$MealPlanEntryDtoFromJson(json);
+class _MealPlanItemDto extends MealPlanItemDto {
+  const _MealPlanItemDto({required this.id, @JsonKey(name: 'recipe_id') required this.recipeId, @JsonKey(name: 'recipe_name') this.recipeName, @JsonKey(name: 'planned_for') required this.plannedFor, @JsonKey(name: 'meal_slot') required this.mealSlot, required this.servings, this.status = 'PLANNED'}): super._();
+  factory _MealPlanItemDto.fromJson(Map<String, dynamic> json) => _$MealPlanItemDtoFromJson(json);
 
-@override final  DateTime date;
-@override final  String slot;
-@override@JsonKey(name: 'dish_id') final  String dishId;
-@override@JsonKey(name: 'dish_name') final  String? dishName;
-@override@JsonKey(name: 'dish_image_url') final  String? dishImageUrl;
+@override final  String id;
+@override@JsonKey(name: 'recipe_id') final  String recipeId;
+@override@JsonKey(name: 'recipe_name') final  String? recipeName;
+@override@JsonKey(name: 'planned_for') final  DateTime plannedFor;
+@override@JsonKey(name: 'meal_slot') final  String mealSlot;
+@override final  double servings;
+@override@JsonKey() final  String status;
 
-/// Create a copy of MealPlanEntryDto
+/// Create a copy of MealPlanItemDto
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$MealPlanEntryDtoCopyWith<_MealPlanEntryDto> get copyWith => __$MealPlanEntryDtoCopyWithImpl<_MealPlanEntryDto>(this, _$identity);
+_$MealPlanItemDtoCopyWith<_MealPlanItemDto> get copyWith => __$MealPlanItemDtoCopyWithImpl<_MealPlanItemDto>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$MealPlanEntryDtoToJson(this, );
+  return _$MealPlanItemDtoToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlanEntryDto&&(identical(other.date, date) || other.date == date)&&(identical(other.slot, slot) || other.slot == slot)&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&(identical(other.dishImageUrl, dishImageUrl) || other.dishImageUrl == dishImageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlanItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.plannedFor, plannedFor) || other.plannedFor == plannedFor)&&(identical(other.mealSlot, mealSlot) || other.mealSlot == mealSlot)&&(identical(other.servings, servings) || other.servings == servings)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,slot,dishId,dishName,dishImageUrl);
+int get hashCode => Object.hash(runtimeType,id,recipeId,recipeName,plannedFor,mealSlot,servings,status);
 
 @override
 String toString() {
-  return 'MealPlanEntryDto(date: $date, slot: $slot, dishId: $dishId, dishName: $dishName, dishImageUrl: $dishImageUrl)';
+  return 'MealPlanItemDto(id: $id, recipeId: $recipeId, recipeName: $recipeName, plannedFor: $plannedFor, mealSlot: $mealSlot, servings: $servings, status: $status)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$MealPlanEntryDtoCopyWith<$Res> implements $MealPlanEntryDtoCopyWith<$Res> {
-  factory _$MealPlanEntryDtoCopyWith(_MealPlanEntryDto value, $Res Function(_MealPlanEntryDto) _then) = __$MealPlanEntryDtoCopyWithImpl;
+abstract mixin class _$MealPlanItemDtoCopyWith<$Res> implements $MealPlanItemDtoCopyWith<$Res> {
+  factory _$MealPlanItemDtoCopyWith(_MealPlanItemDto value, $Res Function(_MealPlanItemDto) _then) = __$MealPlanItemDtoCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime date, String slot,@JsonKey(name: 'dish_id') String dishId,@JsonKey(name: 'dish_name') String? dishName,@JsonKey(name: 'dish_image_url') String? dishImageUrl
+ String id,@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String? recipeName,@JsonKey(name: 'planned_for') DateTime plannedFor,@JsonKey(name: 'meal_slot') String mealSlot, double servings, String status
 });
 
 
@@ -263,23 +267,25 @@ $Res call({
 
 }
 /// @nodoc
-class __$MealPlanEntryDtoCopyWithImpl<$Res>
-    implements _$MealPlanEntryDtoCopyWith<$Res> {
-  __$MealPlanEntryDtoCopyWithImpl(this._self, this._then);
+class __$MealPlanItemDtoCopyWithImpl<$Res>
+    implements _$MealPlanItemDtoCopyWith<$Res> {
+  __$MealPlanItemDtoCopyWithImpl(this._self, this._then);
 
-  final _MealPlanEntryDto _self;
-  final $Res Function(_MealPlanEntryDto) _then;
+  final _MealPlanItemDto _self;
+  final $Res Function(_MealPlanItemDto) _then;
 
-/// Create a copy of MealPlanEntryDto
+/// Create a copy of MealPlanItemDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? slot = null,Object? dishId = null,Object? dishName = freezed,Object? dishImageUrl = freezed,}) {
-  return _then(_MealPlanEntryDto(
-date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime,slot: null == slot ? _self.slot : slot // ignore: cast_nullable_to_non_nullable
-as String,dishId: null == dishId ? _self.dishId : dishId // ignore: cast_nullable_to_non_nullable
-as String,dishName: freezed == dishName ? _self.dishName : dishName // ignore: cast_nullable_to_non_nullable
-as String?,dishImageUrl: freezed == dishImageUrl ? _self.dishImageUrl : dishImageUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? recipeId = null,Object? recipeName = freezed,Object? plannedFor = null,Object? mealSlot = null,Object? servings = null,Object? status = null,}) {
+  return _then(_MealPlanItemDto(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,recipeId: null == recipeId ? _self.recipeId : recipeId // ignore: cast_nullable_to_non_nullable
+as String,recipeName: freezed == recipeName ? _self.recipeName : recipeName // ignore: cast_nullable_to_non_nullable
+as String?,plannedFor: null == plannedFor ? _self.plannedFor : plannedFor // ignore: cast_nullable_to_non_nullable
+as DateTime,mealSlot: null == mealSlot ? _self.mealSlot : mealSlot // ignore: cast_nullable_to_non_nullable
+as String,servings: null == servings ? _self.servings : servings // ignore: cast_nullable_to_non_nullable
+as double,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -290,7 +296,7 @@ as String?,
 /// @nodoc
 mixin _$MealPlanDto {
 
-@JsonKey(name: 'week_start') DateTime get weekStart; List<MealPlanEntryDto> get entries;
+ String get id; String? get name;@JsonKey(name: 'starts_on') DateTime get startsOn;@JsonKey(name: 'ends_on') DateTime get endsOn; List<MealPlanItemDto> get items;
 /// Create a copy of MealPlanDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -303,16 +309,16 @@ $MealPlanDtoCopyWith<MealPlanDto> get copyWith => _$MealPlanDtoCopyWithImpl<Meal
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlanDto&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&const DeepCollectionEquality().equals(other.entries, entries));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MealPlanDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.startsOn, startsOn) || other.startsOn == startsOn)&&(identical(other.endsOn, endsOn) || other.endsOn == endsOn)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,weekStart,const DeepCollectionEquality().hash(entries));
+int get hashCode => Object.hash(runtimeType,id,name,startsOn,endsOn,const DeepCollectionEquality().hash(items));
 
 @override
 String toString() {
-  return 'MealPlanDto(weekStart: $weekStart, entries: $entries)';
+  return 'MealPlanDto(id: $id, name: $name, startsOn: $startsOn, endsOn: $endsOn, items: $items)';
 }
 
 
@@ -323,7 +329,7 @@ abstract mixin class $MealPlanDtoCopyWith<$Res>  {
   factory $MealPlanDtoCopyWith(MealPlanDto value, $Res Function(MealPlanDto) _then) = _$MealPlanDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'week_start') DateTime weekStart, List<MealPlanEntryDto> entries
+ String id, String? name,@JsonKey(name: 'starts_on') DateTime startsOn,@JsonKey(name: 'ends_on') DateTime endsOn, List<MealPlanItemDto> items
 });
 
 
@@ -340,11 +346,14 @@ class _$MealPlanDtoCopyWithImpl<$Res>
 
 /// Create a copy of MealPlanDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? weekStart = null,Object? entries = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? startsOn = null,Object? endsOn = null,Object? items = null,}) {
   return _then(_self.copyWith(
-weekStart: null == weekStart ? _self.weekStart : weekStart // ignore: cast_nullable_to_non_nullable
-as DateTime,entries: null == entries ? _self.entries : entries // ignore: cast_nullable_to_non_nullable
-as List<MealPlanEntryDto>,
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,startsOn: null == startsOn ? _self.startsOn : startsOn // ignore: cast_nullable_to_non_nullable
+as DateTime,endsOn: null == endsOn ? _self.endsOn : endsOn // ignore: cast_nullable_to_non_nullable
+as DateTime,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<MealPlanItemDto>,
   ));
 }
 
@@ -429,10 +438,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'week_start')  DateTime weekStart,  List<MealPlanEntryDto> entries)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String? name, @JsonKey(name: 'starts_on')  DateTime startsOn, @JsonKey(name: 'ends_on')  DateTime endsOn,  List<MealPlanItemDto> items)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MealPlanDto() when $default != null:
-return $default(_that.weekStart,_that.entries);case _:
+return $default(_that.id,_that.name,_that.startsOn,_that.endsOn,_that.items);case _:
   return orElse();
 
 }
@@ -450,10 +459,10 @@ return $default(_that.weekStart,_that.entries);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'week_start')  DateTime weekStart,  List<MealPlanEntryDto> entries)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String? name, @JsonKey(name: 'starts_on')  DateTime startsOn, @JsonKey(name: 'ends_on')  DateTime endsOn,  List<MealPlanItemDto> items)  $default,) {final _that = this;
 switch (_that) {
 case _MealPlanDto():
-return $default(_that.weekStart,_that.entries);case _:
+return $default(_that.id,_that.name,_that.startsOn,_that.endsOn,_that.items);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -470,10 +479,10 @@ return $default(_that.weekStart,_that.entries);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'week_start')  DateTime weekStart,  List<MealPlanEntryDto> entries)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String? name, @JsonKey(name: 'starts_on')  DateTime startsOn, @JsonKey(name: 'ends_on')  DateTime endsOn,  List<MealPlanItemDto> items)?  $default,) {final _that = this;
 switch (_that) {
 case _MealPlanDto() when $default != null:
-return $default(_that.weekStart,_that.entries);case _:
+return $default(_that.id,_that.name,_that.startsOn,_that.endsOn,_that.items);case _:
   return null;
 
 }
@@ -485,15 +494,18 @@ return $default(_that.weekStart,_that.entries);case _:
 @JsonSerializable()
 
 class _MealPlanDto extends MealPlanDto {
-  const _MealPlanDto({@JsonKey(name: 'week_start') required this.weekStart, final  List<MealPlanEntryDto> entries = const <MealPlanEntryDto>[]}): _entries = entries,super._();
+  const _MealPlanDto({required this.id, this.name, @JsonKey(name: 'starts_on') required this.startsOn, @JsonKey(name: 'ends_on') required this.endsOn, final  List<MealPlanItemDto> items = const <MealPlanItemDto>[]}): _items = items,super._();
   factory _MealPlanDto.fromJson(Map<String, dynamic> json) => _$MealPlanDtoFromJson(json);
 
-@override@JsonKey(name: 'week_start') final  DateTime weekStart;
- final  List<MealPlanEntryDto> _entries;
-@override@JsonKey() List<MealPlanEntryDto> get entries {
-  if (_entries is EqualUnmodifiableListView) return _entries;
+@override final  String id;
+@override final  String? name;
+@override@JsonKey(name: 'starts_on') final  DateTime startsOn;
+@override@JsonKey(name: 'ends_on') final  DateTime endsOn;
+ final  List<MealPlanItemDto> _items;
+@override@JsonKey() List<MealPlanItemDto> get items {
+  if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_entries);
+  return EqualUnmodifiableListView(_items);
 }
 
 
@@ -510,16 +522,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlanDto&&(identical(other.weekStart, weekStart) || other.weekStart == weekStart)&&const DeepCollectionEquality().equals(other._entries, _entries));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MealPlanDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.startsOn, startsOn) || other.startsOn == startsOn)&&(identical(other.endsOn, endsOn) || other.endsOn == endsOn)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,weekStart,const DeepCollectionEquality().hash(_entries));
+int get hashCode => Object.hash(runtimeType,id,name,startsOn,endsOn,const DeepCollectionEquality().hash(_items));
 
 @override
 String toString() {
-  return 'MealPlanDto(weekStart: $weekStart, entries: $entries)';
+  return 'MealPlanDto(id: $id, name: $name, startsOn: $startsOn, endsOn: $endsOn, items: $items)';
 }
 
 
@@ -530,7 +542,7 @@ abstract mixin class _$MealPlanDtoCopyWith<$Res> implements $MealPlanDtoCopyWith
   factory _$MealPlanDtoCopyWith(_MealPlanDto value, $Res Function(_MealPlanDto) _then) = __$MealPlanDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'week_start') DateTime weekStart, List<MealPlanEntryDto> entries
+ String id, String? name,@JsonKey(name: 'starts_on') DateTime startsOn,@JsonKey(name: 'ends_on') DateTime endsOn, List<MealPlanItemDto> items
 });
 
 
@@ -547,11 +559,14 @@ class __$MealPlanDtoCopyWithImpl<$Res>
 
 /// Create a copy of MealPlanDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? weekStart = null,Object? entries = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? startsOn = null,Object? endsOn = null,Object? items = null,}) {
   return _then(_MealPlanDto(
-weekStart: null == weekStart ? _self.weekStart : weekStart // ignore: cast_nullable_to_non_nullable
-as DateTime,entries: null == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
-as List<MealPlanEntryDto>,
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,startsOn: null == startsOn ? _self.startsOn : startsOn // ignore: cast_nullable_to_non_nullable
+as DateTime,endsOn: null == endsOn ? _self.endsOn : endsOn // ignore: cast_nullable_to_non_nullable
+as DateTime,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<MealPlanItemDto>,
   ));
 }
 

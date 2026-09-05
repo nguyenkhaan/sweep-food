@@ -286,10 +286,9 @@ as String?,
 /// @nodoc
 mixin _$CookResult {
 
- String get dishId; String get dishName; List<PantryChange> get changes;/// Post-cook state of the touched pantry items, for the list to splice in.
+ String get dishId; String get dishName; String get sessionId; List<PantryChange> get changes;/// Post-cook state of the touched pantry items, for the list to splice in.
  List<PantryItem> get updatedPantryItems;/// Ids of pantry items that dropped to zero and were marked used.
- List<String> get depletedItemIds; int get nearExpiryUsedCount; double get wasteAvoidedGrams;/// Servings cooked but not eaten — offered as a leftover to save (D-06).
- int get leftoverServings;
+ List<String> get depletedItemIds; int get nearExpiryUsedCount; double get wasteAvoidedGrams;
 /// Create a copy of CookResult
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -300,16 +299,16 @@ $CookResultCopyWith<CookResult> get copyWith => _$CookResultCopyWithImpl<CookRes
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CookResult&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&const DeepCollectionEquality().equals(other.changes, changes)&&const DeepCollectionEquality().equals(other.updatedPantryItems, updatedPantryItems)&&const DeepCollectionEquality().equals(other.depletedItemIds, depletedItemIds)&&(identical(other.nearExpiryUsedCount, nearExpiryUsedCount) || other.nearExpiryUsedCount == nearExpiryUsedCount)&&(identical(other.wasteAvoidedGrams, wasteAvoidedGrams) || other.wasteAvoidedGrams == wasteAvoidedGrams)&&(identical(other.leftoverServings, leftoverServings) || other.leftoverServings == leftoverServings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CookResult&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&const DeepCollectionEquality().equals(other.changes, changes)&&const DeepCollectionEquality().equals(other.updatedPantryItems, updatedPantryItems)&&const DeepCollectionEquality().equals(other.depletedItemIds, depletedItemIds)&&(identical(other.nearExpiryUsedCount, nearExpiryUsedCount) || other.nearExpiryUsedCount == nearExpiryUsedCount)&&(identical(other.wasteAvoidedGrams, wasteAvoidedGrams) || other.wasteAvoidedGrams == wasteAvoidedGrams));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,dishId,dishName,const DeepCollectionEquality().hash(changes),const DeepCollectionEquality().hash(updatedPantryItems),const DeepCollectionEquality().hash(depletedItemIds),nearExpiryUsedCount,wasteAvoidedGrams,leftoverServings);
+int get hashCode => Object.hash(runtimeType,dishId,dishName,sessionId,const DeepCollectionEquality().hash(changes),const DeepCollectionEquality().hash(updatedPantryItems),const DeepCollectionEquality().hash(depletedItemIds),nearExpiryUsedCount,wasteAvoidedGrams);
 
 @override
 String toString() {
-  return 'CookResult(dishId: $dishId, dishName: $dishName, changes: $changes, updatedPantryItems: $updatedPantryItems, depletedItemIds: $depletedItemIds, nearExpiryUsedCount: $nearExpiryUsedCount, wasteAvoidedGrams: $wasteAvoidedGrams, leftoverServings: $leftoverServings)';
+  return 'CookResult(dishId: $dishId, dishName: $dishName, sessionId: $sessionId, changes: $changes, updatedPantryItems: $updatedPantryItems, depletedItemIds: $depletedItemIds, nearExpiryUsedCount: $nearExpiryUsedCount, wasteAvoidedGrams: $wasteAvoidedGrams)';
 }
 
 
@@ -320,7 +319,7 @@ abstract mixin class $CookResultCopyWith<$Res>  {
   factory $CookResultCopyWith(CookResult value, $Res Function(CookResult) _then) = _$CookResultCopyWithImpl;
 @useResult
 $Res call({
- String dishId, String dishName, List<PantryChange> changes, List<PantryItem> updatedPantryItems, List<String> depletedItemIds, int nearExpiryUsedCount, double wasteAvoidedGrams, int leftoverServings
+ String dishId, String dishName, String sessionId, List<PantryChange> changes, List<PantryItem> updatedPantryItems, List<String> depletedItemIds, int nearExpiryUsedCount, double wasteAvoidedGrams
 });
 
 
@@ -337,17 +336,17 @@ class _$CookResultCopyWithImpl<$Res>
 
 /// Create a copy of CookResult
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? dishId = null,Object? dishName = null,Object? changes = null,Object? updatedPantryItems = null,Object? depletedItemIds = null,Object? nearExpiryUsedCount = null,Object? wasteAvoidedGrams = null,Object? leftoverServings = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? dishId = null,Object? dishName = null,Object? sessionId = null,Object? changes = null,Object? updatedPantryItems = null,Object? depletedItemIds = null,Object? nearExpiryUsedCount = null,Object? wasteAvoidedGrams = null,}) {
   return _then(_self.copyWith(
 dishId: null == dishId ? _self.dishId : dishId // ignore: cast_nullable_to_non_nullable
 as String,dishName: null == dishName ? _self.dishName : dishName // ignore: cast_nullable_to_non_nullable
+as String,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,changes: null == changes ? _self.changes : changes // ignore: cast_nullable_to_non_nullable
 as List<PantryChange>,updatedPantryItems: null == updatedPantryItems ? _self.updatedPantryItems : updatedPantryItems // ignore: cast_nullable_to_non_nullable
 as List<PantryItem>,depletedItemIds: null == depletedItemIds ? _self.depletedItemIds : depletedItemIds // ignore: cast_nullable_to_non_nullable
 as List<String>,nearExpiryUsedCount: null == nearExpiryUsedCount ? _self.nearExpiryUsedCount : nearExpiryUsedCount // ignore: cast_nullable_to_non_nullable
 as int,wasteAvoidedGrams: null == wasteAvoidedGrams ? _self.wasteAvoidedGrams : wasteAvoidedGrams // ignore: cast_nullable_to_non_nullable
-as double,leftoverServings: null == leftoverServings ? _self.leftoverServings : leftoverServings // ignore: cast_nullable_to_non_nullable
-as int,
+as double,
   ));
 }
 
@@ -432,10 +431,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String dishId,  String dishName,  List<PantryChange> changes,  List<PantryItem> updatedPantryItems,  List<String> depletedItemIds,  int nearExpiryUsedCount,  double wasteAvoidedGrams,  int leftoverServings)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String dishId,  String dishName,  String sessionId,  List<PantryChange> changes,  List<PantryItem> updatedPantryItems,  List<String> depletedItemIds,  int nearExpiryUsedCount,  double wasteAvoidedGrams)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CookResult() when $default != null:
-return $default(_that.dishId,_that.dishName,_that.changes,_that.updatedPantryItems,_that.depletedItemIds,_that.nearExpiryUsedCount,_that.wasteAvoidedGrams,_that.leftoverServings);case _:
+return $default(_that.dishId,_that.dishName,_that.sessionId,_that.changes,_that.updatedPantryItems,_that.depletedItemIds,_that.nearExpiryUsedCount,_that.wasteAvoidedGrams);case _:
   return orElse();
 
 }
@@ -453,10 +452,10 @@ return $default(_that.dishId,_that.dishName,_that.changes,_that.updatedPantryIte
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String dishId,  String dishName,  List<PantryChange> changes,  List<PantryItem> updatedPantryItems,  List<String> depletedItemIds,  int nearExpiryUsedCount,  double wasteAvoidedGrams,  int leftoverServings)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String dishId,  String dishName,  String sessionId,  List<PantryChange> changes,  List<PantryItem> updatedPantryItems,  List<String> depletedItemIds,  int nearExpiryUsedCount,  double wasteAvoidedGrams)  $default,) {final _that = this;
 switch (_that) {
 case _CookResult():
-return $default(_that.dishId,_that.dishName,_that.changes,_that.updatedPantryItems,_that.depletedItemIds,_that.nearExpiryUsedCount,_that.wasteAvoidedGrams,_that.leftoverServings);case _:
+return $default(_that.dishId,_that.dishName,_that.sessionId,_that.changes,_that.updatedPantryItems,_that.depletedItemIds,_that.nearExpiryUsedCount,_that.wasteAvoidedGrams);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -473,10 +472,10 @@ return $default(_that.dishId,_that.dishName,_that.changes,_that.updatedPantryIte
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String dishId,  String dishName,  List<PantryChange> changes,  List<PantryItem> updatedPantryItems,  List<String> depletedItemIds,  int nearExpiryUsedCount,  double wasteAvoidedGrams,  int leftoverServings)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String dishId,  String dishName,  String sessionId,  List<PantryChange> changes,  List<PantryItem> updatedPantryItems,  List<String> depletedItemIds,  int nearExpiryUsedCount,  double wasteAvoidedGrams)?  $default,) {final _that = this;
 switch (_that) {
 case _CookResult() when $default != null:
-return $default(_that.dishId,_that.dishName,_that.changes,_that.updatedPantryItems,_that.depletedItemIds,_that.nearExpiryUsedCount,_that.wasteAvoidedGrams,_that.leftoverServings);case _:
+return $default(_that.dishId,_that.dishName,_that.sessionId,_that.changes,_that.updatedPantryItems,_that.depletedItemIds,_that.nearExpiryUsedCount,_that.wasteAvoidedGrams);case _:
   return null;
 
 }
@@ -488,11 +487,12 @@ return $default(_that.dishId,_that.dishName,_that.changes,_that.updatedPantryIte
 
 
 class _CookResult extends CookResult {
-  const _CookResult({this.dishId = '', this.dishName = '', final  List<PantryChange> changes = const <PantryChange>[], final  List<PantryItem> updatedPantryItems = const <PantryItem>[], final  List<String> depletedItemIds = const <String>[], this.nearExpiryUsedCount = 0, this.wasteAvoidedGrams = 0, this.leftoverServings = 0}): _changes = changes,_updatedPantryItems = updatedPantryItems,_depletedItemIds = depletedItemIds,super._();
+  const _CookResult({this.dishId = '', this.dishName = '', this.sessionId = '', final  List<PantryChange> changes = const <PantryChange>[], final  List<PantryItem> updatedPantryItems = const <PantryItem>[], final  List<String> depletedItemIds = const <String>[], this.nearExpiryUsedCount = 0, this.wasteAvoidedGrams = 0}): _changes = changes,_updatedPantryItems = updatedPantryItems,_depletedItemIds = depletedItemIds,super._();
   
 
 @override@JsonKey() final  String dishId;
 @override@JsonKey() final  String dishName;
+@override@JsonKey() final  String sessionId;
  final  List<PantryChange> _changes;
 @override@JsonKey() List<PantryChange> get changes {
   if (_changes is EqualUnmodifiableListView) return _changes;
@@ -520,8 +520,6 @@ class _CookResult extends CookResult {
 
 @override@JsonKey() final  int nearExpiryUsedCount;
 @override@JsonKey() final  double wasteAvoidedGrams;
-/// Servings cooked but not eaten — offered as a leftover to save (D-06).
-@override@JsonKey() final  int leftoverServings;
 
 /// Create a copy of CookResult
 /// with the given fields replaced by the non-null parameter values.
@@ -533,16 +531,16 @@ _$CookResultCopyWith<_CookResult> get copyWith => __$CookResultCopyWithImpl<_Coo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CookResult&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&const DeepCollectionEquality().equals(other._changes, _changes)&&const DeepCollectionEquality().equals(other._updatedPantryItems, _updatedPantryItems)&&const DeepCollectionEquality().equals(other._depletedItemIds, _depletedItemIds)&&(identical(other.nearExpiryUsedCount, nearExpiryUsedCount) || other.nearExpiryUsedCount == nearExpiryUsedCount)&&(identical(other.wasteAvoidedGrams, wasteAvoidedGrams) || other.wasteAvoidedGrams == wasteAvoidedGrams)&&(identical(other.leftoverServings, leftoverServings) || other.leftoverServings == leftoverServings));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CookResult&&(identical(other.dishId, dishId) || other.dishId == dishId)&&(identical(other.dishName, dishName) || other.dishName == dishName)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&const DeepCollectionEquality().equals(other._changes, _changes)&&const DeepCollectionEquality().equals(other._updatedPantryItems, _updatedPantryItems)&&const DeepCollectionEquality().equals(other._depletedItemIds, _depletedItemIds)&&(identical(other.nearExpiryUsedCount, nearExpiryUsedCount) || other.nearExpiryUsedCount == nearExpiryUsedCount)&&(identical(other.wasteAvoidedGrams, wasteAvoidedGrams) || other.wasteAvoidedGrams == wasteAvoidedGrams));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,dishId,dishName,const DeepCollectionEquality().hash(_changes),const DeepCollectionEquality().hash(_updatedPantryItems),const DeepCollectionEquality().hash(_depletedItemIds),nearExpiryUsedCount,wasteAvoidedGrams,leftoverServings);
+int get hashCode => Object.hash(runtimeType,dishId,dishName,sessionId,const DeepCollectionEquality().hash(_changes),const DeepCollectionEquality().hash(_updatedPantryItems),const DeepCollectionEquality().hash(_depletedItemIds),nearExpiryUsedCount,wasteAvoidedGrams);
 
 @override
 String toString() {
-  return 'CookResult(dishId: $dishId, dishName: $dishName, changes: $changes, updatedPantryItems: $updatedPantryItems, depletedItemIds: $depletedItemIds, nearExpiryUsedCount: $nearExpiryUsedCount, wasteAvoidedGrams: $wasteAvoidedGrams, leftoverServings: $leftoverServings)';
+  return 'CookResult(dishId: $dishId, dishName: $dishName, sessionId: $sessionId, changes: $changes, updatedPantryItems: $updatedPantryItems, depletedItemIds: $depletedItemIds, nearExpiryUsedCount: $nearExpiryUsedCount, wasteAvoidedGrams: $wasteAvoidedGrams)';
 }
 
 
@@ -553,7 +551,7 @@ abstract mixin class _$CookResultCopyWith<$Res> implements $CookResultCopyWith<$
   factory _$CookResultCopyWith(_CookResult value, $Res Function(_CookResult) _then) = __$CookResultCopyWithImpl;
 @override @useResult
 $Res call({
- String dishId, String dishName, List<PantryChange> changes, List<PantryItem> updatedPantryItems, List<String> depletedItemIds, int nearExpiryUsedCount, double wasteAvoidedGrams, int leftoverServings
+ String dishId, String dishName, String sessionId, List<PantryChange> changes, List<PantryItem> updatedPantryItems, List<String> depletedItemIds, int nearExpiryUsedCount, double wasteAvoidedGrams
 });
 
 
@@ -570,17 +568,17 @@ class __$CookResultCopyWithImpl<$Res>
 
 /// Create a copy of CookResult
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? dishId = null,Object? dishName = null,Object? changes = null,Object? updatedPantryItems = null,Object? depletedItemIds = null,Object? nearExpiryUsedCount = null,Object? wasteAvoidedGrams = null,Object? leftoverServings = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? dishId = null,Object? dishName = null,Object? sessionId = null,Object? changes = null,Object? updatedPantryItems = null,Object? depletedItemIds = null,Object? nearExpiryUsedCount = null,Object? wasteAvoidedGrams = null,}) {
   return _then(_CookResult(
 dishId: null == dishId ? _self.dishId : dishId // ignore: cast_nullable_to_non_nullable
 as String,dishName: null == dishName ? _self.dishName : dishName // ignore: cast_nullable_to_non_nullable
+as String,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,changes: null == changes ? _self._changes : changes // ignore: cast_nullable_to_non_nullable
 as List<PantryChange>,updatedPantryItems: null == updatedPantryItems ? _self._updatedPantryItems : updatedPantryItems // ignore: cast_nullable_to_non_nullable
 as List<PantryItem>,depletedItemIds: null == depletedItemIds ? _self._depletedItemIds : depletedItemIds // ignore: cast_nullable_to_non_nullable
 as List<String>,nearExpiryUsedCount: null == nearExpiryUsedCount ? _self.nearExpiryUsedCount : nearExpiryUsedCount // ignore: cast_nullable_to_non_nullable
 as int,wasteAvoidedGrams: null == wasteAvoidedGrams ? _self.wasteAvoidedGrams : wasteAvoidedGrams // ignore: cast_nullable_to_non_nullable
-as double,leftoverServings: null == leftoverServings ? _self.leftoverServings : leftoverServings // ignore: cast_nullable_to_non_nullable
-as int,
+as double,
   ));
 }
 

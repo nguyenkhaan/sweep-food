@@ -36,4 +36,20 @@ enum StorageTier {
     (t) => t.name == value,
     orElse: () => StorageTier.fridge,
   );
+
+  /// Maps to the backend's `StorageMode` enum (`inventory` batches have no
+  /// "eat soon" concept — it collapses to `ROOM_TEMPERATURE`).
+  String get backendWire => switch (this) {
+    StorageTier.eatSoon => 'ROOM_TEMPERATURE',
+    StorageTier.fridge => 'REFRIGERATED',
+    StorageTier.freezer => 'FROZEN',
+    StorageTier.pantryShelf => 'DRY_SHELF',
+  };
+
+  static StorageTier fromBackendWire(String? value) => switch (value) {
+    'REFRIGERATED' => StorageTier.fridge,
+    'FROZEN' => StorageTier.freezer,
+    'DRY_SHELF' => StorageTier.pantryShelf,
+    _ => StorageTier.eatSoon, // ROOM_TEMPERATURE and unknowns
+  };
 }

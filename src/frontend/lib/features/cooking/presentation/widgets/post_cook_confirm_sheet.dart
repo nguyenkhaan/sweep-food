@@ -8,28 +8,40 @@ import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cooking_preview.dart';
 import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
 import 'package:sweepfood/features/cooking/presentation/widgets/custom_usage_sheet.dart';
-import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 
 /// D-03 — "Bạn đã nấu …?". Pick a consumption mode; exact/half/all deduct stock
-/// straight away, "Tự điều chỉnh" opens the per-ingredient sheet (D-04).
+/// straight away, "Tự điều chỉnh" opens the per-batch sheet (D-04). Needs an
+/// already-fetched [CookingPreview] (see `CookingController.previewForDish` /
+/// `previewForItem`) since even the mode picker's "recommended" copy and the
+/// custom sheet both need the preview's proposed deductions.
 class PostCookConfirmSheet extends ConsumerStatefulWidget {
-  const PostCookConfirmSheet({required this.dish, super.key});
+  const PostCookConfirmSheet({
+    required this.preview,
+    required this.dishName,
+    super.key,
+  });
 
-  final Dish dish;
+  final CookingPreview preview;
+  final String dishName;
 
   /// Opens the sheet, then routes to the cook-result screen (D-05/D-07) or the
   /// custom-usage sheet depending on what the user chose.
-  static Future<void> show(BuildContext context, {required Dish dish}) async {
+  static Future<void> show(
+    BuildContext context, {
+    required CookingPreview preview,
+    required String dishName,
+  }) async {
     final outcome = await showAppBottomSheet<_Outcome>(
       context,
-      builder: (_) => PostCookConfirmSheet(dish: dish),
+      builder: (_) => PostCookConfirmSheet(preview: preview, dishName: dishName),
     );
     if (outcome == null || !context.mounted) return;
     switch (outcome) {
       case _WantCustom():
-        await CustomUsageSheet.show(context, dish: dish);
+        await CustomUsageSheet.show(context, preview: preview, dishName: dishName);
       case _Cooked(:final result):
         context.push(Routes.cookResult, extra: result);
     }
@@ -61,12 +73,9 @@ class _State extends ConsumerState<PostCookConfirmSheet> {
       final result = await ref
           .read(cookingControllerProvider.notifier)
           .confirm(
-            CookConfirmation(
-              dishId: widget.dish.id,
-              mode: mode,
-              servingsCooked: widget.dish.servings,
-            ),
-            dishName: widget.dish.name,
+            preview: widget.preview,
+            mode: mode,
+            dishName: widget.dishName,
           );
       if (mounted) Navigator.of(context).pop(_Cooked(result));
     } catch (_) {
@@ -80,7 +89,7 @@ class _State extends ConsumerState<PostCookConfirmSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return SheetBody(
-      title: l10n.cookConfirmTitle(widget.dish.name),
+      title: l10n.cookConfirmTitle(widget.dishName),
       subtitle: l10n.cookConfirmSubtitle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -88,7 +97,7 @@ class _State extends ConsumerState<PostCookConfirmSheet> {
           _Option(
             icon: Icons.check_rounded,
             label: CookMode.exact.label(l10n),
-            description: l10n.cookExactWithServings(widget.dish.servings),
+            description: l10n.cookExactWithServings(widget.preview.servings.round()),
             recommended: true,
             enabled: !_busy,
             onTap: () => _confirm(CookMode.exact),

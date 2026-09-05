@@ -8,21 +8,27 @@ part of 'custom_usage_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// D-04 — per-ingredient "how much did you actually use" sliders, keyed by dish.
-/// Seeded from the scaled recipe amounts; the sheet edits each entry.
+/// D-04 — per-batch "how much did you actually use" sliders, keyed by
+/// `recipe_ingredient_id|batch_id` (a recipe ingredient can be split across
+/// more than one matched batch). Seeded from the preview's proposed
+/// deductions; the sheet edits each entry.
 
 @ProviderFor(CustomUsageController)
 final customUsageControllerProvider = CustomUsageControllerFamily._();
 
-/// D-04 — per-ingredient "how much did you actually use" sliders, keyed by dish.
-/// Seeded from the scaled recipe amounts; the sheet edits each entry.
+/// D-04 — per-batch "how much did you actually use" sliders, keyed by
+/// `recipe_ingredient_id|batch_id` (a recipe ingredient can be split across
+/// more than one matched batch). Seeded from the preview's proposed
+/// deductions; the sheet edits each entry.
 final class CustomUsageControllerProvider
     extends $NotifierProvider<CustomUsageController, Map<String, double>> {
-  /// D-04 — per-ingredient "how much did you actually use" sliders, keyed by dish.
-  /// Seeded from the scaled recipe amounts; the sheet edits each entry.
+  /// D-04 — per-batch "how much did you actually use" sliders, keyed by
+  /// `recipe_ingredient_id|batch_id` (a recipe ingredient can be split across
+  /// more than one matched batch). Seeded from the preview's proposed
+  /// deductions; the sheet edits each entry.
   CustomUsageControllerProvider._({
     required CustomUsageControllerFamily super.from,
-    required String super.argument,
+    required CookingPreview super.argument,
   }) : super(
          retry: null,
          name: r'customUsageControllerProvider',
@@ -65,10 +71,12 @@ final class CustomUsageControllerProvider
 }
 
 String _$customUsageControllerHash() =>
-    r'516b7c8b4d5744d11191d0cb0699a788bcef288e';
+    r'5c1769af6e1aa3b2efa083aa5f6f12802fb57511';
 
-/// D-04 — per-ingredient "how much did you actually use" sliders, keyed by dish.
-/// Seeded from the scaled recipe amounts; the sheet edits each entry.
+/// D-04 — per-batch "how much did you actually use" sliders, keyed by
+/// `recipe_ingredient_id|batch_id` (a recipe ingredient can be split across
+/// more than one matched batch). Seeded from the preview's proposed
+/// deductions; the sheet edits each entry.
 
 final class CustomUsageControllerFamily extends $Family
     with
@@ -77,7 +85,7 @@ final class CustomUsageControllerFamily extends $Family
           Map<String, double>,
           Map<String, double>,
           Map<String, double>,
-          String
+          CookingPreview
         > {
   CustomUsageControllerFamily._()
     : super(
@@ -88,24 +96,28 @@ final class CustomUsageControllerFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// D-04 — per-ingredient "how much did you actually use" sliders, keyed by dish.
-  /// Seeded from the scaled recipe amounts; the sheet edits each entry.
+  /// D-04 — per-batch "how much did you actually use" sliders, keyed by
+  /// `recipe_ingredient_id|batch_id` (a recipe ingredient can be split across
+  /// more than one matched batch). Seeded from the preview's proposed
+  /// deductions; the sheet edits each entry.
 
-  CustomUsageControllerProvider call(String dishId) =>
-      CustomUsageControllerProvider._(argument: dishId, from: this);
+  CustomUsageControllerProvider call(CookingPreview preview) =>
+      CustomUsageControllerProvider._(argument: preview, from: this);
 
   @override
   String toString() => r'customUsageControllerProvider';
 }
 
-/// D-04 — per-ingredient "how much did you actually use" sliders, keyed by dish.
-/// Seeded from the scaled recipe amounts; the sheet edits each entry.
+/// D-04 — per-batch "how much did you actually use" sliders, keyed by
+/// `recipe_ingredient_id|batch_id` (a recipe ingredient can be split across
+/// more than one matched batch). Seeded from the preview's proposed
+/// deductions; the sheet edits each entry.
 
 abstract class _$CustomUsageController extends $Notifier<Map<String, double>> {
-  late final _$args = ref.$arg as String;
-  String get dishId => _$args;
+  late final _$args = ref.$arg as CookingPreview;
+  CookingPreview get preview => _$args;
 
-  Map<String, double> build(String dishId);
+  Map<String, double> build(CookingPreview preview);
   @$mustCallSuper
   @override
   void runBuild() {

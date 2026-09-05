@@ -251,12 +251,21 @@ class _CookBarState extends ConsumerState<_CookBar> {
     if (_busy) return;
     setState(() => _busy = true);
     try {
-      await ref.read(cookingControllerProvider.notifier).confirm(
-        CookConfirmation(
-          dishId: widget.dish.id,
-          mode: CookMode.exact,
-          servingsCooked: widget.dish.servings,
-        ),
+      final controller = ref.read(cookingControllerProvider.notifier);
+      final preview = await controller.previewForDish(
+        dishId: widget.dish.id,
+        servings: widget.dish.servings.toDouble(),
+      );
+      if (preview.hasMissingIngredients) {
+        if (mounted) {
+          final names = preview.missingIngredients.map((m) => m.ingredientName).join(', ');
+          AppSnack.show(context, 'Thiếu nguyên liệu: $names');
+        }
+        return;
+      }
+      await controller.confirm(
+        preview: preview,
+        mode: CookMode.exact,
         dishName: widget.dish.name,
       );
       if (mounted) {

@@ -141,6 +141,9 @@ class AppL10nEn extends AppL10n {
   String get mealSlotDinner => 'Dinner';
 
   @override
+  String get mealSlotSnack => 'Snack';
+
+  @override
   String get mealTypeBreakfast => 'Breakfast';
 
   @override
@@ -377,9 +380,7 @@ class AppL10nEn extends AppL10n {
   String get cookResultTitle => 'Pantry updated';
 
   @override
-  String cookResultSaveLeftovers(int count) {
-    return 'Save $count leftover servings';
-  }
+  String get cookResultSaveLeftovers => 'Save leftovers';
 
   @override
   String get cookResultViewPantry => 'View pantry';
@@ -1704,12 +1705,6 @@ class AppL10nEn extends AppL10n {
   String get shoppingItemName => 'Item name';
 
   @override
-  String get shoppingCategoryOptional => 'Category (optional)';
-
-  @override
-  String get shoppingCategoryHint => 'Vegetables, Meat & seafood, …';
-
-  @override
   String get shoppingAddToList => 'Add to list';
 
   @override
@@ -1717,6 +1712,22 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get shoppingFromRecipe => 'From recipe';
+
+  @override
+  String get shoppingPurchaseTitle => 'Confirm purchase';
+
+  @override
+  String get shoppingPurchaseSubtitle =>
+      'This helps save it to your pantry as soon as you tick it bought.';
+
+  @override
+  String get shoppingPurchaseExpiryPick => 'Pick expiry date';
+
+  @override
+  String get shoppingPurchasePriceLabel => 'Price (VND, optional)';
+
+  @override
+  String get shoppingPurchaseConfirm => 'Confirm';
 
   @override
   String get subCurrentPlan => 'You\'re on';

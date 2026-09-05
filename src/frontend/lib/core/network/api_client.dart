@@ -14,13 +14,22 @@ abstract interface class ApiClient {
     String path, {
     Object? body,
     Map<String, dynamic>? query,
+    Map<String, String>? headers,
   });
 
   Future<dynamic> put(String path, {Object? body});
 
-  Future<dynamic> patch(String path, {Object? body});
+  Future<dynamic> patch(
+    String path, {
+    Object? body,
+    Map<String, String>? headers,
+  });
 
-  Future<dynamic> delete(String path, {Object? body});
+  Future<dynamic> delete(
+    String path, {
+    Object? body,
+    Map<String, String>? headers,
+  });
 
   Future<dynamic> postMultipart(
     String path, {

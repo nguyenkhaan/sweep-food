@@ -46,4 +46,17 @@ enum MeasurementUnit {
   /// Weight units combine numerically; count units don't.
   bool get isWeight =>
       this == MeasurementUnit.gram || this == MeasurementUnit.kilogram;
+
+  /// The backend `MeasurementUnit` enum token to send on writes. Units the
+  /// backend has no equivalent for (`qua`, `bo`, `hop`, …) collapse to `OTHER`
+  /// — a known display regression until the backend adds more units.
+  String get backendWire => switch (this) {
+    MeasurementUnit.gram => 'GRAM',
+    MeasurementUnit.kilogram => 'KG',
+    MeasurementUnit.milliliter => 'ML',
+    MeasurementUnit.liter => 'LITER',
+    MeasurementUnit.piece => 'PIECE',
+    MeasurementUnit.pack => 'PACK',
+    _ => 'OTHER',
+  };
 }

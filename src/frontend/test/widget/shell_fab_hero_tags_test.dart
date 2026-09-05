@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sweepfood/app/theme/app_theme.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_screen.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
+import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
 import 'package:sweepfood/features/shopping_list/presentation/screens/shopping_list_screen.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
 
@@ -21,6 +23,13 @@ void main() {
     for (final screen in const [PantryScreen(), ShoppingListScreen()]) {
       await tester.pumpWidget(
         ProviderScope(
+          overrides: [
+            // The Shopping FAB only shows once a list has been generated —
+            // stub one so this test can focus on the hero-tag invariant.
+            shoppingListControllerProvider.overrideWith(
+              () => _FakeShoppingListController(),
+            ),
+          ],
           child: MaterialApp(
             locale: const Locale('vi'),
             supportedLocales: AppL10n.supportedLocales,
@@ -44,4 +53,12 @@ void main() {
     expect(tags[1], isNotNull);
     expect(tags[0], isNot(equals(tags[1])));
   });
+}
+
+class _FakeShoppingListController extends ShoppingListController {
+  @override
+  Future<ShoppingList?> build() async => const ShoppingList(
+        id: 'sl1',
+        items: [],
+      );
 }

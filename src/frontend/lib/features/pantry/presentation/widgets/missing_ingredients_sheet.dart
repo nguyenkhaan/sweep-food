@@ -207,7 +207,6 @@ class _MissingIngredientsSheetState
             name: item.name,
             quantity: item.quantity,
             unit: item.unit,
-            category: 'Từ kho đồ',
           ),
         );
       }

@@ -221,12 +221,14 @@ final class PantryTierCountsProvider
 
 String _$pantryTierCountsHash() => r'f6d3fb4034b792509b52a99e19a1387b3ae6dca6';
 
-/// `GET /pantry/summary` (Home dashboard; also invalidated after mutations).
+/// Dashboard summary, computed client-side from the batch list (Home
+/// dashboard; also invalidated after mutations).
 
 @ProviderFor(pantrySummary)
 final pantrySummaryProvider = PantrySummaryProvider._();
 
-/// `GET /pantry/summary` (Home dashboard; also invalidated after mutations).
+/// Dashboard summary, computed client-side from the batch list (Home
+/// dashboard; also invalidated after mutations).
 
 final class PantrySummaryProvider
     extends
@@ -236,7 +238,8 @@ final class PantrySummaryProvider
           FutureOr<PantrySummary>
         >
     with $FutureModifier<PantrySummary>, $FutureProvider<PantrySummary> {
-  /// `GET /pantry/summary` (Home dashboard; also invalidated after mutations).
+  /// Dashboard summary, computed client-side from the batch list (Home
+  /// dashboard; also invalidated after mutations).
   PantrySummaryProvider._()
     : super(
         from: null,

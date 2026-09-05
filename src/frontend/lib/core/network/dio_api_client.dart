@@ -17,20 +17,42 @@ class DioApiClient implements ApiClient {
     String path, {
     Object? body,
     Map<String, dynamic>? query,
+    Map<String, String>? headers,
   }) async =>
-      (await _dio.post<dynamic>(path, data: body, queryParameters: query)).data;
+      (await _dio.post<dynamic>(
+        path,
+        data: body,
+        queryParameters: query,
+        options: headers == null ? null : Options(headers: headers),
+      )).data;
 
   @override
   Future<dynamic> put(String path, {Object? body}) async =>
       (await _dio.put<dynamic>(path, data: body)).data;
 
   @override
-  Future<dynamic> patch(String path, {Object? body}) async =>
-      (await _dio.patch<dynamic>(path, data: body)).data;
+  Future<dynamic> patch(
+    String path, {
+    Object? body,
+    Map<String, String>? headers,
+  }) async =>
+      (await _dio.patch<dynamic>(
+        path,
+        data: body,
+        options: headers == null ? null : Options(headers: headers),
+      )).data;
 
   @override
-  Future<dynamic> delete(String path, {Object? body}) async =>
-      (await _dio.delete<dynamic>(path, data: body)).data;
+  Future<dynamic> delete(
+    String path, {
+    Object? body,
+    Map<String, String>? headers,
+  }) async =>
+      (await _dio.delete<dynamic>(
+        path,
+        data: body,
+        options: headers == null ? null : Options(headers: headers),
+      )).data;
 
   @override
   Future<dynamic> postMultipart(

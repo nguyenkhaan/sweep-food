@@ -23,6 +23,10 @@ abstract final class AppConstants {
   static const kNotificationPrefs = 'pref.notification_prefs';
   static const kMealPlanWeekStart = 'pref.meal_plan_week_start';
 
+  /// The backend has no "list-all"/"active list" endpoint — the id from the
+  /// last successful `generate` is remembered locally instead.
+  static const kActiveShoppingListId = 'pref.active_shopping_list_id';
+
   /// SecureStorage keys.
   static const kAccessToken = 'auth.access_token';
   static const kRefreshToken = 'auth.refresh_token';

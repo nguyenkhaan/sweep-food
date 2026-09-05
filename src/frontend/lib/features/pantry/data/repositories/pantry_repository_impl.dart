@@ -17,6 +17,11 @@ PantryRepository pantryRepository(Ref ref) => PantryRepositoryImpl(
       PantryRemoteDataSource(ref.watch(apiClientProvider)),
     );
 
+/// The backend has no `/inventory/summary`-for-dashboard endpoint (its
+/// `GET /inventory/summary` only rolls up by ingredient, not storage tier or
+/// waste stats) — [summary] is computed client-side from the active batch
+/// list instead. `wasteReductionCount`/`wasteAvoidedKg` have no backend
+/// equivalent and are left at zero/null rather than fabricated.
 class PantryRepositoryImpl implements PantryRepository {
   PantryRepositoryImpl(this._remote);
 
@@ -40,8 +45,27 @@ class PantryRepositoryImpl implements PantryRepository {
       });
 
   @override
-  Future<Result<PantrySummary>> summary() =>
-      runGuarded(() async => (await _remote.summary()).toEntity());
+  Future<Result<PantrySummary>> summary() => runGuarded(() async {
+        final dtos = await _remote.list(
+          status: PantryItemStatus.active,
+          sort: PantrySort.priority,
+          page: 1,
+        );
+        final items = [for (final d in dtos) d.toEntity()];
+        final countByTier = <StorageTier, int>{};
+        for (final item in items) {
+          countByTier[item.storageTier] = (countByTier[item.storageTier] ?? 0) + 1;
+        }
+        final nearExpiry = items.where((i) => i.isNearExpiry()).toList()
+          ..sort((a, b) => (a.daysUntilExpiry ?? 0).compareTo(b.daysUntilExpiry ?? 0));
+        return PantrySummary(
+          totalCount: items.length,
+          countByTier: countByTier,
+          nearExpiry: nearExpiry,
+          wasteReductionCount: 0,
+          wasteAvoidedKg: null,
+        );
+      });
 
   @override
   Future<Result<PantryItem>> add(PantryItemDraft draft) =>

@@ -29,13 +29,27 @@ abstract final class ApiPaths {
   static const ingredients = '/ingredients';
   static String ingredient(String id) => '/ingredients/$id';
 
-  // Pantry
-  static const pantryItems = '/pantry/items';
-  static const pantryItemsBatch = '/pantry/items:batch';
-  static String pantryItem(String id) => '/pantry/items/$id';
-  static String pantryItemConsume(String id) => '/pantry/items/$id/consume';
-  static const pantrySummary = '/pantry/summary';
-  static const cookedFood = '/pantry/cooked-food';
+  // Inventory (real backend) — pantry screen reads/writes here. See
+  // api-contract.md §2.
+  static const inventoryBatches = '/inventory/batches';
+  static String inventoryBatch(String id) => '/inventory/batches/$id';
+  static String inventoryBatchAdjustments(String id) =>
+      '/inventory/batches/$id/adjustments';
+  static String inventoryBatchConsume(String id) =>
+      '/inventory/batches/$id/consume';
+  static String inventoryBatchMove(String id) =>
+      '/inventory/batches/$id/move';
+  static String inventoryBatchLedger(String id) =>
+      '/inventory/batches/$id/ledger';
+
+  // Cooking (real backend) — the 3-step flow: preview -> session -> complete.
+  // Always requires a meal_plan_item_id. See api-contract.md §6.
+  static const cookingPreview = '/cooking/preview';
+  static const cookingSessions = '/cooking/sessions';
+  static String cookingSessionComplete(String id) =>
+      '/cooking/sessions/$id/complete';
+  static String cookingSessionLeftovers(String id) =>
+      '/cooking/sessions/$id/leftovers';
 
   // Scan / ingest
   static const scanLabel = '/scan/label';
@@ -47,19 +61,24 @@ abstract final class ApiPaths {
   // Recipes (real backend) — the Dish detail screen reads from here.
   static String recipe(String id) => '/recipes/$id';
 
-  // Suggestions / dishes (still frontend-assumed / mock)
+  // Suggestions (still frontend-assumed / mock)
   static const suggestions = '/suggestions/dishes';
-  static String dish(String id) => '/dishes/$id';
-  static String cookDish(String id) => '/dishes/$id/cook';
 
-  // Meal plan
-  static const mealPlans = '/meal-plans';
-  static String mealPlan(String weekStart) => '/meal-plans/$weekStart';
+  // Meal plans (real backend) — no "current week" concept; FE creates/finds a
+  // plan per viewed week and manages items individually. See api-contract.md §7.
+  static const mealPlans = '/meal-plans'; // POST create (no trailing slash)
+  static const mealPlansList = '/meal-plans/'; // GET list (trailing slash)
+  static String mealPlan(String id) => '/meal-plans/$id';
+  static String mealPlanItems(String planId) => '/meal-plans/$planId/items';
+  static String mealPlanItem(String planId, String itemId) =>
+      '/meal-plans/$planId/items/$itemId';
 
-  // Shopping list
-  static const shoppingLists = '/shopping-lists';
+  // Shopping lists (real backend) — no "list all" / "active list" endpoint;
+  // FE remembers the last generated list id locally. See api-contract.md §8.
   static const shoppingListsGenerate = '/shopping-lists/generate';
   static String shoppingList(String id) => '/shopping-lists/$id';
+  static String shoppingListItems(String listId) =>
+      '/shopping-lists/$listId/items';
   static String shoppingListItem(String listId, String itemId) =>
       '/shopping-lists/$listId/items/$itemId';
 

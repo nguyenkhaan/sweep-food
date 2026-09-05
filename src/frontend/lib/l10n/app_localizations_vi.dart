@@ -141,6 +141,9 @@ class AppL10nVi extends AppL10n {
   String get mealSlotDinner => 'Tối';
 
   @override
+  String get mealSlotSnack => 'Ăn vặt';
+
+  @override
   String get mealTypeBreakfast => 'Bữa sáng';
 
   @override
@@ -374,9 +377,7 @@ class AppL10nVi extends AppL10n {
   String get cookResultTitle => 'Đã cập nhật kho';
 
   @override
-  String cookResultSaveLeftovers(int count) {
-    return 'Lưu $count phần ăn thừa';
-  }
+  String get cookResultSaveLeftovers => 'Lưu phần ăn thừa';
 
   @override
   String get cookResultViewPantry => 'Xem kho';
@@ -1692,12 +1693,6 @@ class AppL10nVi extends AppL10n {
   String get shoppingItemName => 'Tên món';
 
   @override
-  String get shoppingCategoryOptional => 'Danh mục (tùy chọn)';
-
-  @override
-  String get shoppingCategoryHint => 'Rau củ, Thịt & hải sản, …';
-
-  @override
   String get shoppingAddToList => 'Thêm vào danh sách';
 
   @override
@@ -1705,6 +1700,22 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get shoppingFromRecipe => 'Từ công thức';
+
+  @override
+  String get shoppingPurchaseTitle => 'Xác nhận đã mua';
+
+  @override
+  String get shoppingPurchaseSubtitle =>
+      'Thông tin này giúp lưu vào kho ngay khi bạn tick đã mua.';
+
+  @override
+  String get shoppingPurchaseExpiryPick => 'Chọn hạn sử dụng';
+
+  @override
+  String get shoppingPurchasePriceLabel => 'Giá (VNĐ, tùy chọn)';
+
+  @override
+  String get shoppingPurchaseConfirm => 'Xác nhận';
 
   @override
   String get subCurrentPlan => 'Bạn đang dùng';

@@ -29,11 +29,11 @@ void main() {
     await tester.binding.setSurfaceSize(const Size(400, 900));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    await tester.pumpWidget(_app('p1'));
+    await tester.pumpWidget(_app('b1'));
     await _settle(tester);
 
     expect(tester.takeException(), isNull);
-    // p1 = "Cải bó xôi" in assets/mock/pantry_items.json
+    // b1 = "Cải bó xôi" in assets/mock/inventory_batches.json
     expect(find.text('Cải bó xôi'), findsWidgets);
     expect(find.text('Chi tiết'), findsOneWidget);
     expect(find.text('Đã dùng hết'), findsOneWidget);

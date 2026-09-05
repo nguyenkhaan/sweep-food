@@ -7,8 +7,10 @@ import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
 import 'package:sweepfood/core/widgets/empty_state.dart';
 import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
+import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
 import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
 import 'package:sweepfood/features/shopping_list/presentation/widgets/add_shopping_item_sheet.dart';
+import 'package:sweepfood/features/shopping_list/presentation/widgets/purchase_detail_sheet.dart';
 import 'package:sweepfood/features/shopping_list/presentation/widgets/shopping_item_row.dart';
 
 /// B-01 Danh sách mua sắm — grouped by category, hide-in-stock toggle, check off,
@@ -21,10 +23,11 @@ class ShoppingListScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final async = ref.watch(shoppingListControllerProvider);
     final showInStock = ref.watch(shoppingListShowInStockProvider);
+    final hasList = async.hasValue && async.value != null;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.shoppingTitle)),
-      floatingActionButton: async.hasValue
+      floatingActionButton: hasList
           ? FloatingActionButton.extended(
               // Unique tag — see note on the Pantry FAB (shared IndexedStack
               // subtree ⇒ default FAB hero tags collide).
@@ -37,11 +40,11 @@ class ShoppingListScreen extends ConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () =>
             ref.read(shoppingListControllerProvider.notifier).refresh(),
-        child: AsyncValueWidget<ShoppingList>(
+        child: AsyncValueWidget<ShoppingList?>(
           value: async,
           onRetry: () => ref.invalidate(shoppingListControllerProvider),
           data: (list) {
-            if (list.items.isEmpty) {
+            if (list == null || list.items.isEmpty) {
               return ListView(
                 children: [
                   const SizedBox(height: 72),
@@ -100,9 +103,7 @@ class ShoppingListScreen extends ConsumerWidget {
                   for (final item in entry.value)
                     ShoppingItemRow(
                       item: item,
-                      onToggle: () => ref
-                          .read(shoppingListControllerProvider.notifier)
-                          .toggleChecked(item.id),
+                      onToggle: () => _toggleItem(context, ref, item),
                       onDismissed: item.isManual
                           ? () => ref
                                 .read(shoppingListControllerProvider.notifier)
@@ -138,5 +139,23 @@ class ShoppingListScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Checking an item (false→true) needs `purchase` details first — the
+  /// backend uses them to create the resulting inventory batch. Un-checking
+  /// needs none, so it's applied immediately.
+  Future<void> _toggleItem(
+    BuildContext context,
+    WidgetRef ref,
+    ShoppingListItem item,
+  ) async {
+    final notifier = ref.read(shoppingListControllerProvider.notifier);
+    if (item.checked) {
+      await notifier.toggleChecked(item.id);
+      return;
+    }
+    final purchase = await PurchaseDetailSheet.show(context);
+    if (purchase == null) return; // cancelled — stays unchecked
+    await notifier.toggleChecked(item.id, purchase: purchase);
   }
 }
