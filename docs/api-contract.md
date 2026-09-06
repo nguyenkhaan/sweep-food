@@ -9,41 +9,7 @@
 
 ---
 
-## 1. Authentication — `/auth`
-
-> Không đổi so với bản trước — đã khớp code BE. Xem chi tiết OTP MVP (BE trả OTP thẳng trong response, `ENV=dev|test` luôn là `123456`), token TTL, và toàn bộ endpoint đăng ký/đăng nhập/refresh/logout/reset mật khẩu tại mục này của bản gốc. Tóm tắt route:
-
-```text
-POST /auth/register                    { phone, password, name?, email? } -> { otp, expires_in_seconds }
-POST /auth/register/resend-otp         { phone } -> { otp, expires_in_seconds }
-POST /auth/verify/register             { phone, otp } -> text/plain
-POST /auth/login                       { phone, password } -> { access_token, refresh_token, token_type, access_expires_in_seconds, refresh_expires_in_seconds, session_id }
-POST /auth/token/refresh               { refresh_token } -> { access_token, token_type, access_expires_in_seconds }
-POST /auth/logout                      (auth) { refresh_token } -> text/plain
-GET  /auth/sessions                    (auth) -> [{ id, ip_address, user_agent, expires_at, created_at, last_used_at }]
-DELETE /auth/sessions/{session_id}     (auth) -> 204
-POST /auth/password/reset              { phone } -> { otp, expires_in_seconds }
-POST /auth/password/change             (auth, no body) -> { otp, expires_in_seconds }
-POST /auth/verify/change-password      { phone, otp, purpose: "RESET_PASSWORD"|"CHANGE_PASSWORD", new_password } -> { message }
-```
-
-## 2. Users / Account — `/users`
-
-> Không đổi — đã khớp code BE.
-
-```text
-GET   /users/me                                (auth) -> { user_id, roles: [] }
-GET   /users/profile                            (auth) -> { user_id, name, phone, phone_verified_at, email, email_verified_at, preferences: {} }
-PATCH /users/profile                            (auth) { name?, preferences? } -> UserProfile
-POST  /users/me/email/request-verification      (auth) { email } -> { otp, expires_in_seconds }
-POST  /users/me/email/verify                    (auth) { otp } -> text/plain
-POST  /users/me/phone/request-change            (auth) { phone } -> { otp, expires_in_seconds }
-POST  /users/me/phone/confirm-change            (auth) { otp } -> text/plain
-```
-
----
-
-## 3. Catalog — `/ingredients`
+## 1. Catalog — `/ingredients`
 
 > **[CẬP NHẬT]** Khác bản trước: `category` là **object**, param search là `q` (không phải `query`), nutrition/shelf-life chỉ có ở detail.
 
@@ -92,7 +58,7 @@ POST  /users/me/phone/confirm-change            (auth) { otp } -> text/plain
 
 ---
 
-## 4. Recipes — `/recipes`
+## 2. Recipes — `/recipes`
 
 > **[CẬP NHẬT]** Thay cho mục "Suggestions & Dishes" cũ. Đây là API duy nhất cho chi tiết món ăn — **không có** `/dishes/{id}`.
 
@@ -137,9 +103,9 @@ Không truyền `servings` → BE dùng `default_servings`. Trả về **định
 
 ---
 
-## 5. Recommendations — `POST /recommendations`
+## 3. Recommendations — `POST /recommendations`
 
-> **[MỚI — thay `/suggestions/dishes`]** BE hiện là **mock provider** (`analysis.is_mock: true`) — trả kết quả có thật từ catalog seed nhưng scoring chưa dùng inventory thật.
+> **[MỚI — thay `/suggestions/dishes`]** BE hiện là **mock provider** (`analysis.is_mock: true`)
 
 **Request:**
 ```json
@@ -173,9 +139,10 @@ Một chuỗi tự do duy nhất — **không có** field filter cấu trúc (`m
 ```
 `score_components` ↔ công thức PRD `0.4E + 0.3A + 0.2P + 0.1U`: `e=expiration_utilization`, `a=availability`, `p=preference_fit`, `u=purchase_minimization`. **Chỉ trả `recipe_id`+`recipe_name`, không nhúng recipe đầy đủ** — FE cần gọi thêm `GET /recipes/{recipe_id}` để lấy nutrition/instructions/ingredients cho card/detail.
 
+Yêu cầu tối cao: vẫn thực hiện việc mock dữ liệu response trả về 
 ---
 
-## 6. Cooking — `/cooking`
+## 4. Cooking — `/cooking`
 
 > **[CẬP NHẬT]** Thay cho `/dishes/{id}/cook`. Luồng 3 bước, **bắt buộc đi qua Meal Plan** — không có cách nấu trực tiếp 1 recipe mà không tạo meal-plan item trước.
 
@@ -206,7 +173,7 @@ GET  /cooking/history/{id}                              (auth) -> chi tiết 1 s
 
 ---
 
-## 7. Meal Plans — `/meal-plans`
+## 5. Meal Plans — `/meal-plans`
 
 > **[CẬP NHẬT]** Không có khái niệm "tuần hiện tại" hay `PUT` cả plan. Mỗi plan có `id`, khoảng ngày tự chọn (`starts_on`/`ends_on`), và các item được thêm/sửa/xoá riêng lẻ.
 
@@ -232,7 +199,7 @@ DELETE /meal-plans/{id}/items/{item_id}  (auth) -> 204
 
 ---
 
-## 8. Shopping Lists — `/shopping-lists`
+## 6. Shopping Lists — `/shopping-lists`
 
 > **[CẬP NHẬT]** **Không có** `GET /shopping-lists` (danh sách "hiện tại"). Chỉ có generate-từ-plan và đọc theo `id`. Mọi lệnh ghi cần header `Idempotency-Key`.
 
@@ -263,27 +230,7 @@ List: `{ "id", "meal_plan_id", "status": "ACTIVE|ARCHIVED", "generated_at", "ite
 
 ---
 
-## 9. Favorites — `/recipes/{id}/favorite`, `/favorite-recipes`, `/favorite-menus`
-
-> **[MỚI]** FE **chưa có tính năng này** — BE đã có đầy đủ.
-
-```text
-PUT    /recipes/{recipe_id}/favorite                        (auth) -> { recipe_id, is_favorite: true }
-DELETE /recipes/{recipe_id}/favorite                        (auth) -> gỡ lưu, không tiết lộ trạng thái user khác
-GET    /favorite-recipes                                     (auth, ?limit=&offset=) -> { items: [{recipe_id, recipe_name, recipe_description, media_url, created_at}], total, limit, offset }
-POST   /favorite-menus                                       (auth) { name, description? } -> menu rỗng (201)
-GET    /favorite-menus                                       (auth, ?limit=&offset=) -> { items: [{id, name, description, created_at, updated_at}], total, limit, offset }
-GET    /favorite-menus/{id}                                  (auth) -> menu + items: [{id, recipe_id, recipe_name, recipe_description, media_url, created_at}]
-PATCH  /favorite-menus/{id}                                  (auth) { name?, description? } -> menu
-DELETE /favorite-menus/{id}                                  (auth) -> 204
-POST   /favorite-menus/{id}/items                             (auth) { recipe_id } -> item (201)
-PATCH  /favorite-menus/{id}/items/{item_id}                   (auth) { recipe_id } -> item
-DELETE /favorite-menus/{id}/items/{item_id}                   (auth) -> 204
-```
-
----
-
-## 10. Inventory (Kho) — `/inventory`
+## 7. Inventory (Kho) — `/inventory`
 
 > **[CẬP NHẬT — thay toàn bộ mục "Pantry" `/pantry/*` cũ]** Model theo **batch** (không phải 1 hàng phẳng mỗi nguyên liệu), có ledger bất biến. **Mọi lệnh ghi bắt buộc header `Idempotency-Key`.**
 
@@ -337,7 +284,7 @@ Mọi datetime **bắt buộc có timezone**. Response batch:
 
 ---
 
-## 11. Extractions (Quét OCR/ASR/Barcode) — `/extractions`
+## 8. Extractions (Quét OCR/ASR/Barcode) — `/extractions`
 
 > **[CẬP NHẬT — thay mục "Multimodal Scan" `/scan/*` cũ]** Envelope chung, **`persisted` luôn `false`** — không endpoint nào ghi kho. `label`/`invoice`/`asr` là `multipart/form-data`; `barcode` là **query param**, không upload.
 
@@ -361,7 +308,7 @@ POST /extractions/barcode?barcode=<string>  (auth, không upload) -> BarcodeExtr
 
 ---
 
-## 12. Devices & Notifications
+## 9. Devices & Notifications
 
 > **[CẬP NHẬT]** Path device đổi, `read: bool` đổi thành `status` 3 trạng thái.
 
@@ -386,7 +333,7 @@ Notification chỉ được BE tạo tự động bởi job quét hạn hàng ng
 
 ---
 
-## 13. Reports — `/reports` — **[MOCK ONLY, BE chưa có]**
+## 10. Reports — `/reports` — **[MOCK ONLY, BE chưa có]**
 
 Giữ nguyên đề xuất cũ của FE làm tài liệu tham khảo khi BE triển khai — hiện `GET /reports/waste-reduction` **không tồn tại**, màn Báo cáo phải tiếp tục chạy mock cho tới khi BE bổ sung.
 
@@ -395,7 +342,7 @@ GET /reports/waste-reduction?period=week|month|year
 -> { "total_saved_kg": 1.4, "period": "month", "weekly_series": [0.2,0.5,0.3,0.4], "top_saved_ingredients": [{ "name": "string", "saved_kg": 0.5 }] }
 ```
 
-## 14. Subscription — `/subscription` — **[MOCK ONLY, BE chưa có]**
+## 11. Subscription — `/subscription` — **[MOCK ONLY, BE chưa có]**
 
 ```json
 GET  /subscription -> { "plan": "free|premium", "expires_at": "string|null" }
@@ -409,7 +356,6 @@ MVP mở hết tính năng (không gating) — 2 endpoint trên chỉ phục v�
 
 | # | Endpoint / mục | Ghi chú |
 |---|---|---|
-| 1 | `POST /recommendations` | Đang là mock provider (`is_mock: true`). FE sẽ nối khi có real scoring theo inventory; xin xác nhận roadmap để FE biết khi nào bỏ nhãn "gợi ý thử nghiệm" trên UI. |
 | 2 | `GET /shopping-lists` (list-all) | FE cần 1 cách lấy "shopping list đang active của tôi" mà không phải tự nhớ `list_id` (ví dụ sau khi cài lại app / đổi máy). Đề xuất: thêm `GET /shopping-lists?status=ACTIVE` trả list mới nhất theo user, hoặc field `active_shopping_list_id` trong response `GET /meal-plans/{id}`. |
 | 3 | `POST /cooking/sessions` yêu cầu `meal_plan_item_id` | Xác nhận đây là chủ đích sản phẩm (không "nấu nhanh" ngoài kế hoạch)? Nếu đúng, FE sẽ luôn tạo/dùng 1 meal-plan item ẩn khi user bấm "Đã nấu món này" từ màn Dish detail — xin BE xác nhận việc tự tạo meal-plan item kiểu này không vi phạm ràng buộc nghiệp vụ nào khác (ví dụ báo cáo/thống kê theo meal plan thật). |
 | 4 | `PATCH /shopping-lists/{list}/items/{item}` khi check item generated | Yêu cầu object `purchase` đầy đủ ngay trong request check — FE cần 1 form nhập tối thiểu (storage_mode + hạn dùng) trước khi tick, sẽ tăng số bước thao tác. Có thể chấp nhận default `storage_mode` theo `default_storage_mode` của ingredient để giảm bước? |
