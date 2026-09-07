@@ -13,6 +13,8 @@ import 'package:sweepfood/features/auth/presentation/screens/splash_screen.dart'
 import 'package:sweepfood/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
 import 'package:sweepfood/features/cooking/presentation/screens/cook_result_screen.dart';
+import 'package:sweepfood/features/cooking/presentation/screens/cooking_history_detail_screen.dart';
+import 'package:sweepfood/features/cooking/presentation/screens/cooking_history_screen.dart';
 import 'package:sweepfood/features/dishes/presentation/screens/dish_detail_screen.dart';
 import 'package:sweepfood/features/favorites/presentation/screens/favorite_menu_detail_screen.dart';
 import 'package:sweepfood/features/favorites/presentation/screens/favorites_screen.dart';
@@ -255,6 +257,18 @@ GoRouter appRouter(Ref ref) {
         parentNavigatorKey: _rootKey,
         builder: (context, state) =>
             CookResultScreen(result: state.extra! as CookResult),
+      ),
+      GoRoute(
+        path: Routes.cookHistory,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const CookingHistoryScreen(),
+      ),
+      GoRoute(
+        path: Routes.cookHistoryDetail,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => CookingHistoryDetailScreen(
+          sessionId: state.pathParameters['id']!,
+        ),
       ),
       GoRoute(
         path: Routes.notifications,

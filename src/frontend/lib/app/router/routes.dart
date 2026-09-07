@@ -35,6 +35,8 @@ abstract final class Routes {
 
   // Misc pushed screens
   static const cookResult = '/cook-result';
+  static const cookHistory = '/cook-history';
+  static const cookHistoryDetail = '/cook-history/:id';
   static const notifications = '/notifications';
   static const paywall = '/paywall';
   static const reports = '/reports';

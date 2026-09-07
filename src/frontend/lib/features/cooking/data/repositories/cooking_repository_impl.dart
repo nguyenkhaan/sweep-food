@@ -5,6 +5,7 @@ import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/cooking/data/datasources/cooking_remote_data_source.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cooking_history.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cooking_preview.dart';
 import 'package:sweepfood/features/cooking/domain/repositories/cooking_repository.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
@@ -42,4 +43,16 @@ class CookingRepositoryImpl implements CookingRepository {
   Future<Result<PantryItem>> saveLeftover(CookedFood food) => runGuarded(
         () async => (await _remote.saveLeftover(food)).toEntity(food.dishName),
       );
+
+  @override
+  Future<Result<List<CookingHistoryEntry>>> history() => runGuarded(
+        () async => (await _remote.history())
+            .items
+            .map((e) => e.toEntity())
+            .toList(),
+      );
+
+  @override
+  Future<Result<CookingHistoryDetail>> historyDetail(String sessionId) =>
+      runGuarded(() async => (await _remote.historyDetail(sessionId)).toEntity());
 }

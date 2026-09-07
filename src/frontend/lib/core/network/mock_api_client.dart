@@ -434,6 +434,38 @@ class MockApiClient implements ApiClient {
 
   final _cookingSessions = <Map<String, dynamic>>[];
 
+  /// One canned completed session so the history screen has content without
+  /// having to cook something first in the demo.
+  final _cookingHistory = <Map<String, dynamic>>[
+    {
+      'session_id': 'mock-hist-1',
+      'recipe_id': 'd1',
+      'recipe_name': 'Salad bơ ức gà',
+      'meal_plan_item_id': null,
+      'servings': 2.0,
+      'status': 'COMPLETED',
+      'consumption_mode': 'EXACT',
+      'completed_at': DateTime.now()
+          .subtract(const Duration(days: 3))
+          .toIso8601String(),
+      'leftover_batch_id': null,
+      'consumptions': <Map<String, dynamic>>[
+        {
+          'recipe_ingredient_id': 'ri2',
+          'inventory_batch_id': 'b3',
+          'quantity': 200.0,
+          'unit': 'GRAM',
+        },
+        {
+          'recipe_ingredient_id': 'ri3',
+          'inventory_batch_id': 'b2',
+          'quantity': 100.0,
+          'unit': 'GRAM',
+        },
+      ],
+    },
+  ];
+
   Map<String, dynamic>? _findMealPlanItem(String itemId) {
     for (final plan in _mealPlans) {
       for (final item in (plan['items'] as List).cast<Map<String, dynamic>>()) {
@@ -534,6 +566,7 @@ class MockApiClient implements ApiClient {
     final consumptions =
         (body['consumptions'] as List?)?.cast<Map<String, dynamic>>();
 
+    final recordedConsumptions = <Map<String, dynamic>>[];
     for (final d in matched.proposed) {
       final idx = items.indexWhere((b) => b['id'] == d['batch_id']);
       if (idx < 0) continue;
@@ -558,7 +591,26 @@ class MockApiClient implements ApiClient {
       batch['current_quantity'] = next;
       batch['status'] = next <= 0 ? 'DEPLETED' : 'ACTIVE';
       batch['updated_at'] = DateTime.now().toIso8601String();
+      recordedConsumptions.add({
+        'recipe_ingredient_id': d['recipe_ingredient_id'],
+        'inventory_batch_id': d['batch_id'],
+        'quantity': used,
+        'unit': d['unit'],
+      });
     }
+
+    _cookingHistory.insert(0, {
+      'session_id': sessionId,
+      'recipe_id': recipe['id'],
+      'recipe_name': recipe['name'],
+      'meal_plan_item_id': session['meal_plan_item_id'],
+      'servings': item['servings'],
+      'status': 'COMPLETED',
+      'consumption_mode': mode ?? 'EXACT',
+      'completed_at': DateTime.now().toIso8601String(),
+      'leftover_batch_id': null,
+      'consumptions': recordedConsumptions,
+    });
     return session;
   }
 
@@ -569,8 +621,14 @@ class MockApiClient implements ApiClient {
     Map<String, dynamic> body,
   ) {
     final now = DateTime.now().toIso8601String();
+    final batchId = 'mock-${_autoId++}';
+    final hist = _cookingHistory.cast<Map<String, dynamic>?>().firstWhere(
+          (h) => h!['session_id'] == sessionId,
+          orElse: () => null,
+        );
+    if (hist != null) hist['leftover_batch_id'] = batchId;
     return {
-      'batch_id': 'mock-${_autoId++}',
+      'batch_id': batchId,
       'cooking_session_id': sessionId,
       'batch_type': 'COOKED_FOOD',
       'quantity': body['quantity'],
@@ -578,6 +636,31 @@ class MockApiClient implements ApiClient {
       'storage_mode': body['storage_mode'] ?? 'REFRIGERATED',
       'expires_at': body['expires_at'],
       'created_at': now,
+    };
+  }
+
+  Map<String, dynamic> _cookingHistoryDetail(String sessionId) {
+    final h = _cookingHistory.firstWhere(
+      (e) => e['session_id'] == sessionId,
+      orElse: () =>
+          throw MockFixtureException('Không có cooking session "$sessionId"'),
+    );
+    return {
+      'session': {
+        'id': h['session_id'],
+        'recipe_id': h['recipe_id'],
+        'meal_plan_item_id': h['meal_plan_item_id'],
+        'servings': h['servings'],
+        'status': h['status'],
+        'consumption_mode': h['consumption_mode'],
+        'nutrition_snapshot': <String, dynamic>{},
+        'completed_at': h['completed_at'],
+      },
+      'recipe_id': h['recipe_id'],
+      'recipe_name': h['recipe_name'],
+      'consumptions': h['consumptions'],
+      'leftover_batch_id': h['leftover_batch_id'],
+      'completed_at': h['completed_at'],
     };
   }
 
@@ -602,6 +685,13 @@ class MockApiClient implements ApiClient {
     }
     if (path.startsWith('/shopping-lists/') && !path.contains('/items')) {
       return _clone(_findShoppingList(path.substring('/shopping-lists/'.length)));
+    }
+    if (path == ApiPaths.cookingHistory) {
+      return {'items': _clone(_cookingHistory)};
+    }
+    if (path.startsWith('${ApiPaths.cookingHistory}/')) {
+      final id = path.substring('${ApiPaths.cookingHistory}/'.length);
+      return _clone(_cookingHistoryDetail(id));
     }
     if (path == ApiPaths.favoriteRecipes) {
       final items = _favoriteRecipeIds.map((id) => {

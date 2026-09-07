@@ -50,6 +50,8 @@ abstract final class ApiPaths {
       '/cooking/sessions/$id/complete';
   static String cookingSessionLeftovers(String id) =>
       '/cooking/sessions/$id/leftovers';
+  static const cookingHistory = '/cooking/history';
+  static String cookingHistoryDetail(String id) => '/cooking/history/$id';
 
   // Extractions (real backend) — see api-contract.md §11
   static const extractionOcrLabel = '/extractions/ocr/label';

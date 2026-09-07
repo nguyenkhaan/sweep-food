@@ -69,6 +69,11 @@ class SettingsHomeScreen extends ConsumerWidget {
                 onTap: () => context.push(Routes.favorites),
               ),
               SettingsRow(
+                icon: Icons.history_rounded,
+                label: 'Lịch sử nấu ăn',
+                onTap: () => context.push(Routes.cookHistory),
+              ),
+              SettingsRow(
                 icon: Icons.insights_rounded,
                 label: l10n.settingsWasteReport,
                 onTap: () => context.push(Routes.reports),

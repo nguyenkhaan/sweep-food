@@ -735,6 +735,38 @@
       "y": 23440,
       "w": 400,
       "h": 900
+    },
+    {
+      "file": "CookHistory.dc.html",
+      "title": "Lịch sử nấu ăn (D-08) · Sáng",
+      "x": 3640,
+      "y": 12800,
+      "w": 400,
+      "h": 760
+    },
+    {
+      "file": "CookHistoryDark.dc.html",
+      "title": "Lịch sử nấu ăn (D-08) · Tối",
+      "x": 3640,
+      "y": 14500,
+      "w": 400,
+      "h": 760
+    },
+    {
+      "file": "CookHistoryDetail.dc.html",
+      "title": "Chi tiết phiên nấu (D-09) · Sáng",
+      "x": 4160,
+      "y": 12800,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "CookHistoryDetailDark.dc.html",
+      "title": "Chi tiết phiên nấu (D-09) · Tối",
+      "x": 4160,
+      "y": 14500,
+      "w": 400,
+      "h": 900
     }
   ],
   "annotations": [
