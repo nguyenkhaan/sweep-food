@@ -1,0 +1,1 @@
+"""Waste-reduction reporting module."""

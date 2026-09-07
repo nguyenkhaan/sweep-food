@@ -49,16 +49,25 @@ from src.module.cooking.cooking_helper import (
     MealPlanItemNotFoundError,
     RecipeNotFoundError,
 )
+from src.module.reports.report_service import stage_waste_reduction_events
 from src.service.fefo_service import FEFOService
 
 
 class CookingService:
     """Orchestrate ownership-safe cooking queries and one transaction per completion."""
 
-    def __init__(self, db_session: AsyncSession, fefo_service: FEFOService) -> None:
+    def __init__(
+        self,
+        db_session: AsyncSession,
+        fefo_service: FEFOService,
+        warning_days: int = 3,
+    ) -> None:
         """Store the request-scoped database session and cooking helpers."""
+        if warning_days < 0:
+            raise ValueError("warning_days must be non-negative")
         self.db_session = db_session
         self.helper = CookingHelper(db_session, fefo_service)
+        self.warning_days = warning_days
 
     async def preview(
         self,
@@ -195,22 +204,33 @@ class CookingService:
                 request,
             )
             cooking_session.idempotency_key = idempotency_key
-            response = self.helper.apply_completion(
+            completion = self.helper.apply_completion(
                 cooking_session,
                 recipe,
+                recipe_ingredients,
                 locked_batches,
                 resolved_consumptions,
                 request.consumption_mode,
             )
+            completed_at = cooking_session.completed_at
+            if completed_at is None:
+                raise ValueError("Cooking completion timestamp is missing")
+            await self.db_session.flush()
+            stage_waste_reduction_events(
+                self.db_session,
+                completion.waste_reduction_snapshots,
+                consumed_at=completed_at,
+                warning_days=self.warning_days,
+            )
             meal_plan_item.status = MealPlanItemStatus.COMPLETED
             await self.db_session.commit()
-            return response
+            return completion.response
         except IntegrityError as error:
             await self.db_session.rollback()
             raise CookingCompletionConflictError(
                 "Cooking completion was already submitted",
             ) from error
-        except (CookingDomainError, SQLAlchemyError):
+        except (CookingDomainError, SQLAlchemyError, ValueError):
             await self.db_session.rollback()
             raise
 

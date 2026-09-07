@@ -10,9 +10,10 @@ from typing import cast
 from uuid import UUID
 
 import pytest
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.model.base import generate_uuid7
 from src.model.cooking_consumption_model import CookingConsumptionModel
 from src.model.cooking_session_model import CookingSessionModel
 from src.model.enum_model import (
@@ -35,6 +36,7 @@ from src.model.meal_plan_item_model import MealPlanItemModel
 from src.model.meal_plan_model import MealPlanModel
 from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
+from src.model.waste_reduction_event_model import WasteReductionEventModel
 from src.module.cooking.cooking_dto import (
     CompleteCookingSessionRequestDTO,
     CreateCookingSessionRequestDTO,
@@ -109,6 +111,7 @@ class FakeDatabaseSession:
     commit_count: int = 0
     rollback_count: int = 0
     raise_integrity_error_on_commit: bool = False
+    raise_event_write_error: bool = False
 
     async def execute(
         self,
@@ -119,6 +122,11 @@ class FakeDatabaseSession:
 
     def add(self, record: object) -> None:
         """Record a pending insert in the transaction."""
+        if self.raise_event_write_error and isinstance(
+            record,
+            WasteReductionEventModel,
+        ):
+            raise SQLAlchemyError("waste event insert failed")
         if isinstance(record, CookingSessionModel):
             record.id = SESSION_ID
         self.added.append(record)
@@ -128,6 +136,12 @@ class FakeDatabaseSession:
         if self.raise_integrity_error_on_commit:
             raise IntegrityError("statement", {}, Exception("unique constraint violation"))
         self.commit_count += 1
+
+    async def flush(self) -> None:
+        """Assign IDs as a database flush would before evidence is staged."""
+        for record in self.added:
+            if isinstance(record, InventoryLedgerEntryModel) and record.id is None:
+                record.id = generate_uuid7()
 
     async def rollback(self) -> None:
         """Record a failed transaction rollback."""
@@ -295,7 +309,7 @@ async def test_complete_session_atomically_deducts_and_records_ledger() -> None:
     assert response.updated_batches[0].current_quantity == 0.5
     assert database.commit_count == 1
     assert database.rollback_count == 0
-    assert len(database.added) == 2
+    assert len(database.added) == 3
     assert isinstance(database.added[0], CookingConsumptionModel)
     assert isinstance(database.added[1], InventoryLedgerEntryModel)
     ledger_entry = database.added[1]
@@ -303,6 +317,10 @@ async def test_complete_session_atomically_deducts_and_records_ledger() -> None:
     assert ledger_entry.quantity_before == 1.0
     assert ledger_entry.quantity_delta == -0.5
     assert ledger_entry.quantity_after == 0.5
+    waste_event = database.added[2]
+    assert isinstance(waste_event, WasteReductionEventModel)
+    assert waste_event.is_eligible is False
+    assert waste_event.exclusion_reason == "UNSUPPORTED_UNIT"
 
 
 @pytest.mark.anyio
@@ -320,6 +338,27 @@ async def test_complete_session_marks_its_meal_plan_item_completed() -> None:
     )
 
     assert meal_plan_item.status is MealPlanItemStatus.COMPLETED
+
+
+@pytest.mark.anyio
+async def test_complete_session_rolls_back_when_staging_waste_evidence_fails() -> None:
+    """Evidence failures prevent the transaction from committing a completion."""
+    database = build_completion_database(build_batch())
+    database.raise_event_write_error = True
+    service = CookingService(cast(AsyncSession, database), FEFOService())
+
+    with pytest.raises(SQLAlchemyError, match="waste event insert failed"):
+        await service.complete_session(
+            USER_ID,
+            SESSION_ID,
+            "waste-event-write-error",
+            CompleteCookingSessionRequestDTO(
+                consumption_mode=CookingConsumptionMode.EXACT,
+            ),
+        )
+
+    assert database.commit_count == 0
+    assert database.rollback_count == 1
 
 
 @pytest.mark.anyio

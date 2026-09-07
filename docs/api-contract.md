@@ -337,14 +337,50 @@ Notification chỉ được BE tạo tự động bởi job quét hạn hàng ng
 
 ---
 
-## 10. Reports — `/reports` — **[MOCK ONLY, BE chưa có]**
+## 10. Reports — `/reports`
 
-Giữ nguyên đề xuất cũ của FE làm tài liệu tham khảo khi BE triển khai — hiện `GET /reports/waste-reduction` **không tồn tại**, màn Báo cáo phải tiếp tục chạy mock cho tới khi BE bổ sung.
+`GET /reports/waste-reduction?period=week|month|year` yêu cầu Bearer token. `period` mặc định là `month`; giá trị khác trả 422 error envelope chung. Endpoint trả số liệu thật từ evidence snapshot, không dùng mock hoặc suy ngược hạn dùng hiện tại từ inventory batch.
+
+Metric `near-expiry-v1` là **ước tính khối lượng nguyên liệu thô đã được dùng khi sắp hết hạn**. Một event chỉ được cộng khi là `COOKING_CONSUMPTION` đã snapshot lúc completion, batch là `RAW_INGREDIENT`, hạn dùng đã biết, chưa qua ngày hết hạn theo `Asia/Ho_Chi_Minh`, nằm trong warning window và unit là `GRAM` hoặc `KG`. `GRAM` chia 1000; `KG` giữ nguyên. Không quy đổi `ML`, `LITER`, `PIECE`, `PACK` hoặc `OTHER` khi chưa có density/mass. Không cộng leftover cooked food, manual consumption, discard hoặc ledger event khác.
+
+Thứ tự lý do loại là: `COOKED_FOOD` → `UNKNOWN_EXPIRATION` → `EXPIRED` → `OUTSIDE_WARNING_WINDOW` → `UNSUPPORTED_UNIT`. Evidence vẫn được ghi cho event bị loại để phân biệt với lịch sử chưa có evidence. `warning_days` là cấu hình inventory hiện hành tại lúc completion; ngày hết hạn trùng ngày local của completion vẫn chưa bị xem là expired.
+
+Kỳ luôn là kỳ lịch hiện tại theo `Asia/Ho_Chi_Minh`: tuần bắt đầu thứ Hai, tháng từ ngày 1, năm từ 01/01. Khoảng query là nửa mở `[period_start, period_end)`, với `period_end` là thời điểm request. `weekly_series` gom theo các tuần thứ Hai giao với kỳ, gồm số 0 cho mọi tuần đã bắt đầu chưa có event; `weekly_labels` là ngày Thứ Hai tương ứng và có thể nằm trước ngày đầu tháng/năm. Mọi kilogram công khai làm tròn `ROUND_HALF_UP` đến 0,001 kg sau khi cộng tổng. `top_saved_ingredients` lấy tối đa 5 identity theo kg giảm dần, phá hòa ổn định theo identity và hiển thị tên snapshot mới nhất trong kỳ; `total_saved_kg` vẫn là tổng của mọi ingredient hợp lệ, không chỉ top 5.
 
 ```json
-GET /reports/waste-reduction?period=week|month|year
--> { "total_saved_kg": 1.4, "period": "month", "weekly_series": [0.2,0.5,0.3,0.4], "top_saved_ingredients": [{ "name": "string", "saved_kg": 0.5 }] }
+GET /reports/waste-reduction?period=month
+-> {
+     "total_saved_kg": "1.601",
+     "period": "month",
+     "weekly_series": ["1.601"],
+     "top_saved_ingredients": [
+       { "name": "Cà chua", "saved_kg": "1.5" },
+       { "name": "Rau bina", "saved_kg": "0.101" }
+     ],
+     "weekly_labels": ["2026-08-31"],
+     "period_start": "2026-09-01T00:00:00+07:00",
+     "period_end": "2026-09-03T12:00:00+07:00",
+     "timezone": "Asia/Ho_Chi_Minh",
+     "coverage": {
+       "data_from": "2026-09-01T08:00:00Z",
+       "missing_evidence_count": 2,
+       "unsupported_unit_count": 1
+     }
+   }
 ```
+
+Các giá trị kg là Decimal, nên client phải chấp nhận JSON number hoặc string Decimal. `coverage.data_from` là `consumed_at` evidence v1 sớm nhất của user, hoặc `null` khi chưa có evidence. `missing_evidence_count` là số negative `COOKING_CONSUMPTION` của session completed trong kỳ chưa có evidence v1. `unsupported_unit_count` đếm mọi event v1 trong kỳ có `mass_kg=null`, kể cả khi một lý do loại có priority cao hơn unsupported unit.
+
+Ví dụ tính tay với warning window 3 ngày:
+
+- Không có evidence: tổng 0, top rỗng, series vẫn có 0 cho các tuần đã bắt đầu và `data_from=null`.
+- Dùng 500 GRAM raw, hết hạn cùng ngày hoặc sau 2 ngày: eligible, đóng góp 0,5 kg.
+- Dùng raw KG nhưng hạn dùng ở ngày local trước completion: `EXPIRED`, không đóng góp.
+- Dùng raw KG không có hạn: `UNKNOWN_EXPIRATION`, không đóng góp.
+- Dùng raw LITER trong warning window: `UNSUPPORTED_UNIT`, `mass_kg=null`, không đóng góp.
+- Dùng cooked leftover, dù có/không có hạn hoặc unit không đổi được: `COOKED_FOOD`, không đóng góp.
+
+FE tiếp tục giữ mock cho tới Checkpoint Phase 5: migration DB-02 phải được người phụ trách tạo và áp dụng, sau đó evidence writer/reader cần được kiểm chứng trên database test biệt lập.
 
 ## 11. Subscription — `/subscription` — **[MOCK ONLY, BE chưa có]**
 

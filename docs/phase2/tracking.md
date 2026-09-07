@@ -49,13 +49,13 @@
 
 ## Phase 5
 
-- [ ] Task 5.1 — Chốt metric và response Reports
-- [ ] Task 5.2 — Viết WasteReductionEventModel
+- [x] Task 5.1 — Chốt metric và response Reports
+- [x] Task 5.2 — Viết WasteReductionEventModel
 - [ ] Task 5.3 — Tạo migration DB-02 waste_reduction_events
-- [ ] Task 5.4 — Viết logic phân loại và snapshot waste event
-- [ ] Task 5.5 — Ghi event trong cooking completion transaction
-- [ ] Task 5.6 — Viết Report DTO và aggregate service
-- [ ] Task 5.7 — Setup module và route GET reports/waste-reduction
+- [x] Task 5.4 — Viết logic phân loại và snapshot waste event
+- [x] Task 5.5 — Ghi event trong cooking completion transaction
+- [x] Task 5.6 — Viết Report DTO và aggregate service
+- [x] Task 5.7 — Setup module và route GET reports/waste-reduction
 
 ## Phase 6
 
