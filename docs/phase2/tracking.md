@@ -18,9 +18,9 @@
 
 ## Phase 1
 
-- [ ] Task 1.1 — Chuẩn hóa error envelope cho OCR/ASR
-- [ ] Task 1.2 — Đồng bộ HTTP status đăng ký device
-- [ ] Task 1.3 — Cố định response và thứ tự GET meal plans
+- [x] Task 1.1 — Chuẩn hóa error envelope cho OCR/ASR
+- [x] Task 1.2 — Đồng bộ HTTP status đăng ký device
+- [x] Task 1.3 — Cố định response và thứ tự GET meal plans
 
 ## Phase 2
 
