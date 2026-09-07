@@ -6,7 +6,7 @@ from decimal import Decimal
 from uuid import UUID
 
 from fastapi import HTTPException, status
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -29,8 +29,11 @@ from src.module.inventory.inventory_service import InventoryService
 from src.module.shopping_lists.shopping_dto import (
     CreateShoppingItemRequestDTO,
     GenerateShoppingListRequestDTO,
+    ShoppingListCollectionResponseDTO,
     ShoppingListDTO,
     ShoppingListItemDTO,
+    ShoppingListQueryDTO,
+    ShoppingListSummaryDTO,
     ShoppingPurchaseDTO,
     UpdateShoppingListItemRequestDTO,
 )
@@ -169,6 +172,50 @@ class ShoppingService:
             await self.db_session.rollback()
             raise
 
+    async def list_lists(
+        self,
+        user_id: UUID,
+        query: ShoppingListQueryDTO,
+    ) -> ShoppingListCollectionResponseDTO:
+        """List one user's shopping-list metadata in deterministic newest-first order."""
+        filters = [ShoppingListModel.user_id == user_id]
+        if query.list_status is not None:
+            filters.append(ShoppingListModel.status == query.list_status)
+        if query.meal_plan_id is not None:
+            filters.append(ShoppingListModel.meal_plan_id == query.meal_plan_id)
+        try:
+            total = int(
+                (
+                    await self.db_session.execute(
+                        select(func.count())
+                        .select_from(ShoppingListModel)
+                        .where(*filters)
+                    )
+                ).scalar_one()
+            )
+            result = await self.db_session.execute(
+                select(ShoppingListModel)
+                .where(*filters)
+                .order_by(
+                    ShoppingListModel.created_at.desc(),
+                    ShoppingListModel.id.desc(),
+                )
+                .offset(query.offset)
+                .limit(query.limit)
+            )
+            return ShoppingListCollectionResponseDTO(
+                items=[
+                    self._to_summary_dto(shopping_list)
+                    for shopping_list in result.scalars().all()
+                ],
+                total=total,
+                limit=query.limit,
+                offset=query.offset,
+            )
+        except SQLAlchemyError:
+            await self.db_session.rollback()
+            raise
+
     async def add_item(
         self,
         user_id: UUID,
@@ -219,7 +266,13 @@ class ShoppingService:
             if body.estimated_cost is not None:
                 self._update_manual_cost(item, body.estimated_cost)
             if body.checked is True:
-                await self._check_item(user_id, item, body.purchase, idempotency_key)
+                await self._check_item(
+                    user_id,
+                    item,
+                    ingredient,
+                    body.purchase,
+                    idempotency_key,
+                )
             elif body.checked is False:
                 item.is_checked = False
             await self.db_session.commit()
@@ -257,6 +310,7 @@ class ShoppingService:
         self,
         user_id: UUID,
         item: ShoppingListItemModel,
+        ingredient: MasterIngredientModel | None,
         purchase: ShoppingPurchaseDTO | None,
         idempotency_key: str,
     ) -> None:
@@ -269,7 +323,7 @@ class ShoppingService:
         quantity = item.missing_quantity if self._is_generated(item) else item.required_quantity
         batch = await self.inventory_service.stage_batch(
             user_id,
-            self._purchase_batch_request(item, quantity, purchase),
+            self._purchase_batch_request(item, ingredient, quantity, purchase),
             f"{idempotency_key}:{item.id}",
             reason="Shopping item purchase",
         )
@@ -486,15 +540,39 @@ class ShoppingService:
     @staticmethod
     def _purchase_batch_request(
         item: ShoppingListItemModel,
+        ingredient: MasterIngredientModel | None,
         quantity: float,
         purchase: ShoppingPurchaseDTO,
     ) -> CreateInventoryBatchRequestDTO:
+        storage_mode = purchase.storage_mode
+        if storage_mode is None and ingredient is not None:
+            storage_mode = ingredient.default_storage_mode
+        if storage_mode is None:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+                detail="purchase.storage_mode is required when no catalog default exists",
+            )
         return CreateInventoryBatchRequestDTO(
             master_ingredient_id=item.master_ingredient_id,
             custom_name=item.custom_name,
             quantity=quantity,
             unit=item.unit,
-            **purchase.model_dump(),
+            storage_mode=storage_mode,
+            **purchase.model_dump(exclude={"storage_mode"}),
+        )
+
+    @staticmethod
+    def _to_summary_dto(
+        shopping_list: ShoppingListModel,
+    ) -> ShoppingListSummaryDTO:
+        """Map only collection fields so list reads never load item rows."""
+        return ShoppingListSummaryDTO(
+            id=shopping_list.id,
+            meal_plan_id=shopping_list.meal_plan_id,
+            status=shopping_list.status,
+            generated_at=shopping_list.generated_at,
+            created_at=shopping_list.created_at,
+            updated_at=shopping_list.updated_at,
         )
 
     @staticmethod

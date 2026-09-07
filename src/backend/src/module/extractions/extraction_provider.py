@@ -97,6 +97,17 @@ def mock_asr(_filename: str) -> ExtractionResponse:
 
 def mock_barcode_lookup(barcode: str) -> BarcodeExtractionResponse:
     """Return a mock barcode product lookup result."""
+    if barcode == "unknown-barcode":
+        return BarcodeExtractionResponse(
+            request_id=uuid4(),
+            status=ExtractionStatus.FAILED,
+            provider="MOCK_BARCODE",
+            raw_text=f"No mock product found for barcode {barcode}",
+            fields=BarcodeProductFields(barcode=barcode),
+            confidence={},
+            warnings=["No mock product was found for this barcode."],
+            persisted=False,
+        )
     return BarcodeExtractionResponse(
         request_id=uuid4(),
         status=ExtractionStatus.SUCCEEDED,

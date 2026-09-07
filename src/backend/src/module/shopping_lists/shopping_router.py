@@ -14,8 +14,10 @@ from src.module.shopping_lists.shopping_dependency import (
 from src.module.shopping_lists.shopping_dto import (
     CreateShoppingItemRequestDTO,
     GenerateShoppingListRequestDTO,
+    ShoppingListCollectionResponseDTO,
     ShoppingListDTO,
     ShoppingListItemDTO,
+    ShoppingListQueryDTO,
     UpdateShoppingListItemRequestDTO,
 )
 from src.module.shopping_lists.shopping_service import ShoppingService
@@ -34,6 +36,16 @@ async def post_shopping_list_generation(
 ) -> ShoppingListDTO:
     """Generate the active shopping list for one owned meal plan."""
     return await service.generate(user.user_id, body, idempotency_key)
+
+
+@shopping_router.get("", response_model=ShoppingListCollectionResponseDTO)
+async def get_shopping_lists(
+    query: Annotated[ShoppingListQueryDTO, Depends()],
+    user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[ShoppingService, Depends(get_shopping_service)],
+) -> ShoppingListCollectionResponseDTO:
+    """List the caller's shopping-list summaries without loading their items."""
+    return await service.list_lists(user.user_id, query)
 
 
 @shopping_router.get("/{list_id}", response_model=ShoppingListDTO)

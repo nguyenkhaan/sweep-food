@@ -10,9 +10,11 @@ from src.module.recommendations.recommendation_dto import (
     MockRecommendationAnalysisDTO,
     RecommendationItemDTO,
     RecommendationListResponseDTO,
+    RecommendationRecipeSummaryDTO,
     RecommendationRequestDTO,
     RecommendationScoreComponentsDTO,
 )
+from src.module.recipes.recipe_dto import RecipeNutritionDTO
 
 
 class RecommendationService:
@@ -78,4 +80,19 @@ class RecommendationService:
             ),
             provider="MOCK",
             model_version="mock-v1",
+            recipe_summary=RecommendationRecipeSummaryDTO(
+                id=recipe.id,
+                name=recipe.name,
+                media_url=recipe.media_url,
+                estimated_cooking_minutes=recipe.estimated_cooking_minutes,
+                default_servings=recipe.default_servings,
+                nutrition=RecipeNutritionDTO(
+                    calories=recipe.total_calories,
+                    protein_g=recipe.total_protein_g,
+                    fat_g=recipe.total_fat_g,
+                    carbs_g=recipe.total_carbs_g,
+                    sugar_g=recipe.total_sugar_g,
+                    other_nutrients=recipe.other_nutrients,
+                ),
+            ),
         )

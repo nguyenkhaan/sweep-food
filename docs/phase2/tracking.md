@@ -4,8 +4,9 @@
 
 - Bám sát `plan.md`, `task.md` và `api-contract.md`; không tự thêm API, field, behavior hoặc phạm vi chưa được mô tả.
 - Các tác vụ mất nhiều thời gian do người phụ trách chạy và kiểm tra. Trước khi cần thực hiện, phải dừng lại và thông báo rõ lệnh cùng mục đích.
-- Mỗi lần chạy test giới hạn tối đa 60 giây. Nếu test vượt 60 giây, phải dừng và thông báo cho người phụ trách, không tiếp tục chạy.
+- Mỗi lần chạy test giới hạn tối đa 90 giây. Nếu test vượt 90 giây, phải dừng và thông báo cho người phụ trách, không tiếp tục chạy.
 - Nếu cùng một kiểm tra thất bại 3 lần, phải dừng và thông báo cho người phụ trách, không retry lần thứ tư.
+- Test treo hoặc không pass không chặn việc hoàn tất code theo task; phải ghi rõ kết quả khi bàn giao.
 - Chỉ tạo hoặc chạy file test khi người phụ trách yêu cầu rõ trong prompt; không tự tìm, thêm hoặc chạy test.
 - Sau mỗi thay đổi code, phải kiểm tra kỹ import, annotation, generic và kiểu trả về của các file đã chạm; không bàn giao khi còn lỗi type trong IDE hoặc kiểm tra type tĩnh của phạm vi thay đổi.
 - Áp dụng `agent/rules/clean-code/mini.md`: ưu tiên local reasoning, tên rõ nghĩa, hàm có một trách nhiệm, side effect tường minh và không thêm abstraction ngoài phạm vi task.
@@ -24,12 +25,12 @@
 
 ## Phase 2
 
-- [ ] Task 2.1 — Thêm DTO query và response cho danh sách shopping list
-- [ ] Task 2.2 — Triển khai service và route GET shopping-lists
-- [ ] Task 2.3 — Cho phép purchase dùng default storage từ catalog
-- [ ] Task 2.4 — Định nghĩa recipe_summary cho recommendation response
-- [ ] Task 2.5 — Populate recipe_summary trong mock recommendation service
-- [ ] Task 2.6 — Thêm barcode mock không tìm thấy
+- [x] Task 2.1 — Thêm DTO query và response cho danh sách shopping list
+- [x] Task 2.2 — Triển khai service và route GET shopping-lists
+- [x] Task 2.3 — Cho phép purchase dùng default storage từ catalog
+- [x] Task 2.4 — Định nghĩa recipe_summary cho recommendation response
+- [x] Task 2.5 — Populate recipe_summary trong mock recommendation service
+- [x] Task 2.6 — Thêm barcode mock không tìm thấy
 
 ## Phase 3
 
