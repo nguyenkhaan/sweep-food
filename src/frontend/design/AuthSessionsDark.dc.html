@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#B7E4C7;--green-700:#40916C;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--danger:#E39393;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column;padding:16px 24px 28px;min-height:820px}
+    .rnd{width:36px;height:36px;border-radius:11px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink)}
+    .head{margin:24px 0 8px}
+    .head .t{font-size:26px;font-weight:700;letter-spacing:-.02em}
+    .hint{font-size:13px;color:var(--ink-2);line-height:1.55;margin:8px 0 18px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;gap:12px;margin-bottom:12px}
+    .card .ic{width:44px;height:44px;flex:none;border-radius:11px;background:var(--fill);display:flex;align-items:center;justify-content:center;color:var(--ink-2)}
+    .card .bd{flex:1;min-width:0}
+    .card .nm{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+    .badge{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--green-800);background:var(--green-100);border-radius:6px;padding:2px 6px}
+    .card .mt{font-size:12px;color:var(--ink-3);margin-top:4px;line-height:1.7}
+    .card .rv{align-self:flex-start;font-size:13px;font-weight:600;color:var(--danger);background:none;border:none;padding:4px 2px;white-space:nowrap}
+    .card .rv.disabled{color:var(--ink-3)}
+  </style>
+</helmet>
+<div class="screen">
+  <span class="rnd"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></span>
+  <div class="head"><div class="t">Thiết bị &amp; phiên đăng nhập</div></div>
+  <div class="hint">Đây là các thiết bị đang đăng nhập vào tài khoản của bạn. Thu hồi một phiên sẽ đăng xuất thiết bị đó trong lần yêu cầu tiếp theo.</div>
+
+  <div class="card">
+    <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="10" height="18" rx="2"/><rect x="15" y="9" width="6" height="12" rx="1.5"/></svg></span>
+    <div class="bd">
+      <div class="nm">Android · Ứng dụng SweepFood <span class="badge">Thiết bị này</span></div>
+      <div class="mt">IP: 113.161.44.20<br>Đăng nhập: 05/09/2026 · 08:12<br>Hoạt động gần nhất: vừa xong<br>Hết hạn: 05/10/2026 · 08:12</div>
+    </div>
+    <button class="rv disabled">Thu hồi</button>
+  </div>
+
+  <div class="card">
+    <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="10" height="18" rx="2"/><rect x="15" y="9" width="6" height="12" rx="1.5"/></svg></span>
+    <div class="bd">
+      <div class="nm">iPhone · Ứng dụng SweepFood</div>
+      <div class="mt">IP: 27.72.100.8<br>Đăng nhập: 01/09/2026 · 19:40<br>Hoạt động gần nhất: 2 giờ trước<br>Hết hạn: 01/10/2026 · 19:40</div>
+    </div>
+    <button class="rv">Thu hồi</button>
+  </div>
+
+  <div class="card">
+    <span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+    <div class="bd">
+      <div class="nm">Windows · Chrome</div>
+      <div class="mt">IP: 203.113.130.44<br>Đăng nhập: 28/08/2026 · 09:05<br>Hoạt động gần nhất: 5 ngày trước<br>Hết hạn: 27/09/2026 · 09:05</div>
+    </div>
+    <button class="rv">Thu hồi</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/app/router/route_guards.dart';
 import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/shell/app_shell.dart';
+import 'package:sweepfood/features/auth/presentation/screens/active_sessions_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/login_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/otp_screen.dart';
@@ -335,6 +336,11 @@ GoRouter appRouter(Ref ref) {
         path: Routes.settingsChangePhone,
         parentNavigatorKey: _rootKey,
         builder: (context, state) => const ChangePhoneScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsSessions,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const ActiveSessionsScreen(),
       ),
       GoRoute(
         path: Routes.settingsPreferences,

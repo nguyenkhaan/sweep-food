@@ -54,6 +54,7 @@ abstract final class Routes {
   static const settingsChangePassword = '/settings/profile/password';
   static const settingsChangeEmail = '/settings/profile/email';
   static const settingsChangePhone = '/settings/profile/phone';
+  static const settingsSessions = '/settings/profile/sessions';
 
   /// Where the router boots. [appRedirect] immediately routes on from here
   /// based on session + onboarding state.

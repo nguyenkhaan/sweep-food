@@ -826,6 +826,284 @@ as int?,
 
 
 /// @nodoc
+mixin _$AuthSessionDto {
+
+ String get id;@JsonKey(name: 'ip_address') String? get ipAddress;@JsonKey(name: 'user_agent') String? get userAgent;@JsonKey(name: 'expires_at') DateTime get expiresAt;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'last_used_at') DateTime? get lastUsedAt;
+/// Create a copy of AuthSessionDto
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthSessionDtoCopyWith<AuthSessionDto> get copyWith => _$AuthSessionDtoCopyWithImpl<AuthSessionDto>(this as AuthSessionDto, _$identity);
+
+  /// Serializes this AuthSessionDto to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthSessionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.ipAddress, ipAddress) || other.ipAddress == ipAddress)&&(identical(other.userAgent, userAgent) || other.userAgent == userAgent)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.lastUsedAt, lastUsedAt) || other.lastUsedAt == lastUsedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,ipAddress,userAgent,expiresAt,createdAt,lastUsedAt);
+
+@override
+String toString() {
+  return 'AuthSessionDto(id: $id, ipAddress: $ipAddress, userAgent: $userAgent, expiresAt: $expiresAt, createdAt: $createdAt, lastUsedAt: $lastUsedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AuthSessionDtoCopyWith<$Res>  {
+  factory $AuthSessionDtoCopyWith(AuthSessionDto value, $Res Function(AuthSessionDto) _then) = _$AuthSessionDtoCopyWithImpl;
+@useResult
+$Res call({
+ String id,@JsonKey(name: 'ip_address') String? ipAddress,@JsonKey(name: 'user_agent') String? userAgent,@JsonKey(name: 'expires_at') DateTime expiresAt,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'last_used_at') DateTime? lastUsedAt
+});
+
+
+
+
+}
+/// @nodoc
+class _$AuthSessionDtoCopyWithImpl<$Res>
+    implements $AuthSessionDtoCopyWith<$Res> {
+  _$AuthSessionDtoCopyWithImpl(this._self, this._then);
+
+  final AuthSessionDto _self;
+  final $Res Function(AuthSessionDto) _then;
+
+/// Create a copy of AuthSessionDto
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? ipAddress = freezed,Object? userAgent = freezed,Object? expiresAt = null,Object? createdAt = null,Object? lastUsedAt = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,ipAddress: freezed == ipAddress ? _self.ipAddress : ipAddress // ignore: cast_nullable_to_non_nullable
+as String?,userAgent: freezed == userAgent ? _self.userAgent : userAgent // ignore: cast_nullable_to_non_nullable
+as String?,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,lastUsedAt: freezed == lastUsedAt ? _self.lastUsedAt : lastUsedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [AuthSessionDto].
+extension AuthSessionDtoPatterns on AuthSessionDto {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AuthSessionDto value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AuthSessionDto() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AuthSessionDto value)  $default,){
+final _that = this;
+switch (_that) {
+case _AuthSessionDto():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AuthSessionDto value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AuthSessionDto() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'ip_address')  String? ipAddress, @JsonKey(name: 'user_agent')  String? userAgent, @JsonKey(name: 'expires_at')  DateTime expiresAt, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'last_used_at')  DateTime? lastUsedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AuthSessionDto() when $default != null:
+return $default(_that.id,_that.ipAddress,_that.userAgent,_that.expiresAt,_that.createdAt,_that.lastUsedAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'ip_address')  String? ipAddress, @JsonKey(name: 'user_agent')  String? userAgent, @JsonKey(name: 'expires_at')  DateTime expiresAt, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'last_used_at')  DateTime? lastUsedAt)  $default,) {final _that = this;
+switch (_that) {
+case _AuthSessionDto():
+return $default(_that.id,_that.ipAddress,_that.userAgent,_that.expiresAt,_that.createdAt,_that.lastUsedAt);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'ip_address')  String? ipAddress, @JsonKey(name: 'user_agent')  String? userAgent, @JsonKey(name: 'expires_at')  DateTime expiresAt, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'last_used_at')  DateTime? lastUsedAt)?  $default,) {final _that = this;
+switch (_that) {
+case _AuthSessionDto() when $default != null:
+return $default(_that.id,_that.ipAddress,_that.userAgent,_that.expiresAt,_that.createdAt,_that.lastUsedAt);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _AuthSessionDto extends AuthSessionDto {
+  const _AuthSessionDto({required this.id, @JsonKey(name: 'ip_address') this.ipAddress, @JsonKey(name: 'user_agent') this.userAgent, @JsonKey(name: 'expires_at') required this.expiresAt, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'last_used_at') this.lastUsedAt}): super._();
+  factory _AuthSessionDto.fromJson(Map<String, dynamic> json) => _$AuthSessionDtoFromJson(json);
+
+@override final  String id;
+@override@JsonKey(name: 'ip_address') final  String? ipAddress;
+@override@JsonKey(name: 'user_agent') final  String? userAgent;
+@override@JsonKey(name: 'expires_at') final  DateTime expiresAt;
+@override@JsonKey(name: 'created_at') final  DateTime createdAt;
+@override@JsonKey(name: 'last_used_at') final  DateTime? lastUsedAt;
+
+/// Create a copy of AuthSessionDto
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AuthSessionDtoCopyWith<_AuthSessionDto> get copyWith => __$AuthSessionDtoCopyWithImpl<_AuthSessionDto>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$AuthSessionDtoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthSessionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.ipAddress, ipAddress) || other.ipAddress == ipAddress)&&(identical(other.userAgent, userAgent) || other.userAgent == userAgent)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.lastUsedAt, lastUsedAt) || other.lastUsedAt == lastUsedAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,ipAddress,userAgent,expiresAt,createdAt,lastUsedAt);
+
+@override
+String toString() {
+  return 'AuthSessionDto(id: $id, ipAddress: $ipAddress, userAgent: $userAgent, expiresAt: $expiresAt, createdAt: $createdAt, lastUsedAt: $lastUsedAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AuthSessionDtoCopyWith<$Res> implements $AuthSessionDtoCopyWith<$Res> {
+  factory _$AuthSessionDtoCopyWith(_AuthSessionDto value, $Res Function(_AuthSessionDto) _then) = __$AuthSessionDtoCopyWithImpl;
+@override @useResult
+$Res call({
+ String id,@JsonKey(name: 'ip_address') String? ipAddress,@JsonKey(name: 'user_agent') String? userAgent,@JsonKey(name: 'expires_at') DateTime expiresAt,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'last_used_at') DateTime? lastUsedAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$AuthSessionDtoCopyWithImpl<$Res>
+    implements _$AuthSessionDtoCopyWith<$Res> {
+  __$AuthSessionDtoCopyWithImpl(this._self, this._then);
+
+  final _AuthSessionDto _self;
+  final $Res Function(_AuthSessionDto) _then;
+
+/// Create a copy of AuthSessionDto
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? ipAddress = freezed,Object? userAgent = freezed,Object? expiresAt = null,Object? createdAt = null,Object? lastUsedAt = freezed,}) {
+  return _then(_AuthSessionDto(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,ipAddress: freezed == ipAddress ? _self.ipAddress : ipAddress // ignore: cast_nullable_to_non_nullable
+as String?,userAgent: freezed == userAgent ? _self.userAgent : userAgent // ignore: cast_nullable_to_non_nullable
+as String?,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
+as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,lastUsedAt: freezed == lastUsedAt ? _self.lastUsedAt : lastUsedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$UserProfileDto {
 
 @JsonKey(name: 'user_id') String get userId; String? get name; String get phone;@JsonKey(name: 'phone_verified_at') String? get phoneVerifiedAt; String? get email;@JsonKey(name: 'email_verified_at') String? get emailVerifiedAt; Map<String, dynamic> get preferences;

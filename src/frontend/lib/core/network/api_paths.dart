@@ -13,6 +13,7 @@ abstract final class ApiPaths {
   static const tokenRefresh = '/auth/token/refresh';
   static const logout = '/auth/logout';
   static const sessions = '/auth/sessions';
+  static String session(String id) => '/auth/sessions/$id';
   static const passwordReset = '/auth/password/reset';
   static const passwordChange = '/auth/password/change';
   static const verifyChangePassword = '/auth/verify/change-password';

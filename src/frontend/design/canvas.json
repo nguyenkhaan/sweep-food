@@ -783,6 +783,22 @@
       "y": 5080,
       "w": 400,
       "h": 1100
+    },
+    {
+      "file": "AuthSessions.dc.html",
+      "title": "Thiết bị & phiên đăng nhập (P-01c) · Sáng",
+      "x": 2600,
+      "y": 22420,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "AuthSessionsDark.dc.html",
+      "title": "Thiết bị & phiên đăng nhập (P-01c) · Tối",
+      "x": 2600,
+      "y": 23440,
+      "w": 400,
+      "h": 900
     }
   ],
   "annotations": [
@@ -839,8 +855,8 @@
       "id": "note-account",
       "x": 0,
       "y": 22270,
-      "w": 760,
-      "text": "Quản lý tài khoản (P-01a + 4 màn con) — thêm sau canvas gốc để khớp app: điều hướng từ Cá nhân → 'Hồ sơ & mật khẩu'. Đổi mật khẩu / email / SĐT đều là luồng OTP 2 bước (artboard hiện trạng thái nhập OTP)."
+      "w": 780,
+      "text": "Quản lý tài khoản (P-01a + 5 màn con) — thêm sau canvas gốc để khớp app: điều hướng từ Cá nhân → 'Hồ sơ & mật khẩu'. Đổi mật khẩu / email / SĐT đều là luồng OTP 2 bước (artboard hiện trạng thái nhập OTP). P-01c 'Thiết bị & phiên đăng nhập' liệt kê các phiên đang hoạt động, thu hồi từng phiên."
     }
   ],
   "launch": {

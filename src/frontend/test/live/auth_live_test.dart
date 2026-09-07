@@ -192,4 +192,47 @@ void main() {
     final again = await repo.login(phone: phone, password: 'brandnew12345');
     expect(again.isRight(), isTrue);
   });
+
+  test('activeSessions() lists the session created by signing in', () async {
+    final phone = uniquePhone();
+    await registerAndSignIn(phone, 'secret12345');
+
+    final res = await repo.activeSessions();
+    final list = res.fold((f) => fail('activeSessions failed: $f'), (r) => r);
+
+    expect(list, isNotEmpty);
+    expect(list.every((s) => s.id.isNotEmpty), isTrue);
+    // expires_at is always in the future for an active session.
+    expect(list.first.expiresAt.isAfter(DateTime.now()), isTrue);
+  });
+
+  test('revokeSession() drops a session from the list', () async {
+    final phone = uniquePhone();
+    const password = 'secret12345';
+    await registerAndSignIn(phone, password);
+    // A second sign-in => a second server session to revoke.
+    final second = await repo.login(phone: phone, password: password);
+    second.fold((f) => fail('second login failed: $f'), (_) {});
+
+    final before = (await repo.activeSessions())
+        .fold((f) => fail('list failed: $f'), (r) => r);
+    expect(before.length, greaterThanOrEqualTo(2));
+
+    final revoke = await repo.revokeSession(before.last.id);
+    expect(revoke.isRight(), isTrue);
+
+    final after = (await repo.activeSessions())
+        .fold((f) => fail('list failed: $f'), (r) => r);
+    expect(after.any((s) => s.id == before.last.id), isFalse);
+    expect(after.length, before.length - 1);
+  });
+
+  test('revokeSession() with an unknown id surfaces a Failure', () async {
+    await registerAndSignIn(uniquePhone(), 'secret12345');
+
+    final res = await repo.revokeSession(
+      '00000000-0000-4000-8000-000000000000',
+    );
+    expect(res.isLeft(), isTrue);
+  });
 }

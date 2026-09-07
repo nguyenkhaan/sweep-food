@@ -5,6 +5,7 @@ import 'package:sweepfood/core/storage/secure_storage.dart';
 import 'package:sweepfood/core/storage/storage_providers.dart';
 import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:sweepfood/features/auth/domain/entities/active_session.dart';
 import 'package:sweepfood/features/auth/domain/entities/session.dart';
 import 'package:sweepfood/features/auth/domain/entities/user.dart';
 import 'package:sweepfood/features/auth/domain/repositories/auth_repository.dart';
@@ -103,6 +104,17 @@ class AuthRepositoryImpl implements AuthRepository {
     final token = await _store.readAccessToken();
     return token != null && token.isNotEmpty;
   }
+
+  @override
+  Future<Result<List<ActiveSession>>> activeSessions() => runGuarded(
+        () async => [
+          for (final dto in await _remote.sessions()) dto.toEntity(),
+        ],
+      );
+
+  @override
+  Future<Result<void>> revokeSession(String id) =>
+      guardVoid(() => _remote.revokeSession(id));
 
   @override
   Future<Result<User>> updateProfile({
