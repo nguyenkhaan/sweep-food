@@ -57,7 +57,7 @@ class ShoppingPurchaseDTO(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    storage_mode: StorageMode
+    storage_mode: StorageMode | None = None
     purchased_at: datetime | None = None
     packaged_at: datetime | None = None
     stored_at: datetime | None = None
@@ -111,6 +111,17 @@ class UpdateShoppingListItemRequestDTO(BaseModel):
         return self
 
 
+class ShoppingListQueryDTO(BaseModel):
+    """Optional filters and bounded pagination for owned shopping lists."""
+
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+
+    list_status: ShoppingListStatus | None = Field(default=None, alias="status")
+    meal_plan_id: UUID | None = None
+    limit: int = Field(default=20, ge=1, le=100)
+    offset: int = Field(default=0, ge=0)
+
+
 class ShoppingListItemDTO(BaseModel):
     """Public state and stock traceability of one shopping line."""
 
@@ -137,3 +148,23 @@ class ShoppingListDTO(BaseModel):
     status: ShoppingListStatus
     generated_at: datetime | None
     items: list[ShoppingListItemDTO]
+
+
+class ShoppingListSummaryDTO(BaseModel):
+    """List metadata returned without loading individual shopping items."""
+
+    id: UUID
+    meal_plan_id: UUID | None
+    status: ShoppingListStatus
+    generated_at: datetime | None
+    created_at: datetime
+    updated_at: datetime
+
+
+class ShoppingListCollectionResponseDTO(BaseModel):
+    """Stable offset page of owned shopping-list summaries."""
+
+    items: list[ShoppingListSummaryDTO]
+    total: int
+    limit: int
+    offset: int

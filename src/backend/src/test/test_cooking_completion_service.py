@@ -10,9 +10,10 @@ from typing import cast
 from uuid import UUID
 
 import pytest
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.model.base import generate_uuid7
 from src.model.cooking_consumption_model import CookingConsumptionModel
 from src.model.cooking_session_model import CookingSessionModel
 from src.model.enum_model import (
@@ -32,8 +33,10 @@ from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.meal_plan_item_model import MealPlanItemModel
+from src.model.meal_plan_model import MealPlanModel
 from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
+from src.model.waste_reduction_event_model import WasteReductionEventModel
 from src.module.cooking.cooking_dto import (
     CompleteCookingSessionRequestDTO,
     CreateCookingSessionRequestDTO,
@@ -60,11 +63,11 @@ MEAL_PLAN_ITEM_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a040")
 class FakeScalarResult:
     """Expose the scalar result shape used by session and recipe queries."""
 
-    value: CookingSessionModel | MealPlanItemModel | RecipeModel | None
+    value: CookingSessionModel | MealPlanItemModel | MealPlanModel | RecipeModel | None
 
     def scalar_one_or_none(
         self,
-    ) -> CookingSessionModel | MealPlanItemModel | RecipeModel | None:
+    ) -> CookingSessionModel | MealPlanItemModel | MealPlanModel | RecipeModel | None:
         """Return the queued scalar result."""
         return self.value
 
@@ -108,6 +111,7 @@ class FakeDatabaseSession:
     commit_count: int = 0
     rollback_count: int = 0
     raise_integrity_error_on_commit: bool = False
+    raise_event_write_error: bool = False
 
     async def execute(
         self,
@@ -118,6 +122,11 @@ class FakeDatabaseSession:
 
     def add(self, record: object) -> None:
         """Record a pending insert in the transaction."""
+        if self.raise_event_write_error and isinstance(
+            record,
+            WasteReductionEventModel,
+        ):
+            raise SQLAlchemyError("waste event insert failed")
         if isinstance(record, CookingSessionModel):
             record.id = SESSION_ID
         self.added.append(record)
@@ -127,6 +136,12 @@ class FakeDatabaseSession:
         if self.raise_integrity_error_on_commit:
             raise IntegrityError("statement", {}, Exception("unique constraint violation"))
         self.commit_count += 1
+
+    async def flush(self) -> None:
+        """Assign IDs as a database flush would before evidence is staged."""
+        for record in self.added:
+            if isinstance(record, InventoryLedgerEntryModel) and record.id is None:
+                record.id = generate_uuid7()
 
     async def rollback(self) -> None:
         """Record a failed transaction rollback."""
@@ -156,14 +171,16 @@ def build_recipe() -> RecipeModel:
 def build_session(
     status: CookingSessionStatus = CookingSessionStatus.PLANNED,
     idempotency_key: str | None = None,
+    meal_plan_item_id: UUID | None = MEAL_PLAN_ITEM_ID,
+    servings: float = 2.0,
 ) -> CookingSessionModel:
     """Build a planned or completed user-owned cooking session."""
     return CookingSessionModel(
         id=SESSION_ID,
         user_id=USER_ID,
         recipe_id=RECIPE_ID,
-        meal_plan_item_id=None,
-        servings=2.0,
+        meal_plan_item_id=meal_plan_item_id,
+        servings=servings,
         status=status,
         consumption_mode=(
             CookingConsumptionMode.EXACT
@@ -214,6 +231,17 @@ def build_meal_plan_item(servings: float = 2.0) -> MealPlanItemModel:
     )
 
 
+def build_meal_plan() -> MealPlanModel:
+    """Build the plan locked before a meal-plan item or cooking session."""
+    return MealPlanModel(
+        id=MEAL_PLAN_ID,
+        user_id=USER_ID,
+        name="Completion plan",
+        starts_on=date(2026, 8, 31),
+        ends_on=date(2026, 9, 6),
+    )
+
+
 def build_batch(current_quantity: float = 1.0) -> InventoryBatchModel:
     """Build an eligible liter batch for the session's authenticated user."""
     now = datetime.now(UTC)
@@ -237,13 +265,20 @@ def build_batch(current_quantity: float = 1.0) -> InventoryBatchModel:
 
 def build_completion_database(
     batch: InventoryBatchModel,
+    meal_plan_item: MealPlanItemModel | None = None,
+    cooking_session: CookingSessionModel | None = None,
 ) -> FakeDatabaseSession:
     """Queue lookups for a new completion transaction and its locks."""
     recipe_ingredient, ingredient = build_recipe_ingredient()
+    meal_plan_item = meal_plan_item or build_meal_plan_item()
+    cooking_session = cooking_session or build_session()
     return FakeDatabaseSession(
         results=[
             FakeScalarResult(None),
-            FakeScalarResult(build_session()),
+            FakeScalarResult(cooking_session),
+            FakeScalarResult(build_meal_plan()),
+            FakeScalarResult(meal_plan_item),
+            FakeScalarResult(cooking_session),
             FakeScalarResult(None),
             FakeScalarResult(build_recipe()),
             FakeIngredientResult([(recipe_ingredient, ingredient)]),
@@ -274,7 +309,7 @@ async def test_complete_session_atomically_deducts_and_records_ledger() -> None:
     assert response.updated_batches[0].current_quantity == 0.5
     assert database.commit_count == 1
     assert database.rollback_count == 0
-    assert len(database.added) == 2
+    assert len(database.added) == 3
     assert isinstance(database.added[0], CookingConsumptionModel)
     assert isinstance(database.added[1], InventoryLedgerEntryModel)
     ledger_entry = database.added[1]
@@ -282,6 +317,97 @@ async def test_complete_session_atomically_deducts_and_records_ledger() -> None:
     assert ledger_entry.quantity_before == 1.0
     assert ledger_entry.quantity_delta == -0.5
     assert ledger_entry.quantity_after == 0.5
+    waste_event = database.added[2]
+    assert isinstance(waste_event, WasteReductionEventModel)
+    assert waste_event.is_eligible is False
+    assert waste_event.exclusion_reason == "UNSUPPORTED_UNIT"
+
+
+@pytest.mark.anyio
+async def test_complete_session_marks_its_meal_plan_item_completed() -> None:
+    """A committed completion advances the linked plan item with the stock write."""
+    meal_plan_item = build_meal_plan_item()
+    database = build_completion_database(build_batch(), meal_plan_item)
+    service = CookingService(cast(AsyncSession, database), FEFOService())
+
+    await service.complete_session(
+        USER_ID,
+        SESSION_ID,
+        "complete-plan-item-key",
+        CompleteCookingSessionRequestDTO(consumption_mode=CookingConsumptionMode.EXACT),
+    )
+
+    assert meal_plan_item.status is MealPlanItemStatus.COMPLETED
+
+
+@pytest.mark.anyio
+async def test_complete_session_rolls_back_when_staging_waste_evidence_fails() -> None:
+    """Evidence failures prevent the transaction from committing a completion."""
+    database = build_completion_database(build_batch())
+    database.raise_event_write_error = True
+    service = CookingService(cast(AsyncSession, database), FEFOService())
+
+    with pytest.raises(SQLAlchemyError, match="waste event insert failed"):
+        await service.complete_session(
+            USER_ID,
+            SESSION_ID,
+            "waste-event-write-error",
+            CompleteCookingSessionRequestDTO(
+                consumption_mode=CookingConsumptionMode.EXACT,
+            ),
+        )
+
+    assert database.commit_count == 0
+    assert database.rollback_count == 1
+
+
+@pytest.mark.anyio
+async def test_complete_session_rejects_another_session_for_a_completed_item() -> None:
+    """A second planned session cannot deduct stock after the item was completed."""
+    meal_plan_item = build_meal_plan_item()
+    meal_plan_item.status = MealPlanItemStatus.COMPLETED
+    batch = build_batch()
+    database = build_completion_database(batch, meal_plan_item)
+    service = CookingService(cast(AsyncSession, database), FEFOService())
+
+    with pytest.raises(CookingCompletionConflictError):
+        await service.complete_session(
+            USER_ID,
+            SESSION_ID,
+            "second-session-key",
+            CompleteCookingSessionRequestDTO(
+                consumption_mode=CookingConsumptionMode.EXACT
+            ),
+        )
+
+    assert batch.current_quantity == 1.0
+    assert database.commit_count == 0
+    assert database.rollback_count == 1
+    assert not database.added
+
+
+@pytest.mark.anyio
+async def test_complete_session_rejects_a_stale_recipe_or_servings_snapshot() -> None:
+    """A session cannot consume inventory after its source item no longer matches."""
+    cooking_session = build_session(servings=3.0)
+    batch = build_batch()
+    database = build_completion_database(batch, cooking_session=cooking_session)
+    service = CookingService(cast(AsyncSession, database), FEFOService())
+
+    with pytest.raises(CookingCompletionConflictError):
+        await service.complete_session(
+            USER_ID,
+            SESSION_ID,
+            "stale-session-key",
+            CompleteCookingSessionRequestDTO(
+                consumption_mode=CookingConsumptionMode.EXACT
+            ),
+        )
+
+    assert batch.current_quantity == 1.0
+    assert database.commit_count == 0
+    assert database.rollback_count == 1
+    assert not database.added
 
 
 @pytest.mark.anyio
@@ -290,6 +416,7 @@ async def test_create_session_derives_recipe_from_an_owned_meal_plan_item() -> N
     recipe_ingredient, ingredient = build_recipe_ingredient()
     database = FakeDatabaseSession(
         results=[
+            FakeScalarResult(build_meal_plan()),
             FakeScalarResult(build_meal_plan_item(servings=4.0)),
             FakeScalarResult(build_recipe()),
             FakeIngredientResult([(recipe_ingredient, ingredient)]),
@@ -326,6 +453,7 @@ async def test_create_session_supports_decimal_backed_recipe_values() -> None:
     recipe_ingredient.required_quantity = Decimal("500.000")
     database = FakeDatabaseSession(
         results=[
+            FakeScalarResult(build_meal_plan()),
             FakeScalarResult(build_meal_plan_item(servings=4.0)),
             FakeScalarResult(recipe),
             FakeIngredientResult([(recipe_ingredient, ingredient)]),
@@ -351,6 +479,7 @@ async def test_create_session_rejects_missing_inventory_without_writes() -> None
     recipe_ingredient, ingredient = build_recipe_ingredient()
     database = FakeDatabaseSession(
         results=[
+            FakeScalarResult(build_meal_plan()),
             FakeScalarResult(build_meal_plan_item()),
             FakeScalarResult(build_recipe()),
             FakeIngredientResult([(recipe_ingredient, ingredient)]),

@@ -112,6 +112,7 @@ def _delivery_http_error(
 @notification_router.post(
     "/users/me/devices",
     response_model=DeviceRegistrationResponseDTO,
+    status_code=status.HTTP_201_CREATED,
     summary="Register an Android FCM device",
 )
 async def post_device_registration(

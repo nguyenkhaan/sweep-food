@@ -1,10 +1,12 @@
 """Request and response DTOs for the mock recommendation boundary."""
 
+from decimal import Decimal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from src.model.enum_model import MeasurementUnit
+from src.module.recipes.recipe_dto import RecipeNutritionDTO
 
 
 class RecommendationRequestDTO(BaseModel):
@@ -50,6 +52,17 @@ class RecommendationMissingIngredientDTO(BaseModel):
     unit: MeasurementUnit
 
 
+class RecommendationRecipeSummaryDTO(BaseModel):
+    """Display-ready recipe card at the recipe's default serving count."""
+
+    id: UUID
+    name: str
+    media_url: str | None
+    estimated_cooking_minutes: int
+    default_servings: Decimal
+    nutrition: RecipeNutritionDTO
+
+
 class RecommendationItemDTO(BaseModel):
     """One mock-ranked, catalog-backed recipe choice."""
 
@@ -63,6 +76,7 @@ class RecommendationItemDTO(BaseModel):
     explanation: str
     provider: str
     model_version: str
+    recipe_summary: RecommendationRecipeSummaryDTO | None = None
 
 
 class RecommendationListResponseDTO(BaseModel):

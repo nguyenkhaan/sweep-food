@@ -1,8 +1,8 @@
-"""initial diagram
+"""initial digram for phase 2
 
-Revision ID: 2ca31dd74ae1
+Revision ID: 9988f9aa15b0
 Revises: 
-Create Date: 2026-09-01 16:19:33.719950
+Create Date: 2026-09-07 12:38:11.543037
 """
 
 from collections.abc import Sequence
@@ -13,7 +13,7 @@ from sqlalchemy.dialects import postgresql
 
 
 # revision identifiers, used by Alembic.
-revision: str = '2ca31dd74ae1'
+revision: str = '9988f9aa15b0'
 down_revision: str | Sequence[str] | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -111,6 +111,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('ix_favorite_menus_user_created_at', 'favorite_menus', ['user_id', 'created_at'], unique=False)
     op.create_table('favorite_recipes',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('recipe_id', sa.UUID(), nullable=False),
@@ -121,6 +122,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id', 'recipe_id')
     )
+    op.create_index('ix_favorite_recipes_recipe_id', 'favorite_recipes', ['recipe_id'], unique=False)
     op.create_table('master_ingredients',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=False),
@@ -155,6 +157,13 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('ix_meal_plans_user_starts_on', 'meal_plans', ['user_id', 'starts_on'], unique=False)
+    op.create_table('premium_interests',
+    sa.Column('user_id', sa.UUID(), nullable=False),
+    sa.Column('registered_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('user_id')
+    )
     op.create_table('recommendation_runs',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('criteria', postgresql.JSONB(astext_type=sa.Text()), server_default=sa.text("'{}'::jsonb"), nullable=False),
@@ -165,6 +174,27 @@ def upgrade() -> None:
     sa.Column('id', sa.UUID(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index('ix_recommendation_runs_user_created_at', 'recommendation_runs', ['user_id', 'created_at'], unique=False)
+    op.create_table('shopping_mutation_receipts',
+    sa.Column('user_id', sa.UUID(), nullable=False),
+    sa.Column('method', sa.String(length=6), nullable=False),
+    sa.Column('request_path', sa.String(length=255), nullable=False),
+    sa.Column('idempotency_key', sa.Text(), nullable=False),
+    sa.Column('key_hash', sa.String(length=64), nullable=False),
+    sa.Column('request_fingerprint', sa.String(length=64), nullable=False),
+    sa.Column('response_status', sa.SmallInteger(), nullable=False),
+    sa.Column('response_body', postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint("(response_status = 204 AND response_body IS NULL) OR (response_status IN (200, 201) AND response_body IS NOT NULL AND jsonb_typeof(response_body) = 'object')", name='shopping_receipt_response_body_consistent'),
+    sa.CheckConstraint("btrim(idempotency_key) <> ''", name='shopping_receipt_key_nonblank'),
+    sa.CheckConstraint("key_hash ~ '^[0-9a-f]{64}$' AND request_fingerprint ~ '^[0-9a-f]{64}$'", name='shopping_receipt_hashes_valid'),
+    sa.CheckConstraint("method IN ('POST', 'PATCH', 'DELETE')", name='shopping_receipt_method_allowed'),
+    sa.CheckConstraint('response_status IN (200, 201, 204)', name='shopping_receipt_response_status_allowed'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id', 'method', 'request_path', 'key_hash', name='uq_shopping_receipt_scope_key')
     )
     op.create_table('user_notification_preferences',
     sa.Column('user_id', sa.UUID(), nullable=False),
@@ -190,6 +220,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('favorite_menu_id', 'recipe_id')
     )
+    op.create_index('ix_favorite_menu_items_recipe_id', 'favorite_menu_items', ['recipe_id'], unique=False)
     op.create_table('ingredient_aliases',
     sa.Column('master_ingredient_id', sa.UUID(), nullable=False),
     sa.Column('alias', sa.String(), nullable=False),
@@ -218,6 +249,9 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('meal_plan_id', 'planned_for', 'meal_slot')
     )
+    op.create_index('ix_meal_plan_items_plan_planned_for', 'meal_plan_items', ['meal_plan_id', 'planned_for'], unique=False)
+    op.create_index('ix_meal_plan_items_recipe_id', 'meal_plan_items', ['recipe_id'], unique=False)
+    op.create_index('ix_meal_plan_items_recommendation_run_id', 'meal_plan_items', ['recommendation_run_id'], unique=False)
     op.create_table('recipe_ingredients',
     sa.Column('recipe_id', sa.UUID(), nullable=False),
     sa.Column('master_ingredient_id', sa.UUID(), nullable=False),
@@ -251,6 +285,7 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('recommendation_run_id', 'rank')
     )
+    op.create_index('ix_recommendation_items_recipe_id', 'recommendation_items', ['recipe_id'], unique=False)
     op.create_table('shelf_life_rules',
     sa.Column('scope', sa.Enum('INGREDIENT', 'CATEGORY', name='shelf_life_rule_scope'), nullable=False),
     sa.Column('master_ingredient_id', sa.UUID(), nullable=True),
@@ -287,6 +322,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('ix_shopping_lists_user_status', 'shopping_lists', ['user_id', 'status'], unique=False)
     op.create_table('cooking_sessions',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('recipe_id', sa.UUID(), nullable=False),
@@ -320,6 +356,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint("custom_name IS NULL OR btrim(custom_name) <> ''", name='shopping_item_custom_name_nonblank'),
     sa.CheckConstraint('(master_ingredient_id IS NULL) <> (custom_name IS NULL)', name='shopping_item_exactly_one_identity'),
     sa.CheckConstraint('available_quantity >= 0'),
     sa.CheckConstraint('missing_quantity >= 0'),
@@ -328,6 +365,8 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['shopping_list_id'], ['shopping_lists.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_index('ix_shopping_list_items_list_id', 'shopping_list_items', ['shopping_list_id'], unique=False)
+    op.create_index('ix_shopping_list_items_master_ingredient_id', 'shopping_list_items', ['master_ingredient_id'], unique=False)
     op.create_table('inventory_batches',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('master_ingredient_id', sa.UUID(), nullable=True),
@@ -352,15 +391,20 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint("(batch_type = 'RAW_INGREDIENT' AND source = 'MANUAL' AND source_cooking_session_id IS NULL) OR (batch_type = 'COOKED_FOOD' AND source = 'LEFTOVER' AND source_cooking_session_id IS NOT NULL)", name='inventory_batch_source_type_consistent'),
+    sa.CheckConstraint("(status = 'ACTIVE' AND current_quantity > 0 AND archived_at IS NULL) OR (status IN ('DEPLETED', 'DISCARDED') AND current_quantity = 0 AND archived_at IS NULL) OR (status = 'ARCHIVED' AND archived_at IS NOT NULL)", name='inventory_batch_status_quantity_consistent'),
     sa.CheckConstraint('(master_ingredient_id IS NULL) <> (custom_name IS NULL)', name='inventory_batch_exactly_one_identity'),
-    sa.CheckConstraint('current_quantity >= 0'),
-    sa.CheckConstraint('initial_quantity > 0'),
+    sa.CheckConstraint('current_quantity >= 0', name='inventory_batch_current_nonnegative'),
+    sa.CheckConstraint('initial_quantity > 0', name='inventory_batch_initial_positive'),
     sa.ForeignKeyConstraint(['master_ingredient_id'], ['master_ingredients.id'], ),
     sa.ForeignKeyConstraint(['source_cooking_session_id'], ['cooking_sessions.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index('ix_inventory_batches_status_expires_at', 'inventory_batches', ['status', 'expires_at'], unique=False)
+    op.create_index('ix_inventory_batches_user_fefo', 'inventory_batches', ['user_id', 'status', 'expires_at', 'created_at'], unique=False)
+    op.create_index('ix_inventory_batches_user_ingredient', 'inventory_batches', ['user_id', 'master_ingredient_id'], unique=False)
+    op.create_index('ix_inventory_batches_user_storage', 'inventory_batches', ['user_id', 'storage_mode'], unique=False)
     op.create_table('cooking_consumptions',
     sa.Column('cooking_session_id', sa.UUID(), nullable=False),
     sa.Column('recipe_ingredient_id', sa.UUID(), nullable=True),
@@ -378,21 +422,26 @@ def upgrade() -> None:
     op.create_table('inventory_ledger_entries',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('inventory_batch_id', sa.UUID(), nullable=False),
-    sa.Column('event_type', sa.Enum('INITIAL_STOCK', 'MANUAL_ADJUSTMENT', 'COOKING_CONSUMPTION', 'DISCARDED', 'LEFTOVER_CREATED', 'CORRECTION', name='inventory_ledger_event_type'), nullable=False),
+    sa.Column('event_type', sa.Enum('INITIAL_STOCK', 'MANUAL_ADJUSTMENT', 'MANUAL_CONSUMPTION', 'COOKING_CONSUMPTION', 'DISCARDED', 'LEFTOVER_CREATED', 'CORRECTION', 'METADATA_UPDATED', 'MOVED', 'ARCHIVED', name='inventory_ledger_event_type'), nullable=False),
     sa.Column('quantity_before', sa.Float(), nullable=False),
     sa.Column('quantity_delta', sa.Float(), nullable=False),
     sa.Column('quantity_after', sa.Float(), nullable=False),
     sa.Column('unit', sa.Enum('KG', 'GRAM', 'LITER', 'ML', 'PIECE', 'PACK', 'OTHER', name='measurement_unit'), nullable=False),
     sa.Column('cooking_session_id', sa.UUID(), nullable=True),
     sa.Column('idempotency_key', sa.String(), nullable=True),
+    sa.Column('reason', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
-    sa.CheckConstraint('quantity_after = quantity_before + quantity_delta'),
+    sa.CheckConstraint('quantity_after = quantity_before + quantity_delta', name='inventory_ledger_quantity_arithmetic'),
     sa.ForeignKeyConstraint(['cooking_session_id'], ['cooking_sessions.id'], ),
     sa.ForeignKeyConstraint(['inventory_batch_id'], ['inventory_batches.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id', 'idempotency_key', 'inventory_batch_id', 'event_type', name='uq_inventory_ledger_idempotent_batch_event')
     )
+    op.create_index('ix_inventory_ledger_batch_created', 'inventory_ledger_entries', ['inventory_batch_id', 'created_at'], unique=False)
+    op.create_index('ix_inventory_ledger_user_created', 'inventory_ledger_entries', ['user_id', 'created_at'], unique=False)
+    op.create_index('uq_inventory_ledger_initial_stock_key', 'inventory_ledger_entries', ['user_id', 'idempotency_key'], unique=True, postgresql_where=sa.text("idempotency_key IS NOT NULL AND event_type = 'INITIAL_STOCK'"))
     op.create_table('notifications',
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('inventory_batch_id', sa.UUID(), nullable=True),
@@ -416,36 +465,92 @@ def upgrade() -> None:
     )
     op.create_index('ix_notifications_delivery_scheduled', 'notifications', ['delivery_status', 'scheduled_at'], unique=False)
     op.create_index('ix_notifications_user_created_at', 'notifications', ['user_id', 'created_at'], unique=False)
+    op.create_table('waste_reduction_events',
+    sa.Column('inventory_ledger_entry_id', sa.UUID(), nullable=False),
+    sa.Column('user_id', sa.UUID(), nullable=False),
+    sa.Column('inventory_batch_id', sa.UUID(), nullable=False),
+    sa.Column('cooking_session_id', sa.UUID(), nullable=False),
+    sa.Column('master_ingredient_id', sa.UUID(), nullable=True),
+    sa.Column('ingredient_name_snapshot', sa.Text(), nullable=False),
+    sa.Column('batch_type_snapshot', sa.Enum('RAW_INGREDIENT', 'COOKED_FOOD', name='inventory_batch_type'), nullable=False),
+    sa.Column('quantity', sa.Numeric(), nullable=False),
+    sa.Column('unit', sa.Enum('KG', 'GRAM', 'LITER', 'ML', 'PIECE', 'PACK', 'OTHER', name='measurement_unit'), nullable=False),
+    sa.Column('mass_kg', sa.Numeric(), nullable=True),
+    sa.Column('expires_at_snapshot', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('consumed_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('warning_days', sa.Integer(), nullable=False),
+    sa.Column('metric_version', sa.String(length=32), nullable=False),
+    sa.Column('is_eligible', sa.Boolean(), nullable=False),
+    sa.Column('exclusion_reason', sa.String(length=32), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint("(is_eligible AND mass_kg IS NOT NULL AND expires_at_snapshot IS NOT NULL AND batch_type_snapshot = 'RAW_INGREDIENT' AND exclusion_reason IS NULL) OR (NOT is_eligible AND exclusion_reason IN ('COOKED_FOOD', 'UNKNOWN_EXPIRATION', 'EXPIRED', 'OUTSIDE_WARNING_WINDOW', 'UNSUPPORTED_UNIT'))", name='waste_event_eligibility_consistent'),
+    sa.CheckConstraint("btrim(ingredient_name_snapshot) <> ''", name='waste_event_ingredient_name_nonblank'),
+    sa.CheckConstraint("btrim(metric_version) <> ''", name='waste_event_metric_version_nonblank'),
+    sa.CheckConstraint("mass_kg IS NULL OR (mass_kg > 0 AND mass_kg NOT IN ('NaN'::numeric, 'Infinity'::numeric, '-Infinity'::numeric))", name='waste_event_mass_kg_positive_finite'),
+    sa.CheckConstraint("quantity > 0 AND quantity NOT IN ('NaN'::numeric, 'Infinity'::numeric, '-Infinity'::numeric)", name='waste_event_quantity_positive_finite'),
+    sa.CheckConstraint('warning_days >= 0', name='waste_event_warning_days_nonnegative'),
+    sa.ForeignKeyConstraint(['cooking_session_id'], ['cooking_sessions.id'], ),
+    sa.ForeignKeyConstraint(['inventory_batch_id'], ['inventory_batches.id'], ),
+    sa.ForeignKeyConstraint(['inventory_ledger_entry_id'], ['inventory_ledger_entries.id'], ),
+    sa.ForeignKeyConstraint(['master_ingredient_id'], ['master_ingredients.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('inventory_ledger_entry_id', name='uq_waste_event_ledger')
+    )
+    op.create_index('ix_waste_events_user_consumed_at', 'waste_reduction_events', ['user_id', 'consumed_at'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index('ix_waste_events_user_consumed_at', table_name='waste_reduction_events')
+    op.drop_table('waste_reduction_events')
     op.drop_index('ix_notifications_user_created_at', table_name='notifications')
     op.drop_index('ix_notifications_delivery_scheduled', table_name='notifications')
     op.drop_table('notifications')
+    op.drop_index('uq_inventory_ledger_initial_stock_key', table_name='inventory_ledger_entries', postgresql_where=sa.text("idempotency_key IS NOT NULL AND event_type = 'INITIAL_STOCK'"))
+    op.drop_index('ix_inventory_ledger_user_created', table_name='inventory_ledger_entries')
+    op.drop_index('ix_inventory_ledger_batch_created', table_name='inventory_ledger_entries')
     op.drop_table('inventory_ledger_entries')
     op.drop_table('cooking_consumptions')
+    op.drop_index('ix_inventory_batches_user_storage', table_name='inventory_batches')
+    op.drop_index('ix_inventory_batches_user_ingredient', table_name='inventory_batches')
+    op.drop_index('ix_inventory_batches_user_fefo', table_name='inventory_batches')
     op.drop_index('ix_inventory_batches_status_expires_at', table_name='inventory_batches')
     op.drop_table('inventory_batches')
+    op.drop_index('ix_shopping_list_items_master_ingredient_id', table_name='shopping_list_items')
+    op.drop_index('ix_shopping_list_items_list_id', table_name='shopping_list_items')
     op.drop_table('shopping_list_items')
     op.drop_table('cooking_sessions')
+    op.drop_index('ix_shopping_lists_user_status', table_name='shopping_lists')
     op.drop_table('shopping_lists')
     op.drop_table('shelf_life_rules')
+    op.drop_index('ix_recommendation_items_recipe_id', table_name='recommendation_items')
     op.drop_table('recommendation_items')
     op.drop_index('ix_recipe_ingredients_recipe_id', table_name='recipe_ingredients')
     op.drop_index('ix_recipe_ingredients_master_ingredient_id', table_name='recipe_ingredients')
     op.drop_table('recipe_ingredients')
+    op.drop_index('ix_meal_plan_items_recommendation_run_id', table_name='meal_plan_items')
+    op.drop_index('ix_meal_plan_items_recipe_id', table_name='meal_plan_items')
+    op.drop_index('ix_meal_plan_items_plan_planned_for', table_name='meal_plan_items')
     op.drop_table('meal_plan_items')
     op.drop_table('ingredient_aliases')
+    op.drop_index('ix_favorite_menu_items_recipe_id', table_name='favorite_menu_items')
     op.drop_table('favorite_menu_items')
     op.drop_table('user_notification_preferences')
+    op.drop_table('shopping_mutation_receipts')
+    op.drop_index('ix_recommendation_runs_user_created_at', table_name='recommendation_runs')
     op.drop_table('recommendation_runs')
+    op.drop_table('premium_interests')
+    op.drop_index('ix_meal_plans_user_starts_on', table_name='meal_plans')
     op.drop_table('meal_plans')
     op.drop_index('uq_master_ingredients_category_name_lower', table_name='master_ingredients')
     op.drop_index('ix_master_ingredients_category_id', table_name='master_ingredients')
     op.drop_table('master_ingredients')
+    op.drop_index('ix_favorite_recipes_recipe_id', table_name='favorite_recipes')
     op.drop_table('favorite_recipes')
+    op.drop_index('ix_favorite_menus_user_created_at', table_name='favorite_menus')
     op.drop_table('favorite_menus')
     op.drop_index('ix_device_registrations_user_enabled', table_name='device_registrations')
     op.drop_table('device_registrations')

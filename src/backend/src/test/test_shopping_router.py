@@ -25,6 +25,7 @@ from src.module.shopping_lists.shopping_dto import (
     ShoppingListItemDTO,
     UpdateShoppingListItemRequestDTO,
 )
+from src.module.shopping_lists.shopping_service import ShoppingMutationResult
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b101")
 PLAN_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b102")
@@ -70,11 +71,11 @@ class FakeShoppingService:
         user_id: UUID,
         body: GenerateShoppingListRequestDTO,
         idempotency_key: str,
-    ) -> ShoppingListDTO:
+    ) -> ShoppingMutationResult[ShoppingListDTO]:
         assert user_id == USER_ID
         assert body.meal_plan_id == PLAN_ID
         assert idempotency_key == "generate-1"
-        return _list()
+        return ShoppingMutationResult(201, _list())
 
     async def get(self, user_id: UUID, list_id: UUID) -> ShoppingListDTO:
         assert user_id == USER_ID
@@ -87,12 +88,12 @@ class FakeShoppingService:
         list_id: UUID,
         body: CreateShoppingItemRequestDTO,
         idempotency_key: str,
-    ) -> ShoppingListItemDTO:
+    ) -> ShoppingMutationResult[ShoppingListItemDTO]:
         assert user_id == USER_ID
         assert list_id == LIST_ID
         assert body.master_ingredient_id == INGREDIENT_ID
         assert idempotency_key == "add-1"
-        return _item()
+        return ShoppingMutationResult(201, _item())
 
     async def update_item(
         self,
@@ -101,7 +102,7 @@ class FakeShoppingService:
         item_id: UUID,
         body: UpdateShoppingListItemRequestDTO,
         idempotency_key: str,
-    ) -> ShoppingListItemDTO:
+    ) -> ShoppingMutationResult[ShoppingListItemDTO]:
         assert user_id == USER_ID
         assert list_id == LIST_ID
         assert item_id == ITEM_ID
@@ -109,15 +110,16 @@ class FakeShoppingService:
         assert body.purchase is not None
         assert body.purchase.storage_mode is StorageMode.REFRIGERATED
         assert idempotency_key == "check-1"
-        return _item()
+        return ShoppingMutationResult(200, _item())
 
     async def remove_item(
         self, user_id: UUID, list_id: UUID, item_id: UUID, idempotency_key: str
-    ) -> None:
+    ) -> int:
         assert user_id == USER_ID
         assert list_id == LIST_ID
         assert item_id == ITEM_ID
         assert idempotency_key == "delete-1"
+        return 204
 
 
 @pytest.fixture(name="shopping_routes")

@@ -86,6 +86,7 @@ REQUIRED_TABLES = frozenset(
         "meal_plan_items",
         "meal_plans",
         "notifications",
+        "premium_interests",
         "recommendation_items",
         "recommendation_runs",
         "recipe_ingredients",
@@ -93,8 +94,10 @@ REQUIRED_TABLES = frozenset(
         "shelf_life_rules",
         "shopping_list_items",
         "shopping_lists",
+        "shopping_mutation_receipts",
         "user_notification_preferences",
         "users",
+        "waste_reduction_events",
     },
 )
 

@@ -39,6 +39,10 @@ from src.module.inventory.inventory_service import (
     InventoryQuantityChange,
     apply_quantity_change,
 )
+from src.module.reports.report_service import (
+    WasteReductionBatchSnapshot,
+    WasteReductionSnapshot,
+)
 from src.service.fefo_service import (
     FEFOAllocation,
     FEFOAllocationResult,
@@ -113,6 +117,14 @@ class ResolvedConsumption:
     quantity: float
 
 
+@dataclass(frozen=True, slots=True)
+class CookingCompletionMutation:
+    """The response and evidence staged by one atomic cooking completion."""
+
+    response: CookingCompletionResponseDTO
+    waste_reduction_snapshots: list[WasteReductionSnapshot]
+
+
 class CookingHelper:
     """Keep cooking calculations and record mapping outside request orchestration."""
 
@@ -152,16 +164,28 @@ class CookingHelper:
         self,
         cooking_session: CookingSessionModel,
         recipe: RecipeModel,
+        recipe_ingredients: list[tuple[RecipeIngredientModel, MasterIngredientModel]],
         locked_batches: list[InventoryBatchModel],
         resolved_consumptions: list[ResolvedConsumption],
         consumption_mode: CookingConsumptionMode,
-    ) -> CookingCompletionResponseDTO:
+    ) -> CookingCompletionMutation:
         """Mutate locked batches and add auditable records to the current transaction."""
         batch_by_id = {batch.id: batch for batch in locked_batches}
+        ingredient_name_by_recipe_ingredient_id = {
+            recipe_ingredient.id: ingredient.name
+            for recipe_ingredient, ingredient in recipe_ingredients
+        }
         consumption_dtos: list[CookingConsumptionDTO] = []
         updated_batches: list[UpdatedInventoryBatchDTO] = []
+        waste_reduction_snapshots: list[WasteReductionSnapshot] = []
         for resolved_consumption in resolved_consumptions:
             batch = batch_by_id[resolved_consumption.inventory_batch_id]
+            batch_snapshot = WasteReductionBatchSnapshot.from_batch(
+                batch,
+                ingredient_name_by_recipe_ingredient_id[
+                    resolved_consumption.recipe_ingredient_id
+                ],
+            )
             self.db_session.add(
                 CookingConsumptionModel(
                     cooking_session_id=cooking_session.id,
@@ -172,7 +196,7 @@ class CookingHelper:
                 )
             )
             try:
-                apply_quantity_change(
+                ledger = apply_quantity_change(
                     self.db_session,
                     batch,
                     InventoryQuantityChange(
@@ -186,6 +210,7 @@ class CookingHelper:
                 )
             except InventoryConflictError as error:
                 raise InsufficientInventoryError() from error
+            waste_reduction_snapshots.append(batch_snapshot.with_ledger(ledger))
             consumption_dtos.append(
                 CookingConsumptionDTO(
                     recipe_ingredient_id=resolved_consumption.recipe_ingredient_id,
@@ -203,10 +228,13 @@ class CookingHelper:
             recipe,
             consumption_mode,
         )
-        return CookingCompletionResponseDTO(
-            session=self.to_session_dto(cooking_session),
-            consumptions=consumption_dtos,
-            updated_batches=updated_batches,
+        return CookingCompletionMutation(
+            response=CookingCompletionResponseDTO(
+                session=self.to_session_dto(cooking_session),
+                consumptions=consumption_dtos,
+                updated_batches=updated_batches,
+            ),
+            waste_reduction_snapshots=waste_reduction_snapshots,
         )
 
     def build_preview(

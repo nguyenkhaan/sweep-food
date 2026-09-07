@@ -9,6 +9,7 @@ from uuid import UUID, uuid4
 
 import pytest
 from sqlalchemy import (
+    CheckConstraint,
     ForeignKeyConstraint,
     Index,
     Table,
@@ -39,6 +40,7 @@ from src.model.recommendation_item_model import RecommendationItemModel
 from src.model.recommendation_run_model import RecommendationRunModel
 from src.model.shopping_list_item_model import ShoppingListItemModel
 from src.model.shopping_list_model import ShoppingListModel
+from src.model.shopping_mutation_receipt_model import ShoppingMutationReceiptModel
 from src.model.user_model import UserModel
 
 
@@ -240,6 +242,51 @@ def test_planning_models_have_required_relationships_indexes_and_foreign_keys() 
     assert ("user_id", "recipe_id") in favorite_recipe_uniques
     assert ("favorite_menu_id", "recipe_id") in favorite_menu_item_uniques
     assert "position" not in _table(FavoriteMenuItemModel).columns
+
+
+def test_shopping_mutation_receipt_metadata_preserves_replay_invariants() -> None:
+    """Receipt metadata is append-only and scoped without an item foreign key."""
+    table = _table(ShoppingMutationReceiptModel)
+    assert {
+        "id",
+        "created_at",
+        "user_id",
+        "method",
+        "request_path",
+        "idempotency_key",
+        "key_hash",
+        "request_fingerprint",
+        "response_status",
+        "response_body",
+    } <= set(table.columns.keys())
+    assert table.c.response_body.nullable is True
+
+    foreign_key_targets = {
+        foreign_key.target_fullname.split(".")[0]
+        for constraint in table.constraints
+        if isinstance(constraint, ForeignKeyConstraint)
+        for foreign_key in constraint.elements
+    }
+    unique_columns = {
+        tuple(column.name for column in constraint.columns)
+        for constraint in table.constraints
+        if isinstance(constraint, UniqueConstraint)
+    }
+    check_names = {
+        constraint.name
+        for constraint in table.constraints
+        if isinstance(constraint, CheckConstraint)
+    }
+
+    assert foreign_key_targets == {"users"}
+    assert ("user_id", "method", "request_path", "key_hash") in unique_columns
+    assert {
+        "shopping_receipt_method_allowed",
+        "shopping_receipt_response_status_allowed",
+        "shopping_receipt_key_nonblank",
+        "shopping_receipt_hashes_valid",
+        "shopping_receipt_response_body_consistent",
+    } <= check_names
 
 
 @pytest.mark.anyio

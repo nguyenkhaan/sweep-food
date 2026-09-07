@@ -1,10 +1,10 @@
 """Authenticated experimental extraction API routes."""
 
-from typing import Annotated
+from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, File, UploadFile, status
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 
+from src.core.exceptions import ErrorResponseDTO
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.module.extractions.extraction_dto import (
     BarcodeExtractionResponse,
@@ -20,6 +20,9 @@ from src.module.extractions.extraction_service import (
 )
 
 extraction_router = APIRouter(prefix="/extractions", tags=["extractions"])
+EXTRACTION_VALIDATION_RESPONSES: dict[int | str, dict[str, Any]] = {
+    status.HTTP_422_UNPROCESSABLE_CONTENT: {"model": ErrorResponseDTO},
+}
 
 
 @extraction_router.post(
@@ -30,19 +33,20 @@ extraction_router = APIRouter(prefix="/extractions", tags=["extractions"])
         "Accept a product label image and return extracted ingredient "
         "fields. No inventory records are created."
     ),
+    responses=EXTRACTION_VALIDATION_RESPONSES,
 )
 async def post_ocr_label(
     file: Annotated[UploadFile, File()],
     _user: Annotated[AuthenticatedUser, Depends(require_authentication)],
-) -> ExtractionResponse | JSONResponse:
+) -> ExtractionResponse:
     """Extract ingredient information from a product label image."""
     try:
         return await extract_ocr_label(file)
     except ExtractionValidationError as exc:
-        return JSONResponse(
+        raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-            content={"detail": exc.detail},
-        )
+            detail=exc.detail,
+        ) from exc
 
 
 @extraction_router.post(
@@ -53,19 +57,20 @@ async def post_ocr_label(
         "Accept an invoice image and return extracted line items. "
         "No inventory records are created."
     ),
+    responses=EXTRACTION_VALIDATION_RESPONSES,
 )
 async def post_ocr_invoice(
     file: Annotated[UploadFile, File()],
     _user: Annotated[AuthenticatedUser, Depends(require_authentication)],
-) -> InvoiceExtractionResponse | JSONResponse:
+) -> InvoiceExtractionResponse:
     """Extract line items from an invoice image."""
     try:
         return await extract_ocr_invoice(file)
     except ExtractionValidationError as exc:
-        return JSONResponse(
+        raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-            content={"detail": exc.detail},
-        )
+            detail=exc.detail,
+        ) from exc
 
 
 @extraction_router.post(
@@ -76,19 +81,20 @@ async def post_ocr_invoice(
         "Accept an audio file and return transcription with parsed "
         "ingredient fields. No inventory records are created."
     ),
+    responses=EXTRACTION_VALIDATION_RESPONSES,
 )
 async def post_asr(
     file: Annotated[UploadFile, File()],
     _user: Annotated[AuthenticatedUser, Depends(require_authentication)],
-) -> ExtractionResponse | JSONResponse:
+) -> ExtractionResponse:
     """Transcribe audio and extract ingredient fields."""
     try:
         return await extract_asr(file)
     except ExtractionValidationError as exc:
-        return JSONResponse(
+        raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-            content={"detail": exc.detail},
-        )
+            detail=exc.detail,
+        ) from exc
 
 
 @extraction_router.post(

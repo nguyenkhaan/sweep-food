@@ -4,10 +4,10 @@ from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy import select
-from sqlalchemy import exc
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.model.cooking_session_model import CookingSessionModel
 from src.model.enum_model import MealPlanItemStatus
 from src.model.meal_plan_item_model import MealPlanItemModel
 from src.model.meal_plan_model import MealPlanModel
@@ -100,26 +100,31 @@ class MealPlanService:
         except SQLAlchemyError:
             await self.db_session.rollback()
             raise
-    async def get_all(self , user_id: UUID, limit : int, offset : int) -> list[MealPlanViewDTO]: 
-        try: 
-            meal_plans = (await self.db_session.execute(
-                select(MealPlanModel).where(MealPlanModel.user_id == user_id)
-                .limit(limit) 
-                .offset(offset) 
-            )).scalars().all() 
-            return [
-                MealPlanViewDTO(
-                    id = meal.id, 
-                    name = meal.name, 
-                    starts_on = meal.starts_on, 
-                    ends_on = meal.ends_on, 
-                    created_at = meal.created_at, 
-                    updated_at = meal.updated_at
-                ) for meal in meal_plans 
-            ]
-
-        except SQLAlchemyError: 
-            raise 
+    async def get_all(
+        self,
+        user_id: UUID,
+        limit: int,
+        offset: int,
+    ) -> list[MealPlanViewDTO]:
+        """List a user's plans in deterministic newest-first order."""
+        result = await self.db_session.execute(
+            select(MealPlanModel)
+            .where(MealPlanModel.user_id == user_id)
+            .order_by(MealPlanModel.created_at.desc(), MealPlanModel.id.desc())
+            .offset(offset)
+            .limit(limit)
+        )
+        return [
+            MealPlanViewDTO(
+                id=meal_plan.id,
+                name=meal_plan.name,
+                starts_on=meal_plan.starts_on,
+                ends_on=meal_plan.ends_on,
+                created_at=meal_plan.created_at,
+                updated_at=meal_plan.updated_at,
+            )
+            for meal_plan in result.scalars().all()
+        ]
     async def add_item(
         self,
         user_id: UUID,
@@ -162,6 +167,7 @@ class MealPlanService:
         try:
             plan = await self._find_plan(user_id, plan_id, lock=True)
             item = await self._find_item(plan.id, item_id, lock=True)
+            await self._ensure_item_is_unused(item)
             recipe_name = (await self._find_recipe(item.recipe_id)).name
             if body.recipe_id is not None:
                 recipe = await self._find_recipe(body.recipe_id)
@@ -188,6 +194,7 @@ class MealPlanService:
         try:
             plan = await self._find_plan(user_id, plan_id, lock=True)
             item = await self._find_item(plan.id, item_id, lock=True)
+            await self._ensure_item_is_unused(item)
             await self.db_session.delete(item)
             await self.db_session.commit()
         except (HTTPException, SQLAlchemyError):
@@ -231,6 +238,21 @@ class MealPlanService:
         if recipe is None:
             raise MealPlanRecipeNotFoundError()
         return recipe
+
+    async def _ensure_item_is_unused(self, item: MealPlanItemModel) -> None:
+        if item.status is MealPlanItemStatus.COMPLETED:
+            raise MealPlanConflictError("Completed meal plan items cannot be changed")
+        cooking_session = (
+            await self.db_session.execute(
+                select(CookingSessionModel)
+                .where(CookingSessionModel.meal_plan_item_id == item.id)
+                .with_for_update()
+            )
+        ).scalar_one_or_none()
+        if cooking_session is not None:
+            raise MealPlanConflictError(
+                "Meal plan items with cooking sessions cannot be changed"
+            )
 
     async def _verify_recommendation_run(
         self, user_id: UUID, recommendation_run_id: UUID | None
