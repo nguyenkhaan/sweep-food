@@ -1,6 +1,6 @@
 # SweepFood API Contract
 
-> **Phiên bản:** M7 — 2026-09-05 · Đối chiếu trực tiếp với code BE (`src/backend/src/module/**`) cho **Auth, Users, Catalog, Recipes, Inventory, Cooking, Recommendations, Meal Plans, Shopping Lists, Favorites, Devices & Notifications**. Chỉ còn **Reports** và **Subscription** là chưa có endpoint BE — giữ nguyên bản FE đề xuất, đánh dấu rõ **[MOCK ONLY]**.
+> **Phiên bản:** M7 — 2026-09-05 · Đối chiếu trực tiếp với code BE (`src/backend/src/module/**`) cho **Auth, Users, Catalog, Recipes, Inventory, Cooking, Recommendations, Meal Plans, Shopping Lists, Favorites, Devices, Notifications, Reports và Subscription**. Reports/Subscription cần migration và kiểm chứng database riêng trước khi FE bỏ mock.
 > **Tác giả:** Frontend team, đối chiếu BE ngày 2026-09-05
 > **Base URL:** `{API_BASE_URL}` (env) — BE chạy cổng **`4000`**, prefix `/api`, **không có `/v1`**. Local: `http://localhost:4000/api` (web/desktop) hoặc `http://10.0.2.2:4000/api` (Android emulator) / `http://127.0.0.1:4000/api` (USB + `adb reverse tcp:4000 tcp:4000`). Cổng `8000` trong `docker-compose.yaml` là WireMock, không phải API.
 > **Auth:** Bearer token (JWT access token) trong header `Authorization: Bearer <token>` cho mọi route trừ `POST /auth/register`, `/auth/register/resend-otp`, `/auth/verify/register`, `/auth/login`, `/auth/token/refresh`, `/auth/password/reset`.
@@ -382,13 +382,21 @@ Ví dụ tính tay với warning window 3 ngày:
 
 FE tiếp tục giữ mock cho tới Checkpoint Phase 5: migration DB-02 phải được người phụ trách tạo và áp dụng, sau đó evidence writer/reader cần được kiểm chứng trên database test biệt lập.
 
-## 11. Subscription — `/subscription` — **[MOCK ONLY, BE chưa có]**
+## 11. Subscription — `/subscription`
+
+Cả hai endpoint yêu cầu Bearer token. MVP luôn mở toàn bộ tính năng: không có payment, checkout, webhook, role change hoặc feature gating.
 
 ```json
-GET  /subscription -> { "plan": "free|premium", "expires_at": "string|null" }
-POST /subscription/premium-interest -> { "registered": true }
+GET /subscription
+-> { "plan": "free", "expires_at": null }
+
+POST /subscription/premium-interest
+-> { "registered": true }
 ```
-MVP mở hết tính năng (không gating) — 2 endpoint trên chỉ phục vụ trang "quan tâm premium", không có logic thanh toán.
+
+`GET /subscription` luôn trả `free/null`, kể cả user đã đăng ký quan tâm. `POST /subscription/premium-interest` không có business body, trả 200 chỉ sau khi persistence commit thành công. Mỗi user có tối đa một registration; retry/concurrent request giữ `registered_at` đầu tiên và vẫn trả `{ "registered": true }`. Registration không ghi vào `UserModel.preferences`, không đổi role/plan, và không cấp Premium.
+
+FE giữ mock cho tới Checkpoint Phase 6: người phụ trách phải tạo/applied migration DB-03 và kiểm chứng upsert trên database test biệt lập.
 
 ---
 
@@ -400,5 +408,5 @@ MVP mở hết tính năng (không gating) — 2 endpoint trên chỉ phục v�
 | 3 | `POST /cooking/sessions` yêu cầu `meal_plan_item_id` | Xác nhận đây là chủ đích sản phẩm (không "nấu nhanh" ngoài kế hoạch)? Nếu đúng, FE sẽ luôn tạo/dùng 1 meal-plan item ẩn khi user bấm "Đã nấu món này" từ màn Dish detail — xin BE xác nhận việc tự tạo meal-plan item kiểu này không vi phạm ràng buộc nghiệp vụ nào khác (ví dụ báo cáo/thống kê theo meal plan thật). |
 | 4 | `PATCH /shopping-lists/{list}/items/{item}` khi check item generated | Yêu cầu object `purchase` đầy đủ ngay trong request check — FE cần 1 form nhập tối thiểu (storage_mode + hạn dùng) trước khi tick, sẽ tăng số bước thao tác. Có thể chấp nhận default `storage_mode` theo `default_storage_mode` của ingredient để giảm bước? |
 | 5 | `GET /recommendations` không nhúng recipe | Với danh sách 3-5 gợi ý, FE phải gọi thêm N lần `GET /recipes/{id}` để hiện đủ thumbnail/thời gian nấu/dinh dưỡng. Cân nhắc BE nhúng thẳng 1 bản rút gọn recipe (name, media_url, estimated_cooking_minutes) trong mỗi `item` để tránh N+1? |
-| 6 | Reports / Subscription | Chưa có endpoint — FE tiếp tục mock 2 mục này cho tới khi BE lên lịch (không chặn MVP theo PRD). |
+| 6 | Reports / Subscription | Route đã triển khai; FE chỉ bỏ mock sau checkpoint từng Phase, gồm migration và kiểm chứng database test. |
 | 7 | `POST /extractions/barcode` là query param | FE hiện gọi multipart cho 3 loại quét còn lại; xác nhận barcode luôn là query string (không upload ảnh mã vạch) để FE không thiết kế nhầm luồng nhập liệu. |

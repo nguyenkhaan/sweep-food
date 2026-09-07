@@ -59,10 +59,10 @@
 
 ## Phase 6
 
-- [ ] Task 6.1 — Viết PremiumInterestModel
+- [x] Task 6.1 — Viết PremiumInterestModel
 - [ ] Task 6.2 — Tạo migration DB-03 premium_interests
-- [ ] Task 6.3 — Viết Subscription DTO và service
-- [ ] Task 6.4 — Setup module và hai route Subscription
+- [x] Task 6.3 — Viết Subscription DTO và service
+- [x] Task 6.4 — Setup module và hai route Subscription
 
 ## Phase 7
 
