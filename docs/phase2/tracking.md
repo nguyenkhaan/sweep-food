@@ -42,10 +42,10 @@
 
 ## Phase 4
 
-- [ ] Task 4.1 — Xác nhận quy tắc một item cho một lần nấu
-- [ ] Task 4.2 — Cập nhật completion transaction và lock order
-- [ ] Task 4.3 — Chặn sửa/xóa meal-plan item đã được sử dụng
-- [ ] Task 4.4 — Kiểm tra tác động tới shopping snapshot
+- [x] Task 4.1 — Xác nhận quy tắc một item cho một lần nấu
+- [x] Task 4.2 — Cập nhật completion transaction và lock order
+- [x] Task 4.3 — Chặn sửa/xóa meal-plan item đã được sử dụng
+- [x] Task 4.4 — Kiểm tra tác động tới shopping snapshot
 
 ## Phase 5
 

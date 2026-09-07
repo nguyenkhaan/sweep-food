@@ -171,6 +171,8 @@ GET  /cooking/history/{id}                              (auth) -> chi tiết 1 s
 
 **Vì `preview`/`sessions` chỉ nhận `meal_plan_item_id`, muốn "nấu ngay 1 recipe" từ màn Dish detail thì FE phải:** tạo (hoặc tái dùng) 1 meal plan → thêm recipe vào làm 1 item → lấy `meal_plan_item_id` đó → gọi `preview`/`sessions`. Không thể bỏ qua bước Meal Plan.
 
+Mỗi meal-plan item chỉ được complete một lần: completion chuyển item từ `PLANNED` sang `COMPLETED` cùng transaction trừ kho. Item đã có cooking session hoặc đã `COMPLETED` không thể PATCH/DELETE (409); direct cooking vẫn không được hỗ trợ.
+
 ---
 
 ## 5. Meal Plans — `/meal-plans`
@@ -225,6 +227,8 @@ DELETE /shopping-lists/{list_id}/items/{item_id} (auth, Idempotency-Key) -> 204
 }
 ```
 List: `{ "id", "meal_plan_id", "status": "ACTIVE|ARCHIVED", "generated_at", "items": [...] }`.
+
+Shopping list đã generate là snapshot: hoàn tất meal-plan item không tự tính lại, xóa hoặc thay item trong ACTIVE list. Khi tạo list mới theo luồng hiện có, chỉ meal-plan item còn `PLANNED` mới đóng góp requirement.
 
 **FE muốn màn "Danh sách mua sắm hiện tại" cần tự lưu `list_id` cục bộ** (từ response `generate`) — không có endpoint "lấy list đang active của tôi".
 

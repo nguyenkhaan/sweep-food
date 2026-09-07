@@ -17,6 +17,7 @@ from src.model.enum_model import (
     InventoryBatchType,
     InventoryLedgerEventType,
     InventorySource,
+    MealPlanItemStatus,
 )
 from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
@@ -28,8 +29,8 @@ from src.model.recipe_model import RecipeModel
 from src.module.cooking.cooking_dto import (
     CompleteCookingSessionRequestDTO,
     CookedLeftoverResponseDTO,
-    CookingConsumptionDTO,
     CookingCompletionResponseDTO,
+    CookingConsumptionDTO,
     CookingHistoryDetailResponseDTO,
     CookingHistoryListResponseDTO,
     CookingHistorySummaryDTO,
@@ -96,10 +97,11 @@ class CookingService:
     ) -> CookingSessionDTO:
         """Create a planned session from an owned meal-plan item without deduction."""
         try:
-            meal_plan_item = await self._find_meal_plan_item(
+            meal_plan_item = await self._find_locked_meal_plan_item(
                 user_id,
                 request.meal_plan_item_id,
             )
+            self._ensure_meal_plan_item_is_planned(meal_plan_item)
             recipe = await self._find_recipe(meal_plan_item.recipe_id)
             recipe_ingredients = await self._find_recipe_ingredients(recipe.id)
             batches = await self._find_active_batches(
@@ -157,6 +159,11 @@ class CookingService:
             if previous_session is not None:
                 return await self._existing_completion_response(previous_session)
 
+            session_reference = await self._find_session_by_id(user_id, session_id)
+            meal_plan_item = await self._find_locked_meal_plan_item(
+                user_id,
+                self._meal_plan_item_id(session_reference),
+            )
             cooking_session = await self._find_locked_session(user_id, session_id)
             previous_session = await self._find_session_by_idempotency_key(
                 user_id,
@@ -165,6 +172,11 @@ class CookingService:
             if previous_session is not None:
                 return await self._existing_completion_response(previous_session)
             self._ensure_session_is_completable(cooking_session)
+            self._ensure_session_matches_meal_plan_item(
+                cooking_session,
+                meal_plan_item,
+            )
+            self._ensure_meal_plan_item_is_planned(meal_plan_item)
 
             recipe = await self._find_recipe(cooking_session.recipe_id)
             recipe_ingredients = await self._find_recipe_ingredients(recipe.id)
@@ -190,6 +202,7 @@ class CookingService:
                 resolved_consumptions,
                 request.consumption_mode,
             )
+            meal_plan_item.status = MealPlanItemStatus.COMPLETED
             await self.db_session.commit()
             return response
         except IntegrityError as error:
@@ -403,6 +416,42 @@ class CookingService:
             raise MealPlanItemNotFoundError()
         return meal_plan_item
 
+    async def _find_locked_meal_plan_item(
+        self,
+        user_id: UUID,
+        meal_plan_item_id: UUID,
+    ) -> MealPlanItemModel:
+        """Lock the owning plan before its item for a cooking write."""
+        plan = (
+            await self.db_session.execute(
+                select(MealPlanModel)
+                .join(
+                    MealPlanItemModel,
+                    MealPlanItemModel.meal_plan_id == MealPlanModel.id,
+                )
+                .where(
+                    MealPlanItemModel.id == meal_plan_item_id,
+                    MealPlanModel.user_id == user_id,
+                )
+                .with_for_update(of=MealPlanModel)
+            )
+        ).scalar_one_or_none()
+        if plan is None:
+            raise MealPlanItemNotFoundError()
+        meal_plan_item = (
+            await self.db_session.execute(
+                select(MealPlanItemModel)
+                .where(
+                    MealPlanItemModel.id == meal_plan_item_id,
+                    MealPlanItemModel.meal_plan_id == plan.id,
+                )
+                .with_for_update()
+            )
+        ).scalar_one_or_none()
+        if meal_plan_item is None:
+            raise MealPlanItemNotFoundError()
+        return meal_plan_item
+
     async def _find_session_by_idempotency_key(
         self,
         user_id: UUID,
@@ -527,4 +576,33 @@ class CookingService:
         if cooking_session.status is CookingSessionStatus.CANCELLED:
             raise CookingCompletionConflictError(
                 "Cancelled cooking session cannot complete"
+            )
+
+    @staticmethod
+    def _meal_plan_item_id(cooking_session: CookingSessionModel) -> UUID:
+        if cooking_session.meal_plan_item_id is None:
+            raise CookingCompletionConflictError(
+                "Cooking session is not linked to a meal plan item"
+            )
+        return cooking_session.meal_plan_item_id
+
+    @staticmethod
+    def _ensure_meal_plan_item_is_planned(meal_plan_item: MealPlanItemModel) -> None:
+        if meal_plan_item.status is not MealPlanItemStatus.PLANNED:
+            raise CookingCompletionConflictError(
+                "Meal plan item is no longer available for cooking"
+            )
+
+    @staticmethod
+    def _ensure_session_matches_meal_plan_item(
+        cooking_session: CookingSessionModel,
+        meal_plan_item: MealPlanItemModel,
+    ) -> None:
+        if (
+            cooking_session.meal_plan_item_id != meal_plan_item.id
+            or cooking_session.recipe_id != meal_plan_item.recipe_id
+            or cooking_session.servings != meal_plan_item.servings
+        ):
+            raise CookingCompletionConflictError(
+                "Cooking session no longer matches its meal plan item"
             )
