@@ -68,6 +68,11 @@ class ProfileScreen extends ConsumerWidget {
                 label: l10n.profileChangePassword,
                 onTap: () => context.push(Routes.settingsChangePassword),
               ),
+              SettingsRow(
+                icon: Icons.devices_rounded,
+                label: 'Thiết bị & phiên đăng nhập',
+                onTap: () => context.push(Routes.settingsSessions),
+              ),
             ],
           ),
           Gap.gapMd,

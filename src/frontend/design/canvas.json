@@ -735,6 +735,70 @@
       "y": 23440,
       "w": 400,
       "h": 900
+    },
+    {
+      "file": "CookHistory.dc.html",
+      "title": "Lịch sử nấu ăn (D-08) · Sáng",
+      "x": 3640,
+      "y": 12800,
+      "w": 400,
+      "h": 760
+    },
+    {
+      "file": "CookHistoryDark.dc.html",
+      "title": "Lịch sử nấu ăn (D-08) · Tối",
+      "x": 3640,
+      "y": 14500,
+      "w": 400,
+      "h": 760
+    },
+    {
+      "file": "CookHistoryDetail.dc.html",
+      "title": "Chi tiết phiên nấu (D-09) · Sáng",
+      "x": 4160,
+      "y": 12800,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "CookHistoryDetailDark.dc.html",
+      "title": "Chi tiết phiên nấu (D-09) · Tối",
+      "x": 4160,
+      "y": 14500,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "InventoryLedger.dc.html",
+      "title": "Lịch sử biến động kho (K-05) · Sáng",
+      "x": 3120,
+      "y": 3600,
+      "w": 400,
+      "h": 1100
+    },
+    {
+      "file": "InventoryLedgerDark.dc.html",
+      "title": "Lịch sử biến động kho (K-05) · Tối",
+      "x": 3120,
+      "y": 5080,
+      "w": 400,
+      "h": 1100
+    },
+    {
+      "file": "AuthSessions.dc.html",
+      "title": "Thiết bị & phiên đăng nhập (P-01c) · Sáng",
+      "x": 2600,
+      "y": 22420,
+      "w": 400,
+      "h": 900
+    },
+    {
+      "file": "AuthSessionsDark.dc.html",
+      "title": "Thiết bị & phiên đăng nhập (P-01c) · Tối",
+      "x": 2600,
+      "y": 23440,
+      "w": 400,
+      "h": 900
     }
   ],
   "annotations": [
@@ -750,7 +814,7 @@
       "x": 0,
       "y": 3440,
       "w": 700,
-      "text": "Hàng trên = Sáng, hàng dưới = Tối. Đã có: Trang chủ (H-01), Kho (K-01→K-04), Chọn cách nhập (G-03)."
+      "text": "Hàng trên = Sáng, hàng dưới = Tối. Đã có: Trang chủ (H-01), Kho (K-01→K-05), Chọn cách nhập (G-03)."
     },
     {
       "id": "note-auth",
@@ -791,8 +855,8 @@
       "id": "note-account",
       "x": 0,
       "y": 22270,
-      "w": 760,
-      "text": "Quản lý tài khoản (P-01a + 4 màn con) — thêm sau canvas gốc để khớp app: điều hướng từ Cá nhân → 'Hồ sơ & mật khẩu'. Đổi mật khẩu / email / SĐT đều là luồng OTP 2 bước (artboard hiện trạng thái nhập OTP)."
+      "w": 780,
+      "text": "Quản lý tài khoản (P-01a + 5 màn con) — thêm sau canvas gốc để khớp app: điều hướng từ Cá nhân → 'Hồ sơ & mật khẩu'. Đổi mật khẩu / email / SĐT đều là luồng OTP 2 bước (artboard hiện trạng thái nhập OTP). P-01c 'Thiết bị & phiên đăng nhập' liệt kê các phiên đang hoạt động, thu hồi từng phiên."
     }
   ],
   "launch": {

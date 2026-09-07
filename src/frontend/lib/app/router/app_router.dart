@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/app/router/route_guards.dart';
 import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/shell/app_shell.dart';
+import 'package:sweepfood/features/auth/presentation/screens/active_sessions_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/login_screen.dart';
 import 'package:sweepfood/features/auth/presentation/screens/otp_screen.dart';
@@ -13,6 +14,8 @@ import 'package:sweepfood/features/auth/presentation/screens/splash_screen.dart'
 import 'package:sweepfood/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
 import 'package:sweepfood/features/cooking/presentation/screens/cook_result_screen.dart';
+import 'package:sweepfood/features/cooking/presentation/screens/cooking_history_detail_screen.dart';
+import 'package:sweepfood/features/cooking/presentation/screens/cooking_history_screen.dart';
 import 'package:sweepfood/features/dishes/presentation/screens/dish_detail_screen.dart';
 import 'package:sweepfood/features/favorites/presentation/screens/favorite_menu_detail_screen.dart';
 import 'package:sweepfood/features/favorites/presentation/screens/favorites_screen.dart';
@@ -32,6 +35,7 @@ import 'package:sweepfood/features/onboarding/presentation/screens/onboarding_pa
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/add_ingredient_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/cookable_recipes_screen.dart';
+import 'package:sweepfood/features/pantry/presentation/screens/inventory_ledger_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_item_detail_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_screen.dart';
 import 'package:sweepfood/features/reports/presentation/screens/reports_screen.dart';
@@ -257,6 +261,26 @@ GoRouter appRouter(Ref ref) {
             CookResultScreen(result: state.extra! as CookResult),
       ),
       GoRoute(
+        path: Routes.cookHistory,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const CookingHistoryScreen(),
+      ),
+      GoRoute(
+        path: Routes.cookHistoryDetail,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => CookingHistoryDetailScreen(
+          sessionId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: Routes.inventoryLedger,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => InventoryLedgerScreen(
+          batchId: state.uri.queryParameters['batchId'],
+          batchName: state.extra as String?,
+        ),
+      ),
+      GoRoute(
         path: Routes.notifications,
         parentNavigatorKey: _rootKey,
         builder: (context, state) => const NotificationCenterScreen(),
@@ -312,6 +336,11 @@ GoRouter appRouter(Ref ref) {
         path: Routes.settingsChangePhone,
         parentNavigatorKey: _rootKey,
         builder: (context, state) => const ChangePhoneScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsSessions,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const ActiveSessionsScreen(),
       ),
       GoRoute(
         path: Routes.settingsPreferences,

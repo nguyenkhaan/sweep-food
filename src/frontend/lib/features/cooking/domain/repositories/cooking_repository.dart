@@ -1,6 +1,7 @@
 import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
+import 'package:sweepfood/features/cooking/domain/entities/cooking_history.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cooking_preview.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 
@@ -21,4 +22,10 @@ abstract interface class CookingRepository {
   /// Save leftover portions as a new `COOKED_FOOD` batch
   /// (`POST /cooking/sessions/{id}/leftovers`).
   Future<Result<PantryItem>> saveLeftover(CookedFood food);
+
+  /// `GET /cooking/history` — completed sessions, newest first.
+  Future<Result<List<CookingHistoryEntry>>> history();
+
+  /// `GET /cooking/history/{sessionId}` — one completed session in full.
+  Future<Result<CookingHistoryDetail>> historyDetail(String sessionId);
 }

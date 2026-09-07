@@ -13,6 +13,7 @@ abstract final class ApiPaths {
   static const tokenRefresh = '/auth/token/refresh';
   static const logout = '/auth/logout';
   static const sessions = '/auth/sessions';
+  static String session(String id) => '/auth/sessions/$id';
   static const passwordReset = '/auth/password/reset';
   static const passwordChange = '/auth/password/change';
   static const verifyChangePassword = '/auth/verify/change-password';
@@ -39,8 +40,8 @@ abstract final class ApiPaths {
       '/inventory/batches/$id/consume';
   static String inventoryBatchMove(String id) =>
       '/inventory/batches/$id/move';
-  static String inventoryBatchLedger(String id) =>
-      '/inventory/batches/$id/ledger';
+  // Immutable quantity-change history. Filter to one batch with `?batch_id=`.
+  static const inventoryLedger = '/inventory/ledger';
 
   // Cooking (real backend) — the 3-step flow: preview -> session -> complete.
   // Always requires a meal_plan_item_id. See api-contract.md §6.
@@ -50,6 +51,8 @@ abstract final class ApiPaths {
       '/cooking/sessions/$id/complete';
   static String cookingSessionLeftovers(String id) =>
       '/cooking/sessions/$id/leftovers';
+  static const cookingHistory = '/cooking/history';
+  static String cookingHistoryDetail(String id) => '/cooking/history/$id';
 
   // Extractions (real backend) — see api-contract.md §11
   static const extractionOcrLabel = '/extractions/ocr/label';

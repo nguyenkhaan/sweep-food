@@ -2,6 +2,7 @@ import 'package:sweepfood/core/network/api_client.dart';
 import 'package:sweepfood/core/network/api_paths.dart';
 import 'package:sweepfood/core/utils/idempotency.dart';
 import 'package:sweepfood/features/cooking/data/models/cooked_leftover_dto.dart';
+import 'package:sweepfood/features/cooking/data/models/cooking_history_dto.dart';
 import 'package:sweepfood/features/cooking/data/models/cooking_preview_dto.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
@@ -54,5 +55,17 @@ class CookingRemoteDataSource {
       body: food.toBody(),
     );
     return CookedLeftoverDto.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// `GET /cooking/history` — completed sessions, newest first.
+  Future<CookingHistoryListDto> history() async {
+    final json = await _api.get(ApiPaths.cookingHistory);
+    return CookingHistoryListDto.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// `GET /cooking/history/{session_id}`.
+  Future<CookingHistoryDetailDto> historyDetail(String sessionId) async {
+    final json = await _api.get(ApiPaths.cookingHistoryDetail(sessionId));
+    return CookingHistoryDetailDto.fromJson(json as Map<String, dynamic>);
   }
 }

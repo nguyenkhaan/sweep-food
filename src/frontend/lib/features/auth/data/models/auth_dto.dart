@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/auth/domain/entities/active_session.dart';
 import 'package:sweepfood/features/auth/domain/entities/user.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
@@ -48,6 +49,34 @@ abstract class AccessTokenDto with _$AccessTokenDto {
 
   factory AccessTokenDto.fromJson(Map<String, dynamic> json) =>
       _$AccessTokenDtoFromJson(json);
+}
+
+/// One row of `GET /auth/sessions` — a non-revoked, non-expired login session
+/// owned by the caller. Timestamps arrive as ISO-8601 strings.
+@freezed
+abstract class AuthSessionDto with _$AuthSessionDto {
+  const AuthSessionDto._();
+
+  const factory AuthSessionDto({
+    required String id,
+    @JsonKey(name: 'ip_address') String? ipAddress,
+    @JsonKey(name: 'user_agent') String? userAgent,
+    @JsonKey(name: 'expires_at') required DateTime expiresAt,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'last_used_at') DateTime? lastUsedAt,
+  }) = _AuthSessionDto;
+
+  factory AuthSessionDto.fromJson(Map<String, dynamic> json) =>
+      _$AuthSessionDtoFromJson(json);
+
+  ActiveSession toEntity() => ActiveSession(
+        id: id,
+        ipAddress: ipAddress,
+        userAgent: userAgent,
+        expiresAt: expiresAt,
+        createdAt: createdAt,
+        lastUsedAt: lastUsedAt,
+      );
 }
 
 /// `GET /users/profile` payload. `name`/`email` are nullable; the meal-ranking

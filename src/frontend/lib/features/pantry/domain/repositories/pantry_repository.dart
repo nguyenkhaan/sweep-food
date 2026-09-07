@@ -1,4 +1,5 @@
 ﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/pantry/domain/entities/inventory_ledger.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_summary.dart';
@@ -39,4 +40,12 @@ abstract interface class PantryRepository {
 
   /// Reduce the quantity by [quantityUsed]; reaching 0 marks it `used`.
   Future<Result<PantryItem>> consume(String id, {required double quantityUsed});
+
+  /// `GET /inventory/ledger` — immutable quantity-change history (newest first).
+  /// Pass [batchId] to scope it to one batch.
+  Future<Result<Paginated<InventoryLedgerEntry>>> ledger({
+    String? batchId,
+    LedgerEventType? eventType,
+    int page,
+  });
 }

@@ -206,4 +206,39 @@ void main() {
     expect(leftover.id, isNotEmpty);
     expect(leftover.quantity, 2);
   });
+
+  test('history() lists the completed session', () async {
+    final setup = await setUpCookableItem();
+    final sessionId = (await cooking.createSession(setup.mealPlanItemId))
+        .fold((f) => fail('createSession failed: $f'), (id) => id);
+    await cooking.complete(sessionId, CookMode.exact);
+
+    final res = await cooking.history();
+    final list = res.fold((f) => fail('history failed: $f'), (r) => r);
+    final entry = list.firstWhere(
+      (e) => e.sessionId == sessionId,
+      orElse: () => fail('session $sessionId not in history: $list'),
+    );
+    expect(entry.status.wire, 'COMPLETED');
+    expect(entry.recipeId, isNotEmpty);
+    expect(entry.completedAt, isNotNull);
+  });
+
+  test('historyDetail() returns the session with its consumptions', () async {
+    final setup = await setUpCookableItem();
+    final sessionId = (await cooking.createSession(setup.mealPlanItemId))
+        .fold((f) => fail('createSession failed: $f'), (id) => id);
+    await cooking.complete(sessionId, CookMode.exact);
+
+    final res = await cooking.historyDetail(sessionId);
+    final d = res.fold((f) => fail('historyDetail failed: $f'), (r) => r);
+    expect(d.sessionId, sessionId);
+    expect(d.recipeId, isNotEmpty);
+    expect(d.consumptions, isNotEmpty);
+    expect(
+      d.consumptions.any((c) => c.inventoryBatchId == setup.batch.id),
+      isTrue,
+      reason: 'the stocked batch should appear in the recorded consumptions',
+    );
+  });
 }

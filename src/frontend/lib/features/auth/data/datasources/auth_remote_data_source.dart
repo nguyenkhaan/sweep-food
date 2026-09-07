@@ -98,6 +98,20 @@ class AuthRemoteDataSource {
         body: {if (refreshToken != null) 'refresh_token': refreshToken},
       );
 
+  /// `GET /auth/sessions` — authenticated; the caller's active login sessions,
+  /// newest first. Returns a bare JSON array.
+  Future<List<AuthSessionDto>> sessions() async {
+    final json = await _api.get(ApiPaths.sessions);
+    return [
+      for (final e in json as List)
+        AuthSessionDto.fromJson(e as Map<String, dynamic>),
+    ];
+  }
+
+  /// `DELETE /auth/sessions/{id}` — authenticated; revokes one session. 204,
+  /// nothing to decode.
+  Future<void> revokeSession(String id) => _api.delete(ApiPaths.session(id));
+
   // --- Account management (authenticated) ------------------------------------
 
   /// `PATCH /users/profile` — update the display name and/or preferences map.

@@ -54,6 +54,28 @@ Map<String, dynamic> _$AccessTokenDtoToJson(_AccessTokenDto instance) =>
       'access_expires_in_seconds': instance.accessExpiresInSeconds,
     };
 
+_AuthSessionDto _$AuthSessionDtoFromJson(Map<String, dynamic> json) =>
+    _AuthSessionDto(
+      id: json['id'] as String,
+      ipAddress: json['ip_address'] as String?,
+      userAgent: json['user_agent'] as String?,
+      expiresAt: DateTime.parse(json['expires_at'] as String),
+      createdAt: DateTime.parse(json['created_at'] as String),
+      lastUsedAt: json['last_used_at'] == null
+          ? null
+          : DateTime.parse(json['last_used_at'] as String),
+    );
+
+Map<String, dynamic> _$AuthSessionDtoToJson(_AuthSessionDto instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'ip_address': instance.ipAddress,
+      'user_agent': instance.userAgent,
+      'expires_at': instance.expiresAt.toIso8601String(),
+      'created_at': instance.createdAt.toIso8601String(),
+      'last_used_at': instance.lastUsedAt?.toIso8601String(),
+    };
+
 _UserProfileDto _$UserProfileDtoFromJson(Map<String, dynamic> json) =>
     _UserProfileDto(
       userId: json['user_id'] as String,

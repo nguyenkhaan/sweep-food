@@ -11,6 +11,14 @@ enum CookMode {
   const CookMode(this.wire);
   final String wire;
 
+  static CookMode? fromWire(String? v) {
+    if (v == null) return null;
+    for (final m in CookMode.values) {
+      if (m.wire == v) return m;
+    }
+    return null;
+  }
+
   String label(AppL10n l10n) => switch (this) {
     CookMode.exact => l10n.cookModeExact,
     CookMode.half => l10n.cookModeHalf,

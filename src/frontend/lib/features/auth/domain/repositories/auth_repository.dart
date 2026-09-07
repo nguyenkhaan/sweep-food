@@ -1,4 +1,5 @@
 import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/auth/domain/entities/active_session.dart';
 import 'package:sweepfood/features/auth/domain/entities/session.dart';
 import 'package:sweepfood/features/auth/domain/entities/user.dart';
 
@@ -56,6 +57,14 @@ abstract interface class AuthRepository {
 
   /// Whether a persisted access token exists (no network call).
   Future<bool> hasStoredSession();
+
+  /// `GET /auth/sessions` — the signed-in user's active login sessions,
+  /// newest first.
+  Future<Result<List<ActiveSession>>> activeSessions();
+
+  /// `DELETE /auth/sessions/{id}` — revoke one of those sessions. Revoking the
+  /// session backing the current device signs it out on its next request.
+  Future<Result<void>> revokeSession(String id);
 
   // --- Account management (authenticated) ----------------------------------
 

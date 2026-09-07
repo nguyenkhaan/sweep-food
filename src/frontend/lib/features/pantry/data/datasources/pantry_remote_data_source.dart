@@ -1,7 +1,9 @@
 import 'package:sweepfood/core/network/api_client.dart';
 import 'package:sweepfood/core/network/api_paths.dart';
 import 'package:sweepfood/core/utils/idempotency.dart';
+import 'package:sweepfood/features/pantry/data/models/inventory_ledger_dto.dart';
 import 'package:sweepfood/features/pantry/data/models/pantry_item_dto.dart';
+import 'package:sweepfood/features/pantry/domain/entities/inventory_ledger.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
 import 'package:sweepfood/features/pantry/domain/repositories/pantry_repository.dart';
@@ -108,6 +110,27 @@ class PantryRemoteDataSource {
       headers: _idempotencyHeaders(),
     );
     return PantryItemDto.fromJson(json as Map<String, dynamic>);
+  }
+
+  /// `GET /inventory/ledger` — the immutable quantity-change history, newest
+  /// first. Filter to one batch with [batchId]. `per_page` is capped at the
+  /// backend's max (100).
+  Future<InventoryLedgerListDto> ledger({
+    String? batchId,
+    LedgerEventType? eventType,
+    int page = 1,
+    int perPage = 30,
+  }) async {
+    final json = await _api.get(
+      ApiPaths.inventoryLedger,
+      query: {
+        if (batchId != null) 'batch_id': batchId,
+        if (eventType != null) 'event_type': eventType.wire,
+        'page': page,
+        'per_page': perPage,
+      },
+    );
+    return InventoryLedgerListDto.fromJson(json as Map<String, dynamic>);
   }
 
   Map<String, String> _idempotencyHeaders() =>
