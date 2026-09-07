@@ -652,5 +652,8 @@
   "paywallBenefit6": "Chia sẻ tủ bếp cho tối đa 4 người",
   "paywallSubmitted": "Đã ghi nhận — cảm ơn bạn!",
   "paywallNotifyMe": "Nhận thông báo khi ra mắt",
-  "paywallFinePrint": "Chưa tính phí · giá & gói đang trong giai đoạn kiểm chứng"
+  "paywallFinePrint": "Chưa tính phí · giá & gói đang trong giai đoạn kiểm chứng",
+
+  "favoritesTitle": "Món & thực đơn yêu thích",
+  "favAddToMenuTitle": "Thêm vào thực đơn mẫu"
 }

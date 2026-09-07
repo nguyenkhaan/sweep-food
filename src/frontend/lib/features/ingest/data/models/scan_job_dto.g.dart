@@ -35,38 +35,3 @@ Map<String, dynamic> _$ParsedItemDraftDtoToJson(_ParsedItemDraftDto instance) =>
       'price_vnd': instance.priceVnd,
       'is_expiry_warn': instance.isExpiryWarn,
     };
-
-_ScanJobDto _$ScanJobDtoFromJson(Map<String, dynamic> json) => _ScanJobDto(
-  jobId: json['job_id'] as String,
-  type: json['type'] as String,
-  status: json['status'] as String? ?? 'completed',
-  rawText: json['raw_text'] as String?,
-  rawTranscript: json['raw_transcript'] as String?,
-  storeName: json['store_name'] as String?,
-  purchaseDate: json['purchase_date'] == null
-      ? null
-      : DateTime.parse(json['purchase_date'] as String),
-  fieldCount: (json['field_count'] as num?)?.toInt(),
-  item: json['item'] == null
-      ? null
-      : ParsedItemDraftDto.fromJson(json['item'] as Map<String, dynamic>),
-  items:
-      (json['items'] as List<dynamic>?)
-          ?.map((e) => ParsedItemDraftDto.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      const <ParsedItemDraftDto>[],
-);
-
-Map<String, dynamic> _$ScanJobDtoToJson(_ScanJobDto instance) =>
-    <String, dynamic>{
-      'job_id': instance.jobId,
-      'type': instance.type,
-      'status': instance.status,
-      'raw_text': instance.rawText,
-      'raw_transcript': instance.rawTranscript,
-      'store_name': instance.storeName,
-      'purchase_date': instance.purchaseDate?.toIso8601String(),
-      'field_count': instance.fieldCount,
-      'item': instance.item,
-      'items': instance.items,
-    };

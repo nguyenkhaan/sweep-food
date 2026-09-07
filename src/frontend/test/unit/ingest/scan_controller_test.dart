@@ -28,6 +28,24 @@ void main() {
     verify(() => repo.scanLabel('/tmp/x.jpg')).called(1);
   });
 
+  test('lookupBarcode returns the job from the repository', () async {
+    final repo = MockScanRepository();
+    final job = labelScanJob();
+    when(() => repo.lookupBarcode('8934567890123'))
+        .thenAnswer((_) async => Right(job));
+
+    final container = createContainer(
+      overrides: [scanRepositoryProvider.overrideWithValue(repo)],
+    );
+    final notifier = container.read(scanControllerProvider.notifier);
+
+    final result = await notifier.lookupBarcode('8934567890123');
+
+    expect(result.id, job.id);
+    expect(container.read(scanControllerProvider).value, job);
+    verify(() => repo.lookupBarcode('8934567890123')).called(1);
+  });
+
   test('a repository Failure is rethrown and stored as AsyncError', () async {
     final repo = MockScanRepository();
     const failure = ServerFailure(message: 'boom');

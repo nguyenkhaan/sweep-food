@@ -174,6 +174,39 @@ class _List extends StatelessWidget {
             ),
           ),
         ),
+        if (items.any((s) => s.isMock))
+          Padding(
+            padding: const EdgeInsets.only(bottom: Gap.sm),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Gap.sm,
+                vertical: Gap.xs,
+              ),
+              decoration: BoxDecoration(
+                color: context.sweep.soon.bg,
+                borderRadius: Radii.brSm,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.science_outlined,
+                    size: 14,
+                    color: context.sweep.soon.fg,
+                  ),
+                  const SizedBox(width: Gap.xs),
+                  Expanded(
+                    child: Text(
+                      'Kết quả thử nghiệm (Mock AI provider)',
+                      style: context.text.labelSmall?.copyWith(
+                        color: context.sweep.soon.fg,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         for (final s in items)
           Padding(
             padding: const EdgeInsets.only(bottom: Gap.md),

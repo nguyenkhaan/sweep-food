@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
@@ -72,6 +72,68 @@ class ScoreBreakdownSheet extends StatelessWidget {
             ),
           ),
           Gap.gapMd,
+          if (suggestion.isMock) ...[
+            Container(
+              padding: const EdgeInsets.all(Gap.sm),
+              decoration: BoxDecoration(
+                color: context.sweep.soon.bg,
+                borderRadius: Radii.brMd,
+                border: Border.all(
+                  color: context.sweep.soon.fg.withValues(alpha: 0.3),
+                ),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline_rounded,
+                    size: 16,
+                    color: context.sweep.soon.fg,
+                  ),
+                  const SizedBox(width: Gap.xs),
+                  Expanded(
+                    child: Text(
+                      'Kết quả thử nghiệm (Mock AI) — Điểm số mẫu đang được cung cấp trong giai đoạn tích hợp mô hình AI thực tế.',
+                      style: context.text.labelSmall?.copyWith(
+                        color: context.sweep.soon.fg,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Gap.gapSm,
+          ],
+          if (suggestion.explanation != null &&
+              suggestion.explanation!.isNotEmpty) ...[
+            Container(
+              padding: const EdgeInsets.all(Gap.sm),
+              decoration: BoxDecoration(
+                color: context.sweep.subtleFill,
+                borderRadius: Radii.brMd,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.auto_awesome_rounded,
+                    size: 16,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: Gap.xs),
+                  Expanded(
+                    child: Text(
+                      suggestion.explanation!,
+                      style: context.text.bodySmall?.copyWith(
+                        color: context.sweep.textSecondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Gap.gapSm,
+          ],
           for (final c in suggestion.breakdown.components(l10n))
             Padding(
               padding: const EdgeInsets.only(bottom: Gap.md),

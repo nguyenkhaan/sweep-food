@@ -34,7 +34,9 @@ Nối `DioApiClient` với BE thật, "xong đến đâu nối đến đó". `co
 - **Meal Plans (2026-09-05)** — ✅ nối + **verify live** (`test/live/meal_plan_live_test.dart`, 3/3 pass). 1 lỗi FE phát hiện khi verify live, đã sửa — xem mục B.
 - **Shopping Lists (2026-09-05)** — ✅ nối + **verify live** (`test/live/shopping_list_live_test.dart`, 5/5 pass), không phát sinh lỗi mới.
 - **Cooking (2026-09-05)** — ✅ nối + **verify live** (`test/live/cooking_live_test.dart`, 3/3 pass, quyết định UX auto-tạo meal-plan-item ẩn vẫn chưa được BE xác nhận). 1 lỗi thiết kế DTO phát hiện khi verify live, đã sửa — xem mục D.
-- **Chưa nối:** Extractions, Recommendations, Favorites. Chi tiết hợp đồng đã đối chiếu BE thật ở `docs/api-contract.md` (bản M7, 2026-09-05) — các mục việc bên dưới bám theo đúng shape trong đó, không phải bản FE tự đề xuất cũ.
+- **Favorites (2026-09-05)** — ✅ đã triển khai hoàn thiện Clean Architecture & nối API thật + MockApiClient + unit / widget / live tests (`test/live/favorites_live_test.dart`) — xem mục F.
+- **Extractions (2026-09-05)** — ✅ đã nối API thật & mapping ExtractionResponse / InvoiceExtractionResponse / BarcodeExtractionResponse + MockApiClient + unit / widget / live tests (`test/live/extractions_live_test.dart`) — xem mục G.
+- **Tất cả các mục A, B, C, D, E, F, G đã hoàn thành nối API và có test đầy đủ.**
 
 ### M6.2 — Việc còn lại, theo `docs/api-contract.md` M7 (2026-09-05)
 
@@ -100,23 +102,63 @@ Thứ tự đề xuất: **Inventory trước** (nền tảng — unblock "in pa
 
 #### E. Recommendations — `features/suggestions/*`
 
-- [ ] `suggestion_remote_data_source` đổi `POST /suggestions/dishes` → `POST /recommendations {request: string}`.
-- [ ] Bỏ filter cấu trúc (`meal_type`, `max_time_min`...) khỏi request — BE chỉ nhận 1 chuỗi tự do; FE tự ghép câu từ filter UI thành text nếu muốn giữ chip lọc, hoặc bỏ chip và chỉ còn ô nhập tự do.
-- [ ] Response chỉ có `recipe_id`+`recipe_name`+score — **không nhúng recipe đầy đủ**; phải gọi thêm `GET /recipes/{recipe_id}` cho từng item để có ảnh/thời gian/dinh dưỡng hiện trên card (N+1 — cân nhắc gọi song song, hoặc giới hạn hiện đủ khi tap vào chi tiết).
-- [ ] `score_components` map trực tiếp `e/a/p/u` — đổi tên field cho khớp (`expiration_utilization→e`, `availability→a`, `preference_fit→p`, `purchase_minimization→u`).
-- [ ] Đánh dấu rõ trên UI đây là **kết quả từ mock provider** (`analysis.is_mock`) cho tới khi BE có scoring thật theo inventory — tránh gây hiểu lầm là "AI" hoàn chỉnh (xem `CookableRecipesScreen` hiện đang hard-code, không gọi API nào — cân nhắc thay bằng luồng này).
+> ✅ **Đã nối API (2026-09-05).** Đã chuyển hoàn toàn sang `POST /recommendations {request: string}` theo đúng API contract của BE, kèm N+1 parallel fetch qua `GET /recipes/{id}` và có test live riêng.
+
+- [x] `suggestion_remote_data_source` đổi `POST /suggestions/dishes` → `POST /recommendations {request: string}`.
+- [x] Bỏ filter cấu trúc (`meal_type`, `max_time_min`...) khỏi request — BE chỉ nhận 1 chuỗi tự do (`{request: string}`, 1..1000 ký tự); `SuggestionRequest` tự ghép câu từ prompt và filter UI (`MealType`, `maxCookTimeMin`, `dietaryPreference`) thành chuỗi tự nhiên (mặc định `'Gợi ý món ăn hôm nay'`).
+- [x] Response chỉ có `recipe_id`+`recipe_name`+score — **không nhúng recipe đầy đủ**; `SuggestionRepositoryImpl` gọi song song `GET /recipes/{recipe_id}` (`Future.wait`) cho từng item qua `DishRemoteDataSource` để nạp đầy đủ thực thể `Dish` (ảnh, thời gian, dinh dưỡng, nguyên liệu), có fallback an toàn nếu chưa tìm thấy recipe.
+- [x] `score_components` map trực tiếp `e/a/p/u` — DTO `recommendation_dto.dart` map chuẩn xác `expiration_utilization→e`, `availability→a`, `preference_fit→p`, `purchase_minimization→u`.
+- [x] Đánh dấu rõ trên UI đây là **kết quả từ mock provider** (`analysis.is_mock`): `SuggestionListScreen` hiện thanh thông báo trạng thái thử nghiệm và `ScoreBreakdownSheet` hiển thị banner cảnh báo mock AI cùng giải thích chi tiết `suggestion.explanation`.
+- [x] **Verify & Tests (2026-09-05)**: Viết bộ test đơn vị chi tiết (`test/unit/suggestions/suggestion_list_controller_test.dart`), test tích hợp live (`test/live/recommendations_live_test.dart`), mock fixture chuẩn backend `assets/mock/recommendations.json`. Toàn bộ 107 tests pass 100%, `flutter analyze` 0 issues.
 
 #### F. Favorites — feature mới hoàn toàn `features/favorites/*`
 
-- [ ] Chưa có trong FE — tạo mới theo Clean Architecture chuẩn của repo (`data/datasources`, `data/repositories`, `domain/entities`, `domain/repositories`, `presentation/controllers`, `presentation/screens`).
-- [ ] API: `PUT/DELETE /recipes/{id}/favorite`, `GET /favorite-recipes`, CRUD `/favorite-menus` + `/favorite-menus/{id}/items`.
-- [ ] Cần thiết kế UI (chưa có artboard) — nút "Lưu công thức" ở Dish detail + màn danh sách yêu thích + màn quản lý menu yêu thích.
+> ✅ **Đã hoàn thành & nối API (2026-09-05).** Đầy đủ Clean Architecture, đồng bộ backend api-contract §9, hỗ trợ mock in-memory, có unit tests, widget tests, và live test.
+
+- [x] Tạo mới theo Clean Architecture chuẩn của repo:
+  - `domain/entities`: `favorite_recipe.dart`, `favorite_menu.dart` (`FavoriteMenu`, `FavoriteMenuItem`, `FavoriteMenuDetail`).
+  - `domain/repositories`: `favorite_repository.dart`.
+  - `data/models`: `favorite_dto.dart` (`FavoriteRecipeDto`, `FavoriteRecipeListDto`, `FavoriteMenuDto`, `FavoriteMenuListDto`, `FavoriteMenuItemDto`, `FavoriteMenuDetailDto`).
+  - `data/datasources`: `favorite_remote_data_source.dart`.
+  - `data/repositories`: `favorite_repository_impl.dart`.
+  - `presentation/controllers`: `favorite_recipes_controller.dart` (`FavoriteRecipesController`, `isRecipeFavoriteProvider`), `favorite_menus_controller.dart` (`FavoriteMenusController`, `FavoriteMenuDetailController`).
+  - `presentation/screens`: `favorites_screen.dart` (2 tabs: Món yêu thích, Thực đơn mẫu), `favorite_menu_detail_screen.dart`.
+  - `presentation/widgets`: `create_edit_menu_dialog.dart`, `add_to_menu_sheet.dart`.
+- [x] API: `PUT/DELETE /recipes/{id}/favorite`, `GET /favorite-recipes`, CRUD `/favorite-menus` + `/favorite-menus/{id}/items`.
+- [x] UI entry points:
+  - Dish detail (`dish_detail_screen.dart`): Nút tim yêu thích trên AppBar toggle `isRecipeFavoriteProvider` + Menu "Thêm vào thực đơn mẫu..." mở `AddToMenuSheet`.
+  - Settings (`settings_home_screen.dart`): Dòng "Món & thực đơn yêu thích" mở `Routes.favorites`.
+- [x] Mock & Routing:
+  - Thêm routes `Routes.favorites` (`/favorites`) và `Routes.favoriteMenuDetail` (`/favorites/menu/:id`) trong `app_router.dart`.
+  - MockApiClient giả lập toàn bộ lifecycle của favorites (lưu id yêu thích, menu CRUD, item menu CRUD).
+- [x] Test đầy đủ:
+  - Unit tests: `test/unit/favorites/favorite_repository_impl_test.dart` (8 tests).
+  - Controller tests: `test/unit/favorites/favorite_controllers_test.dart` (3 test suites).
+  - Widget tests: `test/widget/favorites/favorites_screen_test.dart` (1 test).
+  - Live tests: `test/live/favorites_live_test.dart` (Lifecycle toggle + CRUD menu + add/remove item).
+  - Toàn bộ 121 tests pass 100%, `flutter analyze` 0 issues.
 
 #### G. Extractions — `features/ingest/data/*`
 
-- [ ] Path: `/scan/label|receipt|voice` → `/extractions/ocr/label|ocr/invoice|asr`; barcode là **query param** `?barcode=`, không phải upload.
-- [ ] `ScanJobDto` đổi theo envelope `ExtractionResponse`/`InvoiceExtractionResponse`/`BarcodeExtractionResponse` (`request_id, status, provider, raw_text, fields, confidence, warnings, persisted`) — field tên khác hẳn (`fields.ingredient_name` không phải `parsed.name`).
-- [ ] "Xác nhận vào kho" sau review = gọi `POST /inventory/batches` từng dòng (phụ thuộc mục A xong trước) — không có endpoint "confirm hàng loạt".
+> ✅ **Đã hoàn thành & nối API (2026-09-05).** Đồng bộ backend api-contract §11, Clean Architecture, dung nạp đa định dạng envelope, có unit tests, widget tests, và live test.
+
+- [x] Path: `/scan/label|receipt|voice` → `/extractions/ocr/label|ocr/invoice|asr`; barcode là **query param** `POST /extractions/barcode?barcode=`, không phải upload file. Cập nhật `ApiPaths` và `ScanType.endpoint`.
+- [x] `ScanJobDto` hỗ trợ dung nạp cả envelope mới của BE (`ExtractionResponse`, `InvoiceExtractionResponse`, `BarcodeExtractionResponse` với `request_id`, `status`, `provider`, `raw_text`, `fields`, `confidence`, `warnings`, `persisted`) và envelope legacy của mock fixture.
+  - OCR label / ASR: map `fields.ingredient_name`, `quantity`, `unit` qua `MeasurementUnit.fromWire`, `packaged_at`, `expires_at`, `price`, và cờ `isExpiryWarn` khi `confidence['expires_at'] < 0.8`.
+  - Invoice OCR: map `vendor_name`, `invoice_date`, và danh sách `fields.line_items`.
+  - Barcode lookup: map `product_name`, `brand`, `category`, `ingredient_name`, `quantity`, `unit`, `price`.
+- [x] Data Layer & Repository:
+  - `ScanRemoteDataSource` hỗ trợ `submit(type, mediaPath, transcript)` và `lookupBarcode(barcode)`.
+  - `ScanRepository` và `ScanRepositoryImpl` thêm `lookupBarcode(barcode)`.
+  - `ScanController` thêm `lookupBarcode(barcode)`.
+  - `MockApiClient` hỗ trợ mocking cho `/extractions/ocr/label`, `/extractions/ocr/invoice`, `/extractions/asr`, và `/extractions/barcode?barcode=`.
+- [x] "Xác nhận vào kho" sau review:
+  - Giữ nguyên luồng xác nhận vào kho gọi `PantryListController.add()` (`POST /inventory/batches` qua Milestone A) cho từng item draft đã review — không phụ thuộc batch confirm từ server extraction.
+- [x] Test đầy đủ:
+  - Unit tests: `test/unit/ingest/scan_repository_impl_test.dart` (4 tests), `scan_controller_test.dart` (3 tests), `label_review_controller_test.dart` (3 tests), `receipt_review_controller_test.dart` (4 tests), `voice_capture_controller_test.dart` (3 tests), `parsed_item_draft_test.dart` (4 tests).
+  - Widget tests: `test/widget/ingest/*` (all 10 widget tests pass).
+  - Live test: `test/live/extractions_live_test.dart` (4 tests covering label, invoice, asr, barcode).
+  - Toàn bộ 123 tests pass 100%, `flutter analyze` 0 issues.
 
 ### M0 đã hoàn thành (2026-08-30)
 

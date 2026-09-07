@@ -3276,6 +3276,18 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Chưa tính phí · giá & gói đang trong giai đoạn kiểm chứng'**
   String get paywallFinePrint;
+
+  /// No description provided for @favoritesTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Món & thực đơn yêu thích'**
+  String get favoritesTitle;
+
+  /// No description provided for @favAddToMenuTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm vào thực đơn mẫu'**
+  String get favAddToMenuTitle;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

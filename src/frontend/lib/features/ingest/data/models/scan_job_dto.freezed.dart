@@ -298,7 +298,6 @@ as bool,
 
 }
 
-
 /// @nodoc
 mixin _$ScanJobDto {
 
@@ -310,8 +309,6 @@ mixin _$ScanJobDto {
 @pragma('vm:prefer-inline')
 $ScanJobDtoCopyWith<ScanJobDto> get copyWith => _$ScanJobDtoCopyWithImpl<ScanJobDto>(this as ScanJobDto, _$identity);
 
-  /// Serializes this ScanJobDto to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -319,7 +316,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is ScanJobDto&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.rawText, rawText) || other.rawText == rawText)&&(identical(other.rawTranscript, rawTranscript) || other.rawTranscript == rawTranscript)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.purchaseDate, purchaseDate) || other.purchaseDate == purchaseDate)&&(identical(other.fieldCount, fieldCount) || other.fieldCount == fieldCount)&&(identical(other.item, item) || other.item == item)&&const DeepCollectionEquality().equals(other.items, items));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,jobId,type,status,rawText,rawTranscript,storeName,purchaseDate,fieldCount,item,const DeepCollectionEquality().hash(items));
 
@@ -515,11 +512,11 @@ return $default(_that.jobId,_that.type,_that.status,_that.rawText,_that.rawTrans
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _ScanJobDto extends ScanJobDto {
   const _ScanJobDto({@JsonKey(name: 'job_id') required this.jobId, required this.type, this.status = 'completed', @JsonKey(name: 'raw_text') this.rawText, @JsonKey(name: 'raw_transcript') this.rawTranscript, @JsonKey(name: 'store_name') this.storeName, @JsonKey(name: 'purchase_date') this.purchaseDate, @JsonKey(name: 'field_count') this.fieldCount, this.item, final  List<ParsedItemDraftDto> items = const <ParsedItemDraftDto>[]}): _items = items,super._();
-  factory _ScanJobDto.fromJson(Map<String, dynamic> json) => _$ScanJobDtoFromJson(json);
+  
 
 @override@JsonKey(name: 'job_id') final  String jobId;
 @override final  String type;
@@ -545,17 +542,14 @@ class _ScanJobDto extends ScanJobDto {
 @pragma('vm:prefer-inline')
 _$ScanJobDtoCopyWith<_ScanJobDto> get copyWith => __$ScanJobDtoCopyWithImpl<_ScanJobDto>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$ScanJobDtoToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScanJobDto&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&(identical(other.rawText, rawText) || other.rawText == rawText)&&(identical(other.rawTranscript, rawTranscript) || other.rawTranscript == rawTranscript)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.purchaseDate, purchaseDate) || other.purchaseDate == purchaseDate)&&(identical(other.fieldCount, fieldCount) || other.fieldCount == fieldCount)&&(identical(other.item, item) || other.item == item)&&const DeepCollectionEquality().equals(other._items, _items));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,jobId,type,status,rawText,rawTranscript,storeName,purchaseDate,fieldCount,item,const DeepCollectionEquality().hash(_items));
 

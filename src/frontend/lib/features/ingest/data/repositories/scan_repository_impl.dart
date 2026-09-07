@@ -31,6 +31,13 @@ class ScanRepositoryImpl implements ScanRepository {
   Future<Result<ScanJob>> scanVoice({String? audioPath, String? transcript}) =>
       _submit(ScanType.voice, mediaPath: audioPath, transcript: transcript);
 
+  @override
+  Future<Result<ScanJob>> lookupBarcode(String barcode) =>
+      runGuarded(() async {
+        final dto = await _remote.lookupBarcode(barcode);
+        return dto.toEntity();
+      });
+
   Future<Result<ScanJob>> _submit(
     ScanType type, {
     String? mediaPath,

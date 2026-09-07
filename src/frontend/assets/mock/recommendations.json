@@ -1,0 +1,109 @@
+{
+  "request": "Gợi ý món ăn hôm nay",
+  "analysis": {
+    "intent": "meal_recommendation",
+    "summary": "Mock analysis is active while the production AI provider is being integrated.",
+    "is_mock": true
+  },
+  "items": [
+    {
+      "recipe_id": "d1",
+      "recipe_name": "Salad bơ ức gà",
+      "rank": 1,
+      "score": 0.95,
+      "score_components": {
+        "expiration_utilization": 0.92,
+        "availability": 0.8,
+        "preference_fit": 0.74,
+        "purchase_minimization": 0.78
+      },
+      "missing_ingredients": [
+        {
+          "master_ingredient_id": "i-lettuce",
+          "name": "Xà lách",
+          "quantity": 150.0,
+          "unit": "GRAM"
+        },
+        {
+          "master_ingredient_id": "i-olive-oil",
+          "name": "Dầu ô liu",
+          "quantity": 15.0,
+          "unit": "ML"
+        }
+      ],
+      "near_expiry_ingredients": [
+        "Bơ",
+        "Ức gà",
+        "Cà chua bi"
+      ],
+      "explanation": "Tận dụng bơ và ức gà sắp hết hạn trong kho.",
+      "provider": "MOCK",
+      "model_version": "mock-v1"
+    },
+    {
+      "recipe_id": "d2",
+      "recipe_name": "Canh chua cá lóc",
+      "rank": 2,
+      "score": 0.88,
+      "score_components": {
+        "expiration_utilization": 0.7,
+        "availability": 0.9,
+        "preference_fit": 0.82,
+        "purchase_minimization": 1.0
+      },
+      "missing_ingredients": [],
+      "near_expiry_ingredients": [
+        "Cà chua bi",
+        "Cải bó xôi"
+      ],
+      "explanation": "Đầy đủ nguyên liệu sẵn có trong tủ lạnh.",
+      "provider": "MOCK",
+      "model_version": "mock-v1"
+    },
+    {
+      "recipe_id": "d3",
+      "recipe_name": "Trứng chiên hành lá",
+      "rank": 3,
+      "score": 0.82,
+      "score_components": {
+        "expiration_utilization": 0.55,
+        "availability": 1.0,
+        "preference_fit": 0.7,
+        "purchase_minimization": 1.0
+      },
+      "missing_ingredients": [],
+      "near_expiry_ingredients": [
+        "Trứng gà"
+      ],
+      "explanation": "Món nấu nhanh dưới 15 phút, nguyên liệu 100% sẵn có.",
+      "provider": "MOCK",
+      "model_version": "mock-v1"
+    },
+    {
+      "recipe_id": "d4",
+      "recipe_name": "Thịt ba chỉ rang cháy cạnh",
+      "rank": 4,
+      "score": 0.76,
+      "score_components": {
+        "expiration_utilization": 0.5,
+        "availability": 0.7,
+        "preference_fit": 0.68,
+        "purchase_minimization": 0.55
+      },
+      "missing_ingredients": [
+        {
+          "master_ingredient_id": "i-shallot",
+          "name": "Hành tím",
+          "quantity": 20.0,
+          "unit": "GRAM"
+        }
+      ],
+      "near_expiry_ingredients": [
+        "Thịt ba chỉ"
+      ],
+      "explanation": "Món mặn đậm đà, sử dụng thịt ba chỉ sẵn có.",
+      "provider": "MOCK",
+      "model_version": "mock-v1"
+    }
+  ]
+}

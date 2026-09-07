@@ -11,6 +11,8 @@ import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 import 'package:sweepfood/features/dishes/presentation/controllers/dish_detail_controller.dart';
 import 'package:sweepfood/features/dishes/presentation/widgets/cooking_steps_view.dart';
 import 'package:sweepfood/features/dishes/presentation/widgets/ingredient_checklist.dart';
+import 'package:sweepfood/features/favorites/presentation/controllers/favorite_recipes_controller.dart';
+import 'package:sweepfood/features/favorites/presentation/widgets/add_to_menu_sheet.dart';
 import 'package:sweepfood/features/nutrition/presentation/widgets/macro_breakdown.dart';
 import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
@@ -26,9 +28,51 @@ class DishDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(dishByIdProvider(dishId));
+    final isFav = ref.watch(isRecipeFavoriteProvider(dishId));
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.dishDetailTitle)),
+      appBar: AppBar(
+        title: Text(context.l10n.dishDetailTitle),
+        actions: [
+          IconButton(
+            icon: Icon(
+              isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+              color: isFav ? Colors.red : null,
+            ),
+            tooltip: isFav ? 'Bỏ thích' : 'Yêu thích',
+            onPressed: () {
+              ref
+                  .read(favoriteRecipesControllerProvider.notifier)
+                  .toggleFavorite(dishId);
+            },
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert_rounded),
+            onSelected: (value) {
+              if (value == 'add_to_menu') {
+                final dish = async.value;
+                AddToMenuSheet.show(
+                  context,
+                  recipeId: dishId,
+                  recipeName: dish?.name ?? '',
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'add_to_menu',
+                child: Row(
+                  children: [
+                    const Icon(Icons.playlist_add_rounded),
+                    const SizedBox(width: 8),
+                    Text(context.l10n.favAddToMenuTitle),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: AsyncValueWidget<Dish>(
         value: async,
         onRetry: () => ref.invalidate(dishByIdProvider(dishId)),

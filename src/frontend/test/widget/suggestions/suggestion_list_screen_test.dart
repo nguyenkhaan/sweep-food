@@ -22,9 +22,9 @@ void main() {
         ),
       ),
     );
-    // Past the mock's ~320ms latency (avoid pumpAndSettle — skeleton animates).
+    // Past the mock's latency (~320ms for POST + ~320ms for recipes, avoid pumpAndSettle).
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 1000));
 
     expect(find.text('Salad bơ ức gà'), findsOneWidget);
     expect(find.text('Canh chua cá lóc'), findsOneWidget);

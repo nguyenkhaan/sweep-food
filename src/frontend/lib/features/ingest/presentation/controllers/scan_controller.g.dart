@@ -42,7 +42,7 @@ final class ScanControllerProvider
   ScanController create() => ScanController();
 }
 
-String _$scanControllerHash() => r'4c6fa8e13d10e136edb48dd7d386314859f31022';
+String _$scanControllerHash() => r'587483e0f60ca9c7d182c3b2c592f3091aa024a6';
 
 /// Drives one capture → upload → extract cycle. The camera / voice screens
 /// `read` this to run a scan and watch it for the in-flight state; the review

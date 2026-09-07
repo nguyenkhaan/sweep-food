@@ -1,4 +1,4 @@
-﻿import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/core/network/api_paths.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 
 /// The three multimodal ingestion channels (M4). `wire` is the API/mock token.
@@ -13,9 +13,9 @@ enum ScanType {
 
   /// `POST` endpoint that accepts this channel's media.
   String get endpoint => switch (this) {
-        ScanType.label => ApiPaths.scanLabel,
-        ScanType.receipt => ApiPaths.scanReceipt,
-        ScanType.voice => ApiPaths.scanVoice,
+        ScanType.label => ApiPaths.extractionOcrLabel,
+        ScanType.receipt => ApiPaths.extractionOcrInvoice,
+        ScanType.voice => ApiPaths.extractionAsr,
       };
 
   /// Which [PantrySource] a saved item from this channel carries.
@@ -41,8 +41,20 @@ enum ScanStatus {
 
   final String wire;
 
-  static ScanStatus fromWire(String? value) => ScanStatus.values.firstWhere(
-        (s) => s.wire == value,
-        orElse: () => ScanStatus.completed,
-      );
+  static ScanStatus fromWire(String? value) {
+    final upper = value?.toUpperCase();
+    if (upper == 'SUCCEEDED' || upper == 'PARTIAL' || upper == 'COMPLETED') {
+      return ScanStatus.completed;
+    }
+    if (upper == 'FAILED') {
+      return ScanStatus.failed;
+    }
+    if (upper == 'PENDING') {
+      return ScanStatus.pending;
+    }
+    return ScanStatus.values.firstWhere(
+      (s) => s.wire == value,
+      orElse: () => ScanStatus.completed,
+    );
+  }
 }

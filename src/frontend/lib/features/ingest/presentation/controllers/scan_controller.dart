@@ -23,6 +23,9 @@ class ScanController extends _$ScanController {
   Future<ScanJob> scanVoice({String? audioPath, String? transcript}) =>
       _run((r) => r.scanVoice(audioPath: audioPath, transcript: transcript));
 
+  Future<ScanJob> lookupBarcode(String barcode) =>
+      _run((r) => r.lookupBarcode(barcode));
+
   Future<ScanJob> _run(
     Future<Result<ScanJob>> Function(ScanRepository repo) call,
   ) async {
