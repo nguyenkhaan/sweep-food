@@ -16,6 +16,7 @@ from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.meal_plan_item_model import MealPlanItemModel
 from src.model.meal_plan_model import MealPlanModel
 from src.model.notification_model import NotificationModel
+from src.model.premium_interest_model import PremiumInterestModel
 from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
 from src.model.recommendation_item_model import RecommendationItemModel
@@ -23,8 +24,10 @@ from src.model.recommendation_run_model import RecommendationRunModel
 from src.model.shelf_life_rule_model import ShelfLifeRuleModel
 from src.model.shopping_list_item_model import ShoppingListItemModel
 from src.model.shopping_list_model import ShoppingListModel
+from src.model.shopping_mutation_receipt_model import ShoppingMutationReceiptModel
 from src.model.user_model import UserModel
 from src.model.user_notification_preference_model import UserNotificationPreferenceModel
+from src.model.waste_reduction_event_model import WasteReductionEventModel
 
 __all__ = [
     "AuthSessionModel",
@@ -44,6 +47,7 @@ __all__ = [
     "MealPlanItemModel",
     "MealPlanModel",
     "NotificationModel",
+    "PremiumInterestModel",
     "RecipeIngredientModel",
     "RecipeModel",
     "RecommendationItemModel",
@@ -51,8 +55,10 @@ __all__ = [
     "ShelfLifeRuleModel",
     "ShoppingListItemModel",
     "ShoppingListModel",
+    "ShoppingMutationReceiptModel",
     "TimestampedUUIDModel",
     "UUIDModel",
     "UserModel",
     "UserNotificationPreferenceModel",
+    "WasteReductionEventModel",
 ]
