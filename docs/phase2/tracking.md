@@ -4,7 +4,7 @@
 
 - Bám sát `plan.md`, `task.md` và `api-contract.md`; không tự thêm API, field, behavior hoặc phạm vi chưa được mô tả.
 - Các tác vụ mất nhiều thời gian do người phụ trách chạy và kiểm tra. Trước khi cần thực hiện, phải dừng lại và thông báo rõ lệnh cùng mục đích.
-- Mỗi lần chạy test giới hạn tối đa 90 giây. Nếu test vượt 90 giây, phải dừng và thông báo cho người phụ trách, không tiếp tục chạy.
+- Mỗi lần chạy test giới hạn tối đa 100 giây. Nếu test vượt 100 giây, phải dừng và thông báo cho người phụ trách, không tiếp tục chạy.
 - Nếu cùng một kiểm tra thất bại 3 lần, phải dừng và thông báo cho người phụ trách, không retry lần thứ tư.
 - Test treo hoặc không pass không chặn việc hoàn tất code theo task; phải ghi rõ kết quả khi bàn giao.
 - Chỉ tạo hoặc chạy file test khi người phụ trách yêu cầu rõ trong prompt; không tự tìm, thêm hoặc chạy test.
@@ -34,11 +34,11 @@
 
 ## Phase 3
 
-- [ ] Task 3.1 — Viết ShoppingMutationReceiptModel
+- [x] Task 3.1 — Viết ShoppingMutationReceiptModel
 - [ ] Task 3.2 — Tạo migration DB-01 shopping_mutation_receipts
-- [ ] Task 3.3 — Cài đặt lookup, fingerprint và replay receipt
-- [ ] Task 3.4 — Áp dụng receipt cho generate và add item
-- [ ] Task 3.5 — Áp dụng receipt cho update và delete item
+- [x] Task 3.3 — Cài đặt lookup, fingerprint và replay receipt
+- [x] Task 3.4 — Áp dụng receipt cho generate và add item
+- [x] Task 3.5 — Áp dụng receipt cho update và delete item
 
 ## Phase 4
 

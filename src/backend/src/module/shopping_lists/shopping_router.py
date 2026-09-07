@@ -30,12 +30,15 @@ shopping_router = APIRouter(prefix="/shopping-lists", tags=["shopping-lists"])
 )
 async def post_shopping_list_generation(
     body: GenerateShoppingListRequestDTO,
+    response: Response,
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
     service: Annotated[ShoppingService, Depends(get_shopping_service)],
     idempotency_key: Annotated[str, Header(alias="Idempotency-Key", min_length=1)],
 ) -> ShoppingListDTO:
     """Generate the active shopping list for one owned meal plan."""
-    return await service.generate(user.user_id, body, idempotency_key)
+    result = await service.generate(user.user_id, body, idempotency_key)
+    response.status_code = result.status_code
+    return result.body
 
 
 @shopping_router.get("", response_model=ShoppingListCollectionResponseDTO)
@@ -66,26 +69,32 @@ async def get_shopping_list(
 async def post_shopping_list_item(
     list_id: UUID,
     body: CreateShoppingItemRequestDTO,
+    response: Response,
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
     service: Annotated[ShoppingService, Depends(get_shopping_service)],
     idempotency_key: Annotated[str, Header(alias="Idempotency-Key", min_length=1)],
 ) -> ShoppingListItemDTO:
     """Add an unchecked manual item without creating inventory."""
-    return await service.add_item(user.user_id, list_id, body, idempotency_key)
+    result = await service.add_item(user.user_id, list_id, body, idempotency_key)
+    response.status_code = result.status_code
+    return result.body
 
 
 @shopping_router.patch("/{list_id}/items/{item_id}", response_model=ShoppingListItemDTO)
 async def patch_shopping_list_item(
     path: Annotated[ShoppingItemPath, Depends(get_shopping_item_path)],
     body: UpdateShoppingListItemRequestDTO,
+    response: Response,
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
     service: Annotated[ShoppingService, Depends(get_shopping_service)],
     idempotency_key: Annotated[str, Header(alias="Idempotency-Key", min_length=1)],
 ) -> ShoppingListItemDTO:
     """Edit a manual item or atomically add a purchased item to inventory."""
-    return await service.update_item(
+    result = await service.update_item(
         user.user_id, path.list_id, path.item_id, body, idempotency_key
     )
+    response.status_code = result.status_code
+    return result.body
 
 
 @shopping_router.delete(
@@ -99,5 +108,7 @@ async def delete_shopping_list_item(
     idempotency_key: Annotated[str, Header(alias="Idempotency-Key", min_length=1)],
 ) -> Response:
     """Remove an unchecked manual reminder from an active shopping list."""
-    await service.remove_item(user.user_id, list_id, item_id, idempotency_key)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    response_status = await service.remove_item(
+        user.user_id, list_id, item_id, idempotency_key
+    )
+    return Response(status_code=response_status)
