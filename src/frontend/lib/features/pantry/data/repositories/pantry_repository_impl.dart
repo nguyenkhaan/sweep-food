@@ -3,6 +3,7 @@ import 'package:sweepfood/core/network/api_result.dart';
 import 'package:sweepfood/core/network/network_providers.dart';
 import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/pantry/data/datasources/pantry_remote_data_source.dart';
+import 'package:sweepfood/features/pantry/domain/entities/inventory_ledger.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_summary.dart';
@@ -88,4 +89,25 @@ class PantryRepositoryImpl implements PantryRepository {
   @override
   Future<Result<PantryItem>> consume(String id, {required double quantityUsed}) =>
       runGuarded(() async => (await _remote.consume(id, quantityUsed)).toEntity());
+
+  @override
+  Future<Result<Paginated<InventoryLedgerEntry>>> ledger({
+    String? batchId,
+    LedgerEventType? eventType,
+    int page = 1,
+  }) =>
+      runGuarded(() async {
+        final dto = await _remote.ledger(
+          batchId: batchId,
+          eventType: eventType,
+          page: page,
+        );
+        final loaded = page * dto.perPage;
+        return Paginated(
+          items: [for (final e in dto.items) e.toEntity()],
+          page: dto.page,
+          total: dto.total,
+          nextPage: loaded < dto.total ? dto.page + 1 : null,
+        );
+      });
 }

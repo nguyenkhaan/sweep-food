@@ -187,6 +187,15 @@ class _PantryItemDetailScreenState
             icon: Icons.restaurant_menu_rounded,
             onPressed: () => context.go(Routes.suggestions),
           ),
+          Gap.gapSm,
+          SecondaryButton(
+            label: 'Lịch sử biến động',
+            icon: Icons.history_rounded,
+            onPressed: () => context.push(
+              '${Routes.inventoryLedger}?batchId=${item.id}',
+              extra: item.name,
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: _ActionBar(

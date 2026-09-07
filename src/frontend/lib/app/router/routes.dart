@@ -37,6 +37,7 @@ abstract final class Routes {
   static const cookResult = '/cook-result';
   static const cookHistory = '/cook-history';
   static const cookHistoryDetail = '/cook-history/:id';
+  static const inventoryLedger = '/inventory-ledger'; // ?batchId= , extra = name
   static const notifications = '/notifications';
   static const paywall = '/paywall';
   static const reports = '/reports';

@@ -71,6 +71,11 @@ class _PantryScreenState extends ConsumerState<PantryScreen> {
               tooltip: 'Bỏ chọn',
               onPressed: () => setState(() => _selectedIds.clear()),
             ),
+          IconButton(
+            icon: const Icon(Icons.history_rounded),
+            tooltip: 'Lịch sử biến động kho',
+            onPressed: () => context.push(Routes.inventoryLedger),
+          ),
           PopupMenuButton<PantrySort>(
             icon: const Icon(Icons.sort_rounded),
             initialValue: filter.sort,

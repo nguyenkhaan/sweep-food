@@ -193,6 +193,83 @@ class MockApiClient implements ApiClient {
     return rest.split('/').first;
   }
 
+  // --- Inventory ledger emulation ----------------------------------------
+  final _inventoryLedger = <Map<String, dynamic>>[];
+  var _ledgerSeeded = false;
+
+  /// One INITIAL_STOCK row per fixture batch, added the first time the ledger
+  /// is read so a fresh demo has something to show.
+  Future<void> _seedLedgerOnce() async {
+    if (_ledgerSeeded) return;
+    _ledgerSeeded = true;
+    final items = await _inventoryItems();
+    for (final b in items) {
+      final qty = (b['current_quantity'] as num).toDouble();
+      _inventoryLedger.add({
+        'id': 'mock-led-${_autoId++}',
+        'inventory_batch_id': b['id'],
+        'event_type': 'INITIAL_STOCK',
+        'quantity_before': 0,
+        'quantity_delta': qty,
+        'quantity_after': qty,
+        'unit': b['unit'],
+        'cooking_session_id': null,
+        'idempotency_key': null,
+        'reason': 'Nhập kho ban đầu',
+        'created_at': b['created_at'] ?? DateTime.now().toIso8601String(),
+      });
+    }
+  }
+
+  void _recordLedger({
+    required String batchId,
+    required String eventType,
+    required num before,
+    required num after,
+    required Object? unit,
+    String? reason,
+    String? cookingSessionId,
+  }) {
+    _inventoryLedger.insert(0, {
+      'id': 'mock-led-${_autoId++}',
+      'inventory_batch_id': batchId,
+      'event_type': eventType,
+      'quantity_before': before,
+      'quantity_delta': after - before,
+      'quantity_after': after,
+      'unit': unit,
+      'cooking_session_id': cookingSessionId,
+      'idempotency_key': null,
+      'reason': reason,
+      'created_at': DateTime.now().toIso8601String(),
+    });
+  }
+
+  Future<Map<String, dynamic>> _inventoryLedgerPage(
+    Map<String, dynamic> query,
+  ) async {
+    await _seedLedgerOnce();
+    final batchId = query['batch_id'] as String?;
+    final eventType = query['event_type'] as String?;
+    final page = int.tryParse('${query['page'] ?? 1}') ?? 1;
+    final perPage = int.tryParse('${query['per_page'] ?? 30}') ?? 30;
+    final filtered = _inventoryLedger.where((e) {
+      if (batchId != null && e['inventory_batch_id'] != batchId) return false;
+      if (eventType != null && e['event_type'] != eventType) return false;
+      return true;
+    }).toList();
+    final start = (page - 1) * perPage;
+    final slice = start >= filtered.length
+        ? <Map<String, dynamic>>[]
+        : filtered.sublist(start, (start + perPage).clamp(0, filtered.length));
+    return {
+      'items': _clone(slice),
+      'total': filtered.length,
+      'page': page,
+      'per_page': perPage,
+    };
+  }
+
   // --- Meal plan emulation --------------------------------------------------
   //
   // The backend has no "current week" / seed-data concept — plans and items
@@ -693,6 +770,9 @@ class MockApiClient implements ApiClient {
       final id = path.substring('${ApiPaths.cookingHistory}/'.length);
       return _clone(_cookingHistoryDetail(id));
     }
+    if (path == ApiPaths.inventoryLedger) {
+      return _inventoryLedgerPage(query ?? const {});
+    }
     if (path == ApiPaths.favoriteRecipes) {
       final items = _favoriteRecipeIds.map((id) => {
         'recipe_id': id,
@@ -791,7 +871,9 @@ class MockApiClient implements ApiClient {
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null && path.endsWith('/adjustments')) {
       final b = body as Map<String, dynamic>;
-      return _mutateInventoryBatch(batchId, (batch) {
+      num? before;
+      final res = await _mutateInventoryBatch(batchId, (batch) {
+        before = batch['current_quantity'] as num;
         final delta = b['event_type'] == 'DISCARDED'
             ? -(batch['current_quantity'] as num)
             : (b['quantity_delta'] as num);
@@ -802,22 +884,52 @@ class MockApiClient implements ApiClient {
             : 'ACTIVE';
         return batch;
       });
+      _recordLedger(
+        batchId: batchId,
+        eventType: b['event_type'] as String? ?? 'MANUAL_ADJUSTMENT',
+        before: before ?? 0,
+        after: res['current_quantity'] as num,
+        unit: res['unit'],
+        reason: b['reason'] as String?,
+      );
+      return res;
     }
     if (batchId != null && path.endsWith('/consume')) {
       final b = body as Map<String, dynamic>;
-      return _mutateInventoryBatch(batchId, (batch) {
+      num? before;
+      final res = await _mutateInventoryBatch(batchId, (batch) {
+        before = batch['current_quantity'] as num;
         final next = (batch['current_quantity'] as num) - (b['quantity'] as num);
         batch['current_quantity'] = next < 0 ? 0 : next;
         batch['status'] = next <= 0 ? 'DEPLETED' : 'ACTIVE';
         return batch;
       });
+      _recordLedger(
+        batchId: batchId,
+        eventType: 'MANUAL_CONSUMPTION',
+        before: before ?? 0,
+        after: res['current_quantity'] as num,
+        unit: res['unit'],
+        reason: b['reason'] as String?,
+      );
+      return res;
     }
     if (batchId != null && path.endsWith('/move')) {
       final b = body as Map<String, dynamic>;
-      return _mutateInventoryBatch(
+      final res = await _mutateInventoryBatch(
         batchId,
         (batch) => batch..['storage_mode'] = b['storage_mode'],
       );
+      final q = res['current_quantity'] as num;
+      _recordLedger(
+        batchId: batchId,
+        eventType: 'MOVED',
+        before: q,
+        after: q,
+        unit: res['unit'],
+        reason: b['reason'] as String?,
+      );
+      return res;
     }
     if (path.startsWith('/extractions/barcode')) {
       final uri = Uri.parse(path);

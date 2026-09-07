@@ -34,6 +34,7 @@ import 'package:sweepfood/features/onboarding/presentation/screens/onboarding_pa
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/add_ingredient_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/cookable_recipes_screen.dart';
+import 'package:sweepfood/features/pantry/presentation/screens/inventory_ledger_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_item_detail_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_screen.dart';
 import 'package:sweepfood/features/reports/presentation/screens/reports_screen.dart';
@@ -268,6 +269,14 @@ GoRouter appRouter(Ref ref) {
         parentNavigatorKey: _rootKey,
         builder: (context, state) => CookingHistoryDetailScreen(
           sessionId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: Routes.inventoryLedger,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => InventoryLedgerScreen(
+          batchId: state.uri.queryParameters['batchId'],
+          batchName: state.extra as String?,
         ),
       ),
       GoRoute(

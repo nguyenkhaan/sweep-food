@@ -767,6 +767,22 @@
       "y": 14500,
       "w": 400,
       "h": 900
+    },
+    {
+      "file": "InventoryLedger.dc.html",
+      "title": "Lịch sử biến động kho (K-05) · Sáng",
+      "x": 3120,
+      "y": 3600,
+      "w": 400,
+      "h": 1100
+    },
+    {
+      "file": "InventoryLedgerDark.dc.html",
+      "title": "Lịch sử biến động kho (K-05) · Tối",
+      "x": 3120,
+      "y": 5080,
+      "w": 400,
+      "h": 1100
     }
   ],
   "annotations": [
@@ -782,7 +798,7 @@
       "x": 0,
       "y": 3440,
       "w": 700,
-      "text": "Hàng trên = Sáng, hàng dưới = Tối. Đã có: Trang chủ (H-01), Kho (K-01→K-04), Chọn cách nhập (G-03)."
+      "text": "Hàng trên = Sáng, hàng dưới = Tối. Đã có: Trang chủ (H-01), Kho (K-01→K-05), Chọn cách nhập (G-03)."
     },
     {
       "id": "note-auth",

@@ -15,6 +15,7 @@ import 'package:sweepfood/features/auth/data/datasources/auth_remote_data_source
 import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:sweepfood/features/pantry/data/datasources/pantry_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
+import 'package:sweepfood/features/pantry/domain/entities/inventory_ledger.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
@@ -139,5 +140,44 @@ void main() {
     final res = await pantry.list();
     final page = res.fold((f) => fail('list failed: $f'), (p) => p);
     expect(page.items.any((i) => i.id == created.id), isFalse);
+  });
+
+  test('ledger() records an entry for a freshly created batch', () async {
+    final created = await addBatch(quantity: 300);
+
+    final res = await pantry.ledger(batchId: created.id);
+    final page = res.fold((f) => fail('ledger failed: $f'), (p) => p);
+
+    expect(page.items, isNotEmpty);
+    expect(page.items.every((e) => e.inventoryBatchId == created.id), isTrue);
+    // The batch's first movement is its initial stock-in.
+    expect(page.items.last.eventType, LedgerEventType.initialStock);
+    expect(page.items.last.quantityAfter, 300);
+  });
+
+  test('ledger() records a consumption movement after consume()', () async {
+    final created = await addBatch(quantity: 200);
+    await pantry.consume(created.id, quantityUsed: 60);
+
+    final res = await pantry.ledger(batchId: created.id);
+    final page = res.fold((f) => fail('ledger failed: $f'), (p) => p);
+
+    final consumption = page.items.firstWhere(
+      (e) => e.quantityDelta < 0,
+      orElse: () => fail('no consumption entry in ledger: ${page.items}'),
+    );
+    expect(consumption.quantityDelta, -60);
+    expect(consumption.quantityBefore, 200);
+    expect(consumption.quantityAfter, 140);
+  });
+
+  test('ledger() without a filter returns the paginated history', () async {
+    await addBatch();
+
+    final res = await pantry.ledger();
+    final page = res.fold((f) => fail('ledger failed: $f'), (p) => p);
+
+    expect(page.items, isNotEmpty);
+    expect(page.page, 1);
   });
 }

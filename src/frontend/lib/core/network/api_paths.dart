@@ -39,8 +39,8 @@ abstract final class ApiPaths {
       '/inventory/batches/$id/consume';
   static String inventoryBatchMove(String id) =>
       '/inventory/batches/$id/move';
-  static String inventoryBatchLedger(String id) =>
-      '/inventory/batches/$id/ledger';
+  // Immutable quantity-change history. Filter to one batch with `?batch_id=`.
+  static const inventoryLedger = '/inventory/ledger';
 
   // Cooking (real backend) — the 3-step flow: preview -> session -> complete.
   // Always requires a meal_plan_item_id. See api-contract.md §6.
