@@ -15,6 +15,7 @@ import 'package:sweepfood/core/media/media_providers.dart';
 import 'package:sweepfood/core/permissions/permission_prime_sheet.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/waveform_recorder.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/scan_controller.dart';
 
 /// I-06 — Thu âm giọng nói để thêm nguyên liệu.
@@ -86,7 +87,10 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
           .scanVoice(audioPath: path);
       if (!mounted) return;
       if (job.isFailed || !job.hasItems) {
-        context.pushReplacement('${Routes.pantry}/${Routes.scanFailed}');
+        context.pushReplacement(
+          '${Routes.pantry}/${Routes.scanFailed}',
+          extra: ScanType.voice,
+        );
         return;
       }
       context.pushReplacement(
@@ -95,7 +99,10 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
       );
     } on Object {
       if (mounted) {
-        context.pushReplacement('${Routes.pantry}/${Routes.scanFailed}');
+        context.pushReplacement(
+          '${Routes.pantry}/${Routes.scanFailed}',
+          extra: ScanType.voice,
+        );
       }
     }
   }

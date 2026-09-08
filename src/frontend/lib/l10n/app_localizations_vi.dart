@@ -961,6 +961,18 @@ class AppL10nVi extends AppL10n {
   String get scanAddRow => 'Thêm dòng';
 
   @override
+  String get chooserScanOcr => 'Quét tem / Hóa đơn';
+
+  @override
+  String get chooserScanOcrSub => 'Chụp nhãn cân hoặc hóa đơn mua sắm';
+
+  @override
+  String get chooserScanBarcode => 'Quét mã vạch';
+
+  @override
+  String get chooserScanBarcodeSub => 'Quét barcode trên bao bì đóng gói';
+
+  @override
   String get chooserScanLabel => 'Quét tem nhãn';
 
   @override
@@ -989,6 +1001,9 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get camModeReceipt => 'Hóa đơn';
+
+  @override
+  String get camModeBarcode => 'Mã vạch';
 
   @override
   String camScanTitle(String kind) {
@@ -1027,6 +1042,9 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get camGuideReceipt => 'Đưa toàn bộ hóa đơn vào khung';
+
+  @override
+  String get camGuideBarcode => 'Đưa mã vạch vào giữa khung, giữ máy thẳng';
 
   @override
   String get camPermissionNeeded => 'Cần quyền máy ảnh để quét trực tiếp.';

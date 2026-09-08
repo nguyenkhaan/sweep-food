@@ -965,6 +965,18 @@ class AppL10nEn extends AppL10n {
   String get scanAddRow => 'Add row';
 
   @override
+  String get chooserScanOcr => 'Scan label / receipt';
+
+  @override
+  String get chooserScanOcrSub => 'Photograph weight label or shopping receipt';
+
+  @override
+  String get chooserScanBarcode => 'Scan barcode';
+
+  @override
+  String get chooserScanBarcodeSub => 'Scan barcode on packaged products';
+
+  @override
   String get chooserScanLabel => 'Scan label';
 
   @override
@@ -995,6 +1007,9 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get camModeReceipt => 'Receipt';
+
+  @override
+  String get camModeBarcode => 'Barcode';
 
   @override
   String camScanTitle(String kind) {
@@ -1034,6 +1049,10 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get camGuideReceipt => 'Fit the whole receipt in the frame';
+
+  @override
+  String get camGuideBarcode =>
+      'Align barcode within the frame, hold the phone level';
 
   @override
   String get camPermissionNeeded =>

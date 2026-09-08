@@ -240,38 +240,36 @@ class _PantryScreenState extends ConsumerState<PantryScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: Gap.xs),
-                        FilledButton.icon(
-                          style: FilledButton.styleFrom(
-                            minimumSize: Size.zero,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: Gap.md,
-                              vertical: Gap.sm,
-                            ),
-                          ),
-                          onPressed: () {
-                            final all = ref
-                                    .read(pantryListControllerProvider)
-                                    .asData
-                                    ?.value ??
-                                [];
-                            final selectedItems = all
+                      ],
+                    ),
+                    const SizedBox(height: Gap.xs),
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: Gap.sm,
+                        ),
+                      ),
+                      onPressed: () {
+                        final all = ref
+                                .read(pantryListControllerProvider)
+                                .asData
+                                ?.value ??
+                            [];
+                        final selectedItems = all
                                 .where((i) => _selectedIds.contains(i.id))
                                 .toList();
-                            final prompt = _promptController.text.trim();
-                            context.push(
-                              '${Routes.pantry}/${Routes.cookableRecipes}',
-                              extra: (
-                                items: selectedItems,
-                                prompt: prompt,
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.restaurant_menu_rounded,
-                              size: 18),
-                          label: const Text('Xem công thức'),
-                        ),
-                      ],
+                        final prompt = _promptController.text.trim();
+                        context.push(
+                          '${Routes.pantry}/${Routes.cookableRecipes}',
+                          extra: (
+                            items: selectedItems,
+                            prompt: prompt,
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.restaurant_menu_rounded,
+                          size: 18),
+                      label: const Text('Xem công thức'),
                     ),
                   ],
                 ),

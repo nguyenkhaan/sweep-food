@@ -248,6 +248,7 @@ class _FavoriteMenusTab extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'favorite_menu_fab',
         onPressed: () async {
           final res = await CreateEditMenuDialog.show(context);
           if (res != null) {
