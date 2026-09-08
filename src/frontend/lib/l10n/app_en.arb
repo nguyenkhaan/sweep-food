@@ -360,6 +360,10 @@
   "scanNeedsCheckShort": "Check",
   "scanAddRow": "Add row",
 
+  "chooserScanOcr": "Scan label / receipt",
+  "chooserScanOcrSub": "Photograph weight label or shopping receipt",
+  "chooserScanBarcode": "Scan barcode",
+  "chooserScanBarcodeSub": "Scan barcode on packaged products",
   "chooserScanLabel": "Scan label",
   "chooserScanLabelSub": "Photograph the weight label on packaged goods",
   "chooserScanReceipt": "Scan receipt",
@@ -371,6 +375,7 @@
 
   "camModeLabel": "Label",
   "camModeReceipt": "Receipt",
+  "camModeBarcode": "Barcode",
   "camScanTitle": "Scan {kind}",
   "@camScanTitle": { "placeholders": { "kind": { "type": "String" } } },
   "camNoCamera": "This device has no camera.",
@@ -385,6 +390,7 @@
   "camOpening": "Opening the camera…",
   "camGuideLabel": "Put the weight label in the frame, hold the phone level",
   "camGuideReceipt": "Fit the whole receipt in the frame",
+  "camGuideBarcode": "Align barcode within the frame, hold the phone level",
   "camPermissionNeeded": "Camera permission is needed to scan directly.",
   "camGrantPermission": "Grant camera permission",
   "camUseGallery": "Use an existing photo",

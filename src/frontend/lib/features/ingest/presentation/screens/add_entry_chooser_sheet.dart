@@ -79,8 +79,8 @@ class AddEntryChooserSheet extends StatelessWidget {
                       Expanded(
                         child: _OptionCard(
                           icon: const _CameraIcon(),
-                          title: l10n.chooserScanLabel,
-                          subtitle: l10n.chooserScanLabelSub,
+                          title: l10n.chooserScanOcr,
+                          subtitle: l10n.chooserScanOcrSub,
                           isPrimary: true,
                           onTap: () {
                             context.pop(); // đóng sheet
@@ -93,13 +93,13 @@ class AddEntryChooserSheet extends StatelessWidget {
                       const SizedBox(width: Gap.sm),
                       Expanded(
                         child: _OptionCard(
-                          icon: const _ReceiptIcon(),
-                          title: l10n.chooserScanReceipt,
-                          subtitle: l10n.chooserScanReceiptSub,
+                          icon: const _BarcodeIcon(),
+                          title: l10n.chooserScanBarcode,
+                          subtitle: l10n.chooserScanBarcodeSub,
                           onTap: () {
                             context.pop();
                             context.push(
-                              '${Routes.pantry}/${Routes.scanCamera}?mode=receipt',
+                              '${Routes.pantry}/${Routes.scanCamera}?mode=barcode',
                             );
                           },
                         ),
@@ -263,11 +263,11 @@ class _CameraIcon extends StatelessWidget {
   }
 }
 
-class _ReceiptIcon extends StatelessWidget {
-  const _ReceiptIcon();
+class _BarcodeIcon extends StatelessWidget {
+  const _BarcodeIcon();
   @override
   Widget build(BuildContext context) {
-    return const Icon(Icons.receipt_long_outlined);
+    return const Icon(Icons.qr_code_scanner_rounded);
   }
 }
 

@@ -14,6 +14,8 @@ import 'package:sweepfood/core/media/media_providers.dart';
 import 'package:sweepfood/core/permissions/permission_prime_sheet.dart';
 import 'package:sweepfood/core/permissions/permission_service.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/scan_controller.dart';
 import 'package:sweepfood/features/ingest/presentation/widgets/viewfinder_overlay.dart';
@@ -21,7 +23,8 @@ import 'package:sweepfood/l10n/app_localizations.dart';
 
 enum CameraScanMode {
   label(ScanType.label),
-  receipt(ScanType.receipt);
+  receipt(ScanType.receipt),
+  barcode(ScanType.label);
 
   const CameraScanMode(this.scanType);
 
@@ -30,6 +33,7 @@ enum CameraScanMode {
   String title(AppL10n l10n) => switch (this) {
     CameraScanMode.label => l10n.camModeLabel,
     CameraScanMode.receipt => l10n.camModeReceipt,
+    CameraScanMode.barcode => l10n.camModeBarcode,
   };
 }
 
@@ -144,7 +148,7 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
 
   void _snack(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    AppSnack.show(context, msg);
   }
 
   Future<void> _toggleTorch() async {
@@ -197,13 +201,18 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
     await _process(path);
   }
 
-  /// Shared: send [path] to OCR, then route to the review / failed screen.
+  /// Shared: send [path] to OCR / Barcode lookup, then route to the review / failed screen.
   Future<void> _process(String path) async {
     try {
       final notifier = ref.read(scanControllerProvider.notifier);
-      final job = _mode == CameraScanMode.label
-          ? await notifier.scanLabel(path)
-          : await notifier.scanReceipt(path);
+      final ScanJob job;
+      if (_mode == CameraScanMode.barcode) {
+        job = await notifier.lookupBarcode('8934567890123');
+      } else if (_mode == CameraScanMode.label) {
+        job = await notifier.scanLabel(path);
+      } else {
+        job = await notifier.scanReceipt(path);
+      }
       if (!mounted) return;
       if (job.isFailed || !job.hasItems) {
         context.push(
@@ -212,9 +221,9 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
         );
         return;
       }
-      final route = _mode == CameraScanMode.label
-          ? Routes.scanLabelReview
-          : Routes.scanReceiptReview;
+      final route = _mode == CameraScanMode.receipt
+          ? Routes.scanReceiptReview
+          : Routes.scanLabelReview;
       context.push('${Routes.pantry}/$route', extra: job);
     } on Object {
       if (mounted) {
@@ -356,7 +365,10 @@ class _Stage extends StatelessWidget {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ViewfinderOverlay(portrait: mode == CameraScanMode.receipt),
+          ViewfinderOverlay(
+            portrait: mode == CameraScanMode.receipt,
+            barcode: mode == CameraScanMode.barcode,
+          ),
           Gap.gapLg,
           const SizedBox(
             width: 22,
@@ -373,16 +385,27 @@ class _Stage extends StatelessWidget {
     }
 
     if (hint == null) {
+      final String guide;
+      switch (mode) {
+        case CameraScanMode.barcode:
+          guide = l10n.camGuideBarcode;
+          break;
+        case CameraScanMode.label:
+          guide = l10n.camGuideLabel;
+          break;
+        case CameraScanMode.receipt:
+          guide = l10n.camGuideReceipt;
+          break;
+      }
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ViewfinderOverlay(portrait: mode == CameraScanMode.receipt),
-          Gap.gapLg,
-          caption(
-            mode == CameraScanMode.label
-                ? l10n.camGuideLabel
-                : l10n.camGuideReceipt,
+          ViewfinderOverlay(
+            portrait: mode == CameraScanMode.receipt,
+            barcode: mode == CameraScanMode.barcode,
           ),
+          Gap.gapLg,
+          caption(guide),
         ],
       );
     }

@@ -7,7 +7,7 @@ import 'package:sweepfood/features/dishes/presentation/screens/dish_detail_scree
 import 'package:sweepfood/l10n/app_localizations.dart';
 
 void main() {
-  testWidgets('DishDetailScreen direct cook skips PostCookConfirmSheet and confirms immediately', (
+  testWidgets('DishDetailScreen cook button opens PostCookConfirmSheet (AISC Section 6.3.5)', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(1200, 2000));
@@ -32,22 +32,14 @@ void main() {
     expect(find.text('Salad bơ ức gà'), findsWidgets);
     expect(find.text('Đã nấu món này'), findsOneWidget);
 
-    // Tap "Đã nấu món này". The direct-cook flow now chains several
-    // sequential mock round trips (resolve/create today's meal-plan item,
-    // preview, create session, complete) before the snackbar appears.
+    // Tap "Đã nấu món này".
     await tester.tap(find.text('Đã nấu món này'));
     await tester.pump();
-    for (var i = 0; i < 20; i++) {
+    for (var i = 0; i < 10; i++) {
       await tester.pump(const Duration(milliseconds: 300));
     }
 
-    // Must NOT show PostCookConfirmSheet
-    expect(find.byType(PostCookConfirmSheet), findsNothing);
-
-    // Must show success snackbar
-    expect(
-      find.textContaining('Đã ghi nhận nấu Salad bơ ức gà!'),
-      findsOneWidget,
-    );
+    // Must show PostCookConfirmSheet
+    expect(find.byType(PostCookConfirmSheet), findsOneWidget);
   });
 }

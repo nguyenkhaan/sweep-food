@@ -1783,6 +1783,30 @@ abstract class AppL10n {
   /// **'Thêm dòng'**
   String get scanAddRow;
 
+  /// No description provided for @chooserScanOcr.
+  ///
+  /// In vi, this message translates to:
+  /// **'Quét tem / Hóa đơn'**
+  String get chooserScanOcr;
+
+  /// No description provided for @chooserScanOcrSub.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chụp nhãn cân hoặc hóa đơn mua sắm'**
+  String get chooserScanOcrSub;
+
+  /// No description provided for @chooserScanBarcode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Quét mã vạch'**
+  String get chooserScanBarcode;
+
+  /// No description provided for @chooserScanBarcodeSub.
+  ///
+  /// In vi, this message translates to:
+  /// **'Quét barcode trên bao bì đóng gói'**
+  String get chooserScanBarcodeSub;
+
   /// No description provided for @chooserScanLabel.
   ///
   /// In vi, this message translates to:
@@ -1843,6 +1867,12 @@ abstract class AppL10n {
   /// **'Hóa đơn'**
   String get camModeReceipt;
 
+  /// No description provided for @camModeBarcode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mã vạch'**
+  String get camModeBarcode;
+
   /// No description provided for @camScanTitle.
   ///
   /// In vi, this message translates to:
@@ -1902,6 +1932,12 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Đưa toàn bộ hóa đơn vào khung'**
   String get camGuideReceipt;
+
+  /// No description provided for @camGuideBarcode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đưa mã vạch vào giữa khung, giữ máy thẳng'**
+  String get camGuideBarcode;
 
   /// No description provided for @camPermissionNeeded.
   ///

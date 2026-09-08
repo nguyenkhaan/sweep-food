@@ -1,28 +1,59 @@
-﻿// lib/features/ingest/presentation/widgets/viewfinder_overlay.dart
+// lib/features/ingest/presentation/widgets/viewfinder_overlay.dart
 // Camera frame guide overlay (I-01 / I-04)
 
 import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_colors.dart';
 
 /// Rounded corner-bracket guide drawn over the camera preview. [portrait] uses
-/// a tall frame (receipts); otherwise a wide frame (weight labels).
+/// a tall frame (receipts); [barcode] uses a wide slit with a laser line; otherwise
+/// a wide frame (weight labels).
 class ViewfinderOverlay extends StatelessWidget {
   const ViewfinderOverlay({
     this.portrait = false,
+    this.barcode = false,
     this.color = BrandPalette.green300,
     super.key,
   });
 
   final bool portrait;
+  final bool barcode;
   final Color color;
 
   @override
   Widget build(BuildContext context) {
+    final w = barcode ? 280.0 : (portrait ? 280.0 : 260.0);
+    final h = barcode ? 130.0 : (portrait ? 340.0 : 180.0);
+
     return SizedBox(
-      width: portrait ? 280 : 260,
-      height: portrait ? 340 : 180,
-      child: CustomPaint(
-        painter: _CornerGuidePainter(color: color),
+      width: w,
+      height: h,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(
+            size: Size(w, h),
+            painter: _CornerGuidePainter(color: color),
+          ),
+          if (barcode)
+            Positioned(
+              left: 12,
+              right: 12,
+              child: Container(
+                height: 2,
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(1),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.redAccent.withValues(alpha: 0.8),
+                      blurRadius: 6,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

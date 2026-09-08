@@ -360,6 +360,10 @@
   "scanNeedsCheckShort": "Kiểm tra",
   "scanAddRow": "Thêm dòng",
 
+  "chooserScanOcr": "Quét tem / Hóa đơn",
+  "chooserScanOcrSub": "Chụp nhãn cân hoặc hóa đơn mua sắm",
+  "chooserScanBarcode": "Quét mã vạch",
+  "chooserScanBarcodeSub": "Quét barcode trên bao bì đóng gói",
   "chooserScanLabel": "Quét tem nhãn",
   "chooserScanLabelSub": "Chụp nhãn cân trên sản phẩm đóng gói",
   "chooserScanReceipt": "Quét hóa đơn",
@@ -371,6 +375,7 @@
 
   "camModeLabel": "Tem nhãn",
   "camModeReceipt": "Hóa đơn",
+  "camModeBarcode": "Mã vạch",
   "camScanTitle": "Quét {kind}",
   "@camScanTitle": { "placeholders": { "kind": { "type": "String" } } },
   "camNoCamera": "Thiết bị không có máy ảnh.",
@@ -385,6 +390,7 @@
   "camOpening": "Đang mở máy ảnh…",
   "camGuideLabel": "Đưa nhãn cân vào khung, giữ máy thẳng",
   "camGuideReceipt": "Đưa toàn bộ hóa đơn vào khung",
+  "camGuideBarcode": "Đưa mã vạch vào giữa khung, giữ máy thẳng",
   "camPermissionNeeded": "Cần quyền máy ảnh để quét trực tiếp.",
   "camGrantPermission": "Cấp quyền máy ảnh",
   "camUseGallery": "Dùng ảnh có sẵn",

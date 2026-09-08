@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sweepfood/app/theme/app_theme.dart';
@@ -23,8 +23,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Thêm nguyên liệu'), findsOneWidget);
-    expect(find.text('Quét tem nhãn'), findsOneWidget);
-    expect(find.text('Quét hóa đơn'), findsOneWidget);
+    expect(find.text('Quét tem / Hóa đơn'), findsOneWidget);
+    expect(find.text('Quét mã vạch'), findsOneWidget);
     expect(find.text('Nói'), findsOneWidget);
     expect(find.text('Nhập tay'), findsOneWidget);
   });
@@ -53,7 +53,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Quét tem nhãn'), findsOneWidget);
+    expect(find.text('Quét tem / Hóa đơn'), findsOneWidget);
     expect(find.text('Nhập tay'), findsOneWidget);
   });
 

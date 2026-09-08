@@ -172,7 +172,9 @@ GoRouter appRouter(Ref ref) {
                       final modeQuery = state.uri.queryParameters['mode'];
                       final initialMode = modeQuery == 'receipt'
                           ? CameraScanMode.receipt
-                          : CameraScanMode.label;
+                          : (modeQuery == 'barcode'
+                              ? CameraScanMode.barcode
+                              : CameraScanMode.label);
                       return CameraCaptureScreen(initialMode: initialMode);
                     },
                   ),

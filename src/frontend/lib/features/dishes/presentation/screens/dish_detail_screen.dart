@@ -5,8 +5,8 @@ import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
 import 'package:sweepfood/core/widgets/section_header.dart';
-import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
 import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
+import 'package:sweepfood/features/cooking/presentation/widgets/post_cook_confirm_sheet.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 import 'package:sweepfood/features/dishes/presentation/controllers/dish_detail_controller.dart';
 import 'package:sweepfood/features/dishes/presentation/widgets/cooking_steps_view.dart';
@@ -296,9 +296,10 @@ class _CookBarState extends ConsumerState<_CookBar> {
     setState(() => _busy = true);
     try {
       final controller = ref.read(cookingControllerProvider.notifier);
+      final servings = (ref.read(dishServingsProvider(widget.dish.id)) ?? widget.dish.servings).toDouble();
       final preview = await controller.previewForDish(
         dishId: widget.dish.id,
-        servings: widget.dish.servings.toDouble(),
+        servings: servings,
       );
       if (preview.hasMissingIngredients) {
         if (mounted) {
@@ -307,15 +308,11 @@ class _CookBarState extends ConsumerState<_CookBar> {
         }
         return;
       }
-      await controller.confirm(
-        preview: preview,
-        mode: CookMode.exact,
-        dishName: widget.dish.name,
-      );
       if (mounted) {
-        AppSnack.show(
+        await PostCookConfirmSheet.show(
           context,
-          'Đã ghi nhận nấu ${widget.dish.name}! Kho đã được tự động cập nhật.',
+          preview: preview,
+          dishName: widget.dish.name,
         );
       }
     } catch (e) {
@@ -342,7 +339,7 @@ class _CookBarState extends ConsumerState<_CookBar> {
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
               : const Icon(Icons.restaurant_menu_rounded, size: 18),
-          label: Text(_busy ? 'Đang cập nhật kho...' : context.l10n.dishCookedThis),
+          label: Text(_busy ? 'Đang tải...' : context.l10n.dishCookedThis),
         ),
       ),
     );
