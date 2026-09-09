@@ -661,5 +661,23 @@
   "paywallFinePrint": "No charge yet · pricing & plans are still being validated",
 
   "favoritesTitle": "Favorites & Menus",
-  "favAddToMenuTitle": "Add to saved menu"
+  "favAddToMenuTitle": "Add to saved menu",
+
+  "cookingHistoryTitle": "Cooking history",
+  "cookingHistoryDetailTitle": "Cooking session details",
+  "cookingHistoryEmptyTitle": "No cooking history yet",
+  "cookingHistoryEmptyMessage": "Every time you complete cooking a dish, the session will be recorded here.",
+  "cookingHistoryExploreSuggestions": "Explore suggestions",
+  "cookingHistoryServings": "{count} servings",
+  "@cookingHistoryServings": { "placeholders": { "count": { "type": "String" } } },
+  "cookingHistoryServingsCount": "Servings",
+  "cookingHistoryCompletedAt": "Completed at",
+  "cookingHistoryDeductionMode": "Deduction mode",
+  "cookingHistoryLeftoverSaved": "Leftover saved",
+  "cookingHistoryDeductedIngredients": "DEDUCTED INGREDIENTS",
+  "cookingHistoryNoDeductions": "No ingredients were deducted in this session.",
+  "cookingHistoryBatchPrefix": "Batch {id}",
+  "@cookingHistoryBatchPrefix": { "placeholders": { "id": { "type": "String" } } },
+  "commonYes": "Yes",
+  "commonNo": "No"
 }

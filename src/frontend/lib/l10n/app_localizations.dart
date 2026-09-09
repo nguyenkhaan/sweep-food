@@ -3324,6 +3324,96 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Thêm vào thực đơn mẫu'**
   String get favAddToMenuTitle;
+
+  /// No description provided for @cookingHistoryTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lịch sử nấu ăn'**
+  String get cookingHistoryTitle;
+
+  /// No description provided for @cookingHistoryDetailTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chi tiết phiên nấu'**
+  String get cookingHistoryDetailTitle;
+
+  /// No description provided for @cookingHistoryEmptyTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có lịch sử nấu ăn'**
+  String get cookingHistoryEmptyTitle;
+
+  /// No description provided for @cookingHistoryEmptyMessage.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mỗi khi bạn hoàn tất nấu một món, phiên nấu sẽ được ghi lại ở đây.'**
+  String get cookingHistoryEmptyMessage;
+
+  /// No description provided for @cookingHistoryExploreSuggestions.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xem gợi ý món'**
+  String get cookingHistoryExploreSuggestions;
+
+  /// No description provided for @cookingHistoryServings.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} phần'**
+  String cookingHistoryServings(String count);
+
+  /// No description provided for @cookingHistoryServingsCount.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số phần'**
+  String get cookingHistoryServingsCount;
+
+  /// No description provided for @cookingHistoryCompletedAt.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hoàn tất lúc'**
+  String get cookingHistoryCompletedAt;
+
+  /// No description provided for @cookingHistoryDeductionMode.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cách trừ kho'**
+  String get cookingHistoryDeductionMode;
+
+  /// No description provided for @cookingHistoryLeftoverSaved.
+  ///
+  /// In vi, this message translates to:
+  /// **'Món ăn thừa đã lưu'**
+  String get cookingHistoryLeftoverSaved;
+
+  /// No description provided for @cookingHistoryDeductedIngredients.
+  ///
+  /// In vi, this message translates to:
+  /// **'NGUYÊN LIỆU ĐÃ TRỪ'**
+  String get cookingHistoryDeductedIngredients;
+
+  /// No description provided for @cookingHistoryNoDeductions.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không có nguyên liệu nào bị trừ trong phiên này.'**
+  String get cookingHistoryNoDeductions;
+
+  /// No description provided for @cookingHistoryBatchPrefix.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lô kho {id}'**
+  String cookingHistoryBatchPrefix(String id);
+
+  /// No description provided for @commonYes.
+  ///
+  /// In vi, this message translates to:
+  /// **'Có'**
+  String get commonYes;
+
+  /// No description provided for @commonNo.
+  ///
+  /// In vi, this message translates to:
+  /// **'Không'**
+  String get commonNo;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

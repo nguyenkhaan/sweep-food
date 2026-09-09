@@ -18,10 +18,11 @@ class CookingHistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final async = ref.watch(cookingHistoryControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Lịch sử nấu ăn')),
+      appBar: AppBar(title: Text(l10n.cookingHistoryTitle)),
       body: RefreshIndicator(
         onRefresh: () =>
             ref.read(cookingHistoryControllerProvider.notifier).refresh(),
@@ -34,11 +35,10 @@ class CookingHistoryScreen extends ConsumerWidget {
                 children: [
                   const SizedBox(height: 100),
                   EmptyState(
-                    title: 'Chưa có lịch sử nấu ăn',
-                    message:
-                        'Mỗi khi bạn hoàn tất nấu một món, phiên nấu sẽ được ghi lại ở đây.',
+                    title: l10n.cookingHistoryEmptyTitle,
+                    message: l10n.cookingHistoryEmptyMessage,
                     icon: Icons.restaurant_menu_rounded,
-                    actionLabel: 'Xem gợi ý món',
+                    actionLabel: l10n.cookingHistoryExploreSuggestions,
                     onAction: () => context.go(Routes.suggestions),
                   ),
                 ],
@@ -99,7 +99,7 @@ class _HistoryTile extends StatelessWidget {
         ),
         subtitle: Text(
           [
-            '${_servingsLabel(entry.servings)} phần',
+            context.l10n.cookingHistoryServings(_servingsLabel(entry.servings)),
             if (entry.completedAt != null)
               _dateFmt.format(entry.completedAt!.toLocal())
             else

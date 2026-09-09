@@ -661,5 +661,23 @@
   "paywallFinePrint": "Chưa tính phí · giá & gói đang trong giai đoạn kiểm chứng",
 
   "favoritesTitle": "Món & thực đơn yêu thích",
-  "favAddToMenuTitle": "Thêm vào thực đơn mẫu"
+  "favAddToMenuTitle": "Thêm vào thực đơn mẫu",
+
+  "cookingHistoryTitle": "Lịch sử nấu ăn",
+  "cookingHistoryDetailTitle": "Chi tiết phiên nấu",
+  "cookingHistoryEmptyTitle": "Chưa có lịch sử nấu ăn",
+  "cookingHistoryEmptyMessage": "Mỗi khi bạn hoàn tất nấu một món, phiên nấu sẽ được ghi lại ở đây.",
+  "cookingHistoryExploreSuggestions": "Xem gợi ý món",
+  "cookingHistoryServings": "{count} phần",
+  "@cookingHistoryServings": { "placeholders": { "count": { "type": "String" } } },
+  "cookingHistoryServingsCount": "Số phần",
+  "cookingHistoryCompletedAt": "Hoàn tất lúc",
+  "cookingHistoryDeductionMode": "Cách trừ kho",
+  "cookingHistoryLeftoverSaved": "Món ăn thừa đã lưu",
+  "cookingHistoryDeductedIngredients": "NGUYÊN LIỆU ĐÃ TRỪ",
+  "cookingHistoryNoDeductions": "Không có nguyên liệu nào bị trừ trong phiên này.",
+  "cookingHistoryBatchPrefix": "Lô kho {id}",
+  "@cookingHistoryBatchPrefix": { "placeholders": { "id": { "type": "String" } } },
+  "commonYes": "Có",
+  "commonNo": "Không"
 }
