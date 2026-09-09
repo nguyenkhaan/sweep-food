@@ -16,19 +16,13 @@ class CookingHistoryDetailScreen extends ConsumerWidget {
 
   final String sessionId;
 
-  static const _modeLabel = {
-    'EXACT': 'Đúng định lượng',
-    'HALF': 'Một nửa',
-    'USE_ALL_MATCHED': 'Dùng hết nguyên liệu khớp',
-    'CUSTOM': 'Tự điều chỉnh',
-  };
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final async = ref.watch(cookingHistoryDetailProvider(sessionId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Chi tiết phiên nấu')),
+      appBar: AppBar(title: Text(l10n.cookingHistoryDetailTitle)),
       body: AsyncValueWidget<CookingHistoryDetail>(
         value: async,
         onRetry: () => ref.invalidate(cookingHistoryDetailProvider(sessionId)),
@@ -49,17 +43,17 @@ class CookingHistoryDetailScreen extends ConsumerWidget {
             Gap.gapLg,
             _InfoCard(
               rows: [
-                ('Số phần', _num(d.servings)),
+                (l10n.cookingHistoryServingsCount, _num(d.servings)),
                 if (d.completedAt != null)
-                  ('Hoàn tất lúc', _dateFmt.format(d.completedAt!.toLocal())),
+                  (l10n.cookingHistoryCompletedAt, _dateFmt.format(d.completedAt!.toLocal())),
                 if (d.consumptionMode != null)
-                  ('Cách trừ kho', _modeLabel[d.consumptionMode!.wire] ?? '—'),
-                ('Món ăn thừa đã lưu', d.leftoverBatchId != null ? 'Có' : 'Không'),
+                  (l10n.cookingHistoryDeductionMode, d.consumptionMode!.label(l10n)),
+                (l10n.cookingHistoryLeftoverSaved, d.leftoverBatchId != null ? l10n.commonYes : l10n.commonNo),
               ],
             ),
             Gap.gapLg,
             Text(
-              'NGUYÊN LIỆU ĐÃ TRỪ',
+              l10n.cookingHistoryDeductedIngredients,
               style: context.text.labelSmall?.copyWith(
                 color: context.sweep.textTertiary,
               ),
@@ -67,7 +61,7 @@ class CookingHistoryDetailScreen extends ConsumerWidget {
             Gap.gapXs,
             if (d.consumptions.isEmpty)
               Text(
-                'Không có nguyên liệu nào bị trừ trong phiên này.',
+                l10n.cookingHistoryNoDeductions,
                 style: context.text.bodySmall?.copyWith(
                   color: context.sweep.textSecondary,
                 ),
@@ -100,7 +94,7 @@ class CookingHistoryDetailScreen extends ConsumerWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                'Lô kho ${_shortId(c.inventoryBatchId)}',
+                                l10n.cookingHistoryBatchPrefix(_shortId(c.inventoryBatchId)),
                                 style: context.text.bodyMedium,
                               ),
                             ),

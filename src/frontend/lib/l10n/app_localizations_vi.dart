@@ -1800,4 +1800,55 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get favAddToMenuTitle => 'Thêm vào thực đơn mẫu';
+
+  @override
+  String get cookingHistoryTitle => 'Lịch sử nấu ăn';
+
+  @override
+  String get cookingHistoryDetailTitle => 'Chi tiết phiên nấu';
+
+  @override
+  String get cookingHistoryEmptyTitle => 'Chưa có lịch sử nấu ăn';
+
+  @override
+  String get cookingHistoryEmptyMessage =>
+      'Mỗi khi bạn hoàn tất nấu một món, phiên nấu sẽ được ghi lại ở đây.';
+
+  @override
+  String get cookingHistoryExploreSuggestions => 'Xem gợi ý món';
+
+  @override
+  String cookingHistoryServings(String count) {
+    return '$count phần';
+  }
+
+  @override
+  String get cookingHistoryServingsCount => 'Số phần';
+
+  @override
+  String get cookingHistoryCompletedAt => 'Hoàn tất lúc';
+
+  @override
+  String get cookingHistoryDeductionMode => 'Cách trừ kho';
+
+  @override
+  String get cookingHistoryLeftoverSaved => 'Món ăn thừa đã lưu';
+
+  @override
+  String get cookingHistoryDeductedIngredients => 'NGUYÊN LIỆU ĐÃ TRỪ';
+
+  @override
+  String get cookingHistoryNoDeductions =>
+      'Không có nguyên liệu nào bị trừ trong phiên này.';
+
+  @override
+  String cookingHistoryBatchPrefix(String id) {
+    return 'Lô kho $id';
+  }
+
+  @override
+  String get commonYes => 'Có';
+
+  @override
+  String get commonNo => 'Không';
 }

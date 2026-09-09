@@ -1813,4 +1813,55 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get favAddToMenuTitle => 'Add to saved menu';
+
+  @override
+  String get cookingHistoryTitle => 'Cooking history';
+
+  @override
+  String get cookingHistoryDetailTitle => 'Cooking session details';
+
+  @override
+  String get cookingHistoryEmptyTitle => 'No cooking history yet';
+
+  @override
+  String get cookingHistoryEmptyMessage =>
+      'Every time you complete cooking a dish, the session will be recorded here.';
+
+  @override
+  String get cookingHistoryExploreSuggestions => 'Explore suggestions';
+
+  @override
+  String cookingHistoryServings(String count) {
+    return '$count servings';
+  }
+
+  @override
+  String get cookingHistoryServingsCount => 'Servings';
+
+  @override
+  String get cookingHistoryCompletedAt => 'Completed at';
+
+  @override
+  String get cookingHistoryDeductionMode => 'Deduction mode';
+
+  @override
+  String get cookingHistoryLeftoverSaved => 'Leftover saved';
+
+  @override
+  String get cookingHistoryDeductedIngredients => 'DEDUCTED INGREDIENTS';
+
+  @override
+  String get cookingHistoryNoDeductions =>
+      'No ingredients were deducted in this session.';
+
+  @override
+  String cookingHistoryBatchPrefix(String id) {
+    return 'Batch $id';
+  }
+
+  @override
+  String get commonYes => 'Yes';
+
+  @override
+  String get commonNo => 'No';
 }

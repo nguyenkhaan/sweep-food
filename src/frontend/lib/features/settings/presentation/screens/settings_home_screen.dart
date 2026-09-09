@@ -70,7 +70,7 @@ class SettingsHomeScreen extends ConsumerWidget {
               ),
               SettingsRow(
                 icon: Icons.history_rounded,
-                label: 'Lịch sử nấu ăn',
+                label: l10n.cookingHistoryTitle,
                 onTap: () => context.push(Routes.cookHistory),
               ),
               SettingsRow(
