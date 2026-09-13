@@ -4,8 +4,8 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 from uuid import UUID
 
+from sqlalchemy import Boolean, ForeignKey, Index, Numeric, String, text
 from sqlalchemy import Enum as SQLEnum
-from sqlalchemy import ForeignKey, Index, Numeric, String, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -36,7 +36,7 @@ class MasterIngredientModel(TimestampedUUIDModel):
     )
 
     name: Mapped[str] = mapped_column(String, nullable=False)
-    description: Mapped[str] = mapped_column(String, nullable=False)
+    description: Mapped[str | None] = mapped_column(String, nullable=True)
     category_id: Mapped[UUID] = mapped_column(
         PostgreSQLUUID(as_uuid=True),
         ForeignKey("ingredient_categories.id"),
@@ -62,6 +62,12 @@ class MasterIngredientModel(TimestampedUUIDModel):
     default_storage_mode: Mapped[StorageMode | None] = mapped_column(
         SQLEnum(StorageMode, name="storage_mode"),
         nullable=True,
+    )
+    is_verified: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        server_default=text("true"),
+        nullable=False,
     )
     category: Mapped["IngredientCategoryModel"] = relationship(
         back_populates="master_ingredients",

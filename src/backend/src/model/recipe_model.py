@@ -2,6 +2,7 @@
 
 from decimal import Decimal
 from typing import TYPE_CHECKING
+from uuid import uuid4
 
 from sqlalchemy import CheckConstraint, Float, Index, Integer, Numeric, String, text
 from sqlalchemy.dialects.postgresql import JSONB
@@ -25,13 +26,29 @@ class RecipeModel(TimestampedUUIDModel):
         CheckConstraint(
             "default_servings > 0", name="recipe_default_servings_positive"
         ),
+        CheckConstraint(
+            "nutrition_status IN ('COMPLETE', 'PARTIAL', 'INCOMPLETE')",
+            name="recipe_nutrition_status_valid",
+        ),
         Index("uq_recipes_name_lower", text("lower(name)"), unique=True),
+        Index("uq_recipes_source_url", "source_url", unique=True),
     )
 
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=False)
     instructions: Mapped[dict[str, object]] = mapped_column(JSONB, nullable=False)
     media_url: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_platform: Mapped[str] = mapped_column(
+        String(50),
+        default="internal",
+        server_default=text("'internal'"),
+        nullable=False,
+    )
+    source_url: Mapped[str] = mapped_column(
+        String,
+        default=lambda: f"internal://recipe/{uuid4()}",
+        nullable=False,
+    )
     default_servings: Mapped[Decimal] = mapped_column(Numeric(6, 2), nullable=False)
     estimated_cooking_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
     estimated_cost: Mapped[float | None] = mapped_column(Float, nullable=True)
@@ -48,6 +65,12 @@ class RecipeModel(TimestampedUUIDModel):
         JSONB,
         default=dict,
         server_default=text("'{}'::jsonb"),
+        nullable=False,
+    )
+    nutrition_status: Mapped[str] = mapped_column(
+        String(20),
+        default="INCOMPLETE",
+        server_default=text("'INCOMPLETE'"),
         nullable=False,
     )
     tags: Mapped[dict[str, object]] = mapped_column(

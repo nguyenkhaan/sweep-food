@@ -23,6 +23,10 @@ class RecipeIngredientModel(CreatedAtUUIDModel):
     __tablename__ = "recipe_ingredients"
     __table_args__ = (
         CheckConstraint("required_quantity > 0"),
+        CheckConstraint(
+            "display_quantity IS NULL OR display_quantity > 0",
+            name="recipe_ingredient_display_quantity_positive",
+        ),
         Index("ix_recipe_ingredients_recipe_id", "recipe_id"),
         Index("ix_recipe_ingredients_master_ingredient_id", "master_ingredient_id"),
     )
@@ -42,6 +46,10 @@ class RecipeIngredientModel(CreatedAtUUIDModel):
         SQLEnum(MeasurementUnit, name="measurement_unit"),
         nullable=False,
     )
+    display_quantity: Mapped[Decimal | None] = mapped_column(
+        Numeric(12, 3), nullable=True
+    )
+    display_unit: Mapped[str | None] = mapped_column(String(50), nullable=True)
     is_optional: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     preparation_note: Mapped[str | None] = mapped_column(String, nullable=True)
     recipe: Mapped["RecipeModel"] = relationship(back_populates="recipe_ingredients")

@@ -51,7 +51,7 @@ class IngredientListItemDTO(BaseModel):
 class IngredientDetailDTO(IngredientListItemDTO):
     """Complete public catalog details for one canonical ingredient."""
 
-    description: str
+    description: str | None
     default_media_url: str | None
     nutrition: IngredientNutritionDTO
     shelf_life_rules: list[ShelfLifeRuleDTO]

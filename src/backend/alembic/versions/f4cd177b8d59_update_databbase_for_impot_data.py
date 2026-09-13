@@ -1,8 +1,8 @@
-"""initial digram for phase 2
+"""update databbase for impot data
 
-Revision ID: 9988f9aa15b0
+Revision ID: f4cd177b8d59
 Revises: 
-Create Date: 2026-09-07 12:38:11.543037
+Create Date: 2026-09-13 16:31:15.368360
 """
 
 from collections.abc import Sequence
@@ -13,7 +13,7 @@ from sqlalchemy.dialects import postgresql
 
 
 # revision identifiers, used by Alembic.
-revision: str = '9988f9aa15b0'
+revision: str = 'f4cd177b8d59'
 down_revision: str | Sequence[str] | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -35,6 +35,8 @@ def upgrade() -> None:
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('instructions', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
     sa.Column('media_url', sa.String(), nullable=True),
+    sa.Column('source_platform', sa.String(length=50), server_default=sa.text("'internal'"), nullable=False),
+    sa.Column('source_url', sa.String(), nullable=False),
     sa.Column('default_servings', sa.Numeric(precision=6, scale=2), nullable=False),
     sa.Column('estimated_cooking_minutes', sa.Integer(), nullable=False),
     sa.Column('estimated_cost', sa.Float(), nullable=True),
@@ -44,14 +46,17 @@ def upgrade() -> None:
     sa.Column('total_carbs_g', sa.Numeric(precision=12, scale=3), nullable=True),
     sa.Column('total_sugar_g', sa.Numeric(precision=12, scale=3), nullable=True),
     sa.Column('other_nutrients', postgresql.JSONB(astext_type=sa.Text()), server_default=sa.text("'{}'::jsonb"), nullable=False),
+    sa.Column('nutrition_status', sa.String(length=20), server_default=sa.text("'INCOMPLETE'"), nullable=False),
     sa.Column('tags', postgresql.JSONB(astext_type=sa.Text()), server_default=sa.text("'{}'::jsonb"), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint("nutrition_status IN ('COMPLETE', 'PARTIAL', 'INCOMPLETE')", name='recipe_nutrition_status_valid'),
     sa.CheckConstraint('default_servings > 0', name='recipe_default_servings_positive'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index('uq_recipes_name_lower', 'recipes', [sa.literal_column('lower(name)')], unique=True)
+    op.create_index('uq_recipes_source_url', 'recipes', ['source_url'], unique=True)
     op.create_table('users',
     sa.Column('name', sa.String(), nullable=True),
     sa.Column('phone_e164', sa.String(), nullable=False),
@@ -125,7 +130,7 @@ def upgrade() -> None:
     op.create_index('ix_favorite_recipes_recipe_id', 'favorite_recipes', ['recipe_id'], unique=False)
     op.create_table('master_ingredients',
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('description', sa.String(), nullable=False),
+    sa.Column('description', sa.String(), nullable=True),
     sa.Column('category_id', sa.UUID(), nullable=False),
     sa.Column('default_media_url', sa.String(), nullable=True),
     sa.Column('canonical_unit', sa.Enum('KG', 'GRAM', 'LITER', 'ML', 'PIECE', 'PACK', 'OTHER', name='measurement_unit'), nullable=False),
@@ -137,6 +142,7 @@ def upgrade() -> None:
     sa.Column('sodium_mg', sa.Numeric(precision=12, scale=3), nullable=True),
     sa.Column('other_nutrients', postgresql.JSONB(astext_type=sa.Text()), server_default=sa.text("'{}'::jsonb"), nullable=False),
     sa.Column('default_storage_mode', sa.Enum('ROOM_TEMPERATURE', 'REFRIGERATED', 'FROZEN', 'DRY_SHELF', name='storage_mode'), nullable=True),
+    sa.Column('is_verified', sa.Boolean(), server_default=sa.text('true'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
@@ -257,10 +263,13 @@ def upgrade() -> None:
     sa.Column('master_ingredient_id', sa.UUID(), nullable=False),
     sa.Column('required_quantity', sa.Numeric(precision=12, scale=3), nullable=False),
     sa.Column('unit', sa.Enum('KG', 'GRAM', 'LITER', 'ML', 'PIECE', 'PACK', 'OTHER', name='measurement_unit'), nullable=False),
+    sa.Column('display_quantity', sa.Numeric(precision=12, scale=3), nullable=True),
+    sa.Column('display_unit', sa.String(length=50), nullable=True),
     sa.Column('is_optional', sa.Boolean(), nullable=False),
     sa.Column('preparation_note', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint('display_quantity IS NULL OR display_quantity > 0', name='recipe_ingredient_display_quantity_positive'),
     sa.CheckConstraint('required_quantity > 0'),
     sa.ForeignKeyConstraint(['master_ingredient_id'], ['master_ingredients.id'], ),
     sa.ForeignKeyConstraint(['recipe_id'], ['recipes.id'], ),
@@ -558,6 +567,7 @@ def downgrade() -> None:
     op.drop_index('ix_auth_sessions_token_family_id', table_name='auth_sessions')
     op.drop_table('auth_sessions')
     op.drop_table('users')
+    op.drop_index('uq_recipes_source_url', table_name='recipes')
     op.drop_index('uq_recipes_name_lower', table_name='recipes')
     op.drop_table('recipes')
     op.drop_index('uq_ingredient_categories_name_lower', table_name='ingredient_categories')
