@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/config/app_constants.dart';
 
@@ -19,22 +19,14 @@ class SplashScreen extends StatelessWidget {
             Container(
               width: 96,
               height: 96,
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: scheme.onPrimary.withValues(alpha: 0.12),
                 borderRadius: Radii.brXl,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 12,
-                    offset: Offset(0, 4),
-                  ),
-                ],
               ),
-              clipBehavior: Clip.antiAlias,
-              padding: const EdgeInsets.all(Gap.sm),
-              child: Image.asset(
-                'assets/images/sf_icon.png',
-                fit: BoxFit.contain,
+              child: Icon(
+                Icons.eco_rounded,
+                size: 52,
+                color: scheme.onPrimary,
               ),
             ),
             Gap.gapLg,
