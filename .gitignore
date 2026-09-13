@@ -1,6 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,flutter,kotlin
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,flutter,kotlin
-data/
+data123/
 ### Flutter ###
 # Flutter/Dart/Pub related
 **/doc/api/
