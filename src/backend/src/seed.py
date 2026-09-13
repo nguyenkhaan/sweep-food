@@ -262,6 +262,7 @@ def build_catalog_records() -> list[Base]:
             sodium_mg=79.0,
             other_nutrients={"fiber_g": 2.2},
             default_storage_mode=StorageMode.REFRIGERATED,
+            is_verified=True,
         ),
         MasterIngredientModel(
             id=chicken_id,
@@ -277,6 +278,7 @@ def build_catalog_records() -> list[Base]:
             sodium_mg=74.0,
             other_nutrients={"cholesterol_mg": 85.0},
             default_storage_mode=StorageMode.REFRIGERATED,
+            is_verified=True,
         ),
         MasterIngredientModel(
             id=milk_id,
@@ -292,6 +294,7 @@ def build_catalog_records() -> list[Base]:
             sodium_mg=43.0,
             other_nutrients={"calcium_mg": 113.0},
             default_storage_mode=StorageMode.REFRIGERATED,
+            is_verified=True,
         ),
         MasterIngredientModel(
             id=rice_id,
@@ -307,6 +310,7 @@ def build_catalog_records() -> list[Base]:
             sodium_mg=1.0,
             other_nutrients={"fiber_g": 0.4},
             default_storage_mode=StorageMode.DRY_SHELF,
+            is_verified=True,
         ),
         IngredientAliasModel(
             id=seed_id("alias-spinach"),
@@ -373,6 +377,8 @@ def build_catalog_records() -> list[Base]:
             name="Spinach soup",
             description="Quick light soup with fresh spinach.",
             instructions={"steps": ["Wash spinach", "Cook for five minutes"]},
+            source_platform="internal",
+            source_url="internal://seed/recipe-spinach-soup",
             default_servings=2.0,
             estimated_cooking_minutes=15,
             estimated_cost=25000.0,
@@ -382,6 +388,7 @@ def build_catalog_records() -> list[Base]:
             total_carbs_g=7.2,
             total_sugar_g=0.8,
             other_nutrients={"fiber_g": 4.4},
+            nutrition_status="COMPLETE",
             tags={"values": ["quick", "vegetarian"]},
         ),
         RecipeModel(
@@ -389,6 +396,8 @@ def build_catalog_records() -> list[Base]:
             name="Grilled chicken breast",
             description="Simple high-protein chicken breast.",
             instructions={"steps": ["Season chicken", "Grill until cooked"]},
+            source_platform="internal",
+            source_url="internal://seed/recipe-grilled-chicken",
             default_servings=2.0,
             estimated_cooking_minutes=25,
             estimated_cost=75000.0,
@@ -398,6 +407,7 @@ def build_catalog_records() -> list[Base]:
             total_carbs_g=0.0,
             total_sugar_g=0.0,
             other_nutrients={"sodium_mg": 148.0},
+            nutrition_status="COMPLETE",
             tags={"values": ["high-protein", "quick"]},
         ),
         RecipeModel(
@@ -405,6 +415,8 @@ def build_catalog_records() -> list[Base]:
             name="Fresh milk smoothie",
             description="A quick chilled milk drink.",
             instructions={"steps": ["Chill milk", "Blend and serve"]},
+            source_platform="internal",
+            source_url="internal://seed/recipe-milk-smoothie",
             default_servings=2.0,
             estimated_cooking_minutes=5,
             estimated_cost=18000.0,
@@ -414,6 +426,7 @@ def build_catalog_records() -> list[Base]:
             total_carbs_g=9.6,
             total_sugar_g=9.6,
             other_nutrients={"calcium_mg": 226.0},
+            nutrition_status="COMPLETE",
             tags={"values": ["breakfast", "quick"]},
         ),
         RecipeModel(
@@ -421,6 +434,8 @@ def build_catalog_records() -> list[Base]:
             name="Steamed rice",
             description="Basic cooked white rice.",
             instructions={"steps": ["Rinse rice", "Steam until tender"]},
+            source_platform="internal",
+            source_url="internal://seed/recipe-steamed-rice",
             default_servings=2.0,
             estimated_cooking_minutes=30,
             estimated_cost=12000.0,
@@ -430,6 +445,7 @@ def build_catalog_records() -> list[Base]:
             total_carbs_g=57.4,
             total_sugar_g=0.2,
             other_nutrients={"fiber_g": 0.8},
+            nutrition_status="COMPLETE",
             tags={"values": ["staple", "vegetarian"]},
         ),
         RecipeIngredientModel(
@@ -438,6 +454,8 @@ def build_catalog_records() -> list[Base]:
             master_ingredient_id=spinach_id,
             required_quantity=200.0,
             unit=MeasurementUnit.GRAM,
+            display_quantity=200.0,
+            display_unit="g",
             is_optional=False,
         ),
         RecipeIngredientModel(
@@ -446,6 +464,8 @@ def build_catalog_records() -> list[Base]:
             master_ingredient_id=chicken_id,
             required_quantity=300.0,
             unit=MeasurementUnit.GRAM,
+            display_quantity=300.0,
+            display_unit="g",
             is_optional=False,
         ),
         RecipeIngredientModel(
@@ -454,6 +474,8 @@ def build_catalog_records() -> list[Base]:
             master_ingredient_id=milk_id,
             required_quantity=500.0,
             unit=MeasurementUnit.ML,
+            display_quantity=500.0,
+            display_unit="ml",
             is_optional=False,
         ),
         RecipeIngredientModel(
@@ -462,6 +484,8 @@ def build_catalog_records() -> list[Base]:
             master_ingredient_id=rice_id,
             required_quantity=300.0,
             unit=MeasurementUnit.GRAM,
+            display_quantity=300.0,
+            display_unit="g",
             is_optional=False,
         ),
     ]
