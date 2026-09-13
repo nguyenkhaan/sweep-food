@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_colors.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/config/app_constants.dart';
@@ -28,10 +28,11 @@ class AboutScreen extends StatelessWidget {
                     color: context.colors.primaryContainer,
                     borderRadius: Radii.brLg,
                   ),
-                  child: Icon(
-                    Icons.eco_rounded,
-                    size: 34,
-                    color: context.colors.onPrimaryContainer,
+                  clipBehavior: Clip.antiAlias,
+                  padding: const EdgeInsets.all(Gap.xs),
+                  child: Image.asset(
+                    'assets/images/sf_icon.png',
+                    fit: BoxFit.contain,
                   ),
                 ),
                 Gap.gapSm,

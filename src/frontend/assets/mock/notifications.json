@@ -37,7 +37,7 @@
     },
     {
       "notification_id": "n5",
-      "type": "meal_plan_ready",
+      "type": "system",
       "title": "Thực đơn tuần mới đã sẵn sàng",
       "body": "Tạo danh sách mua sắm chỉ với 1 chạm",
       "created_at": "{{today-1T07:30}}",

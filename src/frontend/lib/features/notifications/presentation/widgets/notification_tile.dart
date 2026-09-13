@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_colors.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
@@ -59,7 +59,16 @@ class NotificationTile extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(color: v.bg, borderRadius: Radii.brMd),
-              child: Icon(v.icon, size: 18, color: v.fg),
+              clipBehavior: Clip.antiAlias,
+              child: notification.type == AppNotificationType.system
+                  ? Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Image.asset(
+                        'assets/images/sf_icon.png',
+                        fit: BoxFit.contain,
+                      ),
+                    )
+                  : Icon(v.icon, size: 18, color: v.fg),
             ),
             Gap.gapSm,
             Expanded(

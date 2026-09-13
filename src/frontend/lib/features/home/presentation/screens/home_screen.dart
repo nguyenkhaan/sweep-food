@@ -31,12 +31,16 @@ class HomeScreen extends ConsumerWidget {
         titleSpacing: Gap.lg,
         title: Row(
           children: [
-            const Icon(
-              Icons.eco_rounded,
-              color: BrandPalette.green700,
-              size: 24,
+            ClipRRect(
+              borderRadius: Radii.brSm,
+              child: Image.asset(
+                'assets/images/sf_icon.png',
+                width: 24,
+                height: 24,
+                fit: BoxFit.contain,
+              ),
             ),
-            const SizedBox(width: Gap.xs),
+            const SizedBox(width: Gap.sm),
             Text(
               'SweepFood',
               style: context.text.titleLarge?.copyWith(
