@@ -1,10 +1,11 @@
-"""Read-only seeded recipe query service."""
+"""Recipe query and mutation service."""
 
 from decimal import Decimal
 from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy.sql.functions import count
@@ -13,11 +14,13 @@ from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
 from src.module.recipes.recipe_dto import (
+    CreateRecipeRequestDTO,
     RecipeDetailDTO,
     RecipeIngredientDTO,
     RecipeListItemDTO,
     RecipeListResponseDTO,
     RecipeNutritionDTO,
+    UpdateRecipeRequestDTO,
 )
 
 
@@ -32,7 +35,7 @@ class RecipeNotFoundError(HTTPException):
 
 
 class RecipeService:
-    """Load and serving-scale seeded recipes without public mutation behavior."""
+    """Query recipes and apply administrator-managed mutations."""
 
     def __init__(self, db_session: AsyncSession) -> None:
         self.db_session = db_session
@@ -71,6 +74,48 @@ class RecipeService:
             per_page=per_page,
         )
 
+    async def create_recipe(
+        self,
+        data: CreateRecipeRequestDTO,
+    ) -> RecipeDetailDTO:
+        """Create a recipe and return its public details."""
+        try:
+            recipe = RecipeModel(**data.model_dump(exclude_none=True))
+            self.db_session.add(recipe)
+            await self.db_session.commit()
+            return await self.get_recipe(recipe.id, None)
+        except IntegrityError as error:
+            await self.db_session.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Recipe conflicts with existing data",
+            ) from error
+        except SQLAlchemyError:
+            await self.db_session.rollback()
+            raise
+
+    async def update_recipe(
+        self,
+        recipe_id: UUID,
+        data: UpdateRecipeRequestDTO,
+    ) -> RecipeDetailDTO:
+        """Update explicitly supplied fields of one recipe."""
+        try:
+            recipe = await self._find_recipe(recipe_id, lock=True)
+            for field_name, value in data.model_dump(exclude_unset=True).items():
+                setattr(recipe, field_name, value)
+            await self.db_session.commit()
+            return await self.get_recipe(recipe.id, None)
+        except IntegrityError as error:
+            await self.db_session.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Recipe update conflicts with existing data",
+            ) from error
+        except (HTTPException, SQLAlchemyError):
+            await self.db_session.rollback()
+            raise
+
     async def get_recipe(
         self,
         recipe_id: UUID,
@@ -100,13 +145,17 @@ class RecipeService:
             ],
         )
 
-    async def _find_recipe(self, recipe_id: UUID) -> RecipeModel:
-        """Fetch one seeded recipe or raise a safe not-found response."""
-        recipe = (
-            await self.db_session.execute(
-                select(RecipeModel).where(RecipeModel.id == recipe_id),
-            )
-        ).scalar_one_or_none()
+    async def _find_recipe(
+        self,
+        recipe_id: UUID,
+        *,
+        lock: bool = False,
+    ) -> RecipeModel:
+        """Fetch one recipe, optionally locking it for a mutation."""
+        statement = select(RecipeModel).where(RecipeModel.id == recipe_id)
+        if lock:
+            statement = statement.with_for_update()
+        recipe = (await self.db_session.execute(statement)).scalar_one_or_none()
         if recipe is None:
             raise RecipeNotFoundError()
         return recipe

@@ -1,18 +1,25 @@
-"""Authenticated, read-only seeded recipe routes."""
+"""Authenticated recipe query and admin mutation routes."""
 
 from decimal import Decimal
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, status
 
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
+from src.middleware.role_middleware import require_role
+from src.model.enum_model import UserRole
 from src.module.recipes.recipe_dependency import (
     RecipeListQuery,
     get_recipe_list_query,
     get_recipe_service,
 )
-from src.module.recipes.recipe_dto import RecipeDetailDTO, RecipeListResponseDTO
+from src.module.recipes.recipe_dto import (
+    CreateRecipeRequestDTO,
+    RecipeDetailDTO,
+    RecipeListResponseDTO,
+    UpdateRecipeRequestDTO,
+)
 from src.module.recipes.recipe_service import RecipeService
 
 recipe_router = APIRouter(prefix="/recipes", tags=["recipes"])
@@ -61,3 +68,33 @@ async def get_recipe(
 ) -> RecipeDetailDTO:
     """Return one recipe with its serving-scaled public details."""
     return await service.get_recipe(recipe_id, servings)
+
+
+@recipe_router.post(
+    "",
+    response_model=RecipeDetailDTO,
+    status_code=status.HTTP_201_CREATED,
+    summary="Create a recipe",
+)
+async def create_recipe(
+    data: CreateRecipeRequestDTO,
+    _admin: Annotated[AuthenticatedUser, Depends(require_role(UserRole.ADMIN))],
+    service: Annotated[RecipeService, Depends(get_recipe_service)],
+) -> RecipeDetailDTO:
+    """Create one recipe as an administrator."""
+    return await service.create_recipe(data)
+
+
+@recipe_router.put(
+    "/{recipe_id}",
+    response_model=RecipeDetailDTO,
+    summary="Update a recipe",
+)
+async def update_recipe(
+    recipe_id: UUID,
+    data: UpdateRecipeRequestDTO,
+    _admin: Annotated[AuthenticatedUser, Depends(require_role(UserRole.ADMIN))],
+    service: Annotated[RecipeService, Depends(get_recipe_service)],
+) -> RecipeDetailDTO:
+    """Update explicitly supplied fields of one recipe as an administrator."""
+    return await service.update_recipe(recipe_id, data)

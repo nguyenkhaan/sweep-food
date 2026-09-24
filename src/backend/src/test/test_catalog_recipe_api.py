@@ -187,10 +187,8 @@ async def test_catalog_and_recipe_reads_require_authentication(
     assert recipe_response.json()["detail"] == "Invalid or missing bearer token"
 
 
-def test_catalog_recipe_openapi_documents_queries_schemas_and_read_only_methods() -> (
-    None
-):
-    """OpenAPI exposes auth, filtering, pagination, and response-model contracts."""
+def test_catalog_recipe_openapi_documents_query_and_mutation_contracts() -> None:
+    """OpenAPI exposes authenticated recipe reads and admin mutation schemas."""
     app.openapi_schema = None
     schema = app.openapi()
     paths = cast(dict[str, object], schema["paths"])
@@ -200,14 +198,18 @@ def test_catalog_recipe_openapi_documents_queries_schemas_and_read_only_methods(
 
     ingredient_get = cast(dict[str, object], ingredient_route["get"])
     recipe_get = cast(dict[str, object], recipe_route["get"])
+    recipe_post = cast(dict[str, object], recipe_route["post"])
     recipe_detail_get = cast(dict[str, object], recipe_detail_route["get"])
+    recipe_detail_put = cast(dict[str, object], recipe_detail_route["put"])
 
     assert set(ingredient_route) == {"get"}
-    assert set(recipe_route) == {"get"}
-    assert set(recipe_detail_route) == {"get"}
+    assert set(recipe_route) == {"get", "post"}
+    assert set(recipe_detail_route) == {"get", "put"}
     assert ingredient_get["security"] == [{"BearerAuth": []}]
     assert recipe_get["security"] == [{"BearerAuth": []}]
+    assert recipe_post["security"] == [{"BearerAuth": []}]
     assert recipe_detail_get["security"] == [{"BearerAuth": []}]
+    assert recipe_detail_put["security"] == [{"BearerAuth": []}]
     assert _parameter_names(ingredient_get) == {"q", "category", "page", "per_page"}
     assert _parameter_names(recipe_get) == {
         "q",
@@ -217,6 +219,7 @@ def test_catalog_recipe_openapi_documents_queries_schemas_and_read_only_methods(
         "per_page",
     }
     assert _parameter_names(recipe_detail_get) == {"recipe_id", "servings"}
+    assert _parameter_names(recipe_detail_put) == {"recipe_id"}
     assert _response_schema_ref(ingredient_get) == (
         "#/components/schemas/IngredientListResponseDTO"
     )
@@ -227,12 +230,31 @@ def test_catalog_recipe_openapi_documents_queries_schemas_and_read_only_methods(
         _response_schema_ref(recipe_detail_get)
         == "#/components/schemas/RecipeDetailDTO"
     )
+    assert (
+        _response_schema_ref(recipe_detail_put)
+        == "#/components/schemas/RecipeDetailDTO"
+    )
+    assert _request_schema_ref(recipe_post) == (
+        "#/components/schemas/CreateRecipeRequestDTO"
+    )
+    assert _request_schema_ref(recipe_detail_put) == (
+        "#/components/schemas/UpdateRecipeRequestDTO"
+    )
 
 
 def _parameter_names(operation: dict[str, object]) -> set[str]:
     """Extract documented query and path parameter names from one operation."""
     parameters = cast(list[dict[str, object]], operation["parameters"])
     return {cast(str, parameter["name"]) for parameter in parameters}
+
+
+def _request_schema_ref(operation: dict[str, object]) -> str:
+    """Extract the documented JSON request-model reference."""
+    request_body = cast(dict[str, object], operation["requestBody"])
+    content = cast(dict[str, object], request_body["content"])
+    application_json = cast(dict[str, object], content["application/json"])
+    schema = cast(dict[str, object], application_json["schema"])
+    return cast(str, schema["$ref"])
 
 
 def _response_schema_ref(operation: dict[str, object]) -> str:

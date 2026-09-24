@@ -3,7 +3,7 @@
 from uuid import UUID
 
 from fastapi import HTTPException, status
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -49,8 +49,18 @@ class IngredientService:
             )
         return ingredient
 
-    async def _commit_catalog_change(self, ingredient_id: UUID) -> IngredientDetailDTO:
+    async def _update_master_fields(
+        self,
+        ingredient_id: UUID,
+        values: dict[str, object],
+    ) -> IngredientDetailDTO:
+        """Update only named columns and return the unchanged full record."""
         try:
+            await self.db_session.execute(
+                update(MasterIngredientModel)
+                .where(MasterIngredientModel.id == ingredient_id)
+                .values(**values)
+            )
             await self.db_session.commit()
         except IntegrityError as error:
             await self.db_session.rollback()
@@ -63,46 +73,28 @@ class IngredientService:
     async def update_ingredient(
         self, ingredient_id: UUID, body: UpdateIngredientDTO
     ) -> IngredientDetailDTO:
-        """Change the requested mutable catalog fields."""
-        ingredient = await self._get_master(ingredient_id)
-        fields = body.model_fields_set
-        if "name" in fields and body.name is not None:
-            ingredient.name = body.name
-        if "description" in fields:
-            ingredient.description = body.description
-        if "default_media_url" in fields:
-            ingredient.default_media_url = body.default_media_url
-        if "canonical_unit" in fields and body.canonical_unit is not None:
-            ingredient.canonical_unit = body.canonical_unit
-        if "calories" in fields:
-            ingredient.calories = body.calories
-        if "protein_g" in fields:
-            ingredient.protein_g = body.protein_g
-        if "fat_g" in fields:
-            ingredient.fat_g = body.fat_g
-        if "carbs_g" in fields:
-            ingredient.carbs_g = body.carbs_g
-        if "sugar_g" in fields:
-            ingredient.sugar_g = body.sugar_g
-        if "sodium_mg" in fields:
-            ingredient.sodium_mg = body.sodium_mg
-        if "other_nutrients" in fields and body.other_nutrients is not None:
-            ingredient.other_nutrients = body.other_nutrients
-        return await self._commit_catalog_change(ingredient_id)
+        """Change only the explicitly requested mutable catalog fields."""
+        await self._get_master(ingredient_id)
+        return await self._update_master_fields(
+            ingredient_id,
+            body.model_dump(exclude_unset=True),
+        )
 
     async def update_default_storage(
         self, ingredient_id: UUID, body: UpdateIngredientDefaultStorageDTO
     ) -> IngredientDetailDTO:
-        """Change the global default without moving any existing user batch."""
-        ingredient = await self._get_master(ingredient_id)
-        ingredient.default_storage_mode = body.default_storage_mode
-        return await self._commit_catalog_change(ingredient_id)
+        """Change only the global default storage mode."""
+        await self._get_master(ingredient_id)
+        return await self._update_master_fields(
+            ingredient_id,
+            {"default_storage_mode": body.default_storage_mode},
+        )
 
     async def update_category(
         self, ingredient_id: UUID, body: AssignIngredientCategoryDTO
     ) -> IngredientDetailDTO:
         """Attach an existing category to a master ingredient."""
-        ingredient = await self._get_master(ingredient_id)
+        await self._get_master(ingredient_id)
         category = await self.db_session.execute(
             select(IngredientCategoryModel.id).where(
                 IngredientCategoryModel.id == body.category_id
@@ -113,8 +105,10 @@ class IngredientService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Category not found",
             )
-        ingredient.category_id = body.category_id
-        return await self._commit_catalog_change(ingredient_id)
+        return await self._update_master_fields(
+            ingredient_id,
+            {"category_id": body.category_id},
+        )
 
     async def delete_ingredient(self, ingredient_id: UUID) -> None:
         """Delete only an ingredient unused by business records."""
