@@ -12,6 +12,7 @@ from src.core.setting import DATABASE_URL, REDIS_URL, get_env_var
 from src.db import db_session
 from src.module.auth.auth_router import auth_router
 from src.module.catalog.catalog_router import catalog_router
+from src.module.category.category_router import category_router
 from src.module.cooking.cooking_route import cooking_router
 from src.module.extractions.extraction_route import extraction_router
 from src.module.favorites.favorite_router import favorite_router
@@ -69,6 +70,7 @@ def create_app() -> FastAPI:
     application.include_router(health_router, prefix=API_PREFIX)
     application.include_router(auth_router, prefix=API_PREFIX)
     application.include_router(catalog_router, prefix=API_PREFIX)
+    application.include_router(category_router, prefix=API_PREFIX)
     application.include_router(ingredient_router, prefix=API_PREFIX)
     application.include_router(recipe_router, prefix=API_PREFIX)
     application.include_router(favorite_router, prefix=API_PREFIX)
