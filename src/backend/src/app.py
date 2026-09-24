@@ -16,6 +16,7 @@ from src.module.cooking.cooking_route import cooking_router
 from src.module.extractions.extraction_route import extraction_router
 from src.module.favorites.favorite_router import favorite_router
 from src.module.health.health_router import health_router
+from src.module.ingredient.ingredient_router import ingredient_router
 from src.module.inventory.inventory_router import inventory_router
 from src.module.meal_plans.meal_plan_router import meal_plan_router
 from src.module.notification.notification_router import notification_router
@@ -68,6 +69,7 @@ def create_app() -> FastAPI:
     application.include_router(health_router, prefix=API_PREFIX)
     application.include_router(auth_router, prefix=API_PREFIX)
     application.include_router(catalog_router, prefix=API_PREFIX)
+    application.include_router(ingredient_router, prefix=API_PREFIX)
     application.include_router(recipe_router, prefix=API_PREFIX)
     application.include_router(favorite_router, prefix=API_PREFIX)
     application.include_router(recommendation_router, prefix=API_PREFIX)
