@@ -30,6 +30,7 @@ from src.module.inventory.inventory_dto import (
     InventoryAdjustmentRequestDTO,
     MoveInventoryBatchRequestDTO,
     UpdateInventoryBatchRequestDTO,
+    WasteIngredientQueryDTO,
 )
 from src.module.inventory.inventory_service import (
     InventoryBatchNotFoundError,
@@ -563,3 +564,32 @@ async def test_summary_groups_compatible_custom_ingredient_units() -> None:
     assert response.items[0].quantity == 1500.0
     assert response.items[0].unit is MeasurementUnit.GRAM
     assert response.items[0].batch_count == 2
+
+
+@pytest.mark.anyio
+async def test_list_waste_queries_current_expired_stock_with_stable_order() -> None:
+    """Waste pages count and sort only active, non-empty, expired user batches."""
+    batch = _custom_batch(expiration_source=ExpirationSource.MANUFACTURER)
+    batch.expires_at = NOW - timedelta(days=1)
+    database = FakeDatabaseSession([FakeResult(3), FakeResult([batch])])
+    service = InventoryService(cast(AsyncSession, database))
+
+    response = await service.list_waste(
+        USER_ID,
+        WasteIngredientQueryDTO(limit=5, offset=10, order="desc"),
+    )
+
+    assert response.total == 3
+    assert response.limit == 5
+    assert response.offset == 10
+    assert response.items[0].id == BATCH_ID
+    statement = str(database.statements[1])
+    assert "inventory_batches.user_id" in statement
+    assert "inventory_batches.status" in statement
+    assert "inventory_batches.current_quantity" in statement
+    assert "inventory_batches.expires_at IS NOT NULL" in statement
+    assert "inventory_batches.expires_at <=" in statement
+    assert (
+        "ORDER BY inventory_batches.expires_at DESC, inventory_batches.id DESC"
+        in statement
+    )

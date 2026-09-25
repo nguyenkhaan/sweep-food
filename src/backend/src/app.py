@@ -10,6 +10,7 @@ from src.core.exceptions import register_exception_handlers
 from src.core.openapi import BearerOpenAPIFastAPI
 from src.core.setting import DATABASE_URL, REDIS_URL, get_env_var
 from src.db import db_session
+from src.module.admin.admin_router import admin_router
 from src.module.auth.auth_router import auth_router
 from src.module.catalog.catalog_router import catalog_router
 from src.module.category.category_router import category_router
@@ -69,6 +70,7 @@ def create_app() -> FastAPI:
     application.state.environment = get_env_var("ENV", "dev")
     register_exception_handlers(application)
     application.include_router(health_router, prefix=API_PREFIX)
+    application.include_router(admin_router, prefix=API_PREFIX)
     application.include_router(auth_router, prefix=API_PREFIX)
     application.include_router(catalog_router, prefix=API_PREFIX)
     application.include_router(category_router, prefix=API_PREFIX)

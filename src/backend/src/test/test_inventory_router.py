@@ -31,6 +31,8 @@ from src.module.inventory.inventory_dto import (
     InventoryLedgerListResponseDTO,
     InventoryLedgerQueryDTO,
     InventorySummaryResponseDTO,
+    WasteIngredientListResponseDTO,
+    WasteIngredientQueryDTO,
 )
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b101")
@@ -89,6 +91,19 @@ class FakeInventoryService:
         assert _query.storage_mode is StorageMode.REFRIGERATED
         return InventoryBatchListResponseDTO(
             items=[_batch()], total=1, page=1, per_page=20
+        )
+
+    async def list_waste(
+        self,
+        user_id: UUID,
+        query: WasteIngredientQueryDTO,
+    ) -> WasteIngredientListResponseDTO:
+        """Return one expired-inventory page with the supplied paging values."""
+        assert user_id == USER_ID
+        assert query.sort_by == "expiration_date"
+        assert query.order == "desc"
+        return WasteIngredientListResponseDTO(
+            items=[_batch()], total=7, limit=query.limit, offset=query.offset
         )
 
     async def get_batch(self, user_id: UUID, batch_id: UUID) -> InventoryBatchDTO:
@@ -239,6 +254,31 @@ async def test_manual_batch_create_list_and_detail_contract(
     assert list_response.json()["total"] == 1
     assert detail_response.status_code == 200
     assert detail_response.json()["freshness"] == "EXPIRING_SOON"
+
+
+@pytest.mark.anyio
+async def test_waste_route_returns_total_and_requested_page(
+    api_client: httpx.AsyncClient,
+    inventory_routes: object,
+) -> None:
+    """Expired inventory exposes limit/offset and expiration ordering."""
+    assert inventory_routes is None
+    response = await api_client.get(
+        "/api/inventory/waste",
+        params={
+            "limit": 5,
+            "offset": 10,
+            "sort_by": "expiration_date",
+            "order": "desc",
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["total"] == 7
+    assert payload["limit"] == 5
+    assert payload["offset"] == 10
+    assert payload["items"][0]["id"] == str(BATCH_ID)
 
 
 @pytest.mark.anyio

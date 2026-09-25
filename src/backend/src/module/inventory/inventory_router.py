@@ -19,6 +19,8 @@ from src.module.inventory.inventory_dto import (
     InventorySummaryResponseDTO,
     MoveInventoryBatchRequestDTO,
     UpdateInventoryBatchRequestDTO,
+    WasteIngredientListResponseDTO,
+    WasteIngredientQueryDTO,
 )
 from src.module.inventory.inventory_service import InventoryService
 
@@ -48,6 +50,16 @@ async def get_inventory_batches(
 ) -> InventoryBatchListResponseDTO:
     """List the current user's batches with stable pagination."""
     return await service.list_batches(user.user_id, query)
+
+
+@inventory_router.get("/waste", response_model=WasteIngredientListResponseDTO)
+async def get_inventory_waste(
+    user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[InventoryService, Depends(get_inventory_service)],
+    query: Annotated[WasteIngredientQueryDTO, Query()],
+) -> WasteIngredientListResponseDTO:
+    """Return expired batches that still contain current inventory."""
+    return await service.list_waste(user.user_id, query)
 
 
 @inventory_router.get("/batches/{batch_id}", response_model=InventoryBatchDTO)

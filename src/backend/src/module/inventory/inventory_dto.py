@@ -3,6 +3,7 @@
 from datetime import datetime
 from enum import Enum
 from math import isfinite
+from typing import Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -229,6 +230,26 @@ class InventoryBatchListResponseDTO(BaseModel):
     total: int
     page: int
     per_page: int
+
+
+class WasteIngredientQueryDTO(BaseModel):
+    """Pagination and expiration ordering for current expired stock."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    limit: int = Field(default=20, ge=1, le=100)
+    offset: int = Field(default=0, ge=0)
+    sort_by: Literal["expiration_date"] = "expiration_date"
+    order: Literal["asc", "desc"] = "asc"
+
+
+class WasteIngredientListResponseDTO(BaseModel):
+    """Page of expired inventory batches and its unpaginated count."""
+
+    items: list[InventoryBatchDTO]
+    total: int
+    limit: int
+    offset: int
 
 
 class InventoryBatchSummaryDTO(BaseModel):

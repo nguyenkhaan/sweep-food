@@ -43,6 +43,8 @@ from src.module.inventory.inventory_dto import (
     InventorySummaryResponseDTO,
     MoveInventoryBatchRequestDTO,
     UpdateInventoryBatchRequestDTO,
+    WasteIngredientListResponseDTO,
+    WasteIngredientQueryDTO,
 )
 from src.service.fefo_service import are_units_compatible, convert_quantity
 
@@ -299,6 +301,64 @@ class InventoryService:
                 total=total,
                 page=query.page,
                 per_page=query.per_page,
+            )
+        except SQLAlchemyError:
+            await self.db_session.rollback()
+            raise
+
+    async def list_waste(
+        self,
+        user_id: UUID,
+        query: WasteIngredientQueryDTO,
+    ) -> WasteIngredientListResponseDTO:
+        """List expired batches that still contain the user's current stock."""
+        filters = (
+            InventoryBatchModel.user_id == user_id,
+            InventoryBatchModel.status == InventoryBatchStatus.ACTIVE,
+            InventoryBatchModel.current_quantity > 0,
+            InventoryBatchModel.expires_at.is_not(None),
+            InventoryBatchModel.expires_at <= datetime.now(_PRODUCT_TIMEZONE),
+        )
+        expiration_order = (
+            InventoryBatchModel.expires_at.asc()
+            if query.order == "asc"
+            else InventoryBatchModel.expires_at.desc()
+        )
+        id_order = (
+            InventoryBatchModel.id.asc()
+            if query.order == "asc"
+            else InventoryBatchModel.id.desc()
+        )
+        try:
+            total = int(
+                (
+                    await self.db_session.execute(
+                        select(count()).select_from(InventoryBatchModel).where(*filters)
+                    )
+                ).scalar_one()
+            )
+            result = await self.db_session.execute(
+                select(InventoryBatchModel)
+                .where(*filters)
+                .order_by(expiration_order, id_order)
+                .offset(query.offset)
+                .limit(query.limit)
+            )
+            batches = list(result.scalars().all())
+            names = await self._ingredient_names(batches)
+            return WasteIngredientListResponseDTO(
+                items=[
+                    self._map_batch(
+                        batch,
+                        names.get(batch.master_ingredient_id)
+                        if batch.master_ingredient_id is not None
+                        else None,
+                    )
+                    for batch in batches
+                ],
+                total=total,
+                limit=query.limit,
+                offset=query.offset,
             )
         except SQLAlchemyError:
             await self.db_session.rollback()
