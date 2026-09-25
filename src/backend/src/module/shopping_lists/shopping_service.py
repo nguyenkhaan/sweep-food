@@ -34,6 +34,7 @@ from src.module.inventory.inventory_service import InventoryService
 from src.module.shopping_lists.shopping_dto import (
     CreateShoppingItemRequestDTO,
     GenerateShoppingListRequestDTO,
+    GenerateShoppingListResponseDTO,
     ShoppingListCollectionResponseDTO,
     ShoppingListDTO,
     ShoppingListItemDTO,
@@ -142,7 +143,7 @@ class ShoppingService:
         user_id: UUID,
         body: GenerateShoppingListRequestDTO,
         idempotency_key: str,
-    ) -> ShoppingMutationResult[ShoppingListDTO]:
+    ) -> ShoppingMutationResult[GenerateShoppingListResponseDTO]:
         """Generate one active list once for an owned plan using usable inventory."""
         receipt_request = self._receipt_request(
             user_id,
@@ -155,10 +156,10 @@ class ShoppingService:
             plan = await self._find_plan(user_id, body.meal_plan_id, lock=True)
             receipt = await self._find_receipt(receipt_request)
             if receipt is not None:
-                return self._replay_receipt(receipt, ShoppingListDTO)
+                return self._replay_receipt(receipt, GenerateShoppingListResponseDTO)
             existing = await self._find_active_list(user_id, plan.id)
             if existing is not None:
-                result = await self._to_list_dto(existing)
+                shopping_list = existing
             else:
                 requirements = await self._requirements_for_plan(plan.id)
                 available = await self._available_quantities(user_id, requirements)
@@ -196,14 +197,19 @@ class ShoppingService:
                                 },
                             )
                         )
-                result = await self._to_list_dto(shopping_list)
+            result = GenerateShoppingListResponseDTO(
+                id=shopping_list.id,
+                meal_plan_id=shopping_list.meal_plan_id,
+                status=shopping_list.status,
+                generated_at=shopping_list.generated_at,
+            )
             self._record_receipt(receipt_request, status.HTTP_201_CREATED, result)
             await self.db_session.commit()
             return ShoppingMutationResult(status.HTTP_201_CREATED, result)
         except IntegrityError as error:
             receipt = await self._receipt_after_integrity_error(receipt_request)
             if receipt is not None:
-                return self._replay_receipt(receipt, ShoppingListDTO)
+                return self._replay_receipt(receipt, GenerateShoppingListResponseDTO)
             raise ShoppingListConflictError("Shopping list generation conflicted") from error
         except (HTTPException, SQLAlchemyError):
             await self.db_session.rollback()

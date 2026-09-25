@@ -1,10 +1,21 @@
 """Meal-plan item database model."""
-
+# Remember to run this: 
+"""
+ALTER TABLE public.meal_plan_items
+DROP CONSTRAINT IF EXISTS meal_plan_items_meal_plan_id_planned_for_meal_slot_key;
+"""
+# Check the unique constraint 
+"""
+SELECT conname, pg_get_constraintdef(oid)
+FROM pg_constraint
+WHERE conrelid = 'public.meal_plan_items'::regclass
+  AND contype = 'u';
+"""
 from datetime import date
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import CheckConstraint, Date, Float, ForeignKey, Index, UniqueConstraint
+from sqlalchemy import CheckConstraint, Date, Float, ForeignKey, Index
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -24,7 +35,6 @@ class MealPlanItemModel(TimestampedUUIDModel):
     __tablename__ = "meal_plan_items"
     __table_args__ = (
         CheckConstraint("servings > 0"),
-        UniqueConstraint("meal_plan_id", "planned_for", "meal_slot"),
         Index("ix_meal_plan_items_plan_planned_for", "meal_plan_id", "planned_for"),
         Index("ix_meal_plan_items_recipe_id", "recipe_id"),
         Index("ix_meal_plan_items_recommendation_run_id", "recommendation_run_id"),

@@ -4,7 +4,7 @@ from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.model.cooking_session_model import CookingSessionModel
@@ -64,9 +64,9 @@ class MealPlanRecommendationRunNotFoundError(HTTPException):
 
 
 class MealPlanConflictError(HTTPException):
-    """Report a date-range or duplicate-slot write conflict."""
+    """Report a meal-plan mutation conflict."""
 
-    def __init__(self, detail: str = "Meal plan item conflicts with an existing slot") -> None:
+    def __init__(self, detail: str) -> None:
         super().__init__(status_code=status.HTTP_409_CONFLICT, detail=detail)
 
 
@@ -149,9 +149,6 @@ class MealPlanService:
             self.db_session.add(item)
             await self.db_session.commit()
             return self._to_item_dto(item, recipe.name)
-        except IntegrityError as error:
-            await self.db_session.rollback()
-            raise MealPlanConflictError() from error
         except (HTTPException, SQLAlchemyError):
             await self.db_session.rollback()
             raise
@@ -182,9 +179,6 @@ class MealPlanService:
                 item.servings = body.servings
             await self.db_session.commit()
             return self._to_item_dto(item, recipe_name)
-        except IntegrityError as error:
-            await self.db_session.rollback()
-            raise MealPlanConflictError() from error
         except (HTTPException, SQLAlchemyError):
             await self.db_session.rollback()
             raise

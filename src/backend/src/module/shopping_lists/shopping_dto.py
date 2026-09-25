@@ -23,6 +23,15 @@ class GenerateShoppingListRequestDTO(BaseModel):
     meal_plan_id: UUID
 
 
+class GenerateShoppingListResponseDTO(BaseModel):
+    """Metadata for a generated shopping list; items are read separately."""
+
+    id: UUID
+    meal_plan_id: UUID | None
+    status: ShoppingListStatus
+    generated_at: datetime | None
+
+
 class CreateShoppingItemRequestDTO(BaseModel):
     """Add one manual reminder item that does not yet change inventory."""
 

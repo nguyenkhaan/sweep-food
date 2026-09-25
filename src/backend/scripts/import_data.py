@@ -27,7 +27,7 @@ from src.model.recipe_ingredient_model import RecipeIngredientModel
 from src.model.recipe_model import RecipeModel
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_INPUT_DIR = PROJECT_ROOT / "data/normalized"
+DEFAULT_INPUT_DIR = PROJECT_ROOT / "data123/normalized"
 NUTRITION_STATUS = {"COMPLETE", "PARTIAL", "INCOMPLETE"}
 
 CATEGORY_FIELDS = {"id", "name", "description"}

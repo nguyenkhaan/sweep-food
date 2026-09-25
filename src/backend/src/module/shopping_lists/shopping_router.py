@@ -14,6 +14,7 @@ from src.module.shopping_lists.shopping_dependency import (
 from src.module.shopping_lists.shopping_dto import (
     CreateShoppingItemRequestDTO,
     GenerateShoppingListRequestDTO,
+    GenerateShoppingListResponseDTO,
     ShoppingListCollectionResponseDTO,
     ShoppingListDTO,
     ShoppingListItemDTO,
@@ -26,7 +27,9 @@ shopping_router = APIRouter(prefix="/shopping-lists", tags=["shopping-lists"])
 
 
 @shopping_router.post(
-    "/generate", response_model=ShoppingListDTO, status_code=status.HTTP_201_CREATED
+    "/generate",
+    response_model=GenerateShoppingListResponseDTO,
+    status_code=status.HTTP_201_CREATED,
 )
 async def post_shopping_list_generation(
     body: GenerateShoppingListRequestDTO,
@@ -34,7 +37,7 @@ async def post_shopping_list_generation(
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
     service: Annotated[ShoppingService, Depends(get_shopping_service)],
     idempotency_key: Annotated[str, Header(alias="Idempotency-Key", min_length=1)],
-) -> ShoppingListDTO:
+) -> GenerateShoppingListResponseDTO:
     """Generate the active shopping list for one owned meal plan."""
     result = await service.generate(user.user_id, body, idempotency_key)
     response.status_code = result.status_code

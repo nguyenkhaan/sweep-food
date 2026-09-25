@@ -132,7 +132,14 @@ class CompleteCookingSessionRequestDTO(BaseModel):
     """Confirm a planned session with the desired actual-consumption mode."""
 
     consumption_mode: CookingConsumptionMode
-    consumptions: list[CookingConsumptionInputDTO] = Field(default_factory=list)
+    consumptions: list[CookingConsumptionInputDTO] = Field(
+        default_factory=list,
+        description=(
+            "For EXACT and HALF, omit this field or pass [] to let the system "
+            "select inventory batches automatically using FEFO. CUSTOM and "
+            "USE_ALL_MATCHED require at least one matched batch."
+        ),
+    )
 
     @model_validator(mode="after")
     def validate_consumptions(self) -> CompleteCookingSessionRequestDTO:
