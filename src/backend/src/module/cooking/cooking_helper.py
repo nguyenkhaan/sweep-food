@@ -15,6 +15,7 @@ from src.model.enum_model import (
     CookingSessionStatus,
     InventoryLedgerEventType,
 )
+from src.model.history_model import IngredientUsageHistoryModel
 from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.recipe_ingredient_model import RecipeIngredientModel
@@ -175,16 +176,18 @@ class CookingHelper:
             recipe_ingredient.id: ingredient.name
             for recipe_ingredient, ingredient in recipe_ingredients
         }
+        completed_at = datetime.now(UTC)
         consumption_dtos: list[CookingConsumptionDTO] = []
         updated_batches: list[UpdatedInventoryBatchDTO] = []
         waste_reduction_snapshots: list[WasteReductionSnapshot] = []
         for resolved_consumption in resolved_consumptions:
             batch = batch_by_id[resolved_consumption.inventory_batch_id]
+            ingredient_name = ingredient_name_by_recipe_ingredient_id[
+                resolved_consumption.recipe_ingredient_id
+            ]
             batch_snapshot = WasteReductionBatchSnapshot.from_batch(
                 batch,
-                ingredient_name_by_recipe_ingredient_id[
-                    resolved_consumption.recipe_ingredient_id
-                ],
+                ingredient_name,
             )
             self.db_session.add(
                 CookingConsumptionModel(
@@ -193,6 +196,16 @@ class CookingHelper:
                     inventory_batch_id=batch.id,
                     quantity=resolved_consumption.quantity,
                     unit=batch.unit,
+                )
+            )
+            self.db_session.add(
+                IngredientUsageHistoryModel(
+                    user_id=cooking_session.user_id,
+                    ingredient={"name": ingredient_name, "type": "ingredient"},
+                    recipe={"name": recipe.name, "type": "recipe"},
+                    quantity=resolved_consumption.quantity,
+                    unit=batch.unit,
+                    used_at=completed_at,
                 )
             )
             try:
@@ -222,7 +235,7 @@ class CookingHelper:
             updated_batches.append(self.to_updated_batch_dto(batch))
         cooking_session.status = CookingSessionStatus.COMPLETED
         cooking_session.consumption_mode = consumption_mode
-        cooking_session.completed_at = datetime.now(UTC)
+        cooking_session.completed_at = completed_at
         cooking_session.nutrition_snapshot = self.completion_nutrition_snapshot(
             cooking_session,
             recipe,
@@ -490,7 +503,7 @@ class CookingHelper:
             raise InvalidCookingConsumptionError(
                 "Batch does not match recipe ingredient"
             )
-        if batch.expires_at is not None and batch.expires_at < now:
+        if batch.expires_at is not None and batch.expires_at <= now:
             raise InvalidCookingConsumptionError(
                 "Expired inventory batch cannot be consumed"
             )

@@ -654,7 +654,7 @@ class ShoppingService:
                 InventoryBatchModel.master_ingredient_id.in_(ingredient_ids),
                 or_(
                     InventoryBatchModel.expires_at.is_(None),
-                    InventoryBatchModel.expires_at >= now,
+                    InventoryBatchModel.expires_at > now,
                 ),
             )
         )

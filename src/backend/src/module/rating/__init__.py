@@ -1,0 +1,1 @@
+"""User rating API module."""

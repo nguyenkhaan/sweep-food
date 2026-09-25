@@ -96,7 +96,7 @@ class FEFOService:
         expired: list[FEFOCandidate] = []
         non_expired: list[FEFOCandidate] = []
         for candidate in candidates:
-            if candidate.expires_at is not None and candidate.expires_at < now:
+            if candidate.expires_at is not None and candidate.expires_at <= now:
                 expired.append(candidate)
             else:
                 non_expired.append(candidate)

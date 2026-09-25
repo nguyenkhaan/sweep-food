@@ -8,6 +8,7 @@ from src.model.device_registration_model import DeviceRegistrationModel
 from src.model.favorite_menu_item_model import FavoriteMenuItemModel
 from src.model.favorite_menu_model import FavoriteMenuModel
 from src.model.favorite_recipe_model import FavoriteRecipeModel
+from src.model.history_model import IngredientUsageHistoryModel
 from src.model.ingredient_alias_model import IngredientAliasModel
 from src.model.ingredient_category_model import IngredientCategoryModel
 from src.model.inventory_batch_model import InventoryBatchModel
@@ -25,6 +26,7 @@ from src.model.shelf_life_rule_model import ShelfLifeRuleModel
 from src.model.shopping_list_item_model import ShoppingListItemModel
 from src.model.shopping_list_model import ShoppingListModel
 from src.model.shopping_mutation_receipt_model import ShoppingMutationReceiptModel
+from src.model.user_feedback_model import UserFeedbackModel
 from src.model.user_model import UserModel
 from src.model.user_notification_preference_model import UserNotificationPreferenceModel
 from src.model.waste_reduction_event_model import WasteReductionEventModel
@@ -41,6 +43,7 @@ __all__ = [
     "FavoriteRecipeModel",
     "IngredientAliasModel",
     "IngredientCategoryModel",
+    "IngredientUsageHistoryModel",
     "InventoryBatchModel",
     "InventoryLedgerEntryModel",
     "MasterIngredientModel",
@@ -58,6 +61,7 @@ __all__ = [
     "ShoppingMutationReceiptModel",
     "TimestampedUUIDModel",
     "UUIDModel",
+    "UserFeedbackModel",
     "UserModel",
     "UserNotificationPreferenceModel",
     "WasteReductionEventModel",

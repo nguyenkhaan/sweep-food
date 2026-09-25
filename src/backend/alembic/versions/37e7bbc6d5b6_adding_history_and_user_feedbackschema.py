@@ -1,8 +1,8 @@
-"""update databbase for impot data
+"""adding history and user feedbackschema
 
-Revision ID: f4cd177b8d59
+Revision ID: 37e7bbc6d5b6
 Revises: 
-Create Date: 2026-09-13 16:31:15.368360
+Create Date: 2026-09-25 09:17:42.653807
 """
 
 from collections.abc import Sequence
@@ -13,7 +13,7 @@ from sqlalchemy.dialects import postgresql
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'f4cd177b8d59'
+revision: str = '37e7bbc6d5b6'
 down_revision: str | Sequence[str] | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -128,6 +128,20 @@ def upgrade() -> None:
     sa.UniqueConstraint('user_id', 'recipe_id')
     )
     op.create_index('ix_favorite_recipes_recipe_id', 'favorite_recipes', ['recipe_id'], unique=False)
+    op.create_table('ingredient_usage_history',
+    sa.Column('user_id', sa.UUID(), nullable=False),
+    sa.Column('ingredient', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
+    sa.Column('recipe', postgresql.JSONB(astext_type=sa.Text()), nullable=False),
+    sa.Column('quantity', sa.Float(), nullable=False),
+    sa.Column('unit', sa.Enum('KG', 'GRAM', 'LITER', 'ML', 'PIECE', 'PACK', 'OTHER', name='measurement_unit'), nullable=False),
+    sa.Column('used_at', sa.DateTime(timezone=True), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint("(jsonb_typeof(ingredient) = 'object' AND jsonb_typeof(ingredient -> 'name') = 'string' AND btrim(ingredient ->> 'name') <> '' AND ingredient ->> 'type' = 'ingredient') IS TRUE", name='ingredient_usage_history_ingredient_snapshot_valid'),
+    sa.CheckConstraint("(jsonb_typeof(recipe) = 'object' AND jsonb_typeof(recipe -> 'name') = 'string' AND btrim(recipe ->> 'name') <> '' AND recipe ->> 'type' = 'recipe') IS TRUE", name='ingredient_usage_history_recipe_snapshot_valid'),
+    sa.CheckConstraint('quantity > 0', name='ingredient_usage_history_quantity_positive'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('master_ingredients',
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
@@ -201,6 +215,16 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('user_id', 'method', 'request_path', 'key_hash', name='uq_shopping_receipt_scope_key')
+    )
+    op.create_table('user_feedback',
+    sa.Column('user_id', sa.UUID(), nullable=False),
+    sa.Column('rating', sa.Float(), nullable=False),
+    sa.Column('feedback', sa.Text(), nullable=False),
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.CheckConstraint('rating >= 1 AND rating <= 5', name='user_feedback_rating_range'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user_notification_preferences',
     sa.Column('user_id', sa.UUID(), nullable=False),
@@ -548,6 +572,7 @@ def downgrade() -> None:
     op.drop_index('ix_favorite_menu_items_recipe_id', table_name='favorite_menu_items')
     op.drop_table('favorite_menu_items')
     op.drop_table('user_notification_preferences')
+    op.drop_table('user_feedback')
     op.drop_table('shopping_mutation_receipts')
     op.drop_index('ix_recommendation_runs_user_created_at', table_name='recommendation_runs')
     op.drop_table('recommendation_runs')
@@ -557,6 +582,7 @@ def downgrade() -> None:
     op.drop_index('uq_master_ingredients_category_name_lower', table_name='master_ingredients')
     op.drop_index('ix_master_ingredients_category_id', table_name='master_ingredients')
     op.drop_table('master_ingredients')
+    op.drop_table('ingredient_usage_history')
     op.drop_index('ix_favorite_recipes_recipe_id', table_name='favorite_recipes')
     op.drop_table('favorite_recipes')
     op.drop_index('ix_favorite_menus_user_created_at', table_name='favorite_menus')

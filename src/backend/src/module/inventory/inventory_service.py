@@ -968,7 +968,7 @@ def calculate_freshness(
     """Classify one expiration instant using an inclusive warning window."""
     if expires_at is None:
         return FreshnessState.UNKNOWN
-    if expires_at < now:
+    if expires_at <= now:
         return FreshnessState.EXPIRED
     if expires_at <= now + timedelta(days=warning_days):
         return FreshnessState.EXPIRING_SOON
