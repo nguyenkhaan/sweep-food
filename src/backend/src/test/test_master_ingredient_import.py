@@ -31,6 +31,13 @@ def test_transform_master_ingredients_uses_reviewed_qwen_extractions() -> None:
                     },
                 ],
             },
+            {
+                "code": "101",
+                "name_vi": "Cà chua",
+                "category": "Rau",
+                "energy": 20,
+                "nutrition": [],
+            },
         ],
         [
             {
@@ -82,10 +89,19 @@ def test_transform_master_ingredients_uses_reviewed_qwen_extractions() -> None:
     )
 
     by_name = {row["name"]: row for row in rows}
-    assert set(by_name) == {"Cà chua", "Hành lá", "Mì căn", "Nước tương"}
+    assert set(by_name) == {
+        "Cà chua",
+        "Cà chua (101)",
+        "Dầu hành lá",
+        "Hành lá",
+        "Mì căn",
+        "Nước tương",
+        "Vừa đủ",
+    }
     assert "Đậu phụ" not in by_name
     assert by_name["Cà chua"]["calories"] == "18.000"
     assert by_name["Cà chua"]["protein_g"] == "0.900"
     assert by_name["Cà chua"]["sodium_mg"] == "5.000"
     assert by_name["Cà chua"]["carbs_g"] is None
+    assert by_name["Cà chua (101)"]["calories"] == "20.000"
     assert all(row["is_verified"] is True for row in rows)

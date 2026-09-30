@@ -15,7 +15,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_INPUT = PROJECT_ROOT / "data123/raw/recipes/canonical_recipe_ingredients.json"
 DEFAULT_RECIPES_INPUT = PROJECT_ROOT / "data123/normalized/recipes.json"
 DEFAULT_MASTERS_INPUT = PROJECT_ROOT / "data123/normalized/master_ingredients.json"
-DEFAULT_CATEGORIES_INPUT = PROJECT_ROOT / "data123/normalized/ingredient_categories.json"
+DEFAULT_CATEGORIES_INPUT = (
+    PROJECT_ROOT / "data123/normalized/ingredient_categories.json"
+)
 DEFAULT_FOOD_INPUT = PROJECT_ROOT / "data123/raw/food_nutrition_raw.json"
 DEFAULT_QWEN_MAP_INPUT = PROJECT_ROOT / "data123/raw/qwen_extracted_map.json"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data123/normalized/recipe_ingredients.json"
@@ -48,7 +50,11 @@ def source_ingredient_name(
     """Return the same lossless fallback name used by the master transformer."""
     if row.get("match_method") == QWEN_MATCH_METHOD:
         raw_text = row.get("raw_text")
-        qwen_name = qwen_map.get(normalize_text(raw_text)) if isinstance(raw_text, str) else None
+        qwen_name = (
+            qwen_map.get(normalize_text(raw_text))
+            if isinstance(raw_text, str)
+            else None
+        )
         if qwen_name and qwen_name.casefold() != QWEN_NO_INGREDIENT:
             return qwen_name
     fields = (
@@ -90,8 +96,47 @@ def load_food_rows(input_path: Path) -> list[dict[str, Any]]:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
     rows = payload.get("data") if isinstance(payload, dict) else None
     if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
-        raise TypeError("Expected food_nutrition_raw.json to contain a data array of objects.")
+        raise TypeError(
+            "Expected food_nutrition_raw.json to contain a data array of objects."
+        )
     return rows
+
+
+def uniquely_named_food_rows(
+    food_rows: Iterable[dict[str, Any]],
+) -> list[tuple[dict[str, Any], str]]:
+    """Mirror the lossless food-name disambiguation used by the master transform."""
+    result: list[tuple[dict[str, Any], str]] = []
+    used_keys: set[tuple[str, str]] = set()
+    codes: set[str] = set()
+    for food in sorted(food_rows, key=lambda row: str(row.get("code", ""))):
+        code, raw_name, raw_category = (
+            food.get("code"),
+            food.get("name_vi"),
+            food.get("category"),
+        )
+        if (
+            not isinstance(code, str)
+            or not isinstance(raw_name, str)
+            or not isinstance(raw_category, str)
+        ):
+            raise TypeError(
+                "Nutrition food rows require string code, name_vi, and category."
+            )
+        if code in codes:
+            raise ValueError(f"Duplicate nutrition food code: {code!r}")
+        codes.add(code)
+        name = normalize_text(raw_name)
+        category_key = normalize_text(raw_category).casefold()
+        key = (category_key, name.casefold())
+        if key in used_keys:
+            name = f"{name} ({code})"
+            key = (category_key, name.casefold())
+        if key in used_keys:
+            raise ValueError(f"Cannot disambiguate nutrition food {code!r}.")
+        used_keys.add(key)
+        result.append((food, name))
+    return result
 
 
 def load_qwen_map(input_path: Path) -> dict[str, str]:
@@ -131,9 +176,19 @@ def master_indexes(
     natural: dict[tuple[str, str], str] = {}
     names: dict[str, set[str]] = {}
     for row in rows:
-        master_id, name, category_id = row.get("id"), row.get("name"), row.get("category_id")
-        if not isinstance(master_id, str) or not isinstance(name, str) or not isinstance(category_id, str):
-            raise TypeError("Normalized master rows require string id, name, and category_id.")
+        master_id, name, category_id = (
+            row.get("id"),
+            row.get("name"),
+            row.get("category_id"),
+        )
+        if (
+            not isinstance(master_id, str)
+            or not isinstance(name, str)
+            or not isinstance(category_id, str)
+        ):
+            raise TypeError(
+                "Normalized master rows require string id, name, and category_id."
+            )
         UUID(master_id)
         key = (category_id, normalize_text(name).casefold())
         if master_id in ids or key in natural:
@@ -151,13 +206,12 @@ def food_master_ids(
 ) -> dict[str, str]:
     """Resolve nutrition codes to the exact master natural key generated in phase 2."""
     result: dict[str, str] = {}
-    for food in sorted(food_rows, key=lambda row: str(row.get("code", ""))):
-        code, name, category = food.get("code"), food.get("name_vi"), food.get("category")
-        if not isinstance(code, str) or not isinstance(name, str) or not isinstance(category, str):
-            raise TypeError("Nutrition food rows require string code, name_vi, and category.")
+    for food, name in uniquely_named_food_rows(food_rows):
+        code = str(food["code"])
+        category = str(food["category"])
         category_id = category_ids.get(normalize_text(category).casefold())
         master_id = (
-            masters_by_natural.get((category_id, normalize_text(name).casefold()))
+            masters_by_natural.get((category_id, name.casefold()))
             if category_id is not None
             else None
         )
@@ -191,7 +245,9 @@ def source_code_master_ids(
             result[code] = nutrition_ids[code]
             continue
         normalized_name = source_ingredient_name(row, {}, prefer_master=True)
-        master_id = masters_by_natural.get((unclassified_id, normalized_name.casefold()))
+        master_id = masters_by_natural.get(
+            (unclassified_id, normalized_name.casefold())
+        )
         if master_id is not None:
             result[code] = master_id
     return result
@@ -215,18 +271,6 @@ def alias_master_ids(
     return aliases
 
 
-def rejection(row: dict[str, Any], reason: str) -> dict[str, object]:
-    """Return the compact audit record for a row deliberately excluded from import."""
-    source_id = row.get("id")
-    raw_text = row.get("raw_text")
-    return {
-        "entity": "recipe_ingredient",
-        "source_id": source_id if isinstance(source_id, str) else None,
-        "reason": reason,
-        "details": {"raw_text": raw_text if isinstance(raw_text, str) else None},
-    }
-
-
 def resolve_master_id(
     row: dict[str, Any],
     code_ids: dict[str, str],
@@ -239,7 +283,11 @@ def resolve_master_id(
     """Resolve one source row to an existing master, never creating an FK on the fly."""
     if row.get("match_method") == QWEN_MATCH_METHOD:
         raw_text = row.get("raw_text")
-        name = qwen_map.get(normalize_text(raw_text)) if isinstance(raw_text, str) else None
+        name = (
+            qwen_map.get(normalize_text(raw_text))
+            if isinstance(raw_text, str)
+            else None
+        )
         if name is None:
             return None, "MISSING_MASTER_NAME"
         if name.casefold() == QWEN_NO_INGREDIENT:
@@ -262,13 +310,17 @@ def resolve_master_id(
     master_ids = masters_by_name.get(name.casefold(), set())
     if len(master_ids) == 1:
         return next(iter(master_ids)), None
-    preferred_id = masters_by_natural.get((unclassified_id, display_name(name).casefold()))
+    preferred_id = masters_by_natural.get(
+        (unclassified_id, display_name(name).casefold())
+    )
     if preferred_id is not None:
         return preferred_id, None
     return None, "AMBIGUOUS_MASTER" if master_ids else "MISSING_MASTER"
 
 
-def normalized_quantity(row: dict[str, Any]) -> tuple[str | None, str | None, str | None]:
+def normalized_quantity(
+    row: dict[str, Any],
+) -> tuple[str | None, str | None, str | None]:
     """Prefer positive grams, then source quantity, then a schema-valid placeholder."""
     try:
         weight = decimal_string(row.get("estimated_weight_g"), positive=True)
@@ -284,7 +336,7 @@ def normalized_quantity(row: dict[str, Any]) -> tuple[str | None, str | None, st
         return "1.000", "OTHER", None
     source_unit = row.get("unit")
     if not isinstance(source_unit, str):
-        return None, None, "INVALID_UNIT"
+        return source_quantity, "OTHER", None
     unit = normalize_text(source_unit)
     return source_quantity, unit if unit in VALID_UNITS else "OTHER", None
 
@@ -297,14 +349,18 @@ def transform_recipe_ingredients(
     food_rows: Iterable[dict[str, Any]],
     qwen_map: dict[str, str],
 ) -> tuple[list[dict[str, Any]], list[dict[str, object]]]:
-    """Produce FK-safe recipe ingredients and record only rows policy permits excluding."""
+    """Produce one FK-safe database row for every source recipe ingredient."""
     source = list(source_rows)
-    recipe_ids = {row.get("id") for row in recipe_rows if isinstance(row.get("id"), str)}
+    recipe_ids = {
+        row.get("id") for row in recipe_rows if isinstance(row.get("id"), str)
+    }
     master_ids, masters_by_natural, masters_by_name = master_indexes(master_rows)
     category_ids = category_ids_by_name(category_rows)
     unclassified_id = category_ids[UNCLASSIFIED_CATEGORY.casefold()]
     nutrition_ids = food_master_ids(food_rows, category_ids, masters_by_natural)
-    code_ids = source_code_master_ids(source, nutrition_ids, unclassified_id, masters_by_natural)
+    code_ids = source_code_master_ids(
+        source, nutrition_ids, unclassified_id, masters_by_natural
+    )
     aliases = alias_master_ids(source, code_ids)
     output: list[dict[str, Any]] = []
     rejections: list[dict[str, object]] = []
@@ -312,14 +368,18 @@ def transform_recipe_ingredients(
     for row in source:
         source_id, recipe_id = row.get("id"), row.get("recipe_id")
         if not isinstance(source_id, str) or not isinstance(recipe_id, str):
-            raise ValueError("Recipe ingredient is missing id or recipe_id.")
+            raise TypeError("Recipe ingredient is missing id or recipe_id.")
         try:
             UUID(source_id)
             UUID(recipe_id)
         except ValueError as error:
-            raise ValueError(f"Recipe ingredient {source_id!r} has an invalid UUID.") from error
+            raise ValueError(
+                f"Recipe ingredient {source_id!r} has an invalid UUID."
+            ) from error
         if recipe_id not in recipe_ids:
-            raise ValueError(f"Recipe ingredient {source_id} references an unknown recipe.")
+            raise ValueError(
+                f"Recipe ingredient {source_id} references an unknown recipe."
+            )
 
         quantity, unit, quantity_error = normalized_quantity(row)
         if quantity_error:
@@ -338,7 +398,9 @@ def transform_recipe_ingredients(
             raise ValueError(f"Recipe ingredient {source_id} has {reason}.")
 
         try:
-            display_quantity = decimal_string(row.get("required_quantity"), positive=True)
+            display_quantity = decimal_string(
+                row.get("required_quantity"), positive=True
+            )
         except ValueError:
             display_quantity = None
         display_unit = row.get("unit_vi")
@@ -368,11 +430,12 @@ def transform_recipe_ingredients(
     if any(row["master_ingredient_id"] not in master_ids for row in output):
         raise ValueError("Normalized recipe ingredient has an unknown master.")
     output.sort(key=lambda row: str(row["id"]))
-    rejections.sort(key=lambda row: (str(row["source_id"]), str(row["reason"])))
     return output, rejections
 
 
-def write_json(output_path: Path, rows: list[dict[str, Any]] | list[dict[str, object]]) -> None:
+def write_json(
+    output_path: Path, rows: list[dict[str, Any]] | list[dict[str, object]]
+) -> None:
     """Write a complete JSON array atomically."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
     temporary_path = output_path.with_suffix(f"{output_path.suffix}.tmp")
@@ -388,11 +451,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--recipes-input", type=Path, default=DEFAULT_RECIPES_INPUT)
     parser.add_argument("--masters-input", type=Path, default=DEFAULT_MASTERS_INPUT)
-    parser.add_argument("--categories-input", type=Path, default=DEFAULT_CATEGORIES_INPUT)
+    parser.add_argument(
+        "--categories-input", type=Path, default=DEFAULT_CATEGORIES_INPUT
+    )
     parser.add_argument("--food-input", type=Path, default=DEFAULT_FOOD_INPUT)
     parser.add_argument("--qwen-map-input", type=Path, default=DEFAULT_QWEN_MAP_INPUT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--rejections-output", type=Path, default=DEFAULT_REJECTIONS_OUTPUT)
+    parser.add_argument(
+        "--rejections-output", type=Path, default=DEFAULT_REJECTIONS_OUTPUT
+    )
     return parser.parse_args()
 
 
