@@ -11,8 +11,8 @@ from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_INPUT = PROJECT_ROOT / "data/raw/food_nutrition_raw.json"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/normalized/ingredient_categories.json"
+DEFAULT_INPUT = PROJECT_ROOT / "data123/raw/food_nutrition_raw.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data123/normalized/ingredient_categories.json"
 UNCLASSIFIED_CATEGORY = "Chưa phân loại"
 CATEGORY_DESCRIPTIONS = {
     "Chưa phân loại": "Nguyên liệu chưa đủ thông tin để xếp vào một nhóm cụ thể.",

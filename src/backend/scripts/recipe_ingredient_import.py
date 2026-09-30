@@ -12,14 +12,14 @@ from typing import Any
 from uuid import UUID
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_INPUT = PROJECT_ROOT / "data/raw/recipes/canonical_recipe_ingredients.json"
-DEFAULT_RECIPES_INPUT = PROJECT_ROOT / "data/normalized/recipes.json"
-DEFAULT_MASTERS_INPUT = PROJECT_ROOT / "data/normalized/master_ingredients.json"
-DEFAULT_CATEGORIES_INPUT = PROJECT_ROOT / "data/normalized/ingredient_categories.json"
-DEFAULT_FOOD_INPUT = PROJECT_ROOT / "data/raw/food_nutrition_raw.json"
-DEFAULT_QWEN_MAP_INPUT = PROJECT_ROOT / "data/raw/qwen_extracted_map.json"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/normalized/recipe_ingredients.json"
-DEFAULT_REJECTIONS_OUTPUT = PROJECT_ROOT / "data/normalized/rejected_records.json"
+DEFAULT_INPUT = PROJECT_ROOT / "data123/raw/recipes/canonical_recipe_ingredients.json"
+DEFAULT_RECIPES_INPUT = PROJECT_ROOT / "data123/normalized/recipes.json"
+DEFAULT_MASTERS_INPUT = PROJECT_ROOT / "data123/normalized/master_ingredients.json"
+DEFAULT_CATEGORIES_INPUT = PROJECT_ROOT / "data123/normalized/ingredient_categories.json"
+DEFAULT_FOOD_INPUT = PROJECT_ROOT / "data123/raw/food_nutrition_raw.json"
+DEFAULT_QWEN_MAP_INPUT = PROJECT_ROOT / "data123/raw/qwen_extracted_map.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data123/normalized/recipe_ingredients.json"
+DEFAULT_REJECTIONS_OUTPUT = PROJECT_ROOT / "data123/normalized/rejected_records.json"
 UNCLASSIFIED_CATEGORY = "Chưa phân loại"
 QWEN_MATCH_METHOD = "QWEN_LLM_MATCH"
 QWEN_NO_INGREDIENT = "không có nguyên liệu cụ thể"
@@ -38,12 +38,30 @@ def display_name(name: str) -> str:
 
 
 def is_valid_master_name(name: str) -> bool:
-    """Use the same meaningful-name threshold as master_ingredient_import."""
-    return (
-        2 <= len(name) <= 120
-        and any(character.isalpha() for character in name)
-        and name.casefold() not in {"vừa đủ", "tùy thích", "để trang trí", "nguyên liệu"}
+    """Accept every non-blank source name supported by the database model."""
+    return bool(name)
+
+
+def source_ingredient_name(
+    row: dict[str, Any], qwen_map: dict[str, str], *, prefer_master: bool = False
+) -> str:
+    """Return the same lossless fallback name used by the master transformer."""
+    if row.get("match_method") == QWEN_MATCH_METHOD:
+        raw_text = row.get("raw_text")
+        qwen_name = qwen_map.get(normalize_text(raw_text)) if isinstance(raw_text, str) else None
+        if qwen_name and qwen_name.casefold() != QWEN_NO_INGREDIENT:
+            return qwen_name
+    fields = (
+        ("master_ingredient_name", "cleaned_name", "raw_text")
+        if prefer_master
+        else ("cleaned_name", "raw_text", "master_ingredient_name")
     )
+    for field in fields:
+        value = row.get(field)
+        if isinstance(value, str) and (name := normalize_text(value)):
+            return name
+    source_id = row.get("id", "không xác định")
+    return f"Nguyên liệu {source_id}"
 
 
 def decimal_string(value: object, *, positive: bool = False) -> str | None:
@@ -172,14 +190,10 @@ def source_code_master_ids(
         if code in nutrition_ids:
             result[code] = nutrition_ids[code]
             continue
-        name = row.get("master_ingredient_name")
-        if not isinstance(name, str):
-            continue
-        normalized_name = normalize_text(name)
-        if is_valid_master_name(normalized_name):
-            master_id = masters_by_natural.get((unclassified_id, normalized_name.casefold()))
-            if master_id is not None:
-                result[code] = master_id
+        normalized_name = source_ingredient_name(row, {}, prefer_master=True)
+        master_id = masters_by_natural.get((unclassified_id, normalized_name.casefold()))
+        if master_id is not None:
+            result[code] = master_id
     return result
 
 
@@ -229,7 +243,7 @@ def resolve_master_id(
         if name is None:
             return None, "MISSING_MASTER_NAME"
         if name.casefold() == QWEN_NO_INGREDIENT:
-            return None, "QWEN_NO_INGREDIENT"
+            name = source_ingredient_name(row, qwen_map)
     else:
         code = row.get("master_ingredient_code")
         if isinstance(code, str) and code:
@@ -238,7 +252,7 @@ def resolve_master_id(
         raw_name = row.get("cleaned_name")
         name = normalize_text(raw_name) if isinstance(raw_name, str) else ""
         if not is_valid_master_name(name):
-            return None, "MISSING_MASTER_NAME"
+            name = source_ingredient_name(row, qwen_map)
         alias_ids = aliases.get(name.casefold(), set())
         if len(alias_ids) == 1:
             return next(iter(alias_ids)), None
@@ -255,16 +269,19 @@ def resolve_master_id(
 
 
 def normalized_quantity(row: dict[str, Any]) -> tuple[str | None, str | None, str | None]:
-    """Prefer estimated grams, falling back to a valid positive source quantity."""
+    """Prefer positive grams, then source quantity, then a schema-valid placeholder."""
     try:
         weight = decimal_string(row.get("estimated_weight_g"), positive=True)
-        source_quantity = decimal_string(row.get("required_quantity"), positive=True)
     except ValueError:
-        return None, None, "INVALID_NUMERIC"
+        weight = None
     if weight is not None:
         return weight, "GRAM", None
+    try:
+        source_quantity = decimal_string(row.get("required_quantity"), positive=True)
+    except ValueError:
+        source_quantity = None
     if source_quantity is None:
-        return None, None, "MISSING_USABLE_QUANTITY"
+        return "1.000", "OTHER", None
     source_unit = row.get("unit")
     if not isinstance(source_unit, str):
         return None, None, "INVALID_UNIT"
@@ -295,22 +312,18 @@ def transform_recipe_ingredients(
     for row in source:
         source_id, recipe_id = row.get("id"), row.get("recipe_id")
         if not isinstance(source_id, str) or not isinstance(recipe_id, str):
-            rejections.append(rejection(row, "MISSING_REQUIRED_FIELD"))
-            continue
+            raise ValueError("Recipe ingredient is missing id or recipe_id.")
         try:
             UUID(source_id)
             UUID(recipe_id)
-        except ValueError:
-            rejections.append(rejection(row, "INVALID_UUID"))
-            continue
+        except ValueError as error:
+            raise ValueError(f"Recipe ingredient {source_id!r} has an invalid UUID.") from error
         if recipe_id not in recipe_ids:
-            rejections.append(rejection(row, "MISSING_RECIPE"))
-            continue
+            raise ValueError(f"Recipe ingredient {source_id} references an unknown recipe.")
 
         quantity, unit, quantity_error = normalized_quantity(row)
         if quantity_error:
-            rejections.append(rejection(row, quantity_error))
-            continue
+            raise ValueError(f"Recipe ingredient {source_id} has {quantity_error}.")
         master_id, master_error = resolve_master_id(
             row,
             code_ids,
@@ -321,8 +334,8 @@ def transform_recipe_ingredients(
             qwen_map,
         )
         if master_error or master_id not in master_ids:
-            rejections.append(rejection(row, master_error or "MISSING_MASTER"))
-            continue
+            reason = master_error or "MISSING_MASTER"
+            raise ValueError(f"Recipe ingredient {source_id} has {reason}.")
 
         try:
             display_quantity = decimal_string(row.get("required_quantity"), positive=True)

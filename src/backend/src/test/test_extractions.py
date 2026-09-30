@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Generator
+from collections.abc import AsyncIterator, Generator
 from io import BytesIO
 from uuid import UUID
 
@@ -12,12 +12,81 @@ import pytest
 from src.app import app
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.model.enum_model import UserRole
+from src.service.sweep_food_ai_client import (
+    AIAsrItemDTO,
+    AIAsrResponseDTO,
+    AIOcrItemDTO,
+    AIOcrResponseDTO,
+    get_sweep_food_ai_client,
+)
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a051")
 
 
 class FakeExtractionUserService:
     """Provide authenticated user for extraction routes."""
+
+
+class FakeSweepFoodAIClient:
+    """Return deterministic typed AI responses without network access."""
+
+    async def extract_ocr(
+        self,
+        *,
+        filename: str,
+        content: bytes,
+        content_type: str | None,
+    ) -> AIOcrResponseDTO:
+        del content, content_type
+        if "invoice" in filename:
+            return AIOcrResponseDTO(
+                status="success",
+                source="receipt",
+                store_name="Test Grocery",
+                raw_text="Milk 500g\nBread",
+                items=[
+                    AIOcrItemDTO(
+                        name="Whole Milk",
+                        quantity_g=500,
+                        quantity_source="extracted",
+                    ),
+                    AIOcrItemDTO(
+                        name="Bread",
+                        quantity_g=250,
+                        quantity_source="estimated",
+                    ),
+                ],
+            )
+        return AIOcrResponseDTO(
+            status="success",
+            source="label",
+            raw_text="Whole Milk 500g NSX 28/08/2026 HSD 05/09/2026",
+            items=[
+                AIOcrItemDTO(
+                    name="Whole Milk",
+                    quantity_g=500,
+                    quantity_source="extracted",
+                    production_date="28/08/2026",
+                    expiry_date="05/09/2026",
+                    confidence=0.95,
+                )
+            ],
+        )
+
+    async def extract_asr(self, **_kwargs: object) -> AIAsrResponseDTO:
+        return AIAsrResponseDTO(
+            status="success",
+            engine="groq_whisper",
+            transcript="Tôi có năm trăm gram sữa",
+            items=[
+                AIAsrItemDTO(
+                    name="Milk",
+                    quantity_g=500,
+                    quantity_source="spoken",
+                    confidence=0.92,
+                )
+            ],
+        )
 
 
 @pytest.fixture()
@@ -27,9 +96,14 @@ def _override_extraction_deps() -> Generator[None]:
     async def get_user() -> AuthenticatedUser:
         return AuthenticatedUser(USER_ID, (UserRole.USER,))
 
+    async def get_ai_client() -> AsyncIterator[FakeSweepFoodAIClient]:
+        yield FakeSweepFoodAIClient()
+
     app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_sweep_food_ai_client] = get_ai_client
     yield
     app.dependency_overrides.pop(require_authentication, None)
+    app.dependency_overrides.pop(get_sweep_food_ai_client, None)
 
 
 @pytest.mark.anyio
@@ -37,7 +111,7 @@ async def test_ocr_label_route_returns_200_with_mock_data(
     api_client: httpx.AsyncClient,
     _override_extraction_deps: None,
 ) -> None:
-    """POST /extractions/ocr/label returns mock extraction fields."""
+    """POST /extractions/ocr/label maps a typed AI response."""
     fake_image = BytesIO(b"\x89PNG fake image content")
     response = await api_client.post(
         "/api/extractions/ocr/label",
@@ -46,11 +120,11 @@ async def test_ocr_label_route_returns_200_with_mock_data(
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "SUCCEEDED"
-    assert body["provider"] == "MOCK_OCR"
+    assert body["provider"] == "SWEEP_FOOD_AI"
     assert body["persisted"] is False
     assert body["fields"]["ingredient_name"] == "Whole Milk"
-    assert body["fields"]["quantity"] == 1.0
-    assert body["fields"]["unit"] == "LITER"
+    assert body["fields"]["quantity"] == 500.0
+    assert body["fields"]["unit"] == "GRAM"
     assert body["fields"]["expires_at"] == "2026-09-05"
 
 
@@ -90,7 +164,7 @@ async def test_ocr_invoice_route_returns_200_with_mock_data(
     api_client: httpx.AsyncClient,
     _override_extraction_deps: None,
 ) -> None:
-    """POST /extractions/ocr/invoice returns mock invoice line items."""
+    """POST /extractions/ocr/invoice returns an honest partial result."""
     fake_image = BytesIO(b"\x89PNG fake invoice image")
     response = await api_client.post(
         "/api/extractions/ocr/invoice",
@@ -98,14 +172,15 @@ async def test_ocr_invoice_route_returns_200_with_mock_data(
     )
     assert response.status_code == 200
     body = response.json()
-    assert body["status"] == "SUCCEEDED"
-    assert body["provider"] == "MOCK_OCR"
+    assert body["status"] == "PARTIAL"
+    assert body["provider"] == "SWEEP_FOOD_AI"
     assert body["persisted"] is False
     assert isinstance(body["fields"]["line_items"], list)
     assert len(body["fields"]["line_items"]) == 2
-    assert body["fields"]["total_amount"] == 85000.0
-    assert body["fields"]["currency"] == "VND"
-    assert body["fields"]["vendor_name"] == "Mock Grocery Store"
+    assert body["fields"]["total_amount"] is None
+    assert body["fields"]["currency"] is None
+    assert body["fields"]["vendor_name"] == "Test Grocery"
+    assert "INVOICE_FINANCIAL_FIELDS_NOT_AVAILABLE" in body["warnings"]
 
 
 @pytest.mark.anyio
@@ -128,7 +203,7 @@ async def test_asr_route_returns_200_with_mock_data(
     api_client: httpx.AsyncClient,
     _override_extraction_deps: None,
 ) -> None:
-    """POST /extractions/asr returns mock transcription and parsed fields."""
+    """POST /extractions/asr maps the first typed AI item."""
     fake_audio = BytesIO(b"\xff\xfb\x90\x00 fake audio content")
     response = await api_client.post(
         "/api/extractions/asr",
@@ -137,13 +212,13 @@ async def test_asr_route_returns_200_with_mock_data(
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "SUCCEEDED"
-    assert body["provider"] == "MOCK_ASR"
+    assert body["provider"] == "SWEEP_FOOD_AI"
     assert body["persisted"] is False
-    assert "milk" in body["raw_text"].lower()
+    assert "sữa" in body["raw_text"].lower()
     assert body["fields"]["ingredient_name"] == "Milk"
-    assert body["fields"]["quantity"] == 2.0
-    assert body["fields"]["unit"] == "LITER"
-    assert body["confidence"]["transcript"] == 0.92
+    assert body["fields"]["quantity"] == 500.0
+    assert body["fields"]["unit"] == "GRAM"
+    assert body["confidence"]["ingredient_name"] == 0.92
 
 
 @pytest.mark.anyio

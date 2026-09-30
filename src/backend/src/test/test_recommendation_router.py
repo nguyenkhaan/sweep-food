@@ -9,7 +9,6 @@ import pytest
 
 from src.app import app
 from src.db import get_db_session
-from src.db import get_db_session
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.model.enum_model import UserRole
 from src.module.recommendations.recommendation_dependency import (
@@ -41,7 +40,7 @@ class FakeRecommendationService:
         """Return one stable mock recommendation for contract verification."""
         self.requests.append((user_id, body))
         return RecommendationListResponseDTO(
-            request=body.request,
+            request=body,
             analysis=MockRecommendationAnalysisDTO(
                 intent="meal_recommendation",
                 summary="Mock analysis for recipe discovery.",
@@ -94,27 +93,55 @@ async def test_recommendation_route_accepts_an_authenticated_user_request(
     api_client: httpx.AsyncClient,
     recommendation_routes: FakeRecommendationService,
 ) -> None:
-    """The new public contract contains only the free-text user request."""
+    """The public contract accepts the structured SweepFood AI request."""
     response = await api_client.post(
         "/api/recommendations",
-        json={"request": "Tôi cần một món nhanh với rau trong tủ lạnh"},
+        json={
+            "items": [
+                {
+                    "name": "Rau chân vịt",
+                    "code": "ingredient-id",
+                    "quantity_g": 300,
+                    "hours_to_expire": 12,
+                    "is_staple": False,
+                }
+            ],
+            "household_size": 2,
+            "max_cooking_time_min": 25,
+            "scenario_type": "quick_meal",
+            "dietary_restrictions": ["vegetarian"],
+            "allergies": ["peanut"],
+            "disliked_ingredients": ["cilantro"],
+            "preferred_cuisines": ["Vietnamese"],
+        },
     )
 
     assert response.status_code == 200
     assert response.json()["analysis"]["is_mock"] is True
     assert response.json()["items"][0]["provider"] == "MOCK"
     assert recommendation_routes.requests[0][0] == USER_ID
-    assert recommendation_routes.requests[0][1].request.startswith("Tôi cần")
+    request = recommendation_routes.requests[0][1]
+    assert request.items[0].quantity_g == 300
+    assert request.scenario_type == "quick_meal"
+    assert request.preferred_cuisines == ["Vietnamese"]
 
 
 @pytest.mark.anyio
-@pytest.mark.parametrize("body", [{}, {"request": " "}, {"request": 42}])
+@pytest.mark.parametrize(
+    "body",
+    [
+        {},
+        {"items": [{"name": "", "quantity_g": 200}]},
+        {"items": [{"name": "Spinach", "quantity_g": 0}]},
+        {"items": [], "request": "legacy free text"},
+    ],
+)
 async def test_recommendation_route_rejects_invalid_request_bodies(
     api_client: httpx.AsyncClient,
     recommendation_routes: FakeRecommendationService,
     body: dict[str, object],
 ) -> None:
-    """Invalid free-text requests never reach the recommendation service."""
+    """Invalid structured requests never reach the recommendation service."""
     response = await api_client.post("/api/recommendations", json=body)
 
     assert response.status_code == 422
@@ -136,7 +163,7 @@ async def test_recommendation_route_requires_authentication(
 
     response = await api_client.post(
         "/api/recommendations",
-        json={"request": "Món ăn tối"},
+        json={"items": []},
     )
 
     assert response.status_code == 401
@@ -144,7 +171,7 @@ async def test_recommendation_route_requires_authentication(
 
 
 def test_recommendation_openapi_documents_the_authenticated_request_contract() -> None:
-    """OpenAPI exposes the single request field and bearer security."""
+    """OpenAPI exposes the AI request fields and bearer security."""
     app.openapi_schema = None
     paths = cast(dict[str, object], app.openapi()["paths"])
     operation = cast(dict[str, object], paths["/api/recommendations"])["post"]
@@ -152,4 +179,14 @@ def test_recommendation_openapi_documents_the_authenticated_request_contract() -
     schemas = cast(dict[str, dict[str, object]], app.openapi()["components"]["schemas"])
 
     assert post["security"] == [{"BearerAuth": []}]
-    assert set(schemas["RecommendationRequestDTO"]["properties"]) == {"request"}
+    assert {"502", "503", "504"} <= set(cast(dict[str, object], post["responses"]))
+    assert set(schemas["RecommendationRequestDTO"]["properties"]) == {
+        "items",
+        "household_size",
+        "max_cooking_time_min",
+        "scenario_type",
+        "dietary_restrictions",
+        "allergies",
+        "disliked_ingredients",
+        "preferred_cuisines",
+    }

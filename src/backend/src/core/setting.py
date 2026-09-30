@@ -2,6 +2,7 @@
 
 import os
 from typing import Final
+from urllib.parse import urlsplit
 
 from dotenv import load_dotenv
 
@@ -34,6 +35,20 @@ def get_positive_int_env(key: str, default: int) -> int:
         raise ValueError(f"Environment variable {key} must be an integer") from error
     if value <= 0:
         raise ValueError(f"Environment variable {key} must be greater than zero")
+    return value
+
+
+def get_http_base_url_env(key: str, default: str) -> str:
+    """Return a normalized absolute HTTP(S) base URL from the environment."""
+    value = get_env_var(key, default).strip().rstrip("/")
+    parsed = urlsplit(value)
+    if (
+        parsed.scheme not in {"http", "https"}
+        or not parsed.netloc
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise ValueError(f"Environment variable {key} must be an HTTP(S) base URL")
     return value
 
 
@@ -118,4 +133,26 @@ EXTRACTION_ALLOWED_AUDIO_TYPES: Final[str] = get_env_var(
 EXTRACTION_PROVIDER_TIMEOUT: Final[int] = get_positive_int_env(
     "EXTRACTION_PROVIDER_TIMEOUT",
     15,
+)
+
+
+AI_BASE_URL: Final[str] = get_http_base_url_env(
+    "AI_BASE_URL",
+    "http://127.0.0.1:8001",
+)
+AI_CONNECT_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
+    "AI_CONNECT_TIMEOUT_SECONDS",
+    3,
+)
+AI_RECOMMEND_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
+    "AI_RECOMMEND_TIMEOUT_SECONDS",
+    10,
+)
+AI_OCR_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
+    "AI_OCR_TIMEOUT_SECONDS",
+    30,
+)
+AI_ASR_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
+    "AI_ASR_TIMEOUT_SECONDS",
+    60,
 )

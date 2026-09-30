@@ -1,29 +1,39 @@
-"""Request and response DTOs for the mock recommendation boundary."""
+"""Request and response DTOs for the recommendation boundary."""
 
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from src.model.enum_model import MeasurementUnit
 from src.module.recipes.recipe_dto import RecipeNutritionDTO
 
 
-class RecommendationRequestDTO(BaseModel):
-    """Accept the free-text request that a future AI provider will interpret."""
+class RecommendationPantryItemDTO(BaseModel):
+    """One pantry item supplied to recommendation inference."""
 
     model_config = ConfigDict(extra="forbid")
 
-    request: str = Field(min_length=1, max_length=1000)
+    name: str = Field(min_length=1)
+    code: str | None = None
+    quantity_g: float = Field(default=200, gt=0)
+    hours_to_expire: float | None = None
+    is_staple: bool = False
 
-    @field_validator("request")
-    @classmethod
-    def validate_request(cls, value: str) -> str:
-        """Trim the user request and reject blank content."""
-        normalized = value.strip()
-        if not normalized:
-            raise ValueError("request must not be blank")
-        return normalized
+
+class RecommendationRequestDTO(BaseModel):
+    """Mirror the structured request accepted by SweepFood AI."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    items: list[RecommendationPantryItemDTO]
+    household_size: float = Field(default=4, gt=0)
+    max_cooking_time_min: float = Field(default=45, gt=0)
+    scenario_type: str = "custom"
+    dietary_restrictions: list[str] = Field(default_factory=list)
+    allergies: list[str] = Field(default_factory=list)
+    disliked_ingredients: list[str] = Field(default_factory=list)
+    preferred_cuisines: list[str] = Field(default_factory=list)
 
 
 class MockRecommendationAnalysisDTO(BaseModel):
@@ -80,8 +90,9 @@ class RecommendationItemDTO(BaseModel):
 
 
 class RecommendationListResponseDTO(BaseModel):
-    """Return the mock analysis and three to five selectable recipe choices."""
+    """Return ranked, catalog-backed recipe choices."""
 
-    request: str
+    request: RecommendationRequestDTO
     analysis: MockRecommendationAnalysisDTO
     items: list[RecommendationItemDTO]
+    warnings: list[str] = Field(default_factory=list)

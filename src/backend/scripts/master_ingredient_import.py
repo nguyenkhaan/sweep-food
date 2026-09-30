@@ -12,13 +12,13 @@ from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_FOOD_INPUT = PROJECT_ROOT / "data/raw/food_nutrition_raw.json"
-DEFAULT_CATEGORY_OUTPUT = PROJECT_ROOT / "data/normalized/ingredient_categories.json"
+DEFAULT_FOOD_INPUT = PROJECT_ROOT / "data123/raw/food_nutrition_raw.json"
+DEFAULT_CATEGORY_OUTPUT = PROJECT_ROOT / "data123/normalized/ingredient_categories.json"
 DEFAULT_RECIPE_INGREDIENT_INPUT = (
-    PROJECT_ROOT / "data/raw/recipes/canonical_recipe_ingredients.json"
+    PROJECT_ROOT / "data123/raw/recipes/canonical_recipe_ingredients.json"
 )
-DEFAULT_QWEN_MAP_INPUT = PROJECT_ROOT / "data/raw/qwen_extracted_map.json"
-DEFAULT_MASTER_OUTPUT = PROJECT_ROOT / "data/normalized/master_ingredients.json"
+DEFAULT_QWEN_MAP_INPUT = PROJECT_ROOT / "data123/raw/qwen_extracted_map.json"
+DEFAULT_MASTER_OUTPUT = PROJECT_ROOT / "data123/normalized/master_ingredients.json"
 UNCLASSIFIED_CATEGORY = "Chưa phân loại"
 INVALID_MASTER_NAMES = {
     "vừa đủ",
@@ -72,12 +72,8 @@ def decimal_string(value: object, *, negative_as_none: bool = False) -> str | No
 
 
 def is_valid_master_name(name: str) -> bool:
-    """Accept meaningful ingredient names and reject placeholders from recipe text."""
-    return (
-        2 <= len(name) <= 120
-        and any(character.isalpha() for character in name)
-        and name.casefold() not in INVALID_MASTER_NAMES
-    )
+    """Accept every non-blank source name supported by the database model."""
+    return bool(name)
 
 
 def display_name(name: str) -> str:
@@ -142,9 +138,29 @@ def qwen_extracted_name(
     name = qwen_map.get(normalize_text(raw_text))
     if name is None:
         raise ValueError(f"Qwen map has no entry for {raw_text!r}.")
-    if name.casefold() == QWEN_NO_INGREDIENT:
-        return None
     return name
+
+
+def source_ingredient_name(
+    row: dict[str, Any], qwen_map: dict[str, str], *, prefer_master: bool = False
+) -> str:
+    """Return a non-blank source name without discarding placeholder records."""
+    if row.get("match_method") == QWEN_MATCH_METHOD:
+        qwen_name = qwen_extracted_name(row, qwen_map)
+        if qwen_name and qwen_name.casefold() != QWEN_NO_INGREDIENT:
+            return qwen_name
+
+    fields = (
+        ("master_ingredient_name", "cleaned_name", "raw_text")
+        if prefer_master
+        else ("cleaned_name", "raw_text", "master_ingredient_name")
+    )
+    for field in fields:
+        value = row.get(field)
+        if isinstance(value, str) and (name := normalize_text(value)):
+            return name
+    source_id = row.get("id", "không xác định")
+    return f"Nguyên liệu {source_id}"
 
 
 def category_ids_by_name(category_rows: Iterable[dict[str, Any]]) -> dict[str, str]:
@@ -308,12 +324,7 @@ def transform_master_ingredients(
         if code in nutrition_ids_by_code:
             code_ids[code] = nutrition_ids_by_code[code]
             continue
-        raw_name = recipe_ingredient.get("master_ingredient_name")
-        if not isinstance(raw_name, str):
-            raise TypeError(f"Coded ingredient {code} has no master name.")
-        name = normalize_text(raw_name)
-        if not is_valid_master_name(name):
-            continue
+        name = source_ingredient_name(recipe_ingredient, qwen_map, prefer_master=True)
         row = master_row(name, unclassified_id)
         add_master_candidate(candidates, row, priority=1)
         code_ids[code] = str(row["id"])
@@ -325,10 +336,7 @@ def transform_master_ingredients(
     for recipe_ingredient in recipe_rows:
         if recipe_ingredient.get("match_method") != QWEN_MATCH_METHOD:
             continue
-        qwen_name = qwen_extracted_name(recipe_ingredient, qwen_map)
-        if qwen_name is None or not is_valid_master_name(qwen_name):
-            continue
-        name = qwen_name
+        name = source_ingredient_name(recipe_ingredient, qwen_map)
         known_ids = known_ids_by_name.get(name.casefold(), set())
         if len(known_ids) == 1:
             continue
@@ -353,18 +361,7 @@ def transform_master_ingredients(
         code = recipe_ingredient.get("master_ingredient_code")
         if isinstance(code, str) and code:
             continue
-        if recipe_ingredient.get("match_method") == QWEN_MATCH_METHOD:
-            qwen_name = qwen_extracted_name(recipe_ingredient, qwen_map)
-            if qwen_name is None:
-                continue
-            name = qwen_name
-        else:
-            raw_name = recipe_ingredient.get("cleaned_name")
-            if not isinstance(raw_name, str):
-                raise TypeError("Uncoded recipe ingredient has no cleaned_name.")
-            name = normalize_text(raw_name)
-        if not is_valid_master_name(name):
-            continue
+        name = source_ingredient_name(recipe_ingredient, qwen_map)
         known_ids = known_ids_by_name.get(name.casefold(), set())
         if len(known_ids) == 1:
             continue

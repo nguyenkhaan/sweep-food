@@ -14,10 +14,10 @@ from urllib.parse import urlsplit, urlunsplit
 from uuid import UUID
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_CANONICAL_INPUT = PROJECT_ROOT / "data/raw/recipes/canonical_recipes.json"
-DEFAULT_NUTRITION_INPUT = PROJECT_ROOT / "data/raw/recipes/recipes.json"
-DEFAULT_SCRAPED_INPUT = PROJECT_ROOT / "data/raw/recipes_raw_scraped.json"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data/normalized/recipes.json"
+DEFAULT_CANONICAL_INPUT = PROJECT_ROOT / "data123/raw/recipes/canonical_recipes.json"
+DEFAULT_NUTRITION_INPUT = PROJECT_ROOT / "data123/raw/recipes/recipes.json"
+DEFAULT_SCRAPED_INPUT = PROJECT_ROOT / "data123/raw/recipes_raw_scraped.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data123/normalized/recipes.json"
 NUTRITION_STATUSES = {"COMPLETE", "PARTIAL", "INCOMPLETE"}
 HASHTAG_ONLY = re.compile(r"^\s*(#[^\s]+\s*)+$")
 
@@ -87,8 +87,6 @@ def normalized_steps(value: object) -> dict[str, list[dict[str, object]]]:
         if not isinstance(content, str):
             raise TypeError("Scraped recipe step must contain string content.")
         normalized_content = normalize_text(content)
-        if not normalized_content:
-            continue
         title = raw_step.get("title")
         normalized_title = normalize_text(title) if isinstance(title, str) else ""
         step_number = len(steps) + 1

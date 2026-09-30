@@ -23,6 +23,13 @@ class FakeRecipe:
         self.id = recipe_id
         self.name = name
         self.default_servings = Decimal(2)
+        self.media_url: str | None = None
+        self.total_calories: Decimal | None = Decimal(300)
+        self.total_protein_g: Decimal | None = Decimal(10)
+        self.total_fat_g: Decimal | None = Decimal(5)
+        self.total_carbs_g: Decimal | None = Decimal(30)
+        self.total_sugar_g: Decimal | None = Decimal(2)
+        self.other_nutrients: dict[str, object] = {}
         self.estimated_cooking_minutes = 20
 
 
