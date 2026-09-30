@@ -129,6 +129,7 @@ class _HomeContent extends StatelessWidget {
         WasteSavedPill(
           count: data.wasteSavedCount,
           wasteAvoidedKg: data.wasteAvoidedKg,
+          onTap: () => context.push(Routes.reports),
         ),
         Gap.gapMd,
 

@@ -248,6 +248,7 @@ POST   /inventory/batches/{id}/adjustments         (auth, Idempotency-Key) { eve
 POST   /inventory/batches/{id}/consume             (auth, Idempotency-Key) { quantity, reason } -> batch đã cập nhật
 POST   /inventory/batches/{id}/move                (auth, Idempotency-Key) { storage_mode, reason } -> batch đã cập nhật
 GET    /inventory/summary                          (auth) -> gộp theo ingredient (không phải theo tầng bảo quản)
+GET    /inventory/waste                            (auth, ?limit=&offset=&sort_by=&order=) -> danh sách lô quá hạn còn tồn trong kho
 GET    /inventory/ledger                           (auth, ?batch_id=&event_type=&created_from=&created_to=&page=&per_page=) -> lịch sử ghi bất biến
 ```
 
@@ -382,6 +383,124 @@ Ví dụ tính tay với warning window 3 ngày:
 
 FE tiếp tục giữ mock cho tới Checkpoint Phase 5: migration DB-02 phải được người phụ trách tạo và áp dụng, sau đó evidence writer/reader cần được kiểm chứng trên database test biệt lập.
 
+### GET `/reports/usage-history`
+
+> **[MỚI]** Lịch sử sử dụng thực phẩm: xem danh sách các lần nguyên liệu/thực phẩm được đưa vào sử dụng (từ phiên nấu ăn hoặc tiêu thụ thủ công).
+
+**Query:** `period` (`week`|`month`|`year`, default `month`), `page` (default 1), `per_page` (default 20, tối đa 100).
+
+**Response 200:**
+```json
+{
+  "period": "month",
+  "total_used_count": 38,
+  "total_used_kg": "14.500",
+  "items": [
+    {
+      "id": "uuid",
+      "ingredient_name": "Ức gà",
+      "quantity": 300.0,
+      "unit": "GRAM",
+      "recipe_name": "Gà nướng thảo mộc",
+      "usage_type": "COOKING",
+      "used_before_expiry": true,
+      "used_at": "2026-09-29T11:30:00+07:00"
+    },
+    {
+      "id": "uuid",
+      "ingredient_name": "Sữa tươi không đường",
+      "quantity": 500.0,
+      "unit": "ML",
+      "recipe_name": null,
+      "usage_type": "MANUAL",
+      "used_before_expiry": true,
+      "used_at": "2026-09-28T08:15:00+07:00"
+    }
+  ],
+  "page": 1,
+  "per_page": 20,
+  "total": 38
+}
+```
+`usage_type` ∈ `COOKING|MANUAL`. `used_before_expiry` là `true` nếu thời điểm sử dụng trước ngày hết hạn của lô.
+
+---
+
+### GET `/reports/waste-statistics`
+
+> **[MỚI]** Thống kê thực phẩm lãng phí: lượng thực phẩm bị quá hạn hoặc bị vứt bỏ trong kỳ.
+
+**Query:** `period` (`week`|`month`|`year`, default `month`).
+
+**Response 200:**
+```json
+{
+  "period": "month",
+  "total_wasted_kg": "1.250",
+  "wasted_items_count": 3,
+  "by_category": [
+    { "category_name": "Rau củ", "wasted_kg": "0.750", "percentage": 60.0 },
+    { "category_name": "Sữa & Chế phẩm", "wasted_kg": "0.300", "percentage": 24.0 },
+    { "category_name": "Thịt & Thủy sản", "wasted_kg": "0.200", "percentage": 16.0 }
+  ],
+  "waste_reasons": [
+    { "reason": "EXPIRED", "count": 2, "percentage": 66.7 },
+    { "reason": "SPOILED", "count": 1, "percentage": 33.3 }
+  ],
+  "wasted_batches": [
+    {
+      "batch_id": "uuid",
+      "ingredient_name": "Rau xà lách",
+      "quantity": 250.0,
+      "unit": "GRAM",
+      "expired_at": "2026-09-27T00:00:00+07:00",
+      "discarded_at": "2026-09-28T09:00:00+07:00",
+      "reason": "EXPIRED"
+    }
+  ]
+}
+```
+`reason` ∈ `EXPIRED|SPOILED|DAMAGED|OTHER`.
+
+---
+
+### GET `/reports/efficiency`
+
+> **[MỚI]** Đánh giá hiệu quả sử dụng thực phẩm: chấm điểm hiệu quả quản lý bếp gia đình, so sánh xu hướng và đề xuất thông minh.
+
+**Query:** `period` (`week`|`month`|`year`, default `month`).
+
+**Response 200:**
+```json
+{
+  "period": "month",
+  "efficiency_score": 88,
+  "rating_level": "EXCELLENT",
+  "utilization_rate": 92.1,
+  "waste_rate": 7.9,
+  "trend_vs_previous_period": {
+    "score_delta": 4.5,
+    "waste_kg_delta": -0.450
+  },
+  "insights": [
+    {
+      "type": "POSITIVE",
+      "title": "Tận dụng tốt thực phẩm cận hạn",
+      "message": "Bạn đã nấu 92% nguyên liệu cận hạn kịp thời trước khi hết hạn."
+    },
+    {
+      "type": "RECOMMENDATION",
+      "title": "Lưu ý nhóm Rau lá xanh",
+      "message": "Rau lá xanh chiếm 60% lượng lãng phí. Nên ưu tiên chế biến trong vòng 3 ngày sau khi mua."
+    }
+  ]
+}
+```
+`rating_level` ∈ `EXCELLENT` (>=85) | `GOOD` (70-84) | `AVERAGE` (50-69) | `POOR` (<50).
+`insights[].type` ∈ `POSITIVE|RECOMMENDATION|WARNING`.
+
+---
+
 ## 11. Subscription — `/subscription`
 
 Cả hai endpoint yêu cầu Bearer token. MVP luôn mở toàn bộ tính năng: không có payment, checkout, webhook, role change hoặc feature gating.
@@ -400,6 +519,78 @@ FE giữ mock cho tới Checkpoint Phase 6: người phụ trách phải tạo/a
 
 ---
 
+## 12. Onboarding & User Preferences — `/users/profile` & `/users/onboarding`
+
+> **[MỚI]** Đặc tả quản lý trạng thái Onboarding và lưu trữ Tùy chọn khẩu vị / mục tiêu dinh dưỡng ban đầu của người dùng.
+
+### Quy trình Onboarding phía Client:
+1. **Bước 1 (Khẩu vị / Dinh dưỡng):** Người dùng chọn mục tiêu dinh dưỡng (`dietary_preference` ∈ `BALANCED|LOW_CARB|HIGH_PROTEIN|VEGETARIAN|VEGAN|QUICK_MEAL`). Có thể Skip.
+2. **Bước 2 (Khởi tạo kho):** Giới thiệu 3 phương thức quét nhãn / giọng nói / thủ công. Người dùng bấm "Thêm nguyên liệu đầu tiên" hoặc "Bỏ qua".
+3. **Hoàn tất Onboarding:** Client gửi cập nhật `preferences` lên Backend để đồng bộ giữa các thiết bị.
+
+### GET `/users/profile`
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response 200:**
+```json
+{
+  "user_id": "uuid",
+  "name": "Nguyen Van A",
+  "phone": "+84912345678",
+  "phone_verified_at": "2026-09-01T08:00:00Z",
+  "email": "a@example.com",
+  "email_verified_at": "2026-09-01T08:00:00Z",
+  "preferences": {
+    "onboarding_completed": true,
+    "onboarding_completed_at": "2026-09-01T08:05:00Z",
+    "dietary_preference": "BALANCED"
+  }
+}
+```
+
+### PATCH `/users/profile`
+
+Cập nhật `name` hoặc `preferences` (gồm cờ onboarding và tùy chọn dinh dưỡng).
+
+**Request Body:**
+```json
+{
+  "preferences": {
+    "onboarding_completed": true,
+    "onboarding_completed_at": "2026-09-29T10:00:00Z",
+    "dietary_preference": "HIGH_PROTEIN"
+  }
+}
+```
+
+**Response 200:** Trả về `UserProfileDTO` đã cập nhật.
+
+### POST `/users/onboarding/complete` (Tùy chọn dedicated route)
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+{
+  "dietary_preference": "BALANCED",
+  "preferred_input_method": "SCAN_OCR"
+}
+```
+
+**Response 200:**
+```json
+{
+  "success": true,
+  "onboarding_completed": true,
+  "completed_at": "2026-09-29T10:00:00Z"
+}
+```
+
+*Lưu ý cho FE:* Nếu thiết bị mất mạng lúc Onboarding, FE vẫn lưu cờ `kOnboardingDone` và `kDietaryPreference` vào SharedPreferences cục bộ để không chặn trải nghiệm người dùng, sau đó gửi đồng bộ khi có kết nối trở lại.
+
+---
+
 ## Ghi chú cho Backend
 
 | # | Endpoint / mục | Ghi chú |
@@ -408,5 +599,6 @@ FE giữ mock cho tới Checkpoint Phase 6: người phụ trách phải tạo/a
 | 3 | `POST /cooking/sessions` yêu cầu `meal_plan_item_id` | Xác nhận đây là chủ đích sản phẩm (không "nấu nhanh" ngoài kế hoạch)? Nếu đúng, FE sẽ luôn tạo/dùng 1 meal-plan item ẩn khi user bấm "Đã nấu món này" từ màn Dish detail — xin BE xác nhận việc tự tạo meal-plan item kiểu này không vi phạm ràng buộc nghiệp vụ nào khác (ví dụ báo cáo/thống kê theo meal plan thật). |
 | 4 | `PATCH /shopping-lists/{list}/items/{item}` khi check item generated | Yêu cầu object `purchase` đầy đủ ngay trong request check — FE cần 1 form nhập tối thiểu (storage_mode + hạn dùng) trước khi tick, sẽ tăng số bước thao tác. Có thể chấp nhận default `storage_mode` theo `default_storage_mode` của ingredient để giảm bước? |
 | 5 | `GET /recommendations` không nhúng recipe | Với danh sách 3-5 gợi ý, FE phải gọi thêm N lần `GET /recipes/{id}` để hiện đủ thumbnail/thời gian nấu/dinh dưỡng. Cân nhắc BE nhúng thẳng 1 bản rút gọn recipe (name, media_url, estimated_cooking_minutes) trong mỗi `item` để tránh N+1? |
-| 6 | Reports / Subscription | Route đã triển khai; FE chỉ bỏ mock sau checkpoint từng Phase, gồm migration và kiểm chứng database test. |
+| 6 | Reports / Subscription | Route đã triển khai; FE chỉ bỏ mock sau checkpoint từng Phase, gồm migration và kiểm chứng database test. Đã bổ sung 3 endpoint thống kê mới: `usage-history`, `waste-statistics`, `efficiency`. |
 | 7 | `POST /extractions/barcode` là query param | FE hiện gọi multipart cho 3 loại quét còn lại; xác nhận barcode luôn là query string (không upload ảnh mã vạch) để FE không thiết kế nhầm luồng nhập liệu. |
+| 8 | Onboarding & User Preferences | FE đã chuẩn hóa hợp đồng lưu trữ `onboarding_completed` và `dietary_preference` trong `preferences` của `PATCH /users/profile` hoặc qua `POST /users/onboarding/complete`. |
