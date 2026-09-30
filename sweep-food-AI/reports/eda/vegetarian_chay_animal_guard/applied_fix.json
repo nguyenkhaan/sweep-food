@@ -1,0 +1,381 @@
+{
+  "policy": "VEGETARIAN_PHRASE_ANIMAL_TARGET",
+  "guard_location": "nlp/entity_matcher.py::VietnameseIngredientMatcher._blocks_vegetarian",
+  "animal_categories_vi": [
+    "Thịt và sản phẩm chế biến",
+    "Thủy sản và sản phẩm chế biến"
+  ],
+  "animal_supplementary_codes": [
+    "11015",
+    "11016",
+    "11017",
+    "11018",
+    "11019",
+    "11020",
+    "11021",
+    "11022",
+    "11023",
+    "6003",
+    "6004"
+  ],
+  "rows_cleared": 11,
+  "rows_already_applied": 0,
+  "recipes_affected": 11,
+  "recipe_ids": [
+    "195b2b1c-266f-4e2b-87aa-ede4851856a8",
+    "1fd3a1a9-95e1-45b1-9922-65a64625c90a",
+    "2f7df876-cf8b-42bc-a8d6-6072f362d474",
+    "3afcd049-78d1-4253-9433-26828c7ef728",
+    "48e42560-66ae-4567-ad70-94004e472b38",
+    "4f38112e-e2ad-48ce-acd6-fc99dc84031d",
+    "621d7def-0c11-4d1b-acd2-b3fcbf4cca68",
+    "7cce2a6d-bf05-48a9-916d-f7182205b14b",
+    "87643147-3d97-4d9b-ac52-fb276cbd7d6a",
+    "931a0244-1873-4a58-83d5-80fd99ceb3be",
+    "c23ecf6c-9762-4347-9074-7173aa555917"
+  ],
+  "nutrition_removed": {
+    "calories": 1663.5,
+    "protein_g": 174.7,
+    "fat_g": 90.3,
+    "carbs_g": 16.7
+  },
+  "recipes_csv_totals_changed": 11,
+  "recipes_json_totals_changed": 11,
+  "nutrition_status": {
+    "recipes_with_changed_missing_count": 11,
+    "recipes_with_status_label_changed": 1,
+    "status_transitions": {
+      "unchanged": 5640,
+      "PARTIAL -> INCOMPLETE": 1
+    }
+  },
+  "rows": [
+    {
+      "id": "f2c392cf-57dc-4f80-be17-bcf76ef95243",
+      "state": "pending",
+      "recipe_id": "3afcd049-78d1-4253-9433-26828c7ef728",
+      "raw_text": "Đùi gà chay 250 gr",
+      "cleaned_name": "đùi gà chay",
+      "estimated_weight_g": "250.0",
+      "before": {
+        "master_ingredient_code": "7088",
+        "master_ingredient_name": "Đùi gà",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 342.5,
+        "protein_g": 45.0,
+        "fat_g": 17.0,
+        "carbs_g": 2.2
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "dcc433c7-a4cf-41a9-8280-40cf7107c41b",
+      "state": "pending",
+      "recipe_id": "2f7df876-cf8b-42bc-a8d6-6072f362d474",
+      "raw_text": "Đùi gà chay 300 gr",
+      "cleaned_name": "đùi gà chay",
+      "estimated_weight_g": "300.0",
+      "before": {
+        "master_ingredient_code": "7088",
+        "master_ingredient_name": "Đùi gà",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 411.0,
+        "protein_g": 54.0,
+        "fat_g": 20.4,
+        "carbs_g": 2.7
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "fb37da49-f7ec-4c4e-a42a-0a1b55686bf2",
+      "state": "pending",
+      "recipe_id": "931a0244-1873-4a58-83d5-80fd99ceb3be",
+      "raw_text": "Xúc xích chay 100g",
+      "cleaned_name": "xúc xích chay",
+      "estimated_weight_g": "100.0",
+      "before": {
+        "master_ingredient_code": "7077",
+        "master_ingredient_name": "Xúc xích",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 535.0,
+        "protein_g": 27.2,
+        "fat_g": 47.4,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "256d7443-eff2-4f8e-85ab-ecd60f822547",
+      "state": "pending",
+      "recipe_id": "87643147-3d97-4d9b-ac52-fb276cbd7d6a",
+      "raw_text": "Nem chua chay 150g",
+      "cleaned_name": "nem chua chay",
+      "estimated_weight_g": "150.0",
+      "before": {
+        "master_ingredient_code": "7073",
+        "master_ingredient_name": "Nem chua",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 187.5,
+        "protein_g": 31.0,
+        "fat_g": 4.9,
+        "carbs_g": 4.8
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "7c4d60bc-5848-4220-8987-9a53380c22d6",
+      "state": "pending",
+      "recipe_id": "4f38112e-e2ad-48ce-acd6-fc99dc84031d",
+      "raw_text": "Thịt cua chay: 100g",
+      "cleaned_name": "thịt cua chay",
+      "estimated_weight_g": "100.0",
+      "before": {
+        "master_ingredient_code": "8069",
+        "master_ingredient_name": "Thịt cua",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 103.0,
+        "protein_g": 17.5,
+        "fat_g": 0.6,
+        "carbs_g": 7.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "1d643050-5137-42a0-b195-c9d6590fd020",
+      "state": "pending",
+      "recipe_id": "621d7def-0c11-4d1b-acd2-b3fcbf4cca68",
+      "raw_text": "Nước dùng chay: 250ml",
+      "cleaned_name": "nước dùng chay",
+      "estimated_weight_g": "250.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 2.5,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "22d71f4f-378d-405a-b0f7-5031b5a2b3d3",
+      "state": "pending",
+      "recipe_id": "c23ecf6c-9762-4347-9074-7173aa555917",
+      "raw_text": "Nước dùng chay 2 lít",
+      "cleaned_name": "nước dùng chay",
+      "estimated_weight_g": "2000.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 20.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "318fddc7-e512-473c-9cf3-86db26c42854",
+      "state": "pending",
+      "recipe_id": "195b2b1c-266f-4e2b-87aa-ede4851856a8",
+      "raw_text": "Nước dùng chay 1.5 lít",
+      "cleaned_name": "nước dùng chay",
+      "estimated_weight_g": "1500.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 15.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "bb9a520c-dcbf-4c31-a776-09cf853410a5",
+      "state": "pending",
+      "recipe_id": "1fd3a1a9-95e1-45b1-9922-65a64625c90a",
+      "raw_text": "Nước dùng chay 2,5 lít (Nấu từ củ sắn, củ cải trăng, susu, cải thào, bắp mỹ, nấm đông cô)",
+      "cleaned_name": "nước dùng chay",
+      "estimated_weight_g": "2500.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 25.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "2175a41f-3184-41a9-bfd9-eb99b942ea17",
+      "state": "pending",
+      "recipe_id": "48e42560-66ae-4567-ad70-94004e472b38",
+      "raw_text": "Nước dùng chay: 1L",
+      "cleaned_name": "nước dùng chay",
+      "estimated_weight_g": "1000.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 10.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "1e0d1e8b-ec4e-4155-9741-167efaa010ee",
+      "state": "pending",
+      "recipe_id": "7cce2a6d-bf05-48a9-916d-f7182205b14b",
+      "raw_text": "Nước dùng chay : 1,2 lít",
+      "cleaned_name": "nước dùng chay",
+      "estimated_weight_g": "1200.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 12.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETARIAN_PHRASE_ANIMAL_TARGET"
+    }
+  ],
+  "out_of_scope": [
+    "seasoning analogues in Gia vị, nước chấm (213 rows)",
+    "the four hazardous alias-map keys (left inert, not removed)",
+    "20002 as a replacement for nước dùng chay",
+    "Chà bông chay từ sườn non; Nước dùng rau củ (no ingredient-level marker)",
+    "dairy/egg policy"
+  ]
+}

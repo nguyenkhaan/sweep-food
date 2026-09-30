@@ -1,0 +1,346 @@
+{
+  "status": "applied",
+  "alias_states": {
+    "thịt ba chỉ rút sườn": "pending"
+  },
+  "alias_removals": [
+    "thịt ba chỉ rút sườn"
+  ],
+  "alias_decision": "REMOVE_ALIAS",
+  "fallthrough": {
+    "cleaned_query": "thịt ba chỉ",
+    "resolves_to": "7018",
+    "method": "PRESET_ALIAS_MATCH",
+    "confidence": "0.98",
+    "row_level_overrides": 0
+  },
+  "remap_target_count": 10,
+  "remap_applied_now": 10,
+  "remap_already_applied": 0,
+  "legitimate_7082_rows_untouched": 5,
+  "affected_recipe_count": 10,
+  "affected_recipe_ids": [
+    "33dcd164-3b75-45a2-b4d1-b761beee77e8",
+    "47d61b60-c8f7-4509-bae2-0021d82997e5",
+    "606b4911-520b-42c3-993f-7ef7e24a8f23",
+    "7e31ba93-0dbb-410b-a3aa-8a121d467048",
+    "9af36752-bcbe-44e4-af7a-3b3f010f30a1",
+    "b8357bf3-3112-46fa-93ba-035f97fe2033",
+    "c6250f13-2578-4443-ab76-76be2ad62635",
+    "ca9a3444-0184-49d9-a991-ce42947f6ac5",
+    "d58c3605-2d2d-485f-8c49-d1a25bd7e90a",
+    "fbe96723-6120-4b24-b7a1-036967cb219d"
+  ],
+  "recipes_with_changed_totals": 10,
+  "recipes_with_changed_missing_count": 0,
+  "recipes_with_status_label_changed": 0,
+  "status_transitions": {
+    "unchanged": 5641
+  },
+  "nutrition_all_10": {
+    "before": {
+      "calories": 7497.0,
+      "protein_g": 1126.3,
+      "fat_g": 281.5,
+      "carbs_g": 112.8
+    },
+    "after": {
+      "calories": 16380.0,
+      "protein_g": 1039.5,
+      "fat_g": 1354.5,
+      "carbs_g": 0.0
+    },
+    "delta": {
+      "calories": 8883.0,
+      "protein_g": -86.8,
+      "fat_g": 1073.0,
+      "carbs_g": -112.8
+    }
+  },
+  "remap_row_ids": [
+    "42cf8d71-b3ae-45fd-8de9-a2d69809dfc1",
+    "49e65216-cbf8-4c09-8496-41d629b4ad6e",
+    "649979f6-91b9-487e-be84-7465328d395b",
+    "6f9cfee5-507d-433e-a9fd-9e0e6ad168e2",
+    "7d78336c-9527-4dee-89f3-dc79c33e32f3",
+    "9dd7353b-f0aa-46a8-9b02-0fa7aa679398",
+    "d321c9bf-8c2c-4bb0-9397-c482d93f7731",
+    "d74a55d5-4036-40b0-8a78-c5849b4d6969",
+    "dfce19a5-520b-4eb3-9a6c-af9c3e00d88a",
+    "e2278878-b9fb-4392-b15a-318885739704"
+  ],
+  "row_outcomes": {
+    "42cf8d71-b3ae-45fd-8de9-a2d69809dfc1": {
+      "raw_text": "Thịt ba chỉ rút sườn 300g",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "606b4911-520b-42c3-993f-7ef7e24a8f23",
+      "estimated_weight_g": "300.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "357.0",
+        "protein_g": "53.6",
+        "fat_g": "13.4",
+        "carbs_g": "5.4"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "780.0",
+        "protein_g": "49.5",
+        "fat_g": "64.5",
+        "carbs_g": null
+      }
+    },
+    "49e65216-cbf8-4c09-8496-41d629b4ad6e": {
+      "raw_text": "Thịt ba chỉ rút sườn 600g",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "9af36752-bcbe-44e4-af7a-3b3f010f30a1",
+      "estimated_weight_g": "600.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "714.0",
+        "protein_g": "107.3",
+        "fat_g": "26.8",
+        "carbs_g": "10.7"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1560.0",
+        "protein_g": "99.0",
+        "fat_g": "129.0",
+        "carbs_g": null
+      }
+    },
+    "649979f6-91b9-487e-be84-7465328d395b": {
+      "raw_text": "400 g Thịt ba chỉ rút sườn",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "33dcd164-3b75-45a2-b4d1-b761beee77e8",
+      "estimated_weight_g": "400.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "476.0",
+        "protein_g": "71.5",
+        "fat_g": "17.9",
+        "carbs_g": "7.2"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1040.0",
+        "protein_g": "66.0",
+        "fat_g": "86.0",
+        "carbs_g": null
+      }
+    },
+    "6f9cfee5-507d-433e-a9fd-9e0e6ad168e2": {
+      "raw_text": "Thịt ba chỉ rút sườn 300g",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "fbe96723-6120-4b24-b7a1-036967cb219d",
+      "estimated_weight_g": "300.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "357.0",
+        "protein_g": "53.6",
+        "fat_g": "13.4",
+        "carbs_g": "5.4"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "780.0",
+        "protein_g": "49.5",
+        "fat_g": "64.5",
+        "carbs_g": null
+      }
+    },
+    "7d78336c-9527-4dee-89f3-dc79c33e32f3": {
+      "raw_text": "Thịt ba chỉ rút sườn 500 gr",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "c6250f13-2578-4443-ab76-76be2ad62635",
+      "estimated_weight_g": "500.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "595.0",
+        "protein_g": "89.4",
+        "fat_g": "22.3",
+        "carbs_g": "8.9"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1300.0",
+        "protein_g": "82.5",
+        "fat_g": "107.5",
+        "carbs_g": null
+      }
+    },
+    "9dd7353b-f0aa-46a8-9b02-0fa7aa679398": {
+      "raw_text": "Thịt ba chỉ rút sườn 2.5 kg",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "b8357bf3-3112-46fa-93ba-035f97fe2033",
+      "estimated_weight_g": "2500.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2975.0",
+        "protein_g": "447.0",
+        "fat_g": "111.8",
+        "carbs_g": "44.8"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "6500.0",
+        "protein_g": "412.5",
+        "fat_g": "537.5",
+        "carbs_g": null
+      }
+    },
+    "d321c9bf-8c2c-4bb0-9397-c482d93f7731": {
+      "raw_text": "Thịt ba chỉ rút sườn 400g",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "7e31ba93-0dbb-410b-a3aa-8a121d467048",
+      "estimated_weight_g": "400.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "476.0",
+        "protein_g": "71.5",
+        "fat_g": "17.9",
+        "carbs_g": "7.2"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1040.0",
+        "protein_g": "66.0",
+        "fat_g": "86.0",
+        "carbs_g": null
+      }
+    },
+    "d74a55d5-4036-40b0-8a78-c5849b4d6969": {
+      "raw_text": "500 gr thịt ba rọi rút sườn",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "d58c3605-2d2d-485f-8c49-d1a25bd7e90a",
+      "estimated_weight_g": "500.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "595.0",
+        "protein_g": "89.4",
+        "fat_g": "22.3",
+        "carbs_g": "8.9"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1300.0",
+        "protein_g": "82.5",
+        "fat_g": "107.5",
+        "carbs_g": null
+      }
+    },
+    "dfce19a5-520b-4eb3-9a6c-af9c3e00d88a": {
+      "raw_text": "Thịt ba chỉ rút sườn 500g",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "47d61b60-c8f7-4509-bae2-0021d82997e5",
+      "estimated_weight_g": "500.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "595.0",
+        "protein_g": "89.4",
+        "fat_g": "22.3",
+        "carbs_g": "8.9"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1300.0",
+        "protein_g": "82.5",
+        "fat_g": "107.5",
+        "carbs_g": null
+      }
+    },
+    "e2278878-b9fb-4392-b15a-318885739704": {
+      "raw_text": "Thịt ba chỉ rút sườn: 300g",
+      "cleaned_name": "thịt ba chỉ rút sườn",
+      "recipe_id": "ca9a3444-0184-49d9-a991-ce42947f6ac5",
+      "estimated_weight_g": "300.0",
+      "decision": "REMAP_7018_VIA_ALIAS_FALLTHROUGH",
+      "before": {
+        "master_ingredient_code": "7082",
+        "master_ingredient_name": "Lòng gà (cả bộ)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "357.0",
+        "protein_g": "53.6",
+        "fat_g": "13.4",
+        "carbs_g": "5.4"
+      },
+      "after": {
+        "master_ingredient_code": "7018",
+        "master_ingredient_name": "Thịt ba chỉ (ba rọi) heo",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "780.0",
+        "protein_g": "49.5",
+        "fat_g": "64.5",
+        "carbs_g": null
+      }
+    }
+  },
+  "out_of_scope_note": "Batch B removes exactly one alias. Every other 70xx audit finding is deliberately unchanged: 'sườn cốt lết'/'sườn cốt lết xắt lát'->7070, chả lụa, da heo, the beef aliases, vịt, chim bồ câu, 'sườn bò'/'dẻ sườn bò'->7094, mỡ gà, thịt heo quay, catalog corruption, stale-code rows, and cleaner/matcher policy issues.",
+  "canonical_note": "Canonical outputs (canonical_recipes.csv/json, canonical_recipe_ingredients.csv/json, recipe_canonical_mapping.csv/json, recipe_canonicalization_summary.json) are NOT regenerated by this script and are stale for these rows/recipes until scripts/canonicalize_recipes.py and scripts/export_canonical_json.py are re-run."
+}

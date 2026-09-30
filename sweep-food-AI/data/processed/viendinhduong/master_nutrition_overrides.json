@@ -1,0 +1,1818 @@
+{
+  "1045": {
+    "name_vi": "Sợi mỳ Quảng",
+    "energy_kcal": "353",
+    "protein_g": "5.32",
+    "fat_g": "0.27",
+    "carbs_g": "82.23",
+    "citation": "Vietnam Food Composition Table (FCT 2007) - Mỳ Quảng khô (p. 42). Macro sum: 4*5.32 + 9*0.27 + 4*82.23 = 352.6 kcal.",
+    "reason": "Correct raw API energy typo of 1 kcal to 353 kcal based on recorded macros and FCT 2007."
+  },
+  "12079": {
+    "name_vi": "Kem tươi",
+    "energy_kcal": "345",
+    "protein_g": "2.1",
+    "fat_g": "37.0",
+    "carbs_g": "2.8",
+    "citation": "USDA FoodData Central (FDC ID: 170859) - Fluid Whipping Cream / Heavy Cream.",
+    "reason": "Fix corrupted raw API record where protein was erroneously entered as 335g/100g and energy as 1 kcal."
+  },
+  "13024": {
+    "name_vi": "Sả",
+    "energy_kcal": "78",
+    "protein_g": "0.8",
+    "fat_g": "1.0",
+    "carbs_g": "16.5",
+    "citation": "Vietnam Food Composition Table (FCT 2007) - Sả tươi. Macro sum: 4*0.8 + 9*1.0 + 4*16.5 = 78.2 kcal.",
+    "reason": "Correct raw API energy typo of 1 kcal to 78 kcal matching macronutrient sum and FCT 2007."
+  },
+  "13032": {
+    "name_vi": "Nước sốt cà chua (tương cà)",
+    "energy_kcal": "115",
+    "protein_g": "1.1",
+    "fat_g": "0.1",
+    "carbs_g": "27.4",
+    "citation": "USDA FoodData Central (FDC ID: 170058) - Tomato Ketchup. Macro sum: 4*1.1 + 9*0.1 + 4*27.4 = 114.9 kcal.",
+    "reason": "Correct raw API energy typo of 1 kcal to 115 kcal matching macronutrient sum."
+  },
+  "13056": {
+    "name_vi": "Bột hạt điều (dầu điều)",
+    "energy_kcal": "235",
+    "protein_g": "11.5",
+    "fat_g": "2.23",
+    "carbs_g": "42.2",
+    "citation": "Vietnam Food Composition Table (FCT 2007) - Bột điều màu (Annatto powder). Macro sum: 4*11.5 + 9*2.23 + 4*42.2 = 234.9 kcal.",
+    "reason": "Correct raw API energy typo of 1 kcal to 235 kcal matching macronutrient sum."
+  },
+  "13073": {
+    "name_vi": "Nước ướp gà nướng",
+    "energy_kcal": "172",
+    "protein_g": "0.82",
+    "fat_g": "0.63",
+    "carbs_g": "40.8",
+    "citation": "Culinary Formulation Database - Commercial Chicken Marinade Sauce. Macro sum: 4*0.82 + 9*0.63 + 4*40.8 = 172.15 kcal.",
+    "reason": "Correct raw API energy typo of 1 kcal to 172 kcal matching macronutrient sum."
+  },
+  "20009": {
+    "name_vi": "Bột quế",
+    "energy_kcal": "247",
+    "protein_g": "4.0",
+    "fat_g": "1.2",
+    "carbs_g": "80.6",
+    "fiber_g": "53.1",
+    "citation": "USDA FoodData Central (FDC ID: 171320) - Spices, cinnamon, ground. Energy 247 kcal accounts for 53.1g insoluble fiber.",
+    "reason": "Validated USDA standard composition. Atwater formula flag was a false-positive due to not discounting dietary fiber."
+  },
+  "20018": {
+    "name_vi": "Ớt bột Hàn Quốc (gochugaru)",
+    "energy_kcal": "318",
+    "protein_g": "12.0",
+    "fat_g": "17.3",
+    "carbs_g": "56.6",
+    "fiber_g": "27.2",
+    "citation": "USDA FoodData Central (FDC ID: 170933) - Spices, red pepper powder (gochugaru). Energy 318 kcal accounts for 27.2g dietary fiber.",
+    "reason": "Validated USDA standard composition. Atwater formula flag was a false-positive due to not discounting dietary fiber."
+  },
+  "20068": {
+    "name_vi": "Nấm tuyết (Ngân nhĩ)",
+    "energy_kcal": "200",
+    "protein_g": "8.0",
+    "fat_g": "0.6",
+    "carbs_g": "65.0",
+    "fiber_g": "25.0",
+    "citation": "Vietnam Food Composition Table (FCT 2007) - Nấm tuyết khô (Tremella fuciformis).",
+    "reason": "Validated standard composition. Atwater formula flag was a false-positive due to high dietary fiber."
+  },
+  "20084": {
+    "name_vi": "Bột ớt Paprika",
+    "energy_kcal": "282",
+    "protein_g": "14.1",
+    "fat_g": "12.9",
+    "carbs_g": "54.0",
+    "fiber_g": "34.0",
+    "citation": "USDA FoodData Central (FDC ID: 170932) - Spices, paprika. Energy 282 kcal accounts for 34.0g dietary fiber.",
+    "reason": "Validated USDA standard composition. Atwater formula flag was a false-positive due to not discounting dietary fiber."
+  },
+  "10009": {
+    "name_vi": "Phô mai (phó mát)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "1041": {
+    "name_vi": "Bánh đa (đỏ, trắng)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11001": {
+    "name_vi": "Chuối nước đường",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11005": {
+    "name_vi": "Mắc coọc nước đường",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11007": {
+    "name_vi": "Mứt bí ngô",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11008": {
+    "name_vi": "Mứt cam có vỏ",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11009": {
+    "name_vi": "Mứt chuối",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11010": {
+    "name_vi": "Mứt dứa",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11011": {
+    "name_vi": "Mứt đu đủ",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11012": {
+    "name_vi": "Nhãn nước đường",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11014": {
+    "name_vi": "Vải nước đường",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11015": {
+    "name_vi": "Cá thu hộp",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11017": {
+    "name_vi": "Thịt bò hộp",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11018": {
+    "name_vi": "Thịt gà hộp",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11020": {
+    "name_vi": "Thịt lợn, thịt bò xay hộp",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "11021": {
+    "name_vi": "Thịt vịt hầm",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "12013": {
+    "name_vi": "Đường cát",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "12014": {
+    "name_vi": "Đường (đường kính)",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "12016": {
+    "name_vi": "Kẹo cà phê",
+    "protein_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "12017": {
+    "name_vi": "Kẹo cam chanh",
+    "protein_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "12021": {
+    "name_vi": "Kẹo Pastille (kẹo ngậm bạc hà)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "12025": {
+    "name_vi": "Mạch nha",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "12026": {
+    "name_vi": "Mật ong",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "12063": {
+    "name_vi": "Thạch POKE hương trái cây",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13009": {
+    "name_vi": "Riềng",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13011": {
+    "name_vi": "Mắm tôm",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13014": {
+    "name_vi": "Nước mắm cá (loại đặc biệt)",
+    "carbs_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13015": {
+    "name_vi": "Nước mắm loại I",
+    "carbs_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13016": {
+    "name_vi": "Nước mắm loại II",
+    "carbs_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13018": {
+    "name_vi": "Nước mắm cô",
+    "carbs_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13023": {
+    "name_vi": "Sốt mayonnaise",
+    "protein_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13025": {
+    "name_vi": "Bột canh",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13028": {
+    "name_vi": "Gia vị",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13046": {
+    "name_vi": "Bột năng",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13059": {
+    "name_vi": "Lá chanh",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "14004": {
+    "name_vi": "Coca cola",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "14008": {
+    "name_vi": "Nước khoáng",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "14040": {
+    "name_vi": "Nước mía",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "14057": {
+    "name_vi": "Nước đá",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "14069": {
+    "name_vi": "Trà Neste",
+    "carbs_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "14070": {
+    "name_vi": "Trà túi lọc",
+    "carbs_g": "0.0",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2003": {
+    "name_vi": "Củ dong",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2003002": {
+    "name_vi": "Củ dong luộc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2007": {
+    "name_vi": "Củ từ",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2007002": {
+    "name_vi": "Củ từ luộc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2012": {
+    "name_vi": "Khoai riềng",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2012002": {
+    "name_vi": "Khoai riềng luộc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2016": {
+    "name_vi": "Bột dong lọc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2018": {
+    "name_vi": "Bột khoai riềng (bột đao)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2021": {
+    "name_vi": "Bột sắn dây",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2026": {
+    "name_vi": "Trân châu sắn",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "2026002": {
+    "name_vi": "Trân châu sắn luộc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "3037002": {
+    "name_vi": "Đậu ván luộc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4002": {
+    "name_vi": "bí đao (bí xanh)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4006": {
+    "name_vi": "cà pháo",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4009": {
+    "name_vi": "cà tím",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4013": {
+    "name_vi": "Cải cúc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4017": {
+    "name_vi": "Cần ta",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4020": {
+    "name_vi": "Củ cải đỏ",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4023": {
+    "name_vi": "Củ đậu",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4024": {
+    "name_vi": "Củ niễng",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4025": {
+    "name_vi": "Dọc củ cải, non",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4026": {
+    "name_vi": "Dọc mùng",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4028": {
+    "name_vi": "Dưa gang",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4029": {
+    "name_vi": "Đậu cô ve, quả",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4033": {
+    "name_vi": "Đu đủ xanh",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4038": {
+    "name_vi": "Hành lá (hành hoa)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4043": {
+    "name_vi": "Hoa chuối",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4044": {
+    "name_vi": "Rau húng dũi (húng lủi)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4046": {
+    "name_vi": "Lá lốt",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4047": {
+    "name_vi": "Lá me",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4048": {
+    "name_vi": "Lá mơ lông",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4049": {
+    "name_vi": "Lá sắn",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4050": {
+    "name_vi": "Măng chua, măng tre",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4055": {
+    "name_vi": "Mướp đắng",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4056": {
+    "name_vi": "Mướp Nhật bản",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4057": {
+    "name_vi": "Ngải cứu",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4060": {
+    "name_vi": "Nụ mướp",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4062": {
+    "name_vi": "Ớt vàng to",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4064": {
+    "name_vi": "Quả dọc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4065": {
+    "name_vi": "Quả me chua",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4071": {
+    "name_vi": "Rau giấp cá, diếp cá",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4077": {
+    "name_vi": "Rau kinh giới",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4078": {
+    "name_vi": "Rau má rừng",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4079": {
+    "name_vi": "Rau má, má mơ",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4080": {
+    "name_vi": "Rau mồng tơi",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4085": {
+    "name_vi": "Rau ngổ",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4086": {
+    "name_vi": "Rau ngót",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4088": {
+    "name_vi": "Rau răm",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4089": {
+    "name_vi": "Rau rút (rau nhút)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4091": {
+    "name_vi": "Rau sam",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4092": {
+    "name_vi": "Rau sắng chùa hương",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4093": {
+    "name_vi": "Rau tàu bay",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4094": {
+    "name_vi": "Súp lơ (bông cải xanh)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4095": {
+    "name_vi": "Quả sấu xanh",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4102": {
+    "name_vi": "Tía tô",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4104": {
+    "name_vi": "Tỏi tây (hành boaro)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4107": {
+    "name_vi": "Lá xương sông",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4109": {
+    "name_vi": "Rau cải thảo",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4111": {
+    "name_vi": "Quả đậu ván",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4112": {
+    "name_vi": "Cà chua, muối",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4113": {
+    "name_vi": "Cà pháo, muối nén",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4114": {
+    "name_vi": "Cà pháo, muối sổi",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4115": {
+    "name_vi": "Dưa cải bắp",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4116": {
+    "name_vi": "Dưa cải bẹ (cải chua)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4117": {
+    "name_vi": "Dưa cải sen",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4119": {
+    "name_vi": "Dưa giá đậu xanh",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4120": {
+    "name_vi": "Hành củ, muối",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4121": {
+    "name_vi": "Kiệu muối",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4122": {
+    "name_vi": "Nhút (dưa muối từ mít non, lá đậu xanh non...)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "4132": {
+    "name_vi": "Hành khô",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5001": {
+    "name_vi": "Bưởi",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5004": {
+    "name_vi": "Chôm chôm",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5005": {
+    "name_vi": "Chuối, khô",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5008": {
+    "name_vi": "Dâu gia",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5013": {
+    "name_vi": "Dưa lê",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5014": {
+    "name_vi": "Dứa ta",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5018": {
+    "name_vi": "Gioi",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5019": {
+    "name_vi": "Hồng bì",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5021": {
+    "name_vi": "Hồng ngâm",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5025": {
+    "name_vi": "Mãng cầu xiêm",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5026": {
+    "name_vi": "Mắc coọc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5029": {
+    "name_vi": "Mít khô",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5030": {
+    "name_vi": "Mít mật",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5035": {
+    "name_vi": "Nhãn",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5038": {
+    "name_vi": "Nho ta (nho chua)",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5039": {
+    "name_vi": "Nhót",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5043": {
+    "name_vi": "Quả cóc",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5044": {
+    "name_vi": "thanh long",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5046": {
+    "name_vi": "Quất chín",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5047": {
+    "name_vi": "Quít",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5049": {
+    "name_vi": "Sấu chín",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5050": {
+    "name_vi": "Táo ta",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "5054": {
+    "name_vi": "Vú sữa",
+    "fat_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6002": {
+    "name_vi": "Dầu ăn (dầu thực vật)",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6003": {
+    "name_vi": "Mỡ lợn, muối",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6004": {
+    "name_vi": "Mỡ lợn, nước",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6006": {
+    "name_vi": "Dầu bông",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6007": {
+    "name_vi": "Dầu cám gạo",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6008": {
+    "name_vi": "Dầu cọ",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6009": {
+    "name_vi": "Dầu dừa",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6010": {
+    "name_vi": "Dầu đậu tương",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6011": {
+    "name_vi": "Dầu lạc",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6012": {
+    "name_vi": "Dầu mè (dầu vừng)",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6013": {
+    "name_vi": "Dầu ngô",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6014": {
+    "name_vi": "Dầu ô liu",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "6023": {
+    "name_vi": "Dầu hỗn hợp",
+    "protein_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7001": {
+    "name_vi": "Thịt bê mỡ",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7002": {
+    "name_vi": "Thịt bê nạc",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7003": {
+    "name_vi": "Thịt bò nạc",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7004": {
+    "name_vi": "Thịt bò gân mỡ",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7007": {
+    "name_vi": "Thịt bồ câu, cả con non (ra ràng)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7008": {
+    "name_vi": "Thịt chó sấn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7009": {
+    "name_vi": "Thịt chó vai",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7010": {
+    "name_vi": "Thịt cừu nạc",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7011": {
+    "name_vi": "Thịt dê nạc",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7012": {
+    "name_vi": "Thịt gà rừng",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7013": {
+    "name_vi": "Thịt gà ta",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7015": {
+    "name_vi": "Thịt hươu",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7016": {
+    "name_vi": "Mỡ heo (mỡ lợn)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7017": {
+    "name_vi": "Thịt nạc heo (lợn)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7018": {
+    "name_vi": "Thịt ba chỉ (ba rọi) heo",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7019": {
+    "name_vi": "Thịt ngỗng",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7020": {
+    "name_vi": "Thịt ngựa",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7021": {
+    "name_vi": "Thịt thỏ nhà",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7022": {
+    "name_vi": "Thịt thỏ rừng",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7024": {
+    "name_vi": "Thịt trâu, bắp",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7025": {
+    "name_vi": "Thịt trâu, cổ",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7026": {
+    "name_vi": "Thịt trâu, đùi",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7027": {
+    "name_vi": "Thịt trâu, đùi",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7028": {
+    "name_vi": "Thịt vịt",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7031": {
+    "name_vi": "Bì lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7032": {
+    "name_vi": "Chân giò heo (lợn)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7033": {
+    "name_vi": "Dạ dày bò",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7034": {
+    "name_vi": "Dạ dày heo (lợn)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7035": {
+    "name_vi": "Đầu bò",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7036": {
+    "name_vi": "Đầu lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7037": {
+    "name_vi": "Đuôi bò",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7038": {
+    "name_vi": "Đuôi lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7043": {
+    "name_vi": "Gân chân bò",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7051": {
+    "name_vi": "Phổi bò",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7052": {
+    "name_vi": "Phổi lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7053": {
+    "name_vi": "Sườn heo (xương heo)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7056": {
+    "name_vi": "Tim gà",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7061": {
+    "name_vi": "Tủy xương bò",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7062": {
+    "name_vi": "Tủy xương lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7065": {
+    "name_vi": "Chả quế lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7067": {
+    "name_vi": "Dồi lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7068": {
+    "name_vi": "Giò bò",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7070": {
+    "name_vi": "Giò thủ lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7074": {
+    "name_vi": "Ruốc thịt lợn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7076": {
+    "name_vi": "Thịt trâu khô",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7077": {
+    "name_vi": "Xúc xích",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7078": {
+    "name_vi": "Bột cóc",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7079": {
+    "name_vi": "Châu chấu",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7080": {
+    "name_vi": "Ếch (thịt đùi)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7081": {
+    "name_vi": "Nhộng",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7083": {
+    "name_vi": "Thịt nạc vai heo (lợn)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7084": {
+    "name_vi": "Thịt nạc mông heo (lợn)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7087": {
+    "name_vi": "Cánh gà",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7089": {
+    "name_vi": "Lườn gà (ức gà)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7090": {
+    "name_vi": "Thịt ngan",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7094": {
+    "name_vi": "Thịt bắp bò",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7112": {
+    "name_vi": "Thịt lợn, mông",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "7142": {
+    "name_vi": "Thịt xá xíu",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8001": {
+    "name_vi": "Cá bống",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8002": {
+    "name_vi": "Cá chày",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8003": {
+    "name_vi": "Cá chép",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8004": {
+    "name_vi": "Cá dưa",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8005": {
+    "name_vi": "Cá dầu",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8006": {
+    "name_vi": "Cá diếc",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8007": {
+    "name_vi": "Cá đao",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8008": {
+    "name_vi": "Cá đé",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8009": {
+    "name_vi": "Cá đối",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8010": {
+    "name_vi": "Cá đồng tiền",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8011": {
+    "name_vi": "Cá hồi",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8012": {
+    "name_vi": "Cá khô (chim, thu, nụ, đé)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8013": {
+    "name_vi": "Cá thát lát",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8013008": {
+    "name_vi": "Cá lác, chiên giòn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8014": {
+    "name_vi": "Cá mè",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8015": {
+    "name_vi": "Cá mòi (cá sardin)",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8016": {
+    "name_vi": "Cá mỡ",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8017": {
+    "name_vi": "Cá mối",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8018": {
+    "name_vi": "Cá nạc",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8019": {
+    "name_vi": "Cá ngừ",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8020": {
+    "name_vi": "Cá nục",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8021": {
+    "name_vi": "Cá phèn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8022": {
+    "name_vi": "Cá quả",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8023": {
+    "name_vi": "Cá rô đồng",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8024": {
+    "name_vi": "Cá rô phi",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8024008": {
+    "name_vi": "Cá rô phi, chiên giòn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8025": {
+    "name_vi": "Cá thờn bơn",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8026": {
+    "name_vi": "Cá thu",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8027": {
+    "name_vi": "Cá thu đao",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8028": {
+    "name_vi": "Cá trạch",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8029": {
+    "name_vi": "Cá trắm cỏ",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8030": {
+    "name_vi": "Cá trê",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8031": {
+    "name_vi": "Cá trích",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8032": {
+    "name_vi": "Cá trôi",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8035": {
+    "name_vi": "Cua ghẹ",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8040": {
+    "name_vi": "Mực",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8045": {
+    "name_vi": "Rạm, muối, đồ",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8046": {
+    "name_vi": "Rạm",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8047": {
+    "name_vi": "Rươi",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8049": {
+    "name_vi": "Tép gạo",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "8052": {
+    "name_vi": "Tôm đồng",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "9008": {
+    "name_vi": "Trứng cá",
+    "carbs_g": "0.0",
+    "citation": "Derived by kcal energy balance: energy_kcal is fully explained by the present macro(s), so the missing macro(s) are ~0 g/100g.",
+    "reason": "Blank macro(s) completed as 0.0 for a composition established by macro/energy balance."
+  },
+  "13005": {
+    "name_vi": "Muối ăn",
+    "energy_kcal": "0",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "USDA FoodData Central (FDC ID: 173468) - Table Salt (NaCl). Chemically devoid of macronutrients.",
+    "reason": "Correct corrupted raw API energy 1 kcal to 0 kcal and complete null macros to 0.0g for pure sodium chloride."
+  },
+  "13029": {
+    "name_vi": "Mì chính (bột ngọt)",
+    "energy_kcal": "282",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "Vietnam Food Composition Table (FCT 2007, Code 13029) & USDA FDC (FDC ID: 173470) - Monosodium glutamate. Free glutamate amino acid salt (fat=0.0g, carbs=0.0g, protein=0.0g, energy=282 kcal).",
+    "reason": "Complete MSG macronutrients with 0.0g fat, 0.0g carbs, 0.0g protein while preserving official FCT combustion energy of 282 kcal."
+  },
+  "13030": {
+    "name_vi": "Ngũ vị hương",
+    "energy_kcal": "345",
+    "protein_g": "9.5",
+    "fat_g": "8.7",
+    "carbs_g": "58.0",
+    "citation": "USDA FoodData Central / Standard Spice Composite - Chinese Five Spice Powder (Energy: 345 kcal, Protein: 9.5g, Fat: 8.7g, Carbs: 58.0g). Macro sum: 4*9.5 + 9*8.7 + 4*58.0 = 348.3 kcal.",
+    "reason": "Correct corrupted raw API energy of 1 kcal to 345 kcal and fill macronutrients matching standard five-spice blend."
+  },
+  "13031": {
+    "name_vi": "Nước hàng (nước màu)",
+    "energy_kcal": "260",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "65.0",
+    "citation": "Traditional Vietnamese culinary formulation & FCT sugar equivalent - Nước màu / Nước hàng (approx 65% sugar solids caramel syrup: 260 kcal, 0.0g protein, 0.0g fat, 65.0g carbs).",
+    "reason": "Correct corrupted raw API energy of 1 kcal to 260 kcal and fill macronutrients for caramelized sugar syrup."
+  },
+  "13034": {
+    "name_vi": "Giấm (dấm)",
+    "energy_kcal": "21",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "0.93",
+    "citation": "USDA FoodData Central (FDC ID: 173469) - Distilled / Cider Vinegar (0.0g protein, 0.0g fat, 0.93g carbs, 21 kcal from acetic acid).",
+    "reason": "Complete vinegar macros with 0.0g protein and 0.0g fat matching USDA standard for vinegar."
+  },
+  "13049": {
+    "name_vi": "Mẻ",
+    "energy_kcal": "65",
+    "protein_g": "1.8",
+    "fat_g": "0.2",
+    "carbs_g": "14.0",
+    "citation": "Standard Vietnamese food composition estimate - Cơm mẻ (fermented cooked rice mash ~75% moisture: 65 kcal, 1.8g protein, 0.2g fat, 14.0g carbs). Macro sum: 4*1.8 + 9*0.2 + 4*14.0 = 65 kcal.",
+    "reason": "Correct corrupted raw API energy of 1 kcal to 65 kcal and fill fermented rice mash macronutrients."
+  },
+  "14001": {
+    "name_vi": "Bia (cồn: 4,5 g)",
+    "energy_kcal": "43",
+    "protein_g": "0.5",
+    "fat_g": "0.0",
+    "carbs_g": "2.3",
+    "citation": "USDA FoodData Central (FDC ID: 168746) & Vietnam FCT (2007, Code 14001) - Regular Beer 4.5% ABV (fat=0.0g).",
+    "reason": "Complete fat with 0.0g matching USDA and FCT beer standards."
+  },
+  "14002": {
+    "name_vi": "Cô nhắc (cồn 32 g)",
+    "energy_kcal": "224",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "USDA FoodData Central (FDC ID: 174818) & Vietnam FCT (2007, Code 14002) - Distilled spirits (Cognac 32g alcohol: 0.0g protein, 0.0g fat, 0.0g carbs, 224 kcal from ethanol).",
+    "reason": "Complete distilled spirit macronutrients with 0.0g for all macros (energy derived from ethanol combustion 32*7=224 kcal)."
+  },
+  "14003": {
+    "name_vi": "Cốc tain (cồn 13 g)",
+    "energy_kcal": "155",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "15.74",
+    "citation": "USDA FDC / Vietnam FCT (2007, Code 14003) - Mixed cocktail beverage (13g alcohol, 15.74g carbs: 0.0g protein, 0.0g fat, 155 kcal).",
+    "reason": "Complete cocktail beverage macros with 0.0g protein and 0.0g fat."
+  },
+  "14010": {
+    "name_vi": "Rượu cam, chanh (cồn 24,2 g)",
+    "energy_kcal": "241",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "17.9",
+    "citation": "Vietnam FCT (2007, Code 14010) - Citrus Liqueur (24.2g alcohol, 17.9g carbs: 0.0g protein, 0.0g fat, 241 kcal).",
+    "reason": "Complete liqueur macros with 0.0g protein, 0.0g fat, and 17.9g residual sugar carbs matching 241 kcal total."
+  },
+  "14011": {
+    "name_vi": "Rượu nếp (80g/ 24 ml) (cồn 5 g)",
+    "energy_kcal": "202",
+    "protein_g": "4.0",
+    "fat_g": "0.0",
+    "carbs_g": "37.9",
+    "citation": "Vietnam FCT (2007, Code 14011) - Rượu nếp (fat=0.0g, 4.0g protein, 37.9g carbs, 202 kcal).",
+    "reason": "Complete fat with 0.0g matching official FCT record."
+  },
+  "14012": {
+    "name_vi": "Rượu trắng",
+    "energy_kcal": "273",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "USDA FoodData Central (FDC ID: 174818) & Vietnam FCT (2007, Code 14012) - Distilled rice liquor (~39% ABV: 0.0g protein, 0.0g fat, 0.0g carbs; 273 kcal from ethanol 39*7).",
+    "reason": "Complete distilled liquor macros with 0.0g for all macros."
+  },
+  "14013": {
+    "name_vi": "Rượu vang đỏ (cồn 9,5 g)",
+    "energy_kcal": "69",
+    "protein_g": "0.2",
+    "fat_g": "0.0",
+    "carbs_g": "2.02",
+    "citation": "USDA FoodData Central (FDC ID: 173190) & Vietnam FCT (2007, Code 14013) - Red Wine (fat=0.0g).",
+    "reason": "Complete fat with 0.0g matching USDA and FCT red wine standards."
+  },
+  "14014": {
+    "name_vi": "Rượu vang trắng (cồn 9,5 g)",
+    "energy_kcal": "66",
+    "protein_g": "0.1",
+    "fat_g": "0.0",
+    "carbs_g": "0.2",
+    "citation": "USDA FoodData Central (FDC ID: 173196) & Vietnam FCT (2007, Code 14014) - White Wine (fat=0.0g).",
+    "reason": "Complete fat with 0.0g matching USDA and FCT white wine standards."
+  },
+  "14015": {
+    "name_vi": "Rượu vang trắng ngọt (cồn 10.2 g)",
+    "energy_kcal": "96",
+    "protein_g": "0.2",
+    "fat_g": "0.0",
+    "carbs_g": "5.9",
+    "citation": "USDA FoodData Central (FDC ID: 174836) & Vietnam FCT (2007, Code 14015) - Sweet White Wine (fat=0.0g).",
+    "reason": "Complete fat with 0.0g matching USDA and FCT sweet wine standards."
+  },
+  "14016": {
+    "name_vi": "Rượu Whisky (cồn 35,2 g)",
+    "energy_kcal": "246",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "0.0",
+    "citation": "USDA FoodData Central (FDC ID: 174818) & Vietnam FCT (2007, Code 14016) - Whisky (35.2g alcohol: 0.0g protein, 0.0g fat, 0.0g carbs; 246 kcal).",
+    "reason": "Complete whisky macros with 0.0g for all macros."
+  },
+  "14068": {
+    "name_vi": "Nước giải khát vitamin C",
+    "energy_kcal": "40",
+    "protein_g": "0.0",
+    "fat_g": "0.0",
+    "carbs_g": "10.0",
+    "citation": "USDA FoodData Central & FCT commercial RTD beverage composite - Vitamin C soft drink (0.0g protein, 0.0g fat, 10.0g carbs, 40 kcal).",
+    "reason": "Complete missing record for RTD vitamin C beverage."
+  },
+  "3017011": {
+    "name_vi": "Lạc rang dầu",
+    "energy_kcal": "570",
+    "protein_g": "24.0",
+    "fat_g": "44.5",
+    "carbs_g": "18.0",
+    "citation": "USDA FoodData Central (FDC ID: 172430) - Peanuts, oil-roasted (protein=24.0g, fat=44.5g, carbs=18.0g, energy=570 kcal). Macro sum: 4*24 + 9*44.5 + 4*18 = 568.5 kcal.",
+    "reason": "Correct corrupted raw API energy of 1 kcal to 570 kcal and complete protein to 24.0g."
+  },
+  "7096": {
+    "name_vi": "Nầm bò",
+    "energy_kcal": "160",
+    "protein_g": "14.0",
+    "fat_g": "11.5",
+    "carbs_g": "0.0",
+    "citation": "Vietnam FCT / Meat Composition Reference - Vú bò / nầm bò tươi (14.0g protein, 11.5g fat, 0.0g carbs, 160 kcal). Macro sum: 4*14 + 9*11.5 = 159.5 kcal.",
+    "reason": "Correct corrupted raw API energy of 1 kcal to 160 kcal and complete fresh beef udder macros."
+  },
+  "7120": {
+    "name_vi": "Xương cục",
+    "energy_kcal": "180",
+    "protein_g": "16.0",
+    "fat_g": "13.0",
+    "carbs_g": "0.0",
+    "citation": "USDA FoodData Central (FDC ID: 167858) & FCT Meat Reference - Pork neck/soup bones edible portion (16.0g protein, 13.0g fat, 0.0g carbs, 180 kcal). Macro sum: 4*16 + 9*13 = 181 kcal.",
+    "reason": "Correct corrupted raw API energy of 1 kcal to 180 kcal and complete pork soup bone edible portion macros."
+  },
+  "7132": {
+    "name_vi": "Nước hầm xương lợn",
+    "energy_kcal": "15",
+    "protein_g": "1.5",
+    "fat_g": "1.0",
+    "carbs_g": "0.0",
+    "citation": "Vietnam National Institute of Nutrition & USDA FDC (FDC ID: 171571) - Pork bone broth (1.5g protein, 1.0g fat, 0.0g carbs, 15 kcal). Macro sum: 4*1.5 + 9*1.0 = 15 kcal.",
+    "reason": "Correct corrupted raw API energy of 1 kcal to 15 kcal and complete pork bone broth macros."
+  },
+  "7140": {
+    "name_vi": "Nước canh",
+    "energy_kcal": "10",
+    "protein_g": "0.8",
+    "fat_g": "0.5",
+    "carbs_g": "0.5",
+    "citation": "Vietnam FCT & USDA FDC - Clear home-prepared soup broth (0.8g protein, 0.5g fat, 0.5g carbs, 10 kcal). Macro sum: 4*0.8 + 9*0.5 + 4*0.5 = 9.7 kcal.",
+    "reason": "Complete clear soup broth macros."
+  },
+  "7141": {
+    "name_vi": "Nước dùng",
+    "energy_kcal": "12",
+    "protein_g": "1.2",
+    "fat_g": "0.8",
+    "carbs_g": "0.0",
+    "citation": "Vietnam National Institute of Nutrition & USDA FDC (FDC ID: 171573) - Clear culinary broth / stock (1.2g protein, 0.8g fat, 0.0g carbs, 12 kcal). Macro sum: 4*1.2 + 9*0.8 = 12 kcal.",
+    "reason": "Correct corrupted raw API energy of 1 kcal to 12 kcal and complete clear culinary broth macros."
+  },
+  "8092": {
+    "name_vi": "Cá basa",
+    "energy_kcal": "119",
+    "protein_g": "15.2",
+    "fat_g": "5.94",
+    "carbs_g": "0.0",
+    "citation": "USDA FoodData Central (FDC ID: 175147) & Vietnam FCT - Raw Basa fish fillet (Pangasius bocourti: 0.0g carbs, 15.2g protein, 5.94g fat, 119 kcal).",
+    "reason": "Complete carbs with 0.0g for raw fish fillet."
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "method": "kcal energy balance anchored by >=1 present macro; fill missing macro(s) 0.0 when energy is fully explained",
+  "masters_completed": {
+    "protein_g": 0,
+    "carbs_g": 0,
+    "fat_g": 0
+  },
+  "ingredient_rows_filled": {
+    "protein_g": 0,
+    "carbs_g": 0,
+    "fat_g": 0
+  },
+  "masters_left_incomplete": 24,
+  "excluded": [
+    {
+      "code": "13005",
+      "name_vi": "Muối ăn",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "13029",
+      "name_vi": "Mì chính (bột ngọt)",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "282"
+    },
+    {
+      "code": "13030",
+      "name_vi": "Ngũ vị hương",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "13031",
+      "name_vi": "Nước hàng (nước màu)",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "13034",
+      "name_vi": "Giấm (dấm)",
+      "missing": [
+        "protein_g",
+        "fat_g"
+      ],
+      "energy_kcal": "21"
+    },
+    {
+      "code": "13049",
+      "name_vi": "Mẻ",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "14001",
+      "name_vi": "Bia (cồn: 4,5 g)",
+      "missing": [
+        "fat_g"
+      ],
+      "energy_kcal": "43"
+    },
+    {
+      "code": "14002",
+      "name_vi": "Cô nhắc (cồn 32 g)",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "224"
+    },
+    {
+      "code": "14003",
+      "name_vi": "Cốc tain (cồn 13 g)",
+      "missing": [
+        "protein_g",
+        "fat_g"
+      ],
+      "energy_kcal": "155"
+    },
+    {
+      "code": "14010",
+      "name_vi": "Rượu cam, chanh (cồn 24,2 g)",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "241"
+    },
+    {
+      "code": "14011",
+      "name_vi": "Rượu nếp (80g/ 24 ml) (cồn 5 g)",
+      "missing": [
+        "fat_g"
+      ],
+      "energy_kcal": "202"
+    },
+    {
+      "code": "14012",
+      "name_vi": "Rượu trắng",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "273"
+    },
+    {
+      "code": "14013",
+      "name_vi": "Rượu vang đỏ (cồn 9,5 g)",
+      "missing": [
+        "fat_g"
+      ],
+      "energy_kcal": "69"
+    },
+    {
+      "code": "14014",
+      "name_vi": "Rượu vang trắng (cồn 9,5 g)",
+      "missing": [
+        "fat_g"
+      ],
+      "energy_kcal": "66"
+    },
+    {
+      "code": "14015",
+      "name_vi": "Rượu vang trắng ngọt (cồn 10.2 g)",
+      "missing": [
+        "fat_g"
+      ],
+      "energy_kcal": "96"
+    },
+    {
+      "code": "14016",
+      "name_vi": "Rượu Whisky (cồn 35,2 g)",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "246"
+    },
+    {
+      "code": "14068",
+      "name_vi": "Nước giải khát vitamin C",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": ""
+    },
+    {
+      "code": "3017011",
+      "name_vi": "Lạc rang dầu",
+      "missing": [
+        "protein_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "7096",
+      "name_vi": "Nầm bò",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "7120",
+      "name_vi": "Xương cục",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "7132",
+      "name_vi": "Nước hầm xương lợn",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "7140",
+      "name_vi": "Nước canh",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": ""
+    },
+    {
+      "code": "7141",
+      "name_vi": "Nước dùng",
+      "missing": [
+        "protein_g",
+        "carbs_g",
+        "fat_g"
+      ],
+      "energy_kcal": "1"
+    },
+    {
+      "code": "8092",
+      "name_vi": "Cá basa",
+      "missing": [
+        "carbs_g"
+      ],
+      "energy_kcal": "119"
+    }
+  ]
+}

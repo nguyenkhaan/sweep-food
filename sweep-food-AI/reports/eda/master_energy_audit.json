@@ -1,0 +1,825 @@
+{
+  "baseline_commit": "c8c45e7ceef72a10810e61e019294f633f0678fe",
+  "formula": "abs(E - (P*4 + C*4 + F*9)) / E * 100 > 30; complete core and E > 0",
+  "master_rows": 749,
+  "complete_core_master_rows": 478,
+  "zero_energy_complete_master_rows": 1,
+  "master_inconsistent_before": 10,
+  "master_inconsistent_after": 10,
+  "fixed_records": [],
+  "unresolved_records": [
+    {
+      "code": "1045",
+      "name_vi": "Sợi mỳ Quảng",
+      "processed_core": {
+        "energy_kcal": "1",
+        "protein_g": "5.32",
+        "fat_g": "0.27",
+        "carbs_g": "82.23"
+      },
+      "source_core": {
+        "energy_kcal": 1,
+        "protein_g": 5.32,
+        "fat_g": 0.27,
+        "carbs_g": 82.23
+      },
+      "source_origin": "data/raw/viendinhduong/food_nutrition_raw.json",
+      "source_name": "Sợi mỳ Quảng",
+      "raw_nutrients": [
+        {
+          "name": "Chất đạm",
+          "name_en": "Protein",
+          "value": 5.32,
+          "unit": "g"
+        },
+        {
+          "name": "Chất béo (Fat)",
+          "name_en": "Total lipid (Fat)",
+          "value": 0.27,
+          "unit": "g"
+        },
+        {
+          "name": "Chất bột đường",
+          "name_en": "Carbohydrate by difference",
+          "value": 82.23,
+          "unit": "g"
+        }
+      ],
+      "extension_fiber_g": null,
+      "estimated_energy": 352.63000000000005,
+      "relative_difference_percent": 35163.00000000001,
+      "diagnosis": "Raw energy is already 1; no repository-backed replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 0
+    },
+    {
+      "code": "12079",
+      "name_vi": "Kem tươi",
+      "processed_core": {
+        "energy_kcal": "1",
+        "protein_g": "335",
+        "fat_g": "2.4",
+        "carbs_g": "35.5"
+      },
+      "source_core": {
+        "energy_kcal": 1,
+        "protein_g": 335,
+        "fat_g": 2.4,
+        "carbs_g": 35.5
+      },
+      "source_origin": "data/raw/viendinhduong/food_nutrition_raw.json",
+      "source_name": "Kem tươi",
+      "raw_nutrients": [
+        {
+          "name": "Chất đạm",
+          "name_en": "Protein",
+          "value": 335,
+          "unit": "g"
+        },
+        {
+          "name": "Chất béo (Fat)",
+          "name_en": "Total lipid (Fat)",
+          "value": 2.4,
+          "unit": "g"
+        },
+        {
+          "name": "Chất bột đường",
+          "name_en": "Carbohydrate by difference",
+          "value": 35.5,
+          "unit": "g"
+        },
+        {
+          "name": "Chất xơ",
+          "name_en": "Fibre, total dietary",
+          "value": 3.1,
+          "unit": "g"
+        },
+        {
+          "name": "Sắt",
+          "name_en": "Fe",
+          "value": 27,
+          "unit": "mg"
+        }
+      ],
+      "extension_fiber_g": null,
+      "estimated_energy": 1503.6,
+      "relative_difference_percent": 150260.0,
+      "diagnosis": "Raw energy is already 1; no repository-backed replacement. Raw protein is already 335 g; decimal/column correction cannot be established.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 14
+    },
+    {
+      "code": "13024",
+      "name_vi": "Sả",
+      "processed_core": {
+        "energy_kcal": "1",
+        "protein_g": "0.8",
+        "fat_g": "1",
+        "carbs_g": "16.5"
+      },
+      "source_core": {
+        "energy_kcal": 1,
+        "protein_g": 0.8,
+        "fat_g": 1,
+        "carbs_g": 16.5
+      },
+      "source_origin": "data/raw/viendinhduong/food_nutrition_raw.json",
+      "source_name": "Sả",
+      "raw_nutrients": [
+        {
+          "name": "Chất đạm",
+          "name_en": "Protein",
+          "value": 0.8,
+          "unit": "g"
+        },
+        {
+          "name": "Chất béo (Fat)",
+          "name_en": "Total lipid (Fat)",
+          "value": 1,
+          "unit": "g"
+        },
+        {
+          "name": "Chất bột đường",
+          "name_en": "Carbohydrate by difference",
+          "value": 16.5,
+          "unit": "g"
+        },
+        {
+          "name": "Vit A-RAE",
+          "name_en": "Vit A-RAE",
+          "value": 2,
+          "unit": "mcg"
+        },
+        {
+          "name": "ß-carotene",
+          "name_en": "ß-carotene",
+          "value": 18,
+          "unit": "mcg"
+        },
+        {
+          "name": "Vit C",
+          "name_en": "Vit C",
+          "value": 1,
+          "unit": "mg"
+        },
+        {
+          "name": "Canxi",
+          "name_en": "Ca",
+          "value": 31,
+          "unit": "mg"
+        },
+        {
+          "name": "Sắt",
+          "name_en": "Fe",
+          "value": 2,
+          "unit": "mg"
+        },
+        {
+          "name": "Natri",
+          "name_en": "Na",
+          "value": 7,
+          "unit": "mg"
+        },
+        {
+          "name": "Kali",
+          "name_en": "K",
+          "value": 242,
+          "unit": "mg"
+        },
+        {
+          "name": "Kẽm",
+          "name_en": "Zn",
+          "value": 0.5,
+          "unit": "mg"
+        },
+        {
+          "name": "Ash",
+          "name_en": "Ash",
+          "value": 1.5,
+          "unit": "g"
+        },
+        {
+          "name": "Photpho",
+          "name_en": "P",
+          "value": 30,
+          "unit": "mg"
+        },
+        {
+          "name": "Đồng",
+          "name_en": "Cu",
+          "value": 0.7,
+          "unit": "mg"
+        },
+        {
+          "name": "Vitamin B1 (Thiamin)",
+          "name_en": "Thiamin",
+          "value": 0.05,
+          "unit": "mg"
+        },
+        {
+          "name": "Vitamin B2 (Riboflavin)",
+          "name_en": "Riboflavin",
+          "value": 0.04,
+          "unit": "mg"
+        },
+        {
+          "name": "Vitamin B3 (Niacin)",
+          "name_en": "Niacin",
+          "value": 1.1,
+          "unit": "mg"
+        }
+      ],
+      "extension_fiber_g": null,
+      "estimated_energy": 78.2,
+      "relative_difference_percent": 7720.0,
+      "diagnosis": "Raw energy is already 1; no repository-backed replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 293
+    },
+    {
+      "code": "13032",
+      "name_vi": "Nước sốt cà chua (tương cà)",
+      "processed_core": {
+        "energy_kcal": "1",
+        "protein_g": "1.1",
+        "fat_g": "0.1",
+        "carbs_g": "27.4"
+      },
+      "source_core": {
+        "energy_kcal": 1,
+        "protein_g": 1.1,
+        "fat_g": 0.1,
+        "carbs_g": 27.4
+      },
+      "source_origin": "data/raw/viendinhduong/food_nutrition_raw.json",
+      "source_name": "Nước sốt cà chua",
+      "raw_nutrients": [
+        {
+          "name": "Chất đạm",
+          "name_en": "Protein",
+          "value": 1.1,
+          "unit": "g"
+        },
+        {
+          "name": "Chất béo (Fat)",
+          "name_en": "Total lipid (Fat)",
+          "value": 0.1,
+          "unit": "g"
+        },
+        {
+          "name": "Chất bột đường",
+          "name_en": "Carbohydrate by difference",
+          "value": 27.4,
+          "unit": "g"
+        },
+        {
+          "name": "Chất xơ",
+          "name_en": "Fibre, total dietary",
+          "value": 0.3,
+          "unit": "g"
+        },
+        {
+          "name": "ß-carotene",
+          "name_en": "ß-carotene",
+          "value": 316,
+          "unit": "mcg"
+        },
+        {
+          "name": "Vit C",
+          "name_en": "Vit C",
+          "value": 4.1,
+          "unit": "mg"
+        },
+        {
+          "name": "Canxi",
+          "name_en": "Ca",
+          "value": 15,
+          "unit": "mg"
+        },
+        {
+          "name": "Sắt",
+          "name_en": "Fe",
+          "value": 0.35,
+          "unit": "mg"
+        },
+        {
+          "name": "Natri",
+          "name_en": "Na",
+          "value": 907,
+          "unit": "mg"
+        },
+        {
+          "name": "Kali",
+          "name_en": "K",
+          "value": 281,
+          "unit": "mg"
+        },
+        {
+          "name": "Kẽm",
+          "name_en": "Zn",
+          "value": 0.17,
+          "unit": "mg"
+        },
+        {
+          "name": "Sugars, total",
+          "name_en": "Sugars, total",
+          "value": 21.27,
+          "unit": "g"
+        },
+        {
+          "name": "Đồng",
+          "name_en": "Cu",
+          "value": 0.09,
+          "unit": "mg"
+        },
+        {
+          "name": "Selen",
+          "name_en": "Se",
+          "value": 0.7,
+          "unit": "mcg"
+        },
+        {
+          "name": "Vit A- RE",
+          "name_en": "Vit A- RE",
+          "value": 26,
+          "unit": "mcg"
+        },
+        {
+          "name": "Tocopherol, alpha",
+          "name_en": "Tocopherol, alpha",
+          "value": 1.46,
+          "unit": "mg"
+        },
+        {
+          "name": "Vitamin B1 (Thiamin)",
+          "name_en": "Thiamin",
+          "value": 0.01,
+          "unit": "mg"
+        },
+        {
+          "name": "Vitamin B2 (Riboflavin)",
+          "name_en": "Riboflavin",
+          "value": 0.17,
+          "unit": "mg"
+        },
+        {
+          "name": "Vitamin B3 (Niacin)",
+          "name_en": "Niacin",
+          "value": 1.43,
+          "unit": "mg"
+        },
+        {
+          "name": "Vit B6",
+          "name_en": "Vit B6",
+          "value": 0.16,
+          "unit": "mg"
+        },
+        {
+          "name": "Folate tổng số",
+          "name_en": "Folate, total",
+          "value": 9,
+          "unit": "mcg"
+        },
+        {
+          "name": "Folate, food",
+          "name_en": "Folate, food",
+          "value": 9,
+          "unit": "mcg"
+        },
+        {
+          "name": "Folate, DFE",
+          "name_en": "Folate, DFE",
+          "value": 9,
+          "unit": "mcg"
+        },
+        {
+          "name": "Choline, total",
+          "name_en": "Choline, total",
+          "value": 12.5,
+          "unit": "mg"
+        }
+      ],
+      "extension_fiber_g": null,
+      "estimated_energy": 114.9,
+      "relative_difference_percent": 11390.0,
+      "diagnosis": "Raw energy is already 1; no repository-backed replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 8
+    },
+    {
+      "code": "13056",
+      "name_vi": "Bột hạt điều (dầu điều)",
+      "processed_core": {
+        "energy_kcal": "1",
+        "protein_g": "11.5",
+        "fat_g": "2.23",
+        "carbs_g": "42.2"
+      },
+      "source_core": {
+        "energy_kcal": 1,
+        "protein_g": 11.5,
+        "fat_g": 2.23,
+        "carbs_g": 42.2
+      },
+      "source_origin": "data/raw/viendinhduong/food_nutrition_raw.json",
+      "source_name": "Bột hạt điều đỏ",
+      "raw_nutrients": [
+        {
+          "name": "Chất đạm",
+          "name_en": "Protein",
+          "value": 11.5,
+          "unit": "g"
+        },
+        {
+          "name": "Chất béo (Fat)",
+          "name_en": "Total lipid (Fat)",
+          "value": 2.23,
+          "unit": "g"
+        },
+        {
+          "name": "Chất bột đường",
+          "name_en": "Carbohydrate by difference",
+          "value": 42.2,
+          "unit": "g"
+        },
+        {
+          "name": "Chất xơ",
+          "name_en": "Fibre, total dietary",
+          "value": 28.48,
+          "unit": "g"
+        },
+        {
+          "name": "Nước",
+          "name_en": "Water",
+          "value": 6.75,
+          "unit": "g"
+        },
+        {
+          "name": "Tryptophan",
+          "name_en": "Tryptophan",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Threonine",
+          "name_en": "Threonine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Isoleucine",
+          "name_en": "Isoleucine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Leucine",
+          "name_en": "Leucine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Lysine",
+          "name_en": "Lysine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Methionine",
+          "name_en": "Methionine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Cystine",
+          "name_en": "Cystine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Phenylalanine",
+          "name_en": "Phenylalanine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Tyrosine",
+          "name_en": "Tyrosine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Valine",
+          "name_en": "Valine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Arginine",
+          "name_en": "Arginine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Histidine",
+          "name_en": "Histidine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Alanine",
+          "name_en": "Alanine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Axit Aspartic",
+          "name_en": "Aspartic acid",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Axit Glutamic",
+          "name_en": "Glutamic acid",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Glycine",
+          "name_en": "Glycine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Proline",
+          "name_en": "Proline",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Serine",
+          "name_en": "Serine",
+          "value": null,
+          "unit": "mg"
+        },
+        {
+          "name": "Đồng",
+          "name_en": "Cu",
+          "value": null,
+          "unit": "mg"
+        }
+      ],
+      "extension_fiber_g": null,
+      "estimated_energy": 234.87,
+      "relative_difference_percent": 23387.0,
+      "diagnosis": "Raw energy is already 1; no repository-backed replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 22
+    },
+    {
+      "code": "13073",
+      "name_vi": "Nước ướp gà nướng",
+      "processed_core": {
+        "energy_kcal": "1",
+        "protein_g": "0.82",
+        "fat_g": "0.63",
+        "carbs_g": "40.8"
+      },
+      "source_core": {
+        "energy_kcal": 1,
+        "protein_g": 0.82,
+        "fat_g": 0.63,
+        "carbs_g": 40.8
+      },
+      "source_origin": "data/raw/viendinhduong/food_nutrition_raw.json",
+      "source_name": "Nước ướp gà nướng",
+      "raw_nutrients": [
+        {
+          "name": "Chất đạm",
+          "name_en": "Protein",
+          "value": 0.82,
+          "unit": "g"
+        },
+        {
+          "name": "Chất béo (Fat)",
+          "name_en": "Total lipid (Fat)",
+          "value": 0.63,
+          "unit": "g"
+        },
+        {
+          "name": "Chất bột đường",
+          "name_en": "Carbohydrate by difference",
+          "value": 40.8,
+          "unit": "g"
+        },
+        {
+          "name": "Nước",
+          "name_en": "Water",
+          "value": 54.7,
+          "unit": "g"
+        }
+      ],
+      "extension_fiber_g": null,
+      "estimated_energy": 172.14999999999998,
+      "relative_difference_percent": 17114.999999999996,
+      "diagnosis": "Raw energy is already 1; no repository-backed replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 0
+    },
+    {
+      "code": "20009",
+      "name_vi": "Bột quế",
+      "processed_core": {
+        "energy_kcal": "247",
+        "protein_g": "4.0",
+        "fat_g": "1.2",
+        "carbs_g": "80.6"
+      },
+      "source_core": {
+        "energy_kcal": "247",
+        "protein_g": "4.0",
+        "fat_g": "1.2",
+        "carbs_g": "80.6"
+      },
+      "source_origin": "nlp/master_extensions.py",
+      "source_name": "Bột quế",
+      "raw_nutrients": null,
+      "extension_fiber_g": "53.1",
+      "estimated_energy": 349.2,
+      "relative_difference_percent": 41.376518218623474,
+      "diagnosis": "Extension literals match; no record-specific source reference or authoritative replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 17
+    },
+    {
+      "code": "20018",
+      "name_vi": "Ớt bột Hàn Quốc (gochugaru)",
+      "processed_core": {
+        "energy_kcal": "318",
+        "protein_g": "12.0",
+        "fat_g": "17.3",
+        "carbs_g": "56.6"
+      },
+      "source_core": {
+        "energy_kcal": "318",
+        "protein_g": "12.0",
+        "fat_g": "17.3",
+        "carbs_g": "56.6"
+      },
+      "source_origin": "nlp/master_extensions.py",
+      "source_name": "Ớt bột Hàn Quốc (gochugaru)",
+      "raw_nutrients": null,
+      "extension_fiber_g": "27.2",
+      "estimated_energy": 430.1,
+      "relative_difference_percent": 35.25157232704403,
+      "diagnosis": "Extension literals match; no record-specific source reference or authoritative replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 32
+    },
+    {
+      "code": "20068",
+      "name_vi": "Nấm tuyết (Ngân nhĩ)",
+      "processed_core": {
+        "energy_kcal": "200",
+        "protein_g": "8.0",
+        "fat_g": "0.6",
+        "carbs_g": "65.0"
+      },
+      "source_core": {
+        "energy_kcal": "200",
+        "protein_g": "8.0",
+        "fat_g": "0.6",
+        "carbs_g": "65.0"
+      },
+      "source_origin": "nlp/master_extensions.py",
+      "source_name": "Nấm tuyết (Ngân nhĩ)",
+      "raw_nutrients": null,
+      "extension_fiber_g": "25.0",
+      "estimated_energy": 297.4,
+      "relative_difference_percent": 48.69999999999999,
+      "diagnosis": "Extension literals match; no record-specific source reference or authoritative replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 14
+    },
+    {
+      "code": "20084",
+      "name_vi": "Bột ớt Paprika",
+      "processed_core": {
+        "energy_kcal": "282",
+        "protein_g": "14.1",
+        "fat_g": "12.9",
+        "carbs_g": "54.0"
+      },
+      "source_core": {
+        "energy_kcal": "282",
+        "protein_g": "14.1",
+        "fat_g": "12.9",
+        "carbs_g": "54.0"
+      },
+      "source_origin": "nlp/master_extensions.py",
+      "source_name": "Bột ớt Paprika",
+      "raw_nutrients": null,
+      "extension_fiber_g": "34.0",
+      "estimated_energy": 388.5,
+      "relative_difference_percent": 37.765957446808514,
+      "diagnosis": "Extension literals match; no record-specific source reference or authoritative replacement.",
+      "safe_automatic_fix": false,
+      "proposed_action": "Leave unchanged; requires source verification.",
+      "linked_inconsistent_rows": 31
+    }
+  ],
+  "downstream": {
+    "fields": {
+      "energy_kcal": {
+        "master_missing": 2,
+        "linked_missing_instances": 0,
+        "zero_before": 0,
+        "missing_after": 0,
+        "true_zero_instances": 358,
+        "true_zero_before": 358,
+        "true_zero_after": 358
+      },
+      "protein_g": {
+        "master_missing": 39,
+        "linked_missing_instances": 8546,
+        "zero_before": 0,
+        "missing_after": 8546,
+        "true_zero_instances": 528,
+        "true_zero_before": 528,
+        "true_zero_after": 528
+      },
+      "fat_g": {
+        "master_missing": 146,
+        "linked_missing_instances": 12163,
+        "zero_before": 0,
+        "missing_after": 12163,
+        "true_zero_instances": 554,
+        "true_zero_before": 554,
+        "true_zero_after": 554
+      },
+      "carbs_g": {
+        "master_missing": 142,
+        "linked_missing_instances": 9144,
+        "zero_before": 0,
+        "missing_after": 9144,
+        "true_zero_instances": 538,
+        "true_zero_before": 538,
+        "true_zero_after": 538
+      }
+    },
+    "ingredient_rows": 63943,
+    "affected_rows": 0,
+    "affected_recipes": 0,
+    "unexpected_numeric_or_unrelated_changes": 0,
+    "inconsistent_before": 612,
+    "inconsistent_after": 612,
+    "previously_inconsistent_now_missing_macro": 0,
+    "remaining_categories": {
+      "rounding_scaling_tolerance": 181,
+      "inconsistent_master": 431
+    }
+  },
+  "rows_resolved_by_master_corrections": 0,
+  "ingredient_rows_excluded_missing_core": 19499,
+  "protected_data_sha256": {
+    "data/benchmark/ablation_benchmark_pairs.csv": "a52751b68b5a0442e0e772c9f01e8a0292aaedc85ac4880fe433f040fa7194aa",
+    "data/benchmark/ablation_benchmark_results.json": "8e8d8cebb5e423718829f4d9a5266402ad8ea1f3782479e341a41836318a21f1",
+    "data/benchmark/fair_benchmark_100_queries.json": "b421cdc8d4519f2a6ff3942fdfc7b0dad7727cdd4f2b2a39e410e4577f9cce45",
+    "data/benchmark/fair_benchmark_pairs.csv": "d8ac8ab0a0882e6e86493b33f5258e4f963c55c8336b5abe99e3e9847c315d71",
+    "data/benchmark/fair_benchmark_results.json": "89511c625b6e03dfb5e3cd258a651e5efff8457f3838710448d4ff2a5b1aedd2",
+    "data/benchmark/full_baselines_benchmark_results.json": "35470d0b52d90525da6b5036f0f33d578f0f03080ecec22f33b5231c3a9c80d1",
+    "data/interim/qwen_extracted_map.json": "374f74ddf117d1331e6e8bd548ffc0a0a75de6eb667d42cd831666e76e29935d",
+    "data/interim/recipe_ingredients.csv": "441831d531f5b2ff453620332127a60c1dba722fcaef7add2eb5e066f18338a8",
+    "data/interim/recipe_ingredients.json": "7d5ea0d2c2be2a6eba8276c6f5e30fa5fcfbee6a3b1b0600b2c147c4e5e4b9f9",
+    "data/interim/recipes_crawled_cleaned.csv": "681a2f4c6a901cac28c024b44bd59be45b3b80e14a9be5141f9c8b0d8cadccb2",
+    "data/interim/recipes_crawled_cleaned.json": "389c3f5011c864927c7418670e77a07c24a2a5797e797df78eefd01b48557967",
+    "data/processed/recipes/canonical_recipe_ingredients.csv": "eadca2019eb4c08799b6c55ca25186bfd69b6489e4867bdb9f16584c8b2c6472",
+    "data/processed/recipes/canonical_recipes.csv": "42dfa7d653b892b345a5927f9439436026ab96f87f5a1caa8cd10e2509640423",
+    "data/processed/recipes/recipe_canonical_mapping.csv": "95a173037c7355cf4306b98c39097ccc973605b02f5a579a0771f73c25078378",
+    "data/processed/recipes/recipe_canonical_review.csv": "0324232310c083961d62e87401f5d5810f5a76c62243740d94663c5f28942ef0",
+    "data/processed/recipes/recipe_canonicalization_summary.json": "de8475fdb2d5d2f31c30c447c663a364e9f1d82561272c365875041e8d00158c",
+    "data/processed/recipes/recipe_ingredients.csv": "bdf2c24dae890282673aa835042f18b9dd886346911ec58cf634ea24085579d3",
+    "data/processed/recipes/recipe_ingredients.json": "7b3cb8fc3dff8dcbbacd1f1d7b780644e949dbc7467fee7274cba089ec824ac9",
+    "data/processed/recipes/recipe_name_alias_application_audit.csv": "2dfc252eca3ceec3da6cbd6fafbefbca1d675619482268556371f1f9db86c8cc",
+    "data/processed/recipes/recipe_name_alias_candidates.csv": "5d571892afbcbb74d40c8c52b6a71b0024b64629eda2803f703b52b58ece59ca",
+    "data/processed/recipes/recipe_name_alias_decisions.json": "c714af96c5e4d80b71b54fe3728554d39bfc2069499d8025e5eaaa4de17ecf8c",
+    "data/processed/recipes/recipes.csv": "681a2f4c6a901cac28c024b44bd59be45b3b80e14a9be5141f9c8b0d8cadccb2",
+    "data/processed/recipes/recipes.json": "389c3f5011c864927c7418670e77a07c24a2a5797e797df78eefd01b48557967",
+    "data/processed/viendinhduong/ingredient_alias_map.json": "63635240ad587468bec2e84b0c45307e4ea7e94c46244fe8d6cbbbea64cdeba5",
+    "data/processed/viendinhduong/ingredient_categories.csv": "12e7e71e6ca0746ca15a4e21409a01f5ee01010951f1c71e35fe2df5be97a5e7",
+    "data/processed/viendinhduong/master_ingredients_nutrition.csv": "b83faf15f53b1f31f85134fd0ce9777353d6ff8c8f82059b6f124238ad40e193",
+    "data/processed/viendinhduong/traditional_dishes_nutrition.csv": "b8139c141e4b4ab2802a02ffaf9b631cdeacae4b1eb1f5afe836e3944a80738c",
+    "data/raw/recipes_raw_scraped.json": "36473844a562822dcde69514f255a30d2ff9ceffcf5d6ef19d7585bbc4c883a3",
+    "data/raw/viendinhduong/food_nutrition_raw.json": "d00385900d02d697f16efe14f38993a9ca009271d6eb06023b8c7b2e54a1ae7b"
+  },
+  "master_and_ingredient_cells_equal_baseline": true
+}

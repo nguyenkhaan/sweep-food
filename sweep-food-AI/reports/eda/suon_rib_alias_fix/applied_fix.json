@@ -1,0 +1,454 @@
+{
+  "status": "applied",
+  "alias_states": {
+    "xương sườn heo": "pending",
+    "sườn non heo": "pending",
+    "sươ n non heo": "pending",
+    "sườn": "pending",
+    "dẻ sườn": "pending"
+  },
+  "alias_repoints": {
+    "xương sườn heo": "7053",
+    "sườn non heo": "7053",
+    "sươ n non heo": "7053"
+  },
+  "alias_removals": [
+    "sườn",
+    "dẻ sườn"
+  ],
+  "remap_target_count": 10,
+  "remap_applied_now": 10,
+  "remap_already_applied": 0,
+  "remap_alias_driven_count": 6,
+  "remap_row_level_count": 4,
+  "clear_target_count": 2,
+  "clear_applied_now": 2,
+  "clear_already_applied": 0,
+  "affected_recipe_count": 12,
+  "affected_recipe_ids": [
+    "16a32198-23a3-408b-811a-57b03922046c",
+    "1cabeb68-6cd9-496f-9381-bfd84361774d",
+    "2c686541-6636-48c4-9b03-a3466364ec3b",
+    "50a6d6cd-f29e-4046-bfed-6fe6852d3239",
+    "6a5e3d3a-7017-4243-aaa5-d20178aed87b",
+    "717f1b50-c8d4-479b-b1d0-c7ec5f5247aa",
+    "7b924a90-5282-47ba-8b37-a8c5b39dfdac",
+    "8290e2ca-1686-48b9-89ed-230b459d6eae",
+    "85239c1e-d1ce-40ba-8e9c-8d6fac9f1d39",
+    "b116cabb-21d6-4ce9-8561-c95b82ace969",
+    "d78f2196-c9ed-4825-a51a-d8616c7c68aa",
+    "f9af3ca5-d66b-4d8b-b029-ba8d917d9058"
+  ],
+  "recipes_with_changed_totals": 12,
+  "recipes_with_changed_missing_count": 2,
+  "recipes_with_status_label_changed": 1,
+  "status_transitions": {
+    "unchanged": 5640,
+    "COMPLETE -> PARTIAL": 1
+  },
+  "nutrition_all_12": {
+    "before": {
+      "calories": 10998.3,
+      "protein_g": 906.6,
+      "fat_g": 804.7,
+      "carbs_g": 96.6
+    },
+    "after": {
+      "calories": 7882.1,
+      "protein_g": 754.5,
+      "fat_g": 539.5,
+      "carbs_g": 0.0
+    },
+    "delta": {
+      "calories": -3116.2,
+      "protein_g": -152.1,
+      "fat_g": -265.2,
+      "carbs_g": -96.6
+    }
+  },
+  "nutrition_remapped_10": {
+    "before": {
+      "calories": 8640.8,
+      "protein_g": 712.3,
+      "fat_g": 632.2,
+      "carbs_g": 75.9
+    },
+    "after": {
+      "calories": 7882.1,
+      "protein_g": 754.5,
+      "fat_g": 539.5,
+      "carbs_g": 0.0
+    },
+    "delta": {
+      "calories": -758.7,
+      "protein_g": 42.2,
+      "fat_g": -92.7,
+      "carbs_g": -75.9
+    }
+  },
+  "nutrition_cleared_2": {
+    "before": {
+      "calories": 2357.5,
+      "protein_g": 194.3,
+      "fat_g": 172.5,
+      "carbs_g": 20.7
+    },
+    "after": {
+      "calories": 0.0,
+      "protein_g": 0.0,
+      "fat_g": 0.0,
+      "carbs_g": 0.0
+    },
+    "delta": {
+      "calories": -2357.5,
+      "protein_g": -194.3,
+      "fat_g": -172.5,
+      "carbs_g": -20.7
+    }
+  },
+  "remap_row_ids": [
+    "0f84cccc-deac-4bf9-9fd8-a879d66bd1aa",
+    "19504d22-3999-4ae0-bca7-db81df889ad5",
+    "1da91cd2-565a-4467-8f54-bd480ab7294a",
+    "25f14bf1-192c-41f4-9d1b-dc0006e7084c",
+    "36db3701-6ae4-4720-9d4c-c6d8d533decf",
+    "5fbe1cf4-3c16-45d9-a999-c7345dde881c",
+    "a56ffa1e-1225-4c4e-a830-0b756eab2c81",
+    "ac206911-216e-4742-adfa-a7bd9d199e58",
+    "d1400f26-18dc-4e96-8acd-78267045f499",
+    "dfd609c0-7829-4da0-8821-34fbeb960500"
+  ],
+  "clear_row_ids": [
+    "78e45baf-dd51-4f0e-8d7a-ba4cee3612e2",
+    "c9c53624-3d09-4680-9bed-fc9590d5b8ad"
+  ],
+  "row_outcomes": {
+    "0f84cccc-deac-4bf9-9fd8-a879d66bd1aa": {
+      "raw_text": "Xương sườn heo 1 kg",
+      "cleaned_name": "xương sườn heo",
+      "recipe_id": "85239c1e-d1ce-40ba-8e9c-8d6fac9f1d39",
+      "estimated_weight_g": "1000.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2050.0",
+        "protein_g": "169.0",
+        "fat_g": "150.0",
+        "carbs_g": "18.0"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1870.0",
+        "protein_g": "179.0",
+        "fat_g": "128.0",
+        "carbs_g": null
+      }
+    },
+    "19504d22-3999-4ae0-bca7-db81df889ad5": {
+      "raw_text": "2 miếng Sườn",
+      "cleaned_name": "sườn",
+      "recipe_id": "7b924a90-5282-47ba-8b37-a8c5b39dfdac",
+      "estimated_weight_g": "100.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "205.0",
+        "protein_g": "16.9",
+        "fat_g": "15.0",
+        "carbs_g": "1.8"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "187.0",
+        "protein_g": "17.9",
+        "fat_g": "12.8",
+        "carbs_g": null
+      }
+    },
+    "1da91cd2-565a-4467-8f54-bd480ab7294a": {
+      "raw_text": "15 g sườn",
+      "cleaned_name": "sườn",
+      "recipe_id": "6a5e3d3a-7017-4243-aaa5-d20178aed87b",
+      "estimated_weight_g": "15.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.8",
+        "protein_g": "2.5",
+        "fat_g": "2.2",
+        "carbs_g": "0.3"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "28.1",
+        "protein_g": "2.7",
+        "fat_g": "1.9",
+        "carbs_g": null
+      }
+    },
+    "25f14bf1-192c-41f4-9d1b-dc0006e7084c": {
+      "raw_text": "500g xương sườn heo",
+      "cleaned_name": "xương sườn heo",
+      "recipe_id": "50a6d6cd-f29e-4046-bfed-6fe6852d3239",
+      "estimated_weight_g": "500.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1025.0",
+        "protein_g": "84.5",
+        "fat_g": "75.0",
+        "carbs_g": "9.0"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "36db3701-6ae4-4720-9d4c-c6d8d533decf": {
+      "raw_text": "300 g sườn",
+      "cleaned_name": "sườn",
+      "recipe_id": "1cabeb68-6cd9-496f-9381-bfd84361774d",
+      "estimated_weight_g": "300.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "615.0",
+        "protein_g": "50.7",
+        "fat_g": "45.0",
+        "carbs_g": "5.4"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "561.0",
+        "protein_g": "53.7",
+        "fat_g": "38.4",
+        "carbs_g": null
+      }
+    },
+    "5fbe1cf4-3c16-45d9-a999-c7345dde881c": {
+      "raw_text": "Xương sườn heo 8 miếng",
+      "cleaned_name": "xương sườn heo",
+      "recipe_id": "16a32198-23a3-408b-811a-57b03922046c",
+      "estimated_weight_g": "400.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "820.0",
+        "protein_g": "67.6",
+        "fat_g": "60.0",
+        "carbs_g": "7.2"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "748.0",
+        "protein_g": "71.6",
+        "fat_g": "51.2",
+        "carbs_g": null
+      }
+    },
+    "78e45baf-dd51-4f0e-8d7a-ba4cee3612e2": {
+      "raw_text": "Sườn 1 kg",
+      "cleaned_name": "sườn",
+      "recipe_id": "b116cabb-21d6-4ce9-8561-c95b82ace969",
+      "estimated_weight_g": "1000.0",
+      "decision": "CLEAR_UNMATCHED",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2050.0",
+        "protein_g": "169.0",
+        "fat_g": "150.0",
+        "carbs_g": "18.0"
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      }
+    },
+    "a56ffa1e-1225-4c4e-a830-0b756eab2c81": {
+      "raw_text": "400 gr xương / sườn heo",
+      "cleaned_name": "xương sườn heo",
+      "recipe_id": "2c686541-6636-48c4-9b03-a3466364ec3b",
+      "estimated_weight_g": "400.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "820.0",
+        "protein_g": "67.6",
+        "fat_g": "60.0",
+        "carbs_g": "7.2"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "748.0",
+        "protein_g": "71.6",
+        "fat_g": "51.2",
+        "carbs_g": null
+      }
+    },
+    "ac206911-216e-4742-adfa-a7bd9d199e58": {
+      "raw_text": "4 dẻ sườn",
+      "cleaned_name": "dẻ sườn",
+      "recipe_id": "f9af3ca5-d66b-4d8b-b029-ba8d917d9058",
+      "estimated_weight_g": "600.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1230.0",
+        "protein_g": "101.4",
+        "fat_g": "90.0",
+        "carbs_g": "10.8"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1122.0",
+        "protein_g": "107.4",
+        "fat_g": "76.8",
+        "carbs_g": null
+      }
+    },
+    "c9c53624-3d09-4680-9bed-fc9590d5b8ad": {
+      "raw_text": "3 lát sườn",
+      "cleaned_name": "sườn",
+      "recipe_id": "717f1b50-c8d4-479b-b1d0-c7ec5f5247aa",
+      "estimated_weight_g": "150.0",
+      "decision": "CLEAR_UNMATCHED",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "307.5",
+        "protein_g": "25.3",
+        "fat_g": "22.5",
+        "carbs_g": "2.7"
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      }
+    },
+    "d1400f26-18dc-4e96-8acd-78267045f499": {
+      "raw_text": "Xương sườn heo 400 gr",
+      "cleaned_name": "xương sườn heo",
+      "recipe_id": "d78f2196-c9ed-4825-a51a-d8616c7c68aa",
+      "estimated_weight_g": "400.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "820.0",
+        "protein_g": "67.6",
+        "fat_g": "60.0",
+        "carbs_g": "7.2"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "748.0",
+        "protein_g": "71.6",
+        "fat_g": "51.2",
+        "carbs_g": null
+      }
+    },
+    "dfd609c0-7829-4da0-8821-34fbeb960500": {
+      "raw_text": "500 gr sườn non heo",
+      "cleaned_name": "sươ n non heo",
+      "recipe_id": "8290e2ca-1686-48b9-89ed-230b459d6eae",
+      "estimated_weight_g": "500.0",
+      "decision": "REMAP_7053",
+      "before": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1025.0",
+        "protein_g": "84.5",
+        "fat_g": "75.0",
+        "carbs_g": "9.0"
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    }
+  },
+  "out_of_scope_note": "Other suspicious 70xx rib aliases are intentionally NOT touched: 'suon cot let'->7070, 'suon cot let xat lat'->7070, 'thit ba chi rut suon'->7082, 'suon bo'->7094, 'de suon bo'->7094, 'canh suon khoai so'->2013. This fix is scoped to the five reviewed keys only and is not a 70xx cleanup.",
+  "canonical_note": "Canonical outputs (canonical_recipes.csv/json, canonical_recipe_ingredients.csv/json, recipe_canonical_mapping.csv) are NOT regenerated by this script and are now stale for these rows/recipes. Regenerate via scripts/canonicalize_recipes.py after applying.",
+  "report_note": "Captured from the true pre-fix (git HEAD) state so the before/after fields record the actual transition. Re-running the remediation script against already-fixed data is a no-op and would otherwise overwrite this file with a report whose 'before' equals 'after'."
+}

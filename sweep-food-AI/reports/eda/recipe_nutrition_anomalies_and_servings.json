@@ -1,0 +1,1187 @@
+{
+  "file": "recipes.csv",
+  "total_recipes": 5478,
+  "flagged_anomalies": 106,
+  "anomaly_percentage": 1.94,
+  "flagged_recipes": [
+    {
+      "id": "0044f324-6e34-4c83-9d6e-de3a675eec26",
+      "name": "Sườn Non Tiềm Nấm Đông Trùng Hạ Thảo",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 59.9,
+      "calories_per_serving": 29.9,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "07fe97e6-7d67-48a1-ab50-2f6a8eaf070a",
+      "name": "Tóp mỡ ba chỉ giòn ngậy",
+      "source_platform": "cookpad",
+      "default_servings": 1.0,
+      "total_calories": 24.8,
+      "calories_per_serving": 24.8,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "08272d38-415b-4f48-9e35-9d914e460f5e",
+      "name": "Canh bắp cải nấu thịt vai heo xay",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 98.8,
+      "calories_per_serving": 32.9,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "0e2a0e6b-3d04-49b9-aeb9-96f17e8159b7",
+      "name": "Ba kích",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 23000.0,
+      "calories_per_serving": 5750.0,
+      "reasons": [
+        "HIGH_TOTAL_CALORIES",
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "12111b2f-6c8e-4f12-9e6e-783d1b739733",
+      "name": "Bí đao luộc",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 108.6,
+      "calories_per_serving": 27.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "1279356a-19c9-4a9a-81ad-06a6f81d4e89",
+      "name": "Canh Sườn Heo Cải Thảo",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 24.4,
+      "calories_per_serving": 8.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "1b6c37ef-d7ed-4823-86c3-a5a6b702895f",
+      "name": "Gà luộc lá chanh",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 137.7,
+      "calories_per_serving": 34.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "2230baef-acbf-4336-b012-86b45f2aa29e",
+      "name": "Giò Heo Hầm Sả Ớt",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 68.2,
+      "calories_per_serving": 34.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "27475bc5-fedc-4684-8dad-d6033ec59b30",
+      "name": "Canh cải ngọt nấu xương giò heo",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 72.3,
+      "calories_per_serving": 36.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "2ae41cfb-50c0-4424-a2ea-600fdd63432d",
+      "name": "Hủ tiếu giò heo",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 26.8,
+      "calories_per_serving": 13.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "2c12aa46-41b6-4edd-b0ac-52cc2dc1f5ad",
+      "name": "Canh Rau Mồng Tơi Nấu Thịt Nạc",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 43.5,
+      "calories_per_serving": 21.8,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "2dbfba90-03fb-42a0-9e20-901b28d6c637",
+      "name": "Thịt kho tàu miền Bắc",
+      "source_platform": "dienmayxanh",
+      "default_servings": 1.0,
+      "total_calories": 5319.0,
+      "calories_per_serving": 5319.0,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "2e935342-51dd-4e2a-85c2-a195df035e29",
+      "name": "Chuối chanh đường phèn",
+      "source_platform": "dienmayxanh",
+      "default_servings": 3.0,
+      "total_calories": 9120.0,
+      "calories_per_serving": 3040.0,
+      "reasons": [
+        "HIGH_TOTAL_CARBS"
+      ]
+    },
+    {
+      "id": "2efd9fbc-138d-45dd-b44a-632cc30b82c2",
+      "name": "Ba chỉ heo nướng ngũ vị",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 92.1,
+      "calories_per_serving": 46.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "318b6662-68cd-45d3-b20e-5b6d5e9243c2",
+      "name": "Canh dưa leo giò heo",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 14.1,
+      "calories_per_serving": 7.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "33270996-c22b-415e-a5c3-a0a41035def9",
+      "name": "Ba rọi chay xốt xì dầu",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 79.5,
+      "calories_per_serving": 39.8,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "34b6405b-f1f0-4581-bb34-30d0888fbbd9",
+      "name": "Cà ri lươn",
+      "source_platform": "monngonmoingay",
+      "default_servings": 4.0,
+      "total_calories": 14.1,
+      "calories_per_serving": 3.5,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "34becc83-ea20-43a0-9d13-5c0a4831b357",
+      "name": "Canh xương đầu heo",
+      "source_platform": "dienmayxanh",
+      "default_servings": 5.0,
+      "total_calories": 232.1,
+      "calories_per_serving": 46.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "356140fa-f242-4028-bf6e-9703592bf836",
+      "name": "Canh Bí Đỏ Hầm Sườn Non",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 86.1,
+      "calories_per_serving": 43.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "3604b418-4658-4166-b349-800dc9fbec5b",
+      "name": "Giò heo giả cầy",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 9813.5,
+      "calories_per_serving": 4906.8,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "38f07772-77d4-4e4b-81f3-18035849ec39",
+      "name": "Thịt Nạc Kho Quéo Nước Dừa",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 80.6,
+      "calories_per_serving": 40.3,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "3c41b473-c81f-4e28-a53c-b375d9c16543",
+      "name": "Thịt ba rọi, cá lóc chiên nước mắm",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 95.2,
+      "calories_per_serving": 47.6,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "3ecd8122-38eb-46e2-acde-e24e60819479",
+      "name": "Thịt heo luộc- mắm đu đủ",
+      "source_platform": "cookpad",
+      "default_servings": 5.0,
+      "total_calories": 159.6,
+      "calories_per_serving": 31.9,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "3f33b2d4-a8a5-42ca-9203-7c7b6f3acaf6",
+      "name": "Chân giò hầm coke táo tàu",
+      "source_platform": "cookpad",
+      "default_servings": 1.0,
+      "total_calories": 4400.9,
+      "calories_per_serving": 4400.9,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "3f8ae57b-68e4-4c14-975e-91e28a6302e9",
+      "name": "Canh cải cúc nấu thịt băm",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 150.0,
+      "calories_per_serving": 37.5,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "3fffd73b-9785-4fe0-8721-b0244583988e",
+      "name": "CANH BÍ ĐAO NẤU SƯỜN NON",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 150.3,
+      "calories_per_serving": 37.6,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "40a361fa-d0b0-4863-9104-32f6341b0bc2",
+      "name": "Súp lơ luộc",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 21.4,
+      "calories_per_serving": 10.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "411654b3-f8f4-454d-a314-78788394e5b9",
+      "name": "Bữa cơm nhà nhiều món ăn ngon",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 59.3,
+      "calories_per_serving": 14.8,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "47defe41-47b2-43cd-a4b6-f4d75bda628c",
+      "name": "Canh bắp cải thịt bằm",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 147.8,
+      "calories_per_serving": 37.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "4892171b-0147-4f33-97ea-1e0a74cb57a3",
+      "name": "Rau tầm bóp nấu thịt nạc xay",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 178.0,
+      "calories_per_serving": 44.5,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "48a8d93c-601d-4194-b66e-30905f189fc5",
+      "name": "Cà ri gà nước cốt dừa",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 17281.9,
+      "calories_per_serving": 4320.5,
+      "reasons": [
+        "HIGH_TOTAL_CALORIES",
+        "HIGH_TOTAL_FAT",
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "494d5c68-cb11-47c7-b919-f35f262db6fb",
+      "name": "Thịt kho đậu hủ",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 72.0,
+      "calories_per_serving": 18.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "4e16b785-bb4b-456a-b467-a69a7af9857f",
+      "name": "Nước dùng dashi",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 164.3,
+      "calories_per_serving": 41.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "514a425f-cd74-477b-b3c8-204f62ca6edf",
+      "name": "Cá nục kho tóp mỡ",
+      "source_platform": "monngonmoingay",
+      "default_servings": 4.0,
+      "total_calories": 8.5,
+      "calories_per_serving": 2.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "53fbb4a7-1607-4430-8f24-a2f05429e9e1",
+      "name": "Canh cải thảo tôm khô",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 88.4,
+      "calories_per_serving": 44.2,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "5409b539-5fc7-4843-9518-ae236322a2e3",
+      "name": "Canh rau ngót nấu giò heo",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 92.1,
+      "calories_per_serving": 30.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "55901818-36c7-4cfd-9a01-5d06a5ae3e3d",
+      "name": "Canh mướp thịt vai xay nấu nhanh",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 98.8,
+      "calories_per_serving": 49.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "5b39ea54-b1a8-4748-9e03-2004b8fafb5f",
+      "name": "Rượu sâm cau",
+      "source_platform": "dienmayxanh",
+      "default_servings": 1.0,
+      "total_calories": 8570.0,
+      "calories_per_serving": 8570.0,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "5e6933d8-45ea-4c3f-9e57-ecbcfd3aa9b6",
+      "name": "Canh chua cá mè",
+      "source_platform": "dienmayxanh",
+      "default_servings": 3.0,
+      "total_calories": 12563.6,
+      "calories_per_serving": 4187.9,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "61532290-89cd-48e3-9286-af8d88a5eff0",
+      "name": "Chuối già luộc dẻo",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 69.1,
+      "calories_per_serving": 34.5,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "61a3fb38-5b69-4da9-99fd-988b230536a0",
+      "name": "Canh Mướp Mồng Tơi Nấu Tôm",
+      "source_platform": "monngonmoingay",
+      "default_servings": 4.0,
+      "total_calories": 135.0,
+      "calories_per_serving": 33.8,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "64e40247-37b5-4ecd-8ccb-2f6579e33afb",
+      "name": "Canh bắp cải bông điên điển nấu thịt vai xay",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 138.3,
+      "calories_per_serving": 46.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "671514d6-23b1-4d1f-bb61-9ef6abc29f10",
+      "name": "Bữa tiệc Giáng Sinh và Năm Mới (Merry Christmas and New Year)",
+      "source_platform": "cookpad",
+      "default_servings": 8.0,
+      "total_calories": 0.0,
+      "calories_per_serving": 0.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES",
+        "ZERO_CALORIES"
+      ]
+    },
+    {
+      "id": "6acdd9f5-93c2-45e4-b672-926b40b6ac14",
+      "name": "Canh tôm nấu bầu",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 158.7,
+      "calories_per_serving": 39.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "6e488093-aa2a-4341-b0ef-ac9e338dc09d",
+      "name": "Thịt heo nướng (heo quay)",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 56.0,
+      "calories_per_serving": 28.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "6f5b2dd5-d062-4fe8-b6ef-97e5da5d6211",
+      "name": "Hương vị bữa cơm nhà",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 24.3,
+      "calories_per_serving": 8.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "730ba339-5213-4b9d-901a-416838d5481b",
+      "name": "Canh mồng tơi mướp",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 91.2,
+      "calories_per_serving": 45.6,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "7a42ab85-1391-40a3-bd08-34add25c86ff",
+      "name": "Nạc nọng BBQ",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 76.2,
+      "calories_per_serving": 19.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "7be4849c-3f74-4a18-9f71-4ddd22742d9f",
+      "name": "Rau củ luộc thập cẩm",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 84.5,
+      "calories_per_serving": 21.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "7ddd0246-1fef-42ce-9d22-efdf35a00e84",
+      "name": "Khô cá cơm kho tiêu",
+      "source_platform": "dienmayxanh",
+      "default_servings": 6.0,
+      "total_calories": 256.7,
+      "calories_per_serving": 42.8,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "7f0303c4-dae2-4066-a815-2a3b5c3c5923",
+      "name": "Thịt Sá Xíu Homemade/ Char Siew Pork",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 23.8,
+      "calories_per_serving": 11.9,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "7f467bbe-c52f-4251-9778-a9976066af84",
+      "name": "Canh cá nấu hoa chuối",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 174.8,
+      "calories_per_serving": 43.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "8100b8c2-ed74-45a9-9cae-fa3e5f14b355",
+      "name": "Giò heo kho thơm",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 130.7,
+      "calories_per_serving": 32.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "818cd0eb-b060-426b-82fd-25fae10d4fff",
+      "name": "Bánh da lợn lá dứa đậu xanh sầu riêng",
+      "source_platform": "dienmayxanh",
+      "default_servings": 10.0,
+      "total_calories": 17425.6,
+      "calories_per_serving": 1742.6,
+      "reasons": [
+        "HIGH_TOTAL_CALORIES",
+        "HIGH_TOTAL_CARBS"
+      ]
+    },
+    {
+      "id": "841806d4-4d7e-491c-bf6d-30ba324fd06d",
+      "name": "Canh rau ngót chay",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 71.2,
+      "calories_per_serving": 35.6,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "849e18db-0f5c-4651-adbc-c720b4982b65",
+      "name": "Canh bí đao nấm bào ngư",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 141.8,
+      "calories_per_serving": 35.5,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "89f5537b-35b2-42bd-8f5b-5e127832b193",
+      "name": "Sữa dừa sương sáo",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 14680.9,
+      "calories_per_serving": 7340.4,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "8a656a72-4d1b-463a-a333-853878a37417",
+      "name": "Mì Ý xuất xứ Thổ Nhĩ Kỳ xào thịt heo Đắc Lắc sốt cà Việt Nam",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 143.9,
+      "calories_per_serving": 48.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "8b611b39-6cc6-49c4-a007-ce8e57e67159",
+      "name": "Nước dâu tằm",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 6142.2,
+      "calories_per_serving": 3071.1,
+      "reasons": [
+        "HIGH_TOTAL_CARBS"
+      ]
+    },
+    {
+      "id": "8c8efa36-190e-4064-b007-9f0bed156aab",
+      "name": "Canh kiểm chay",
+      "source_platform": "dienmayxanh",
+      "default_servings": 6.0,
+      "total_calories": 17555.5,
+      "calories_per_serving": 2925.9,
+      "reasons": [
+        "HIGH_TOTAL_CALORIES",
+        "HIGH_TOTAL_FAT"
+      ]
+    },
+    {
+      "id": "8e6745ef-82b4-4452-b3f8-b284baf108a7",
+      "name": "Canh rau lang với tỏi",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 177.0,
+      "calories_per_serving": 44.2,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "9a4e23c4-1429-481f-9bc8-0657f6156fc3",
+      "name": "Giò heo đông cô",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 8055.5,
+      "calories_per_serving": 4027.8,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "9b1dff96-950c-438c-b34f-f1bd6473a1c7",
+      "name": "Nấm rơm kho nước tương",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 129.3,
+      "calories_per_serving": 32.3,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "9bf9c9b2-377f-4f50-a114-073b4eb78576",
+      "name": "Mướp luộc giòn",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 38.1,
+      "calories_per_serving": 19.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "9d89c76b-a319-434c-84cf-8dcf7320fd70",
+      "name": "Canh chua cá kho đậm vị cơm nhà",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 114.9,
+      "calories_per_serving": 28.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "9ede76aa-744b-408d-98d2-901c987a46a6",
+      "name": "Trà thạch vải hoa hồng",
+      "source_platform": "monngonmoingay",
+      "default_servings": 4.0,
+      "total_calories": 36.8,
+      "calories_per_serving": 9.2,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "a041dd1b-9b56-45b8-b2e2-62d865951563",
+      "name": "Đậu hũ kho sả ớt, riềng sả",
+      "source_platform": "dienmayxanh",
+      "default_servings": 2.0,
+      "total_calories": 9381.1,
+      "calories_per_serving": 4690.6,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "a15b38b7-9274-4436-8c6b-ef4be857b488",
+      "name": "Canh bắp cải nấu giò heo",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 113.1,
+      "calories_per_serving": 37.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "a58fffae-9863-4c97-ab32-b2ec6ad3b9fc",
+      "name": "Chè đậu xanh nha đam",
+      "source_platform": "dienmayxanh",
+      "default_servings": 1.0,
+      "total_calories": 8919.9,
+      "calories_per_serving": 8919.9,
+      "reasons": [
+        "HIGH_TOTAL_CARBS",
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "a710f88e-51b6-44ba-898a-3ab8e29e482e",
+      "name": "Vị ngon từ bữa cơm nhà",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 90.0,
+      "calories_per_serving": 30.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "ad4b7ce5-841e-4ae2-ac3a-24d9b2a87ad5",
+      "name": "Bò ngâm dấm",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 8715.3,
+      "calories_per_serving": 4357.6,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "ae005ef8-4213-4cf4-910d-ef6448cf8dc5",
+      "name": "Phở bò",
+      "source_platform": "monngonmoingay",
+      "default_servings": 4.0,
+      "total_calories": 15450.2,
+      "calories_per_serving": 3862.6,
+      "reasons": [
+        "HIGH_TOTAL_CALORIES",
+        "HIGH_TOTAL_FAT"
+      ]
+    },
+    {
+      "id": "b3d8d32c-f1aa-440f-9819-fde0b287b527",
+      "name": "Cốt-lết rim mặn",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 84.5,
+      "calories_per_serving": 42.2,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "b432625a-103a-466b-89bc-ac81b767f886",
+      "name": "Tóp mỡ chấm xoài",
+      "source_platform": "dienmayxanh",
+      "default_servings": 3.0,
+      "total_calories": 12086.4,
+      "calories_per_serving": 4028.8,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "b4875dcd-f4c9-4b04-a602-32ba4e403170",
+      "name": "Canh Bầu Nấu Thịt Lợn Muối",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 87.0,
+      "calories_per_serving": 43.5,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "b52d28ac-24cf-4e28-8a2e-72e791060c93",
+      "name": "Canh cà chua nấm kim châm",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 120.1,
+      "calories_per_serving": 30.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "b82e81ec-a791-4ac2-bd8c-0a98a2940113",
+      "name": "Kem \"Blendy\"",
+      "source_platform": "monngonmoingay",
+      "default_servings": 4.0,
+      "total_calories": 197.7,
+      "calories_per_serving": 49.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "b837113b-8940-45fc-a5e5-ae0f88b3aa9c",
+      "name": "Bàn tiệc với các món từ bò và trứng",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 148.8,
+      "calories_per_serving": 37.2,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "bba97621-0f52-49e8-bbf2-956915c71e0c",
+      "name": "Chân giò hầm nấm ăn kèm bánh mỳ",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 48.0,
+      "calories_per_serving": 24.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "c293015d-9280-4ba9-9e11-5a615d1b1e87",
+      "name": "Gà quay mật ong",
+      "source_platform": "dienmayxanh",
+      "default_servings": 3.0,
+      "total_calories": 91.3,
+      "calories_per_serving": 30.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "c5ecab0b-ebe2-4fc1-ae7f-5f7b4558b034",
+      "name": "Cá ác hầm đậu đen",
+      "source_platform": "dienmayxanh",
+      "default_servings": 3.0,
+      "total_calories": 130.4,
+      "calories_per_serving": 43.5,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "c7f4a7cc-684c-4dd0-a38a-25e738fc34f6",
+      "name": "Sấu ngâm chua ngọt",
+      "source_platform": "dienmayxanh",
+      "default_servings": 3.0,
+      "total_calories": 17857.4,
+      "calories_per_serving": 5952.5,
+      "reasons": [
+        "HIGH_TOTAL_CALORIES",
+        "HIGH_TOTAL_CARBS",
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "d1279dc0-2502-4090-9b19-b93aee7a1327",
+      "name": "Cù lao chay",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 158.5,
+      "calories_per_serving": 39.6,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "d37f0c9f-3956-44d2-bad7-e42eb893df11",
+      "name": "Súp khoai tây cà rốt",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 137.7,
+      "calories_per_serving": 34.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "d63abcd1-f19d-4679-9739-ac44bae0e78a",
+      "name": "Sake kho tiêu xanh chay",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 179.0,
+      "calories_per_serving": 44.8,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "d6b2d8c8-5396-4498-88e0-11e7e59f0621",
+      "name": "Rượu dứa",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 43815.0,
+      "calories_per_serving": 10953.8,
+      "reasons": [
+        "HIGH_TOTAL_CALORIES",
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "d833a9a3-e4a5-424b-a767-175b372660d9",
+      "name": "Canh nấm tuyết",
+      "source_platform": "dienmayxanh",
+      "default_servings": 8.0,
+      "total_calories": 396.5,
+      "calories_per_serving": 49.6,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "d87cdcab-4ec3-4b52-8004-7ddb79a8e265",
+      "name": "Canh bí đao nấu giò heo",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 81.3,
+      "calories_per_serving": 27.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "d92804a4-3be0-488c-ad9c-373f308a17b4",
+      "name": "Mắm ruốc me",
+      "source_platform": "dienmayxanh",
+      "default_servings": 1.0,
+      "total_calories": 6148.8,
+      "calories_per_serving": 6148.8,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "d9c6287c-c92a-4bec-b421-820b1dfaebd8",
+      "name": "Thịt ba chỉ kho rim",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 95.3,
+      "calories_per_serving": 47.6,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "df311e8e-8c60-48e2-aa6d-beb68a81451c",
+      "name": "Rong mứt canh tôm",
+      "source_platform": "dienmayxanh",
+      "default_servings": 3.0,
+      "total_calories": 23.1,
+      "calories_per_serving": 7.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "df4f81f0-c51d-4828-b9e6-9daa87665a2f",
+      "name": "Ba Rọi Chiên Sốt Mắm Tỏi",
+      "source_platform": "cookpad",
+      "default_servings": 4.0,
+      "total_calories": 126.7,
+      "calories_per_serving": 31.7,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "df825bc0-1324-4a52-8229-52694b20a646",
+      "name": "Canh Giò Heo Xá Bấu Tóc Tiên",
+      "source_platform": "cookpad",
+      "default_servings": 10.0,
+      "total_calories": 470.1,
+      "calories_per_serving": 47.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "e0b2a83c-0c72-4f12-89c9-ad1e4b465c7c",
+      "name": "Lươn um lá cách nước cốt dừa",
+      "source_platform": "dienmayxanh",
+      "default_servings": 1.0,
+      "total_calories": 4561.5,
+      "calories_per_serving": 4561.5,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "e4c01644-49a1-482b-bd97-5554d030dcc6",
+      "name": "Nước dùng",
+      "source_platform": "dienmayxanh",
+      "default_servings": 7.0,
+      "total_calories": 32959.5,
+      "calories_per_serving": 4708.5,
+      "reasons": [
+        "HIGH_TOTAL_CALORIES",
+        "HIGH_TOTAL_FAT",
+        "HIGH_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "e98bf617-c08b-43ce-ad35-fac145d89b65",
+      "name": "Hủ tiếu giò heo và các món tráng miệng",
+      "source_platform": "cookpad",
+      "default_servings": 5.0,
+      "total_calories": 81.9,
+      "calories_per_serving": 16.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "f04ec2dd-d7fd-4b4a-a119-18352cdd5815",
+      "name": "Cá trích kho rục chấm bánh mì",
+      "source_platform": "dienmayxanh",
+      "default_servings": 5.0,
+      "total_calories": 191.9,
+      "calories_per_serving": 38.4,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "f3bcd6f2-8bb8-4c37-8b7d-220cede60c55",
+      "name": "Thịt ba chỉ chiên nước mắm",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 57.1,
+      "calories_per_serving": 28.6,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "f5bb3a38-c1ca-4abb-9404-957093d4ddc4",
+      "name": "Khổ qua nhỏ hầm móng, giò, đuôi heo",
+      "source_platform": "cookpad",
+      "default_servings": 3.0,
+      "total_calories": 111.6,
+      "calories_per_serving": 37.2,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "f9ab7a26-6b69-40f5-a387-0ec990b80256",
+      "name": "Ba rọi rim mắm ruốc",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 89.1,
+      "calories_per_serving": 44.5,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "fc0fcc55-44c9-4eca-bacd-5ffa32e6defa",
+      "name": "Dưa góp đu đủ cà rốt",
+      "source_platform": "dienmayxanh",
+      "default_servings": 3.0,
+      "total_calories": 78.4,
+      "calories_per_serving": 26.1,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "fc8cb925-8458-413d-a982-1302dac9534b",
+      "name": "Sườn non xào sả ớt (món chay)",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 80.6,
+      "calories_per_serving": 40.3,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "fd775569-a2d4-4540-9580-e57dcc970d8b",
+      "name": "Ba chỉ quay nổ bì",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 18.7,
+      "calories_per_serving": 9.3,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "fe7fb72c-92ee-4260-a049-0f253076f3d1",
+      "name": "Cháo thịt heo cà rốt",
+      "source_platform": "cookpad",
+      "default_servings": 2.0,
+      "total_calories": 87.5,
+      "calories_per_serving": 43.8,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "ff5ae6af-cd6a-44b6-ba23-1696265d62fc",
+      "name": "Canh hến nấu rau ngót",
+      "source_platform": "dienmayxanh",
+      "default_servings": 4.0,
+      "total_calories": 183.9,
+      "calories_per_serving": 46.0,
+      "reasons": [
+        "LOW_SERVING_CALORIES"
+      ]
+    },
+    {
+      "id": "ffb31758-38b1-411d-8912-a778f134fdcc",
+      "name": "Bò Wellington Em Bé",
+      "source_platform": "cookpad",
+      "default_servings": 1.0,
+      "total_calories": 5211.5,
+      "calories_per_serving": 5211.5,
+      "reasons": [
+        "HIGH_SERVING_CALORIES"
+      ]
+    }
+  ]
+}

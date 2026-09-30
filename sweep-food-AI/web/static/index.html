@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50 text-slate-800 antialiased">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SweepFood AI — Gợi Ý Món Ăn & Smart Input (OCR, ASR)</title>
+  <meta name="description"
+    content="Hệ thống AI gợi ý ẩm thực thông minh và nhập liệu tự động bằng OCR hóa đơn và giọng nói tiếng Việt ASR.">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS v4 Browser JIT Engine -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --color-brand-primary: #0f766e;
+      --color-brand-dark: #134e4a;
+      --color-brand-accent: #f59e0b;
+    }
+  </style>
+
+  <style>
+    /* Pulse and Smooth Animations */
+    @keyframes pulse-flame {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+    .animate-flame {
+      animation: pulse-flame 2s infinite ease-in-out;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .animate-recording {
+      animation: pulse-ring 1.5s infinite;
+    }
+    .instructions-body {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.35s ease-out, opacity 0.25s ease-out;
+    }
+    .instructions-body.open {
+      max-height: 3000px;
+      opacity: 1;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body class="min-h-full flex flex-col font-sans selection:bg-teal-500 selection:text-white">
+
+  <!-- Top Glassmorphic Navigation -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/85 border-b border-slate-200/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-700 to-emerald-500 flex items-center justify-center text-xl shadow-md text-white">
+          🥗
+        </span>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-extrabold tracking-tight text-slate-900">
+              SweepFood <span class="text-teal-600">AI</span>
+            </span>
+            <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+              v2.0 Full Stack
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 font-medium -mt-0.5 hidden sm:block">Tủ lạnh có gì, nấu món nấy • Chống lãng phí thực phẩm</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Recommendation • Smart OCR • Smart ASR) -->
+      <nav class="flex items-center p-1 bg-slate-100/90 rounded-xl border border-slate-200/80 text-sm font-semibold">
+        <button type="button" id="tabNavRecommend" onclick="switchAppTab('recommend')"
+          class="tab-nav-btn active flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-slate-700 transition-all cursor-pointer bg-white text-teal-800 shadow-xs font-bold">
+          <span>🍽️</span>
+          <span>Gợi Ý Thực Đơn</span>
+        </button>
+        <button type="button" id="tabNavOcr" onclick="switchAppTab('ocr')"
+          class="tab-nav-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer font-medium">
+          <span>📸</span>
+          <span>Quét Hóa Đơn (OCR)</span>
+        </button>
+        <button type="button" id="tabNavAsr" onclick="switchAppTab('asr')"
+          class="tab-nav-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer font-medium">
+          <span>🎙️</span>
+          <span>Giọng Nói (ASR)</span>
+        </button>
+      </nav>
+
+      <!-- Engine Status & Github -->
+      <div class="hidden lg:flex items-center gap-3 text-xs font-semibold">
+        <div id="gpuStatusBadge" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/60 shadow-xs transition-all">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="gpuStatusText">XGBoost & Smart Input Online</span>
+        </div>
+        <a href="https://github.com/BaryuH/sweep-food-AI" target="_blank" rel="noopener"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>5.641 Món</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main App Shell -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- ======================================================================= -->
+    <!-- TAB 1: RECOMMENDATION ENGINE                                            -->
+    <!-- ======================================================================= -->
+    <div id="tabContentRecommend" class="space-y-6">
+      
+
+
+      <!-- Workbench Grid: Left (Fridge Inventory) & Right (AI Recommendations) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left Column: Fridge Manager (4 cols on lg) -->
+        <aside class="lg:col-span-4 bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs space-y-5 sticky top-22">
+          
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">🧊</span>
+              <div>
+                <h2 class="text-base font-bold text-slate-900">Tủ Lạnh Nhà Bạn</h2>
+                <p class="text-xs text-slate-500" id="pantryCounter">0 nguyên liệu đang có</p>
+              </div>
+            </div>
+            <button type="button" class="text-xs font-semibold text-rose-600 hover:text-rose-700 hover:underline cursor-pointer" id="btnClearPantry">
+              Xóa hết
+            </button>
+          </div>
+
+          <!-- Add Ingredient Form -->
+          <div class="bg-slate-50/80 rounded-xl p-3.5 border border-slate-200/70 space-y-3">
+            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="inputIngredient">
+              Thêm nguyên liệu vào tủ:
+            </label>
+            
+            <div class="relative">
+              <input type="text" id="inputIngredient" placeholder="Gõ tên (thịt bò, trứng, rau muống...)"
+                class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                autocomplete="off">
+              <div class="absolute z-20 left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-56 overflow-y-auto hidden" id="autoDropdown">
+              </div>
+            </div>
+
+
+            <!-- Grams & Expiry Row -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1" for="inputQty">Khối lượng (g):</label>
+                <input type="number" id="inputQty" value="200" min="10" step="50"
+                  class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-md text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1" for="selectExpiry">Hạn dùng:</label>
+                <select id="selectExpiry"
+                  class="w-full px-2 py-1.5 bg-white border border-slate-300 rounded-md text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500">
+                  <option value="24">🔥 Gấp: &lt; 24 giờ</option>
+                  <option value="48" selected>Tươi: &lt; 48 giờ</option>
+                  <option value="72">Bình thường: 3 ngày</option>
+                  <option value="168">Tủ đông: 1 tuần</option>
+                  <option value="720">🧂 Gia vị khô có sẵn</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="button" id="btnAddItem"
+              class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs">
+              + Thêm vào tủ lạnh
+            </button>
+          </div>
+
+          <!-- Active Pantry Items List -->
+          <div class="space-y-2 max-h-80 overflow-y-auto pr-1" id="pantryItemsList">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Sliders: Serving Size & Cooking Time -->
+          <div class="space-y-4 pt-3 border-t border-slate-100">
+            <div>
+              <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
+                <span>🍽️ Khẩu phần ăn:</span>
+                <span class="text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200" id="servingsDisplay">4 người</span>
+              </div>
+              <input type="range" id="sliderServings" min="1" max="8" value="4" step="1"
+                class="w-full accent-teal-600 cursor-pointer">
+              <p class="text-[11px] text-slate-400 mt-0.5">Hệ thống sẽ tự động co giãn khối lượng thịt/rau và calo theo số người.</p>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
+                <span>⏱️ Thời gian nấu tối đa:</span>
+                <span class="text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200" id="timeDisplay">45 phút</span>
+              </div>
+              <input type="range" id="sliderTime" min="15" max="120" value="45" step="5"
+                class="w-full accent-teal-600 cursor-pointer">
+            </div>
+          </div>
+
+          <!-- Big Action CTA Button -->
+          <button type="button" id="btnRecommend" onclick="handleRecommend()"
+            class="w-full py-3.5 px-4 bg-gradient-to-r from-teal-700 via-emerald-600 to-teal-700 hover:from-teal-800 hover:to-emerald-700 text-white font-extrabold text-sm uppercase tracking-wider rounded-xl shadow-md hover:shadow-lg transition-all transform active:scale-98 cursor-pointer flex items-center justify-center gap-2">
+            <span>✨</span>
+            <span>Tìm Gợi Ý Tối Ưu</span>
+          </button>
+        </aside>
+
+        <!-- Right Column: AI Recommendations (8 cols on lg) -->
+        <section class="lg:col-span-8 space-y-4">
+          
+          <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <span>🍳</span> Món Ăn Phù Hợp Nhất
+            </h2>
+            <span class="text-xs font-medium text-slate-500" id="latencyStat">Sẵn sàng phân tích</span>
+          </div>
+
+          <!-- Loading State Skeleton -->
+          <div id="loadingState" class="hidden text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-xs space-y-3">
+            <div class="w-10 h-10 border-3 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p class="text-sm font-semibold text-slate-700">XGBoost đang đánh giá và co giãn các công thức tối ưu...</p>
+          </div>
+
+          <!-- Empty State -->
+          <div id="emptyState" class="text-center py-16 bg-white rounded-2xl border border-dashed border-slate-300 shadow-xs space-y-3">
+            <div class="text-4xl">🍲</div>
+            <h3 class="text-base font-bold text-slate-800">Chưa có nguyên liệu trong tủ lạnh</h3>
+            <p class="text-xs text-slate-500 max-w-sm mx-auto">Hãy thêm nguyên liệu ở cột bên trái hoặc quét hóa đơn (OCR) / giọng nói (ASR) để AI gợi ý món ăn chuẩn vị!</p>
+          </div>
+
+          <!-- Recommendations Card Container -->
+          <div id="recommendationsList" class="space-y-4 hidden">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+
+    <!-- ======================================================================= -->
+    <!-- TAB 2: SMART INPUT — OCR RECEIPT SCANNER                                 -->
+    <!-- ======================================================================= -->
+    <div id="tabContentOcr" class="hidden space-y-6">
+      
+      <!-- OCR Banner -->
+      <section class="bg-gradient-to-r from-sky-900 via-indigo-900 to-slate-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl space-y-2">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/20 text-sky-200 border border-sky-400/30 text-xs font-semibold tracking-wide uppercase">
+            📸 Smart Input • Optical Character Recognition
+          </div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            Quét Hóa Đơn Siêu Thị Tự Động
+          </h2>
+          <p class="text-sky-100 text-sm font-normal">
+            Bóc tách tức thì tên thực phẩm, khối lượng gram/kg và hạn dùng từ hóa đơn WinMart, Bách Hóa Xanh, Co.opmart. Tự động loại bỏ xà phòng, nước rửa chén, túi nilon.
+          </p>
+        </div>
+      </section>
+
+      <!-- OCR Interactive Workspace -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left: Upload & Camera (5 cols) -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-5">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1">Tải ảnh hóa đơn hoặc tem nhãn:</h3>
+            <p class="text-xs text-slate-500">Chụp bằng điện thoại hoặc tải ảnh từ máy tính</p>
+          </div>
+
+          <!-- Live Camera / LiveKit Video Stream or Upload Dropzone -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-700">Phương thức chụp ảnh:</span>
+              <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[11px] font-semibold">
+                <button type="button" id="btnModeUpload" onclick="setOcrInputMode('upload')"
+                  class="px-2.5 py-1 rounded-md bg-white text-sky-800 shadow-xs cursor-pointer">
+                  📁 Tải Ảnh Lên
+                </button>
+                <button type="button" id="btnModeCamera" onclick="setOcrInputMode('camera')"
+                  class="px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900 cursor-pointer">
+                  📷 Mở Camera Trực Tiếp
+                </button>
+              </div>
+            </div>
+
+            <!-- Mode 1: File Dropzone -->
+            <div id="ocrUploadContainer" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-6 text-center transition-all bg-slate-50/60 cursor-pointer" onclick="document.getElementById('ocrFileInput').click()">
+              <input type="file" id="ocrFileInput" accept="image/*" class="hidden" onchange="handleOcrFileUpload(event)">
+              <span class="text-3xl block mb-2">🧾</span>
+              <span class="text-xs font-bold text-slate-800 block">Kéo thả ảnh hóa đơn hoặc tem nhãn Bách Hóa Xanh</span>
+              <span class="text-[11px] text-slate-500 block mt-1">Hỗ trợ JPG, PNG, WEBP (PaddleOCR + VietOCR)</span>
+              <button type="button" class="mt-3 px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs">
+                Chọn File Từ Máy
+              </button>
+            </div>
+
+            <!-- Mode 2: Live Camera Video Stream (WebRTC / HTML5 Live Stream) -->
+            <div id="ocrCameraContainer" class="hidden space-y-3 bg-slate-900 p-4 rounded-2xl text-center">
+              <div class="relative w-full aspect-4/3 rounded-xl overflow-hidden bg-black flex items-center justify-center border border-slate-700">
+                <video id="ocrVideoFeed" autoplay playsinline class="w-full h-full object-cover"></video>
+                <canvas id="ocrCanvasCapture" class="hidden"></canvas>
+                <div class="absolute inset-x-4 top-4 flex justify-between items-center pointer-events-none">
+                  <span class="px-2 py-0.5 rounded-full bg-emerald-500/80 text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span> Live Camera
+                  </span>
+                  <span class="text-[10px] text-white/70 bg-black/50 px-2 py-0.5 rounded">Soi hóa đơn hoặc tem nhãn</span>
+                </div>
+                <!-- Scanning Frame Overlay -->
+                <div class="absolute inset-8 border-2 border-dashed border-sky-400/70 rounded-xl pointer-events-none flex items-center justify-center">
+                  <span class="text-[11px] text-sky-200 bg-sky-950/60 px-2 py-1 rounded">Đặt tem nhãn vào khung</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-center gap-2">
+                <button type="button" onclick="captureCameraSnapshot()"
+                  class="px-4 py-2 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md cursor-pointer flex items-center gap-1.5">
+                  <span>📸</span>
+                  <span>Chụp Snapshot & Quét Ngay</span>
+                </button>
+                <button type="button" onclick="stopCameraStream()"
+                  class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-xl cursor-pointer">
+                  Tắt Cam
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+            <!-- Quick Sample Receipts -->
+            <div class="pt-2">
+              <span class="text-[11px] font-bold text-slate-600 block mb-1.5 uppercase tracking-wider">Hoặc thử nhanh hóa đơn mẫu:</span>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" onclick="loadSampleReceipt('winmart_family')"
+                  class="px-2.5 py-1 bg-slate-100 hover:bg-sky-50 hover:text-sky-800 text-slate-700 text-xs rounded-lg font-medium border border-slate-200 transition-all cursor-pointer">
+                  🛒 Hóa Đơn WinMart (4 món)
+                </button>
+                <button type="button" onclick="loadSampleReceipt('bachhoaxanh_student')"
+                  class="px-2.5 py-1 bg-slate-100 hover:bg-sky-50 hover:text-sky-800 text-slate-700 text-xs rounded-lg font-medium border border-slate-200 transition-all cursor-pointer">
+                  🛒 Hóa Đơn Bách Hóa Xanh
+                </button>
+                <button type="button" onclick="loadSampleReceipt('bhx_label_caithia')"
+                  class="px-2.5 py-1 bg-slate-100 hover:bg-sky-50 hover:text-sky-800 text-slate-700 text-xs rounded-lg font-medium border border-slate-200 transition-all cursor-pointer">
+                  🏷️ Tem Nhãn Cải Thìa
+                </button>
+                <button type="button" onclick="loadSampleReceipt('bhx_label_thitheo')"
+                  class="px-2.5 py-1 bg-slate-100 hover:bg-sky-50 hover:text-sky-800 text-slate-700 text-xs rounded-lg font-medium border border-slate-200 transition-all cursor-pointer">
+                  🏷️ Tem Nhãn Thịt Heo
+                </button>
+              </div>
+            </div>
+
+            <!-- Status Indicator -->
+            <div id="ocrStatusMsg" class="p-3 bg-sky-50 text-sky-800 rounded-xl text-xs font-medium border border-sky-200/80">
+              Sẵn sàng quét. Bạn có thể tải ảnh lên, bật camera hoặc chọn hóa đơn mẫu ở trên.
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: PROMINENT RAW TEXT VIEWER (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>📄</span> Raw Text Nhận Diện (PaddleOCR + VietOCR)
+              </h3>
+              <p id="ocrRawMeta" class="text-xs text-slate-500 font-mono mt-0.5">Chưa có text • Sẵn sàng nhận diện</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="copyOcrRawText()" id="btnCopyOcr"
+                class="px-3 py-1.5 bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-800 text-xs font-bold rounded-lg border border-slate-200 transition-all cursor-pointer flex items-center gap-1">
+                <span>📋</span>
+                <span id="btnCopyOcrText">Sao Chép Text</span>
+              </button>
+              <button type="button" onclick="clearOcrText()"
+                class="px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-xs font-semibold rounded-lg border border-slate-200 transition-all cursor-pointer">
+                🧹 Xóa
+              </button>
+            </div>
+          </div>
+
+          <!-- High-Contrast Raw Textarea -->
+          <div class="relative">
+            <textarea id="ocrRawText" rows="14" placeholder="Nội dung chữ gốc sau khi OCR quét được sẽ hiển thị chi tiết tại đây..."
+              class="w-full p-4 bg-slate-950 text-emerald-400 font-mono text-xs leading-relaxed rounded-xl border border-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-inner select-text"></textarea>
+          </div>
+
+          <!-- Secondary Optional Parse Section -->
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span id="ocrDetectedCount" class="text-slate-500 font-medium">Bóc tách tự động: 0 món thực phẩm</span>
+            <button type="button" onclick="executeOcrParse()"
+              class="text-sky-700 hover:text-sky-900 font-bold hover:underline cursor-pointer">
+              🔍 Bóc tách cấu trúc thực phẩm & gram →
+            </button>
+          </div>
+
+          <!-- Optional Parsed Food Container -->
+          <div id="ocrItemsContainer" class="hidden space-y-2 pt-2"></div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ======================================================================= -->
+    <!-- TAB 3: SMART INPUT — ASR VIETNAMESE CULINARY SPEECH                    -->
+    <!-- ======================================================================= -->
+    <div id="tabContentAsr" class="hidden space-y-6">
+      
+      <!-- ASR Banner -->
+      <section class="bg-gradient-to-r from-amber-900 via-orange-950 to-slate-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+        <div class="relative z-10 max-w-2xl space-y-2">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 border border-amber-400/30 text-xs font-semibold tracking-wide uppercase">
+            🎙️ Smart Input • Automatic Speech Recognition
+          </div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            Nhận Diện Giọng Nói Tiếng Việt
+          </h2>
+          <p class="text-amber-100 text-sm font-normal">
+            Thu âm trực tiếp qua Micro hoặc tải file âm thanh. Tự động nén FLAC 16kHz mono và hiển thị tức thì toàn bộ nội dung lời nói (Raw Transcript).
+          </p>
+        </div>
+      </section>
+
+      <!-- ASR Interactive Workspace -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- Left: Microphone, File Upload & Engine (5 cols) -->
+        <div class="lg:col-span-5 bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-5">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1">Cấu hình luồng nhận dạng & Thu âm:</h3>
+            <p class="text-xs text-slate-500">Chọn luồng ASR và nói trực tiếp hoặc tải file âm thanh lên</p>
+          </div>
+
+          <!-- Dual Stream Engine Selector -->
+          <div class="space-y-1.5 bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <span class="text-[11px] font-bold text-slate-600 block uppercase tracking-wider">Chọn engine ASR:</span>
+            <div class="grid grid-cols-2 gap-2">
+              <label id="labelEngineGroq" class="flex flex-col p-2 rounded-lg border-2 border-amber-500 bg-white cursor-pointer transition-all">
+                <div class="flex items-center gap-1.5">
+                  <input type="radio" name="asrEngine" value="groq_whisper" checked onchange="setAsrEngine('groq_whisper')" class="text-amber-600 focus:ring-amber-500">
+                  <span class="text-xs font-bold text-slate-900">⚡ Groq Turbo</span>
+                </div>
+                <span class="text-[10px] text-slate-500 mt-1">Whisper-large-v3-turbo (<500ms)</span>
+              </label>
+
+              <label id="labelEngineGipformer" class="flex flex-col p-2 rounded-lg border-2 border-slate-200 bg-white/60 cursor-pointer transition-all">
+                <div class="flex items-center gap-1.5">
+                  <input type="radio" name="asrEngine" value="gipformer" onchange="setAsrEngine('gipformer')" class="text-amber-600 focus:ring-amber-500">
+                  <span class="text-xs font-bold text-slate-900">🚀 Gipformer</span>
+                </div>
+                <span class="text-[10px] text-slate-500 mt-1">16kHz Mono FLAC (ffmpeg)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Big Microphone Record Button & File Audio Upload -->
+          <div class="space-y-3">
+            <div class="flex flex-col items-center justify-center py-6 bg-gradient-to-b from-slate-50 to-amber-50/30 rounded-2xl border border-slate-200">
+              <button type="button" id="btnMicRecord" onclick="toggleAudioRecording()"
+                class="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white flex items-center justify-center text-4xl shadow-lg transition-all cursor-pointer">
+                🎙️
+              </button>
+              <span id="micStatusText" class="mt-3 text-xs font-bold text-slate-800">Bấm micro để bắt đầu nói</span>
+              <span id="micSubText" class="text-[11px] text-slate-500 mt-0.5">Tiếng Việt • Thu âm trực tiếp qua trình duyệt</span>
+            </div>
+
+            <!-- Upload Audio File Button -->
+            <div class="text-center">
+              <input type="file" id="asrAudioFileInput" accept="audio/*" class="hidden" onchange="handleAsrAudioUpload(event)">
+              <button type="button" onclick="document.getElementById('asrAudioFileInput').click()"
+                class="w-full py-2.5 px-3 border border-slate-200 hover:border-amber-400 bg-white hover:bg-amber-50/40 text-slate-700 rounded-xl text-xs font-semibold shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>🎵</span>
+                <span>Hoặc tải file ghi âm (.flac, .wav, .mp3, .m4a, .webm)</span>
+              </button>
+            </div>
+
+            <!-- Sample Voice Phrases -->
+            <div class="pt-2">
+              <span class="text-[11px] font-bold text-slate-600 block mb-1.5 uppercase tracking-wider">Thử nhanh câu khẩu ngữ mẫu:</span>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" onclick="loadSampleVoice('voice_beef_garlic')"
+                  class="px-2 py-1 bg-slate-100 hover:bg-amber-50 hover:text-amber-900 text-slate-700 text-xs rounded-lg border border-slate-200 cursor-pointer">
+                  🗣️ "Thịt bò ba trăm gram..."
+                </button>
+                <button type="button" onclick="loadSampleVoice('voice_pork_tofu')"
+                  class="px-2 py-1 bg-slate-100 hover:bg-amber-50 hover:text-amber-900 text-slate-700 text-xs rounded-lg border border-slate-200 cursor-pointer">
+                  🗣️ "Nửa cân thịt ba rọi..."
+                </button>
+                <button type="button" onclick="loadSampleVoice('voice_fish_morningglory')"
+                  class="px-2 py-1 bg-slate-100 hover:bg-amber-50 hover:text-amber-900 text-slate-700 text-xs rounded-lg border border-slate-200 cursor-pointer">
+                  🗣️ "Cá điêu hồng một con..."
+                </button>
+              </div>
+            </div>
+
+            <!-- Status Msg -->
+            <div id="asrStatusMsg" class="p-3 bg-amber-50 text-amber-900 rounded-xl text-xs font-medium border border-amber-200/80">
+              Sẵn sàng thu âm. Hãy bấm nút micro màu cam ở trên để nói.
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: PROMINENT RAW TRANSCRIPT VIEWER (7 cols) -->
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>🎙️</span> Transcript Lời Nói & Chuẩn Hóa
+                <span id="asrCorrectorBadge" class="hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  ✨ ProtonX CT2
+                </span>
+              </h3>
+              <p id="asrRawMeta" class="text-xs text-slate-500 font-mono mt-0.5">Chưa có dữ liệu • Sẵn sàng nhận diện</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div id="asrViewModeGroup" class="hidden inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-xs">
+                <button type="button" id="btnAsrShowCorrected" onclick="toggleAsrTextView('corrected')"
+                  class="px-2 py-1 rounded-md font-semibold bg-white text-slate-800 shadow-2xs cursor-pointer">
+                  ✨ Đã sửa lỗi
+                </button>
+                <button type="button" id="btnAsrShowRaw" onclick="toggleAsrTextView('raw')"
+                  class="px-2 py-1 rounded-md font-medium text-slate-500 hover:text-slate-800 cursor-pointer">
+                  Thô (Raw)
+                </button>
+              </div>
+              <span id="asrEngineBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                ⚡ Groq Whisper Turbo
+              </span>
+              <button type="button" onclick="copyAsrTranscript()" id="btnCopyAsr"
+                class="px-3 py-1.5 bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-900 text-xs font-bold rounded-lg border border-slate-200 transition-all cursor-pointer flex items-center gap-1">
+                <span>📋</span>
+                <span id="btnCopyAsrText">Sao Chép</span>
+              </button>
+              <button type="button" onclick="clearAsrText()"
+                class="px-2.5 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-xs font-semibold rounded-lg border border-slate-200 transition-all cursor-pointer">
+                🧹 Xóa
+              </button>
+            </div>
+          </div>
+
+          <!-- Large High-Contrast Transcript Box -->
+          <div class="relative">
+            <textarea id="asrTranscript" rows="10" placeholder="Nội dung lời nói sau khi nhận diện sẽ hiển thị trực tiếp tại đây..."
+              class="w-full p-4 bg-slate-950 text-amber-300 font-medium text-base leading-relaxed rounded-xl border border-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-inner select-text"></textarea>
+          </div>
+
+          <!-- Secondary Optional Parse Trigger -->
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span id="asrDetectedCount" class="text-slate-500 font-medium">Bóc tách tự động: 0 món thực phẩm</span>
+            <button type="button" onclick="executeAsrParse()"
+              class="text-amber-700 hover:text-amber-900 font-bold hover:underline cursor-pointer">
+              🧠 Bóc tách thực thể ẩm thực & gram →
+            </button>
+          </div>
+
+          <!-- Optional Parsed Speech Container -->
+          <div id="asrItemsContainer" class="hidden space-y-2 pt-2"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 space-y-1">
+      <p class="font-semibold text-slate-700">SweepFood AI — Công Trình Nghiên Cứu & Triển Khai Hệ Thống Ẩm Thực Thông Minh Việt Nam</p>
+      <p>Module Smart Input (VietOCR & Culinary Speech NLP) • XGBoost Learning-to-Rank Engine • Tailwind CSS v4</p>
+    </div>
+  </footer>
+
+  <!-- App Main Scripts -->
+  <script src="/static/main.js?v=3.5"></script>
+</body>
+
+</html>

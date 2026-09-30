@@ -1,0 +1,31 @@
+{
+  "overrides_applied": 24,
+  "ingredient_rows_updated": 2781,
+  "recipes_recomputed": 2124,
+  "citations": {
+    "13005": "USDA FoodData Central (FDC ID: 173468) - Table Salt (NaCl). Chemically devoid of macronutrients.",
+    "13029": "Vietnam Food Composition Table (FCT 2007, Code 13029) & USDA FDC (FDC ID: 173470) - Monosodium glutamate. Free glutamate amino acid salt (fat=0.0g, carbs=0.0g, protein=0.0g, energy=282 kcal).",
+    "13030": "USDA FoodData Central / Standard Spice Composite - Chinese Five Spice Powder (Energy: 345 kcal, Protein: 9.5g, Fat: 8.7g, Carbs: 58.0g). Macro sum: 4*9.5 + 9*8.7 + 4*58.0 = 348.3 kcal.",
+    "13031": "Traditional Vietnamese culinary formulation & FCT sugar equivalent - Nước màu / Nước hàng (approx 65% sugar solids caramel syrup: 260 kcal, 0.0g protein, 0.0g fat, 65.0g carbs).",
+    "13034": "USDA FoodData Central (FDC ID: 173469) - Distilled / Cider Vinegar (0.0g protein, 0.0g fat, 0.93g carbs, 21 kcal from acetic acid).",
+    "13049": "Standard Vietnamese food composition estimate - Cơm mẻ (fermented cooked rice mash ~75% moisture: 65 kcal, 1.8g protein, 0.2g fat, 14.0g carbs). Macro sum: 4*1.8 + 9*0.2 + 4*14.0 = 65 kcal.",
+    "14001": "USDA FoodData Central (FDC ID: 168746) & Vietnam FCT (2007, Code 14001) - Regular Beer 4.5% ABV (fat=0.0g).",
+    "14002": "USDA FoodData Central (FDC ID: 174818) & Vietnam FCT (2007, Code 14002) - Distilled spirits (Cognac 32g alcohol: 0.0g protein, 0.0g fat, 0.0g carbs, 224 kcal from ethanol).",
+    "14003": "USDA FDC / Vietnam FCT (2007, Code 14003) - Mixed cocktail beverage (13g alcohol, 15.74g carbs: 0.0g protein, 0.0g fat, 155 kcal).",
+    "14010": "Vietnam FCT (2007, Code 14010) - Citrus Liqueur (24.2g alcohol, 17.9g carbs: 0.0g protein, 0.0g fat, 241 kcal).",
+    "14011": "Vietnam FCT (2007, Code 14011) - Rượu nếp (fat=0.0g, 4.0g protein, 37.9g carbs, 202 kcal).",
+    "14012": "USDA FoodData Central (FDC ID: 174818) & Vietnam FCT (2007, Code 14012) - Distilled rice liquor (~39% ABV: 0.0g protein, 0.0g fat, 0.0g carbs; 273 kcal from ethanol 39*7).",
+    "14013": "USDA FoodData Central (FDC ID: 173190) & Vietnam FCT (2007, Code 14013) - Red Wine (fat=0.0g).",
+    "14014": "USDA FoodData Central (FDC ID: 173196) & Vietnam FCT (2007, Code 14014) - White Wine (fat=0.0g).",
+    "14015": "USDA FoodData Central (FDC ID: 174836) & Vietnam FCT (2007, Code 14015) - Sweet White Wine (fat=0.0g).",
+    "14016": "USDA FoodData Central (FDC ID: 174818) & Vietnam FCT (2007, Code 14016) - Whisky (35.2g alcohol: 0.0g protein, 0.0g fat, 0.0g carbs; 246 kcal).",
+    "14068": "USDA FoodData Central & FCT commercial RTD beverage composite - Vitamin C soft drink (0.0g protein, 0.0g fat, 10.0g carbs, 40 kcal).",
+    "3017011": "USDA FoodData Central (FDC ID: 172430) - Peanuts, oil-roasted (protein=24.0g, fat=44.5g, carbs=18.0g, energy=570 kcal). Macro sum: 4*24 + 9*44.5 + 4*18 = 568.5 kcal.",
+    "7096": "Vietnam FCT / Meat Composition Reference - Vú bò / nầm bò tươi (14.0g protein, 11.5g fat, 0.0g carbs, 160 kcal). Macro sum: 4*14 + 9*11.5 = 159.5 kcal.",
+    "7120": "USDA FoodData Central (FDC ID: 167858) & FCT Meat Reference - Pork neck/soup bones edible portion (16.0g protein, 13.0g fat, 0.0g carbs, 180 kcal). Macro sum: 4*16 + 9*13 = 181 kcal.",
+    "7132": "Vietnam National Institute of Nutrition & USDA FDC (FDC ID: 171571) - Pork bone broth (1.5g protein, 1.0g fat, 0.0g carbs, 15 kcal). Macro sum: 4*1.5 + 9*1.0 = 15 kcal.",
+    "7140": "Vietnam FCT & USDA FDC - Clear home-prepared soup broth (0.8g protein, 0.5g fat, 0.5g carbs, 10 kcal). Macro sum: 4*0.8 + 9*0.5 + 4*0.5 = 9.7 kcal.",
+    "7141": "Vietnam National Institute of Nutrition & USDA FDC (FDC ID: 171573) - Clear culinary broth / stock (1.2g protein, 0.8g fat, 0.0g carbs, 12 kcal). Macro sum: 4*1.2 + 9*0.8 = 12 kcal.",
+    "8092": "USDA FoodData Central (FDC ID: 175147) & Vietnam FCT - Raw Basa fish fillet (Pangasius bocourti: 0.0g carbs, 15.2g protein, 5.94g fat, 119 kcal)."
+  }
+}

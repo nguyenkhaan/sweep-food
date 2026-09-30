@@ -1,0 +1,717 @@
+{
+  "scope": "Conservative first guard, not complete compound detection. Eligibility = no master link + cached output + active mapper candidate; not a replay of STANDARDIZED_CURE precedence or data remediation.",
+  "structural_identity_comparison": {
+    "normalization": "NFC, casefold, NFC, collapsed/trimmed whitespace; strip only terminal spaces and .,!?:;…; preserve internal punctuation.",
+    "reviewed_equivalences": [
+      {
+        "fragments": [
+          "hành lá",
+          "hành hoa"
+        ],
+        "code": "4038",
+        "name": "Hành lá (hành hoa)"
+      },
+      {
+        "fragments": [
+          "nấm bào ngư",
+          "nấm sò"
+        ],
+        "code": "20004",
+        "name": "Nấm bào ngư (nấm sò)"
+      }
+    ],
+    "rule": "Every fragment must have one identical normalized literal identity or one explicitly reviewed identity. No mapper, alias or fuzzy inference. Bypass only the structural rejection; downstream guards still apply."
+  },
+  "same_identity_probes": [
+    {
+      "output": "hành lá/hành hoa",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "hành lá + hành hoa",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "hành lá - hành hoa",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "hành lá; hành hoa",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "hành lá và hành hoa",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "hành lá hoặc hành hoa",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "hành lá hay hành hoa",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "nấm bào ngư/nấm sò",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "hành lá/hành lá.",
+      "eligible_before_hardening": false,
+      "eligible_after_hardening": true
+    },
+    {
+      "output": "hành lá/hành lá",
+      "eligible_before_hardening": true,
+      "eligible_after_hardening": true
+    }
+  ],
+  "input_sha256": {
+    "data\\interim\\qwen_extracted_map.json": "374f74ddf117d1331e6e8bd548ffc0a0a75de6eb667d42cd831666e76e29935d",
+    "data\\processed\\viendinhduong\\master_ingredients_nutrition.csv": "29c9b0a99d993703863f00a049ce7b75e4951d5b6398d923434fc64a278cdcb9",
+    "data\\processed\\recipes\\recipe_ingredients.csv": "1f47d7a7b05ad0c2a07245a2cb7c33a5b1d088c901b56d29a121733bb12f28e4"
+  },
+  "processed_eligible_before": 15,
+  "processed_eligible_after": 8,
+  "newly_rejected_rows": [
+    {
+      "raw_text": "Ngò gai cắt sợi nhuyễn 3 muỗng canh",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai",
+      "row_id": "78ac1004-a478-4cab-ac25-2930a783d894",
+      "recipe_id": "f547dad2-217f-4a2b-98c5-2cb0a3846eb4"
+    },
+    {
+      "raw_text": "Gốc ngò gai 1 ít",
+      "qwen_cleaned_name": "gốc ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai",
+      "row_id": "e673049a-9285-4239-9f3a-2aadb9d5cc51",
+      "recipe_id": "24df62f9-c2fd-483f-8136-d3f8c282c928"
+    },
+    {
+      "raw_text": "Rau ngò gai 1 cây",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai",
+      "row_id": "fa04d6db-e65c-4a69-b410-39cf87c8a121",
+      "recipe_id": "66f4ae7b-c03b-4077-890e-11408306a664"
+    },
+    {
+      "raw_text": "Rau ngò gai 1 ít",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai",
+      "row_id": "91d82ab6-4f2d-49ed-b95c-c17bf21d8fee",
+      "recipe_id": "66f4ae7b-c03b-4077-890e-11408306a664"
+    },
+    {
+      "raw_text": "Rau ngò gai 4 nhánh",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai",
+      "row_id": "f978f335-89c3-478f-9fab-8f91c737510a",
+      "recipe_id": "5e6933d8-45ea-4c3f-9e57-ecbcfd3aa9b6"
+    },
+    {
+      "raw_text": "Rau ngò gai 3 nhánh",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai",
+      "row_id": "f64c3f3f-ea90-46d4-be21-93097ec07ffc",
+      "recipe_id": "5bf4ebf6-b804-4abe-98c9-d1238e088aba"
+    },
+    {
+      "raw_text": "Rau ngò gai 1 nhánh",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai",
+      "row_id": "eebd2e93-b3a9-4e2e-a173-4d2a9c2f7626",
+      "recipe_id": "1cd2b0f9-5453-4e80-b301-6b37b6101c27"
+    }
+  ],
+  "batch1_eligible_before": 8,
+  "batch1_false_positives": 0,
+  "cache_candidates_before": 362,
+  "cache_candidates_after": 291,
+  "cache_rejections_by_reason": {
+    "qwen_explicit_ingredient_list": 18,
+    "generic_ngo_conflicts_with_raw_ngo_gai": 38,
+    "qwen_collapsed_reviewed_raw_list": 15
+  },
+  "cache_rejections": [
+    {
+      "raw_text": "1 chút thì là + hành lá/dill + green onion",
+      "qwen_cleaned_name": "thì là + hành lá/dill + green onion",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "1 củ  hành tím hoặc đầu hành lá",
+      "qwen_cleaned_name": "hành tím hoặc đầu hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "1 dĩa rau đi kèm: ngò gai",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "1 muỗng canh rau ngò/ngò gai xắt nhỏ",
+      "qwen_cleaned_name": "rau ngò",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "1 ít rau húng lủi hoặc ngò gai",
+      "qwen_cleaned_name": "rau húng lủi hoặc ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "1/2 muỗng cà phê dầu điều/ bột điều",
+      "qwen_cleaned_name": "dầu điều/ bột điều",
+      "winning_code": "13056",
+      "winning_name": "Bột hạt điều (dầu điều)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "10 g - 20 g  Hành lá/hành tím/hành tây (tuỳ chọn)",
+      "qwen_cleaned_name": "hành lá/hành tím/hành tây",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "3 cọng rau ngò gai",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Bắp cải tím/ ngò rí 1 ít",
+      "qwen_cleaned_name": "bắp cải tím/ ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Bột và hạt rau mùi Corriander 1 muỗng cà phê",
+      "qwen_cleaned_name": "bột và hạt rau mùi corriander",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Củ cải trắng và cà rốt 1 củ",
+      "qwen_cleaned_name": "củ cải trắng và cà rốt",
+      "winning_code": "4007",
+      "winning_name": "Cà rốt",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "G hành  và ngò rí 50 lá",
+      "qwen_cleaned_name": "g hành và ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Gốc ngò gai 1 ít",
+      "qwen_cleaned_name": "gốc ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Hành lá Ngò gai và gia vị",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Hành lá và ngò rí 1 ít",
+      "qwen_cleaned_name": "ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Hành lá và ngò rí 10 gr",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Hành lá và ngò rí 20 gr",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Hành lá và ngò rí 50 gr",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Hành lá, hành tím",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Hành lá, hành tím bào",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Hành lá, hành tím băm",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Hành lá/Ngò gai 3 nhánh",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Hành tỏi băm, ngò gai",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Lá lốt/ rau răm/ hành lá/ hành khô 1 ít",
+      "qwen_cleaned_name": "lá lốt/ rau răm/ hành lá/ hành khô",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Ngò gai , ớt hiểm",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai cắt chỉ 5 lá",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai cắt sợi nhuyễn 3 muỗng canh",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai hoặc hành lá 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai, hành lá: 5 lá",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai, ngò om",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai, rau om",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai/ hành lá 120 gr",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai/ ngò om 5 nhánh",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai/ ngò ôm 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò gai/rau quế 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò om/ ngò gai 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò om/ ngò gai/ ngò rí 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò rí, cọng ngò gai",
+      "qwen_cleaned_name": "ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Ngò rí, hành lá",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Ngò rí, ớt sừng",
+      "qwen_cleaned_name": "ớt sừng",
+      "winning_code": "13039",
+      "winning_name": "Ớt tươi",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Ngò rí, ớt sừng cắt sợi",
+      "qwen_cleaned_name": "ớt sừng cắt sợi",
+      "winning_code": "13039",
+      "winning_name": "Ớt tươi",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Ngò ôm/ ngò gai 1 ít",
+      "qwen_cleaned_name": "ngò ôm/ ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Ngò/Hành lá 1 ít",
+      "qwen_cleaned_name": "ngò/hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Quế/ Ngò gai 50 gr",
+      "qwen_cleaned_name": "quế/ ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "RAU NÊM: Hành lá, ngò gai",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "RAU NÊM: Ngò gai/ lá quế",
+      "qwen_cleaned_name": "ngò gai/ lá quế",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "RAU NÊM: Rau ngò gai, tỏi phi",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "RAU NÊM: hành lá, ngò gai",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "RAU NÊM: lá quế, ngò gai",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau ngò gai 1 cây",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau ngò gai 1 nhánh",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau ngò gai 1 ít",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau ngò gai 3 nhánh",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau ngò gai 4 nhánh",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau ngò gai ngò om 1 ít",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau ngò gai/ rau om 1 ít",
+      "qwen_cleaned_name": "rau ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau nêm:  hành lá, ngò gai",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Rau nêm: Ngò gai, rau om",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau om/ ngò gai 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau om/ rau ngò gai 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau om/ngò gai 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau quế/ ngò gai 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Rau thơm/ ngò gai 1 ít",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Thì là hoặc ngò rí",
+      "qwen_cleaned_name": "thì là hoặc ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Tiêu hạt/ớt xanh/ ớt đỏ 1 ít",
+      "qwen_cleaned_name": "tiêu hạt/ớt xanh/ ớt đỏ",
+      "winning_code": "13039",
+      "winning_name": "Ớt tươi",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Trang trí: Ngò gai, ớt cắt lát",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    },
+    {
+      "raw_text": "Tỏi băm, ngò rí: 1 muỗng canh",
+      "qwen_cleaned_name": "ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "Tỏi/ ớt/ hành lá 1 ít",
+      "qwen_cleaned_name": "tỏi/ớt/ hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "Xà lách/ dưa leo/ ớt sừng/ ngò rí 1 ít",
+      "qwen_cleaned_name": "xà lách/ dưa leo/ ớt sừng/ ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "qwen_explicit_ingredient_list"
+    },
+    {
+      "raw_text": "hành lá , hành tím",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": "qwen_collapsed_reviewed_raw_list"
+    },
+    {
+      "raw_text": "rau om ngò gai",
+      "qwen_cleaned_name": "ngò gai",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": "generic_ngo_conflicts_with_raw_ngo_gai"
+    }
+  ],
+  "known_compound_misses": [
+    {
+      "raw_text": "Dầu mè, ngò rí",
+      "qwen_cleaned_name": "dầu mè ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": null,
+      "unlinked_rows": 0
+    },
+    {
+      "raw_text": "Dầu ăn, dầu điều",
+      "qwen_cleaned_name": "dầu ăn dầu điều",
+      "winning_code": "13056",
+      "winning_name": "Bột hạt điều (dầu điều)",
+      "reason": null,
+      "unlinked_rows": 0
+    },
+    {
+      "raw_text": "Hành lá và tỏi băm 1 ít",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": null,
+      "unlinked_rows": 0
+    },
+    {
+      "raw_text": "Hành lá, ngò gai",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": null,
+      "unlinked_rows": 0
+    },
+    {
+      "raw_text": "Hành lá, ớt sừng",
+      "qwen_cleaned_name": "hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": null,
+      "unlinked_rows": 0
+    },
+    {
+      "raw_text": "Tỏi băm nhỏ, hành lá thái nhỏ",
+      "qwen_cleaned_name": "tỏi hành lá",
+      "winning_code": "4038",
+      "winning_name": "Hành lá (hành hoa)",
+      "reason": null,
+      "unlinked_rows": 0
+    },
+    {
+      "raw_text": "Tỏi băm, ngò rí",
+      "qwen_cleaned_name": "tỏi ngò rí",
+      "winning_code": "4073",
+      "winning_name": "Rau mùi (ngò rí)",
+      "reason": null,
+      "unlinked_rows": 0
+    }
+  ],
+  "known_miss_scope": "Enumerated regression examples only, not exhaustive. Separator-free outputs and unreviewed raw-list shapes remain unsupported.",
+  "all_data_hashes_unchanged": true
+}

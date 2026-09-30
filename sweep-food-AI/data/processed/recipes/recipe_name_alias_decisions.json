@@ -1,0 +1,262 @@
+{
+  "policy_version": 1,
+  "review_date": "2026-09-10",
+  "relationships": [
+    {
+      "recipe_id_a": "05f225fd-17bd-47d4-9352-1ba052a4c57b",
+      "recipe_id_b": "aa9a4752-ccb4-482c-9d45-c5edd8691b4d",
+      "normalized_name_a": "bún bò",
+      "normalized_name_b": "bún bò (phiên bản nhà làm)",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "09eb35ab-bf18-4158-bdcb-61629ad5acb2",
+      "recipe_id_b": "7c716f33-c267-4721-9042-676b0695c314",
+      "normalized_name_a": "canh sườn non nấu khoai mỡ",
+      "normalized_name_b": "canh khoai mỡ nấu sườn non",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "0b96afae-1449-4b59-9c36-f5c05a44f684",
+      "recipe_id_b": "f605dcc1-ff3b-4cf5-97e2-82d21fe4849e",
+      "normalized_name_a": "salad bò-đậu rồng",
+      "normalized_name_b": "salad bò đậu rồng",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "0dea63a8-4716-467c-9828-b3e0b89cb203",
+      "recipe_id_b": "c7d87b27-5a4e-4330-80ba-b1e212b3b4f2",
+      "normalized_name_a": "đậu cove xào thịt bò",
+      "normalized_name_b": "thịt bò xào đậu cove",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "18aee701-a1b2-44bf-ad18-922df20768c8",
+      "recipe_id_b": "952fd298-d64f-4bc3-9c0e-dc5e05fed692",
+      "normalized_name_a": "thịt ba chỉ kho măng",
+      "normalized_name_b": "măng kho thịt ba chỉ",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "274d7a0b-c529-4fd9-b08a-06dc220e75a2",
+      "recipe_id_b": "7d27d3b9-2a48-488f-867c-5ddfa7a69099",
+      "normalized_name_a": "cá kho riềng (kiểu miền bắc)",
+      "normalized_name_b": "cá kho riềng",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "3004479f-afd7-4964-9648-2babd45dc7f6",
+      "recipe_id_b": "7aa4feae-2eff-4141-b0be-97b5664b4f42",
+      "normalized_name_a": "mì trộn gyoza",
+      "normalized_name_b": "gyoza mì trộn",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "30f3b3ef-c37a-46dd-a80b-e42d2125e4f4",
+      "recipe_id_b": "b91ed423-2ed7-4c65-b976-cf1ffa4c88fd",
+      "normalized_name_a": "bánh ram ít huế",
+      "normalized_name_b": "bánh ít ram huế",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "329ea13f-bd94-4769-937f-357358a9f211",
+      "recipe_id_b": "faf9d25c-c546-4f74-a856-1cdb38bce1ab",
+      "normalized_name_a": "cần tây xào thịt bò",
+      "normalized_name_b": "thịt bò xào cần tây",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "3aa44973-0694-49eb-9884-aafcd1277ed2",
+      "recipe_id_b": "596a27d9-f9da-432d-8df6-585863060022",
+      "normalized_name_a": "măng kho ba rọi",
+      "normalized_name_b": "ba rọi kho măng",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "3aaae5d6-b601-4bce-be3c-752762f89640",
+      "recipe_id_b": "3e29ddff-c4e4-41c9-b585-b7c181eeb92a",
+      "normalized_name_a": "củ sen hầm chân giò",
+      "normalized_name_b": "chân giò hầm củ sen",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "3f8ae57b-68e4-4c14-975e-91e28a6302e9",
+      "recipe_id_b": "ccac0135-8bd4-4b49-b5f2-22d8e1228a9a",
+      "normalized_name_a": "canh cải cúc nấu thịt băm",
+      "normalized_name_b": "canh cải cúc (tần ô) nấu thịt băm",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "47d8d0d4-e9ec-4472-93fa-bf86fbe12861",
+      "recipe_id_b": "77260cee-2908-4850-960e-b684624f9d47",
+      "normalized_name_a": "canh cải chua sườn non",
+      "normalized_name_b": "canh sườn non cải chua",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "49f9b24f-b8a4-4dd8-bd93-30a00498cfd9",
+      "recipe_id_b": "5feb2476-a602-4e85-9649-40948d31ab0e",
+      "normalized_name_a": "canh đu đủ chân giò",
+      "normalized_name_b": "canh chân giò đu đủ",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "4f862511-a043-4ff4-a863-716fc0131d11",
+      "recipe_id_b": "bdc81835-75a2-48dd-89a5-c7c6b97b3be3",
+      "normalized_name_a": "măng xào thịt bò",
+      "normalized_name_b": "thịt bò xào măng",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "5bc89779-35b4-491e-8247-c72a186d4ff7",
+      "recipe_id_b": "b9b0d0ec-adc6-4cfe-9c54-c5fb069de659",
+      "normalized_name_a": "chân giò hầm hàn quốc",
+      "normalized_name_b": "chân giò hầm hàn quốc (jokbal)",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "5ead8518-063f-4eae-8ec7-a4d6308e60f1",
+      "recipe_id_b": "dee84f1f-5506-4a41-83d9-a706bf16eac1",
+      "normalized_name_a": "giò heo hầm măng",
+      "normalized_name_b": "măng hầm giò heo",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "676e4a43-1ea7-450c-80f9-fa7262ba68e9",
+      "recipe_id_b": "7d31961f-22a2-47cd-ae6e-396b2d2ce360",
+      "normalized_name_a": "canh khoai sọ rau muống",
+      "normalized_name_b": "canh rau muống khoai sọ",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "68f27d2e-eeec-4dc4-8a04-dfd278f6602c",
+      "recipe_id_b": "87cc45cc-2928-4396-b913-19e436320f3c",
+      "normalized_name_a": "kho quẹt tôm khô",
+      "normalized_name_b": "tôm khô kho quẹt",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "7a29697d-bab2-47b1-a4eb-6a84834d4c90",
+      "recipe_id_b": "b5b6a480-6f64-4ae3-b994-41b0568aa8af",
+      "normalized_name_a": "tôm rang thịt ba chỉ",
+      "normalized_name_b": "thịt ba chỉ rang tôm",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "85239c1e-d1ce-40ba-8e9c-8d6fac9f1d39",
+      "recipe_id_b": "86f66ac8-faaa-4f77-bce0-d293cc72f7e2",
+      "normalized_name_a": "canh khoai tây xương hầm",
+      "normalized_name_b": "canh xương hầm khoai tây",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "90b1faec-e2cf-4e3d-a9e6-087a5d797d2b",
+      "recipe_id_b": "af0d4d96-5361-411a-a974-b0241c119189",
+      "normalized_name_a": "thịt heo rừng xào cải chua",
+      "normalized_name_b": "cải chua xào thịt heo rừng",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "9284fb5b-d3fa-42bc-91f9-817fcd4cfb3f",
+      "recipe_id_b": "cf066500-9078-4666-9689-815d968ffb46",
+      "normalized_name_a": "mì trứng tôm thịt heo",
+      "normalized_name_b": "mì tôm trứng thịt heo",
+      "decision": "rejected",
+      "reason": "Word order changes the likely noodle type; lexical false positive."
+    },
+    {
+      "recipe_id_a": "9895807c-57d4-454c-a4cb-8f72ad5c23f2",
+      "recipe_id_b": "c7817bd6-6507-465d-bdf4-6c02d3df8c47",
+      "normalized_name_a": "cháo khoai lang tím thịt heo",
+      "normalized_name_b": "cháo thịt heo khoai lang tím",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "9faf9fda-336b-4ddf-b781-b40a161fcc77",
+      "recipe_id_b": "e99d3120-4201-4da9-b7d2-4e5a6d1db2f4",
+      "normalized_name_a": "bò xào măng tây",
+      "normalized_name_b": "măng tây xào bò",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "a325559b-105b-4ad2-bd73-a1ef42ee6bee",
+      "recipe_id_b": "dc8517c7-668b-4f53-9900-af733ccf069c",
+      "normalized_name_a": "bò xào đậu rồng",
+      "normalized_name_b": "đậu rồng xào bò",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "a6fd4bf3-da56-4d9b-afa2-78a10e4e9d15",
+      "recipe_id_b": "fd9a18e2-06c4-49fa-888f-698f488e3270",
+      "normalized_name_a": "thịt cốt lết ram",
+      "normalized_name_b": "thịt cốt lết (cutlet) ram",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "a814e702-3746-4192-a50e-091415aaa481",
+      "recipe_id_b": "cc10614c-9d4c-4cea-9e55-9bf8e364c505",
+      "normalized_name_a": "canh cà chua thịt bò",
+      "normalized_name_b": "canh thịt bò cà chua",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "afb417dd-112b-4000-bc86-a6279ea1a02a",
+      "recipe_id_b": "f12fb7c8-88c1-4b7e-a5f4-cb781f8f3c1b",
+      "normalized_name_a": "thịt bò xào cải thìa",
+      "normalized_name_b": "cải thìa xào thịt bò",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "b36c1f0d-c86a-45b0-91dc-d2083a064662",
+      "recipe_id_b": "b674691a-974f-47cf-abb8-0d6fa96ba5e4",
+      "normalized_name_a": "canh đu đủ hầm giò heo",
+      "normalized_name_b": "canh giò heo hầm đu đủ",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "c87eade8-b9bd-419b-9d31-f407c34d10b7",
+      "recipe_id_b": "f351e7b3-cc67-45ae-b4f3-968ad6541be1",
+      "normalized_name_a": "thịt heo xào dưa cải chua",
+      "normalized_name_b": "dưa cải chua xào thịt heo",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    },
+    {
+      "recipe_id_a": "dd1a4165-83eb-4c5c-a84a-b4d783965fb0",
+      "recipe_id_b": "e927d85e-ec65-4a2e-a8de-61b759de59e1",
+      "normalized_name_a": "thịt heo kho tiêu, nhanh gọn",
+      "normalized_name_b": "thịt heo kho tiêu",
+      "decision": "approved",
+      "reason": "Business review: equivalent dish names under current canonical-dish granularity."
+    }
+  ]
+}

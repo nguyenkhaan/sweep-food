@@ -1,0 +1,348 @@
+{
+  "model_used": "gpt-oss:120b",
+  "total_recipes": 5478,
+  "total_distinct_clusters": 5458,
+  "multi_recipe_clusters_count": 20,
+  "multi_recipe_clusters": [
+    {
+      "cluster_id": "cluster_01267",
+      "representative_name": "Ba rọi lắc sả tắc",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "05bd8f34-2aab-4924-8d00-7e58d8ae549c",
+          "name": "Ba rọi lắc sả tắc",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "393c6119-531c-49f1-ac08-3e28b519b6d5",
+          "name": "Ba chỉ lắc sả tắc",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_01334",
+      "representative_name": "Tôm rim thịt ba rọi",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "14d0fa62-61ee-4c56-8d7a-23a5d41b33e9",
+          "name": "Tôm rim thịt ba rọi",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "3c8d57f1-40cf-42c9-b7c3-936ce4d79d49",
+          "name": "Tôm rim thịt ba chỉ",
+          "source_platform": "dienmayxanh"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_01643",
+      "representative_name": "Thịt Ba Rọi Xào Mắm Ruốc",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "1d5f4225-1ef6-499d-bde1-f4e27da46eae",
+          "name": "Thịt Ba Rọi Xào Mắm Ruốc",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "4ce5262a-9e16-40f7-8de1-f9bd60880779",
+          "name": "Thịt ba chỉ xào mắm ruốc",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_02400",
+      "representative_name": "Thăn heo cuốn cải hấp",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "306a0cd0-29de-41fe-997e-4dfdb9457b6f",
+          "name": "Thăn heo cuốn cải hấp",
+          "source_platform": "monngonmoingay"
+        },
+        {
+          "id": "6fab1077-ffef-4f9e-9f0e-91b48cebad58",
+          "name": "Thăn heo cuộn cải hấp",
+          "source_platform": "monngonmoingay"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_02502",
+      "representative_name": "Thịt heo một nắng",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "6001e2fa-45bc-45d5-8768-056623332832",
+          "name": "Thịt heo một nắng",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "74351585-1b8c-4f84-a516-6b835e0cacd5",
+          "name": "Thịt lợn một nắng",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_02526",
+      "representative_name": "Cá bớp kho thịt ba rọi",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "64dbd3e7-e88b-48e2-b520-ae0bb00090ca",
+          "name": "Cá bớp kho thịt ba rọi",
+          "source_platform": "monngonmoingay"
+        },
+        {
+          "id": "7532e9d0-5b1d-4976-a5c5-3e1ff6e6f43c",
+          "name": "Cá bớp kho thịt ba chỉ",
+          "source_platform": "dienmayxanh"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_02621",
+      "representative_name": "Thịt ba chỉ chiên giòn",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "72ded6a1-da5c-497e-88d9-5804236e77c5",
+          "name": "Thịt ba chỉ chiên giòn",
+          "source_platform": "monngonmoingay"
+        },
+        {
+          "id": "79c28108-d41d-4331-94ba-b1f42608c1ba",
+          "name": "Thịt ba rọi chiên giòn",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_03061",
+      "representative_name": "Móng giò giả cầy",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "8c82018c-81dc-4090-9f59-f21c1b243841",
+          "name": "Móng giò giả cầy",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "8f240e26-43e9-480d-aa30-e7f8f5735c20",
+          "name": "Chân giò giả cầy",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_03141",
+      "representative_name": "Chân giò kho nước tương",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "067a7241-f6e6-4073-8a2a-130c1942d3ee",
+          "name": "Chân giò kho nước tương",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "924af65d-cdbd-48bf-abc8-7a158c06c410",
+          "name": "Móng giò kho nước tương",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_03293",
+      "representative_name": "Thịt ba chỉ rang cháy cạnh",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "16c9b4d5-05c1-4b73-8468-a9bddb5141df",
+          "name": "Thịt ba chỉ rang cháy cạnh",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "99ed7e7c-dbe9-4bdf-a46d-26e6bcd99d62",
+          "name": "Thịt Ba Rọi Rang Cháy Cạnh",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_03399",
+      "representative_name": "Thịt ba chỉ kho măng",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "18aee701-a1b2-44bf-ad18-922df20768c8",
+          "name": "Thịt ba chỉ kho măng",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "9ecb9eab-a243-4709-942d-5dbbeb01a000",
+          "name": "Thịt ba rọi kho măng",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_03862",
+      "representative_name": "Thịt ba rọi kho mắm ruốc",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "5c8ce53f-c915-4f7b-a98c-ea30343684f9",
+          "name": "Thịt ba rọi kho mắm ruốc",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "b5c67bfc-7a2e-4b6a-a024-fa7771771771",
+          "name": "Thịt Ba Chỉ Kho Mắm Ruốc",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_04060",
+      "representative_name": "Đậu hủ kho nấm rơm",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "18f861fe-0115-41ca-b89d-7a5ac8aac4bf",
+          "name": "Đậu hủ kho nấm rơm",
+          "source_platform": "monngonmoingay"
+        },
+        {
+          "id": "be617bee-5d16-4093-9d51-d666ef468ad4",
+          "name": "Đậu hũ kho nấm rơm",
+          "source_platform": "dienmayxanh"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_04070",
+      "representative_name": "Thịt heo rang",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "3434f4dd-f21b-4a0f-9953-008ce67af014",
+          "name": "Thịt heo rang",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "beda4757-4b42-4ba0-b365-48b4a4d095d5",
+          "name": "Thịt lợn rang",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_04607",
+      "representative_name": "Thịt heo chiên xù",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "7751957a-3147-43c0-9bce-5030f6572043",
+          "name": "Thịt heo chiên xù",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "d83aa952-85db-4117-a846-0739d67a2444",
+          "name": "Thịt lợn chiên xù",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_04998",
+      "representative_name": "Bò cuốn lá lốt",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "69f73876-5997-4957-8d39-f9eca28f63e4",
+          "name": "Bò cuốn lá lốt",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "ea3a3d56-05be-4261-964a-5cf18793c5f7",
+          "name": "Bò cuộn lá lốt",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_05055",
+      "representative_name": "Ba chỉ nướng",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "6febf8b3-fc67-4980-bc32-cdc011d261b8",
+          "name": "Ba chỉ nướng",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "ecab26e1-1cee-4e2f-bd86-be9b213c9569",
+          "name": "Ba Rọi Nướng",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_05096",
+      "representative_name": "Thịt ba rọi nướng",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "6c1d3ffb-9483-4996-aa8d-0089b52e41a0",
+          "name": "Thịt ba rọi nướng",
+          "source_platform": "cookpad"
+        },
+        {
+          "id": "ef2ad80d-12ba-454f-a6ff-12cefe028bb3",
+          "name": "Thịt ba chỉ nướng",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_05224",
+      "representative_name": "Thịt ba chỉ kho tiêu",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "f05c59c5-8ec4-4a44-8017-a26f7b7160fc",
+          "name": "Thịt ba chỉ kho tiêu",
+          "source_platform": "dienmayxanh"
+        },
+        {
+          "id": "f56473c7-d7d9-48b9-b963-9fc9a3ed33ab",
+          "name": "Thịt ba rọi kho tiêu",
+          "source_platform": "cookpad"
+        }
+      ]
+    },
+    {
+      "cluster_id": "cluster_05317",
+      "representative_name": "Ba chỉ rim mắm ruốc",
+      "recipe_count": 2,
+      "recipes": [
+        {
+          "id": "a68b4135-99b7-4cb4-951e-63ba97a99677",
+          "name": "Ba chỉ rim mắm ruốc",
+          "source_platform": "monngonmoingay"
+        },
+        {
+          "id": "f9ab7a26-6b69-40f5-a387-0ec990b80256",
+          "name": "Ba rọi rim mắm ruốc",
+          "source_platform": "cookpad"
+        }
+      ]
+    }
+  ]
+}

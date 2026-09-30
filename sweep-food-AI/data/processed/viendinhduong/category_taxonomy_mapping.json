@@ -1,0 +1,31 @@
+{
+  "description": "Mapping from master ingredient categories (25 variants) to standard system categories (15 taxonomy classes).",
+  "mappings": {
+    "Dầu, mỡ, bơ": "Dầu, mỡ, bơ",
+    "Gia vị, nước chấm": "Gia vị, nước chấm",
+    "Gia vị": "Gia vị, nước chấm",
+    "Gia vị và nước chấm": "Gia vị, nước chấm",
+    "Hạt, quả giàu đạm, béo và sản phẩm chế biến": "Hạt, quả giàu đạm, béo và sản phẩm chế biến",
+    "Các loại hạt": "Hạt, quả giàu đạm, béo và sản phẩm chế biến",
+    "Hạt và sản phẩm chế biến": "Hạt, quả giàu đạm, béo và sản phẩm chế biến",
+    "Đậu, đỗ và sản phẩm chế biến": "Hạt, quả giàu đạm, béo và sản phẩm chế biến",
+    "Đậu phụ và sản phẩm chế biến": "Hạt, quả giàu đạm, béo và sản phẩm chế biến",
+    "Khoai củ và sản phẩm chế biến": "Khoai củ và sản phẩm chế biến",
+    "Ngũ cốc và sản phẩm chế biến": "Ngũ cốc và sản phẩm chế biến",
+    "Nước giải khát": "Nước giải khát",
+    "Đồ uống và nước": "Nước giải khát",
+    "Quả chín": "Quả chín",
+    "Rau, quả, củ dùng làm rau": "Rau, quả, củ dùng làm rau",
+    "Rau củ quả": "Rau, quả, củ dùng làm rau",
+    "Rau củ quả và sản phẩm chế biến": "Rau, quả, củ dùng làm rau",
+    "Sữa và sản phẩm chế biến": "Sữa và sản phẩm chế biến",
+    "Thịt và sản phẩm chế biến": "Thịt và sản phẩm chế biến",
+    "Thủy sản và sản phẩm chế biến": "Thủy sản và sản phẩm chế biến",
+    "Thủy hải sản": "Thủy sản và sản phẩm chế biến",
+    "Thức ăn truyền thống": "Thức ăn truyền thống",
+    "Trứng và sản phẩm chế biến": "Trứng và sản phẩm chế biến",
+    "Đồ hộp": "Đồ hộp",
+    "Đồ ngọt (đường, bánh, mứt, kẹo)": "Đồ ngọt (đường, bánh, mứt, kẹo)",
+    "Đồ ngọt": "Đồ ngọt (đường, bánh, mứt, kẹo)"
+  }
+}

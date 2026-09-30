@@ -1,0 +1,46 @@
+SweepFood Vietnamese Recipe–Nutrition Dataset
+=============================================
+
+SPDX-License-Identifier: CC-BY-4.0
+
+The DATA files in this repository (everything under `data/`, including the
+processed recipe tables, ingredient tables, canonicalization outputs, and the
+derived nutrition values) are licensed under the
+
+    Creative Commons Attribution 4.0 International License (CC BY 4.0)
+    Full legal code: https://creativecommons.org/licenses/by/4.0/legalcode
+    Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+
+You are free to share and adapt the data for any purpose, including
+commercially, provided you give appropriate credit (see ATTRIBUTION.md),
+link to the license, and indicate if changes were made.
+
+Scope and nature of the data
+----------------------------
+This dataset publishes DERIVED FACTUAL DATA only:
+  - canonical/normalized dish names,
+  - structured ingredient lists with quantities and normalized units,
+  - estimated ingredient weights (in grams) with an explicit `weight_source`,
+  - per-ingredient and per-recipe nutrition values,
+  - master-ingredient nutrition references,
+  - the original `source_url` and `source_platform` for provenance.
+
+It does NOT redistribute the copyrighted expressive content of the source
+websites: original step-by-step instruction prose, editorial descriptions,
+photographs, or original creative titles are NOT included in the released
+data. Factual elements (ingredient lists, quantities, nutrition figures, and
+cooking procedures as functional facts) are not subject to copyright.
+
+The `data/raw/recipes_raw_scraped.json` snapshot, which contains verbatim
+source text and media URLs, is retained only locally for reproducibility and
+is excluded from the published/tracked dataset.
+
+Code license
+------------
+Source code in this repository is licensed separately under the MIT License
+(see LICENSE). The MIT License does NOT apply to the data files.
+
+No warranty
+-----------
+The data is provided "as is", without warranty of any kind. Nutrition and
+weight values are estimates and MUST NOT be used as medical or dietary advice.

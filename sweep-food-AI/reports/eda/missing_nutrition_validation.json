@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "energy_kcal": {
+      "master_missing": 2,
+      "linked_missing_instances": 0,
+      "zero_before": 0,
+      "missing_after": 0,
+      "true_zero_instances": 358,
+      "true_zero_before": 358,
+      "true_zero_after": 358
+    },
+    "protein_g": {
+      "master_missing": 39,
+      "linked_missing_instances": 8546,
+      "zero_before": 8546,
+      "missing_after": 8546,
+      "true_zero_instances": 528,
+      "true_zero_before": 528,
+      "true_zero_after": 528
+    },
+    "fat_g": {
+      "master_missing": 146,
+      "linked_missing_instances": 12163,
+      "zero_before": 12163,
+      "missing_after": 12163,
+      "true_zero_instances": 554,
+      "true_zero_before": 554,
+      "true_zero_after": 554
+    },
+    "carbs_g": {
+      "master_missing": 142,
+      "linked_missing_instances": 9144,
+      "zero_before": 9144,
+      "missing_after": 9144,
+      "true_zero_instances": 538,
+      "true_zero_before": 538,
+      "true_zero_after": 538
+    }
+  },
+  "ingredient_rows": 63943,
+  "affected_rows": 19499,
+  "affected_recipes": 5403,
+  "unexpected_numeric_or_unrelated_changes": 0,
+  "inconsistent_before": 3010,
+  "inconsistent_after": 612,
+  "previously_inconsistent_now_missing_macro": 2398,
+  "remaining_categories": {
+    "rounding_scaling_tolerance": 181,
+    "inconsistent_master": 431
+  },
+  "baseline_commit": "242ff45c123d24670ad3df23ffe1a2cc2b24a35d",
+  "protected_data_files_verified": 27,
+  "legacy_aggregate_sums_unchanged": true,
+  "output_sha256": {
+    "data/processed/recipes/recipe_ingredients.csv": "bdf2c24dae890282673aa835042f18b9dd886346911ec58cf634ea24085579d3",
+    "data/processed/recipes/recipe_ingredients.json": "7b3cb8fc3dff8dcbbacd1f1d7b780644e949dbc7467fee7274cba089ec824ac9"
+  }
+}

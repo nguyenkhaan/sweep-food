@@ -1,0 +1,1805 @@
+{
+  "status": "applied",
+  "alias_decision": "SAFE_REPOINT",
+  "alias_repoint_count": 6,
+  "alias_states": {
+    "sườn cốt lết": "pending",
+    "thịt cốt lết": "pending",
+    "cốt lết": "pending",
+    "sườn cốt lết xắt lát": "pending",
+    "bóng bì": "pending",
+    "thịt bò chay lát": "pending"
+  },
+  "alias_repoints": {
+    "sườn cốt lết": {
+      "from": "7070",
+      "to": "7053"
+    },
+    "thịt cốt lết": {
+      "from": "7070",
+      "to": "7053"
+    },
+    "cốt lết": {
+      "from": "7070",
+      "to": "7053"
+    },
+    "sườn cốt lết xắt lát": {
+      "from": "7070",
+      "to": "7053"
+    },
+    "bóng bì": {
+      "from": "7064",
+      "to": "7031"
+    },
+    "thịt bò chay lát": {
+      "from": "7006",
+      "to": "20039"
+    }
+  },
+  "redundant_aliases": [
+    "sườn cốt lết xắt lát"
+  ],
+  "aliases_removed": 0,
+  "aliases_added": 0,
+  "alias_map_size": 4676,
+  "match_method_semantics": {
+    "repaired_rows": "PRESET_ALIAS_MATCH / 0.98 (unchanged)",
+    "row_level_overrides": 0,
+    "cure_held_rows": 0
+  },
+  "rows_in_scope": 46,
+  "rows_repaired_total": 46,
+  "rows_repaired_now": 46,
+  "rows_already_applied": 0,
+  "legitimate_old_code_rows_untouched": {
+    "7006": 203,
+    "7064": 1,
+    "7070": 2
+  },
+  "affected_recipe_count": 43,
+  "affected_recipe_ids": [
+    "0409ebc4-d218-43db-a2d5-c05c541ede32",
+    "06a99bb5-f1ec-4d4d-959b-a7a855d2b7e0",
+    "0a86cdc9-6830-4f7d-9727-8c45b312f603",
+    "1486bc1e-5112-4537-8e39-b11a480cb33a",
+    "14bdb504-db37-4ed8-b42a-215d4f55bd42",
+    "195b2b1c-266f-4e2b-87aa-ede4851856a8",
+    "1ac3e16c-cdf2-4a0d-b2f2-eaf3fd1e182b",
+    "25cf665f-dea8-432e-a809-f2efd1d3fce3",
+    "279f5b09-94df-4249-a78f-570284969dee",
+    "2e2841bd-5fd1-4255-b633-afdb5d53454e",
+    "3f519072-974a-4dfa-bfc7-95b9500f0eed",
+    "4975cd93-2e1c-4432-ac64-527e061fc42b",
+    "51214882-5651-4a34-94be-d8084c711e64",
+    "53d4d73b-01cf-4662-bddf-ff7a8b0c9681",
+    "55f27c6a-b40d-4bd2-b6fc-03eecdaf8844",
+    "56e70cbe-2550-4876-9f24-eed931c43318",
+    "582ee1ec-4612-4c57-8031-45af7f65c64b",
+    "624169ea-ef1b-412d-89cc-f8416adbf502",
+    "6f065d11-8c21-4842-883c-c102405d06fe",
+    "70e633ab-6587-44ef-8f48-608eecbda534",
+    "727bb590-15ef-4ea7-99d4-baba8b1ec2d0",
+    "75c749c7-6ac9-4ef7-b32c-56b749f305bf",
+    "84a62faa-9d9e-4a88-9cd9-f48db8cafe18",
+    "8535fca7-c0ff-41a6-87ae-32183aad4dc2",
+    "87a3297b-794f-423d-9fd0-496ca77ed7b4",
+    "8c87126f-538b-4f90-ab82-16d12b5bf2ee",
+    "902ef58d-e579-4eda-9f5c-38066d7be7ff",
+    "9944d995-df5e-4df5-92c8-3ceb35403860",
+    "a6fd4bf3-da56-4d9b-afa2-78a10e4e9d15",
+    "aebafdc8-6c1a-4596-b553-6556e46b6a4d",
+    "b3f15588-c33a-4e7c-a17a-5797a2dea7d3",
+    "b8b1d49a-9679-4c80-af27-fc9987029a4a",
+    "ba8543b0-07cf-4e93-8853-b8626a51f4ef",
+    "c82ba3ee-1d57-49a0-a986-9a7297ebffbe",
+    "ceaf73ce-56b2-492a-8d0e-c25b929be639",
+    "d2de6b1f-2a24-47d7-af98-bd61a6580432",
+    "dd7f3ea2-dbc8-4697-8cf4-930fda3a601c",
+    "de7f05e8-1188-4943-a956-27822d8e9e74",
+    "e9e6e465-7648-411d-a34c-e33c64d3e0bb",
+    "eb0deed5-d489-423f-bbf2-ce374cbdef3c",
+    "f5c13d75-fe6c-40cd-a4c8-d2d5b9cf5161",
+    "f7d73ef6-2fab-4aa9-bcd1-28f131398715",
+    "fd9a18e2-06c4-49fa-888f-698f488e3270"
+  ],
+  "recipes_with_changed_totals": 43,
+  "recipes_with_changed_missing_count": 0,
+  "recipes_with_status_label_changed": 0,
+  "status_transitions": {
+    "unchanged": 5641
+  },
+  "nutrition_all_repaired_rows": {
+    "before": {
+      "calories": 88397.0,
+      "protein_g": 2565.4,
+      "fat_g": 8670.9,
+      "carbs_g": 11.3
+    },
+    "after": {
+      "calories": 30023.8,
+      "protein_g": 2919.0,
+      "fat_g": 2023.9,
+      "carbs_g": 25.0
+    },
+    "delta": {
+      "calories": -58373.2,
+      "protein_g": 353.6,
+      "fat_g": -6647.0,
+      "carbs_g": 13.7
+    }
+  },
+  "null_nutrition_transitions": {
+    "calories": {
+      "known_to_null": 0,
+      "null_to_known": 0,
+      "known_to_null_ids": [],
+      "null_to_known_ids": []
+    },
+    "protein_g": {
+      "known_to_null": 0,
+      "null_to_known": 0,
+      "known_to_null_ids": [],
+      "null_to_known_ids": []
+    },
+    "fat_g": {
+      "known_to_null": 0,
+      "null_to_known": 0,
+      "known_to_null_ids": [],
+      "null_to_known_ids": []
+    },
+    "carbs_g": {
+      "known_to_null": 4,
+      "null_to_known": 0,
+      "known_to_null_ids": [
+        "4e57445f-d843-49ec-842c-903f4cbcb164",
+        "876b2f44-b5b5-420b-adb6-3e40783c8da8",
+        "978ac64d-c8b2-4f37-93d1-e4d444714ddd",
+        "b86566d6-7a31-45ac-8f1c-fc07d51c50d0"
+      ],
+      "null_to_known_ids": []
+    }
+  },
+  "by_target_code": {
+    "20039": {
+      "name": "Thịt chay (sườn non chay)",
+      "aliases": [
+        "thịt bò chay lát"
+      ],
+      "rows": 1,
+      "recipes": 1,
+      "declares_carbs": true,
+      "nutrition": {
+        "before": {
+          "calories": 174.0,
+          "protein_g": 21.5,
+          "fat_g": 9.5,
+          "carbs_g": 0.7
+        },
+        "after": {
+          "calories": 310.0,
+          "protein_g": 50.0,
+          "fat_g": 1.2,
+          "carbs_g": 25.0
+        },
+        "delta": {
+          "calories": 136.0,
+          "protein_g": 28.5,
+          "fat_g": -8.3,
+          "carbs_g": 24.3
+        }
+      }
+    },
+    "7031": {
+      "name": "Bì lợn",
+      "aliases": [
+        "bóng bì"
+      ],
+      "rows": 4,
+      "recipes": 4,
+      "declares_carbs": false,
+      "nutrition": {
+        "before": {
+          "calories": 1085.7,
+          "protein_g": 22.7,
+          "fat_g": 105.8,
+          "carbs_g": 10.6
+        },
+        "after": {
+          "calories": 247.8,
+          "protein_g": 49.0,
+          "fat_g": 5.8,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -837.9,
+          "protein_g": 26.3,
+          "fat_g": -100.0,
+          "carbs_g": -10.6
+        }
+      }
+    },
+    "7053": {
+      "name": "Sườn heo (xương heo)",
+      "aliases": [
+        "cốt lết",
+        "sườn cốt lết",
+        "sườn cốt lết xắt lát",
+        "thịt cốt lết"
+      ],
+      "rows": 41,
+      "recipes": 38,
+      "declares_carbs": false,
+      "nutrition": {
+        "before": {
+          "calories": 87137.3,
+          "protein_g": 2521.2,
+          "fat_g": 8555.6,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 29466.0,
+          "protein_g": 2820.0,
+          "fat_g": 2016.9,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -57671.3,
+          "protein_g": 298.8,
+          "fat_g": -6538.7,
+          "carbs_g": 0.0
+        }
+      }
+    }
+  },
+  "by_alias": {
+    "sườn cốt lết": {
+      "from": {
+        "code": "7070",
+        "name": "Giò thủ lợn"
+      },
+      "to": {
+        "code": "7053",
+        "name": "Sườn heo (xương heo)"
+      },
+      "alias_state": "pending",
+      "redundant_key": false,
+      "rows_repaired": 24,
+      "recipes_affected": 21,
+      "nutrition": {
+        "before": {
+          "calories": 53127.8,
+          "protein_g": 1537.2,
+          "fat_g": 5216.5,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 17965.5,
+          "protein_g": 1719.5,
+          "fat_g": 1229.7,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -35162.3,
+          "protein_g": 182.3,
+          "fat_g": -3986.8,
+          "carbs_g": 0.0
+        }
+      }
+    },
+    "thịt cốt lết": {
+      "from": {
+        "code": "7070",
+        "name": "Giò thủ lợn"
+      },
+      "to": {
+        "code": "7053",
+        "name": "Sườn heo (xương heo)"
+      },
+      "alias_state": "pending",
+      "redundant_key": false,
+      "rows_repaired": 11,
+      "recipes_affected": 11,
+      "nutrition": {
+        "before": {
+          "calories": 24608.5,
+          "protein_g": 712.0,
+          "fat_g": 2416.2,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 8321.5,
+          "protein_g": 796.4,
+          "fat_g": 569.6,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -16287.0,
+          "protein_g": 84.4,
+          "fat_g": -1846.6,
+          "carbs_g": 0.0
+        }
+      }
+    },
+    "cốt lết": {
+      "from": {
+        "code": "7070",
+        "name": "Giò thủ lợn"
+      },
+      "to": {
+        "code": "7053",
+        "name": "Sườn heo (xương heo)"
+      },
+      "alias_state": "pending",
+      "redundant_key": false,
+      "rows_repaired": 5,
+      "recipes_affected": 5,
+      "nutrition": {
+        "before": {
+          "calories": 5253.5,
+          "protein_g": 152.0,
+          "fat_g": 515.7,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 1776.5,
+          "protein_g": 169.9,
+          "fat_g": 121.6,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -3477.0,
+          "protein_g": 17.9,
+          "fat_g": -394.1,
+          "carbs_g": 0.0
+        }
+      }
+    },
+    "sườn cốt lết xắt lát": {
+      "from": {
+        "code": "7070",
+        "name": "Giò thủ lợn"
+      },
+      "to": {
+        "code": "7053",
+        "name": "Sườn heo (xương heo)"
+      },
+      "alias_state": "pending",
+      "redundant_key": true,
+      "rows_repaired": 1,
+      "recipes_affected": 1,
+      "nutrition": {
+        "before": {
+          "calories": 4147.5,
+          "protein_g": 120.0,
+          "fat_g": 407.2,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 1402.5,
+          "protein_g": 134.2,
+          "fat_g": 96.0,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -2745.0,
+          "protein_g": 14.2,
+          "fat_g": -311.2,
+          "carbs_g": 0.0
+        }
+      }
+    },
+    "bóng bì": {
+      "from": {
+        "code": "7064",
+        "name": "Chả lợn"
+      },
+      "to": {
+        "code": "7031",
+        "name": "Bì lợn"
+      },
+      "alias_state": "pending",
+      "redundant_key": false,
+      "rows_repaired": 4,
+      "recipes_affected": 4,
+      "nutrition": {
+        "before": {
+          "calories": 1085.7,
+          "protein_g": 22.7,
+          "fat_g": 105.8,
+          "carbs_g": 10.6
+        },
+        "after": {
+          "calories": 247.8,
+          "protein_g": 49.0,
+          "fat_g": 5.8,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -837.9,
+          "protein_g": 26.3,
+          "fat_g": -100.0,
+          "carbs_g": -10.6
+        }
+      }
+    },
+    "thịt bò chay lát": {
+      "from": {
+        "code": "7006",
+        "name": "Thịt bò, lưng, nạc và mỡ"
+      },
+      "to": {
+        "code": "20039",
+        "name": "Thịt chay (sườn non chay)"
+      },
+      "alias_state": "pending",
+      "redundant_key": false,
+      "rows_repaired": 1,
+      "recipes_affected": 1,
+      "nutrition": {
+        "before": {
+          "calories": 174.0,
+          "protein_g": 21.5,
+          "fat_g": 9.5,
+          "carbs_g": 0.7
+        },
+        "after": {
+          "calories": 310.0,
+          "protein_g": 50.0,
+          "fat_g": 1.2,
+          "carbs_g": 25.0
+        },
+        "delta": {
+          "calories": 136.0,
+          "protein_g": 28.5,
+          "fat_g": -8.3,
+          "carbs_g": 24.3
+        }
+      }
+    }
+  },
+  "repair_row_ids": [
+    "15d38df7-bb77-4078-a3ef-1704417ab570",
+    "18485b70-cd68-44e7-91df-d1f9b8fe5902",
+    "194b844b-442d-4f3f-b1c9-347e6921cba4",
+    "1a327d06-cce5-4bd6-b5c3-a37e5577c646",
+    "1bfbd300-dff6-4fee-9d0f-a1f561d60d13",
+    "283747ca-acad-4065-9f98-041a10191782",
+    "3e1d6c8f-2475-4b4e-b444-d155bc9c2d7d",
+    "4e57445f-d843-49ec-842c-903f4cbcb164",
+    "5043b577-83df-41a6-89a7-1925d96fa195",
+    "50b63f20-43b1-47e4-897b-a86f816b5e87",
+    "54da621d-1512-4ebb-98d2-0cdeb1adf4c1",
+    "57f44a9c-67a9-4ed6-8d36-307c78a2aacd",
+    "5ccca8ea-8898-4892-8391-c238ba9e5d56",
+    "609ca26e-6a12-4c9a-9165-7adf0571caab",
+    "766dab66-9421-4786-9f4e-7b1fd9fef5cd",
+    "77ebed1c-5a1b-4a9f-803a-380155826f94",
+    "7bca160e-caa0-477f-9f0d-57d65af49b3b",
+    "7e1ccc35-9c18-4f76-8c44-bc1b33b593e7",
+    "83fa0551-a397-4a29-8647-4163f1dd99dd",
+    "85781101-d3da-4067-bc95-7f22ace36c6c",
+    "876b2f44-b5b5-420b-adb6-3e40783c8da8",
+    "8be83165-193a-4553-8f17-fc5bec791754",
+    "978ac64d-c8b2-4f37-93d1-e4d444714ddd",
+    "a01ec750-533b-476a-9bbb-f767f23e1cc5",
+    "a597e032-a0e5-4f76-ae55-5592b2bfa9fa",
+    "a95f94da-cc1b-4a2f-882a-047c703ca266",
+    "b2e7d7e3-0a5d-460f-af32-b3078e88687c",
+    "b4ec2e0e-0efc-45d3-b15b-d47abdacf84d",
+    "b86566d6-7a31-45ac-8f1c-fc07d51c50d0",
+    "bde5e5c2-f6f3-424e-a4b3-5d1fe5cb8e65",
+    "c211f506-8347-464f-9815-7077d92cde0f",
+    "c3f2bd9a-b4da-4def-9be2-db1111c7f4d6",
+    "c632242c-6487-42fd-b704-cb93746a83fc",
+    "c8a1b75f-a55f-43be-8b79-e5acc24077c2",
+    "cbe41198-769d-4c3b-a4c9-9fd64a5413c1",
+    "cc58687b-ff35-4270-bba4-f3ee4d12b8fb",
+    "ce9a0967-77d9-4d74-9e6f-df477dc2b3c6",
+    "de143173-3748-4f19-9b6c-c70bddd43c8f",
+    "e11063c2-2f4f-4655-aad4-dc30a8ee8a74",
+    "eb46216a-f920-42f9-95f1-27c87a119463",
+    "ed46d4bd-ddd2-4a43-ab27-4bc95b81cdc3",
+    "ed7a60e4-1231-43fc-ad71-6fb483249ccf",
+    "ee7f48f4-1e87-431f-95f3-e2492c2008bc",
+    "f489779c-b955-4ff3-8b84-f6b7c92ca01c",
+    "fadd1da3-d780-40db-b5c7-34aeddf5f090",
+    "fe922dbe-d84f-4370-a274-7cae779d9c98"
+  ],
+  "row_outcomes": {
+    "15d38df7-bb77-4078-a3ef-1704417ab570": {
+      "alias": "sườn cốt lết",
+      "raw_text": "4 miếng sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "25cf665f-dea8-432e-a809-f2efd1d3fce3",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "374.0",
+        "protein_g": "35.8",
+        "fat_g": "25.6",
+        "carbs_g": null
+      }
+    },
+    "18485b70-cd68-44e7-91df-d1f9b8fe5902": {
+      "alias": "sườn cốt lết xắt lát",
+      "raw_text": "750 gam sườn cốt lết xắt lát (khoảng 6 lát)",
+      "cleaned_name": "sườn cốt lết xắt lát",
+      "recipe_id": "de7f05e8-1188-4943-a956-27822d8e9e74",
+      "estimated_weight_g": "750.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "4147.5",
+        "protein_g": "120.0",
+        "fat_g": "407.2",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1402.5",
+        "protein_g": "134.2",
+        "fat_g": "96.0",
+        "carbs_g": null
+      }
+    },
+    "194b844b-442d-4f3f-b1c9-347e6921cba4": {
+      "alias": "sườn cốt lết",
+      "raw_text": "4 miếng sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "56e70cbe-2550-4876-9f24-eed931c43318",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "374.0",
+        "protein_g": "35.8",
+        "fat_g": "25.6",
+        "carbs_g": null
+      }
+    },
+    "1a327d06-cce5-4bd6-b5c3-a37e5577c646": {
+      "alias": "cốt lết",
+      "raw_text": "Cốt lết",
+      "cleaned_name": "cốt lết",
+      "recipe_id": "8535fca7-c0ff-41a6-87ae-32183aad4dc2",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "280.5",
+        "protein_g": "26.8",
+        "fat_g": "19.2",
+        "carbs_g": null
+      }
+    },
+    "1bfbd300-dff6-4fee-9d0f-a1f561d60d13": {
+      "alias": "thịt cốt lết",
+      "raw_text": "500 g thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "582ee1ec-4612-4c57-8031-45af7f65c64b",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2765.0",
+        "protein_g": "80.0",
+        "fat_g": "271.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "283747ca-acad-4065-9f98-041a10191782": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 500 gr",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "b3f15588-c33a-4e7c-a17a-5797a2dea7d3",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2765.0",
+        "protein_g": "80.0",
+        "fat_g": "271.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "3e1d6c8f-2475-4b4e-b444-d155bc9c2d7d": {
+      "alias": "thịt cốt lết",
+      "raw_text": "2 miếng thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "727bb590-15ef-4ea7-99d4-baba8b1ec2d0",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "553.0",
+        "protein_g": "16.0",
+        "fat_g": "54.3",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "187.0",
+        "protein_g": "17.9",
+        "fat_g": "12.8",
+        "carbs_g": null
+      }
+    },
+    "4e57445f-d843-49ec-842c-903f4cbcb164": {
+      "alias": "bóng bì",
+      "raw_text": "Bóng bì: 10g",
+      "cleaned_name": "bóng bì",
+      "recipe_id": "1ac3e16c-cdf2-4a0d-b2f2-eaf3fd1e182b",
+      "estimated_weight_g": "10.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "51.7",
+        "protein_g": "1.1",
+        "fat_g": "5.0",
+        "carbs_g": "0.5"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "11.8",
+        "protein_g": "2.3",
+        "fat_g": "0.3",
+        "carbs_g": null
+      }
+    },
+    "5043b577-83df-41a6-89a7-1925d96fa195": {
+      "alias": "sườn cốt lết",
+      "raw_text": "800 gram sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "aebafdc8-6c1a-4596-b553-6556e46b6a4d",
+      "estimated_weight_g": "800.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "4424.0",
+        "protein_g": "128.0",
+        "fat_g": "434.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1496.0",
+        "protein_g": "143.2",
+        "fat_g": "102.4",
+        "carbs_g": null
+      }
+    },
+    "50b63f20-43b1-47e4-897b-a86f816b5e87": {
+      "alias": "sườn cốt lết",
+      "raw_text": "1 kí sườn cốt lết (đã cắt miếng mỏng)",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "53d4d73b-01cf-4662-bddf-ff7a8b0c9681",
+      "estimated_weight_g": "1000.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "5530.0",
+        "protein_g": "160.0",
+        "fat_g": "543.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1870.0",
+        "protein_g": "179.0",
+        "fat_g": "128.0",
+        "carbs_g": null
+      }
+    },
+    "54da621d-1512-4ebb-98d2-0cdeb1adf4c1": {
+      "alias": "sườn cốt lết",
+      "raw_text": "3 miếng sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "279f5b09-94df-4249-a78f-570284969dee",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "280.5",
+        "protein_g": "26.8",
+        "fat_g": "19.2",
+        "carbs_g": null
+      }
+    },
+    "57f44a9c-67a9-4ed6-8d36-307c78a2aacd": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 600 gr",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "b3f15588-c33a-4e7c-a17a-5797a2dea7d3",
+      "estimated_weight_g": "600.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "3318.0",
+        "protein_g": "96.0",
+        "fat_g": "325.8",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1122.0",
+        "protein_g": "107.4",
+        "fat_g": "76.8",
+        "carbs_g": null
+      }
+    },
+    "5ccca8ea-8898-4892-8391-c238ba9e5d56": {
+      "alias": "thịt cốt lết",
+      "raw_text": "1 kg thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "902ef58d-e579-4eda-9f5c-38066d7be7ff",
+      "estimated_weight_g": "1000.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "5530.0",
+        "protein_g": "160.0",
+        "fat_g": "543.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1870.0",
+        "protein_g": "179.0",
+        "fat_g": "128.0",
+        "carbs_g": null
+      }
+    },
+    "609ca26e-6a12-4c9a-9165-7adf0571caab": {
+      "alias": "thịt cốt lết",
+      "raw_text": "700 g thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "1486bc1e-5112-4537-8e39-b11a480cb33a",
+      "estimated_weight_g": "700.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "3871.0",
+        "protein_g": "112.0",
+        "fat_g": "380.1",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1309.0",
+        "protein_g": "125.3",
+        "fat_g": "89.6",
+        "carbs_g": null
+      }
+    },
+    "766dab66-9421-4786-9f4e-7b1fd9fef5cd": {
+      "alias": "sườn cốt lết",
+      "raw_text": "4 miếng sườn cốt lết (khoảng 250gr-300gr)",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "d2de6b1f-2a24-47d7-af98-bd61a6580432",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "374.0",
+        "protein_g": "35.8",
+        "fat_g": "25.6",
+        "carbs_g": null
+      }
+    },
+    "77ebed1c-5a1b-4a9f-803a-380155826f94": {
+      "alias": "thịt cốt lết",
+      "raw_text": "2 miếng thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "dd7f3ea2-dbc8-4697-8cf4-930fda3a601c",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "553.0",
+        "protein_g": "16.0",
+        "fat_g": "54.3",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "187.0",
+        "protein_g": "17.9",
+        "fat_g": "12.8",
+        "carbs_g": null
+      }
+    },
+    "7bca160e-caa0-477f-9f0d-57d65af49b3b": {
+      "alias": "thịt cốt lết",
+      "raw_text": "Thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "c82ba3ee-1d57-49a0-a986-9a7297ebffbe",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "280.5",
+        "protein_g": "26.8",
+        "fat_g": "19.2",
+        "carbs_g": null
+      }
+    },
+    "7e1ccc35-9c18-4f76-8c44-bc1b33b593e7": {
+      "alias": "sườn cốt lết",
+      "raw_text": "600 gr sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "4975cd93-2e1c-4432-ac64-527e061fc42b",
+      "estimated_weight_g": "600.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "3318.0",
+        "protein_g": "96.0",
+        "fat_g": "325.8",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1122.0",
+        "protein_g": "107.4",
+        "fat_g": "76.8",
+        "carbs_g": null
+      }
+    },
+    "83fa0551-a397-4a29-8647-4163f1dd99dd": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 600 gr",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "f5c13d75-fe6c-40cd-a4c8-d2d5b9cf5161",
+      "estimated_weight_g": "600.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "3318.0",
+        "protein_g": "96.0",
+        "fat_g": "325.8",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1122.0",
+        "protein_g": "107.4",
+        "fat_g": "76.8",
+        "carbs_g": null
+      }
+    },
+    "85781101-d3da-4067-bc95-7f22ace36c6c": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 500 gr",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "0a86cdc9-6830-4f7d-9727-8c45b312f603",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2765.0",
+        "protein_g": "80.0",
+        "fat_g": "271.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "876b2f44-b5b5-420b-adb6-3e40783c8da8": {
+      "alias": "bóng bì",
+      "raw_text": "Bóng bì 50 gr",
+      "cleaned_name": "bóng bì",
+      "recipe_id": "87a3297b-794f-423d-9fd0-496ca77ed7b4",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "258.5",
+        "protein_g": "5.4",
+        "fat_g": "25.2",
+        "carbs_g": "2.5"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "59.0",
+        "protein_g": "11.7",
+        "fat_g": "1.4",
+        "carbs_g": null
+      }
+    },
+    "8be83165-193a-4553-8f17-fc5bec791754": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 4 miếng",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "f5c13d75-fe6c-40cd-a4c8-d2d5b9cf5161",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "374.0",
+        "protein_g": "35.8",
+        "fat_g": "25.6",
+        "carbs_g": null
+      }
+    },
+    "978ac64d-c8b2-4f37-93d1-e4d444714ddd": {
+      "alias": "bóng bì",
+      "raw_text": "Bóng bì (loại mỏng dai): 2 miếng",
+      "cleaned_name": "bóng bì",
+      "recipe_id": "624169ea-ef1b-412d-89cc-f8416adbf502",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "517.0",
+        "protein_g": "10.8",
+        "fat_g": "50.4",
+        "carbs_g": "5.1"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "118.0",
+        "protein_g": "23.3",
+        "fat_g": "2.7",
+        "carbs_g": null
+      }
+    },
+    "a01ec750-533b-476a-9bbb-f767f23e1cc5": {
+      "alias": "sườn cốt lết",
+      "raw_text": "2 miếng sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "b8b1d49a-9679-4c80-af27-fc9987029a4a",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "553.0",
+        "protein_g": "16.0",
+        "fat_g": "54.3",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "187.0",
+        "protein_g": "17.9",
+        "fat_g": "12.8",
+        "carbs_g": null
+      }
+    },
+    "a597e032-a0e5-4f76-ae55-5592b2bfa9fa": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết (rib cutlet)",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "fd9a18e2-06c4-49fa-888f-698f488e3270",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "280.5",
+        "protein_g": "26.8",
+        "fat_g": "19.2",
+        "carbs_g": null
+      }
+    },
+    "a95f94da-cc1b-4a2f-882a-047c703ca266": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 500g",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "8c87126f-538b-4f90-ab82-16d12b5bf2ee",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2765.0",
+        "protein_g": "80.0",
+        "fat_g": "271.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "b2e7d7e3-0a5d-460f-af32-b3078e88687c": {
+      "alias": "sườn cốt lết",
+      "raw_text": "4 miếng sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "f7d73ef6-2fab-4aa9-bcd1-28f131398715",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "374.0",
+        "protein_g": "35.8",
+        "fat_g": "25.6",
+        "carbs_g": null
+      }
+    },
+    "b4ec2e0e-0efc-45d3-b15b-d47abdacf84d": {
+      "alias": "cốt lết",
+      "raw_text": "300 gram cốt lết",
+      "cleaned_name": "cốt lết",
+      "recipe_id": "55f27c6a-b40d-4bd2-b6fc-03eecdaf8844",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1659.0",
+        "protein_g": "48.0",
+        "fat_g": "162.9",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "561.0",
+        "protein_g": "53.7",
+        "fat_g": "38.4",
+        "carbs_g": null
+      }
+    },
+    "b86566d6-7a31-45ac-8f1c-fc07d51c50d0": {
+      "alias": "bóng bì",
+      "raw_text": "Bóng bì: 50g",
+      "cleaned_name": "bóng bì",
+      "recipe_id": "0409ebc4-d218-43db-a2d5-c05c541ede32",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "258.5",
+        "protein_g": "5.4",
+        "fat_g": "25.2",
+        "carbs_g": "2.5"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "59.0",
+        "protein_g": "11.7",
+        "fat_g": "1.4",
+        "carbs_g": null
+      }
+    },
+    "bde5e5c2-f6f3-424e-a4b3-5d1fe5cb8e65": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 300 gr",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "ba8543b0-07cf-4e93-8853-b8626a51f4ef",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1659.0",
+        "protein_g": "48.0",
+        "fat_g": "162.9",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "561.0",
+        "protein_g": "53.7",
+        "fat_g": "38.4",
+        "carbs_g": null
+      }
+    },
+    "c211f506-8347-464f-9815-7077d92cde0f": {
+      "alias": "sườn cốt lết",
+      "raw_text": "3 miếng sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "eb0deed5-d489-423f-bbf2-ce374cbdef3c",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "280.5",
+        "protein_g": "26.8",
+        "fat_g": "19.2",
+        "carbs_g": null
+      }
+    },
+    "c3f2bd9a-b4da-4def-9be2-db1111c7f4d6": {
+      "alias": "sườn cốt lết",
+      "raw_text": "500 g sườn cốt lết (tầm 5 miếng sườn)",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "84a62faa-9d9e-4a88-9cd9-f48db8cafe18",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2765.0",
+        "protein_g": "80.0",
+        "fat_g": "271.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "c632242c-6487-42fd-b704-cb93746a83fc": {
+      "alias": "cốt lết",
+      "raw_text": "Cốt lết",
+      "cleaned_name": "cốt lết",
+      "recipe_id": "51214882-5651-4a34-94be-d8084c711e64",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "280.5",
+        "protein_g": "26.8",
+        "fat_g": "19.2",
+        "carbs_g": null
+      }
+    },
+    "c8a1b75f-a55f-43be-8b79-e5acc24077c2": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết: 500g",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "06a99bb5-f1ec-4d4d-959b-a7a855d2b7e0",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2765.0",
+        "protein_g": "80.0",
+        "fat_g": "271.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "cbe41198-769d-4c3b-a4c9-9fd64a5413c1": {
+      "alias": "thịt cốt lết",
+      "raw_text": "3 miếng thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "70e633ab-6587-44ef-8f48-608eecbda534",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "280.5",
+        "protein_g": "26.8",
+        "fat_g": "19.2",
+        "carbs_g": null
+      }
+    },
+    "cc58687b-ff35-4270-bba4-f3ee4d12b8fb": {
+      "alias": "cốt lết",
+      "raw_text": "4 miếng cốt lết",
+      "cleaned_name": "cốt lết",
+      "recipe_id": "2e2841bd-5fd1-4255-b633-afdb5d53454e",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "374.0",
+        "protein_g": "35.8",
+        "fat_g": "25.6",
+        "carbs_g": null
+      }
+    },
+    "ce9a0967-77d9-4d74-9e6f-df477dc2b3c6": {
+      "alias": "thịt cốt lết",
+      "raw_text": "500 gr thịt cốt lết (được tầm 5-6 lát)",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "14bdb504-db37-4ed8-b42a-215d4f55bd42",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2765.0",
+        "protein_g": "80.0",
+        "fat_g": "271.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "de143173-3748-4f19-9b6c-c70bddd43c8f": {
+      "alias": "thịt cốt lết",
+      "raw_text": "1 hộp thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "9944d995-df5e-4df5-92c8-3ceb35403860",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "276.5",
+        "protein_g": "8.0",
+        "fat_g": "27.1",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "93.5",
+        "protein_g": "8.9",
+        "fat_g": "6.4",
+        "carbs_g": null
+      }
+    },
+    "e11063c2-2f4f-4655-aad4-dc30a8ee8a74": {
+      "alias": "sườn cốt lết",
+      "raw_text": "1 miếng sườn cốt lết",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "e9e6e465-7648-411d-a34c-e33c64d3e0bb",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "276.5",
+        "protein_g": "8.0",
+        "fat_g": "27.1",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "93.5",
+        "protein_g": "8.9",
+        "fat_g": "6.4",
+        "carbs_g": null
+      }
+    },
+    "eb46216a-f920-42f9-95f1-27c87a119463": {
+      "alias": "thịt bò chay lát",
+      "raw_text": "Thịt bò chay lát 100g",
+      "cleaned_name": "thịt bò chay lát",
+      "recipe_id": "195b2b1c-266f-4e2b-87aa-ede4851856a8",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7006",
+        "master_ingredient_name": "Thịt bò, lưng, nạc và mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "174.0",
+        "protein_g": "21.5",
+        "fat_g": "9.5",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "20039",
+        "master_ingredient_name": "Thịt chay (sườn non chay)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "310.0",
+        "protein_g": "50.0",
+        "fat_g": "1.2",
+        "carbs_g": "25.0"
+      }
+    },
+    "ed46d4bd-ddd2-4a43-ab27-4bc95b81cdc3": {
+      "alias": "sườn cốt lết",
+      "raw_text": "2 lbs sườn cốt lết (rib cutlet)",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "ceaf73ce-56b2-492a-8d0e-c25b929be639",
+      "estimated_weight_g": "907.2",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "5016.8",
+        "protein_g": "145.2",
+        "fat_g": "492.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1696.5",
+        "protein_g": "162.4",
+        "fat_g": "116.1",
+        "carbs_g": null
+      }
+    },
+    "ed7a60e4-1231-43fc-ad71-6fb483249ccf": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 4 miếng",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "3f519072-974a-4dfa-bfc7-95b9500f0eed",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "374.0",
+        "protein_g": "35.8",
+        "fat_g": "25.6",
+        "carbs_g": null
+      }
+    },
+    "ee7f48f4-1e87-431f-95f3-e2492c2008bc": {
+      "alias": "sườn cốt lết",
+      "raw_text": "Sườn cốt lết 1/2 kg",
+      "cleaned_name": "sườn cốt lết",
+      "recipe_id": "ba8543b0-07cf-4e93-8853-b8626a51f4ef",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2765.0",
+        "protein_g": "80.0",
+        "fat_g": "271.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "935.0",
+        "protein_g": "89.5",
+        "fat_g": "64.0",
+        "carbs_g": null
+      }
+    },
+    "f489779c-b955-4ff3-8b84-f6b7c92ca01c": {
+      "alias": "thịt cốt lết",
+      "raw_text": "4 miếng thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "a6fd4bf3-da56-4d9b-afa2-78a10e4e9d15",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "374.0",
+        "protein_g": "35.8",
+        "fat_g": "25.6",
+        "carbs_g": null
+      }
+    },
+    "fadd1da3-d780-40db-b5c7-34aeddf5f090": {
+      "alias": "thịt cốt lết",
+      "raw_text": "1 kg thịt cốt lết",
+      "cleaned_name": "thịt cốt lết",
+      "recipe_id": "6f065d11-8c21-4842-883c-c102405d06fe",
+      "estimated_weight_g": "1000.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "5530.0",
+        "protein_g": "160.0",
+        "fat_g": "543.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1870.0",
+        "protein_g": "179.0",
+        "fat_g": "128.0",
+        "carbs_g": null
+      }
+    },
+    "fe922dbe-d84f-4370-a274-7cae779d9c98": {
+      "alias": "cốt lết",
+      "raw_text": "3 miếng cốt lết",
+      "cleaned_name": "cốt lết",
+      "recipe_id": "75c749c7-6ac9-4ef7-b32c-56b749f305bf",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7053",
+        "master_ingredient_name": "Sườn heo (xương heo)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "280.5",
+        "protein_g": "26.8",
+        "fat_g": "19.2",
+        "carbs_g": null
+      }
+    }
+  },
+  "approximation_caveats": {
+    "7053": "APPROVED APPROXIMATION, not an exact identity. The catalog carries no pork chop/cutlet entry; 7053 'Sườn heo (xương heo)' (Pork, ribs, raw) is the only bone-in pork rib identity available, and is the identity a prior review already chose for this exact context (row 19504d22, reports/eda/suon_rib_alias_fix).",
+    "7031": "APPROVED APPROXIMATION with a reviewed hydration/density caveat, explicitly NOT a blocker. 'bóng bì' is DRIED/puffed pork skin (~10% water); 7031 'Bì lợn' is RAW pork skin (water 73.3 g/100 g), so 7031 understates energy density per dry gram by roughly 3x. Accepted because the alternative on the table (7064 'Chả lợn') is wrong on part AND preparation AND magnitude; because canh bóng rehydrates the skin before use and the recorded weights are already hydrated-scale; and because no dried/puffed pork-skin identity exists in the catalog. Creating one is catalog repair, out of scope under AGENTS.md §18.",
+    "20039": "Sibling-consistency repair, no new policy: 20039 already declares 'thịt bò chay' and 'bò lát chay' as aliases, and 'thịt bò chay lát' is the same product with the last two words transposed."
+  },
+  "out_of_scope_note": "This follow-up repoints exactly six aliases. Deliberately unchanged: the remaining vegan analogues 'đùi gà chay' -> 7088, 'xúc xích chay' -> 7077 and 'nem chua chay' -> 7073 (they need a wet-vs-dry analogue FORM policy this review did not settle); 'thịt cua chay' -> 8069; the vegan seasoning analogues ('nước mắm chay' -> 13017, 'dầu hào chay' -> 13027); catalog repair; any matcher-level 'chay' guard; cốt-lết coverage expansion beyond these six aliases (13 further pork cốt-lết rows stay UNMATCHED, three of which are BONELESS 'cốt lết bỏ xương' and do not belong on 7053, plus 1 vegan 'sườn cốt lết chay' row); and every other 70xx finding.",
+  "canonical_note": "Canonical outputs (canonical_recipes.csv/json, canonical_recipe_ingredients.csv/json, recipe_canonical_mapping.csv/json, recipe_canonicalization_summary.json) are NOT regenerated by this script and are stale for these rows/recipes until scripts/canonicalize_recipes.py and scripts/export_canonical_json.py are re-run."
+}

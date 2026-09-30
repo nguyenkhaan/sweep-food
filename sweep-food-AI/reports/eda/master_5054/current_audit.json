@@ -1,0 +1,25 @@
+{
+  "scope": "Current processed baseline only; recomputed against whatever is on disk now.",
+  "target_code": "5054",
+  "classes": {
+    "A": "Definitely wrong: dairy/milk term incorrectly linked to the Vú sữa fruit.",
+    "B": "Ambiguous: neither clearly dairy nor clearly the fruit; left untouched.",
+    "D": "Legitimate: raw/cleaned text literally names Vú sữa; preserved."
+  },
+  "summary": {
+    "total_rows": 63943,
+    "linked_rows": 0,
+    "linked_recipes": 0,
+    "class_counts": {
+      "A": 0,
+      "B": 0,
+      "D": 0
+    },
+    "class_recipes": {
+      "A": 0,
+      "B": 0,
+      "D": 0
+    }
+  },
+  "rows": []
+}

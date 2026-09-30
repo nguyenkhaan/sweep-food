@@ -1,0 +1,298 @@
+{
+  "policy": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET",
+  "guard_location": "nlp/entity_matcher.py::VietnameseIngredientMatcher._blocks_vegetable_stock",
+  "detector": "nlp/entity_matcher.py::is_vegetable_stock_text",
+  "animal_categories_vi": [
+    "Thịt và sản phẩm chế biến",
+    "Thủy sản và sản phẩm chế biến"
+  ],
+  "animal_supplementary_codes": [
+    "11015",
+    "11016",
+    "11017",
+    "11018",
+    "11019",
+    "11020",
+    "11021",
+    "11022",
+    "11023",
+    "6003",
+    "6004"
+  ],
+  "rows_cleared": 8,
+  "rows_already_applied": 0,
+  "recipes_affected": 8,
+  "recipe_ids": [
+    "433e9ab5-680a-4fe0-ac24-aeeaf22f92ed",
+    "51790665-f90a-4c31-b95e-cb78ff67a509",
+    "573beeb2-438c-4d08-a040-833e07c1d6e7",
+    "5db63d1d-8b06-4fc7-a003-9dd9c3c643dd",
+    "63265048-9c12-41b4-a357-cedfd8af7d4b",
+    "834dc565-c83e-4e23-b77d-602689d40d85",
+    "9964fcdc-c139-4cf5-b271-fe50ee1f9771",
+    "b049b052-19ac-467d-8e89-eb77ab41bcd5"
+  ],
+  "nutrition_removed": {
+    "calories": 99.5,
+    "protein_g": 0.0,
+    "fat_g": 0.0,
+    "carbs_g": 0.0
+  },
+  "recipes_csv_totals_changed": 8,
+  "recipes_json_totals_changed": 8,
+  "nutrition_status": {
+    "recipes_with_changed_missing_count": 8,
+    "recipes_with_status_label_changed": 1,
+    "status_transitions": {
+      "unchanged": 5640,
+      "COMPLETE -> PARTIAL": 1
+    }
+  },
+  "forward_protection_rows": [
+    "470f6222-a04d-46a7-9404-656880fdf968"
+  ],
+  "rows": [
+    {
+      "id": "f9e2f60c-3f14-4bea-8588-ed6abc045af1",
+      "state": "pending",
+      "recipe_id": "433e9ab5-680a-4fe0-ac24-aeeaf22f92ed",
+      "raw_text": "Nước dùng rau củ 1,6 lít",
+      "cleaned_name": "nước dùng rau",
+      "estimated_weight_g": "1600.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 16.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "e07fe326-e899-4425-995c-f0134cad81e4",
+      "state": "pending",
+      "recipe_id": "573beeb2-438c-4d08-a040-833e07c1d6e7",
+      "raw_text": "Nước dùng rau củ 1,2 lít",
+      "cleaned_name": "nước dùng rau",
+      "estimated_weight_g": "1200.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 12.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "e3b10cc6-c4fc-4420-a662-17b2c432018c",
+      "state": "pending",
+      "recipe_id": "63265048-9c12-41b4-a357-cedfd8af7d4b",
+      "raw_text": "Nước dùng rau củ 1 lít",
+      "cleaned_name": "nước dùng rau",
+      "estimated_weight_g": "1000.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 10.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "16c22e9a-db70-4266-8df2-3c834d977495",
+      "state": "pending",
+      "recipe_id": "5db63d1d-8b06-4fc7-a003-9dd9c3c643dd",
+      "raw_text": "Nước dùng rau củ 1,5 lít",
+      "cleaned_name": "nước dùng rau",
+      "estimated_weight_g": "1500.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 15.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "81739420-ba9f-414b-913d-ee6329326cfd",
+      "state": "pending",
+      "recipe_id": "9964fcdc-c139-4cf5-b271-fe50ee1f9771",
+      "raw_text": "Nước dùng rau 950 ml",
+      "cleaned_name": "nước dùng rau",
+      "estimated_weight_g": "950.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 9.5,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "22b6999f-d0fa-4b27-9a6f-ca6f7cbe5cb8",
+      "state": "pending",
+      "recipe_id": "51790665-f90a-4c31-b95e-cb78ff67a509",
+      "raw_text": "Nước dùng rau củ: 1,2 L",
+      "cleaned_name": "nước dùng rau củ",
+      "estimated_weight_g": "1200.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 12.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "ba987c1c-8399-4e93-87ac-33b393e41370",
+      "state": "pending",
+      "recipe_id": "b049b052-19ac-467d-8e89-eb77ab41bcd5",
+      "raw_text": "Nước dùng rau củ: 1 lít",
+      "cleaned_name": "nước dùng rau củ",
+      "estimated_weight_g": "1000.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 10.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET"
+    },
+    {
+      "id": "c9f4c65d-b499-4854-9b84-8b4afba86da1",
+      "state": "pending",
+      "recipe_id": "834dc565-c83e-4e23-b77d-602689d40d85",
+      "raw_text": "Nước dùng rau củ: 1,5L",
+      "cleaned_name": "nước dùng rau củ",
+      "estimated_weight_g": "1500.0",
+      "before": {
+        "master_ingredient_code": "7141",
+        "master_ingredient_name": "Nước dùng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": 15.0,
+        "protein_g": 0.0,
+        "fat_g": 0.0,
+        "carbs_g": 0.0
+      },
+      "after": {
+        "master_ingredient_code": null,
+        "master_ingredient_name": null,
+        "match_method": "UNMATCHED",
+        "match_confidence": null,
+        "calories": null,
+        "protein_g": null,
+        "fat_g": null,
+        "carbs_g": null
+      },
+      "reason": "VEGETABLE_STOCK_PHRASE_ANIMAL_TARGET"
+    }
+  ],
+  "out_of_scope": [
+    "the two alias-map keys nước dùng rau / nước dùng rau củ (left inert, not removed)",
+    "20002 as a repoint target (asserts real 0.0 macros; semantically wrong)",
+    "a new vegetable-stock catalog entry (deferred catalog gap)",
+    "the 6 nước dùng chay rows and the chay guard",
+    "the 7141 catalog definition, dashi mappings, seasoning analogues",
+    "141 animal broths with explicit animal semantics",
+    "stale cleaned_name on 5 rows (deferred; guard reads raw_text too)",
+    "rau trai -> 8054; garnish-list collapse; other matcher divergence"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "corrections": [
+    {
+      "master_ingredient_name": "tỏi",
+      "unit_vi": "tép",
+      "grams_per_piece": 5.0,
+      "citation": "Standard garlic clove ~4-5 g (USDA SR: 1 clove ≈ 3 g; VN clove ~5 g)."
+    },
+    {
+      "master_ingredient_name": "hành lá (hành hoa)",
+      "unit_vi": "nhánh",
+      "grams_per_piece": 15.0,
+      "citation": "Standard scallion/green-onion stalk ~15 g (USDA: 1 stalk ≈ 15 g)."
+    },
+    {
+      "master_ingredient_name": "sả",
+      "unit_vi": "cây",
+      "grams_per_piece": 20.0,
+      "citation": "Standard lemongrass stalk ~20 g (edible trimmed portion)."
+    }
+  ],
+  "ingredient_rows_changed": 1633,
+  "per_rule_rows": {
+    "tỏi|tép": 630,
+    "hành lá (hành hoa)|nhánh": 713,
+    "sả|cây": 290
+  },
+  "recipes_recomputed": 1331,
+  "note": "Ambiguous large countable items (e.g. '1 con ga', '1 trai dua') left unchanged; see DATASHEET limitations."
+}

@@ -1,0 +1,553 @@
+{
+  "total_audited": 1118,
+  "corrections_count": 161,
+  "corrections_sample": [
+    {
+      "term": "nước tương teriyaki",
+      "turn1": [
+        "nước tương",
+        "teriyaki"
+      ],
+      "turn2_audited": [
+        "nước tương teriyaki"
+      ]
+    },
+    {
+      "term": "nước cốt hành tỏi",
+      "turn1": [
+        "hành",
+        "tỏi"
+      ],
+      "turn2_audited": [
+        "nước cốt hành tỏi"
+      ]
+    },
+    {
+      "term": "kem sữa tươi",
+      "turn1": [
+        "kem",
+        "sữa tươi"
+      ],
+      "turn2_audited": [
+        "kem sữa tươi"
+      ]
+    },
+    {
+      "term": "nước dùng rau",
+      "turn1": [
+        "nước dùng",
+        "rau"
+      ],
+      "turn2_audited": [
+        "nước dùng rau"
+      ]
+    },
+    {
+      "term": "garlic salt",
+      "turn1": [
+        "garlic",
+        "salt"
+      ],
+      "turn2_audited": [
+        "garlic salt"
+      ]
+    },
+    {
+      "term": "rau nêm ngò rí boaro phi",
+      "turn1": [
+        "rau nêm",
+        "ngò rí",
+        "bơ",
+        "rơ phi"
+      ],
+      "turn2_audited": [
+        "rau nêm",
+        "ngò rí",
+        "bơ"
+      ]
+    },
+    {
+      "term": "lá parsley khô hoặc xô dứa",
+      "turn1": [
+        "lá parsley khô",
+        "xô dứa"
+      ],
+      "turn2_audited": [
+        "lá parsley khô",
+        "dứa"
+      ]
+    },
+    {
+      "term": "nước cốt hành tím tỏi",
+      "turn1": [
+        "hành tím",
+        "tỏi"
+      ],
+      "turn2_audited": [
+        "nước cốt hành tím tỏi"
+      ]
+    },
+    {
+      "term": "sườn cốt lết heo",
+      "turn1": [
+        "sườn",
+        "cốt lết heo"
+      ],
+      "turn2_audited": [
+        "sườn cốt lết heo"
+      ]
+    },
+    {
+      "term": "hành tỏi ớt hiểm",
+      "turn1": [
+        "hành tỏi",
+        "ớt hiểm"
+      ],
+      "turn2_audited": [
+        "hành",
+        "tỏi",
+        "ớt hiểm"
+      ]
+    },
+    {
+      "term": "nguyệt quế khô lá",
+      "turn1": [
+        "nguyệt quế khô",
+        "lá"
+      ],
+      "turn2_audited": [
+        "lá nguyệt quế khô"
+      ]
+    },
+    {
+      "term": "dưa leo giá",
+      "turn1": [
+        "dưa leo",
+        "giá"
+      ],
+      "turn2_audited": [
+        "dưa leo"
+      ]
+    },
+    {
+      "term": "nấm hương ngâm mềm tai nhỏ",
+      "turn1": [
+        "nấm hương ngâm mềm",
+        "tai nhỏ"
+      ],
+      "turn2_audited": [
+        "nấm hương ngâm mềm"
+      ]
+    },
+    {
+      "term": "hành tím loại củ nhỏ dài",
+      "turn1": [
+        "hành tím",
+        "củ nhỏ dài"
+      ],
+      "turn2_audited": [
+        "hành tím"
+      ]
+    },
+    {
+      "term": "dầu ăn dầu mè dứa",
+      "turn1": [
+        "dầu ăn",
+        "dầu mè"
+      ],
+      "turn2_audited": [
+        "dầu ăn",
+        "dầu mè",
+        "dứa"
+      ]
+    },
+    {
+      "term": "ăn kèm rau mầm húng lũi chiên",
+      "turn1": [
+        "rau mầm húng lủi"
+      ],
+      "turn2_audited": [
+        "rau mầm húng lũi"
+      ]
+    },
+    {
+      "term": "đậu hoà lan hạt",
+      "turn1": [
+        "đậu hạt",
+        "lan"
+      ],
+      "turn2_audited": [
+        "đậu hạt lan"
+      ]
+    },
+    {
+      "term": "ngò rí tỏi đập dập",
+      "turn1": [
+        "ngò rí",
+        "tỏi"
+      ],
+      "turn2_audited": [
+        "ngò rí",
+        "tỏi đập dập"
+      ]
+    },
+    {
+      "term": "nước hành tỏi",
+      "turn1": [
+        "nước hành",
+        "tỏi"
+      ],
+      "turn2_audited": [
+        "nước hành tỏi"
+      ]
+    },
+    {
+      "term": "rau nêm rau om ngò gai",
+      "turn1": [
+        "rau nêm",
+        "rau om ngò gai"
+      ],
+      "turn2_audited": [
+        "rau nêm",
+        "rau om",
+        "ngò gai"
+      ]
+    },
+    {
+      "term": "rượu trắng gừng tươi chanh muối hạt",
+      "turn1": [
+        "rượu trắng",
+        "gừng tươi",
+        "chanh",
+        "muối",
+        "hạt"
+      ],
+      "turn2_audited": [
+        "rượu trắng",
+        "gừng tươi",
+        "chanh",
+        "muối hạt"
+      ]
+    },
+    {
+      "term": "rau nêm ớt sừng sợi",
+      "turn1": [
+        "rau nêm",
+        "ớt sừng"
+      ],
+      "turn2_audited": [
+        "rau nêm",
+        "ớt sừng sợi"
+      ]
+    },
+    {
+      "term": "trang trí ớt sợi cải mầm",
+      "turn1": [
+        "ớt",
+        "sợi cải mầm"
+      ],
+      "turn2_audited": [
+        "ớt sợi",
+        "cải mầm"
+      ]
+    },
+    {
+      "term": "bắp cải xào lòng gà tép khô",
+      "turn1": [
+        "bắp cải xào",
+        "lòng gà",
+        "tép khô"
+      ],
+      "turn2_audited": [
+        "bắp cải",
+        "lòng gà",
+        "tép khô"
+      ]
+    },
+    {
+      "term": "canh cà chua thịt xay tép khô",
+      "turn1": [
+        "canh cà chua",
+        "thịt xay",
+        "tép khô"
+      ],
+      "turn2_audited": [
+        "cà chua",
+        "thịt xay",
+        "tép khô"
+      ]
+    },
+    {
+      "term": "hành tím că t la t",
+      "turn1": [
+        "hành tím",
+        "cà t là t"
+      ],
+      "turn2_audited": [
+        "hành tím"
+      ]
+    },
+    {
+      "term": "muô ng canh dâ u ăn",
+      "turn1": [
+        "muối",
+        "cá",
+        "dầu ăn"
+      ],
+      "turn2_audited": [
+        "muối",
+        "dầu ăn"
+      ]
+    },
+    {
+      "term": "rau nêm boaro phi ngò rí",
+      "turn1": [
+        "rau nêm boaro phi",
+        "ngò rí"
+      ],
+      "turn2_audited": [
+        "rau nêm",
+        "bò rào phi",
+        "ngò rí"
+      ]
+    },
+    {
+      "term": "rau nêm hành tím ngò và rau quế",
+      "turn1": [
+        "rau nêm hành tím ngò",
+        "rau quế"
+      ],
+      "turn2_audited": [
+        "rau nêm",
+        "hành tím",
+        "ngò",
+        "rau quế"
+      ]
+    },
+    {
+      "term": "phile cá chẽm",
+      "turn1": [
+        "phile",
+        "cá chẽm"
+      ],
+      "turn2_audited": [
+        "cá chẽm"
+      ]
+    },
+    {
+      "term": "mớ rau bò khai",
+      "turn1": [
+        "mớ rau",
+        "bò khai"
+      ],
+      "turn2_audited": [
+        "bò khai"
+      ]
+    },
+    {
+      "term": "xà lách xoăn frisse",
+      "turn1": [
+        "xà lách xoăn",
+        "frisse"
+      ],
+      "turn2_audited": [
+        "xà lách xoăn"
+      ]
+    },
+    {
+      "term": "hỗn hợp gia vị lá dứa",
+      "turn1": [
+        "hỗn hợp gia vị",
+        "lá dứa"
+      ],
+      "turn2_audited": [
+        "lá dứa"
+      ]
+    },
+    {
+      "term": "hành tỏi phi dứa",
+      "turn1": [
+        "hành",
+        "tỏi",
+        "dứa"
+      ],
+      "turn2_audited": [
+        "hành tỏi phi",
+        "dứa"
+      ]
+    },
+    {
+      "term": "khuôn hình ngôi sao khuôn hình thỏ nhỏ",
+      "turn1": [
+        "khuôn hình ngôi sao",
+        "khuôn hình thỏ nhỏ"
+      ],
+      "turn2_audited": []
+    },
+    {
+      "term": "tiêu lô p khô tra i",
+      "turn1": [
+        "tiêu",
+        "tỏi"
+      ],
+      "turn2_audited": [
+        "tiêu",
+        "bột khô",
+        "tỏi"
+      ]
+    },
+    {
+      "term": "xốt cà dầu điều",
+      "turn1": [
+        "xốt cà",
+        "dầu điều"
+      ],
+      "turn2_audited": [
+        "xốt cà dầu điều"
+      ]
+    },
+    {
+      "term": "xốt cà ri dầu",
+      "turn1": [
+        "xốt cà ri",
+        "dầu"
+      ],
+      "turn2_audited": [
+        "xốt cà ri dầu"
+      ]
+    },
+    {
+      "term": "me ngò om tỏi phi",
+      "turn1": [
+        "me",
+        "ngò",
+        "tỏi phi"
+      ],
+      "turn2_audited": [
+        "me",
+        "ngò om",
+        "tỏi phi"
+      ]
+    },
+    {
+      "term": "đường hoặc nước đường 올리고당",
+      "turn1": [
+        "đường",
+        "nước đường"
+      ],
+      "turn2_audited": [
+        "đường",
+        "nước đường",
+        "올리고당"
+      ]
+    },
+    {
+      "term": "hành tím phi nước hành tỏi",
+      "turn1": [
+        "hành tím",
+        "tỏi"
+      ],
+      "turn2_audited": [
+        "hành tím phi",
+        "nước hành tỏi"
+      ]
+    },
+    {
+      "term": "nước tương phú sĩ hạt nêm từ nấm hương và hạt sen",
+      "turn1": [
+        "nước tương phú sĩ",
+        "hạt nêm"
+      ],
+      "turn2_audited": [
+        "nước tương phú sĩ",
+        "nấm hương",
+        "hạt sen"
+      ]
+    },
+    {
+      "term": "phô mai sợi mozarella",
+      "turn1": [
+        "phô mai sợi",
+        "mozarella"
+      ],
+      "turn2_audited": [
+        "phô mai sợi mozarella"
+      ]
+    },
+    {
+      "term": "hành tím phi mè",
+      "turn1": [
+        "hành tím",
+        "mè"
+      ],
+      "turn2_audited": [
+        "hành tím phi mè"
+      ]
+    },
+    {
+      "term": "hành tỏi phi sẵn",
+      "turn1": [
+        "hành",
+        "tỏi"
+      ],
+      "turn2_audited": [
+        "hành tỏi phi sẵn"
+      ]
+    },
+    {
+      "term": "thịt cua rỉa khử mùi bằng cách trụng qua nước sôi có thêm chút rượu trắng vớt ra trộn với ít tiêu xay",
+      "turn1": [
+        "thịt cua rỉa",
+        "tiêu xay"
+      ],
+      "turn2_audited": [
+        "thịt cua rỉa",
+        "rượu trắng",
+        "tiêu xay"
+      ]
+    },
+    {
+      "term": "ăn kèm xà lách xoong cà chua bi",
+      "turn1": [
+        "xà lách",
+        "xoong",
+        "cà chua bi"
+      ],
+      "turn2_audited": [
+        "xà lách",
+        "cà chua bi"
+      ]
+    },
+    {
+      "term": "ăn kèm salad các loại xà lách dún xanh",
+      "turn1": [
+        "salad",
+        "xà lách dún xanh"
+      ],
+      "turn2_audited": [
+        "xà lách dún xanh"
+      ]
+    },
+    {
+      "term": "ớt bột parika hun khói",
+      "turn1": [
+        "ớt bột",
+        "parika hun khói"
+      ],
+      "turn2_audited": [
+        "bột ớt",
+        "paprika hun khói"
+      ]
+    },
+    {
+      "term": "ăn kèm salad trộn salad dún xanh",
+      "turn1": [
+        "salad trộn",
+        "salad dún xanh"
+      ],
+      "turn2_audited": [
+        "salad dún xanh"
+      ]
+    }
+  ]
+}

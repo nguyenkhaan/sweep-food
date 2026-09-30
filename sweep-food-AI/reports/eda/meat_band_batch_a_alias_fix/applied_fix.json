@@ -1,0 +1,4255 @@
+{
+  "status": "applied",
+  "alias_decision": "SAFE_REPOINT",
+  "alias_repoint_count": 15,
+  "alias_states": {
+    "thịt thịt nạc thăn": "pending",
+    "chả lụa": "pending",
+    "chả lụa cắt hạt lựu": "pending",
+    "da heo": "pending",
+    "da heo tươi": "pending",
+    "phile bò": "pending",
+    "bò phile": "pending",
+    "bò thăn": "pending",
+    "gân bò": "pending",
+    "bò hoa": "pending",
+    "chim bồ câu": "pending",
+    "vịt": "pending",
+    "phô mai đầu bò": "pending",
+    "đùi gà tây": "pending",
+    "nấm hủ đùi gà": "pending"
+  },
+  "alias_repoints": {
+    "thịt thịt nạc thăn": {
+      "from": "7070",
+      "to": "7085"
+    },
+    "chả lụa": {
+      "from": "7068",
+      "to": "7069"
+    },
+    "chả lụa cắt hạt lựu": {
+      "from": "7068",
+      "to": "7069"
+    },
+    "da heo": {
+      "from": "7064",
+      "to": "7031"
+    },
+    "da heo tươi": {
+      "from": "7064",
+      "to": "7031"
+    },
+    "phile bò": {
+      "from": "7001",
+      "to": "7005"
+    },
+    "bò phile": {
+      "from": "7001",
+      "to": "7005"
+    },
+    "bò thăn": {
+      "from": "7001",
+      "to": "7005"
+    },
+    "gân bò": {
+      "from": "7001",
+      "to": "7043"
+    },
+    "bò hoa": {
+      "from": "7001",
+      "to": "7094"
+    },
+    "chim bồ câu": {
+      "from": "7012",
+      "to": "7007"
+    },
+    "vịt": {
+      "from": "7042",
+      "to": "7028"
+    },
+    "phô mai đầu bò": {
+      "from": "7035",
+      "to": "10009"
+    },
+    "đùi gà tây": {
+      "from": "7088",
+      "to": "7014"
+    },
+    "nấm hủ đùi gà": {
+      "from": "7088",
+      "to": "20007"
+    }
+  },
+  "latent_aliases": [
+    "bò hoa"
+  ],
+  "aliases_removed": 0,
+  "aliases_added": 0,
+  "alias_map_size": 4676,
+  "match_method_semantics": {
+    "repaired_rows": "PRESET_ALIAS_MATCH / 0.98 (unchanged)",
+    "cure_held_rows": "STANDARDIZED_CURE / 0.98 (unchanged)",
+    "row_level_overrides": 0
+  },
+  "rows_in_scope": 126,
+  "rows_repaired_total": 111,
+  "rows_repaired_now": 111,
+  "rows_already_applied": 0,
+  "rows_cure_held_untouched": 15,
+  "legitimate_old_code_rows_untouched": {
+    "7001": 29,
+    "7012": 3,
+    "7035": 0,
+    "7042": 1,
+    "7064": 5,
+    "7068": 6,
+    "7070": 43,
+    "7088": 85
+  },
+  "affected_recipe_count": 105,
+  "affected_recipe_ids": [
+    "0360969d-97b7-4f84-9826-71ff1866c620",
+    "0432d669-6573-4ee7-bc1f-6c4acf1f2b72",
+    "06d55d25-9b1e-4fd7-934d-e0f5446ababf",
+    "0ac2a9a4-a328-4652-b9e4-b5049fbb1c10",
+    "0af9a4e4-561a-4820-84a9-0e6b81ad94c8",
+    "0f4979f1-ec64-412d-9249-36f069a4093a",
+    "112563f4-0ccd-4d41-a7dd-297a059e0838",
+    "17d1c1a8-6dec-4f30-9fa7-b305165a2a72",
+    "1a779fa4-5ace-4c20-85f3-e8bff3e48b16",
+    "1bff5faf-41b5-4bc7-a6d2-995126161002",
+    "1f74c477-933d-4fa7-bcc8-275618436a95",
+    "24435d6a-48a7-4aaf-a8c3-c553f3b73ac9",
+    "24541848-5b8e-4203-ae07-ce7d57928ff3",
+    "253035ce-90e6-4a86-a4ac-18e9145e3691",
+    "253cf26f-ff92-45f1-9214-610106494c08",
+    "29fa3f3b-2b82-4530-83be-8c666b1c918d",
+    "2c0bdeb3-abc4-4f62-86a0-f1509325fa57",
+    "2e97eb82-5e1e-4963-896b-6d2556390689",
+    "2f2af65f-7a32-4747-a6b6-f7e27682513d",
+    "2fd442e5-bb49-450b-929b-97ed1714aefe",
+    "314e3dc3-f953-4fb1-8604-3a1c2e911725",
+    "33d93fc4-df1c-4fad-80d3-3cad49f96fc4",
+    "342d126b-2b2b-4919-ac04-5570b8209df0",
+    "34aa98ad-05ff-456b-989a-2d35a7cba853",
+    "3a362005-fad7-4800-9bb0-bbc8eb2f517e",
+    "3bafb092-768e-41e9-8466-5c05a2033e6f",
+    "3ed3cfd3-214d-4c7f-9c50-ff1e72442aa8",
+    "407dfcfe-4f65-4192-afb0-15ac41fd47c5",
+    "4549208e-24d2-4d7e-adcf-0ccf2ba78621",
+    "47689cc0-633a-468e-808d-cc89a9ca9164",
+    "4a196f48-e188-4b45-8cda-1c7fa0936b97",
+    "4b352c0a-e350-481d-8f00-fb4aa8e98f65",
+    "4d11d5d2-e2ae-4021-9544-9f2532715639",
+    "4ea466d8-5496-4ea7-a73d-5d6a3cafbd9c",
+    "50393968-c098-4b70-96bb-145c5e0bc035",
+    "511a16bd-aeba-4754-94a5-b9decb59fd3e",
+    "57ffe05a-7b4b-44f5-bc6c-e3a66defef4f",
+    "5d67d6a3-26a2-42e1-8e6b-7e8197a1f565",
+    "5f1657a9-4255-4ba2-b6f0-02a01dd2da2f",
+    "5f5769a3-f2c5-4ae5-aace-07836f0dea47",
+    "63265048-9c12-41b4-a357-cedfd8af7d4b",
+    "641b05ac-10e5-41a6-b736-255812ee1649",
+    "647a4a4a-594c-4063-8407-f51169598d45",
+    "677d178e-653a-42c4-bdde-296ca45c9b18",
+    "68e45911-182d-4584-a645-39e189902c5f",
+    "6bd44e67-25f3-498f-a2a7-6d1c13949e54",
+    "7362745a-9dd1-4692-b425-c2408cb5b0fa",
+    "748f796b-4aa4-487c-93ce-5cb9addd7a21",
+    "77be6070-a47c-4d1b-afe0-470333e7c804",
+    "781e3493-eca2-48bb-a299-c9fb9f19a2ef",
+    "78a0486d-6639-4612-9dac-2867c7f78e36",
+    "87771593-32a7-4e95-ad3d-27612cc164de",
+    "8a2520c5-bfad-4a7a-8710-7628fe036189",
+    "8deee999-a33e-42ab-8671-995e7455d19d",
+    "8e7128db-b996-4934-87d7-6c44a899edd3",
+    "90bea07a-8d80-4e61-b23c-9490708ad43f",
+    "91bed71c-ca14-4996-918c-0b05007ab028",
+    "93a59339-59e3-4035-8c5b-360577e59644",
+    "965f4408-2b91-438d-af7c-6b0e1d0b3794",
+    "96c315a0-9cb6-4453-83e1-be95838c51a5",
+    "9a645572-19ca-46e4-b3df-2658fd260a53",
+    "9da1b0bd-71bd-479a-a9fa-9a5609b33fc8",
+    "a02844cb-ec9c-496e-be47-f2ab8eec670f",
+    "a0c46019-326d-4f84-b8a8-b90f02d5784f",
+    "a14dfb40-7be6-4b42-965e-56361ad7fe91",
+    "a3190490-fb0c-4336-81ff-6a54915d822b",
+    "a4185f57-3695-4a20-9415-2b2e3e310334",
+    "a9731227-da96-4157-8d15-129d173a78b8",
+    "aa2c29d5-53d5-409c-9a19-3d7698c3308c",
+    "ad499421-ee66-4e1e-8ba7-c230414c6b07",
+    "add79d0c-342f-43e9-aee9-d41f435cca0e",
+    "afef3673-f1f6-4326-8576-8d498ef2a74d",
+    "b0f0afa9-9e8d-4307-8727-a8a4acbe58d6",
+    "b17e536c-856a-484d-9c9c-fadace94d037",
+    "b51b8880-517d-4f82-99b1-a996574cbb6a",
+    "bac7913e-6a47-4f48-add0-e6a6b09cb6f2",
+    "bc6168a6-4681-42cd-8822-3cc16f9127d5",
+    "c1c854b2-82a0-43b8-8cc4-83d1380dc304",
+    "c507797b-1bdd-4a09-b1cc-1f0dbb1bcb26",
+    "c637c0ac-fd76-4551-8bc7-b44d33ee4b51",
+    "c68c9bdc-42a5-48b8-8c6b-718dce2ca32f",
+    "c7286d2b-d772-4a3b-92a0-e41df52b550f",
+    "cb8b90b9-ea83-4007-ae66-72d8de2d3592",
+    "cf036c62-fa46-4a6b-8fd4-3a15b3f88f84",
+    "d45b6050-777a-42fa-8135-7e1189243f5f",
+    "d7fa0969-5d67-4417-8daa-e23a5020f2d7",
+    "d9f360db-8521-4ac8-b2ef-02ccee878250",
+    "dac42905-9e77-48ff-9093-ba205035113c",
+    "dc8517c7-668b-4f53-9900-af733ccf069c",
+    "e0f9198a-5fe4-42e0-89b6-47f33a73a458",
+    "e2e79e1e-81a5-45a1-b5d0-d3e76b523a45",
+    "e5b9a688-b036-4d58-b092-236d48ac0393",
+    "e6798105-014b-4815-89e7-b31c442f4e5d",
+    "e6ad51ae-f49b-4ca1-8aab-a73eca36624d",
+    "e6d74be3-e5db-480b-a695-6ebdd3126109",
+    "e6f9393c-136f-40e3-9e1c-0a82eeba4ed9",
+    "e7bc1761-4680-4940-a246-dfff075ce187",
+    "e99d3120-4201-4da9-b7d2-4e5a6d1db2f4",
+    "ec19cd25-f059-43dd-a6e9-c7be1933f143",
+    "ee3374d2-758b-4815-99ba-26ed6603a1fe",
+    "f83d963e-c669-437c-9670-ceffbe5908f5",
+    "f85e0f53-d724-4655-b503-1b50fa553bb2",
+    "fbe05ebb-6e84-4955-9b76-8ebe64caca21",
+    "fc1d31a8-36ea-4d7d-9804-fbf5c5491547",
+    "fdc613b6-c4b1-488d-8ae8-bc649fed2436"
+  ],
+  "recipes_with_changed_totals": 105,
+  "recipes_with_changed_missing_count": 0,
+  "recipes_with_status_label_changed": 0,
+  "status_transitions": {
+    "unchanged": 5641
+  },
+  "nutrition_all_repaired_rows": {
+    "before": {
+      "calories": 52074.8,
+      "protein_g": 4180.3,
+      "fat_g": 3817.5,
+      "carbs_g": 231.3
+    },
+    "after": {
+      "calories": 38941.2,
+      "protein_g": 5447.7,
+      "fat_g": 1895.1,
+      "carbs_g": 39.0
+    },
+    "delta": {
+      "calories": -13133.6,
+      "protein_g": 1267.4,
+      "fat_g": -1922.4,
+      "carbs_g": -192.3
+    }
+  },
+  "by_alias": {
+    "thịt thịt nạc thăn": {
+      "from": {
+        "code": "7070",
+        "name": "Giò thủ lợn"
+      },
+      "to": {
+        "code": "7085",
+        "name": "Thịt nạc thăn heo (lợn)"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 5,
+      "rows_repaired": 5,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 5,
+      "nutrition": {
+        "before": {
+          "calories": 10783.5,
+          "protein_g": 312.0,
+          "fat_g": 1058.8,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 2301.0,
+          "protein_g": 448.5,
+          "fat_g": 56.5,
+          "carbs_g": 0.8
+        },
+        "delta": {
+          "calories": -8482.5,
+          "protein_g": 136.5,
+          "fat_g": -1002.3,
+          "carbs_g": 0.8
+        }
+      }
+    },
+    "chả lụa": {
+      "from": {
+        "code": "7068",
+        "name": "Giò bò"
+      },
+      "to": {
+        "code": "7069",
+        "name": "Giò lụa"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 9,
+      "rows_repaired": 9,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 9,
+      "nutrition": {
+        "before": {
+          "calories": 3618.0,
+          "protein_g": 196.6,
+          "fat_g": 313.2,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 2214.0,
+          "protein_g": 182.2,
+          "fat_g": 162.0,
+          "carbs_g": 19.4
+        },
+        "delta": {
+          "calories": -1404.0,
+          "protein_g": -14.4,
+          "fat_g": -151.2,
+          "carbs_g": 19.4
+        }
+      }
+    },
+    "chả lụa cắt hạt lựu": {
+      "from": {
+        "code": "7068",
+        "name": "Giò bò"
+      },
+      "to": {
+        "code": "7069",
+        "name": "Giò lụa"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 1,
+      "rows_repaired": 1,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 1,
+      "nutrition": {
+        "before": {
+          "calories": 167.5,
+          "protein_g": 9.1,
+          "fat_g": 14.5,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 102.5,
+          "protein_g": 8.4,
+          "fat_g": 7.5,
+          "carbs_g": 0.9
+        },
+        "delta": {
+          "calories": -65.0,
+          "protein_g": -0.7,
+          "fat_g": -7.0,
+          "carbs_g": 0.9
+        }
+      }
+    },
+    "da heo": {
+      "from": {
+        "code": "7064",
+        "name": "Chả lợn"
+      },
+      "to": {
+        "code": "7031",
+        "name": "Bì lợn"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 12,
+      "rows_repaired": 12,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 12,
+      "nutrition": {
+        "before": {
+          "calories": 11891.0,
+          "protein_g": 248.4,
+          "fat_g": 1159.2,
+          "carbs_g": 117.1
+        },
+        "after": {
+          "calories": 2714.0,
+          "protein_g": 536.1,
+          "fat_g": 62.3,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -9177.0,
+          "protein_g": 287.7,
+          "fat_g": -1096.9,
+          "carbs_g": -117.1
+        }
+      }
+    },
+    "da heo tươi": {
+      "from": {
+        "code": "7064",
+        "name": "Chả lợn"
+      },
+      "to": {
+        "code": "7031",
+        "name": "Bì lợn"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 1,
+      "rows_repaired": 1,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 1,
+      "nutrition": {
+        "before": {
+          "calories": 1034.0,
+          "protein_g": 21.6,
+          "fat_g": 100.8,
+          "carbs_g": 10.2
+        },
+        "after": {
+          "calories": 236.0,
+          "protein_g": 46.6,
+          "fat_g": 5.4,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -798.0,
+          "protein_g": 25.0,
+          "fat_g": -95.4,
+          "carbs_g": -10.2
+        }
+      }
+    },
+    "phile bò": {
+      "from": {
+        "code": "7001",
+        "name": "Thịt bê mỡ"
+      },
+      "to": {
+        "code": "7005",
+        "name": "Thịt thăn bò"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 18,
+      "rows_repaired": 18,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 18,
+      "nutrition": {
+        "before": {
+          "calories": 3744.0,
+          "protein_g": 494.0,
+          "fat_g": 195.0,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 3146.0,
+          "protein_g": 600.0,
+          "fat_g": 82.6,
+          "carbs_g": 2.6
+        },
+        "delta": {
+          "calories": -598.0,
+          "protein_g": 106.0,
+          "fat_g": -112.4,
+          "carbs_g": 2.6
+        }
+      }
+    },
+    "bò phile": {
+      "from": {
+        "code": "7001",
+        "name": "Thịt bê mỡ"
+      },
+      "to": {
+        "code": "7005",
+        "name": "Thịt thăn bò"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 7,
+      "rows_repaired": 4,
+      "rows_cure_held": 3,
+      "latent": false,
+      "recipes_affected": 4,
+      "nutrition": {
+        "before": {
+          "calories": 792.0,
+          "protein_g": 104.5,
+          "fat_g": 41.3,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 665.5,
+          "protein_g": 126.9,
+          "fat_g": 17.5,
+          "carbs_g": 0.6
+        },
+        "delta": {
+          "calories": -126.5,
+          "protein_g": 22.4,
+          "fat_g": -23.8,
+          "carbs_g": 0.6
+        }
+      }
+    },
+    "bò thăn": {
+      "from": {
+        "code": "7001",
+        "name": "Thịt bê mỡ"
+      },
+      "to": {
+        "code": "7005",
+        "name": "Thịt thăn bò"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 7,
+      "rows_repaired": 7,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 7,
+      "nutrition": {
+        "before": {
+          "calories": 2160.0,
+          "protein_g": 285.0,
+          "fat_g": 112.4,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 1815.0,
+          "protein_g": 346.1,
+          "fat_g": 47.3,
+          "carbs_g": 1.6
+        },
+        "delta": {
+          "calories": -345.0,
+          "protein_g": 61.1,
+          "fat_g": -65.1,
+          "carbs_g": 1.6
+        }
+      }
+    },
+    "gân bò": {
+      "from": {
+        "code": "7001",
+        "name": "Thịt bê mỡ"
+      },
+      "to": {
+        "code": "7043",
+        "name": "Gân chân bò"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 17,
+      "rows_repaired": 17,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 13,
+      "nutrition": {
+        "before": {
+          "calories": 10008.0,
+          "protein_g": 1320.5,
+          "fat_g": 521.2,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 8618.0,
+          "protein_g": 2098.9,
+          "fat_g": 21.0,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": -1390.0,
+          "protein_g": 778.4,
+          "fat_g": -500.2,
+          "carbs_g": 0.0
+        }
+      }
+    },
+    "bò hoa": {
+      "from": {
+        "code": "7001",
+        "name": "Thịt bê mỡ"
+      },
+      "to": {
+        "code": "7094",
+        "name": "Thịt bắp bò"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 12,
+      "rows_repaired": 0,
+      "rows_cure_held": 12,
+      "latent": true,
+      "recipes_affected": 0,
+      "nutrition": {
+        "before": {
+          "calories": 0.0,
+          "protein_g": 0.0,
+          "fat_g": 0.0,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 0.0,
+          "protein_g": 0.0,
+          "fat_g": 0.0,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": 0.0,
+          "protein_g": 0.0,
+          "fat_g": 0.0,
+          "carbs_g": 0.0
+        }
+      }
+    },
+    "chim bồ câu": {
+      "from": {
+        "code": "7012",
+        "name": "Thịt gà rừng"
+      },
+      "to": {
+        "code": "7007",
+        "name": "Thịt bồ câu, cả con non (ra ràng)"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 5,
+      "rows_repaired": 5,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 4,
+      "nutrition": {
+        "before": {
+          "calories": 2820.0,
+          "protein_g": 488.0,
+          "fat_g": 96.0,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 6800.0,
+          "protein_g": 350.0,
+          "fat_g": 600.0,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": 3980.0,
+          "protein_g": -138.0,
+          "fat_g": 504.0,
+          "carbs_g": 0.0
+        }
+      }
+    },
+    "vịt": {
+      "from": {
+        "code": "7042",
+        "name": "Gan vịt"
+      },
+      "to": {
+        "code": "7028",
+        "name": "Thịt vịt"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 29,
+      "rows_repaired": 29,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 28,
+      "nutrition": {
+        "before": {
+          "calories": 4361.5,
+          "protein_g": 612.3,
+          "fat_g": 169.0,
+          "carbs_g": 100.1
+        },
+        "after": {
+          "calories": 9546.0,
+          "protein_g": 637.1,
+          "fat_g": 780.1,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": 5184.5,
+          "protein_g": 24.8,
+          "fat_g": 611.1,
+          "carbs_g": -100.1
+        }
+      }
+    },
+    "phô mai đầu bò": {
+      "from": {
+        "code": "7035",
+        "name": "Đầu bò"
+      },
+      "to": {
+        "code": "10009",
+        "name": "Phô mai (phó mát)"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 1,
+      "rows_repaired": 1,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 1,
+      "nutrition": {
+        "before": {
+          "calories": 92.5,
+          "protein_g": 9.1,
+          "fat_g": 6.2,
+          "carbs_g": 0.0
+        },
+        "after": {
+          "calories": 190.0,
+          "protein_g": 12.8,
+          "fat_g": 15.4,
+          "carbs_g": 0.0
+        },
+        "delta": {
+          "calories": 97.5,
+          "protein_g": 3.7,
+          "fat_g": 9.2,
+          "carbs_g": 0.0
+        }
+      }
+    },
+    "đùi gà tây": {
+      "from": {
+        "code": "7088",
+        "name": "Đùi gà"
+      },
+      "to": {
+        "code": "7014",
+        "name": "Thịt gà tây"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 1,
+      "rows_repaired": 1,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 1,
+      "nutrition": {
+        "before": {
+          "calories": 328.8,
+          "protein_g": 43.2,
+          "fat_g": 16.3,
+          "carbs_g": 2.1
+        },
+        "after": {
+          "calories": 523.2,
+          "protein_g": 48.1,
+          "fat_g": 36.7,
+          "carbs_g": 0.1
+        },
+        "delta": {
+          "calories": 194.4,
+          "protein_g": 4.9,
+          "fat_g": 20.4,
+          "carbs_g": -2.0
+        }
+      }
+    },
+    "nấm hủ đùi gà": {
+      "from": {
+        "code": "7088",
+        "name": "Đùi gà"
+      },
+      "to": {
+        "code": "20007",
+        "name": "Nấm đùi gà"
+      },
+      "alias_state": "pending",
+      "rows_reachable": 1,
+      "rows_repaired": 1,
+      "rows_cure_held": 0,
+      "latent": false,
+      "recipes_affected": 1,
+      "nutrition": {
+        "before": {
+          "calories": 274.0,
+          "protein_g": 36.0,
+          "fat_g": 13.6,
+          "carbs_g": 1.8
+        },
+        "after": {
+          "calories": 70.0,
+          "protein_g": 6.0,
+          "fat_g": 0.8,
+          "carbs_g": 13.0
+        },
+        "delta": {
+          "calories": -204.0,
+          "protein_g": -30.0,
+          "fat_g": -12.8,
+          "carbs_g": 11.2
+        }
+      }
+    }
+  },
+  "repair_row_ids": [
+    "0147e439-8c8d-4ac8-a1f6-391594e86214",
+    "031b4c4e-4c8c-4e7a-9e42-77b9fbf1c1db",
+    "03df52ae-205f-46f0-8389-bbdeb25274b8",
+    "079c6db7-0039-4e35-b36b-9e3007a0e540",
+    "0a015a58-5c03-413b-ba3a-bcdc56e94ade",
+    "10eb2c4d-2ba4-4f96-a0f3-fe570f51abf0",
+    "1267bdd0-b0d4-4c6b-bcab-52b8d67fe337",
+    "12dcee6e-1f01-4850-8eef-5bbf37bb5a97",
+    "146a2be0-fa7b-412c-81c8-e42eb383eaf1",
+    "14b9c774-8421-4682-94e3-2b823b4bc3e0",
+    "16839bd0-add4-4283-886c-e16a118e46d9",
+    "174da2e3-bb18-468f-9aab-d8e57b3c2c4d",
+    "1a56a54e-a25d-4699-ac41-8a72302ff673",
+    "20bf460c-5971-4af2-98e0-7bec288dad02",
+    "21039de6-08ec-43ae-81b9-daf8dfdf997a",
+    "21477f12-adfd-4c69-a9ec-24e9bc0db22f",
+    "26ad156e-0e13-49bc-99b6-6a60c1ce1767",
+    "293fb46e-f167-465a-98a7-fdc7b7f1deb3",
+    "2a466722-ed43-4220-899e-4c694db6ea2f",
+    "2e40483c-e411-4254-b9d4-9dcc402794f3",
+    "2f188c40-ce67-42a0-8628-bb903b6389e8",
+    "32982570-3c1e-4454-adb2-620fde905ba4",
+    "32b99d97-a9e0-4ac8-accf-b77cc011cbdf",
+    "34813066-e7d4-4316-a102-8239ecc09308",
+    "3742d492-c22c-457d-964f-4d8300cbcf5b",
+    "38fd2474-45cf-4a1c-b006-8df442471744",
+    "3a88d9e4-43ee-4073-bb4b-9c3a0b66ee7a",
+    "48e65763-9f99-42d0-8869-297d8864425b",
+    "4b9920e4-7a7f-43ee-9053-31030b19fa24",
+    "4c08e8ff-c555-4509-a94a-668dcccaf2d8",
+    "4c926ed0-cdd2-4f9a-b399-29dc9cce8213",
+    "4f5b8e26-15dc-4551-ac31-ed5fe0e27dc1",
+    "56c3a1a6-68b8-4fe4-9030-f9d42f008d4e",
+    "57524cfe-258c-4252-9c80-dd12dd32ec59",
+    "59a39b9b-eafb-402e-9c93-a4575043c064",
+    "5ad34949-1d5a-40a8-8e22-26a61897d824",
+    "5b31613a-5ef8-447b-b4da-e647bf4d18ea",
+    "5bd3f359-e852-4ce7-9460-a904441e108e",
+    "5e7f1ca3-cba7-45c9-8dd1-76e2c8e48ca9",
+    "5fc97719-ceab-4b40-a19d-0e5924ae848a",
+    "65bf873c-538f-47f4-8c8c-c68760f1f2aa",
+    "698a32ae-ed89-477f-afc9-55d7cb2e2ffe",
+    "69be6f2a-8240-4509-b0c8-64f4667d1732",
+    "6ad3e04a-da31-41ed-8e7c-1a9dd22ff2b4",
+    "6dfc3067-060d-4cf6-b17a-4620c3236f5c",
+    "6f8e42ad-6dec-44ea-86db-cbeeba9cea37",
+    "712921e7-d15a-431c-a976-5b962c0631d4",
+    "71e3b34b-b5d4-47ae-8060-9accde3304ef",
+    "740e9aaf-72c5-4999-bc84-3d4daa235caa",
+    "75bffd55-3821-4bfa-8a84-795d8ab91a77",
+    "77b994a2-d001-429b-9b58-8980556515ac",
+    "7e4d63e8-de9a-428a-8795-5eeea5487805",
+    "81bb95aa-7457-4b4a-a240-fbda8ca76539",
+    "86799f42-d583-43fb-91fb-e5edc9a2feb2",
+    "88c8649b-cb29-4646-a0c4-b53930a16cfb",
+    "89e768b2-1376-437b-b73b-f5b3b68f8cd2",
+    "8bb76f23-36d9-4871-9faf-4538582b3ed1",
+    "8bdcab54-7b00-4a53-a3e3-49d3e071cff5",
+    "8c336e8f-3bc0-4dde-bf1b-737fc3a2e848",
+    "8d028b94-099f-4af3-b8ee-13f3079d072f",
+    "8d40fd03-500b-4d3a-bec9-805e2e15ad70",
+    "8ff37f84-8bf8-4893-ab48-563d749bd0af",
+    "91b0c9e3-d907-4089-85a2-d999d550a7d9",
+    "9592cf60-e7bf-4286-983f-730525e9542c",
+    "9a71e0f0-23e2-4ae1-bfaa-886af0347204",
+    "9b297680-b1f6-4151-986d-8327bbff5711",
+    "9c53c31f-4d72-4839-a542-dd66f714a958",
+    "9d6e63c5-8aec-4cf1-9ab3-fa6a668c08e5",
+    "a18851e7-10b6-4ed7-bb81-017ca4690902",
+    "a70203de-5b2e-4616-9998-8c6930c55944",
+    "a75cef69-256a-461d-a06b-13fc854ac93f",
+    "a9bef67a-b3b3-4a39-98e3-b8c375f4ed24",
+    "aa3e3ad7-4f24-4cc2-adc1-3b034c49b037",
+    "ae9016ff-ab85-48be-912d-755dd9fadac1",
+    "af09ba50-0c60-41cf-be08-c00367ef82af",
+    "b0b22d0f-770e-4010-a745-234bf9b8f3de",
+    "b6e81aee-6b9e-4678-ab34-31e0fd53368c",
+    "b982aa73-ebc3-45ae-a1a9-5d76212c27c1",
+    "c2754dd6-0c4f-4a33-acd2-352148297e61",
+    "caafbc8c-aece-4077-ba05-c097e1defbc8",
+    "cf0f9439-77d7-4236-a3c4-97355fc41100",
+    "cfbc5fd8-f654-42eb-94fb-82ae0017a0eb",
+    "d0c49e4d-5867-42bc-ae25-f0ba8ce57dae",
+    "d24850b0-e559-41d9-a229-f439560fae11",
+    "d399c4e3-8a54-4057-b929-c374b7976076",
+    "d3ecd030-55f1-42fa-b1c1-aa3f5a432cea",
+    "d492c791-f3b6-4dd4-b30b-17f94750f95c",
+    "d6ad173a-3ba7-4caa-92a8-5b74787d0296",
+    "d96eeb79-74f0-4091-b055-90c05a88930e",
+    "db23a2ee-bb08-46ab-b684-d25a10a7579d",
+    "db5a82cb-b817-4bf6-87ef-39fe0f05c56e",
+    "dd351296-9fb5-419c-950a-5ceae9932f85",
+    "de116ee8-97a8-4669-9c61-29039c167b2f",
+    "e1075b22-e6b1-4724-a0a5-a6c8dc948034",
+    "e3bf7be2-f222-479d-87e1-6f83cff83127",
+    "e4f305bd-02a7-42ee-8d8d-6044354ca750",
+    "e80e7b99-1bab-417c-a4c0-bdb26f03d2e1",
+    "ea71ef40-88ea-4f3a-b439-a1a01c642b45",
+    "edae7b38-99a2-40ac-9f94-a6d348c33b18",
+    "ee21b5ed-292d-47c3-8af0-64319e0f1ec1",
+    "f02deed6-8333-4dd6-972e-73754d606213",
+    "f044ca7f-cc1b-4710-83d4-941d102c09ed",
+    "f0791dc5-c6fa-4552-8e40-1d21070e17ab",
+    "f1ac6182-dc8a-4c0e-93f1-04f3bd699a88",
+    "f5fdb0f6-a9f2-4458-92fc-5ffd048b274a",
+    "f6d262e6-e2fa-47a2-91b1-68394d8b64c2",
+    "f912f3ab-24ab-44b0-b41c-e1fb5f50334d",
+    "f946f1db-6517-42a4-8def-22dba9f4d4ed",
+    "fc89ff58-217a-4e9f-838a-e7c512b81c19",
+    "ffc9d830-a111-4a14-b45a-a8d2ad6972e0",
+    "fff25e63-3552-4389-a44c-c6b9e53ffa58"
+  ],
+  "cure_held_row_ids": [
+    "052845b9-25d3-43a6-b438-597bade70c38",
+    "11e9706d-f998-473e-a319-44aa0c1fbe6b",
+    "184aa6b7-f73f-4828-aa68-61f873920fa7",
+    "1c88ba8c-0d58-4317-9e92-8dce35800252",
+    "1f80c394-b7d0-40d6-952f-7e88f69dbb6e",
+    "20f6d3fe-2241-4fdf-b6a2-7cb855daa459",
+    "2fb1f315-db07-4bf9-bc60-3bffca5c3d61",
+    "5a5e421a-b4ab-46ba-a0d1-cc1263badf29",
+    "61307b00-92fe-4d75-80de-04ab3185049e",
+    "75fdc30f-37de-4470-82b7-ca74a8d26a60",
+    "883b19f1-6da9-44c1-a59d-1d4a7b4cc8ec",
+    "8f9ca4c4-35bc-4682-a245-3b60de4f531b",
+    "ba68e662-b8bd-4f46-abdb-d62cc620e697",
+    "d9feb556-5247-473f-8379-70b666f1e1bb",
+    "f8a40702-28ba-45a9-afaa-4435a77d1dbb"
+  ],
+  "row_outcomes": {
+    "0147e439-8c8d-4ac8-a1f6-391594e86214": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 500 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "5d67d6a3-26a2-42e1-8e6b-7e8197a1f565",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "720.0",
+        "protein_g": "95.0",
+        "fat_g": "37.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "620.0",
+        "protein_g": "151.0",
+        "fat_g": "1.5",
+        "carbs_g": null
+      }
+    },
+    "031b4c4e-4c8c-4e7a-9e42-77b9fbf1c1db": {
+      "alias": "chả lụa",
+      "raw_text": "Chả lụa 1 cây",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "bac7913e-6a47-4f48-add0-e6a6b09cb6f2",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "167.5",
+        "protein_g": "9.1",
+        "fat_g": "14.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "102.5",
+        "protein_g": "8.4",
+        "fat_g": "7.5",
+        "carbs_g": "0.9"
+      }
+    },
+    "03df52ae-205f-46f0-8389-bbdeb25274b8": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "d7fa0969-5d67-4417-8daa-e23a5020f2d7",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "079c6db7-0039-4e35-b36b-9e3007a0e540": {
+      "alias": "phile bò",
+      "raw_text": "300 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "f83d963e-c669-437c-9670-ceffbe5908f5",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "432.0",
+        "protein_g": "57.0",
+        "fat_g": "22.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "363.0",
+        "protein_g": "69.2",
+        "fat_g": "9.5",
+        "carbs_g": "0.3"
+      }
+    },
+    "0a015a58-5c03-413b-ba3a-bcdc56e94ade": {
+      "alias": "thịt thịt nạc thăn",
+      "raw_text": "Thịt nạc thăn",
+      "cleaned_name": "thịt thịt nạc thăn",
+      "recipe_id": "e2e79e1e-81a5-45a1-b5d0-d3e76b523a45",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "829.5",
+        "protein_g": "24.0",
+        "fat_g": "81.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7085",
+        "master_ingredient_name": "Thịt nạc thăn heo (lợn)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "177.0",
+        "protein_g": "34.5",
+        "fat_g": "4.3",
+        "carbs_g": "0.1"
+      }
+    },
+    "10eb2c4d-2ba4-4f96-a0f3-fe570f51abf0": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 500 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "0ac2a9a4-a328-4652-b9e4-b5049fbb1c10",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "720.0",
+        "protein_g": "95.0",
+        "fat_g": "37.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "620.0",
+        "protein_g": "151.0",
+        "fat_g": "1.5",
+        "carbs_g": null
+      }
+    },
+    "1267bdd0-b0d4-4c6b-bcab-52b8d67fe337": {
+      "alias": "chả lụa",
+      "raw_text": "Chả lụa 50g",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "511a16bd-aeba-4754-94a5-b9decb59fd3e",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "167.5",
+        "protein_g": "9.1",
+        "fat_g": "14.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "102.5",
+        "protein_g": "8.4",
+        "fat_g": "7.5",
+        "carbs_g": "0.9"
+      }
+    },
+    "12dcee6e-1f01-4850-8eef-5bbf37bb5a97": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "4b352c0a-e350-481d-8f00-fb4aa8e98f65",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "146a2be0-fa7b-412c-81c8-e42eb383eaf1": {
+      "alias": "phile bò",
+      "raw_text": "200 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "50393968-c098-4b70-96bb-145c5e0bc035",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "288.0",
+        "protein_g": "38.0",
+        "fat_g": "15.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "242.0",
+        "protein_g": "46.1",
+        "fat_g": "6.3",
+        "carbs_g": "0.2"
+      }
+    },
+    "14b9c774-8421-4682-94e3-2b823b4bc3e0": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 300 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "add79d0c-342f-43e9-aee9-d41f435cca0e",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "432.0",
+        "protein_g": "57.0",
+        "fat_g": "22.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "372.0",
+        "protein_g": "90.6",
+        "fat_g": "0.9",
+        "carbs_g": null
+      }
+    },
+    "16839bd0-add4-4283-886c-e16a118e46d9": {
+      "alias": "bò thăn",
+      "raw_text": "200 gr bò thăn",
+      "cleaned_name": "bò thăn",
+      "recipe_id": "781e3493-eca2-48bb-a299-c9fb9f19a2ef",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "288.0",
+        "protein_g": "38.0",
+        "fat_g": "15.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "242.0",
+        "protein_g": "46.1",
+        "fat_g": "6.3",
+        "carbs_g": "0.2"
+      }
+    },
+    "174da2e3-bb18-468f-9aab-d8e57b3c2c4d": {
+      "alias": "da heo",
+      "raw_text": "Da heo 500g",
+      "cleaned_name": "da heo",
+      "recipe_id": "647a4a4a-594c-4063-8407-f51169598d45",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2585.0",
+        "protein_g": "54.0",
+        "fat_g": "252.0",
+        "carbs_g": "25.5"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "590.0",
+        "protein_g": "116.5",
+        "fat_g": "13.5",
+        "carbs_g": null
+      }
+    },
+    "1a56a54e-a25d-4699-ac41-8a72302ff673": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 0.5 kg",
+      "cleaned_name": "gân bò",
+      "recipe_id": "253035ce-90e6-4a86-a4ac-18e9145e3691",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "720.0",
+        "protein_g": "95.0",
+        "fat_g": "37.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "620.0",
+        "protein_g": "151.0",
+        "fat_g": "1.5",
+        "carbs_g": null
+      }
+    },
+    "20bf460c-5971-4af2-98e0-7bec288dad02": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "47689cc0-633a-468e-808d-cc89a9ca9164",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "21039de6-08ec-43ae-81b9-daf8dfdf997a": {
+      "alias": "bò thăn",
+      "raw_text": "150 gr bò thăn",
+      "cleaned_name": "bò thăn",
+      "recipe_id": "d9f360db-8521-4ac8-b2ef-02ccee878250",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "216.0",
+        "protein_g": "28.5",
+        "fat_g": "11.2",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "181.5",
+        "protein_g": "34.6",
+        "fat_g": "4.7",
+        "carbs_g": "0.2"
+      }
+    },
+    "21477f12-adfd-4c69-a9ec-24e9bc0db22f": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "b51b8880-517d-4f82-99b1-a996574cbb6a",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "26ad156e-0e13-49bc-99b6-6a60c1ce1767": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "b0f0afa9-9e8d-4307-8727-a8a4acbe58d6",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "293fb46e-f167-465a-98a7-fdc7b7f1deb3": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "77be6070-a47c-4d1b-afe0-470333e7c804",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "2a466722-ed43-4220-899e-4c694db6ea2f": {
+      "alias": "da heo",
+      "raw_text": "1 miếng da heo",
+      "cleaned_name": "da heo",
+      "recipe_id": "641b05ac-10e5-41a6-b736-255812ee1649",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "258.5",
+        "protein_g": "5.4",
+        "fat_g": "25.2",
+        "carbs_g": "2.5"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "59.0",
+        "protein_g": "11.7",
+        "fat_g": "1.4",
+        "carbs_g": null
+      }
+    },
+    "2e40483c-e411-4254-b9d4-9dcc402794f3": {
+      "alias": "bò phile",
+      "raw_text": "50 g bò phile",
+      "cleaned_name": "bò phile",
+      "recipe_id": "24541848-5b8e-4203-ae07-ce7d57928ff3",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "72.0",
+        "protein_g": "9.5",
+        "fat_g": "3.8",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "60.5",
+        "protein_g": "11.5",
+        "fat_g": "1.6",
+        "carbs_g": "0.1"
+      }
+    },
+    "2f188c40-ce67-42a0-8628-bb903b6389e8": {
+      "alias": "bò thăn",
+      "raw_text": "100 gr bò thăn",
+      "cleaned_name": "bò thăn",
+      "recipe_id": "e5b9a688-b036-4d58-b092-236d48ac0393",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "32982570-3c1e-4454-adb2-620fde905ba4": {
+      "alias": "chim bồ câu",
+      "raw_text": "Chim bồ câu 3 con",
+      "cleaned_name": "chim bồ câu",
+      "recipe_id": "78a0486d-6639-4612-9dac-2867c7f78e36",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7012",
+        "master_ingredient_name": "Thịt gà rừng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "211.5",
+        "protein_g": "36.6",
+        "fat_g": "7.2",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7007",
+        "master_ingredient_name": "Thịt bồ câu, cả con non (ra ràng)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "510.0",
+        "protein_g": "26.2",
+        "fat_g": "45.0",
+        "carbs_g": null
+      }
+    },
+    "32b99d97-a9e0-4ac8-accf-b77cc011cbdf": {
+      "alias": "chả lụa",
+      "raw_text": "50 gr chả lụa",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "0f4979f1-ec64-412d-9249-36f069a4093a",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "167.5",
+        "protein_g": "9.1",
+        "fat_g": "14.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "102.5",
+        "protein_g": "8.4",
+        "fat_g": "7.5",
+        "carbs_g": "0.9"
+      }
+    },
+    "34813066-e7d4-4316-a102-8239ecc09308": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "c637c0ac-fd76-4551-8bc7-b44d33ee4b51",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "3742d492-c22c-457d-964f-4d8300cbcf5b": {
+      "alias": "bò phile",
+      "raw_text": "300 g bò phile",
+      "cleaned_name": "bò phile",
+      "recipe_id": "a0c46019-326d-4f84-b8a8-b90f02d5784f",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "432.0",
+        "protein_g": "57.0",
+        "fat_g": "22.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "363.0",
+        "protein_g": "69.2",
+        "fat_g": "9.5",
+        "carbs_g": "0.3"
+      }
+    },
+    "38fd2474-45cf-4a1c-b006-8df442471744": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 700 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "2f2af65f-7a32-4747-a6b6-f7e27682513d",
+      "estimated_weight_g": "700.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1008.0",
+        "protein_g": "133.0",
+        "fat_g": "52.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "868.0",
+        "protein_g": "211.4",
+        "fat_g": "2.1",
+        "carbs_g": null
+      }
+    },
+    "3a88d9e4-43ee-4073-bb4b-9c3a0b66ee7a": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "c68c9bdc-42a5-48b8-8c6b-718dce2ca32f",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "48e65763-9f99-42d0-8869-297d8864425b": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "e99d3120-4201-4da9-b7d2-4e5a6d1db2f4",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "4b9920e4-7a7f-43ee-9053-31030b19fa24": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "9da1b0bd-71bd-479a-a9fa-9a5609b33fc8",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "4c08e8ff-c555-4509-a94a-668dcccaf2d8": {
+      "alias": "thịt thịt nạc thăn",
+      "raw_text": "300 gr Thịt nạc thăn",
+      "cleaned_name": "thịt thịt nạc thăn",
+      "recipe_id": "5f1657a9-4255-4ba2-b6f0-02a01dd2da2f",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1659.0",
+        "protein_g": "48.0",
+        "fat_g": "162.9",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7085",
+        "master_ingredient_name": "Thịt nạc thăn heo (lợn)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "354.0",
+        "protein_g": "69.0",
+        "fat_g": "8.7",
+        "carbs_g": "0.1"
+      }
+    },
+    "4c926ed0-cdd2-4f9a-b399-29dc9cce8213": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "dc8517c7-668b-4f53-9900-af733ccf069c",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "4f5b8e26-15dc-4551-ac31-ed5fe0e27dc1": {
+      "alias": "chả lụa",
+      "raw_text": "Chả lụa 250 gr",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "8deee999-a33e-42ab-8671-995e7455d19d",
+      "estimated_weight_g": "250.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "837.5",
+        "protein_g": "45.5",
+        "fat_g": "72.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "512.5",
+        "protein_g": "42.2",
+        "fat_g": "37.5",
+        "carbs_g": "4.5"
+      }
+    },
+    "56c3a1a6-68b8-4fe4-9030-f9d42f008d4e": {
+      "alias": "chả lụa cắt hạt lựu",
+      "raw_text": "Chả lụa 50g - cắt hạt lựu",
+      "cleaned_name": "chả lụa cắt hạt lựu",
+      "recipe_id": "6bd44e67-25f3-498f-a2a7-6d1c13949e54",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "167.5",
+        "protein_g": "9.1",
+        "fat_g": "14.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "102.5",
+        "protein_g": "8.4",
+        "fat_g": "7.5",
+        "carbs_g": "0.9"
+      }
+    },
+    "57524cfe-258c-4252-9c80-dd12dd32ec59": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "dac42905-9e77-48ff-9093-ba205035113c",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "59a39b9b-eafb-402e-9c93-a4575043c064": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 350 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "0432d669-6573-4ee7-bc1f-6c4acf1f2b72",
+      "estimated_weight_g": "350.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "504.0",
+        "protein_g": "66.5",
+        "fat_g": "26.2",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "434.0",
+        "protein_g": "105.7",
+        "fat_g": "1.1",
+        "carbs_g": null
+      }
+    },
+    "5ad34949-1d5a-40a8-8e22-26a61897d824": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 400 g",
+      "cleaned_name": "gân bò",
+      "recipe_id": "5d67d6a3-26a2-42e1-8e6b-7e8197a1f565",
+      "estimated_weight_g": "400.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "576.0",
+        "protein_g": "76.0",
+        "fat_g": "30.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "496.0",
+        "protein_g": "120.8",
+        "fat_g": "1.2",
+        "carbs_g": null
+      }
+    },
+    "5b31613a-5ef8-447b-b4da-e647bf4d18ea": {
+      "alias": "bò thăn",
+      "raw_text": "100 gr Bò thăn",
+      "cleaned_name": "bò thăn",
+      "recipe_id": "e6ad51ae-f49b-4ca1-8aab-a73eca36624d",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "5bd3f359-e852-4ce7-9460-a904441e108e": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "a3190490-fb0c-4336-81ff-6a54915d822b",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "5e7f1ca3-cba7-45c9-8dd1-76e2c8e48ca9": {
+      "alias": "thịt thịt nạc thăn",
+      "raw_text": "300 g thịt nạc thăn",
+      "cleaned_name": "thịt thịt nạc thăn",
+      "recipe_id": "bc6168a6-4681-42cd-8822-3cc16f9127d5",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1659.0",
+        "protein_g": "48.0",
+        "fat_g": "162.9",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7085",
+        "master_ingredient_name": "Thịt nạc thăn heo (lợn)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "354.0",
+        "protein_g": "69.0",
+        "fat_g": "8.7",
+        "carbs_g": "0.1"
+      }
+    },
+    "5fc97719-ceab-4b40-a19d-0e5924ae848a": {
+      "alias": "bò thăn",
+      "raw_text": "Bò thăn (chọn khối chữ nhật): 400g",
+      "cleaned_name": "bò thăn",
+      "recipe_id": "a9731227-da96-4157-8d15-129d173a78b8",
+      "estimated_weight_g": "400.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "576.0",
+        "protein_g": "76.0",
+        "fat_g": "30.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "484.0",
+        "protein_g": "92.3",
+        "fat_g": "12.6",
+        "carbs_g": "0.4"
+      }
+    },
+    "65bf873c-538f-47f4-8c8c-c68760f1f2aa": {
+      "alias": "phile bò",
+      "raw_text": "200 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "d45b6050-777a-42fa-8135-7e1189243f5f",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "288.0",
+        "protein_g": "38.0",
+        "fat_g": "15.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "242.0",
+        "protein_g": "46.1",
+        "fat_g": "6.3",
+        "carbs_g": "0.2"
+      }
+    },
+    "698a32ae-ed89-477f-afc9-55d7cb2e2ffe": {
+      "alias": "phô mai đầu bò",
+      "raw_text": "Phô mai đầu bò 1 miếng",
+      "cleaned_name": "phô mai đầu bò",
+      "recipe_id": "ad499421-ee66-4e1e-8ba7-c230414c6b07",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7035",
+        "master_ingredient_name": "Đầu bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "92.5",
+        "protein_g": "9.1",
+        "fat_g": "6.2",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "10009",
+        "master_ingredient_name": "Phô mai (phó mát)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "190.0",
+        "protein_g": "12.8",
+        "fat_g": "15.4",
+        "carbs_g": null
+      }
+    },
+    "69be6f2a-8240-4509-b0c8-64f4667d1732": {
+      "alias": "nấm hủ đùi gà",
+      "raw_text": "Nấm hủ đùi gà 200g",
+      "cleaned_name": "nấm hủ đùi gà",
+      "recipe_id": "63265048-9c12-41b4-a357-cedfd8af7d4b",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7088",
+        "master_ingredient_name": "Đùi gà",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "274.0",
+        "protein_g": "36.0",
+        "fat_g": "13.6",
+        "carbs_g": "1.8"
+      },
+      "after": {
+        "master_ingredient_code": "20007",
+        "master_ingredient_name": "Nấm đùi gà",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "70.0",
+        "protein_g": "6.0",
+        "fat_g": "0.8",
+        "carbs_g": "13.0"
+      }
+    },
+    "6ad3e04a-da31-41ed-8e7c-1a9dd22ff2b4": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "0af9a4e4-561a-4820-84a9-0e6b81ad94c8",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "6dfc3067-060d-4cf6-b17a-4620c3236f5c": {
+      "alias": "da heo",
+      "raw_text": "Da heo 1 ít",
+      "cleaned_name": "da heo",
+      "recipe_id": "2c0bdeb3-abc4-4f62-86a0-f1509325fa57",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "775.5",
+        "protein_g": "16.2",
+        "fat_g": "75.6",
+        "carbs_g": "7.6"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "177.0",
+        "protein_g": "35.0",
+        "fat_g": "4.1",
+        "carbs_g": null
+      }
+    },
+    "6f8e42ad-6dec-44ea-86db-cbeeba9cea37": {
+      "alias": "chả lụa",
+      "raw_text": "Chả lụa",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "fdc613b6-c4b1-488d-8ae8-bc649fed2436",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "502.5",
+        "protein_g": "27.3",
+        "fat_g": "43.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "307.5",
+        "protein_g": "25.3",
+        "fat_g": "22.5",
+        "carbs_g": "2.7"
+      }
+    },
+    "712921e7-d15a-431c-a976-5b962c0631d4": {
+      "alias": "thịt thịt nạc thăn",
+      "raw_text": "Thịt nạc thăn 200 gr",
+      "cleaned_name": "thịt thịt nạc thăn",
+      "recipe_id": "93a59339-59e3-4035-8c5b-360577e59644",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1106.0",
+        "protein_g": "32.0",
+        "fat_g": "108.6",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7085",
+        "master_ingredient_name": "Thịt nạc thăn heo (lợn)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "236.0",
+        "protein_g": "46.0",
+        "fat_g": "5.8",
+        "carbs_g": "0.1"
+      }
+    },
+    "71e3b34b-b5d4-47ae-8060-9accde3304ef": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "3a362005-fad7-4800-9bb0-bbc8eb2f517e",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "740e9aaf-72c5-4999-bc84-3d4daa235caa": {
+      "alias": "chim bồ câu",
+      "raw_text": "Chim bồ câu 2 con",
+      "cleaned_name": "chim bồ câu",
+      "recipe_id": "fc1d31a8-36ea-4d7d-9804-fbf5c5491547",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7012",
+        "master_ingredient_name": "Thịt gà rừng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "141.0",
+        "protein_g": "24.4",
+        "fat_g": "4.8",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7007",
+        "master_ingredient_name": "Thịt bồ câu, cả con non (ra ràng)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "340.0",
+        "protein_g": "17.5",
+        "fat_g": "30.0",
+        "carbs_g": null
+      }
+    },
+    "75bffd55-3821-4bfa-8a84-795d8ab91a77": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "4d11d5d2-e2ae-4021-9544-9f2532715639",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "77b994a2-d001-429b-9b58-8980556515ac": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "965f4408-2b91-438d-af7c-6b0e1d0b3794",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "7e4d63e8-de9a-428a-8795-5eeea5487805": {
+      "alias": "da heo",
+      "raw_text": "200 gr da heo",
+      "cleaned_name": "da heo",
+      "recipe_id": "33d93fc4-df1c-4fad-80d3-3cad49f96fc4",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1034.0",
+        "protein_g": "21.6",
+        "fat_g": "100.8",
+        "carbs_g": "10.2"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "236.0",
+        "protein_g": "46.6",
+        "fat_g": "5.4",
+        "carbs_g": null
+      }
+    },
+    "81bb95aa-7457-4b4a-a240-fbda8ca76539": {
+      "alias": "chả lụa",
+      "raw_text": "Chả lụa: 80g",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "34aa98ad-05ff-456b-989a-2d35a7cba853",
+      "estimated_weight_g": "80.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "268.0",
+        "protein_g": "14.6",
+        "fat_g": "23.2",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "164.0",
+        "protein_g": "13.5",
+        "fat_g": "12.0",
+        "carbs_g": "1.4"
+      }
+    },
+    "86799f42-d583-43fb-91fb-e5edc9a2feb2": {
+      "alias": "phile bò",
+      "raw_text": "300 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "407dfcfe-4f65-4192-afb0-15ac41fd47c5",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "432.0",
+        "protein_g": "57.0",
+        "fat_g": "22.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "363.0",
+        "protein_g": "69.2",
+        "fat_g": "9.5",
+        "carbs_g": "0.3"
+      }
+    },
+    "88c8649b-cb29-4646-a0c4-b53930a16cfb": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "a02844cb-ec9c-496e-be47-f2ab8eec670f",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "89e768b2-1376-437b-b73b-f5b3b68f8cd2": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 500 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "677d178e-653a-42c4-bdde-296ca45c9b18",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "720.0",
+        "protein_g": "95.0",
+        "fat_g": "37.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "620.0",
+        "protein_g": "151.0",
+        "fat_g": "1.5",
+        "carbs_g": null
+      }
+    },
+    "8bb76f23-36d9-4871-9faf-4538582b3ed1": {
+      "alias": "chim bồ câu",
+      "raw_text": "Chim bồ câu 1 con",
+      "cleaned_name": "chim bồ câu",
+      "recipe_id": "ee3374d2-758b-4815-99ba-26ed6603a1fe",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7012",
+        "master_ingredient_name": "Thịt gà rừng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "70.5",
+        "protein_g": "12.2",
+        "fat_g": "2.4",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7007",
+        "master_ingredient_name": "Thịt bồ câu, cả con non (ra ràng)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "170.0",
+        "protein_g": "8.8",
+        "fat_g": "15.0",
+        "carbs_g": null
+      }
+    },
+    "8bdcab54-7b00-4a53-a3e3-49d3e071cff5": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "cf036c62-fa46-4a6b-8fd4-3a15b3f88f84",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "8c336e8f-3bc0-4dde-bf1b-737fc3a2e848": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 250 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "add79d0c-342f-43e9-aee9-d41f435cca0e",
+      "estimated_weight_g": "250.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "360.0",
+        "protein_g": "47.5",
+        "fat_g": "18.8",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "310.0",
+        "protein_g": "75.5",
+        "fat_g": "0.8",
+        "carbs_g": null
+      }
+    },
+    "8d028b94-099f-4af3-b8ee-13f3079d072f": {
+      "alias": "vịt",
+      "raw_text": "Vịt: 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "87771593-32a7-4e95-ad3d-27612cc164de",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "8d40fd03-500b-4d3a-bec9-805e2e15ad70": {
+      "alias": "chả lụa",
+      "raw_text": "Chả lụa 100g",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "4a196f48-e188-4b45-8cda-1c7fa0936b97",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "335.0",
+        "protein_g": "18.2",
+        "fat_g": "29.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "205.0",
+        "protein_g": "16.9",
+        "fat_g": "15.0",
+        "carbs_g": "1.8"
+      }
+    },
+    "8ff37f84-8bf8-4893-ab48-563d749bd0af": {
+      "alias": "da heo",
+      "raw_text": "Da heo 100g",
+      "cleaned_name": "da heo",
+      "recipe_id": "2fd442e5-bb49-450b-929b-97ed1714aefe",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "517.0",
+        "protein_g": "10.8",
+        "fat_g": "50.4",
+        "carbs_g": "5.1"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "118.0",
+        "protein_g": "23.3",
+        "fat_g": "2.7",
+        "carbs_g": null
+      }
+    },
+    "91b0c9e3-d907-4089-85a2-d999d550a7d9": {
+      "alias": "da heo",
+      "raw_text": "Da heo 100 gr",
+      "cleaned_name": "da heo",
+      "recipe_id": "24435d6a-48a7-4aaf-a8c3-c553f3b73ac9",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "517.0",
+        "protein_g": "10.8",
+        "fat_g": "50.4",
+        "carbs_g": "5.1"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "118.0",
+        "protein_g": "23.3",
+        "fat_g": "2.7",
+        "carbs_g": null
+      }
+    },
+    "9592cf60-e7bf-4286-983f-730525e9542c": {
+      "alias": "da heo",
+      "raw_text": "300 gr da heo",
+      "cleaned_name": "da heo",
+      "recipe_id": "e6798105-014b-4815-89e7-b31c442f4e5d",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1551.0",
+        "protein_g": "32.4",
+        "fat_g": "151.2",
+        "carbs_g": "15.3"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "354.0",
+        "protein_g": "69.9",
+        "fat_g": "8.1",
+        "carbs_g": null
+      }
+    },
+    "9a71e0f0-23e2-4ae1-bfaa-886af0347204": {
+      "alias": "bò thăn",
+      "raw_text": "400 gr Bò thăn thái mỏng",
+      "cleaned_name": "bò thăn",
+      "recipe_id": "17d1c1a8-6dec-4f30-9fa7-b305165a2a72",
+      "estimated_weight_g": "400.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "576.0",
+        "protein_g": "76.0",
+        "fat_g": "30.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "484.0",
+        "protein_g": "92.3",
+        "fat_g": "12.6",
+        "carbs_g": "0.4"
+      }
+    },
+    "9b297680-b1f6-4151-986d-8327bbff5711": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 400 g",
+      "cleaned_name": "gân bò",
+      "recipe_id": "cb8b90b9-ea83-4007-ae66-72d8de2d3592",
+      "estimated_weight_g": "400.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "576.0",
+        "protein_g": "76.0",
+        "fat_g": "30.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "496.0",
+        "protein_g": "120.8",
+        "fat_g": "1.2",
+        "carbs_g": null
+      }
+    },
+    "9c53c31f-4d72-4839-a542-dd66f714a958": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "e6d74be3-e5db-480b-a695-6ebdd3126109",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "9d6e63c5-8aec-4cf1-9ab3-fa6a668c08e5": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 200 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "9a645572-19ca-46e4-b3df-2658fd260a53",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "288.0",
+        "protein_g": "38.0",
+        "fat_g": "15.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "248.0",
+        "protein_g": "60.4",
+        "fat_g": "0.6",
+        "carbs_g": null
+      }
+    },
+    "a18851e7-10b6-4ed7-bb81-017ca4690902": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "29fa3f3b-2b82-4530-83be-8c666b1c918d",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "a70203de-5b2e-4616-9998-8c6930c55944": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 350 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "8e7128db-b996-4934-87d7-6c44a899edd3",
+      "estimated_weight_g": "350.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "504.0",
+        "protein_g": "66.5",
+        "fat_g": "26.2",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "434.0",
+        "protein_g": "105.7",
+        "fat_g": "1.1",
+        "carbs_g": null
+      }
+    },
+    "a75cef69-256a-461d-a06b-13fc854ac93f": {
+      "alias": "đùi gà tây",
+      "raw_text": "Đùi gà tây: 2 cái (600-700g)",
+      "cleaned_name": "đùi gà tây",
+      "recipe_id": "f85e0f53-d724-4655-b503-1b50fa553bb2",
+      "estimated_weight_g": "240.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7088",
+        "master_ingredient_name": "Đùi gà",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "328.8",
+        "protein_g": "43.2",
+        "fat_g": "16.3",
+        "carbs_g": "2.1"
+      },
+      "after": {
+        "master_ingredient_code": "7014",
+        "master_ingredient_name": "Thịt gà tây",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "523.2",
+        "protein_g": "48.1",
+        "fat_g": "36.7",
+        "carbs_g": "0.1"
+      }
+    },
+    "a9bef67a-b3b3-4a39-98e3-b8c375f4ed24": {
+      "alias": "da heo",
+      "raw_text": "50 g da heo",
+      "cleaned_name": "da heo",
+      "recipe_id": "1bff5faf-41b5-4bc7-a6d2-995126161002",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "258.5",
+        "protein_g": "5.4",
+        "fat_g": "25.2",
+        "carbs_g": "2.5"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "59.0",
+        "protein_g": "11.7",
+        "fat_g": "1.4",
+        "carbs_g": null
+      }
+    },
+    "aa3e3ad7-4f24-4cc2-adc1-3b034c49b037": {
+      "alias": "da heo",
+      "raw_text": "Da heo 100 g",
+      "cleaned_name": "da heo",
+      "recipe_id": "1f74c477-933d-4fa7-bcc8-275618436a95",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "517.0",
+        "protein_g": "10.8",
+        "fat_g": "50.4",
+        "carbs_g": "5.1"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "118.0",
+        "protein_g": "23.3",
+        "fat_g": "2.7",
+        "carbs_g": null
+      }
+    },
+    "ae9016ff-ab85-48be-912d-755dd9fadac1": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con (khoảng 1,2kg)",
+      "cleaned_name": "vịt",
+      "recipe_id": "c1c854b2-82a0-43b8-8cc4-83d1380dc304",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "af09ba50-0c60-41cf-be08-c00367ef82af": {
+      "alias": "da heo tươi",
+      "raw_text": "Da heo tươi: 200g",
+      "cleaned_name": "da heo tươi",
+      "recipe_id": "57ffe05a-7b4b-44f5-bc6c-e3a66defef4f",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1034.0",
+        "protein_g": "21.6",
+        "fat_g": "100.8",
+        "carbs_g": "10.2"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "236.0",
+        "protein_g": "46.6",
+        "fat_g": "5.4",
+        "carbs_g": null
+      }
+    },
+    "b0b22d0f-770e-4010-a745-234bf9b8f3de": {
+      "alias": "vịt",
+      "raw_text": "Vịt làm sạch: 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "4ea466d8-5496-4ea7-a73d-5d6a3cafbd9c",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "b6e81aee-6b9e-4678-ab34-31e0fd53368c": {
+      "alias": "bò phile",
+      "raw_text": "100 g bò phile",
+      "cleaned_name": "bò phile",
+      "recipe_id": "1a779fa4-5ace-4c20-85f3-e8bff3e48b16",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "b982aa73-ebc3-45ae-a1a9-5d76212c27c1": {
+      "alias": "vịt",
+      "raw_text": "Vịt 2 kg",
+      "cleaned_name": "vịt",
+      "recipe_id": "e6f9393c-136f-40e3-9e1c-0a82eeba4ed9",
+      "estimated_weight_g": "2000.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2440.0",
+        "protein_g": "342.0",
+        "fat_g": "94.0",
+        "carbs_g": "56.0"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "5340.0",
+        "protein_g": "356.0",
+        "fat_g": "436.0",
+        "carbs_g": null
+      }
+    },
+    "c2754dd6-0c4f-4a33-acd2-352148297e61": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "c507797b-1bdd-4a09-b1cc-1f0dbb1bcb26",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "caafbc8c-aece-4077-ba05-c097e1defbc8": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "ec19cd25-f059-43dd-a6e9-c7be1933f143",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "cf0f9439-77d7-4236-a3c4-97355fc41100": {
+      "alias": "vịt",
+      "raw_text": "Vịt làm sạch 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "96c315a0-9cb6-4453-83e1-be95838c51a5",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "cfbc5fd8-f654-42eb-94fb-82ae0017a0eb": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 500 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "8e7128db-b996-4934-87d7-6c44a899edd3",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "720.0",
+        "protein_g": "95.0",
+        "fat_g": "37.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "620.0",
+        "protein_g": "151.0",
+        "fat_g": "1.5",
+        "carbs_g": null
+      }
+    },
+    "d0c49e4d-5867-42bc-ae25-f0ba8ce57dae": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "b17e536c-856a-484d-9c9c-fadace94d037",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "d24850b0-e559-41d9-a229-f439560fae11": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con (khoảng 700- 800g)",
+      "cleaned_name": "vịt",
+      "recipe_id": "a14dfb40-7be6-4b42-965e-56361ad7fe91",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "d399c4e3-8a54-4057-b929-c374b7976076": {
+      "alias": "phile bò",
+      "raw_text": "200 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "748f796b-4aa4-487c-93ce-5cb9addd7a21",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "288.0",
+        "protein_g": "38.0",
+        "fat_g": "15.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "242.0",
+        "protein_g": "46.1",
+        "fat_g": "6.3",
+        "carbs_g": "0.2"
+      }
+    },
+    "d3ecd030-55f1-42fa-b1c1-aa3f5a432cea": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "e0f9198a-5fe4-42e0-89b6-47f33a73a458",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "d492c791-f3b6-4dd4-b30b-17f94750f95c": {
+      "alias": "da heo",
+      "raw_text": "Da heo 500 gr",
+      "cleaned_name": "da heo",
+      "recipe_id": "afef3673-f1f6-4326-8576-8d498ef2a74d",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2585.0",
+        "protein_g": "54.0",
+        "fat_g": "252.0",
+        "carbs_g": "25.5"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "590.0",
+        "protein_g": "116.5",
+        "fat_g": "13.5",
+        "carbs_g": null
+      }
+    },
+    "d6ad173a-3ba7-4caa-92a8-5b74787d0296": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "112563f4-0ccd-4d41-a7dd-297a059e0838",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "d96eeb79-74f0-4091-b055-90c05a88930e": {
+      "alias": "thịt thịt nạc thăn",
+      "raw_text": "1 kg thịt nạc thăn",
+      "cleaned_name": "thịt thịt nạc thăn",
+      "recipe_id": "0360969d-97b7-4f84-9826-71ff1866c620",
+      "estimated_weight_g": "1000.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7070",
+        "master_ingredient_name": "Giò thủ lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "5530.0",
+        "protein_g": "160.0",
+        "fat_g": "543.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7085",
+        "master_ingredient_name": "Thịt nạc thăn heo (lợn)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1180.0",
+        "protein_g": "230.0",
+        "fat_g": "29.0",
+        "carbs_g": "0.4"
+      }
+    },
+    "db23a2ee-bb08-46ab-b684-d25a10a7579d": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "a4185f57-3695-4a20-9415-2b2e3e310334",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "db5a82cb-b817-4bf6-87ef-39fe0f05c56e": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 400 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "342d126b-2b2b-4919-ac04-5570b8209df0",
+      "estimated_weight_g": "400.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "576.0",
+        "protein_g": "76.0",
+        "fat_g": "30.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "496.0",
+        "protein_g": "120.8",
+        "fat_g": "1.2",
+        "carbs_g": null
+      }
+    },
+    "dd351296-9fb5-419c-950a-5ceae9932f85": {
+      "alias": "vịt",
+      "raw_text": "Vịt 600g",
+      "cleaned_name": "vịt",
+      "recipe_id": "c7286d2b-d772-4a3b-92a0-e41df52b550f",
+      "estimated_weight_g": "600.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "732.0",
+        "protein_g": "102.6",
+        "fat_g": "28.2",
+        "carbs_g": "16.8"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "1602.0",
+        "protein_g": "106.8",
+        "fat_g": "130.8",
+        "carbs_g": null
+      }
+    },
+    "de116ee8-97a8-4669-9c61-29039c167b2f": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con (1kg)",
+      "cleaned_name": "vịt",
+      "recipe_id": "7362745a-9dd1-4692-b425-c2408cb5b0fa",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "e1075b22-e6b1-4724-a0a5-a6c8dc948034": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "4549208e-24d2-4d7e-adcf-0ccf2ba78621",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "e3bf7be2-f222-479d-87e1-6f83cff83127": {
+      "alias": "phile bò",
+      "raw_text": "200 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "68e45911-182d-4584-a645-39e189902c5f",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "288.0",
+        "protein_g": "38.0",
+        "fat_g": "15.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "242.0",
+        "protein_g": "46.1",
+        "fat_g": "6.3",
+        "carbs_g": "0.2"
+      }
+    },
+    "e4f305bd-02a7-42ee-8d8d-6044354ca750": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 300 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "90bea07a-8d80-4e61-b23c-9490708ad43f",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "432.0",
+        "protein_g": "57.0",
+        "fat_g": "22.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "372.0",
+        "protein_g": "90.6",
+        "fat_g": "0.9",
+        "carbs_g": null
+      }
+    },
+    "e80e7b99-1bab-417c-a4c0-bdb26f03d2e1": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "314e3dc3-f953-4fb1-8604-3a1c2e911725",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "ea71ef40-88ea-4f3a-b439-a1a01c642b45": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "a3190490-fb0c-4336-81ff-6a54915d822b",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "edae7b38-99a2-40ac-9f94-a6d348c33b18": {
+      "alias": "phile bò",
+      "raw_text": "100 g phile bò",
+      "cleaned_name": "phile bò",
+      "recipe_id": "2e97eb82-5e1e-4963-896b-6d2556390689",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "ee21b5ed-292d-47c3-8af0-64319e0f1ec1": {
+      "alias": "bò thăn",
+      "raw_text": "150 gr bò thăn",
+      "cleaned_name": "bò thăn",
+      "recipe_id": "aa2c29d5-53d5-409c-9a19-3d7698c3308c",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "216.0",
+        "protein_g": "28.5",
+        "fat_g": "11.2",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "181.5",
+        "protein_g": "34.6",
+        "fat_g": "4.7",
+        "carbs_g": "0.2"
+      }
+    },
+    "f02deed6-8333-4dd6-972e-73754d606213": {
+      "alias": "chả lụa",
+      "raw_text": "200 g chả lụa",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "3bafb092-768e-41e9-8466-5c05a2033e6f",
+      "estimated_weight_g": "200.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "670.0",
+        "protein_g": "36.4",
+        "fat_g": "58.0",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "410.0",
+        "protein_g": "33.8",
+        "fat_g": "30.0",
+        "carbs_g": "3.6"
+      }
+    },
+    "f044ca7f-cc1b-4710-83d4-941d102c09ed": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1/2 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "5f5769a3-f2c5-4ae5-aace-07836f0dea47",
+      "estimated_weight_g": "25.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "30.5",
+        "protein_g": "4.3",
+        "fat_g": "1.2",
+        "carbs_g": "0.7"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "66.8",
+        "protein_g": "4.5",
+        "fat_g": "5.5",
+        "carbs_g": null
+      }
+    },
+    "f0791dc5-c6fa-4552-8e40-1d21070e17ab": {
+      "alias": "bò phile",
+      "raw_text": "100 g bò phile",
+      "cleaned_name": "bò phile",
+      "recipe_id": "e7bc1761-4680-4940-a246-dfff075ce187",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "144.0",
+        "protein_g": "19.0",
+        "fat_g": "7.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7005",
+        "master_ingredient_name": "Thịt thăn bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "121.0",
+        "protein_g": "23.1",
+        "fat_g": "3.2",
+        "carbs_g": "0.1"
+      }
+    },
+    "f1ac6182-dc8a-4c0e-93f1-04f3bd699a88": {
+      "alias": "vịt",
+      "raw_text": "Vịt 1 con",
+      "cleaned_name": "vịt",
+      "recipe_id": "fbe05ebb-6e84-4955-9b76-8ebe64caca21",
+      "estimated_weight_g": "50.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7042",
+        "master_ingredient_name": "Gan vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "8.6",
+        "fat_g": "2.4",
+        "carbs_g": "1.4"
+      },
+      "after": {
+        "master_ingredient_code": "7028",
+        "master_ingredient_name": "Thịt vịt",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "133.5",
+        "protein_g": "8.9",
+        "fat_g": "10.9",
+        "carbs_g": null
+      }
+    },
+    "f5fdb0f6-a9f2-4458-92fc-5ffd048b274a": {
+      "alias": "da heo",
+      "raw_text": "150 gr da heo",
+      "cleaned_name": "da heo",
+      "recipe_id": "06d55d25-9b1e-4fd7-934d-e0f5446ababf",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "775.5",
+        "protein_g": "16.2",
+        "fat_g": "75.6",
+        "carbs_g": "7.6"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "177.0",
+        "protein_g": "35.0",
+        "fat_g": "4.1",
+        "carbs_g": null
+      }
+    },
+    "f6d262e6-e2fa-47a2-91b1-68394d8b64c2": {
+      "alias": "da heo",
+      "raw_text": "Da heo: 100g",
+      "cleaned_name": "da heo",
+      "recipe_id": "3ed3cfd3-214d-4c7f-9c50-ff1e72442aa8",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7064",
+        "master_ingredient_name": "Chả lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "517.0",
+        "protein_g": "10.8",
+        "fat_g": "50.4",
+        "carbs_g": "5.1"
+      },
+      "after": {
+        "master_ingredient_code": "7031",
+        "master_ingredient_name": "Bì lợn",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "118.0",
+        "protein_g": "23.3",
+        "fat_g": "2.7",
+        "carbs_g": null
+      }
+    },
+    "f912f3ab-24ab-44b0-b41c-e1fb5f50334d": {
+      "alias": "chim bồ câu",
+      "raw_text": "Chim bồ câu 1.6 kg",
+      "cleaned_name": "chim bồ câu",
+      "recipe_id": "91bed71c-ca14-4996-918c-0b05007ab028",
+      "estimated_weight_g": "1600.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7012",
+        "master_ingredient_name": "Thịt gà rừng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "2256.0",
+        "protein_g": "390.4",
+        "fat_g": "76.8",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7007",
+        "master_ingredient_name": "Thịt bồ câu, cả con non (ra ràng)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "5440.0",
+        "protein_g": "280.0",
+        "fat_g": "480.0",
+        "carbs_g": null
+      }
+    },
+    "f946f1db-6517-42a4-8def-22dba9f4d4ed": {
+      "alias": "chả lụa",
+      "raw_text": "Chả lụa: 150g",
+      "cleaned_name": "chả lụa",
+      "recipe_id": "8a2520c5-bfad-4a7a-8710-7628fe036189",
+      "estimated_weight_g": "150.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7068",
+        "master_ingredient_name": "Giò bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "502.5",
+        "protein_g": "27.3",
+        "fat_g": "43.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7069",
+        "master_ingredient_name": "Giò lụa",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "307.5",
+        "protein_g": "25.3",
+        "fat_g": "22.5",
+        "carbs_g": "2.7"
+      }
+    },
+    "fc89ff58-217a-4e9f-838a-e7c512b81c19": {
+      "alias": "chim bồ câu",
+      "raw_text": "Chim bồ câu 2 con",
+      "cleaned_name": "chim bồ câu",
+      "recipe_id": "ee3374d2-758b-4815-99ba-26ed6603a1fe",
+      "estimated_weight_g": "100.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7012",
+        "master_ingredient_name": "Thịt gà rừng",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "141.0",
+        "protein_g": "24.4",
+        "fat_g": "4.8",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7007",
+        "master_ingredient_name": "Thịt bồ câu, cả con non (ra ràng)",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "340.0",
+        "protein_g": "17.5",
+        "fat_g": "30.0",
+        "carbs_g": null
+      }
+    },
+    "ffc9d830-a111-4a14-b45a-a8d2ad6972e0": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 300 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "2f2af65f-7a32-4747-a6b6-f7e27682513d",
+      "estimated_weight_g": "300.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "432.0",
+        "protein_g": "57.0",
+        "fat_g": "22.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "372.0",
+        "protein_g": "90.6",
+        "fat_g": "0.9",
+        "carbs_g": null
+      }
+    },
+    "fff25e63-3552-4389-a44c-c6b9e53ffa58": {
+      "alias": "gân bò",
+      "raw_text": "Gân bò 500 gr",
+      "cleaned_name": "gân bò",
+      "recipe_id": "253cf26f-ff92-45f1-9214-610106494c08",
+      "estimated_weight_g": "500.0",
+      "decision": "REPOINT_ALIAS_AND_REPAIR_ROW",
+      "before": {
+        "master_ingredient_code": "7001",
+        "master_ingredient_name": "Thịt bê mỡ",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "720.0",
+        "protein_g": "95.0",
+        "fat_g": "37.5",
+        "carbs_g": ""
+      },
+      "after": {
+        "master_ingredient_code": "7043",
+        "master_ingredient_name": "Gân chân bò",
+        "match_method": "PRESET_ALIAS_MATCH",
+        "match_confidence": "0.98",
+        "calories": "620.0",
+        "protein_g": "151.0",
+        "fat_g": "1.5",
+        "carbs_g": null
+      }
+    }
+  },
+  "cure_held_outcomes": {
+    "052845b9-25d3-43a6-b438-597bade70c38": {
+      "raw_text": "Bắp bò hoa: 300g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "366.0",
+        "protein_g": "65.2",
+        "fat_g": "11.6",
+        "carbs_g": ""
+      }
+    },
+    "11e9706d-f998-473e-a319-44aa0c1fbe6b": {
+      "raw_text": "500 g bắp bò phile",
+      "cleaned_name": "bò phile",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "610.0",
+        "protein_g": "108.8",
+        "fat_g": "19.2",
+        "carbs_g": ""
+      }
+    },
+    "184aa6b7-f73f-4828-aa68-61f873920fa7": {
+      "raw_text": "Bắp bò hoa 200g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "244.0",
+        "protein_g": "43.5",
+        "fat_g": "7.7",
+        "carbs_g": ""
+      }
+    },
+    "1c88ba8c-0d58-4317-9e92-8dce35800252": {
+      "raw_text": "Bắp bò hoa: 300g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "366.0",
+        "protein_g": "65.2",
+        "fat_g": "11.6",
+        "carbs_g": ""
+      }
+    },
+    "1f80c394-b7d0-40d6-952f-7e88f69dbb6e": {
+      "raw_text": "Bắp bò hoa: 300g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "366.0",
+        "protein_g": "65.2",
+        "fat_g": "11.6",
+        "carbs_g": ""
+      }
+    },
+    "20f6d3fe-2241-4fdf-b6a2-7cb855daa459": {
+      "raw_text": "100 g bắp bò phile",
+      "cleaned_name": "bò phile",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "122.0",
+        "protein_g": "21.8",
+        "fat_g": "3.9",
+        "carbs_g": ""
+      }
+    },
+    "2fb1f315-db07-4bf9-bc60-3bffca5c3d61": {
+      "raw_text": "Bắp bò hoa 200g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "244.0",
+        "protein_g": "43.5",
+        "fat_g": "7.7",
+        "carbs_g": ""
+      }
+    },
+    "5a5e421a-b4ab-46ba-a0d1-cc1263badf29": {
+      "raw_text": "Bắp bò hoa 350g (1 cái)",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "427.0",
+        "protein_g": "76.1",
+        "fat_g": "13.5",
+        "carbs_g": ""
+      }
+    },
+    "61307b00-92fe-4d75-80de-04ab3185049e": {
+      "raw_text": "Bắp bò hoa 150g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "183.0",
+        "protein_g": "32.6",
+        "fat_g": "5.8",
+        "carbs_g": ""
+      }
+    },
+    "75fdc30f-37de-4470-82b7-ca74a8d26a60": {
+      "raw_text": "Bắp bò hoa 200g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "244.0",
+        "protein_g": "43.5",
+        "fat_g": "7.7",
+        "carbs_g": ""
+      }
+    },
+    "883b19f1-6da9-44c1-a59d-1d4a7b4cc8ec": {
+      "raw_text": "Bắp bò hoa 1 cái",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "61.0",
+        "protein_g": "10.9",
+        "fat_g": "1.9",
+        "carbs_g": ""
+      }
+    },
+    "8f9ca4c4-35bc-4682-a245-3b60de4f531b": {
+      "raw_text": "Bắp bò hoa: 400g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "488.0",
+        "protein_g": "87.0",
+        "fat_g": "15.4",
+        "carbs_g": ""
+      }
+    },
+    "ba68e662-b8bd-4f46-abdb-d62cc620e697": {
+      "raw_text": "Bắp bò hoa: 300g",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "366.0",
+        "protein_g": "65.2",
+        "fat_g": "11.6",
+        "carbs_g": ""
+      }
+    },
+    "d9feb556-5247-473f-8379-70b666f1e1bb": {
+      "raw_text": "Bắp bò hoa: 200g (thái lát mỏng)",
+      "cleaned_name": "bò hoa",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "244.0",
+        "protein_g": "43.5",
+        "fat_g": "7.7",
+        "carbs_g": ""
+      }
+    },
+    "f8a40702-28ba-45a9-afaa-4435a77d1dbb": {
+      "raw_text": "100 g bắp bò phile",
+      "cleaned_name": "bò phile",
+      "decision": "UNCHANGED_CURE_HELD",
+      "state": {
+        "master_ingredient_code": "7094",
+        "master_ingredient_name": "Thịt bắp bò",
+        "match_method": "STANDARDIZED_CURE",
+        "match_confidence": "0.98",
+        "calories": "122.0",
+        "protein_g": "21.8",
+        "fat_g": "3.9",
+        "carbs_g": ""
+      }
+    }
+  },
+  "out_of_scope_note": "Batch A repoints exactly fifteen aliases. Every other 70xx audit finding is deliberately unchanged: the cốt lết family -> 7070, 'bóng bì' -> 7031, the vegan analogues -> 20039, 'thịt ba chỉ rút sườn' (fixed in Batch B), 'sườn bò'/'dẻ sườn bò', 'mỡ gà', 'thịt heo quay', 'nạm bò', 'ba chỉ bò', 'chả chiên', 'mỡ nước', 'tóp mỡ', 'gà tre', catalog name_vi corruption, 'xương bò', the 7096 corruption, cleaner/matcher policy, and stale-code remediation.",
+  "canonical_note": "Canonical outputs (canonical_recipes.csv/json, canonical_recipe_ingredients.csv/json, recipe_canonical_mapping.csv/json, recipe_canonicalization_summary.json) are NOT regenerated by this script and are stale for these rows/recipes until scripts/canonicalize_recipes.py and scripts/export_canonical_json.py are re-run."
+}

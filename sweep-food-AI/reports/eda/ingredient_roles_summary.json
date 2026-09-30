@@ -1,0 +1,18 @@
+{
+  "model_used": "gpt-oss:120b",
+  "total_ingredient_rows": 63662,
+  "role_distribution": {
+    "seasoning": 30875,
+    "secondary": 12067,
+    "core": 12001,
+    "garnish": 8719
+  },
+  "role_percentages": {
+    "seasoning": 48.5,
+    "secondary": 18.95,
+    "core": 18.85,
+    "garnish": 13.7
+  },
+  "recipes_count": 5478,
+  "all_recipes_have_at_least_one_core": true
+}

@@ -1,0 +1,33 @@
+{
+  "source_file": "data\\processed\\recipes\\canonical_recipe_ingredients.csv",
+  "total_ingredient_rows": 63662,
+  "distribution": {
+    "vague_portion_fallback": 22533,
+    "measured_mass_volume": 15937,
+    "count_portion_estimate": 13037,
+    "unit_conversion_std": 11304,
+    "unmatched_no_nutrition": 798,
+    "role_category_estimate": 53
+  },
+  "distribution_pct": {
+    "vague_portion_fallback": 35.39,
+    "measured_mass_volume": 25.03,
+    "count_portion_estimate": 20.48,
+    "unit_conversion_std": 17.76,
+    "unmatched_no_nutrition": 1.25,
+    "role_category_estimate": 0.08
+  },
+  "high_confidence_rows": 27241,
+  "high_confidence_pct": 42.79,
+  "low_confidence_rows": 22586,
+  "low_confidence_pct": 35.48,
+  "conversion_factors_g": {
+    "muỗng canh": 15.0,
+    "muỗng cà phê": 5.0,
+    "chén / cốc": 200.0,
+    "kg": 1000.0,
+    "g": 1.0,
+    "ml": 1.0,
+    "lít": 1000.0
+  }
+}

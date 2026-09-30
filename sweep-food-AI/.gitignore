@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Caches and temporary logs
+.cache/
+.pytest_cache/
+*.checkpoint
+*.log
+*.wav
+*.mp3
+*.flac
+*.m4a
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE & OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Hugging Face / Deep Learning Weights (avoid committing multi-gigabyte models)
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+
+# Agentic / IDE Temporary Artifacts
+brain/
+scratch/
+.agents/
+skills-lock.json
+walkthrough.md
+
+# Training Data & Model Artifacts (keep lightweight production weights, ignore large CSVs)
+data/training/*
+!data/training/metadata.json
+!data/training/xgb_full.json
+data/benchmark/*.csv
+# Copyright-sensitive verbatim crawl snapshot (kept local for reproducibility only)
+data/raw/recipes_raw_scraped.json
+
+# Documentation / Internal specs
+docs/

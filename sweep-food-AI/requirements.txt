@@ -1,0 +1,23 @@
+# Core PyTorch & CUDA
+torch>=2.4.0
+transformers>=4.45.0
+accelerate>=0.34.0
+huggingface_hub>=0.25.0
+
+# Data Science & Numerical Processing
+pandas>=2.2.0
+numpy>=1.26.0
+scikit-learn>=1.5.0
+
+# Web Scraping & Text Parsing
+beautifulsoup4>=4.12.0
+requests>=2.31.0
+tqdm>=4.66.0
+pydantic>=2.7.0
+
+# Recommendation & Ranking Models (Optional / Next Phase)
+lightgbm>=4.3.0
+xgboost>=2.0.0
+
+# OCR recognition (run the AI service with Python 3.11)
+vietocr==0.3.13
