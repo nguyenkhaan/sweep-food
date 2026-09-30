@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#B7E4C7;--green-700:#40916C;--green-600:#52B788;--green-100:#17301F;--ink:#ECEFEA;--ink-2:#A8ADA4;--ink-3:#7C827A;--line:#2E362F;--fill:#242B25;--bg:#101511;--surface:#1A211C;--brick-500:#E6C9C9;--brick-100:#3E1E1F;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .topbar .sp{flex:1}
+    .topbar .per{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 10px}
+    .rnd{width:34px;height:34px;border-radius:10px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .tabs{display:flex;gap:6px;padding:0 18px 12px;border-bottom:1px solid var(--line);background:var(--surface)}
+    .tab{flex:1;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--ink-2);text-decoration:none}
+    .tab.on{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+    .content{padding:14px 18px 24px;display:flex;flex-direction:column;gap:14px}
+    .hero{background:var(--brick-100);border:1px solid rgba(230,201,201,.2);border-radius:16px;padding:16px}
+    .hero .lb{font-size:12px;color:var(--brick-500);font-weight:600;display:flex;align-items:center;gap:5px}
+    .hero .v{font-size:26px;font-weight:800;color:var(--brick-500);margin-top:4px}
+    .hero .sub{font-size:12px;color:var(--brick-500);opacity:.85;margin-top:2px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+    .card h2{margin:0 0 12px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}
+    .prog-row{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+    .prog-row:last-child{margin-bottom:0}
+    .prog-hd{display:flex;justify-content:space-between;font-size:13px;font-weight:600}
+    .prog-sub{font-size:12px;color:var(--ink-2);font-weight:500}
+    .prog-track{height:8px;background:var(--fill);border-radius:999px;overflow:hidden}
+    .prog-bar{height:100%;border-radius:999px}
+    .reasons{display:flex;flex-wrap:wrap;gap:8px}
+    .r-chip{padding:6px 10px;background:var(--fill);border-radius:8px;font-size:12px;font-weight:500;color:var(--ink-2);border:1px solid var(--line)}
+    .item-list{display:flex;flex-direction:column;gap:10px}
+    .w-item{display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--fill)}
+    .w-item:last-child{border-bottom:0}
+    .w-dot{width:8px;height:8px;border-radius:50%;background:var(--brick-500);flex:none}
+    .w-nm{font-weight:600;color:var(--ink)}
+    .w-exp{font-size:11px;color:var(--ink-3);margin-top:1px}
+    .w-qty{margin-left:auto;font-weight:700;color:var(--brick-500)}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></span>
+    <h1>Thực phẩm lãng phí</h1>
+    <span class="sp"></span>
+    <span class="per">Tháng này <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab">Lịch sử dùng</div>
+    <div class="tab on">Lãng phí</div>
+    <div class="tab">Hiệu quả</div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="lb"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Lượng thực phẩm lãng phí trong kỳ</div>
+      <div class="v">0,85 kg</div>
+      <div class="sub">Khoảng 3 nguyên liệu đã không được dùng kịp thời.</div>
+    </div>
+
+    <div class="card">
+      <h2>Phân bố theo nhóm thực phẩm</h2>
+      <div class="prog-row">
+        <div class="prog-hd"><span>Rau củ</span><span class="prog-sub">58.8% (0,50 kg)</span></div>
+        <div class="prog-track"><div class="prog-bar" style="width:58.8%;background:#52B788"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-hd"><span>Sữa &amp; Chế phẩm</span><span class="prog-sub">23.5% (0,20 kg)</span></div>
+        <div class="prog-track"><div class="prog-bar" style="width:23.5%;background:#D6B45A"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-hd"><span>Thịt &amp; Thủy sản</span><span class="prog-sub">17.7% (0,15 kg)</span></div>
+        <div class="prog-track"><div class="prog-bar" style="width:17.7%;background:#C99A9B"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Nguyên nhân lãng phí</h2>
+      <div class="reasons">
+        <span class="r-chip">Hết hạn sử dụng: 2 món (67%)</span>
+        <span class="r-chip">Hư hỏng / ẩm mốc: 1 món (33%)</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Danh sách thực phẩm đã bỏ phí</h2>
+      <div class="item-list">
+        <div class="w-item">
+          <span class="w-dot"></span>
+          <div>
+            <div class="w-nm">Rau cải ngọt</div>
+            <div class="w-exp">Hết hạn: 27/09/2026</div>
+          </div>
+          <span class="w-qty">300 g</span>
+        </div>
+        <div class="w-item">
+          <span class="w-dot"></span>
+          <div>
+            <div class="w-nm">Bánh mì sandwich</div>
+            <div class="w-exp">Hết hạn: 25/09/2026</div>
+          </div>
+          <span class="w-qty">200 g</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

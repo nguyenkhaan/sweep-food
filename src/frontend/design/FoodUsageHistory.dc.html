@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;--brick-500:#8D4D4E;--brick-100:#F6E7E7;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+    .screen{width:390px;background:var(--bg);display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 18px}
+    .topbar h1{font-size:18px;font-weight:700;margin:0}
+    .topbar .sp{flex:1}
+    .topbar .per{font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 10px}
+    .rnd{width:34px;height:34px;border-radius:10px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink);flex:none}
+    .tabs{display:flex;gap:6px;padding:0 18px 12px;border-bottom:1px solid var(--line);background:var(--surface)}
+    .tab{flex:1;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--ink-2);text-decoration:none}
+    .tab.on{background:var(--green-700);color:#fff;border-color:var(--green-700)}
+    .content{padding:14px 18px 24px;display:flex;flex-direction:column;gap:14px}
+    .hero{background:var(--green-100);border-radius:16px;padding:16px}
+    .hero .lb{font-size:12px;color:var(--green-800);font-weight:500}
+    .hero .row{display:flex;align-items:baseline;gap:8px;margin-top:2px}
+    .hero .v{font-size:26px;font-weight:700;color:var(--green-800)}
+    .hero .sub{font-size:13px;color:var(--green-700);font-weight:500}
+    .sec-t{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);margin-top:4px}
+    .item-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+    .item-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none}
+    .item-ic.safe{background:var(--green-100);color:var(--green-700)}
+    .item-ic.late{background:var(--brick-100);color:var(--brick-500)}
+    .item-info{flex:1;min-width:0}
+    .item-top{display:flex;justify-content:space-between;align-items:center}
+    .item-nm{font-size:14px;font-weight:700;color:var(--ink)}
+    .item-qty{font-size:13px;font-weight:700;color:var(--green-700)}
+    .item-ctx{font-size:12px;color:var(--ink-2);margin-top:2px}
+    .item-btm{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px}
+    .pill.safe{background:var(--green-100);color:var(--green-700)}
+    .pill.late{background:var(--brick-100);color:var(--brick-500)}
+    .item-time{font-size:11px;color:var(--ink-3)}
+  </style>
+</helmet>
+<div class="screen">
+  <div class="topbar">
+    <span class="rnd"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></span>
+    <h1>Lịch sử sử dụng</h1>
+    <span class="sp"></span>
+    <span class="per">Tháng này <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab on">Lịch sử dùng</div>
+    <div class="tab">Lãng phí</div>
+    <div class="tab">Hiệu quả</div>
+  </div>
+
+  <div class="content">
+    <div class="hero">
+      <div class="lb">Tổng thực phẩm đã sử dụng</div>
+      <div class="row">
+        <span class="v">4,65 kg</span>
+        <span class="sub">(12 lượt sử dụng)</span>
+      </div>
+    </div>
+
+    <div class="sec-t">Gần đây</div>
+
+    <div class="item-card">
+      <div class="item-ic safe"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
+      <div class="item-info">
+        <div class="item-top">
+          <span class="item-nm">Ức gà tươi</span>
+          <span class="item-qty">350 g</span>
+        </div>
+        <div class="item-ctx">Nấu: Gà nướng thảo mộc</div>
+        <div class="item-btm">
+          <span class="pill safe">Dùng kịp thời</span>
+          <span class="item-time">Hôm nay · 11:30</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-ic safe"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
+      <div class="item-info">
+        <div class="item-top">
+          <span class="item-nm">Cà chua Đà Lạt</span>
+          <span class="item-qty">200 g</span>
+        </div>
+        <div class="item-ctx">Nấu: Canh chua cá lóc</div>
+        <div class="item-btm">
+          <span class="pill safe">Dùng kịp thời</span>
+          <span class="item-time">Hôm qua · 17:45</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-ic safe"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+      <div class="item-info">
+        <div class="item-top">
+          <span class="item-nm">Sữa chua không đường</span>
+          <span class="item-qty">100 g</span>
+        </div>
+        <div class="item-ctx">Dùng trực tiếp</div>
+        <div class="item-btm">
+          <span class="pill safe">Dùng kịp thời</span>
+          <span class="item-time">28/09 · 08:15</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-ic safe"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></div>
+      <div class="item-info">
+        <div class="item-top">
+          <span class="item-nm">Thịt ba chỉ</span>
+          <span class="item-qty">400 g</span>
+        </div>
+        <div class="item-ctx">Nấu: Thịt ba chỉ rang cháy cạnh</div>
+        <div class="item-btm">
+          <span class="pill safe">Dùng kịp thời</span>
+          <span class="item-time">27/09 · 19:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

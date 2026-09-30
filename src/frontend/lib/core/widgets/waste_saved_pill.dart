@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
@@ -11,6 +11,7 @@ class WasteSavedPill extends StatelessWidget {
     required this.count,
     this.periodLabel,
     this.wasteAvoidedKg,
+    this.onTap,
     super.key,
   });
 
@@ -19,12 +20,13 @@ class WasteSavedPill extends StatelessWidget {
   /// Defaults to the localized "this month" when null.
   final String? periodLabel;
   final double? wasteAvoidedKg;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final period = periodLabel ?? l10n.wastePillPeriodThisMonth;
-    return Container(
+    final content = Container(
       padding: const EdgeInsets.all(Gap.sm + 2),
       decoration: BoxDecoration(
         color: context.colors.primaryContainer,
@@ -71,8 +73,29 @@ class WasteSavedPill extends StatelessWidget {
               ),
             ),
           ),
+          if (onTap != null) ...[
+            const SizedBox(width: Gap.xs),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 20,
+              color: context.colors.onPrimaryContainer.withValues(alpha: 0.6),
+            ),
+          ],
         ],
       ),
     );
+
+    if (onTap != null) {
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: Radii.brLg,
+          onTap: onTap,
+          child: content,
+        ),
+      );
+    }
+
+    return content;
   }
 }

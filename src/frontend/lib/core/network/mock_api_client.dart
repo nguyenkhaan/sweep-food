@@ -818,6 +818,146 @@ class MockApiClient implements ApiClient {
       }
       return _clone(recipe);
     }
+    if (path == ApiPaths.reportsUsageHistory) {
+      final period = query?['period'] ?? 'month';
+      return {
+        'period': period,
+        'total_used_count': 12,
+        'total_used_kg': 4.65,
+        'items': [
+          {
+            'id': 'use-1',
+            'ingredient_name': 'Ức gà tươi',
+            'quantity': 350.0,
+            'unit': 'GRAM',
+            'recipe_name': 'Gà nướng thảo mộc',
+            'usage_type': 'COOKING',
+            'used_before_expiry': true,
+            'used_at': DateTime.now().subtract(const Duration(hours: 3)).toIso8601String(),
+          },
+          {
+            'id': 'use-2',
+            'ingredient_name': 'Cà chua Đà Lạt',
+            'quantity': 200.0,
+            'unit': 'GRAM',
+            'recipe_name': 'Canh chua cá lóc',
+            'usage_type': 'COOKING',
+            'used_before_expiry': true,
+            'used_at': DateTime.now().subtract(const Duration(days: 1, hours: 2)).toIso8601String(),
+          },
+          {
+            'id': 'use-3',
+            'ingredient_name': 'Sữa chua không đường',
+            'quantity': 100.0,
+            'unit': 'GRAM',
+            'recipe_name': null,
+            'usage_type': 'MANUAL',
+            'used_before_expiry': true,
+            'used_at': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+          },
+          {
+            'id': 'use-4',
+            'ingredient_name': 'Thịt ba chỉ',
+            'quantity': 400.0,
+            'unit': 'GRAM',
+            'recipe_name': 'Thịt ba chỉ rang cháy cạnh',
+            'usage_type': 'COOKING',
+            'used_before_expiry': true,
+            'used_at': DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+          },
+          {
+            'id': 'use-5',
+            'ingredient_name': 'Trứng gà Ba Huân',
+            'quantity': 4.0,
+            'unit': 'PIECE',
+            'recipe_name': 'Trứng chiên hành lá',
+            'usage_type': 'COOKING',
+            'used_before_expiry': true,
+            'used_at': DateTime.now().subtract(const Duration(days: 4)).toIso8601String(),
+          },
+        ],
+        'page': 1,
+        'per_page': 20,
+        'total': 5,
+      };
+    }
+    if (path == ApiPaths.reportsWasteStatistics) {
+      final period = query?['period'] ?? 'month';
+      return {
+        'period': period,
+        'total_wasted_kg': 0.85,
+        'wasted_items_count': 3,
+        'by_category': [
+          {'category_name': 'Rau củ', 'wasted_kg': 0.50, 'percentage': 58.8},
+          {'category_name': 'Sữa & Chế phẩm', 'wasted_kg': 0.20, 'percentage': 23.5},
+          {'category_name': 'Thịt & Thủy sản', 'wasted_kg': 0.15, 'percentage': 17.7},
+        ],
+        'waste_reasons': [
+          {'reason': 'EXPIRED', 'count': 2, 'percentage': 66.7},
+          {'reason': 'SPOILED', 'count': 1, 'percentage': 33.3},
+        ],
+        'wasted_batches': [
+          {
+            'batch_id': 'wb-1',
+            'ingredient_name': 'Rau cải ngọt',
+            'quantity': 300.0,
+            'unit': 'GRAM',
+            'expired_at': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+            'discarded_at': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+            'reason': 'EXPIRED',
+          },
+          {
+            'batch_id': 'wb-2',
+            'ingredient_name': 'Bánh mì sandwich',
+            'quantity': 200.0,
+            'unit': 'GRAM',
+            'expired_at': DateTime.now().subtract(const Duration(days: 4)).toIso8601String(),
+            'discarded_at': DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+            'reason': 'SPOILED',
+          },
+          {
+            'batch_id': 'wb-3',
+            'ingredient_name': 'Sữa tươi thanh trùng',
+            'quantity': 350.0,
+            'unit': 'ML',
+            'expired_at': DateTime.now().subtract(const Duration(days: 5)).toIso8601String(),
+            'discarded_at': DateTime.now().subtract(const Duration(days: 5)).toIso8601String(),
+            'reason': 'EXPIRED',
+          },
+        ],
+      };
+    }
+    if (path == ApiPaths.reportsEfficiency) {
+      final period = query?['period'] ?? 'month';
+      return {
+        'period': period,
+        'efficiency_score': 86,
+        'rating_level': 'EXCELLENT',
+        'utilization_rate': 91.5,
+        'waste_rate': 8.5,
+        'trend_vs_previous_period': {
+          'score_delta': 4.2,
+          'waste_kg_delta': -0.35,
+        },
+        'insights': [
+          {
+            'type': 'POSITIVE',
+            'title': 'Tận dụng thực phẩm cận hạn xuất sắc',
+            'message': 'Bạn đã sử dụng kịp thời 91.5% thực phẩm trước ngày hết hạn.',
+          },
+          {
+            'type': 'RECOMMENDATION',
+            'title': 'Ưu tiên chế biến rau lá xanh',
+            'message': 'Rau củ chiếm 58% lượng lãng phí. Nên ưu tiên đưa vào thực đơn trong 3 ngày đầu sau khi mua.',
+          },
+          {
+            'type': 'POSITIVE',
+            'title': 'Tiết kiệm hơn kỳ trước',
+            'message': 'Lượng thực phẩm lãng phí giảm 0.35 kg so với tháng trước. Giữ vững phong độ!',
+          },
+        ],
+      };
+    }
     return _clone(await _load(path));
   }
 

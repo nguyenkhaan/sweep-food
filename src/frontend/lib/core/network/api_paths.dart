@@ -116,4 +116,11 @@ abstract final class ApiPaths {
 
   // Reports
   static const reportsWasteReduction = '/reports/waste-reduction';
+  static const reportsUsageHistory = '/reports/usage-history';
+  static const reportsWasteStatistics = '/reports/waste-statistics';
+  static const reportsEfficiency = '/reports/efficiency';
+  static const inventoryWaste = '/inventory/waste';
+
+  // Onboarding
+  static const onboardingComplete = '/users/onboarding/complete';
 }
