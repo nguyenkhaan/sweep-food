@@ -58,6 +58,13 @@ def preprocess_ocr_image(
         # Assuming input is BGR from cv2.imdecode
         img_rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
+    # VietOCR and the fallback detector expect dark text on a light background.
+    # Normalize dark-mode screenshots before contrast enhancement.
+    gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
+    polarity_inverted = float(np.median(gray)) < 127
+    if polarity_inverted:
+        img_rgb = cv2.bitwise_not(img_rgb)
+
     # 2. CLAHE Contrast Enhancement for faint receipts and glossy food packaging
     if enhance_contrast:
         try:
@@ -77,6 +84,7 @@ def preprocess_ocr_image(
         "processed_height": cur_h,
         "scale_factor": round(scale_factor, 3),
         "downscaled": scale_factor < 1.0,
+        "polarity_inverted": polarity_inverted,
         "contrast_enhanced": enhance_contrast,
     }
 

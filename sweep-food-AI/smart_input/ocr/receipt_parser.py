@@ -224,6 +224,7 @@ def parse_receipt_text(raw_text: str) -> list[dict[str, Any]]:
     for idx, raw_line in enumerate(lines):
         line = _normalize_ocr_line(raw_line)
         unacc_line = remove_accents(line)
+        has_diacritics = unacc_line != line.lower()
 
         # Skip receipt headers, footers, total lines, divider lines
         if re.search(r"^(winmart|bach hoa|co\.?opmart|hoa don|ngay|gio|sl|d\.?gia|t\.?tien|tong|tien|cam on|phieu|thoi gian|-|=)", unacc_line):
@@ -237,7 +238,9 @@ def parse_receipt_text(raw_text: str) -> list[dict[str, Any]]:
         matched_standard_name = None
         matched_meta = None
         for std_name, unacc_name, meta in FOOD_KNOWLEDGE_LIST:
-            if re.search(r"\b" + re.escape(unacc_name) + r"\b", unacc_line) or unacc_name in unacc_line:
+            name = std_name if has_diacritics else unacc_name
+            text = line.lower() if has_diacritics else unacc_line
+            if re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", text):
                 matched_standard_name = std_name
                 matched_meta = meta
                 break

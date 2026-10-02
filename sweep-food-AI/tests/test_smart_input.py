@@ -61,6 +61,14 @@ def test_ocr_bachhoaxanh_receipt_parsing():
     assert not any("khăn" in n.lower() for n in names)
 
 
+def test_receipt_parser_does_not_match_words_that_only_share_unaccented_text():
+    raw_text = """Tái sử dụng mã nguồn tối đa
+    DB có cột Store_ID và cho phép cửa hàng tự tạo kho
+    Mặt hàng phi sách khác"""
+
+    assert parse_receipt_text(raw_text) == []
+
+
 def test_bachhoaxanh_food_packaging_label_parser():
     """Verify Bách Hóa Xanh food packaging stickers (Cải thìa VietGAP, Thịt ba rọi heo)."""
     parser = FoodLabelParser()
@@ -277,6 +285,21 @@ def test_image_preprocessor_downsampling_and_clahe():
     assert b_stats["savings_percent"] >= 0.0
 
 
+def test_image_preprocessor_normalizes_dark_background():
+    """Dark-mode screenshots become dark text on a light background for OCR."""
+    import cv2
+    import numpy as np
+    from smart_input.ocr.image_preprocessor import preprocess_ocr_image
+
+    image = np.full((80, 240, 3), 30, dtype=np.uint8)
+    cv2.putText(image, "Yeu cau", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (240, 240, 240), 2)
+
+    processed, stats = preprocess_ocr_image(image, enhance_contrast=False)
+
+    assert stats["polarity_inverted"] is True
+    assert np.median(processed) > 127
+
+
 def test_audio_preprocessor_silence_stripping():
     """Verify audio preprocessor downsamples to 16kHz mono FLAC with silence stripping."""
     from smart_input.asr.audio_preprocessor import preprocess_audio_bytes
@@ -324,4 +347,3 @@ def test_system_status_and_gpu_warmup(client):
     assert "device_name" in data
     assert "xgb_device" in data
     assert "ocr_device" in data
-
