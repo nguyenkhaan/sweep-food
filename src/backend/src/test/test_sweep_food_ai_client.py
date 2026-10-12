@@ -33,8 +33,8 @@ async def test_check_health_validates_ready_response() -> None:
             json={
                 "warmed_up": True,
                 "device_name": "CPU",
-                "xgb_device": "cpu",
                 "ocr_device": "cpu",
+                "ranker_model": "LightGBM LambdaMART",
                 "ignored": "value",
             },
         )
@@ -65,8 +65,13 @@ async def test_ocr_upload_uses_file_multipart_field() -> None:
                 "items": [
                     {
                         "name": "Milk",
+                        "raw_name": "MILK",
+                        "code": "10001",
+                        "category": "Dairy",
                         "quantity_g": 500,
                         "quantity_source": "extracted",
+                        "nutrition": {"energy_kcal": 74.0},
+                        "freshness_guide": {"storage_tips": ["Keep cold"]},
                     }
                 ],
             },
@@ -81,6 +86,7 @@ async def test_ocr_upload_uses_file_multipart_field() -> None:
 
     assert response.items[0].name == "Milk"
     assert response.items[0].quantity_g == 500
+    assert response.items[0].code == "10001"
 
 
 @pytest.mark.anyio
@@ -104,7 +110,7 @@ async def test_asr_upload_uses_audio_field_and_engine() -> None:
                         "name": "Thit bo",
                         "quantity_g": 500,
                         "confidence": 0.95,
-                        "quantity_source": "spoken",
+                        "quantity_source": "extracted",
                     }
                 ],
             },
@@ -118,7 +124,7 @@ async def test_asr_upload_uses_audio_field_and_engine() -> None:
         )
 
     assert response.transcript == "nam tram gram thit bo"
-    assert response.items[0].quantity_source == "spoken"
+    assert response.items[0].quantity_source == "extracted"
 
 
 @pytest.mark.anyio
@@ -133,21 +139,32 @@ async def test_recommend_posts_structured_json() -> None:
             200,
             json={
                 "status": "success",
-                "model_version": "xgb-full-v1",
-                "catalog_revision": "canonical-v1",
+                "contract_version": "2",
+                "model_version": "lgbm-contextual-v1",
+                "catalog_revision": "sha256:test",
+                "ranker_model": "LightGBM LambdaMART",
+                "timings": {"total_ms": 20.1, "candidate_ms": 2.3, "ranker_ms": 4.8},
                 "recommendations": [
                     {
                         "id": "018f0f90-26e6-7ce7-8f61-8769f9e5b102",
                         "name": "Soup",
-                        "score": 0.8,
-                        "score_components": {
-                            "expiration_utilization": 0.7,
-                            "availability": 0.8,
-                            "preference_fit": 1.0,
-                            "purchase_minimization": 0.9,
+                        "rank_score": 1.8,
+                        "ranking_features": {
+                            "core_coverage": 0.8,
+                            "core_missing_count": 1,
+                            "secondary_coverage": 0.7,
+                            "shopping_gap_items": 1,
+                            "rescue_weight_g": 300,
+                            "nutrition_confidence": 0.9,
+                            "kcal_per_serving": 450,
+                            "protein_per_serving": 25,
+                            "prep_complexity": 3.2,
                         },
+                        "matched_ingredients": [],
                         "missing_ingredients": [],
+                        "optional_ingredients": [],
                         "rescued_items": ["spinach"],
+                        "status_badge": "ready",
                     }
                 ],
             },
@@ -167,7 +184,8 @@ async def test_recommend_posts_structured_json() -> None:
         response = await client.recommend(request)
 
     assert response.recommendations[0].name == "Soup"
-    assert response.recommendations[0].score == 0.8
+    assert response.recommendations[0].rank_score == 1.8
+    assert response.contract_version == "2"
 
 
 @pytest.mark.anyio
@@ -243,8 +261,11 @@ async def test_recommend_accepts_an_empty_result() -> None:
             200,
             json={
                 "status": "empty",
-                "model_version": "xgb-full-v1",
-                "catalog_revision": "canonical-v1",
+                "contract_version": "2",
+                "model_version": "lgbm-contextual-v1",
+                "catalog_revision": "sha256:test",
+                "ranker_model": "LightGBM LambdaMART",
+                "timings": {"total_ms": 1, "candidate_ms": 1, "ranker_ms": 0},
                 "recommendations": [],
             },
         )
@@ -262,35 +283,52 @@ async def test_recommend_accepts_an_empty_result() -> None:
     [
         {
             "status": "success",
-            "model_version": "xgb-full-v1",
-            "catalog_revision": "canonical-v1",
+            "contract_version": "2",
+            "model_version": "lgbm-contextual-v1",
+            "catalog_revision": "sha256:test",
+            "ranker_model": "LightGBM LambdaMART",
+            "timings": {"total_ms": 1, "candidate_ms": 1, "ranker_ms": 0},
             "recommendations": [
                 {
                     "id": "not-a-uuid",
                     "name": "Soup",
-                    "score": 0.8,
-                    "score_components": {
-                        "expiration_utilization": 0.7,
-                        "availability": 0.8,
-                        "preference_fit": 1.0,
-                        "purchase_minimization": 0.9,
-                    },
+                    "rank_score": 0.8,
+                    "ranking_features": {},
+                    "matched_ingredients": [],
                     "missing_ingredients": [],
+                    "optional_ingredients": [],
                     "rescued_items": [],
+                    "status_badge": "ready",
                 }
             ],
         },
         {
             "status": "success",
-            "model_version": "xgb-full-v1",
-            "catalog_revision": "canonical-v1",
+            "contract_version": "1",
+            "model_version": "lgbm-contextual-v1",
+            "catalog_revision": "sha256:test",
+            "ranker_model": "LightGBM LambdaMART",
+            "timings": {"total_ms": 1, "candidate_ms": 1, "ranker_ms": 0},
+            "recommendations": [],
+        },
+        {
+            "status": "success",
+            "contract_version": "2",
+            "model_version": "lgbm-contextual-v1",
+            "catalog_revision": "sha256:test",
+            "ranker_model": "LightGBM LambdaMART",
+            "timings": {"total_ms": 1, "candidate_ms": 1, "ranker_ms": 0},
             "recommendations": [
                 {
                     "id": "018f0f90-26e6-7ce7-8f61-8769f9e5b102",
                     "name": "Soup",
-                    "score_components": {},
+                    "rank_score": 0.8,
+                    "ranking_features": {},
+                    "matched_ingredients": [],
                     "missing_ingredients": [],
+                    "optional_ingredients": [],
                     "rescued_items": [],
+                    "status_badge": "ready",
                 }
             ],
         },

@@ -2,8 +2,7 @@
 
 Decoupled from the recommendation engine.
 Features:
-- OCR: Supermarket receipts & Bách Hóa Xanh food packaging stickers (PaddleOCR + VietOCR)
-  with image downsampling (max 1600px), CLAHE contrast enhancement, and JPEG compression.
+- OCR: Supermarket receipts & food packaging labels through Groq Vision.
 - ASR Dual Stream:
     1. Local Gipformer + 16kHz mono FLAC compression & silence stripping via ffmpeg
     2. Cloud Groq Whisper-large-v3-turbo API (<500ms) with 16kHz mono FLAC
@@ -22,24 +21,22 @@ from typing import Any, Optional
 
 from smart_input.ocr.receipt_parser import parse_receipt_text
 from smart_input.ocr.label_parser import FoodLabelParser
-from smart_input.ocr.paddle_vietocr_pipeline import PaddleVietOCRPipeline
+from smart_input.ocr.groq_vision_ocr import GroqVisionOCR
 from smart_input.ocr.sample_receipts import SAMPLE_RECEIPTS
 from smart_input.asr.speech_parser import parse_vietnamese_speech
 from smart_input.asr.sample_transcripts import SAMPLE_VOICE_QUERIES
 from smart_input.asr.groq_whisper import GroqWhisperClient
 from smart_input.asr.gipformer_engine import GipformerEngine
-from smart_input.asr.audio_preprocessor import convert_to_16k_mono_flac, preprocess_audio_bytes
-from smart_input.ocr.image_preprocessor import preprocess_image_bytes
-from smart_input.correction.protonx_corrector import get_corrector
+from smart_input.asr.audio_preprocessor import preprocess_audio_bytes
 
 # Global singleton instances for speed
-_ocr_pipeline: Optional[PaddleVietOCRPipeline] = None
+_ocr_pipeline: Optional[GroqVisionOCR] = None
 _label_parser: Optional[FoodLabelParser] = None
 _groq_client: Optional[GroqWhisperClient] = None
 _gipformer_engine: Optional[GipformerEngine] = None
 
+
 def _serialize_label_item(label_item: dict[str, Any]) -> dict[str, Any]:
-    """Expose label facts and provenance already produced by the parser."""
     return {
         "name": label_item["name"],
         "quantity_g": label_item["quantity_g"],
@@ -51,17 +48,10 @@ def _serialize_label_item(label_item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-
-def get_ocr_pipeline(use_gpu: Optional[bool] = None) -> PaddleVietOCRPipeline:
+def get_ocr_pipeline() -> GroqVisionOCR:
     global _ocr_pipeline
     if _ocr_pipeline is None:
-        if use_gpu is None:
-            try:
-                import torch
-                use_gpu = torch.cuda.is_available()
-            except Exception:
-                use_gpu = False
-        _ocr_pipeline = PaddleVietOCRPipeline(use_gpu=use_gpu)
+        _ocr_pipeline = GroqVisionOCR()
     return _ocr_pipeline
 
 
@@ -87,9 +77,9 @@ def get_gipformer_engine() -> GipformerEngine:
 
 
 def warmup_smart_input_gpu() -> dict[str, Any]:
-    """Preloads OCR and ASR models into GPU VRAM to eliminate cold-start latency."""
+    """Preloads Groq Vision OCR client and ASR models to eliminate cold-start latency."""
     global _ocr_pipeline
-    import numpy as np
+    ocr = get_ocr_pipeline()
 
     try:
         import torch
@@ -99,14 +89,6 @@ def warmup_smart_input_gpu() -> dict[str, Any]:
         cuda_avail = False
         device_name = "CPU"
 
-    ocr = get_ocr_pipeline(use_gpu=cuda_avail)
-    # Warm up OCR pipeline with synthetic 64x200 RGB canvas
-    dummy_img = np.ones((64, 200, 3), dtype=np.uint8) * 255
-    ocr.recognize_image(dummy_img)
-
-    # Warm up Vietnamese text corrector (ProtonX CT2)
-    corrector = get_corrector(use_gpu=cuda_avail)
-    corrector.correct_text("Xin chao")
 
     vram_mb = 0.0
     if cuda_avail:
@@ -116,12 +98,13 @@ def warmup_smart_input_gpu() -> dict[str, Any]:
         except Exception:
             pass
 
+    ocr_status = f"Groq API ({ocr.model})" if ocr.is_available() else "Groq API (Chưa cấu hình API Key)"
     return {
         "cuda_available": cuda_avail,
         "device_name": device_name,
         "vram_allocated_mb": vram_mb,
-        "ocr_engine": "PaddleOCR+VietOCR (CUDA)" if cuda_avail else "PaddleOCR+VietOCR (CPU)",
-        "corrector_engine": f"welcomyou/distilled-protonx-vn-correction-ct2 ({corrector.device.upper()})",
+        "ocr_engine": ocr_status,
+        "corrector_engine": "none",
         "status": "ready",
     }
 
@@ -135,10 +118,7 @@ def process_receipt_input(
 ) -> dict[str, Any]:
     """Processes receipt or food label from image upload, base64, raw text, or sample ID.
 
-    Applies high-throughput preprocessing:
-    - Downsamples high-res images to max 1600px
-    - CLAHE contrast enhancement for faint receipts & reflective labels
-    - Re-compresses to clean JPEG (quality 85)
+    Groq Vision handles image preprocessing and extraction before pantry enrichment.
     """
     if image_base64:
         try:
@@ -177,46 +157,67 @@ def process_receipt_input(
 
     # 2. Handle Image Bytes (LiveKit camera snapshot or uploaded file)
     if image_bytes:
-        _, img_rgb, preprocess_stats = preprocess_image_bytes(
-            image_bytes,
-            max_dim=1600,
-            quality=85,
-            enhance_contrast=True,
-        )
-        ocr_res = get_ocr_pipeline().recognize_image(img_rgb)
-        extracted_text = ocr_res.get("full_text", "")
+        try:
+            ocr = get_ocr_pipeline()
+            res = ocr.recognize_image_bytes(image_bytes, max_dim=1600)
 
-        if "klt" in extracted_text.lower() or "hsd" in extracted_text.lower() or "nsx" in extracted_text.lower():
-            label_item = get_label_parser().parse_label_text(extracted_text)
-            items = [_serialize_label_item(label_item)]
-        else:
-            items = parse_receipt_text(extracted_text)
+            # Deep Matching into Pantry via Master Ingredients & Freshness KB
+            from smart_parser.pantry_parser import get_pantry_parser
+            pantry_parser = get_pantry_parser()
 
-        return {
-            "status": "success",
-            "source": "live_camera_or_upload",
-            "engine": ocr_res.get("engine", "PaddleOCR+VietOCR"),
-            "raw_text": extracted_text,
-            "items_count": len(items),
-            "items": items,
-            "preprocess_stats": preprocess_stats,
-        }
+            enriched_items = []
+            for it in res.get("items", []):
+                raw_name = it.get("name", "")
+                enriched = pantry_parser.enrich_item(it)
+                enriched_items.append({
+                    "raw_name": raw_name,
+                    "name": enriched["name"],
+                    "code": enriched.get("code"),
+                    "category": enriched.get("category"),
+                    "quantity_g": enriched["quantity_g"],
+                    "quantity_source": enriched["quantity_source"],
+                    "hours_to_expire": it.get("hours_to_expire") or enriched.get("hours_to_expire", 48.0),
+                    "expiry_date": it.get("expiry_date"),
+                    "note": it.get("note"),
+                    "nutrition": enriched.get("nutrition_per_100g"),
+                    "freshness_guide": enriched.get("freshness_guide"),
+                    "is_staple": enriched.get("is_staple", False),
+                })
 
+            res["items"] = enriched_items
+            res["items_count"] = len(enriched_items)
+            return res
+        except Exception as e:
+            return {
+                "status": "error",
+                "message": f"Lỗi xử lý Groq Vision OCR: {str(e)}",
+                "items": [],
+                "raw_text": "",
+            }
     # 3. Handle Raw Text directly
     if receipt_text:
         raw = receipt_text.strip()
-        if "klt" in raw.lower() or "hsd" in raw.lower() or "nsx" in raw.lower():
+        raw_lower = raw.lower()
+        label_indicators = [
+            "klt", "hsd", "nsx", "ndg", "nđg", "đơn giá", "don gia",
+            "kl:", "k.l:", "trọng lượng", "trong luong", "khối lượng", "khoi luong",
+            "hạn sử dụng", "han su dung", "ngày đóng gói", "ngay dong goi", "bao bì"
+        ]
+        if any(k in raw_lower for k in label_indicators):
             label_item = get_label_parser().parse_label_text(raw)
             items = [_serialize_label_item(label_item)]
         else:
             items = parse_receipt_text(raw)
 
+        from smart_parser.pantry_parser import get_pantry_parser
+        pantry_parser = get_pantry_parser()
+        enriched_items = [pantry_parser.enrich_item(it) for it in items]
         return {
             "status": "success",
             "source": "text_input",
             "raw_text": raw,
-            "items_count": len(items),
-            "items": items,
+            "items_count": len(enriched_items),
+            "items": enriched_items,
         }
 
     return {
@@ -298,11 +299,8 @@ def process_voice_input(
             "items": [],
         }
 
-    # Vietnamese Text Correction (ProtonX CT2)
-    corrector = get_corrector()
-    corrected_transcript = corrector.correct_asr_transcript(text_to_process)
-    effective_text = corrected_transcript or text_to_process
-
+    effective_text = text_to_process
+    corrected_transcript = text_to_process
     # NLP culinary entity parsing
     items = parse_vietnamese_speech(effective_text)
     if not items and effective_text != text_to_process:
@@ -318,7 +316,7 @@ def process_voice_input(
         "raw_transcript": text_to_process,
         "corrected_transcript": corrected_transcript,
         "correction_applied": bool(corrected_transcript and corrected_transcript != text_to_process),
-        "correction_engine": f"welcomyou/distilled-protonx-vn-correction-ct2 ({corrector.device.upper()})",
+        "correction_engine": "none",
         "latency_ms": latency_ms,
         "items_count": len(items),
         "items": items,

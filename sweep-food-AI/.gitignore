@@ -48,6 +48,7 @@ walkthrough.md
 # Training Data & Model Artifacts (keep lightweight production weights, ignore large CSVs)
 data/training/*
 !data/training/metadata.json
+!data/training/lgbm_contextual.txt
 !data/training/xgb_full.json
 data/benchmark/*.csv
 # Copyright-sensitive verbatim crawl snapshot (kept local for reproducibility only)

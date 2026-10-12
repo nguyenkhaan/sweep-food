@@ -132,6 +132,7 @@ def _has_spoken_quantity(segment: str) -> bool:
         for unit in UNIT_MULTIPLIERS
     )
 
+
 def parse_vietnamese_speech(transcript: str) -> list[dict[str, Any]]:
     """Analyzes spoken Vietnamese transcript and returns structured culinary items."""
     t = transcript.lower()
@@ -186,7 +187,7 @@ def parse_vietnamese_speech(transcript: str) -> list[dict[str, Any]]:
             "spoken_phrase": local_context,
             "quantity_g": weight_g,
             "unit": "g",
-            "quantity_source": "spoken" if _has_spoken_quantity(local_context) else "estimated",
+            "quantity_source": "extracted" if _has_spoken_quantity(local_context) else "estimated",
             "hours_to_expire": expiry_h,
             "is_staple": is_staple,
             "confidence": 0.95

@@ -1,4 +1,4 @@
-"""Transform nutrition categories into ingredient_categories.json."""
+"""Transform master ingredient categories into ingredient_categories.json."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_INPUT = PROJECT_ROOT / "data123/raw/food_nutrition_raw.json"
+DEFAULT_INPUT = PROJECT_ROOT / "data123/raw/master_ingredients_nutrition.json"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data123/normalized/ingredient_categories.json"
 UNCLASSIFIED_CATEGORY = "Chưa phân loại"
 CATEGORY_DESCRIPTIONS = {
@@ -42,7 +42,9 @@ def normalize_text(value: str) -> str:
 
 def category_id(name: str) -> str:
     """Return the stable UUID for one category natural key."""
-    return str(uuid5(NAMESPACE_URL, f"sweep-food:ingredient-category:{name.casefold()}"))
+    return str(
+        uuid5(NAMESPACE_URL, f"sweep-food:ingredient-category:{name.casefold()}")
+    )
 
 
 def category_description(name: str) -> str:
@@ -50,29 +52,38 @@ def category_description(name: str) -> str:
     return CATEGORY_DESCRIPTIONS.get(name, f"Nhóm nguyên liệu thuộc danh mục {name}.")
 
 
-def load_food_rows(input_path: Path) -> list[dict[str, Any]]:
-    """Load the paginated nutrition payload and return its data rows."""
-    payload = json.loads(input_path.read_text(encoding="utf-8"))
-    rows = payload.get("data") if isinstance(payload, dict) else None
+def load_master_rows(input_path: Path) -> list[dict[str, Any]]:
+    """Load master ingredient nutrition rows."""
+    rows = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
-        raise ValueError("Expected food_nutrition_raw.json to contain a data array of objects.")
+        raise ValueError(
+            "Expected master_ingredients_nutrition.json to contain an array of objects."
+        )
     return rows
 
 
-def transform_categories(food_rows: Iterable[dict[str, Any]]) -> list[dict[str, str]]:
+def transform_categories(master_rows: Iterable[dict[str, Any]]) -> list[dict[str, str]]:
     """Normalize source categories into rows for ingredient_categories."""
     names: set[str] = {UNCLASSIFIED_CATEGORY}
-    for row in food_rows:
-        category = row.get("category")
+    for row in master_rows:
+        category = row.get("category_vi")
         if not isinstance(category, str):
-            raise TypeError(f"Food {row.get('code', '<unknown>')} has no category.")
+            raise TypeError(
+                f"Master ingredient {row.get('code', '<unknown>')} has no category_vi."
+            )
         name = normalize_text(category)
         if not name:
-            raise ValueError(f"Food {row.get('code', '<unknown>')} has a blank category.")
+            raise ValueError(
+                f"Master ingredient {row.get('code', '<unknown>')} has a blank category_vi."
+            )
         names.add(name)
 
     rows = [
-        {"id": category_id(name), "name": name, "description": category_description(name)}
+        {
+            "id": category_id(name),
+            "name": name,
+            "description": category_description(name),
+        }
         for name in sorted(names, key=str.casefold)
     ]
     if len({name.casefold() for name in names}) != len(rows):
@@ -104,7 +115,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     """Run the ingredient-category transformation."""
     args = parse_args()
-    rows = transform_categories(load_food_rows(args.input))
+    rows = transform_categories(load_master_rows(args.input))
     write_json(args.output, rows)
     print(f"Wrote {len(rows)} ingredient categories to {args.output}")
 

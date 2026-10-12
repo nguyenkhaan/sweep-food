@@ -84,7 +84,7 @@
       </div>
 
       <!-- Navigation Tabs (Recommendation • Smart OCR • Smart ASR) -->
-      <nav class="flex items-center p-1 bg-slate-100/90 rounded-xl border border-slate-200/80 text-sm font-semibold">
+      <nav class="hidden sm:flex items-center p-1 bg-slate-100/90 rounded-xl border border-slate-200/80 text-sm font-semibold">
         <button type="button" id="tabNavRecommend" onclick="switchAppTab('recommend')"
           class="tab-nav-btn active flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-slate-700 transition-all cursor-pointer bg-white text-teal-800 shadow-xs font-bold">
           <span>🍽️</span>
@@ -93,12 +93,27 @@
         <button type="button" id="tabNavOcr" onclick="switchAppTab('ocr')"
           class="tab-nav-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer font-medium">
           <span>📸</span>
-          <span>Quét Hóa Đơn (OCR)</span>
+          <span>OCR</span>
         </button>
         <button type="button" id="tabNavAsr" onclick="switchAppTab('asr')"
           class="tab-nav-btn flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer font-medium">
           <span>🎙️</span>
-          <span>Giọng Nói (ASR)</span>
+          <span>ASR</span>
+        </button>
+      </nav>
+      <!-- Mobile compact tabs -->
+      <nav class="flex sm:hidden items-center gap-0.5 p-0.5 bg-slate-100/90 rounded-lg border border-slate-200/80 text-xs font-semibold">
+        <button type="button" id="tabNavRecommendM" onclick="switchAppTab('recommend')"
+          class="tab-nav-btn active flex items-center gap-1 px-2.5 py-1.5 rounded-md transition-all cursor-pointer bg-white text-teal-800 shadow-xs font-bold">
+          <span>🍽️</span><span>Gợi ý</span>
+        </button>
+        <button type="button" id="tabNavOcrM" onclick="switchAppTab('ocr')"
+          class="tab-nav-btn flex items-center gap-1 px-2.5 py-1.5 rounded-md text-slate-600 transition-all cursor-pointer">
+          <span>📸</span><span>OCR</span>
+        </button>
+        <button type="button" id="tabNavAsrM" onclick="switchAppTab('asr')"
+          class="tab-nav-btn flex items-center gap-1 px-2.5 py-1.5 rounded-md text-slate-600 transition-all cursor-pointer">
+          <span>🎙️</span><span>ASR</span>
         </button>
       </nav>
 
@@ -109,11 +124,15 @@
           <span id="gpuStatusText">XGBoost & Smart Input Online</span>
         </div>
         <a href="https://github.com/BaryuH/sweep-food-AI" target="_blank" rel="noopener"
-          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all">
+          id="datasetStatsBadge"
+          title="Dataset: 4.895 Món • 52.750 Dòng nguyên liệu (95.0% khớp VDD) • 1.598 Dinh dưỡng Master"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
           </svg>
-          <span>5.641 Món</span>
+          <span id="statDishesCount">4.895 Món</span>
+          <span class="text-slate-300">•</span>
+          <span id="statIngredientsCount" class="text-slate-500 font-medium">52.750 NL</span>
         </a>
       </div>
 
@@ -134,7 +153,7 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
         <!-- Left Column: Fridge Manager (4 cols on lg) -->
-        <aside class="lg:col-span-4 bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs space-y-5 sticky top-22">
+        <aside class="lg:col-span-4 bg-white rounded-2xl p-3 sm:p-5 border border-slate-200/90 shadow-xs space-y-3 sm:space-y-5 sticky top-22">
           
           <div class="flex items-center justify-between pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2.5">
@@ -150,7 +169,7 @@
           </div>
 
           <!-- Add Ingredient Form -->
-          <div class="bg-slate-50/80 rounded-xl p-3.5 border border-slate-200/70 space-y-3">
+          <div class="bg-slate-50/80 rounded-xl p-2.5 sm:p-3.5 border border-slate-200/70 space-y-2 sm:space-y-3">
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider" for="inputIngredient">
               Thêm nguyên liệu vào tủ:
             </label>
@@ -204,7 +223,7 @@
               </div>
               <input type="range" id="sliderServings" min="1" max="8" value="4" step="1"
                 class="w-full accent-teal-600 cursor-pointer">
-              <p class="text-[11px] text-slate-400 mt-0.5">Hệ thống sẽ tự động co giãn khối lượng thịt/rau và calo theo số người.</p>
+              <p class="text-[11px] text-slate-400 mt-0.5 hidden sm:block">Hệ thống sẽ tự động co giãn khối lượng thịt/rau và calo theo số người.</p>
             </div>
 
             <div>
@@ -305,14 +324,16 @@
             </div>
 
             <!-- Mode 1: File Dropzone -->
-            <div id="ocrUploadContainer" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-6 text-center transition-all bg-slate-50/60 cursor-pointer" onclick="document.getElementById('ocrFileInput').click()">
-              <input type="file" id="ocrFileInput" accept="image/*" class="hidden" onchange="handleOcrFileUpload(event)">
-              <span class="text-3xl block mb-2">🧾</span>
-              <span class="text-xs font-bold text-slate-800 block">Kéo thả ảnh hóa đơn hoặc tem nhãn Bách Hóa Xanh</span>
-              <span class="text-[11px] text-slate-500 block mt-1">Hỗ trợ JPG, PNG, WEBP (PaddleOCR + VietOCR)</span>
-              <button type="button" class="mt-3 px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs">
-                Chọn File Từ Máy
-              </button>
+            <div id="ocrUploadContainer" class="border-2 border-dashed border-slate-300 hover:border-sky-500 rounded-xl p-3 sm:p-6 text-center transition-all bg-slate-50/60 cursor-pointer" onclick="document.getElementById('ocrFileInput').click()">
+              <input type="file" id="ocrFileInput" accept="image/*" capture="environment" class="hidden" onchange="handleOcrFileUpload(event)">
+              <span class="text-2xl sm:text-3xl block mb-1 sm:mb-2">🧾</span>
+              <span class="text-xs font-bold text-slate-800 block">Chụp ảnh hoặc tải ảnh hóa đơn</span>
+              <span class="text-[11px] text-slate-500 block mt-1 hidden sm:block">Hỗ trợ JPG, PNG, WEBP (Groq Vision Qwen 3.8)</span>
+              <div class="flex items-center justify-center gap-2 mt-2 sm:mt-3">
+                <button type="button" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs">
+                  📷 Chụp / Chọn Ảnh
+                </button>
+              </div>
             </div>
 
             <!-- Mode 2: Live Camera Video Stream (WebRTC / HTML5 Live Stream) -->
@@ -381,7 +402,7 @@
           <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
             <div>
               <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                <span>📄</span> Raw Text Nhận Diện (PaddleOCR + VietOCR)
+                <span>📄</span> Raw Text Nhận Diện (Groq Vision qwen/qwen3.8-27b)
               </h3>
               <p id="ocrRawMeta" class="text-xs text-slate-500 font-mono mt-0.5">Chưa có text • Sẵn sàng nhận diện</p>
             </div>
@@ -591,7 +612,7 @@
   </footer>
 
   <!-- App Main Scripts -->
-  <script src="/static/main.js?v=3.5"></script>
+  <script src="/static/main.js?v=4.0"></script>
 </body>
 
 </html>

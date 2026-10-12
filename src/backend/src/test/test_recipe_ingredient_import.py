@@ -103,7 +103,7 @@ def test_transform_recipe_ingredients_resolves_trusted_and_reviewed_masters() ->
         recipes,
         masters,
         categories,
-        [{"code": "100", "name_vi": "Cà chua", "category": "Rau"}],
+        [{"code": "100", "name_vi": "Cà chua", "category_vi": "Rau"}],
         {"Mì căn 100 g": "mì căn", "Dầu hành lá": "không có nguyên liệu cụ thể"},
     )
 

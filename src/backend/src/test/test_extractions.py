@@ -47,11 +47,19 @@ class FakeSweepFoodAIClient:
                 items=[
                     AIOcrItemDTO(
                         name="Whole Milk",
+                        raw_name="MILK",
+                        code="10001",
+                        category="Dairy",
                         quantity_g=500,
                         quantity_source="extracted",
+                        nutrition={"energy_kcal": 74.0},
+                        freshness_guide={"storage_tips": ["Keep cold"]},
                     ),
                     AIOcrItemDTO(
                         name="Bread",
+                        raw_name="BREAD",
+                        code="20001",
+                        category="Grains",
                         quantity_g=250,
                         quantity_source="estimated",
                     ),
@@ -64,11 +72,16 @@ class FakeSweepFoodAIClient:
             items=[
                 AIOcrItemDTO(
                     name="Whole Milk",
+                    raw_name="MILK",
+                    code="10001",
+                    category="Dairy",
                     quantity_g=500,
                     quantity_source="extracted",
                     production_date="28/08/2026",
                     expiry_date="05/09/2026",
                     confidence=0.95,
+                    nutrition={"energy_kcal": 74.0},
+                    freshness_guide={"storage_tips": ["Keep cold"]},
                 )
             ],
         )
@@ -81,9 +94,14 @@ class FakeSweepFoodAIClient:
             items=[
                 AIAsrItemDTO(
                     name="Milk",
+                    raw_name="sữa",
+                    code="10001",
+                    category="Dairy",
                     quantity_g=500,
-                    quantity_source="spoken",
+                    quantity_source="extracted",
                     confidence=0.92,
+                    nutrition={"energy_kcal": 74.0},
+                    freshness_guide={"storage_tips": ["Keep cold"]},
                 )
             ],
         )
@@ -123,6 +141,14 @@ async def test_ocr_label_route_returns_200_with_mock_data(
     assert body["provider"] == "SWEEP_FOOD_AI"
     assert body["persisted"] is False
     assert body["fields"]["ingredient_name"] == "Whole Milk"
+    assert body["fields"]["raw_name"] == "MILK"
+    assert body["fields"]["master_ingredient_code"] == "10001"
+    assert body["fields"]["category"] == "Dairy"
+    assert body["fields"]["quantity_source"] == "extracted"
+    assert body["fields"]["nutrition"] == {"energy_kcal": 74.0}
+    assert body["fields"]["freshness_guide"] == {
+        "storage_tips": ["Keep cold"]
+    }
     assert body["fields"]["quantity"] == 500.0
     assert body["fields"]["unit"] == "GRAM"
     assert body["fields"]["expires_at"] == "2026-09-05"
@@ -177,6 +203,9 @@ async def test_ocr_invoice_route_returns_200_with_mock_data(
     assert body["persisted"] is False
     assert isinstance(body["fields"]["line_items"], list)
     assert len(body["fields"]["line_items"]) == 2
+    assert body["fields"]["line_items"][0]["quantity_source"] == "extracted"
+    assert body["fields"]["line_items"][1]["quantity"] is None
+    assert body["fields"]["line_items"][1]["quantity_source"] == "estimated"
     assert body["fields"]["total_amount"] is None
     assert body["fields"]["currency"] is None
     assert body["fields"]["vendor_name"] == "Test Grocery"
@@ -216,6 +245,10 @@ async def test_asr_route_returns_200_with_mock_data(
     assert body["persisted"] is False
     assert "sữa" in body["raw_text"].lower()
     assert body["fields"]["ingredient_name"] == "Milk"
+    assert body["fields"]["raw_name"] == "sữa"
+    assert body["fields"]["master_ingredient_code"] == "10001"
+    assert body["fields"]["category"] == "Dairy"
+    assert body["fields"]["quantity_source"] == "extracted"
     assert body["fields"]["quantity"] == 500.0
     assert body["fields"]["unit"] == "GRAM"
     assert body["confidence"]["ingredient_name"] == 0.92

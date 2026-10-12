@@ -18,8 +18,9 @@ from src.module.recommendations.recommendation_dto import (
     MockRecommendationAnalysisDTO,
     RecommendationItemDTO,
     RecommendationListResponseDTO,
+    RecommendationRankingFeaturesDTO,
     RecommendationRequestDTO,
-    RecommendationScoreComponentsDTO,
+    RecommendationTimingsDTO,
 )
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b101")
@@ -41,6 +42,15 @@ class FakeRecommendationService:
         self.requests.append((user_id, body))
         return RecommendationListResponseDTO(
             request=body,
+            contract_version="2",
+            model_version="lgbm-contextual-v1",
+            catalog_revision="catalog-test",
+            ranker_model="LightGBM LambdaMART",
+            timings=RecommendationTimingsDTO(
+                total_ms=20.1,
+                candidate_ms=2.3,
+                ranker_ms=4.8,
+            ),
             analysis=MockRecommendationAnalysisDTO(
                 intent="meal_recommendation",
                 summary="Mock analysis for recipe discovery.",
@@ -51,18 +61,25 @@ class FakeRecommendationService:
                     recipe_id=RECIPE_ID,
                     recipe_name="Spinach soup",
                     rank=1,
-                    score=0.86,
-                    score_components=RecommendationScoreComponentsDTO(
-                        expiration_utilization=0.9,
-                        availability=0.8,
-                        preference_fit=0.8,
-                        purchase_minimization=0.7,
+                    rank_score=1.86,
+                    ranking_features=RecommendationRankingFeaturesDTO(
+                        core_coverage=0.9,
+                        core_missing_count=0,
+                        secondary_coverage=0.8,
+                        shopping_gap_items=0,
+                        rescue_weight_g=300,
+                        nutrition_confidence=0.9,
+                        kcal_per_serving=350,
+                        protein_per_serving=20,
+                        prep_complexity=2.5,
                     ),
+                    matched_ingredients=[],
                     missing_ingredients=[],
-                    near_expiry_ingredients=["Spinach"],
+                    optional_ingredients=[],
+                    rescued_items=["Spinach"],
+                    status_badge="ready",
                     explanation="Mock ranking for the production AI contract.",
                     provider="MOCK",
-                    model_version="mock-v1",
                 )
             ],
         )
@@ -119,6 +136,8 @@ async def test_recommendation_route_accepts_an_authenticated_user_request(
     assert response.status_code == 200
     assert response.json()["analysis"]["is_mock"] is True
     assert response.json()["items"][0]["provider"] == "MOCK"
+    assert response.json()["contract_version"] == "2"
+    assert response.json()["items"][0]["rank_score"] == 1.86
     assert recommendation_routes.requests[0][0] == USER_ID
     request = recommendation_routes.requests[0][1]
     assert request.items[0].quantity_g == 300

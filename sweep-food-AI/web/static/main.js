@@ -59,7 +59,7 @@ const btnPushAsrToFridge = document.getElementById("btnPushAsrToFridge");
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   checkSystemGpuStatus();
-  // Start with empty, clean pantry
+  loadDatasetStats();
   currentPantry = [];
   updatePantryUI();
 });
@@ -74,13 +74,35 @@ async function checkSystemGpuStatus() {
       if (data.cuda_available) {
         badge.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-100/90 text-emerald-950 border border-emerald-300/80 shadow-xs";
         text.innerHTML = `🟢 <strong>${data.device_name}</strong> (VRAM: ${data.vram_allocated_mb}MB)`;
-        badge.title = `XGBoost: ${data.xgb_device.toUpperCase()} | OCR: ${data.ocr_device} | Không độ trễ khởi động!`;
+        badge.title = `Ranker: LightGBM LambdaMART (9-Feature) | OCR: ${data.ocr_device}`;
       } else {
-        text.textContent = `⚡ XGBoost CPU Inference`;
+        text.textContent = `⚡ LightGBM LambdaMART`;
       }
     }
   } catch (err) {
     console.debug("Status check silent fallback:", err);
+  }
+}
+
+async function loadDatasetStats() {
+  try {
+    const res = await fetch("/api/stats");
+    if (!res.ok) return;
+    const stats = await res.json();
+    const dishesEl = document.getElementById("statDishesCount");
+    const ingsEl = document.getElementById("statIngredientsCount");
+    const badgeEl = document.getElementById("datasetStatsBadge");
+    if (dishesEl && stats.recipes_count) {
+      dishesEl.textContent = `${Number(stats.recipes_count).toLocaleString("vi-VN")} Món`;
+    }
+    if (ingsEl && stats.ingredients_count) {
+      ingsEl.textContent = `${Number(stats.ingredients_count).toLocaleString("vi-VN")} NL`;
+    }
+    if (badgeEl && stats.recipes_count) {
+      badgeEl.title = `Dataset: ${Number(stats.recipes_count).toLocaleString("vi-VN")} Món • ${Number(stats.ingredients_count).toLocaleString("vi-VN")} Nguyên liệu (${stats.matched_rate_pct}% khớp VDD) • ${Number(stats.master_ingredients_count).toLocaleString("vi-VN")} Dinh dưỡng Master`;
+    }
+  } catch (err) {
+    console.debug("Dataset stats silent fallback:", err);
   }
 }
 
@@ -156,11 +178,15 @@ function setupEventListeners() {
 // -----------------------------------------------------------------------------
 function switchAppTab(tab) {
   const tabs = ["recommend", "ocr", "asr"];
-  const navBtns = {
-    recommend: document.getElementById("tabNavRecommend"),
-    ocr: document.getElementById("tabNavOcr"),
-    asr: document.getElementById("tabNavAsr")
-  };
+  // Desktop + mobile nav buttons
+  const navBtns = {};
+  tabs.forEach(t => {
+    const cap = t.charAt(0).toUpperCase() + t.slice(1);
+    navBtns[t] = [
+      document.getElementById("tabNav" + cap),
+      document.getElementById("tabNav" + cap + "M"),
+    ].filter(Boolean);
+  });
   const contents = {
     recommend: document.getElementById("tabContentRecommend"),
     ocr: document.getElementById("tabContentOcr"),
@@ -170,12 +196,16 @@ function switchAppTab(tab) {
   tabs.forEach(t => {
     if (t === tab) {
       contents[t].classList.remove("hidden");
-      navBtns[t].classList.add("bg-white", "text-teal-800", "shadow-xs", "font-bold");
-      navBtns[t].classList.remove("text-slate-600");
+      navBtns[t].forEach(btn => {
+        btn.classList.add("bg-white", "text-teal-800", "shadow-xs", "font-bold");
+        btn.classList.remove("text-slate-600");
+      });
     } else {
       contents[t].classList.add("hidden");
-      navBtns[t].classList.remove("bg-white", "text-teal-800", "shadow-xs", "font-bold");
-      navBtns[t].classList.add("text-slate-600");
+      navBtns[t].forEach(btn => {
+        btn.classList.remove("bg-white", "text-teal-800", "shadow-xs", "font-bold");
+        btn.classList.add("text-slate-600");
+      });
     }
   });
 }
@@ -323,7 +353,9 @@ async function handleRecommend() {
       return;
     }
 
-    latencyStat.textContent = `XGBoost đánh giá ${data.candidates_evaluated} ứng viên trong ${data.xgboost_inference_ms}ms (Tổng: ${data.total_latency_ms}ms)`;
+    const modelLabel = data.ranker_model || "LightGBM LambdaMART";
+    const rankMs = data.ranker_inference_ms || data.xgboost_inference_ms || 0;
+    latencyStat.textContent = `${modelLabel} đánh giá ${data.candidates_evaluated} ứng viên trong ${rankMs}ms (Tổng: ${data.total_latency_ms}ms)`;
     renderRecommendations(data.recommendations);
     recommendationsList.classList.remove("hidden");
 
@@ -406,25 +438,39 @@ function renderRecommendations(recs) {
         </div>
 
         <!-- Ingredient Checklist -->
-        <div class="space-y-1.5 mb-3">
-          <div class="text-xs font-bold text-slate-700">Kiểm tra nguyên liệu:</div>
-          <div class="flex flex-wrap gap-1.5">
-            ${dish.matched_ingredients.map(ing => `
-              <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200" title="Đã có trong tủ">
-                ✓ ${ing.display || ing.name}
-              </span>
-            `).join("")}
-            ${(dish.staple_ingredients || []).map(ing => `
-              <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200" title="Gia vị bếp có sẵn">
-                🧂 ${ing.display || ing.name}
-              </span>
-            `).join("")}
-            ${dish.missing_ingredients.map(ing => `
-              <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200" title="Cần đi chợ mua thêm">
-                🛒 Cần mua: ${ing.display || ing.name}
-              </span>
-            `).join("")}
+        <div class="space-y-2 mb-3">
+          <div>
+            <div class="text-xs font-bold text-slate-700 mb-1.5">Kiểm tra nguyên liệu:</div>
+            <div class="flex flex-wrap gap-1.5">
+              ${dish.matched_ingredients.map(ing => `
+                <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200" title="Đã có trong tủ">
+                  ✓ ${ing.display || ing.name}
+                </span>
+              `).join("")}
+              ${(dish.staple_ingredients || []).map(ing => `
+                <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200" title="Gia vị bếp có sẵn">
+                  🧂 ${ing.display || ing.name}
+                </span>
+              `).join("")}
+              ${dish.missing_ingredients.map(ing => `
+                <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200" title="Cần đi chợ mua thêm">
+                  🛒 Cần mua: ${ing.display || ing.name}
+                </span>
+              `).join("")}
+            </div>
           </div>
+          ${dish.optional_ingredients && dish.optional_ingredients.length > 0 ? `
+            <div class="pt-1 border-t border-slate-100">
+              <div class="text-[11px] font-semibold text-slate-500 mb-1">Ăn kèm (không bắt buộc):</div>
+              <div class="flex flex-wrap gap-1.5">
+                ${dish.optional_ingredients.map(ing => `
+                  <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-slate-50 text-slate-600 border border-slate-200" title="Món ăn kèm (tùy chọn, không bắt buộc)">
+                    🍚 ${ing.display || ing.name}
+                  </span>
+                `).join("")}
+              </div>
+            </div>
+          ` : ''}
         </div>
 
         <!-- Cooking Steps Accordion -->
@@ -589,7 +635,7 @@ function compressImageFile(file, maxDim = 1600, quality = 0.85) {
         ctx.imageSmoothingQuality = "high";
         ctx.drawImage(img, 0, 0, w, h);
 
-        const dataUrl = canvas.toDataURL("image/jpeg", quality);
+        const dataUrl = canvas.toDataURL("image/webp", quality);
         const originalKb = (file.size / 1024).toFixed(1);
         const compKb = ((dataUrl.length * 0.75) / 1024).toFixed(1);
         const savingsPct = Math.max(0, Math.round((1 - compKb / Math.max(1, originalKb)) * 100));
@@ -632,7 +678,7 @@ function captureCameraSnapshot() {
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
   ctx.drawImage(video, 0, 0, w, h);
-  const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+  const dataUrl = canvas.toDataURL("image/webp", 0.82);
   const compKb = ((dataUrl.length * 0.75) / 1024).toFixed(1);
 
   ocrStatusMsg.textContent = `📸 Đã chụp & nén frame ảnh (${w}x${h}, ~${compKb} KB). Đang quét OCR...`;
@@ -722,7 +768,7 @@ function updateOcrStats(text, engine) {
   }
   const lines = clean.split("\n").filter(l => l.trim().length > 0).length;
   const chars = clean.length;
-  const eng = engine || "PaddleOCR + VietOCR (CUDA)";
+  const eng = engine || "Groq Vision API (qwen/qwen3.8-27b)";
   metaEl.textContent = `${eng} • ${lines} dòng text • ${chars} ký tự`;
 }
 
@@ -798,33 +844,60 @@ function renderOcrItems() {
 
   if (ocrItemsContainer) {
     ocrItemsContainer.classList.remove("hidden");
-    ocrItemsContainer.innerHTML = ocrDetectedItems.map(it => `
-      <div class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 bg-slate-50/70 text-xs">
-        <div class="space-y-0.5">
-          <span class="font-bold text-slate-900 text-xs block">${it.name}</span>
-          <span class="text-[10px] text-slate-400 line-clamp-1">Gốc: "${it.raw_receipt_line || it.name}"</span>
+    const cardsHtml = ocrDetectedItems.map(it => {
+      const codeBadge = it.code
+        ? `<span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold">#${it.code} VDD</span>`
+        : `<span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-mono font-bold">Chưa khớp mã</span>`;
+
+      const nut = it.nutrition;
+      const nutHtml = nut
+        ? `<span class="text-[10px] text-slate-500 font-mono block mt-0.5">${nut.energy_kcal || 0} kcal • P: ${nut.protein_g || 0}g • F: ${nut.fat_g || 0}g</span>`
+        : "";
+
+      return `
+      <div class="p-3 rounded-xl border border-slate-200 bg-white shadow-xs text-xs space-y-2">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="font-bold text-slate-900 text-xs">${it.name}</span>
+              ${codeBadge}
+            </div>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Raw OCR: <code class="font-mono text-slate-600 font-medium">"${it.raw_name || it.name}"</code></span>
+            ${nutHtml}
+          </div>
+          <div class="text-right space-y-1 shrink-0">
+            <span class="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded font-mono font-bold text-slate-800 text-xs block">
+              ${it.quantity_g}g
+            </span>
+            <span class="px-2 py-0.5 bg-sky-100 text-sky-800 rounded font-semibold text-[10px] block">
+              Hạn ${it.hours_to_expire}h
+            </span>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 bg-white border border-slate-200 rounded font-mono font-bold text-slate-700 text-xs">
-            ${it.quantity_g}g
-          </span>
-          <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold text-[10px]">
-            Hạn ${it.hours_to_expire}h
-          </span>
-        </div>
+        ${it.note ? `<div class="text-[10px] text-slate-500 bg-slate-50 p-1.5 rounded border border-slate-100 font-mono">📌 ${it.note}</div>` : ""}
       </div>
-    `).join("");
+    `;
+    }).join("");
+
+    ocrItemsContainer.innerHTML = `
+      <div class="space-y-2">
+        ${cardsHtml}
+      </div>
+      <button type="button" onclick="pushOcrItemsToFridge()" class="w-full mt-3 py-2.5 px-4 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-all text-xs">
+        <span>📥</span>
+        <span>Đẩy ${ocrDetectedItems.length} thực phẩm vào Tủ Lạnh & Nhận Gợi Ý Món →</span>
+      </button>
+    `;
   }
 }
 
 function pushOcrItemsToFridge() {
   if (ocrDetectedItems.length === 0) return;
   ocrDetectedItems.forEach(it => {
-    addItemToPantry(it.name, it.quantity_g, it.hours_to_expire);
+    addItemToPantry(it.name, it.quantity_g, it.hours_to_expire, it.code);
   });
   switchAppTab("recommend");
   handleRecommend();
-  alert(`Đã thêm ${ocrDetectedItems.length} thực phẩm vào Tủ Lạnh!`);
 }
 
 

@@ -2,13 +2,12 @@
 
 Powered by:
 - Inverted Index Candidate Generator (sub-millisecond candidate retrieval)
-- 30-Tier Observable Feature Extractor
-- Production-Trained XGBoost Ranker (rank:ndcg)
+- Contextual Feature Extractor
+- Production-Trained LightGBM LambdaMART Ranker (rank:pairwise)
 - Full Vietnamese Recipe & Nutritional Knowledge Base
 """
 
 from __future__ import annotations
-import math
 
 import json
 import os
@@ -16,10 +15,11 @@ import sys
 import re
 import time
 from pathlib import Path
+from collections import Counter
 from typing import Any
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
@@ -41,10 +41,14 @@ class SmartInputAsrRequest(BaseModel):
 ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
 
-import xgboost as xgb
+import lightgbm as lgb
 from src.recommendation.candidate_generator import CandidateGenerator, extract_pantry_name_aliases
-from src.recommendation.feature_extractor import extract_all_features
-from src.recommendation.ingredient_roles import classify_ingredient_role, IngredientRole
+from src.recommendation.pantry_resolver import (
+    build_master_alias_index,
+    resolve_pantry_items,
+    get_effective_codes,
+)
+from src.recommendation.contextual_features import extract_contextual_features, FEATURE_COLS
 from src.recommendation.heuristic_baseline import compute_domain_heuristic_score
 from smart_input.service import (
     process_receipt_input,
@@ -57,7 +61,6 @@ from smart_input.service import (
 SYSTEM_GPU_STATUS = {
     "cuda_available": False,
     "device_name": "CPU",
-    "xgb_device": "cpu",
     "ocr_device": "cpu",
     "vram_allocated_mb": 0.0,
     "warmed_up": False,
@@ -65,47 +68,37 @@ SYSTEM_GPU_STATUS = {
 
 app = FastAPI(title="SweepFood AI Web Demo", version="2.0.0")
 
-CANONICAL_RECIPES_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/canonical_recipes.json")
-CANONICAL_ING_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/canonical_recipe_ingredients.json")
-CANONICAL_MAP_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/recipe_canonical_mapping.json")
-CANONICAL_DETAILED_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/canonical_recipes_detailed.json")
-
 RECIPES_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/recipes.json")
 ING_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/recipe_ingredients.json")
+MAP_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/recipe_canonical_mapping.json")
+DETAILED_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/recipes_restructured_detailed.json")
 MASTER_VDD_CSV = os.path.join(ROOT_DIR, "data/processed/viendinhduong/master_ingredients_nutrition.csv")
-MODEL_PATH = os.path.join(ROOT_DIR, "data/training/xgb_full.json")
-METADATA_PATH = os.path.join(ROOT_DIR, "data/training/metadata.json")
+LGBM_MODEL_PATH = os.path.join(ROOT_DIR, "data/training/lgbm_contextual.txt")
 
 print("Loading knowledge base and production models...")
-active_recipes_path = CANONICAL_RECIPES_JSON if os.path.exists(CANONICAL_RECIPES_JSON) else RECIPES_JSON
-active_ing_path = CANONICAL_ING_JSON if os.path.exists(CANONICAL_ING_JSON) else ING_JSON
-print(f"Active recipe knowledge base: {active_recipes_path}")
+print(f"Active recipe knowledge base: {RECIPES_JSON}")
 
-with open(active_recipes_path, "r", encoding="utf-8") as f:
+with open(RECIPES_JSON, "r", encoding="utf-8") as f:
     recipes_list = json.load(f)
-with open(active_ing_path, "r", encoding="utf-8") as f:
+with open(ING_JSON, "r", encoding="utf-8") as f:
     ingredients_list = json.load(f)
-
-canonical_id_map = {}
-if os.path.exists(CANONICAL_MAP_JSON):
-    with open(CANONICAL_MAP_JSON, "r", encoding="utf-8") as f:
-        canonical_id_map = json.load(f)
 
 cg = CandidateGenerator(recipes_list, ingredients_list)
 recipe_map = {r["id"]: r for r in recipes_list}
 recipe_ings_map = cg.recipe_ingredients
-# Load structured detailed recipe instructions, sensory profile & chef tips
+
+# Load structured detailed recipe instructions (steps, sensory, chef tips)
 detailed_recipe_map = {}
-if os.path.exists(CANONICAL_DETAILED_JSON):
+if os.path.exists(DETAILED_JSON):
     try:
-        with open(CANONICAL_DETAILED_JSON, "r", encoding="utf-8") as f:
+        with open(DETAILED_JSON, "r", encoding="utf-8") as f:
             for det in json.load(f):
-                cid = det.get("canonical_recipe_id")
-                if cid:
-                    detailed_recipe_map[cid] = det
-        print(f"Loaded structured detailed recipes (steps, sensory, chef tips) for {len(detailed_recipe_map):,} canonical dishes.")
+                rid = det.get("canonical_recipe_id") or det.get("id")
+                if rid:
+                    detailed_recipe_map[rid] = det
+        print(f"Loaded structured detailed recipes for {len(detailed_recipe_map):,} dishes.")
     except Exception as e:
-        print(f"Warning: Failed loading canonical detailed recipes: {e}")
+        print(f"Warning: Failed loading detailed recipes: {e}")
 
 # Fallback raw recipe instructions
 RAW_RECIPES_JSON = os.path.join(ROOT_DIR, "data/raw/recipes_raw_scraped.json")
@@ -136,25 +129,105 @@ if not detailed_recipe_map and os.path.exists(RAW_RECIPES_JSON):
         print(f"Loaded step-by-step instructions for {len(recipe_instructions_map)} recipes from raw scrape.")
     except Exception as e:
         print(f"Warning: Failed loading raw recipe instructions: {e}")
-# Load feature names & XGBoost Ranker (or graceful fallback to domain heuristic ranker)
-xgb_ranker = None
-feature_cols = []
-if os.path.exists(METADATA_PATH) and os.path.exists(MODEL_PATH):
+# Load Production LightGBM Ranker (or graceful fallback to domain heuristic ranker)
+lgbm_ranker = None
+if os.path.exists(LGBM_MODEL_PATH):
     try:
-        with open(METADATA_PATH, "r", encoding="utf-8") as f:
-            meta = json.load(f)
-        feature_cols = meta["feature_tiers"]["full_features"]
-        xgb_ranker = xgb.Booster()
-        xgb_ranker.load_model(MODEL_PATH)
-        print(f"XGBoost Ranker loaded successfully with {len(feature_cols)} features.")
+        lgbm_ranker = lgb.Booster(model_file=LGBM_MODEL_PATH)
+        print(f"Production LightGBM LambdaMART Ranker loaded successfully ({len(FEATURE_COLS)} contextual features).")
     except Exception as e:
-        print(f"Warning: Could not load XGBoost model: {e}")
-        xgb_ranker = None
+        print(f"Warning: Could not load LightGBM model: {e}")
+        lgbm_ranker = None
 
-if xgb_ranker is None:
+if lgbm_ranker is None:
     print("Using High-Precision Culinary Domain Heuristic Ranker (Zero-Dependency Mode).")
-# Load master ingredients for autocomplete (name & code)
+# Load master ingredients for autocomplete (name & code) and category mapping
 df_master = pd.read_csv(MASTER_VDD_CSV)
+MASTER_CODE_TO_CATEGORY = {str(row["code"]).strip(): str(row["category_vi"]).strip() for _, row in df_master.iterrows()}
+MASTER_ALIAS_INDEX = build_master_alias_index(df_master)
+_ambiguous_keys_count = sum(1 for codes in MASTER_ALIAS_INDEX.values() if len(codes) > 1)
+print(f"Master alias index built: {len(MASTER_ALIAS_INDEX):,} keys ({_ambiguous_keys_count:,} map to >1 code).")
+
+ANIMAL_CATEGORIES = {
+    "Thịt và sản phẩm chế biến",
+    "Thủy sản và sản phẩm chế biến",
+    "Trứng và sản phẩm chế biến",
+}
+
+ANIMAL_KEYWORDS = [
+    r"\bthịt\b", r"\bcá\b", r"\btôm\b", r"\bcua\b", r"\bmực\b", r"\bgà\b", r"\bvịt\b",
+    r"\bheo\b", r"\blợn\b", r"\bbò\b", r"\btrứng\b", r"\bmỡ lợn\b", r"\bmỡ heo\b",
+    r"\bmỡ bò\b", r"\bmỡ gà\b", r"\bmỡ động vật\b", r"\bngao\b", r"\bsò\b",
+    r"\bốc\b", r"\bhến\b", r"\bhàu\b", r"\blòng\b", r"\bgan\b", r"\bcật\b", r"\bdạ dày\b",
+    r"\bnội tạng\b", r"\bdê\b", r"\bcừu\b", r"\bbê\b", r"\blươn\b", r"\bếch\b",
+    r"\bchả lụa\b", r"\bpate\b", r"\blạp xưởng\b", r"\bbò viên\b", r"\bcá viên\b",
+    r"\bmắm tôm\b", r"\bmắm tép\b", r"\bmắm cá\b", r"\bmắm ruốc\b", r"\bmắm nêm\b"
+]
+
+GOUT_KEYWORDS = [
+    r"\bbò\b", r"\bbê\b", r"\bcừu\b", r"\bdê\b", r"\bcua\b", r"\bghẹ\b",
+    r"\btôm\b", r"\bsò\b", r"\bngao\b", r"\bhàu\b", r"\blòng\b", r"\bgan\b",
+    r"\bcật\b", r"\bdạ dày\b", r"\bnội tạng\b"
+]
+
+
+def has_animal_ingredients(recipe_ings: list[dict]) -> bool:
+    for ing in recipe_ings:
+        clean_n = (ing.get("cleaned_name") or "").strip().lower()
+        raw_t = (ing.get("raw_text") or "").strip().lower()
+        code = str(ing.get("master_ingredient_code") or "").strip()
+
+        # Vegetarian / plant-based exemptions
+        if "chay" in clean_n or "chay" in raw_t:
+            continue
+        if "nấm" in clean_n or "nấm" in raw_t:
+            continue
+        if "đậu phụ" in clean_n or "tàu hũ" in clean_n or "đậu hũ" in clean_n:
+            continue
+        if "tép tỏi" in clean_n or "tép tỏi" in raw_t:
+            clean_n = clean_n.replace("tép tỏi", "")
+            raw_t = raw_t.replace("tép tỏi", "")
+        if "khoai mỡ" in clean_n or "xà lách mỡ" in clean_n:
+            clean_n = clean_n.replace("khoai mỡ", "").replace("xà lách mỡ", "")
+
+        cat = MASTER_CODE_TO_CATEGORY.get(code, "")
+        if cat in ANIMAL_CATEGORIES:
+            return True
+
+        for pat in ANIMAL_KEYWORDS:
+            if re.search(pat, clean_n) or re.search(pat, raw_t):
+                return True
+        if ("nước mắm" in clean_n or "nước mắm" in raw_t) and "chay" not in clean_n and "chay" not in raw_t:
+            return True
+        if re.search(r"\bmỡ\b", clean_n) and not ("khoai" in clean_n or "xà lách" in clean_n or "hành" in clean_n):
+            return True
+    return False
+
+
+def has_gout_forbidden_ingredients(recipe_ings: list[dict]) -> bool:
+    for ing in recipe_ings:
+        clean_n = (ing.get("cleaned_name") or "").strip().lower()
+        raw_t = (ing.get("raw_text") or "").strip().lower()
+        code = str(ing.get("master_ingredient_code") or "").strip()
+
+        if "chay" in clean_n or "chay" in raw_t:
+            continue
+        if "tép tỏi" in clean_n or "tép tỏi" in raw_t:
+            clean_n = clean_n.replace("tép tỏi", "")
+            raw_t = raw_t.replace("tép tỏi", "")
+        if "bắp cải" in clean_n or "bắp ngô" in clean_n:
+            clean_n = clean_n.replace("bắp cải", "").replace("bắp ngô", "")
+
+        cat = MASTER_CODE_TO_CATEGORY.get(code, "")
+        if cat in {"Thịt và sản phẩm chế biến", "Thủy sản và sản phẩm chế biến"}:
+            return True
+
+        for pat in GOUT_KEYWORDS:
+            if re.search(pat, clean_n) or re.search(pat, raw_t):
+                return True
+    return False
+
+
 master_items = []
 for _, row in df_master.iterrows():
     c_val = str(row["code"]).strip()
@@ -162,16 +235,25 @@ for _, row in df_master.iterrows():
     if n_val and n_val != "nan":
         master_items.append({"code": c_val, "name": n_val})
 master_items.sort(key=lambda x: x["name"])
+# Precompute audited dataset statistics for API and UI
+_matched_ings = sum(1 for i in ingredients_list if i.get("master_ingredient_code") and i["master_ingredient_code"] != "UNMATCHED")
+_unmatched_ings = len(ingredients_list) - _matched_ings
+DATASET_STATS = {
+    "recipes_count": len(recipes_list),
+    "ingredients_count": len(ingredients_list),
+    "master_ingredients_count": len(master_items),
+    "matched_ingredients_count": _matched_ings,
+    "unmatched_ingredients_count": _unmatched_ings,
+    "matched_rate_pct": round(_matched_ings / len(ingredients_list) * 100, 2) if ingredients_list else 0.0,
+    "platforms": dict(Counter(r.get("source_platform", "other") for r in recipes_list)),
+    "dish_types": dict(Counter(r.get("dish_type", "other") for r in recipes_list)),
+    "nutrition_anomalies_count": sum(1 for r in recipes_list if str(r.get("nutrition_anomaly_flag", "0")) == "1"),
+}
 
-CATALOG_REVISION = f"catalog-{Path(active_recipes_path).stat().st_mtime_ns}"
-MODEL_VERSION = (
-    f"xgboost-full-{Path(MODEL_PATH).stat().st_mtime_ns}"
-    if xgb_ranker is not None else "domain-heuristic-v1"
-)
 
 @app.on_event("startup")
 def startup_gpu_warmup():
-    """Initializes and warms up GPU acceleration for XGBoost Ranker & Smart Input OCR/ASR."""
+    """Initializes and warms up GPU acceleration for Smart Input OCR/ASR and Ranker."""
     global SYSTEM_GPU_STATUS
     print("\n" + "=" * 60)
     print(" SweepFood AI — Initializing GPU Hardware Acceleration...")
@@ -185,35 +267,29 @@ def startup_gpu_warmup():
         cuda_avail = False
         device_name = "CPU"
 
-    # 1. Warm up XGBoost Booster on GPU
-    xgb_dev = "cpu"
-    if cuda_avail:
+    # 1. Warm up Rankers
+    if lgbm_ranker is not None:
         try:
-            xgb_ranker.set_param({"device": "cuda"})
-            dummy_df = pd.DataFrame(np.zeros((1, len(feature_cols))), columns=feature_cols)
-            xgb_ranker.predict(xgb.DMatrix(dummy_df))
-            xgb_dev = "cuda"
-            print(f"[GPU] XGBoost Ranker successfully loaded on CUDA ({device_name})")
+            dummy_lgb = np.zeros((1, len(FEATURE_COLS)))
+            lgbm_ranker.predict(dummy_lgb)
+            print(f"[Ranker] Production LightGBM LambdaMART (9 features) ready for inference.")
         except Exception as e:
-            print(f"[GPU Warning] Failed setting XGBoost to CUDA, fallback to CPU: {e}")
-            xgb_ranker.set_param({"device": "cpu"})
-            xgb_dev = "cpu"
+            print(f"[Ranker Warning] LightGBM warmup: {e}")
 
     # 2. Warm up Smart Input OCR/ASR on GPU
     try:
         ocr_info = warmup_smart_input_gpu()
-        ocr_dev = ocr_info.get("ocr_engine", "PaddleOCR+VietOCR (CPU)")
+        ocr_dev = ocr_info.get("ocr_engine", "Groq Vision API (qwen/qwen3.8-27b)")
         vram_mb = ocr_info.get("vram_allocated_mb", 0.0)
-        print(f"[GPU] Smart Input OCR: {ocr_dev} (Allocated VRAM: {vram_mb} MB)")
+        print(f"[Smart Input] OCR Engine: {ocr_dev}")
     except Exception as e:
-        ocr_dev = "PaddleOCR+VietOCR (Fallback)"
+        ocr_dev = "Groq Vision API (qwen/qwen3.8-27b)"
         vram_mb = 0.0
-        print(f"[GPU Warning] Smart Input warm up error: {e}")
+        print(f"[Smart Input Warning] Warm up error: {e}")
 
     SYSTEM_GPU_STATUS = {
         "cuda_available": cuda_avail,
         "device_name": device_name,
-        "xgb_device": xgb_dev,
         "ocr_device": ocr_dev,
         "vram_allocated_mb": vram_mb,
         "warmed_up": True,
@@ -230,7 +306,7 @@ class PantryItem(BaseModel):
     name: str
     code: str | None = None
     quantity_g: float = 200.0
-    hours_to_expire: float | None = None
+    hours_to_expire: float = 72.0
     is_staple: bool = False
 
 
@@ -239,10 +315,6 @@ class RecommendRequest(BaseModel):
     household_size: float = 4.0
     max_cooking_time_min: float = 45.0
     scenario_type: str = "custom"
-    dietary_restrictions: list[str] = []
-    allergies: list[str] = []
-    disliked_ingredients: list[str] = []
-    preferred_cuisines: list[str] = []
 
 
 class SmartOcrRequest(BaseModel):
@@ -260,41 +332,6 @@ class SmartAsrRequest(BaseModel):
 # -----------------------------------------------------------------------------
 # Endpoints
 # -----------------------------------------------------------------------------
-def _clamp_score(value: float) -> float:
-    return round(max(0.0, min(1.0, float(value))), 6)
-
-
-def _calibrate_rank_score(value: float) -> float:
-    bounded = max(-60.0, min(60.0, float(value)))
-    return round(1.0 / (1.0 + math.exp(-bounded)), 6)
-
-
-def _preference_fit(
-    req: RecommendRequest,
-    recipe: dict[str, Any],
-    recipe_ingredients: list[dict[str, Any]],
-) -> float | None:
-    ingredient_text = " ".join(
-        str(item.get("cleaned_name") or item.get("name") or "").lower()
-        for item in recipe_ingredients
-    )
-    excluded = [*req.allergies, *req.disliked_ingredients]
-    if any(term.strip().lower() in ingredient_text for term in excluded if term.strip()):
-        return None
-
-    metadata = " ".join(
-        str(recipe.get(field) or "").lower()
-        for field in ("name", "diet_tags", "dish_type", "cooking_method")
-    )
-    restrictions = [term.strip().lower() for term in req.dietary_restrictions if term.strip()]
-    if any(term not in metadata for term in restrictions):
-        return None
-    cuisines = [term.strip().lower() for term in req.preferred_cuisines if term.strip()]
-    if not cuisines:
-        return 1.0
-    return _clamp_score(sum(term in metadata for term in cuisines) / len(cuisines))
-
-
 @app.get("/api/smart-input/samples")
 def get_samples():
     return get_smart_input_samples()
@@ -338,6 +375,11 @@ def get_system_status():
     return status
 
 
+@app.get("/api/stats")
+def get_dataset_stats():
+    """Returns audited statistics of the active processed recipe & master nutrition dataset."""
+    return DATASET_STATS
+
 @app.get("/api/presets")
 def get_presets():
     """Empty presets (deprecated to keep focus on dynamic pantry input)."""
@@ -347,58 +389,116 @@ def get_presets():
 @app.post("/api/recommend")
 def recommend_recipes(req: RecommendRequest):
     t0 = time.time()
+    raw_items = [item.model_dump() for item in req.items]
+    resolved_items = resolve_pantry_items(raw_items, MASTER_ALIAS_INDEX)
     pantry_dict = {
         "pantry_id": "live_user_query",
         "scenario_type": req.scenario_type,
-        "items": [item.model_dump() for item in req.items],
+        "items": resolved_items,
         "household_size": req.household_size,
         "max_cooking_time_min": req.max_cooking_time_min
     }
 
     # 1. Candidate Generation via Inverted Index
     t_cand_start = time.time()
-    candidates = cg.retrieve_candidates(pantry_dict["items"], top_n=35)
+    raw_candidates = cg.retrieve_candidates(pantry_dict["items"], top_n=35)
     cand_time_ms = round((time.time() - t_cand_start) * 1000, 2)
 
-    if not candidates:
+    if not raw_candidates:
         return {
-            "model_version": MODEL_VERSION,
-            "catalog_revision": CATALOG_REVISION,
             "status": "empty",
             "message": "Không tìm thấy món ăn phù hợp với nguyên liệu hiện tại. Thử thêm thịt, cá hoặc rau nhé!",
             "candidates_count": 0,
             "recommendations": []
         }
 
-    # 2 & 3. Predict Scores via XGBoost Ranker or Domain Heuristic Ranker
-    t_rank_start = time.time()
-    rows = []
-    for cand in candidates:
+    # Hard Constraint Filtering Layer
+    scenario = (pantry_dict.get("scenario_type") or "custom").lower().strip()
+    candidates = []
+    for cand in raw_candidates:
+        # a. Data Quality Safety Filter
+        if cand.get("nutrition_anomaly_flag") in (1, "1", True) or cand.get("incomplete_flag") in (1, "1", True):
+            continue
+
+        # b. Scenario Constraint Filter
         r_id = cand["id"]
         r_ings = recipe_ings_map.get(r_id, [])
-        feats = extract_all_features(pantry_dict, cand, r_ings)
-        rows.append(feats)
 
-    if xgb_ranker is not None and feature_cols:
-        df_feats = pd.DataFrame(rows)[feature_cols]
-        dmatrix = xgb.DMatrix(df_feats)
-        scores = xgb_ranker.predict(dmatrix)
+        if scenario in ("an_chay_ram_mung_mot", "an_chay", "chay") or "chay" in scenario:
+            diet_tags = (cand.get("diet_tags") or "").lower()
+            if "ăn chay" not in diet_tags:
+                continue
+            if has_animal_ingredients(r_ings):
+                continue
+        elif scenario == "nguoi_tieu_duong":
+            sugar = float(cand.get("sugar_g_per_serving") or 0.0)
+            carbs = float(cand.get("carbs_per_serving") or 0.0)
+            if sugar >= 10.0 or carbs >= 45.0:
+                continue
+        elif scenario == "nguoi_cao_huyet_ap":
+            sodium = float(cand.get("sodium_mg_per_serving") or 0.0)
+            servings = max(1.0, float(cand.get("default_servings") or 4.0))
+            tot_sodium_per_serv = float(cand.get("total_sodium_mg") or 0.0) / servings
+            if sodium >= 1000.0 or tot_sodium_per_serv >= 1000.0:
+                continue
+        elif scenario == "nguoi_benh_gout":
+            if has_gout_forbidden_ingredients(r_ings):
+                continue
+        elif scenario in ("an_kieng_keto_lowcarb", "keto", "lowcarb"):
+            carbs = float(cand.get("carbs_per_serving") or 0.0)
+            if carbs > 20.0:
+                continue
+        elif scenario == "nguoi_dau_da_day":
+            method = (cand.get("cooking_method") or "").strip().lower()
+            if method in ("chiên/rán", "chiên", "rán"):
+                continue
+
+        candidates.append(cand)
+
+    if not candidates:
+        return {
+            "status": "empty",
+            "message": "Không tìm thấy món ăn phù hợp với yêu cầu dinh dưỡng và nguyên liệu hiện tại. Hãy thử điều chỉnh bộ lọc hoặc thêm nguyên liệu khác!",
+            "candidates_count": 0,
+            "recommendations": []
+        }
+
+    # 2 & 3. Predict Scores via LightGBM Ranker or Domain Heuristic Ranker
+    t_rank_start = time.time()
+
+    active_ranker_name = "Domain Heuristic"
+    rows = []
+    if lgbm_ranker is not None:
+        lgbm_rows = []
+        for cand in candidates:
+            r_id = cand["id"]
+            r_ings = recipe_ings_map.get(r_id, [])
+            steps = detailed_recipe_map.get(r_id, {}).get("steps")
+            f_dict = extract_contextual_features(pantry_dict, cand, r_ings, steps)
+            lgbm_rows.append([f_dict[col] for col in FEATURE_COLS])
+            rows.append(f_dict)
+        scores = lgbm_ranker.predict(np.array(lgbm_rows))
+        active_ranker_name = "LightGBM LambdaMART (9-Feature Contextual)"
     else:
+        for cand in candidates:
+            r_id = cand["id"]
+            r_ings = recipe_ings_map.get(r_id, [])
+            steps = detailed_recipe_map.get(r_id, {}).get("steps")
+            f_dict = extract_contextual_features(pantry_dict, cand, r_ings, steps)
+            rows.append(f_dict)
         scores = [
             compute_domain_heuristic_score(pantry_dict, cand, recipe_ings_map.get(cand["id"], []))
             for cand in candidates
         ]
+        active_ranker_name = "Domain Heuristic"
     rank_time_ms = round((time.time() - t_rank_start) * 1000, 2)
 
-    # 4. Rank & Format Top 6 Recommendations
+    # 4. Rank & Format Top Recommendations
     scored_candidates = []
     for cand, score, feats in zip(candidates, scores, rows):
         r_id = cand["id"]
         full_rec = recipe_map.get(r_id, cand)
         r_ings = recipe_ings_map.get(r_id, [])
-        preference_fit = _preference_fit(req, full_rec, r_ings)
-        if preference_fit is None:
-            continue
 
         try:
             raw_servings = float(full_rec.get("default_servings") or 4.0)
@@ -410,26 +510,22 @@ def recommend_recipes(req: RecommendRequest):
         scale_factor = target_servings / default_servings
         is_scaled = abs(scale_factor - 1.0) >= 0.01
 
-        # Ingredient matching details with aggregation to eliminate duplicate rows & raw enums
+        # Ingredient matching details with aggregation
         pantry_names = set()
         pantry_codes = set()
-        urgent_names = set()
         for it in pantry_dict["items"]:
-            c_it = it.get("code")
-            if c_it:
-                pantry_codes.add(str(c_it).strip())
+            pantry_codes.update(get_effective_codes(it))
             aliases = extract_pantry_name_aliases(it["name"])
             pantry_names.update(aliases)
-            if not it.get("is_staple") and (it.get("hours_to_expire") or 999) <= 24:
-                urgent_names.update(aliases)
+            pantry_names.add(it["name"].strip().lower())
 
         grouped_ings = {}
         for ing in r_ings:
-            raw_n = (ing.get("cleaned_name") or ing.get("name") or "").strip().lower()
-            clean_n = raw_n.replace("nước nước mắm", "nước mắm")
+            clean_n = (ing.get("master_ingredient_name") or ing.get("cleaned_name") or "").strip()
             c = ing.get("master_ingredient_code")
-            raw_t = (ing.get("raw_text") or "").strip().replace("nước nước mắm", "nước mắm")
+            raw_t = (ing.get("raw_text") or "").strip()
             req_g = float(ing.get("estimated_weight_g") or 0.0)
+            role = (ing.get("ingredient_role") or "").strip().lower()
 
             key = c if c else clean_n
             if key not in grouped_ings:
@@ -437,29 +533,43 @@ def recommend_recipes(req: RecommendRequest):
                     "name": clean_n,
                     "code": c,
                     "total_g": 0.0,
-                    "raw_texts": []
+                    "raw_texts": [],
+                    "roles": [],
+                    "cleaned_names": set()
                 }
             grouped_ings[key]["total_g"] += req_g
             if raw_t:
                 grouped_ings[key]["raw_texts"].append(raw_t)
+            if role:
+                grouped_ings[key]["roles"].append(role)
+            cleaned = (ing.get("cleaned_name") or "").strip().lower()
+            if cleaned:
+                grouped_ings[key]["cleaned_names"].add(cleaned)
 
         matched_ings = []
         staple_ings = []
         missing_ings = []
-        rescued_items = []
+        optional_ings = []
+        matched_groups: list[tuple[str, set[str]]] = []
 
         for key, g in grouped_ings.items():
             n = g["name"]
             c = str(g["code"]).strip() if g["code"] else ""
+            if c.endswith(".0"):
+                c = c[:-2]
             tot_g = round(g["total_g"] * scale_factor, 1)
 
-            n_aliases = extract_pantry_name_aliases(n)
-            is_present = (c and c in pantry_codes) or (n and n in pantry_names) or bool(n_aliases & pantry_names)
+            # Same names the candidate generator and features match on: master name + every cleaned_name in the group
+            n_aliases = extract_pantry_name_aliases(n) | {n.strip().lower()}
+            for cleaned in sorted(g["cleaned_names"]):
+                n_aliases |= extract_pantry_name_aliases(cleaned)
+            is_present = bool((c and c in pantry_codes) or (n and n.strip().lower() in pantry_names) or bool(n_aliases & pantry_names))
 
-            # Classify role
-            role = classify_ingredient_role(n, c)
-            is_staple = (role == IngredientRole.STAPLE_SPICE)
-
+            # Staple spice: ingredient_role == "seasoning"
+            is_staple = any(r == "seasoning" for r in g.get("roles", []))
+            # Accompaniment: ALL rows have role "accompaniment"
+            roles = g.get("roles", [])
+            is_accompaniment = bool(roles) and all(r == "accompaniment" for r in roles)
             first_raw = g["raw_texts"][0] if g["raw_texts"] else ""
             if not is_scaled and len(g["raw_texts"]) == 1:
                 # If raw_text already specifies a numeric weight/volume, don't duplicate it
@@ -485,7 +595,7 @@ def recommend_recipes(req: RecommendRequest):
 
             item_info = {
                 "name": n.capitalize(),
-                "code": c or None,
+                "code": c,
                 "display": display_str,
                 "required_g": tot_g,
                 "weight_g": tot_g,
@@ -496,24 +606,24 @@ def recommend_recipes(req: RecommendRequest):
 
             if is_present:
                 matched_ings.append(item_info)
-                if (n in urgent_names) or bool(n_aliases & urgent_names):
-                    rescued_items.append(n)
+                matched_groups.append((c, n_aliases))
+            elif is_accompaniment:
+                opt_info = dict(item_info)
+                opt_info["is_optional"] = True
+                optional_ings.append(opt_info)
             elif is_staple:
-                # Basic pantry staples (Muối, Tiêu, Nước mắm, Dầu ăn, Tỏi, Hành tím...)
-                # Assumed readily available in any kitchen cabinet!
                 staple_ings.append(item_info)
             else:
                 missing_ings.append(item_info)
 
         # Determine Feasibility Badge (Staples DO NOT count as missing grocery shopping!)
-        is_zero_waste_hero = len(rescued_items) > 0
         if len(missing_ings) == 0:
             if len(staple_ings) > 0:
                 status_text = "Sẵn sàng nấu ngay 100% (Gia vị bếp có sẵn)"
             else:
                 status_text = "Sẵn sàng nấu ngay 100%"
             status_badge = "ready"
-        elif len(missing_ings) == 1 and feats["raw_weight_ratio"] >= 0.75:
+        elif len(missing_ings) == 1 and (feats.get("raw_weight_ratio", 0.0) >= 0.75 or feats.get("core_coverage", 0.0) >= 0.75):
             status_text = f"Co giãn linh hoạt (Thiếu nhẹ {missing_ings[0]['name']})"
             status_badge = "elastic"
         else:
@@ -555,26 +665,24 @@ def recommend_recipes(req: RecommendRequest):
             chef_tips = ""
             sensory_profile = {}
 
-        non_staple_count = len(matched_ings) + len(missing_ings)
-        availability = _clamp_score(feats["raw_weight_ratio"])
-        expiration_utilization = (
-            _clamp_score(len(set(rescued_items)) / max(1, len(urgent_names)))
-            if urgent_names else 0.0
-        )
-        purchase_minimization = _clamp_score(
-            1.0 - len(missing_ings) / max(1, non_staple_count)
-        )
-        score_components = {
-            "expiration_utilization": expiration_utilization,
-            "availability": availability,
-            "preference_fit": preference_fit,
-            "purchase_minimization": purchase_minimization,
-        }
+        # Pantry items used / rescued: match if effective codes intersect group code, or aliases intersect
+        def pantry_item_matches(p_item, groups):
+            p_eff_codes = get_effective_codes(p_item)
+            p_aliases = extract_pantry_name_aliases(p_item.get("name", "")) | {p_item.get("name", "").strip().lower()}
+            return any(bool(g_code and g_code in p_eff_codes) or bool(p_aliases & g_aliases) for g_code, g_aliases in groups)
+
+        used_items = [it for it in pantry_dict["items"] if pantry_item_matches(it, matched_groups)]
+        pantry_used = len(used_items)
+        rescued_items = [
+            it["name"] for it in used_items
+            if not it.get("is_staple") and float(it.get("hours_to_expire", 999)) <= 24
+        ]
+        is_zero_waste_hero = len(rescued_items) > 0
+
         scored_candidates.append({
             "id": r_id,
             "name": full_rec["name"],
-            "score": _calibrate_rank_score(float(score)),
-            "score_components": score_components,
+            "score": float(score),
             "cooking_time_min": int(float(full_rec.get("estimated_cooking_minutes") or 30)),
             "cooking_method": full_rec.get("cooking_method", "Khác"),
             "dish_type": full_rec.get("dish_type", "Món chính"),
@@ -594,32 +702,105 @@ def recommend_recipes(req: RecommendRequest):
             "status_text": status_text,
             "status_badge": status_badge,
             "matched_ingredients": matched_ings,
+            "pantry_used_count": pantry_used,
             "staple_ingredients": staple_ings,
             "missing_ingredients": missing_ings,
+            "optional_ingredients": optional_ings,
             "instructions": inst_text,
             "instructions_steps": inst_steps,
             "chef_tips": chef_tips,
             "sensory_profile": sensory_profile,
         })
 
-    # Sort descending by XGBoost score with Top-K dynamic bounded selection (K <= 7)
-    scored_candidates.sort(key=lambda x: x["score"], reverse=True)
-    # Prefer viable dishes (rescuing expiring items or not missing too many core ingredients)
-    viable_candidates = [
-        c for c in scored_candidates
-        if len(c.get("missing_ingredients", [])) <= 3 or c.get("is_zero_waste_hero")
-    ]
-    top_recommendations = (viable_candidates if viable_candidates else scored_candidates)[:7]
+    # Feasibility-First Tiered Ranking with Multi-Urgent Round-Robin Diversity:
+    urgent_pantry_items = sorted(
+        [it for it in pantry_dict["items"] if not it.get("is_staple") and float(it.get("hours_to_expire", 999)) <= 24],
+        key=lambda x: float(x.get("hours_to_expire", 999))
+    )
+
+    def feasibility_rank_key(c):
+        badge = c.get("status_badge", "shopping")
+        is_hero = c.get("is_zero_waste_hero", False)
+        n_missing = len(c.get("missing_ingredients", []))
+        p_used = c.get("pantry_used_count", 0)
+
+        if badge == "ready" and is_hero:
+            tier = 0
+        elif badge == "ready":
+            tier = 1
+        elif is_hero:
+            tier = 2
+        elif badge == "elastic" and n_missing <= 1:
+            tier = 3
+        else:
+            tier = 4 + min(n_missing, 10)
+
+        return (tier, -p_used, -c["score"])
+
+    scored_candidates.sort(key=feasibility_rank_key)
+
+    # If user has multiple expiring ingredients (e.g. cá basa 6h, thịt ba chỉ 8h, đậu phụ 12h):
+    # Interleave recommendations across the urgent items so one ingredient never monopolizes the list!
+    if len(urgent_pantry_items) >= 2:
+        top_recommendations = []
+        seen_ids = set()
+
+        # Priority 0: Super-Hero dishes that rescue MULTIPLE urgent items at once
+        super_heroes = [
+            c for c in scored_candidates
+            if len(c.get("rescued_items", [])) >= 2 and c.get("status_badge") in ("ready", "elastic")
+        ]
+        for sh in super_heroes[:2]:
+            top_recommendations.append(sh)
+            seen_ids.add(sh["id"])
+
+        # Buckets for each urgent item
+        buckets: dict[str, list[dict]] = {u["name"].lower(): [] for u in urgent_pantry_items}
+        for c in scored_candidates:
+            if c["id"] in seen_ids:
+                continue
+            rescued_aliases_list = [extract_pantry_name_aliases(r) | {r.strip().lower()} for r in c.get("rescued_items", [])]
+            for u in urgent_pantry_items:
+                u_name = u["name"].lower()
+                u_aliases = extract_pantry_name_aliases(u_name) | {u_name.strip()}
+                if any(bool(u_aliases & r_aliases) for r_aliases in rescued_aliases_list):
+                    buckets[u_name].append(c)
+                    break
+
+        # Round-robin selection in order of expiry urgency (most urgent first)
+        max_rounds = 4
+        for round_idx in range(max_rounds):
+            for u in urgent_pantry_items:
+                u_name = u["name"].lower()
+                b_list = buckets.get(u_name, [])
+                if round_idx < len(b_list):
+                    cand = b_list[round_idx]
+                    if cand["id"] not in seen_ids:
+                        top_recommendations.append(cand)
+                        seen_ids.add(cand["id"])
+                if len(top_recommendations) >= 7:
+                    break
+            if len(top_recommendations) >= 7:
+                break
+
+        # Fill any remaining slots with top scored candidates
+        for c in scored_candidates:
+            if len(top_recommendations) >= 7:
+                break
+            if c["id"] not in seen_ids:
+                top_recommendations.append(c)
+                seen_ids.add(c["id"])
+    else:
+        top_recommendations = scored_candidates[:7]
 
     total_latency_ms = round((time.time() - t0) * 1000, 2)
 
     return {
         "status": "success",
-        "model_version": MODEL_VERSION,
-        "catalog_revision": CATALOG_REVISION,
         "total_latency_ms": total_latency_ms,
         "candidate_retrieval_ms": cand_time_ms,
-        "xgboost_inference_ms": rank_time_ms,
+        "ranker_inference_ms": rank_time_ms,
+        "ranker_model": active_ranker_name,
         "candidates_evaluated": len(candidates),
         "gpu_accelerated": SYSTEM_GPU_STATUS["cuda_available"],
         "device": SYSTEM_GPU_STATUS["device_name"],
@@ -650,12 +831,7 @@ def smart_input_ocr(req: SmartInputOcrRequest):
 async def smart_input_ocr_upload(file: UploadFile = File(...)):
     """Process uploaded receipt or Bách Hóa Xanh food label image."""
     contents = await file.read()
-    try:
-        return process_receipt_input(image_bytes=contents, filename=file.filename or "receipt.jpg")
-    except ValueError as error:
-        raise HTTPException(status_code=422, detail="Invalid image") from error
-    except RuntimeError as error:
-        raise HTTPException(status_code=503, detail="OCR recognizer is unavailable") from error
+    return process_receipt_input(image_bytes=contents, filename=file.filename or "receipt.jpg")
 
 
 @app.post("/api/smart-input/asr")

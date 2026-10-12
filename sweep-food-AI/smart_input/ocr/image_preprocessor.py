@@ -3,7 +3,7 @@
 Optimizes images from image upload and camera snapshots:
 1. Downsampling high-resolution smartphone photos (up to 4000x3000) to max 1600px via cv2.INTER_AREA.
 2. Contrast-Limited Adaptive Histogram Equalization (CLAHE) on the L-channel to enhance faint receipts and food packaging labels.
-3. High-efficiency JPEG compression (quality 85) to reduce payload size by >90% while preserving text legibility.
+3. High-efficiency WebP compression (quality 85) to reduce payload size while preserving text legibility.
 """
 
 from __future__ import annotations
@@ -58,8 +58,6 @@ def preprocess_ocr_image(
         # Assuming input is BGR from cv2.imdecode
         img_rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
-    # VietOCR and the fallback detector expect dark text on a light background.
-    # Normalize dark-mode screenshots before contrast enhancement.
     gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
     polarity_inverted = float(np.median(gray)) < 127
     if polarity_inverted:
@@ -106,7 +104,7 @@ def preprocess_image_bytes(
         enhance_contrast: Whether to apply CLAHE.
 
     Returns:
-        (compressed_jpeg_bytes, processed_image_rgb, stats_dict)
+        (compressed_webp_bytes, processed_image_rgb, stats_dict)
     """
     orig_bytes_len = len(image_bytes)
     nparr = np.frombuffer(image_bytes, np.uint8)
@@ -121,10 +119,10 @@ def preprocess_image_bytes(
         enhance_contrast=enhance_contrast,
     )
 
-    # Re-encode to optimized JPEG for fast network & downstream transmission
+    # Re-encode to optimized WebP for fast network & downstream transmission (>50% smaller than JPEG)
     img_bgr_out = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
-    encode_params = [int(cv2.IMWRITE_JPEG_QUALITY), quality, int(cv2.IMWRITE_JPEG_OPTIMIZE), 1]
-    success, encoded_buf = cv2.imencode(".jpg", img_bgr_out, encode_params)
+    encode_params = [int(cv2.IMWRITE_WEBP_QUALITY), quality]
+    success, encoded_buf = cv2.imencode(".webp", img_bgr_out, encode_params)
 
     if not success:
         # Fallback to original bytes
@@ -139,7 +137,7 @@ def preprocess_image_bytes(
         "original_size_kb": round(orig_bytes_len / 1024, 1),
         "compressed_size_kb": round(new_bytes_len / 1024, 1),
         "savings_percent": max(0.0, savings_pct),
-        "format": "JPEG",
+        "format": "WEBP",
         "quality": quality,
     })
 

@@ -1,11 +1,11 @@
 from __future__ import annotations
 """Import normalized catalog JSON into PostgreSQL."""
 """
-uv run ingredient_category_import.py 
-uv run master_ingredient_import.py 
-uv run recipe_import.py 
-uv run recipe_ingredient_import.py 
-uv run import_data.py --dry-run
+uv run python scripts/ingredient_category_import.py
+uv run python scripts/master_ingredient_import.py
+uv run python scripts/recipe_import.py
+uv run python scripts/recipe_ingredient_import.py
+uv run python scripts/import_data.py --dry-run
 """
 
 

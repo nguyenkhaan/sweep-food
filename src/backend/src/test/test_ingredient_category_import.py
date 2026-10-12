@@ -7,9 +7,9 @@ def test_transform_categories_normalizes_and_deduplicates_names() -> None:
     """Category names share a stable record after text normalization."""
     rows = transform_categories(
         [
-            {"code": "100", "category": "  Rau\u200b,   củ  "},
-            {"code": "101", "category": "Rau, củ"},
-            {"code": "102", "category": "Thịt"},
+            {"code": "100", "category_vi": "  Rau\u200b,   củ  "},
+            {"code": "101", "category_vi": "Rau, củ"},
+            {"code": "102", "category_vi": "Thịt"},
         ]
     )
 

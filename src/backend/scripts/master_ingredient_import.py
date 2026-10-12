@@ -12,7 +12,7 @@ from typing import Any
 from uuid import NAMESPACE_URL, uuid5
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_FOOD_INPUT = PROJECT_ROOT / "data123/raw/food_nutrition_raw.json"
+DEFAULT_NUTRITION_INPUT = PROJECT_ROOT / "data123/raw/master_ingredients_nutrition.json"
 DEFAULT_CATEGORY_OUTPUT = PROJECT_ROOT / "data123/normalized/ingredient_categories.json"
 DEFAULT_RECIPE_INGREDIENT_INPUT = (
     PROJECT_ROOT / "data123/raw/recipes/canonical_recipe_ingredients.json"
@@ -21,11 +21,36 @@ DEFAULT_QWEN_MAP_INPUT = PROJECT_ROOT / "data123/raw/qwen_extracted_map.json"
 DEFAULT_MASTER_OUTPUT = PROJECT_ROOT / "data123/normalized/master_ingredients.json"
 UNCLASSIFIED_CATEGORY = "Chưa phân loại"
 PRIMARY_NUTRIENT_FIELDS = {
-    "protein": "protein_g",
-    "total lipid (fat)": "fat_g",
-    "carbohydrate by difference": "carbs_g",
-    "sugars, total": "sugar_g",
-    "na": "sodium_mg",
+    "energy_kcal": "calories",
+    "protein_g": "protein_g",
+    "fat_g": "fat_g",
+    "carbs_g": "carbs_g",
+    "sugar_g": "sugar_g",
+    "sodium_mg": "sodium_mg",
+}
+OTHER_NUTRIENT_UNITS = {
+    "fiber_g": "g",
+    "water_g": "g",
+    "ash_g": "g",
+    "calcium_mg": "mg",
+    "iron_mg": "mg",
+    "potassium_mg": "mg",
+    "zinc_mg": "mg",
+    "magnesium_mg": "mg",
+    "phosphorus_mg": "mg",
+    "copper_mg": "mg",
+    "manganese_mg": "mg",
+    "selenium_mcg": "mcg",
+    "vitamin_c_mg": "mg",
+    "retinol_mcg": "mcg",
+    "vitamin_a_rae_mcg": "mcg",
+    "vitamin_b1_mg": "mg",
+    "vitamin_b2_mg": "mg",
+    "vitamin_b3_mg": "mg",
+    "vitamin_b5_mg": "mg",
+    "vitamin_b6_mg": "mg",
+    "folate_total_mcg": "mcg",
+    "folate_food_mcg": "mcg",
 }
 QWEN_MATCH_METHOD = "QWEN_LLM_MATCH"
 QWEN_NO_INGREDIENT = "không có nguyên liệu cụ thể"
@@ -75,29 +100,30 @@ def display_name(name: str) -> str:
     return f"{name[:1].upper()}{name[1:]}"
 
 
-def load_food_rows(input_path: Path) -> list[dict[str, Any]]:
-    """Load the paginated nutrition payload and return its data rows."""
-    payload = json.loads(input_path.read_text(encoding="utf-8"))
-    rows = payload.get("data") if isinstance(payload, dict) else None
+def load_nutrition_rows(input_path: Path) -> list[dict[str, Any]]:
+    """Load the flat master ingredient nutrition rows."""
+    rows = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
         raise ValueError(
-            "Expected food_nutrition_raw.json to contain a data array of objects."
+            "Expected master_ingredients_nutrition.json to contain an array of objects."
         )
     return rows
 
 
-def uniquely_named_food_rows(
-    food_rows: Iterable[dict[str, Any]],
+def uniquely_named_nutrition_rows(
+    nutrition_rows: Iterable[dict[str, Any]],
 ) -> list[tuple[dict[str, Any], str]]:
-    """Keep every food row while satisfying the database natural-key constraint."""
+    """Keep every nutrition row while satisfying the database natural-key constraint."""
     result: list[tuple[dict[str, Any], str]] = []
     used_keys: set[tuple[str, str]] = set()
     codes: set[str] = set()
-    for food in sorted(food_rows, key=lambda row: str(row.get("code", ""))):
+    for nutrition_row in sorted(
+        nutrition_rows, key=lambda row: str(row.get("code", ""))
+    ):
         code, raw_name, raw_category = (
-            food.get("code"),
-            food.get("name_vi"),
-            food.get("category"),
+            nutrition_row.get("code"),
+            nutrition_row.get("name_vi"),
+            nutrition_row.get("category_vi"),
         )
         if (
             not isinstance(code, str)
@@ -105,7 +131,7 @@ def uniquely_named_food_rows(
             or not isinstance(raw_category, str)
         ):
             raise TypeError(
-                "Nutrition food rows require string code, name_vi, and category."
+                "Nutrition rows require string code, name_vi, and category_vi."
             )
         if code in codes:
             raise ValueError(f"Duplicate nutrition food code: {code!r}")
@@ -119,7 +145,7 @@ def uniquely_named_food_rows(
         if key in used_keys:
             raise ValueError(f"Cannot disambiguate nutrition food {code!r}.")
         used_keys.add(key)
-        result.append((food, name))
+        result.append((nutrition_row, name))
     return result
 
 
@@ -214,52 +240,21 @@ def category_ids_by_name(category_rows: Iterable[dict[str, Any]]) -> dict[str, s
 
 
 def nutrition_values(
-    food: dict[str, Any],
+    nutrition_row: dict[str, Any],
 ) -> tuple[dict[str, str | None], dict[str, object]]:
-    """Map source nutrition values to master columns and preserve remaining values."""
-    primary: dict[str, str | None] = {
-        "calories": decimal_string(food.get("energy"), negative_as_none=True),
-        "protein_g": None,
-        "fat_g": None,
-        "carbs_g": None,
-        "sugar_g": None,
-        "sodium_mg": None,
+    """Map flat source nutrition values to master columns and other nutrients."""
+    primary = {
+        target: decimal_string(nutrition_row.get(source), negative_as_none=True)
+        for source, target in PRIMARY_NUTRIENT_FIELDS.items()
     }
-    other: dict[str, object] = {}
-    nutrients = food.get("nutrition", [])
-    if not isinstance(nutrients, list):
-        raise TypeError(f"Food {food.get('code', '<unknown>')} has invalid nutrition.")
-
-    for nutrient in nutrients:
-        if not isinstance(nutrient, dict):
-            raise TypeError(
-                f"Food {food.get('code', '<unknown>')} has invalid nutrient."
-            )
-        source_name = nutrient.get("name_en") or nutrient.get("name")
-        if not isinstance(source_name, str):
-            raise TypeError(
-                f"Food {food.get('code', '<unknown>')} has unnamed nutrient."
-            )
-        normalized_name = normalize_text(source_name)
-        value = decimal_string(nutrient.get("value"), negative_as_none=True)
-        primary_field = PRIMARY_NUTRIENT_FIELDS.get(normalized_name.casefold())
-        if primary_field is not None:
-            primary[primary_field] = value
-            continue
-
-        unit = nutrient.get("unit")
-        if unit is not None and not isinstance(unit, str):
-            raise TypeError(
-                f"Food {food.get('code', '<unknown>')} has invalid nutrient unit."
-            )
-        if normalized_name in other:
-            raise ValueError(
-                f"Food {food.get('code', '<unknown>')} repeats nutrient {normalized_name!r}."
-            )
-        other[normalized_name] = {
-            "value": value,
-            "unit": normalize_text(unit) if unit else None,
+    other = {
+        field: {
+            "value": decimal_string(nutrition_row.get(field), negative_as_none=True),
+            "unit": unit,
         }
+        for field, unit in OTHER_NUTRIENT_UNITS.items()
+        if field in nutrition_row
+    }
     return primary, other
 
 
@@ -310,7 +305,7 @@ def add_master_candidate(
 
 
 def transform_master_ingredients(
-    food_rows: Iterable[dict[str, Any]],
+    nutrition_rows: Iterable[dict[str, Any]],
     recipe_ingredient_rows: Iterable[dict[str, Any]],
     category_ids: dict[str, str],
     qwen_map: dict[str, str],
@@ -321,9 +316,9 @@ def transform_master_ingredients(
     recipe_rows = list(recipe_ingredient_rows)
     unclassified_id = category_ids[UNCLASSIFIED_CATEGORY.casefold()]
 
-    for food, name in uniquely_named_food_rows(food_rows):
-        code = str(food["code"])
-        category_name = normalize_text(str(food["category"]))
+    for nutrition_row, name in uniquely_named_nutrition_rows(nutrition_rows):
+        code = str(nutrition_row["code"])
+        category_name = normalize_text(str(nutrition_row["category_vi"]))
         if not (
             2 <= len(name) <= 120 and any(character.isalpha() for character in name)
         ):
@@ -333,7 +328,7 @@ def transform_master_ingredients(
             raise ValueError(
                 f"Nutrition food {code} has an unknown category: {category_name!r}"
             )
-        nutrition, other_nutrients = nutrition_values(food)
+        nutrition, other_nutrients = nutrition_values(nutrition_row)
         row = master_row(name, category_uuid, nutrition, other_nutrients)
         add_master_candidate(candidates, row, priority=0)
         nutrition_ids_by_code[code] = row["id"]
@@ -413,7 +408,7 @@ def transform_master_ingredients(
 
 
 def run_transform_master_ingredients(
-    food_input: Path,
+    nutrition_input: Path,
     recipe_ingredients_input: Path,
     categories_input: Path,
     qwen_map_input: Path,
@@ -424,7 +419,7 @@ def run_transform_master_ingredients(
         load_json_rows(categories_input, "ingredient_categories.json")
     )
     rows = transform_master_ingredients(
-        load_food_rows(food_input),
+        load_nutrition_rows(nutrition_input),
         load_json_rows(recipe_ingredients_input, "canonical_recipe_ingredients.json"),
         category_ids,
         load_qwen_extracted_map(qwen_map_input),
@@ -436,7 +431,7 @@ def run_transform_master_ingredients(
 def parse_args() -> argparse.Namespace:
     """Parse master-ingredient transform options."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--food-input", type=Path, default=DEFAULT_FOOD_INPUT)
+    parser.add_argument("--nutrition-input", type=Path, default=DEFAULT_NUTRITION_INPUT)
     parser.add_argument(
         "--recipe-ingredients-input",
         type=Path,
@@ -454,7 +449,7 @@ def main() -> None:
     """Run the master-ingredient transformation."""
     args = parse_args()
     run_transform_master_ingredients(
-        args.food_input,
+        args.nutrition_input,
         args.recipe_ingredients_input,
         args.categories_input,
         args.qwen_map_input,

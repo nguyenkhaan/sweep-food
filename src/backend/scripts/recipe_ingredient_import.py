@@ -18,7 +18,7 @@ DEFAULT_MASTERS_INPUT = PROJECT_ROOT / "data123/normalized/master_ingredients.js
 DEFAULT_CATEGORIES_INPUT = (
     PROJECT_ROOT / "data123/normalized/ingredient_categories.json"
 )
-DEFAULT_FOOD_INPUT = PROJECT_ROOT / "data123/raw/food_nutrition_raw.json"
+DEFAULT_NUTRITION_INPUT = PROJECT_ROOT / "data123/raw/master_ingredients_nutrition.json"
 DEFAULT_QWEN_MAP_INPUT = PROJECT_ROOT / "data123/raw/qwen_extracted_map.json"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data123/normalized/recipe_ingredients.json"
 DEFAULT_REJECTIONS_OUTPUT = PROJECT_ROOT / "data123/normalized/rejected_records.json"
@@ -91,29 +91,28 @@ def load_rows(input_path: Path, label: str) -> list[dict[str, Any]]:
     return rows
 
 
-def load_food_rows(input_path: Path) -> list[dict[str, Any]]:
-    """Load food rows from the nutrition API payload."""
-    payload = json.loads(input_path.read_text(encoding="utf-8"))
-    rows = payload.get("data") if isinstance(payload, dict) else None
+def load_nutrition_rows(input_path: Path) -> list[dict[str, Any]]:
+    """Load flat master ingredient nutrition rows."""
+    rows = json.loads(input_path.read_text(encoding="utf-8"))
     if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
         raise TypeError(
-            "Expected food_nutrition_raw.json to contain a data array of objects."
+            "Expected master_ingredients_nutrition.json to contain an array of objects."
         )
     return rows
 
 
-def uniquely_named_food_rows(
-    food_rows: Iterable[dict[str, Any]],
+def uniquely_named_nutrition_rows(
+    nutrition_rows: Iterable[dict[str, Any]],
 ) -> list[tuple[dict[str, Any], str]]:
-    """Mirror the lossless food-name disambiguation used by the master transform."""
+    """Mirror the lossless nutrition-name disambiguation used by the master transform."""
     result: list[tuple[dict[str, Any], str]] = []
     used_keys: set[tuple[str, str]] = set()
     codes: set[str] = set()
-    for food in sorted(food_rows, key=lambda row: str(row.get("code", ""))):
+    for food in sorted(nutrition_rows, key=lambda row: str(row.get("code", ""))):
         code, raw_name, raw_category = (
             food.get("code"),
             food.get("name_vi"),
-            food.get("category"),
+            food.get("category_vi"),
         )
         if (
             not isinstance(code, str)
@@ -121,7 +120,7 @@ def uniquely_named_food_rows(
             or not isinstance(raw_category, str)
         ):
             raise TypeError(
-                "Nutrition food rows require string code, name_vi, and category."
+                "Nutrition rows require string code, name_vi, and category_vi."
             )
         if code in codes:
             raise ValueError(f"Duplicate nutrition food code: {code!r}")
@@ -199,16 +198,16 @@ def master_indexes(
     return ids, natural, names
 
 
-def food_master_ids(
-    food_rows: Iterable[dict[str, Any]],
+def nutrition_master_ids(
+    nutrition_rows: Iterable[dict[str, Any]],
     category_ids: dict[str, str],
     masters_by_natural: dict[tuple[str, str], str],
 ) -> dict[str, str]:
     """Resolve nutrition codes to the exact master natural key generated in phase 2."""
     result: dict[str, str] = {}
-    for food, name in uniquely_named_food_rows(food_rows):
+    for food, name in uniquely_named_nutrition_rows(nutrition_rows):
         code = str(food["code"])
-        category = str(food["category"])
+        category = str(food["category_vi"])
         category_id = category_ids.get(normalize_text(category).casefold())
         master_id = (
             masters_by_natural.get((category_id, name.casefold()))
@@ -346,7 +345,7 @@ def transform_recipe_ingredients(
     recipe_rows: Iterable[dict[str, Any]],
     master_rows: Iterable[dict[str, Any]],
     category_rows: Iterable[dict[str, Any]],
-    food_rows: Iterable[dict[str, Any]],
+    nutrition_rows: Iterable[dict[str, Any]],
     qwen_map: dict[str, str],
 ) -> tuple[list[dict[str, Any]], list[dict[str, object]]]:
     """Produce one FK-safe database row for every source recipe ingredient."""
@@ -357,7 +356,9 @@ def transform_recipe_ingredients(
     master_ids, masters_by_natural, masters_by_name = master_indexes(master_rows)
     category_ids = category_ids_by_name(category_rows)
     unclassified_id = category_ids[UNCLASSIFIED_CATEGORY.casefold()]
-    nutrition_ids = food_master_ids(food_rows, category_ids, masters_by_natural)
+    nutrition_ids = nutrition_master_ids(
+        nutrition_rows, category_ids, masters_by_natural
+    )
     code_ids = source_code_master_ids(
         source, nutrition_ids, unclassified_id, masters_by_natural
     )
@@ -454,7 +455,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--categories-input", type=Path, default=DEFAULT_CATEGORIES_INPUT
     )
-    parser.add_argument("--food-input", type=Path, default=DEFAULT_FOOD_INPUT)
+    parser.add_argument("--nutrition-input", type=Path, default=DEFAULT_NUTRITION_INPUT)
     parser.add_argument("--qwen-map-input", type=Path, default=DEFAULT_QWEN_MAP_INPUT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument(
@@ -471,7 +472,7 @@ def main() -> None:
         load_rows(args.recipes_input, "recipes.json"),
         load_rows(args.masters_input, "master_ingredients.json"),
         load_rows(args.categories_input, "ingredient_categories.json"),
-        load_food_rows(args.food_input),
+        load_nutrition_rows(args.nutrition_input),
         load_qwen_map(args.qwen_map_input),
     )
     write_json(args.output, rows)

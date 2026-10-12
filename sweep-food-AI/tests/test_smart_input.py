@@ -42,9 +42,11 @@ def test_ocr_winmart_receipt_parsing():
     # Verify weights in grams
     beef = next(it for it in items if "Thịt bò" in it["name"])
     assert beef["quantity_g"] == 450.0  # 0.45 kg -> 450g
+    assert beef["quantity_source"] == "extracted"
 
     fish = next(it for it in items if "Cá điêu hồng" in it["name"])
     assert fish["quantity_g"] == 700.0  # 0.70 kg -> 700g
+    assert fish["quantity_source"] == "extracted"
 
 
 def test_ocr_bachhoaxanh_receipt_parsing():
@@ -85,6 +87,7 @@ def test_bachhoaxanh_food_packaging_label_parser():
     res1 = parser.parse_label_text(caithia_sample)
     assert "CAI THIA" in res1["name"].upper()
     assert res1["quantity_g"] == 500.0
+    assert res1["quantity_source"] == "extracted"
     assert res1["expiry_date"] == "09/09/2026"
     assert res1["store"] == "Bách Hóa Xanh"
 
@@ -98,7 +101,15 @@ def test_bachhoaxanh_food_packaging_label_parser():
     res2 = parser.parse_label_text(thitheo_sample)
     assert "THIT BA ROI" in res2["name"].upper()
     assert res2["quantity_g"] == 420.0
+    assert res2["quantity_source"] == "extracted"
     assert res2["expiry_date"] == "08/09/2026"
+
+
+def test_label_parser_marks_default_quantity_as_estimated():
+    result = FoodLabelParser().parse_label_text("CÀ CHUA\nHSD: 14/10/2026")
+
+    assert result["quantity_g"] == 500.0
+    assert result["quantity_source"] == "estimated"
 
 
 def test_audio_preprocessor_ffmpeg_flac():
@@ -182,6 +193,13 @@ def test_asr_culinary_speech_parser():
     assert item_map.get("Tỏi") == 200.0
     # "một bó" -> 300g
     assert item_map.get("Rau muống") == 300.0
+    assert all(it["quantity_source"] == "extracted" for it in items)
+
+
+def test_asr_marks_default_quantity_as_estimated():
+    items = parse_vietnamese_speech("Tôi có thịt bò")
+
+    assert items[0]["quantity_source"] == "estimated"
 
 
 def test_asr_chicken_and_eggs_speech():
@@ -281,7 +299,7 @@ def test_image_preprocessor_downsampling_and_clahe():
     _, encoded = cv2.imencode(".png", high_res)
     comp_bytes, _, b_stats = preprocess_image_bytes(encoded.tobytes(), max_dim=1600, quality=85)
     assert len(comp_bytes) > 0
-    assert b_stats["format"] == "JPEG"
+    assert b_stats["format"] == "WEBP"
     assert b_stats["savings_percent"] >= 0.0
 
 
@@ -345,5 +363,4 @@ def test_system_status_and_gpu_warmup(client):
     data = resp.json()
     assert "cuda_available" in data
     assert "device_name" in data
-    assert "xgb_device" in data
     assert "ocr_device" in data

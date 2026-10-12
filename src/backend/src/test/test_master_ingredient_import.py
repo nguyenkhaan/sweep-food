@@ -11,7 +11,7 @@ def test_transform_master_ingredients_uses_reviewed_qwen_extractions() -> None:
     """Reviewed Qwen names supersede their crawler-provided master code."""
     categories = transform_categories(
         [
-            {"code": "100", "category": "Rau"},
+            {"code": "100", "category_vi": "Rau"},
         ]
     )
     rows = transform_master_ingredients(
@@ -19,24 +19,28 @@ def test_transform_master_ingredients_uses_reviewed_qwen_extractions() -> None:
             {
                 "code": "100",
                 "name_vi": "Cà chua",
-                "category": "Rau",
-                "energy": 18,
-                "nutrition": [
-                    {"name_en": "Protein", "value": 0.9, "unit": "g"},
-                    {"name_en": "Na", "value": 5, "unit": "mg"},
-                    {
-                        "name_en": "Carbohydrate by difference",
-                        "value": -0.03,
-                        "unit": "g",
-                    },
-                ],
+                "category_vi": "Rau",
+                "energy_kcal": "18",
+                "protein_g": "0.9",
+                "fat_g": "0.2",
+                "carbs_g": "-0.03",
+                "sugar_g": "2.6",
+                "sodium_mg": "5",
+                "fiber_g": "1.2",
+                "calcium_mg": "10",
             },
             {
                 "code": "101",
                 "name_vi": "Cà chua",
-                "category": "Rau",
-                "energy": 20,
-                "nutrition": [],
+                "category_vi": "Rau",
+                "energy_kcal": "20",
+                "protein_g": "1",
+                "fat_g": "0.3",
+                "carbs_g": "4",
+                "sugar_g": "2.5",
+                "sodium_mg": "4",
+                "fiber_g": "1.1",
+                "calcium_mg": "9",
             },
         ],
         [
@@ -101,7 +105,13 @@ def test_transform_master_ingredients_uses_reviewed_qwen_extractions() -> None:
     assert "Đậu phụ" not in by_name
     assert by_name["Cà chua"]["calories"] == "18.000"
     assert by_name["Cà chua"]["protein_g"] == "0.900"
+    assert by_name["Cà chua"]["fat_g"] == "0.200"
     assert by_name["Cà chua"]["sodium_mg"] == "5.000"
+    assert by_name["Cà chua"]["sugar_g"] == "2.600"
     assert by_name["Cà chua"]["carbs_g"] is None
+    assert by_name["Cà chua"]["other_nutrients"] == {
+        "fiber_g": {"value": "1.200", "unit": "g"},
+        "calcium_mg": {"value": "10.000", "unit": "mg"},
+    }
     assert by_name["Cà chua (101)"]["calories"] == "20.000"
     assert all(row["is_verified"] is True for row in rows)

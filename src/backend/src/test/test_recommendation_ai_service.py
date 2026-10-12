@@ -1,6 +1,5 @@
 """Unit tests for AI-backed recommendation orchestration."""
 
-from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import cast
 from uuid import UUID
@@ -8,47 +7,23 @@ from uuid import UUID
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.model.enum_model import MeasurementUnit
 from src.module.recommendations.recommendation_ai_service import (
     RecommendationAIService,
 )
 from src.module.recommendations.recommendation_dto import RecommendationRequestDTO
 from src.service.sweep_food_ai_client import (
     AIRecommendationItemDTO,
+    AIRecommendationRankingFeaturesDTO,
     AIRecommendationRequestDTO,
     AIRecommendationResponseDTO,
-    AIRecommendationScoreComponentsDTO,
+    AIRecommendationTimingsDTO,
     SweepFoodAIClient,
 )
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b101")
-INGREDIENT_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b110")
 RECIPE_ONE_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b102")
 RECIPE_TWO_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b103")
 UNKNOWN_RECIPE_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b199")
-
-
-class _Batch:
-    def __init__(
-        self,
-        batch_id: UUID,
-        *,
-        quantity: float,
-        unit: MeasurementUnit,
-        expires_at: datetime | None,
-        master_ingredient_id: UUID | None = INGREDIENT_ID,
-        custom_name: str | None = None,
-    ) -> None:
-        self.id = batch_id
-        self.current_quantity = quantity
-        self.unit = unit
-        self.expires_at = expires_at
-        self.master_ingredient_id = master_ingredient_id
-        self.custom_name = custom_name
-
-
-class _Ingredient:
-    name = "Spinach"
 
 
 class _Recipe:
@@ -70,35 +45,25 @@ class _Result:
     def __init__(self, value: object) -> None:
         self._value = value
 
-    def scalar_one_or_none(self) -> object:
-        return self._value
-
-    def all(self) -> list[tuple[_Batch, _Ingredient | None]]:
-        return cast(list[tuple[_Batch, _Ingredient | None]], self._value)
-
     def scalars(self) -> "_Result":
         return self
 
-    def __iter__(self) -> object:
-        return iter(cast(list[object], self._value))
+    def all(self) -> list[_Recipe]:
+        return cast(list[_Recipe], self._value)
 
 
 class _Session:
     def __init__(
         self,
         *,
-        preferences: dict[str, object],
-        inventory: list[tuple[_Batch, _Ingredient | None]],
         recipes: list[_Recipe],
     ) -> None:
-        self._results = iter(
-            [_Result(preferences), _Result(inventory), _Result(recipes)]
-        )
+        self._result = _Result(recipes)
         self.statements: list[object] = []
 
     async def execute(self, statement: object) -> _Result:
         self.statements.append(statement)
-        return next(self._results)
+        return self._result
 
 
 class _AIClient:
@@ -113,64 +78,33 @@ class _AIClient:
         return self.response
 
 
-def _ai_item(recipe_id: UUID, score: float) -> AIRecommendationItemDTO:
+def _ai_item(recipe_id: UUID, rank_score: float) -> AIRecommendationItemDTO:
     return AIRecommendationItemDTO(
         id=recipe_id,
         name="AI display name",
-        score=score,
-        score_components=AIRecommendationScoreComponentsDTO(
-            expiration_utilization=0.8,
-            availability=0.7,
-            preference_fit=1.0,
-            purchase_minimization=0.6,
+        rank_score=rank_score,
+        ranking_features=AIRecommendationRankingFeaturesDTO(
+            core_coverage=0.8,
+            core_missing_count=1,
+            secondary_coverage=0.7,
+            shopping_gap_items=1,
+            rescue_weight_g=300,
+            nutrition_confidence=0.9,
+            kcal_per_serving=450,
+            protein_per_serving=25,
+            prep_complexity=3.2,
         ),
+        matched_ingredients=[],
         missing_ingredients=[],
+        optional_ingredients=[],
         rescued_items=["Spinach"],
+        status_badge="ready",
     )
 
 
 @pytest.mark.anyio
 async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
-    now = datetime.now(UTC)
-    unsupported_id = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b120")
     session = _Session(
-        preferences={
-            "household_size": 2,
-            "max_cooking_time_min": 25,
-            "allergies": ["peanut"],
-            "preferred_cuisines": ["Vietnamese"],
-        },
-        inventory=[
-            (
-                _Batch(
-                    UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b111"),
-                    quantity=100,
-                    unit=MeasurementUnit.GRAM,
-                    expires_at=now + timedelta(hours=12),
-                ),
-                _Ingredient(),
-            ),
-            (
-                _Batch(
-                    UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b112"),
-                    quantity=0.5,
-                    unit=MeasurementUnit.KG,
-                    expires_at=now - timedelta(hours=1),
-                ),
-                _Ingredient(),
-            ),
-            (
-                _Batch(
-                    unsupported_id,
-                    quantity=1,
-                    unit=MeasurementUnit.LITER,
-                    expires_at=None,
-                    master_ingredient_id=None,
-                    custom_name="Milk",
-                ),
-                None,
-            ),
-        ],
         recipes=[
             _Recipe(RECIPE_ONE_ID, "Backend soup"),
             _Recipe(RECIPE_TWO_ID, "Backend salad"),
@@ -179,12 +113,19 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
     ai_client = _AIClient(
         AIRecommendationResponseDTO(
             status="success",
-            model_version="xgboost-test",
+            contract_version="2",
+            model_version="lgbm-contextual-v1",
             catalog_revision="catalog-test",
+            ranker_model="LightGBM LambdaMART",
+            timings=AIRecommendationTimingsDTO(
+                total_ms=20.1,
+                candidate_ms=2.3,
+                ranker_ms=4.8,
+            ),
             recommendations=[
-                _ai_item(RECIPE_TWO_ID, 0.9),
-                _ai_item(UNKNOWN_RECIPE_ID, 0.8),
-                _ai_item(RECIPE_ONE_ID, 0.7),
+                _ai_item(RECIPE_TWO_ID, 1.9),
+                _ai_item(UNKNOWN_RECIPE_ID, 1.8),
+                _ai_item(RECIPE_ONE_ID, 1.7),
             ],
         )
     )
@@ -195,14 +136,26 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
 
     response = await service.recommend(
         USER_ID,
-        RecommendationRequestDTO(request="Món nhanh"),
+        RecommendationRequestDTO(
+            items=[
+                {
+                    "name": "Spinach",
+                    "code": "4001",
+                    "quantity_g": 600,
+                    "hours_to_expire": 0,
+                }
+            ],
+            household_size=2,
+            max_cooking_time_min=25,
+            allergies=["peanut"],
+        ),
     )
 
     request = ai_client.requests[0]
     assert len(request.items) == 1
     assert request.items[0].quantity_g == 600
     assert request.items[0].hours_to_expire == 0
-    assert request.items[0].code == str(INGREDIENT_ID)
+    assert request.items[0].code == "4001"
     assert request.household_size == 2
     assert request.max_cooking_time_min == 25
     assert request.allergies == ["peanut"]
@@ -211,21 +164,30 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
         RECIPE_ONE_ID,
     ]
     assert response.items[0].recipe_name == "Backend salad"
+    assert response.items[0].rank_score == 1.9
     assert response.items[0].provider == "SWEEP_FOOD_AI"
+    assert response.contract_version == "2"
+    assert response.ranker_model == "LightGBM LambdaMART"
     assert response.analysis.is_mock is False
-    assert f"UNSUPPORTED_UNIT:{unsupported_id}:LITER" in response.warnings
     assert f"UNKNOWN_RECIPE_ID:{UNKNOWN_RECIPE_ID}" in response.warnings
-    assert "inventory_batches.user_id" in str(session.statements[1])
+    assert len(session.statements) == 1
 
 
 @pytest.mark.anyio
 async def test_empty_pantry_and_empty_ai_result_are_explicit() -> None:
-    session = _Session(preferences={}, inventory=[], recipes=[])
+    session = _Session(recipes=[])
     ai_client = _AIClient(
         AIRecommendationResponseDTO(
             status="empty",
-            model_version="xgboost-test",
+            contract_version="2",
+            model_version="lgbm-contextual-v1",
             catalog_revision="catalog-test",
+            ranker_model="LightGBM LambdaMART",
+            timings=AIRecommendationTimingsDTO(
+                total_ms=1,
+                candidate_ms=1,
+                ranker_ms=0,
+            ),
             recommendations=[],
         )
     )
@@ -236,10 +198,10 @@ async def test_empty_pantry_and_empty_ai_result_are_explicit() -> None:
 
     response = await service.recommend(
         USER_ID,
-        RecommendationRequestDTO(request="Tối nay ăn gì?"),
+        RecommendationRequestDTO(items=[]),
     )
 
     assert ai_client.requests[0].items == []
     assert response.items == []
     assert response.analysis.is_mock is False
-    assert len(session.statements) == 2
+    assert len(session.statements) == 0

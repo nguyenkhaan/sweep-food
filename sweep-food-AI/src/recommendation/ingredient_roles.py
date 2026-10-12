@@ -56,10 +56,11 @@ CORE_PRODUCE_KEYWORDS = {
     "đậu bắp", "đậu đũa", "đậu hà lan", "giá đỗ", "giá", "ngô", "bắp",
     "măng", "măng tây", "nấm rơm", "nấm hương", "nấm đùi gà", "nấm kim châm",
     "nấm linh chi", "nấm bào ngư", "nấm tuyết", "mộc nhĩ",
-    # Starches
-    "gạo", "cơm", "bún", "phở", "mì", "miến", "hủ tiếu", "bánh đa"
+    # Starches & Wrappers
+    "gạo", "cơm", "bún", "phở", "mì", "miến", "hủ tiếu", "bánh đa",
+    "hoành thánh", "vỏ hoành thánh", "lá hoành thánh", "sủi cảo", "há cảo",
+    "bánh tráng", "vỏ ram", "bánh phở", "bánh canh", "bánh mì", "bánh hỏi", "bánh cuốn"
 }
-
 # Optional Garnishes & Decorative Herbs
 OPTIONAL_GARNISH_KEYWORDS = {
     "ngò gai", "mùi tàu", "rau om", "rau ngổ", "ngò rí", "rau mùi",
@@ -82,8 +83,8 @@ def classify_ingredient_role(cleaned_name: str, master_code: str | None = None) 
     # 1. Check Staple & Basic Seasoning
     for kw in STAPLE_SPICE_KEYWORDS:
         if kw in n or n.startswith(kw) or n.endswith(kw):
-            # Special check: Don't treat "Thịt ba rọi" as mỡ or "Cá thu" as tiêu
-            if any(p in n for p in ["thịt", "cá", "tôm", "gà", "bò"]):
+            # Special check: Don't treat meats or wrappers as seasonings
+            if any(p in n for p in ["thịt", "cá", "tôm", "gà", "bò", "hoành thánh", "sủi cảo", "há cảo", "bánh tráng", "bánh mì"]):
                 continue
             return IngredientRole.STAPLE_SPICE
 

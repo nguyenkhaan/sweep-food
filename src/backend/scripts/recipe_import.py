@@ -18,7 +18,6 @@ DEFAULT_CANONICAL_INPUT = PROJECT_ROOT / "data123/raw/recipes/canonical_recipes.
 DEFAULT_NUTRITION_INPUT = PROJECT_ROOT / "data123/raw/recipes/recipes.json"
 DEFAULT_SCRAPED_INPUT = PROJECT_ROOT / "data123/raw/recipes_raw_scraped.json"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data123/normalized/recipes.json"
-NUTRITION_STATUSES = {"COMPLETE", "PARTIAL", "INCOMPLETE"}
 HASHTAG_ONLY = re.compile(r"^\s*(#[^\s]+\s*)+$")
 
 
@@ -34,7 +33,9 @@ def normalize_url(value: str) -> str:
     if not parsed.scheme or not parsed.netloc:
         raise ValueError(f"Invalid source URL: {value!r}")
     path = parsed.path.rstrip("/") or "/"
-    return urlunsplit((parsed.scheme.lower(), parsed.netloc.lower(), path, parsed.query, ""))
+    return urlunsplit(
+        (parsed.scheme.lower(), parsed.netloc.lower(), path, parsed.query, "")
+    )
 
 
 def decimal_string(value: object, *, positive: bool = False) -> str | None:
@@ -132,20 +133,46 @@ def scraped_by_url(rows: Iterable[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     return indexed
 
 
-def nutrition_status_by_id(rows: Iterable[dict[str, Any]]) -> dict[str, str]:
-    """Index valid nutrition status by source recipe UUID."""
-    statuses: dict[str, str] = {}
+def nutrition_by_id(rows: Iterable[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Index aggregate nutrition rows by source recipe UUID."""
+    indexed: dict[str, dict[str, Any]] = {}
     for row in rows:
         recipe_id = row.get("id")
-        status = row.get("nutrition_status")
-        if not isinstance(recipe_id, str) or not isinstance(status, str):
-            raise TypeError("Nutrition recipe requires string id and nutrition_status.")
-        if status not in NUTRITION_STATUSES:
-            raise ValueError(f"Invalid nutrition status for {recipe_id}: {status!r}")
-        if recipe_id in statuses:
+        if not isinstance(recipe_id, str):
+            raise TypeError("Nutrition recipe requires a string id.")
+        UUID(recipe_id)
+        if recipe_id in indexed:
             raise ValueError(f"Duplicate nutrition recipe id: {recipe_id}")
-        statuses[recipe_id] = status
-    return statuses
+        indexed[recipe_id] = row
+    return indexed
+
+
+def nutrition_status(row: dict[str, Any] | None) -> str:
+    """Derive database status from the aggregate quality flags."""
+    if row is None:
+        return "INCOMPLETE"
+    incomplete = row.get("incomplete_flag")
+    anomaly = row.get("nutrition_anomaly_flag")
+    if incomplete not in (0, 1) or anomaly not in (0, 1):
+        raise ValueError("Nutrition flags must be 0 or 1.")
+    if incomplete:
+        return "INCOMPLETE"
+    return "PARTIAL" if anomaly else "COMPLETE"
+
+
+def other_nutrients(row: dict[str, Any] | None) -> dict[str, float]:
+    """Keep aggregate nutrients without dedicated recipe columns."""
+    if row is None:
+        return {}
+    result: dict[str, float] = {}
+    for source, target in (
+        ("total_sodium_mg", "sodium_mg"),
+        ("total_fiber_g", "fiber_g"),
+    ):
+        value = decimal_string(row.get(source))
+        if value is not None:
+            result[target] = float(value)
+    return result
 
 
 def transform_recipes(
@@ -155,7 +182,7 @@ def transform_recipes(
 ) -> list[dict[str, Any]]:
     """Create database-ready recipes from canonical and scraped sources."""
     scraped_lookup = scraped_by_url(scraped_rows)
-    nutrition_statuses = nutrition_status_by_id(nutrition_rows)
+    nutrition_lookup = nutrition_by_id(nutrition_rows)
     output: list[dict[str, Any]] = []
 
     for canonical in canonical_rows:
@@ -169,7 +196,9 @@ def transform_recipes(
             or not isinstance(source_platform, str)
             or not isinstance(source_url, str)
         ):
-            raise TypeError("Canonical recipe requires string id, name, source_platform, and source_url.")
+            raise TypeError(
+                "Canonical recipe requires string id, name, source_platform, and source_url."
+            )
         UUID(recipe_id)
         normalized_name = normalize_text(name)
         normalized_platform = normalize_text(source_platform)
@@ -179,21 +208,23 @@ def transform_recipes(
         scraped = scraped_lookup.get(normalized_url)
         if scraped is None:
             raise ValueError(f"Recipe {recipe_id} has no scraped detail.")
-        nutrition_status = nutrition_statuses.get(recipe_id)
-        if nutrition_status is None:
-            raise ValueError(f"Recipe {recipe_id} has no nutrition status.")
+        nutrition = nutrition_lookup.get(recipe_id)
 
         servings = decimal_string(canonical.get("default_servings"), positive=True)
         if servings is None:
             raise ValueError(f"Recipe {recipe_id} has no default_servings.")
         dish_type = canonical.get("dish_type")
         cooking_method = canonical.get("cooking_method")
-        normalized_dish_type = normalize_text(dish_type) if isinstance(dish_type, str) else None
+        normalized_dish_type = (
+            normalize_text(dish_type) if isinstance(dish_type, str) else None
+        )
         normalized_cooking_method = (
             normalize_text(cooking_method) if isinstance(cooking_method, str) else None
         )
         raw_description = scraped.get("description")
-        description = normalize_text(raw_description) if isinstance(raw_description, str) else ""
+        description = (
+            normalize_text(raw_description) if isinstance(raw_description, str) else ""
+        )
         if not description or HASHTAG_ONLY.fullmatch(description):
             description = factual_description(
                 normalized_name,
@@ -224,9 +255,11 @@ def transform_recipes(
                 "total_protein_g": decimal_string(canonical.get("total_protein_g")),
                 "total_fat_g": decimal_string(canonical.get("total_fat_g")),
                 "total_carbs_g": decimal_string(canonical.get("total_carbs_g")),
-                "total_sugar_g": None,
-                "other_nutrients": {},
-                "nutrition_status": nutrition_status,
+                "total_sugar_g": decimal_string(
+                    nutrition.get("total_sugar_g") if nutrition else None
+                ),
+                "other_nutrients": other_nutrients(nutrition),
+                "nutrition_status": nutrition_status(nutrition),
                 "tags": {
                     "cooking_method": normalized_cooking_method,
                     "dish_type": normalized_dish_type,
