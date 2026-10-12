@@ -1,9 +1,9 @@
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
-from smart_input.ocr.groq_vision_ocr import GroqVisionOCR
 import smart_input.service as smart_input_service
-from smart_input.service import process_receipt_input
+from smart_input.ocr.groq_vision_ocr import GroqVisionOCR
+from smart_input.service import process_receipt_input, process_voice_input
 from smart_parser.pantry_parser import PantryEntityParser
 
 
@@ -115,3 +115,15 @@ def test_image_flow_preserves_quantity_provenance(monkeypatch) -> None:
 
     assert result["items"][0]["quantity_source"] == "extracted"
     assert result["items"][0]["category"]
+
+
+def test_voice_flow_enriches_master_ingredient_contract() -> None:
+    result = process_voice_input(transcript="Tôi có ba trăm gram cà chua")
+
+    item = result["items"][0]
+    assert item["raw_name"]
+    assert item["code"]
+    assert item["category"]
+    assert item["quantity_source"] == "extracted"
+    assert item["nutrition"]
+    assert "freshness_guide" in item

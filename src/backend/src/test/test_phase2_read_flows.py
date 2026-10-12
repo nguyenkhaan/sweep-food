@@ -236,7 +236,7 @@ async def test_mock_recommendation_populates_recipe_summary_without_extra_query(
     session = FakeRecommendationSession()
     service = RecommendationService(cast(AsyncSession, session))
 
-    response = await service.recommend(USER_ID, RecommendationRequestDTO(request="Súp"))
+    response = await service.recommend(USER_ID, RecommendationRequestDTO(items=[]))
 
     summary = response.items[0].recipe_summary
     assert summary is not None

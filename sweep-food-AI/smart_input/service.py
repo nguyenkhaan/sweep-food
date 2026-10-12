@@ -16,18 +16,17 @@ import base64
 import os
 import tempfile
 import time
-from pathlib import Path
 from typing import Any, Optional
 
-from smart_input.ocr.receipt_parser import parse_receipt_text
-from smart_input.ocr.label_parser import FoodLabelParser
-from smart_input.ocr.groq_vision_ocr import GroqVisionOCR
-from smart_input.ocr.sample_receipts import SAMPLE_RECEIPTS
-from smart_input.asr.speech_parser import parse_vietnamese_speech
-from smart_input.asr.sample_transcripts import SAMPLE_VOICE_QUERIES
-from smart_input.asr.groq_whisper import GroqWhisperClient
-from smart_input.asr.gipformer_engine import GipformerEngine
 from smart_input.asr.audio_preprocessor import preprocess_audio_bytes
+from smart_input.asr.gipformer_engine import GipformerEngine
+from smart_input.asr.groq_whisper import GroqWhisperClient
+from smart_input.asr.sample_transcripts import SAMPLE_VOICE_QUERIES
+from smart_input.asr.speech_parser import parse_vietnamese_speech
+from smart_input.ocr.groq_vision_ocr import GroqVisionOCR
+from smart_input.ocr.label_parser import FoodLabelParser
+from smart_input.ocr.receipt_parser import parse_receipt_text
+from smart_input.ocr.sample_receipts import SAMPLE_RECEIPTS
 
 # Global singleton instances for speed
 _ocr_pipeline: Optional[GroqVisionOCR] = None
@@ -46,6 +45,24 @@ def _serialize_label_item(label_item: dict[str, Any]) -> dict[str, Any]:
         "production_date": label_item.get("production_date"),
         "note": f"HSD: {label_item.get('expiry_date') or 'Theo bao bì'}",
     }
+
+
+def _enrich_contract_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    from smart_parser.pantry_parser import get_pantry_parser
+
+    pantry_parser = get_pantry_parser()
+    enriched_items = []
+    for item in items:
+        enriched = pantry_parser.enrich_item(item)
+        enriched_items.append(
+            {
+                **enriched,
+                "raw_name": str(item.get("name") or "").strip(),
+                "confidence": item.get("confidence"),
+                "nutrition": enriched.get("nutrition_per_100g"),
+            }
+        )
+    return enriched_items
 
 
 def get_ocr_pipeline() -> GroqVisionOCR:
@@ -161,28 +178,7 @@ def process_receipt_input(
             ocr = get_ocr_pipeline()
             res = ocr.recognize_image_bytes(image_bytes, max_dim=1600)
 
-            # Deep Matching into Pantry via Master Ingredients & Freshness KB
-            from smart_parser.pantry_parser import get_pantry_parser
-            pantry_parser = get_pantry_parser()
-
-            enriched_items = []
-            for it in res.get("items", []):
-                raw_name = it.get("name", "")
-                enriched = pantry_parser.enrich_item(it)
-                enriched_items.append({
-                    "raw_name": raw_name,
-                    "name": enriched["name"],
-                    "code": enriched.get("code"),
-                    "category": enriched.get("category"),
-                    "quantity_g": enriched["quantity_g"],
-                    "quantity_source": enriched["quantity_source"],
-                    "hours_to_expire": it.get("hours_to_expire") or enriched.get("hours_to_expire", 48.0),
-                    "expiry_date": it.get("expiry_date"),
-                    "note": it.get("note"),
-                    "nutrition": enriched.get("nutrition_per_100g"),
-                    "freshness_guide": enriched.get("freshness_guide"),
-                    "is_staple": enriched.get("is_staple", False),
-                })
+            enriched_items = _enrich_contract_items(res.get("items", []))
 
             res["items"] = enriched_items
             res["items_count"] = len(enriched_items)
@@ -209,9 +205,7 @@ def process_receipt_input(
         else:
             items = parse_receipt_text(raw)
 
-        from smart_parser.pantry_parser import get_pantry_parser
-        pantry_parser = get_pantry_parser()
-        enriched_items = [pantry_parser.enrich_item(it) for it in items]
+        enriched_items = _enrich_contract_items(items)
         return {
             "status": "success",
             "source": "text_input",
@@ -305,6 +299,7 @@ def process_voice_input(
     items = parse_vietnamese_speech(effective_text)
     if not items and effective_text != text_to_process:
         items = parse_vietnamese_speech(text_to_process)
+    items = _enrich_contract_items(items)
 
     latency_ms = round((time.time() - start_time) * 1000, 1)
 

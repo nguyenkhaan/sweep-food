@@ -12,6 +12,7 @@ from src.module.recommendations.recommendation_ai_service import (
 )
 from src.module.recommendations.recommendation_dto import RecommendationRequestDTO
 from src.service.sweep_food_ai_client import (
+    AIRecommendationIngredientDTO,
     AIRecommendationItemDTO,
     AIRecommendationRankingFeaturesDTO,
     AIRecommendationRequestDTO,
@@ -94,9 +95,27 @@ def _ai_item(recipe_id: UUID, rank_score: float) -> AIRecommendationItemDTO:
             protein_per_serving=25,
             prep_complexity=3.2,
         ),
-        matched_ingredients=[],
-        missing_ingredients=[],
-        optional_ingredients=[],
+        matched_ingredients=[
+            AIRecommendationIngredientDTO(
+                name="Spinach",
+                code="4001",
+                required_g=300,
+            )
+        ],
+        missing_ingredients=[
+            AIRecommendationIngredientDTO(
+                name="Salt",
+                code="13001",
+                required_g=5,
+            )
+        ],
+        optional_ingredients=[
+            AIRecommendationIngredientDTO(
+                name="Pepper",
+                code="13002",
+                required_g=1,
+            )
+        ],
         rescued_items=["Spinach"],
         status_badge="ready",
     )
@@ -165,6 +184,9 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
     ]
     assert response.items[0].recipe_name == "Backend salad"
     assert response.items[0].rank_score == 1.9
+    assert response.items[0].matched_ingredients[0].code == "4001"
+    assert response.items[0].missing_ingredients[0].required_g == 5
+    assert response.items[0].optional_ingredients[0].name == "Pepper"
     assert response.items[0].provider == "SWEEP_FOOD_AI"
     assert response.contract_version == "2"
     assert response.ranker_model == "LightGBM LambdaMART"

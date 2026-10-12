@@ -41,7 +41,7 @@ FEATURE_COLS: list[str] = [
     "prep_complexity",          # - core count + log(1 + steps)
 ]
 
-# Monotone direction per feature for LightGBM/XGBoost `monotone_constraints`.
+# Monotone direction per feature for LightGBM `monotone_constraints`.
 MONOTONE_CONSTRAINTS: list[int] = [1, -1, 1, -1, 1, 1, 0, 0, -1]
 
 CORE_ROLES = ("core",)

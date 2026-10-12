@@ -2,17 +2,19 @@ import os
 import struct
 import tempfile
 import wave
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 from fastapi.testclient import TestClient
-from web.app import app
-from smart_input.ocr.receipt_parser import parse_receipt_text
-from smart_input.ocr.label_parser import FoodLabelParser
-from smart_input.ocr.sample_receipts import SAMPLE_RECEIPTS
-from smart_input.asr.speech_parser import parse_vietnamese_speech
+
 from smart_input.asr.audio_preprocessor import convert_to_16k_mono_flac
-from smart_input.asr.groq_whisper import GroqWhisperClient
 from smart_input.asr.gipformer_engine import GipformerEngine
+from smart_input.asr.groq_whisper import GroqWhisperClient
+from smart_input.asr.speech_parser import parse_vietnamese_speech
+from smart_input.ocr.label_parser import FoodLabelParser
+from smart_input.ocr.receipt_parser import parse_receipt_text
+from smart_input.ocr.sample_receipts import SAMPLE_RECEIPTS
+from web.app import app
 
 
 @pytest.fixture(scope="module")
@@ -282,7 +284,11 @@ def test_image_preprocessor_downsampling_and_clahe():
     """Verify image preprocessor downscales high-res photos and computes compression ratio."""
     import cv2
     import numpy as np
-    from smart_input.ocr.image_preprocessor import preprocess_ocr_image, preprocess_image_bytes
+
+    from smart_input.ocr.image_preprocessor import (
+        preprocess_image_bytes,
+        preprocess_ocr_image,
+    )
 
     # Create synthetic high-res image (2400 x 1800)
     high_res = np.ones((2400, 1800, 3), dtype=np.uint8) * 240
@@ -307,6 +313,7 @@ def test_image_preprocessor_normalizes_dark_background():
     """Dark-mode screenshots become dark text on a light background for OCR."""
     import cv2
     import numpy as np
+
     from smart_input.ocr.image_preprocessor import preprocess_ocr_image
 
     image = np.full((80, 240, 3), 30, dtype=np.uint8)
@@ -364,3 +371,4 @@ def test_system_status_and_gpu_warmup(client):
     assert "cuda_available" in data
     assert "device_name" in data
     assert "ocr_device" in data
+    assert data["ranker_model"] == "LightGBM LambdaMART"

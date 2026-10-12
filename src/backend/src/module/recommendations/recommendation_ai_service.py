@@ -5,15 +5,15 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.model.enum_model import MeasurementUnit
 from src.model.recipe_model import RecipeModel
 from src.module.recommendations.recommendation_dto import (
     MockRecommendationAnalysisDTO,
+    RecommendationIngredientDTO,
     RecommendationItemDTO,
     RecommendationListResponseDTO,
-    RecommendationMissingIngredientDTO,
+    RecommendationRankingFeaturesDTO,
     RecommendationRequestDTO,
-    RecommendationScoreComponentsDTO,
+    RecommendationTimingsDTO,
 )
 from src.module.recommendations.recommendation_mapper import to_recipe_summary
 from src.service.sweep_food_ai_client import (
@@ -56,12 +56,16 @@ class RecommendationAIService:
                     recommendation,
                     recipe,
                     rank=len(items) + 1,
-                    model_version=ai_response.model_version,
                 )
             )
 
         return RecommendationListResponseDTO(
             request=body,
+            contract_version=ai_response.contract_version,
+            model_version=ai_response.model_version,
+            catalog_revision=ai_response.catalog_revision,
+            ranker_model=ai_response.ranker_model,
+            timings=RecommendationTimingsDTO(**ai_response.timings.model_dump()),
             analysis=MockRecommendationAnalysisDTO(
                 intent="meal_recommendation",
                 summary=(
@@ -88,40 +92,30 @@ class RecommendationAIService:
         recipe: RecipeModel,
         *,
         rank: int,
-        model_version: str,
     ) -> RecommendationItemDTO:
         return RecommendationItemDTO(
             recipe_id=recipe.id,
             recipe_name=recipe.name,
             rank=rank,
-            score=recommendation.score,
-            score_components=RecommendationScoreComponentsDTO(
-                **recommendation.score_components.model_dump()
+            rank_score=recommendation.rank_score,
+            ranking_features=RecommendationRankingFeaturesDTO(
+                **recommendation.ranking_features.model_dump()
             ),
+            matched_ingredients=[
+                RecommendationIngredientDTO(**item.model_dump())
+                for item in recommendation.matched_ingredients
+            ],
             missing_ingredients=[
-                RecommendationMissingIngredientDTO(
-                    master_ingredient_id=_uuid_or_none(item.code),
-                    name=item.name,
-                    quantity=item.required_g,
-                    unit=MeasurementUnit.GRAM,
-                )
+                RecommendationIngredientDTO(**item.model_dump())
                 for item in recommendation.missing_ingredients
             ],
-            near_expiry_ingredients=recommendation.rescued_items,
-            explanation=(
-                f"Ranked by {model_version} from pantry availability, expiry, "
-                "preferences, and missing purchases."
-            ),
+            optional_ingredients=[
+                RecommendationIngredientDTO(**item.model_dump())
+                for item in recommendation.optional_ingredients
+            ],
+            rescued_items=recommendation.rescued_items,
+            status_badge=recommendation.status_badge,
+            explanation="AI-ranked from pantry availability, expiry, and shopping gaps.",
             provider="SWEEP_FOOD_AI",
-            model_version=model_version,
             recipe_summary=to_recipe_summary(recipe),
         )
-
-
-def _uuid_or_none(value: str | None) -> UUID | None:
-    if value is None:
-        return None
-    try:
-        return UUID(value)
-    except ValueError:
-        return None

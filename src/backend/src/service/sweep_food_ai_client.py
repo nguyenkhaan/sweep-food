@@ -41,8 +41,8 @@ class AIHealthResponseDTO(BaseModel):
 
     warmed_up: bool
     device_name: str
-    xgb_device: str
     ocr_device: str
+    ranker_model: str = Field(min_length=1)
 
 
 class AIOcrItemDTO(BaseModel):
@@ -51,11 +51,17 @@ class AIOcrItemDTO(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     name: str = Field(min_length=1)
+    raw_name: str | None = None
+    code: str | None = None
+    category: str | None = None
     quantity_g: float | None = Field(default=None, gt=0)
     confidence: float | None = Field(default=None, ge=0, le=1)
     expiry_date: str | None = None
     production_date: str | None = None
-    quantity_source: str | None = None
+    quantity_source: Literal["extracted", "estimated"] | None = None
+    nutrition: dict[str, object] | None = None
+    freshness_guide: dict[str, object] | None = None
+    is_staple: bool | None = None
 
 
 class AIOcrResponseDTO(BaseModel):
@@ -77,9 +83,15 @@ class AIAsrItemDTO(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     name: str = Field(min_length=1)
+    raw_name: str | None = None
+    code: str | None = None
+    category: str | None = None
     quantity_g: float | None = Field(default=None, gt=0)
     confidence: float | None = Field(default=None, ge=0, le=1)
-    quantity_source: str | None = None
+    quantity_source: Literal["extracted", "estimated"] | None = None
+    nutrition: dict[str, object] | None = None
+    freshness_guide: dict[str, object] | None = None
+    is_staple: bool | None = None
 
 
 class AIAsrResponseDTO(BaseModel):
@@ -127,18 +139,33 @@ class AIRecommendationIngredientDTO(BaseModel):
 
     name: str = Field(min_length=1)
     code: str | None = None
-    required_g: float = Field(gt=0)
+    required_g: float = Field(ge=0)
 
 
-class AIRecommendationScoreComponentsDTO(BaseModel):
-    """Calibrated recommendation signals returned by AI."""
+class AIRecommendationRankingFeaturesDTO(BaseModel):
+    """Contextual features used by the active recipe ranker."""
 
     model_config = ConfigDict(extra="forbid")
 
-    expiration_utilization: float = Field(ge=0, le=1)
-    availability: float = Field(ge=0, le=1)
-    preference_fit: float = Field(ge=0, le=1)
-    purchase_minimization: float = Field(ge=0, le=1)
+    core_coverage: float = Field(ge=0, le=1)
+    core_missing_count: float = Field(ge=0)
+    secondary_coverage: float = Field(ge=0, le=1)
+    shopping_gap_items: float = Field(ge=0)
+    rescue_weight_g: float = Field(ge=0)
+    nutrition_confidence: float = Field(ge=0, le=1)
+    kcal_per_serving: float = Field(ge=0)
+    protein_per_serving: float = Field(ge=0)
+    prep_complexity: float = Field(ge=0)
+
+
+class AIRecommendationTimingsDTO(BaseModel):
+    """AI inference latency split in milliseconds."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    total_ms: float = Field(ge=0)
+    candidate_ms: float = Field(ge=0)
+    ranker_ms: float = Field(ge=0)
 
 
 class AIRecommendationItemDTO(BaseModel):
@@ -148,10 +175,13 @@ class AIRecommendationItemDTO(BaseModel):
 
     id: UUID
     name: str = Field(min_length=1)
-    score: float = Field(ge=0, le=1)
-    score_components: AIRecommendationScoreComponentsDTO
+    rank_score: float
+    ranking_features: AIRecommendationRankingFeaturesDTO
+    matched_ingredients: list[AIRecommendationIngredientDTO]
     missing_ingredients: list[AIRecommendationIngredientDTO]
+    optional_ingredients: list[AIRecommendationIngredientDTO]
     rescued_items: list[str]
+    status_badge: str = Field(min_length=1)
 
 
 class AIRecommendationResponseDTO(BaseModel):
@@ -160,8 +190,11 @@ class AIRecommendationResponseDTO(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     status: Literal["success", "empty"]
+    contract_version: Literal["2"]
     model_version: str = Field(min_length=1)
     catalog_revision: str = Field(min_length=1)
+    ranker_model: str = Field(min_length=1)
+    timings: AIRecommendationTimingsDTO
     recommendations: list[AIRecommendationItemDTO]
 
 

@@ -135,10 +135,17 @@ class ExtractionService:
             raw_text=result.raw_text,
             fields=ExtractionFields(
                 ingredient_name=item.name,
+                raw_name=item.raw_name,
+                master_ingredient_code=item.code,
+                category=item.category,
                 quantity=quantity,
+                quantity_source=item.quantity_source,
                 unit="GRAM" if quantity is not None else None,
                 packaged_at=packaged_at,
                 expires_at=expires_at,
+                nutrition=item.nutrition,
+                freshness_guide=item.freshness_guide,
+                is_staple=item.is_staple,
             ),
             confidence=confidence,
             warnings=warnings,
@@ -156,15 +163,21 @@ class ExtractionService:
         line_items = [
             InvoiceLineItem(
                 name=item.name,
+                raw_name=item.raw_name,
+                master_ingredient_code=item.code,
+                category=item.category,
                 quantity=(
                     item.quantity_g if item.quantity_source == "extracted" else None
                 ),
+                quantity_source=item.quantity_source,
                 unit=(
                     "GRAM"
                     if item.quantity_g is not None
                     and item.quantity_source == "extracted"
                     else None
                 ),
+                nutrition=item.nutrition,
+                freshness_guide=item.freshness_guide,
             )
             for item in result.items
         ]
@@ -209,9 +222,9 @@ class ExtractionService:
         warnings: list[str] = []
         if len(result.items) > 1:
             warnings.append("ADDITIONAL_ITEMS_OMITTED")
-        quantity = item.quantity_g if item.quantity_source == "spoken" else None
+        quantity = item.quantity_g if item.quantity_source == "extracted" else None
         if quantity is None:
-            warnings.append("QUANTITY_NOT_SPOKEN")
+            warnings.append("QUANTITY_NOT_EXTRACTED")
         confidence = (
             {"ingredient_name": item.confidence} if item.confidence is not None else {}
         )
@@ -223,8 +236,15 @@ class ExtractionService:
             raw_text=result.transcript,
             fields=ExtractionFields(
                 ingredient_name=item.name,
+                raw_name=item.raw_name,
+                master_ingredient_code=item.code,
+                category=item.category,
                 quantity=quantity,
+                quantity_source=item.quantity_source,
                 unit="GRAM" if quantity is not None else None,
+                nutrition=item.nutrition,
+                freshness_guide=item.freshness_guide,
+                is_staple=item.is_staple,
             ),
             confidence=confidence,
             warnings=warnings,

@@ -9,20 +9,21 @@ Powered by:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
-import sys
 import re
+import sys
 import time
-from pathlib import Path
 from collections import Counter
-from typing import Any
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, File, Form, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class SmartInputOcrRequest(BaseModel):
@@ -42,19 +43,27 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
 
 import lightgbm as lgb
-from src.recommendation.candidate_generator import CandidateGenerator, extract_pantry_name_aliases
-from src.recommendation.pantry_resolver import (
-    build_master_alias_index,
-    resolve_pantry_items,
-    get_effective_codes,
-)
-from src.recommendation.contextual_features import extract_contextual_features, FEATURE_COLS
-from src.recommendation.heuristic_baseline import compute_domain_heuristic_score
+
 from smart_input.service import (
+    get_smart_input_samples,
     process_receipt_input,
     process_voice_input,
-    get_smart_input_samples,
     warmup_smart_input_gpu,
+)
+from src.recommendation.candidate_generator import (
+    CandidateGenerator,
+    extract_pantry_name_aliases,
+)
+from src.recommendation.contextual_features import (
+    FEATURE_COLS,
+    extract_contextual_features,
+)
+from src.recommendation.heuristic_baseline import compute_domain_heuristic_score
+from src.recommendation.pantry_resolver import (
+    build_master_alias_index,
+    get_effective_codes,
+    normalize,
+    resolve_pantry_items,
 )
 
 # Global GPU Acceleration Status
@@ -74,6 +83,8 @@ MAP_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/recipe_canonical_mappi
 DETAILED_JSON = os.path.join(ROOT_DIR, "data/processed/recipes/recipes_restructured_detailed.json")
 MASTER_VDD_CSV = os.path.join(ROOT_DIR, "data/processed/viendinhduong/master_ingredients_nutrition.csv")
 LGBM_MODEL_PATH = os.path.join(ROOT_DIR, "data/training/lgbm_contextual.txt")
+CONTRACT_VERSION = "2"
+CATALOG_REVISION = f"sha256:{hashlib.sha256(Path(RECIPES_JSON).read_bytes()).hexdigest()}"
 
 print("Loading knowledge base and production models...")
 print(f"Active recipe knowledge base: {RECIPES_JSON}")
@@ -141,6 +152,8 @@ if os.path.exists(LGBM_MODEL_PATH):
 
 if lgbm_ranker is None:
     print("Using High-Precision Culinary Domain Heuristic Ranker (Zero-Dependency Mode).")
+MODEL_VERSION = "lgbm-contextual-v1" if lgbm_ranker is not None else "domain-heuristic-v1"
+RANKER_MODEL_NAME = "LightGBM LambdaMART" if lgbm_ranker is not None else "Domain Heuristic"
 # Load master ingredients for autocomplete (name & code) and category mapping
 df_master = pd.read_csv(MASTER_VDD_CSV)
 MASTER_CODE_TO_CATEGORY = {str(row["code"]).strip(): str(row["category_vi"]).strip() for _, row in df_master.iterrows()}
@@ -228,6 +241,35 @@ def has_gout_forbidden_ingredients(recipe_ings: list[dict]) -> bool:
     return False
 
 
+def has_excluded_ingredients(recipe_ings: list[dict], excluded_names: list[str]) -> bool:
+    normalized_names = {normalize(name) for name in excluded_names if normalize(name)}
+    resolved = resolve_pantry_items(
+        ({"name": name} for name in normalized_names),
+        MASTER_ALIAS_INDEX,
+    )
+    excluded_codes = {code for item in resolved for code in get_effective_codes(item)}
+
+    for ingredient in recipe_ings:
+        code = str(ingredient.get("master_ingredient_code") or "").strip()
+        code = code.removesuffix(".0")
+        if code and code in excluded_codes:
+            return True
+        ingredient_names = (
+            ingredient.get("master_ingredient_name"),
+            ingredient.get("cleaned_name"),
+            ingredient.get("raw_text"),
+        )
+        for raw_name in ingredient_names:
+            candidate = normalize(raw_name)
+            if any(
+                candidate == excluded
+                or re.search(rf"(?<!\w){re.escape(excluded)}(?!\w)", candidate)
+                for excluded in normalized_names
+            ):
+                return True
+    return False
+
+
 master_items = []
 for _, row in df_master.iterrows():
     c_val = str(row["code"]).strip()
@@ -303,18 +345,26 @@ def startup_gpu_warmup():
 # Pydantic Schemas
 # -----------------------------------------------------------------------------
 class PantryItem(BaseModel):
-    name: str
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(min_length=1)
     code: str | None = None
-    quantity_g: float = 200.0
+    quantity_g: float = Field(default=200.0, gt=0)
     hours_to_expire: float = 72.0
     is_staple: bool = False
 
 
 class RecommendRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     items: list[PantryItem]
-    household_size: float = 4.0
-    max_cooking_time_min: float = 45.0
+    household_size: float = Field(default=4.0, gt=0)
+    max_cooking_time_min: float = Field(default=45.0, gt=0)
     scenario_type: str = "custom"
+    dietary_restrictions: list[str] = Field(default_factory=list)
+    allergies: list[str] = Field(default_factory=list)
+    disliked_ingredients: list[str] = Field(default_factory=list)
+    preferred_cuisines: list[str] = Field(default_factory=list)
 
 
 class SmartOcrRequest(BaseModel):
@@ -369,6 +419,7 @@ def get_system_status():
     """Returns GPU status, VRAM usage, and active inference engines."""
     import torch
     status = dict(SYSTEM_GPU_STATUS)
+    status["ranker_model"] = RANKER_MODEL_NAME
     if torch.cuda.is_available():
         status["vram_allocated_mb"] = round(torch.cuda.memory_allocated() / (1024 ** 2), 2)
         status["vram_reserved_mb"] = round(torch.cuda.memory_reserved() / (1024 ** 2), 2)
@@ -407,6 +458,15 @@ def recommend_recipes(req: RecommendRequest):
     if not raw_candidates:
         return {
             "status": "empty",
+            "contract_version": CONTRACT_VERSION,
+            "model_version": MODEL_VERSION,
+            "catalog_revision": CATALOG_REVISION,
+            "ranker_model": RANKER_MODEL_NAME,
+            "timings": {
+                "total_ms": round((time.time() - t0) * 1000, 2),
+                "candidate_ms": cand_time_ms,
+                "ranker_ms": 0.0,
+            },
             "message": "Không tìm thấy món ăn phù hợp với nguyên liệu hiện tại. Thử thêm thịt, cá hoặc rau nhé!",
             "candidates_count": 0,
             "recommendations": []
@@ -414,6 +474,26 @@ def recommend_recipes(req: RecommendRequest):
 
     # Hard Constraint Filtering Layer
     scenario = (pantry_dict.get("scenario_type") or "custom").lower().strip()
+    restrictions = {normalize(value) for value in req.dietary_restrictions}
+    vegetarian = (
+        scenario in ("an_chay_ram_mung_mot", "an_chay", "chay")
+        or "chay" in scenario
+        or bool(restrictions & {"vegetarian", "vegan", "ăn chay", "an chay", "chay"})
+    )
+    diabetic = scenario in ("nguoi_tieu_duong", "tieu_duong", "diabetes") or bool(
+        restrictions & {"diabetic", "diabetes", "tiểu đường", "tieu duong"}
+    )
+    low_sodium = scenario in ("nguoi_cao_huyet_ap", "cao_huyet_ap", "hypertension") or bool(
+        restrictions & {"low sodium", "hypertension", "cao huyết áp", "cao huyet ap"}
+    )
+    gout = scenario in ("nguoi_benh_gout", "gout") or "gout" in restrictions
+    keto = scenario in ("an_kieng_keto_lowcarb", "keto", "lowcarb") or bool(
+        restrictions & {"keto", "low carb", "lowcarb"}
+    )
+    sensitive_stomach = scenario in ("nguoi_dau_da_day", "dau_da_day") or bool(
+        restrictions & {"đau dạ dày", "dau da day", "sensitive stomach"}
+    )
+    excluded_ingredients = req.allergies + req.disliked_ingredients
     candidates = []
     for cand in raw_candidates:
         # a. Data Quality Safety Filter
@@ -424,31 +504,32 @@ def recommend_recipes(req: RecommendRequest):
         r_id = cand["id"]
         r_ings = recipe_ings_map.get(r_id, [])
 
-        if scenario in ("an_chay_ram_mung_mot", "an_chay", "chay") or "chay" in scenario:
+        if excluded_ingredients and has_excluded_ingredients(r_ings, excluded_ingredients):
+            continue
+        if vegetarian:
             diet_tags = (cand.get("diet_tags") or "").lower()
             if "ăn chay" not in diet_tags:
                 continue
             if has_animal_ingredients(r_ings):
                 continue
-        elif scenario == "nguoi_tieu_duong":
+        if diabetic:
             sugar = float(cand.get("sugar_g_per_serving") or 0.0)
             carbs = float(cand.get("carbs_per_serving") or 0.0)
             if sugar >= 10.0 or carbs >= 45.0:
                 continue
-        elif scenario == "nguoi_cao_huyet_ap":
+        if low_sodium:
             sodium = float(cand.get("sodium_mg_per_serving") or 0.0)
             servings = max(1.0, float(cand.get("default_servings") or 4.0))
             tot_sodium_per_serv = float(cand.get("total_sodium_mg") or 0.0) / servings
             if sodium >= 1000.0 or tot_sodium_per_serv >= 1000.0:
                 continue
-        elif scenario == "nguoi_benh_gout":
-            if has_gout_forbidden_ingredients(r_ings):
-                continue
-        elif scenario in ("an_kieng_keto_lowcarb", "keto", "lowcarb"):
+        if gout and has_gout_forbidden_ingredients(r_ings):
+            continue
+        if keto:
             carbs = float(cand.get("carbs_per_serving") or 0.0)
             if carbs > 20.0:
                 continue
-        elif scenario == "nguoi_dau_da_day":
+        if sensitive_stomach:
             method = (cand.get("cooking_method") or "").strip().lower()
             if method in ("chiên/rán", "chiên", "rán"):
                 continue
@@ -458,6 +539,15 @@ def recommend_recipes(req: RecommendRequest):
     if not candidates:
         return {
             "status": "empty",
+            "contract_version": CONTRACT_VERSION,
+            "model_version": MODEL_VERSION,
+            "catalog_revision": CATALOG_REVISION,
+            "ranker_model": RANKER_MODEL_NAME,
+            "timings": {
+                "total_ms": round((time.time() - t0) * 1000, 2),
+                "candidate_ms": cand_time_ms,
+                "ranker_ms": 0.0,
+            },
             "message": "Không tìm thấy món ăn phù hợp với yêu cầu dinh dưỡng và nguyên liệu hiện tại. Hãy thử điều chỉnh bộ lọc hoặc thêm nguyên liệu khác!",
             "candidates_count": 0,
             "recommendations": []
@@ -466,7 +556,6 @@ def recommend_recipes(req: RecommendRequest):
     # 2 & 3. Predict Scores via LightGBM Ranker or Domain Heuristic Ranker
     t_rank_start = time.time()
 
-    active_ranker_name = "Domain Heuristic"
     rows = []
     if lgbm_ranker is not None:
         lgbm_rows = []
@@ -478,7 +567,6 @@ def recommend_recipes(req: RecommendRequest):
             lgbm_rows.append([f_dict[col] for col in FEATURE_COLS])
             rows.append(f_dict)
         scores = lgbm_ranker.predict(np.array(lgbm_rows))
-        active_ranker_name = "LightGBM LambdaMART (9-Feature Contextual)"
     else:
         for cand in candidates:
             r_id = cand["id"]
@@ -490,7 +578,6 @@ def recommend_recipes(req: RecommendRequest):
             compute_domain_heuristic_score(pantry_dict, cand, recipe_ings_map.get(cand["id"], []))
             for cand in candidates
         ]
-        active_ranker_name = "Domain Heuristic"
     rank_time_ms = round((time.time() - t_rank_start) * 1000, 2)
 
     # 4. Rank & Format Top Recommendations
@@ -683,6 +770,10 @@ def recommend_recipes(req: RecommendRequest):
             "id": r_id,
             "name": full_rec["name"],
             "score": float(score),
+            "rank_score": float(score),
+            "ranking_features": {
+                feature: float(feats[feature]) for feature in FEATURE_COLS
+            },
             "cooking_time_min": int(float(full_rec.get("estimated_cooking_minutes") or 30)),
             "cooking_method": full_rec.get("cooking_method", "Khác"),
             "dish_type": full_rec.get("dish_type", "Món chính"),
@@ -797,10 +888,18 @@ def recommend_recipes(req: RecommendRequest):
 
     return {
         "status": "success",
+        "contract_version": CONTRACT_VERSION,
+        "model_version": MODEL_VERSION,
+        "catalog_revision": CATALOG_REVISION,
+        "ranker_model": RANKER_MODEL_NAME,
+        "timings": {
+            "total_ms": total_latency_ms,
+            "candidate_ms": cand_time_ms,
+            "ranker_ms": rank_time_ms,
+        },
         "total_latency_ms": total_latency_ms,
         "candidate_retrieval_ms": cand_time_ms,
         "ranker_inference_ms": rank_time_ms,
-        "ranker_model": active_ranker_name,
         "candidates_evaluated": len(candidates),
         "gpu_accelerated": SYSTEM_GPU_STATUS["cuda_available"],
         "device": SYSTEM_GPU_STATUS["device_name"],

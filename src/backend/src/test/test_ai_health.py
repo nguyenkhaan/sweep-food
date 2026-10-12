@@ -45,8 +45,8 @@ async def test_ai_health_returns_ready_without_authentication(
         AIHealthResponseDTO(
             warmed_up=True,
             device_name="cpu",
-            xgb_device="cpu",
             ocr_device="cpu",
+            ranker_model="LightGBM LambdaMART",
         )
     )
     try:
@@ -70,8 +70,8 @@ async def test_ai_health_rejects_service_that_is_still_warming_up(
         AIHealthResponseDTO(
             warmed_up=False,
             device_name="cpu",
-            xgb_device="cpu",
             ocr_device="cpu",
+            ranker_model="LightGBM LambdaMART",
         )
     )
     try:

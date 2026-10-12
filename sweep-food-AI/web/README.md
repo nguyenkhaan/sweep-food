@@ -7,7 +7,7 @@ You can list all discoverable environments with `conda info --envs`
 
 # 🥗 SweepFood AI — Hướng Dẫn Cài Đặt & Khởi Động Web Application
 
-Tài liệu này hướng dẫn chi tiết cách thiết lập môi trường và khởi động ứng dụng Web **SweepFood AI** (giao diện hiện đại xây dựng trên nền tảng **FastAPI**, **Tailwind CSS v4**, mô hình xếp hạng **XGBoost Ranker LTR** và bộ nhập liệu đa phương thức **Smart Input OCR/ASR**).
+Tài liệu này hướng dẫn thiết lập và khởi động **SweepFood AI** với FastAPI, LightGBM LambdaMART và Smart Input OCR/ASR qua Groq.
 
 ---
 
@@ -15,7 +15,7 @@ Tài liệu này hướng dẫn chi tiết cách thiết lập môi trường v�
 
 - **Hệ điều hành:** Windows 10/11, Linux hoặc macOS.
 - **Python:** Khuyến nghị Python 3.10.
-- **Môi trường Conda:** Đã cài đặt môi trường `ocr_env` (hoặc môi trường chứa các thư viện PyTorch, XGBoost, FastAPI, OpenCV, VietOCR, Uvicorn).
+- **Môi trường Python:** Đã cài dependency trong `requirements.txt` và cấu hình `GROQ_API_KEY`.
 - **Phần cứng GPU (Tùy chọn nhưng khuyến nghị):**
   - Card đồ họa rời hỗ trợ NVIDIA CUDA (ví dụ: NVIDIA GeForce RTX 3050/4060 trở lên, CUDA 12.x).
   - *Lưu ý:* Nếu máy tính không có GPU rời, hệ thống sẽ tự động chuyển sang chế độ **CPU Fallback** an toàn và tiếp tục hoạt động bình thường.
@@ -75,8 +75,8 @@ Khi server khởi động thành công, màn hình terminal sẽ hiển thị th
 ============================================================
  SweepFood AI — Initializing GPU Hardware Acceleration...
 ============================================================
-[GPU] XGBoost Ranker successfully loaded on CUDA (NVIDIA GeForce RTX 4060 Laptop GPU)
-[GPU] Smart Input OCR: PaddleOCR+VietOCR (CUDA) (Allocated VRAM: 145.68 MB)
+[Ranker] Production LightGBM LambdaMART (9 features) ready for inference.
+[Smart Input] OCR Engine: Groq Vision API
 ============================================================
  All models active in GPU VRAM. Zero cold-start latency achieved!
 
@@ -92,8 +92,8 @@ Mở trình duyệt web bất kỳ (Chrome, Edge, Brave, Firefox) và truy cập
 
 1. **Khởi động sẵn GPU (Zero Cold-Start):**
    - Ngay trong sự kiện khởi động server (`@app.on_event("startup")`), hệ thống tự động:
-     - Nạp mô hình **XGBoost Ranker** lên CUDA và chạy suy luận giả định để biên dịch kernel.
-     - Khởi tạo kiến trúc VGG-Transformer của **VietOCR** lên thiết bị `cuda:0` và khóa sẵn **~162 MB VRAM**.
+     - Nạp mô hình **LightGBM LambdaMART** và chạy một dự đoán warm-up.
+     - Khởi tạo client Groq Vision cho OCR và Groq Whisper cho ASR.
      - Giúp toàn bộ các request OCR và gợi ý món ăn đầu tiên của người dùng phản hồi ngay tức thì (dưới 5ms cho gợi ý món, không bị trễ 2-3 giây khởi tạo CUDA).
 2. **Kiểm tra trạng thái hệ thống thời gian thực:**
    - Bạn có thể kiểm tra trạng thái GPU và bộ nhớ VRAM bất kỳ lúc nào qua endpoint:
@@ -105,8 +105,8 @@ Mở trình duyệt web bất kỳ (Chrome, Edge, Brave, Firefox) và truy cập
      {
        "cuda_available": true,
        "device_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
-       "xgb_device": "cuda",
-       "ocr_device": "PaddleOCR+VietOCR (CUDA)",
+       "ranker_model": "LightGBM LambdaMART",
+       "ocr_device": "Groq API (qwen/qwen3.8-27b)",
        "vram_allocated_mb": 0.0,
        "warmed_up": true,
        "vram_reserved_mb": 162.0
@@ -122,7 +122,7 @@ Mở trình duyệt web bất kỳ (Chrome, Edge, Brave, Firefox) và truy cập
 - Nhập nguyên liệu có sẵn trong tủ lạnh (hỗ trợ gợi ý tự động Autocomplete theo Viện Dinh Dưỡng Quốc Gia VDD).
 - Điền khối lượng (gram) và thời gian bảo quản còn lại (giờ).
 - Điều chỉnh số người ăn và thời gian nấu tối đa bằng thanh trượt.
-- Nhấn **"Gợi Ý Thực Đơn Thông Minh"** để nhận Top món ăn được tối ưu theo mô hình toán học *Continuous Quantity Elasticity* và xếp hạng bởi *XGBoost Ranker*.
+- Nhấn **"Gợi Ý Thực Đơn Thông Minh"** để nhận danh sách món được xếp hạng bởi LightGBM LambdaMART theo chín đặc trưng contextual.
 - Nhấn vào từng món để xem chi tiết hướng dẫn nấu từng bước, tỷ lệ dinh dưỡng (Calo, Đạm, Béo, Tinh bột) và liên kết công thức gốc.
 
 ### 📸 Tab 2: Quét Hóa Đơn & Nhãn Mác (Smart OCR)

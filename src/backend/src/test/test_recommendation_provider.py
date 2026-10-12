@@ -75,7 +75,7 @@ async def test_mock_recommendations_are_ranked_and_keep_real_recipe_ids() -> Non
 
     response = await service.recommend(
         UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b101"),
-        RecommendationRequestDTO(request="Món nhanh"),
+        RecommendationRequestDTO(items=[]),
     )
 
     assert [item.rank for item in response.items] == [1, 2]

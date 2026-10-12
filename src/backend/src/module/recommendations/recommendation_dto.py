@@ -5,7 +5,6 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from src.model.enum_model import MeasurementUnit
 from src.module.recipes.recipe_dto import RecipeNutritionDTO
 
 
@@ -44,22 +43,34 @@ class MockRecommendationAnalysisDTO(BaseModel):
     is_mock: bool
 
 
-class RecommendationScoreComponentsDTO(BaseModel):
-    """Keep the production E/A/P/U explanation shape stable."""
+class RecommendationRankingFeaturesDTO(BaseModel):
+    """Contextual feature values returned by SweepFood AI v2."""
 
-    expiration_utilization: float = Field(ge=0, le=1)
-    availability: float = Field(ge=0, le=1)
-    preference_fit: float = Field(ge=0, le=1)
-    purchase_minimization: float = Field(ge=0, le=1)
+    core_coverage: float = Field(ge=0, le=1)
+    core_missing_count: float = Field(ge=0)
+    secondary_coverage: float = Field(ge=0, le=1)
+    shopping_gap_items: float = Field(ge=0)
+    rescue_weight_g: float = Field(ge=0)
+    nutrition_confidence: float = Field(ge=0, le=1)
+    kcal_per_serving: float = Field(ge=0)
+    protein_per_serving: float = Field(ge=0)
+    prep_complexity: float = Field(ge=0)
 
 
-class RecommendationMissingIngredientDTO(BaseModel):
-    """Describe one ingredient the user would need to buy."""
+class RecommendationIngredientDTO(BaseModel):
+    """Describe one recipe ingredient from the AI result."""
 
-    master_ingredient_id: UUID | None
-    name: str
-    quantity: float = Field(gt=0)
-    unit: MeasurementUnit
+    name: str = Field(min_length=1)
+    code: str | None = None
+    required_g: float = Field(ge=0)
+
+
+class RecommendationTimingsDTO(BaseModel):
+    """AI inference latency split in milliseconds."""
+
+    total_ms: float = Field(ge=0)
+    candidate_ms: float = Field(ge=0)
+    ranker_ms: float = Field(ge=0)
 
 
 class RecommendationRecipeSummaryDTO(BaseModel):
@@ -74,18 +85,20 @@ class RecommendationRecipeSummaryDTO(BaseModel):
 
 
 class RecommendationItemDTO(BaseModel):
-    """One mock-ranked, catalog-backed recipe choice."""
+    """One catalog-backed recipe in the AI-defined order."""
 
     recipe_id: UUID
     recipe_name: str
     rank: int = Field(ge=1)
-    score: float = Field(ge=0, le=1)
-    score_components: RecommendationScoreComponentsDTO
-    missing_ingredients: list[RecommendationMissingIngredientDTO]
-    near_expiry_ingredients: list[str]
+    rank_score: float
+    ranking_features: RecommendationRankingFeaturesDTO
+    matched_ingredients: list[RecommendationIngredientDTO]
+    missing_ingredients: list[RecommendationIngredientDTO]
+    optional_ingredients: list[RecommendationIngredientDTO]
+    rescued_items: list[str]
+    status_badge: str
     explanation: str
     provider: str
-    model_version: str
     recipe_summary: RecommendationRecipeSummaryDTO | None = None
 
 
@@ -93,6 +106,11 @@ class RecommendationListResponseDTO(BaseModel):
     """Return ranked, catalog-backed recipe choices."""
 
     request: RecommendationRequestDTO
+    contract_version: str
+    model_version: str
+    catalog_revision: str
+    ranker_model: str
+    timings: RecommendationTimingsDTO
     analysis: MockRecommendationAnalysisDTO
     items: list[RecommendationItemDTO]
     warnings: list[str] = Field(default_factory=list)

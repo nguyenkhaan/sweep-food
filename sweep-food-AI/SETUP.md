@@ -11,8 +11,8 @@ Tài liệu này hướng dẫn chi tiết cách:
 
 Hệ thống sử dụng môi trường Conda `ocr_env` đã cài đặt đầy đủ:
 - **FastAPI** + **Uvicorn** (Web Server).
-- **PyTorch** + **PaddleOCR** + **VietOCR** (Smart Input OCR hỗ trợ GPU CUDA).
-- **XGBoost** + **LightGBM** (Mô hình gợi ý thực đơn Learning-to-Rank).
+- **Groq Vision** (Smart Input OCR; cần `GROQ_API_KEY`).
+- **LightGBM** (mô hình gợi ý thực đơn Learning-to-Rank).
 - **pyngrok** + **ngrok v3** (Quản lý đường hầm HTTPS công khai).
 
 Đường dẫn Python thực thi:
@@ -103,7 +103,7 @@ Bây giờ bạn có thể:
 1. Mở link Web Mockup (local hoặc ngrok).
 2. Tìm khối **Smart Input OCR**.
 3. Bấm **Chọn ảnh hóa đơn / Tem cân** (hoặc chọn tệp mẫu có sẵn `scratch/hoadon.webp`).
-4. Hệ thống VietOCR + PaddleOCR chạy trên GPU CUDA sẽ nhận diện văn bản, chuẩn hóa tên thực phẩm Việt Nam và đưa thẳng vào danh sách tủ lạnh.
+4. Groq Vision nhận diện văn bản, sau đó pantry parser chuẩn hóa tên thực phẩm Việt Nam và đưa vào danh sách tủ lạnh.
 
 ### Test qua cURL (Terminal / Postman)
 Gửi ảnh trực tiếp qua API:

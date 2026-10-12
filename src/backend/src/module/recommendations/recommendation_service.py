@@ -10,8 +10,9 @@ from src.module.recommendations.recommendation_dto import (
     MockRecommendationAnalysisDTO,
     RecommendationItemDTO,
     RecommendationListResponseDTO,
+    RecommendationRankingFeaturesDTO,
     RecommendationRequestDTO,
-    RecommendationScoreComponentsDTO,
+    RecommendationTimingsDTO,
 )
 from src.module.recommendations.recommendation_mapper import to_recipe_summary
 
@@ -36,6 +37,15 @@ class RecommendationService:
         recipes = list(result.scalars().all())
         return RecommendationListResponseDTO(
             request=body,
+            contract_version="2",
+            model_version="mock-v2",
+            catalog_revision="mock-catalog",
+            ranker_model="Deterministic Mock",
+            timings=RecommendationTimingsDTO(
+                total_ms=0,
+                candidate_ms=0,
+                ranker_ms=0,
+            ),
             analysis=MockRecommendationAnalysisDTO(
                 intent="meal_recommendation",
                 summary=(
@@ -52,34 +62,28 @@ class RecommendationService:
     @staticmethod
     def _to_item(recipe: RecipeModel, rank: int) -> RecommendationItemDTO:
         """Map one real catalog recipe to a stable mock ranking response."""
-        expiration_utilization = max(0.5, 0.9 - (rank - 1) * 0.08)
-        availability = max(0.5, 0.85 - (rank - 1) * 0.07)
-        preference_fit = 0.75
-        purchase_minimization = max(0.5, 0.8 - (rank - 1) * 0.05)
-        score = (
-            0.4 * expiration_utilization
-            + 0.3 * availability
-            + 0.2 * preference_fit
-            + 0.1 * purchase_minimization
-        )
         return RecommendationItemDTO(
             recipe_id=recipe.id,
             recipe_name=recipe.name,
             rank=rank,
-            score=round(score, 3),
-            score_components=RecommendationScoreComponentsDTO(
-                expiration_utilization=expiration_utilization,
-                availability=availability,
-                preference_fit=preference_fit,
-                purchase_minimization=purchase_minimization,
+            rank_score=float(6 - rank),
+            ranking_features=RecommendationRankingFeaturesDTO(
+                core_coverage=0,
+                core_missing_count=0,
+                secondary_coverage=0,
+                shopping_gap_items=0,
+                rescue_weight_g=0,
+                nutrition_confidence=0,
+                kcal_per_serving=0,
+                protein_per_serving=0,
+                prep_complexity=0,
             ),
+            matched_ingredients=[],
             missing_ingredients=[],
-            near_expiry_ingredients=[],
-            explanation=(
-                "Mock score preserves the E/A/P/U response contract; live inventory "
-                "analysis will be supplied by the production AI provider."
-            ),
+            optional_ingredients=[],
+            rescued_items=[],
+            status_badge="mock",
+            explanation="Deterministic mock ordering; no AI inference was performed.",
             provider="MOCK",
-            model_version="mock-v1",
             recipe_summary=to_recipe_summary(recipe),
         )
