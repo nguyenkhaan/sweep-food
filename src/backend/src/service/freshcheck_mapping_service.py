@@ -4,12 +4,22 @@ from dataclasses import dataclass
 import re
 from uuid import UUID
 
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.model.freshcheck_mapping_model import MasterIngredientFreshCheckMappingModel
+from src.model.freshcheck_model import FreshCheckIngredientModel
+from src.model.master_ingredient_model import MasterIngredientModel
 _KB_VERSION_PATTERN = re.compile(r"[0-9]+\.[0-9]+\.[0-9]+")
 _MATCH_METHODS = frozenset({"EXACT_CODE", "EXACT_NAME", "MANUAL_REVIEW"})
 
 
 class MappingManifestValidationError(ValueError):
     """Raised when a reviewed mapping manifest cannot be seeded safely."""
+
+
+class MappingSeedError(ValueError):
+    """Raised when a reviewed mapping cannot be persisted safely."""
 
 
 
@@ -73,6 +83,77 @@ class MappingManifest:
 
     kb_version: str
     mappings: tuple[ReviewedMapping, ...]
+
+
+class FreshCheckMappingSeedService:
+    """Persist reviewed mappings without updating an existing release mapping."""
+
+    def __init__(self, session: AsyncSession) -> None:
+        self._session = session
+
+    async def seed(self, manifest: MappingManifest) -> int:
+        """Insert missing mappings and reject invalid or conflicting references."""
+        inserted_count = 0
+        for mapping in manifest.mappings:
+            await self._validate_references(manifest.kb_version, mapping)
+            existing_mapping = await self._session.scalar(
+                select(MasterIngredientFreshCheckMappingModel).where(
+                    MasterIngredientFreshCheckMappingModel.master_ingredient_id
+                    == mapping.master_ingredient_id,
+                    MasterIngredientFreshCheckMappingModel.kb_version
+                    == manifest.kb_version,
+                )
+            )
+            if existing_mapping is not None:
+                self._assert_idempotent(existing_mapping, mapping)
+                continue
+            self._session.add(
+                MasterIngredientFreshCheckMappingModel(
+                    master_ingredient_id=mapping.master_ingredient_id,
+                    kb_version=manifest.kb_version,
+                    freshcheck_ingredient_id=mapping.freshcheck_ingredient_id,
+                    match_method=mapping.match_method,
+                    reviewed_by=mapping.reviewed_by,
+                    note=mapping.note,
+                )
+            )
+            inserted_count += 1
+        await self._session.flush()
+        return inserted_count
+
+    async def _validate_references(
+        self,
+        kb_version: str,
+        mapping: ReviewedMapping,
+    ) -> None:
+        master_ingredient = await self._session.get(
+            MasterIngredientModel,
+            mapping.master_ingredient_id,
+        )
+        if master_ingredient is None:
+            raise MappingSeedError("Mapping references a missing master ingredient.")
+        freshcheck_ingredient = await self._session.get(
+            FreshCheckIngredientModel,
+            (kb_version, mapping.freshcheck_ingredient_id),
+        )
+        if freshcheck_ingredient is None:
+            raise MappingSeedError("Mapping references a missing FreshCheck ingredient.")
+
+    @staticmethod
+    def _assert_idempotent(
+        existing_mapping: MasterIngredientFreshCheckMappingModel,
+        mapping: ReviewedMapping,
+    ) -> None:
+        if (
+            existing_mapping.freshcheck_ingredient_id
+            != mapping.freshcheck_ingredient_id
+            or existing_mapping.match_method != mapping.match_method
+            or existing_mapping.reviewed_by != mapping.reviewed_by
+            or existing_mapping.note != mapping.note
+        ):
+            raise MappingSeedError(
+                "Mapping already exists with different reviewed content."
+            )
 
 
 def build_mapping_candidates(

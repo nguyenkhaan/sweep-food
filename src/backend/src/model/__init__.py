@@ -15,6 +15,7 @@ from src.model.freshcheck_model import (
     FreshCheckKBVersionModel,
     FreshCheckSourceModel,
 )
+from src.model.freshcheck_mapping_model import MasterIngredientFreshCheckMappingModel
 from src.model.history_model import IngredientUsageHistoryModel
 from src.model.ingredient_alias_model import IngredientAliasModel
 from src.model.ingredient_category_model import IngredientCategoryModel
@@ -53,6 +54,7 @@ __all__ = [
     "FreshCheckIngredientModel",
     "FreshCheckKBVersionModel",
     "FreshCheckSourceModel",
+    "MasterIngredientFreshCheckMappingModel",
     "IngredientAliasModel",
     "IngredientCategoryModel",
     "IngredientUsageHistoryModel",

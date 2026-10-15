@@ -1,13 +1,17 @@
 """Unit tests for deterministic FreshCheck mapping candidates."""
 
 from uuid import UUID
+from unittest.mock import AsyncMock, Mock
 
 import pytest
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.service.freshcheck_mapping_service import (
     CatalogIngredient,
     FreshCheckIngredientReference,
+    FreshCheckMappingSeedService,
     MappingManifestValidationError,
+    MappingSeedError,
     build_mapping_candidates,
     parse_mapping_manifest,
 )
@@ -77,3 +81,54 @@ def test_parse_mapping_manifest_rejects_null_and_duplicate_master_ids() -> None:
     manifest["mappings"][1]["freshcheck_ingredient_id"] = "FC-OTHER"
     with pytest.raises(MappingManifestValidationError, match="duplicate"):
         parse_mapping_manifest(manifest)
+
+
+@pytest.mark.anyio
+async def test_seed_mapping_validates_foreign_keys_before_insert() -> None:
+    """A reviewed mapping is inserted only after both referenced rows exist."""
+    manifest = parse_mapping_manifest(
+        {
+            "kb_version": "1.2.3",
+            "mappings": [
+                {
+                    "master_ingredient_id": "00000000-0000-0000-0000-000000000001",
+                    "freshcheck_ingredient_id": "FC-SALMON",
+                    "match_method": "EXACT_NAME",
+                    "reviewed_by": "reviewer",
+                }
+            ],
+        }
+    )
+    session = AsyncMock(spec=AsyncSession)
+    session.get.side_effect = (object(), object())
+    session.scalar.return_value = None
+    session.add = Mock()
+
+    inserted_count = await FreshCheckMappingSeedService(session).seed(manifest)
+
+    assert inserted_count == 1
+    session.add.assert_called_once()
+    session.flush.assert_awaited_once()
+
+
+@pytest.mark.anyio
+async def test_seed_mapping_rejects_a_missing_freshcheck_ingredient() -> None:
+    """A manifest cannot create an orphaned mapping foreign key."""
+    manifest = parse_mapping_manifest(
+        {
+            "kb_version": "1.2.3",
+            "mappings": [
+                {
+                    "master_ingredient_id": "00000000-0000-0000-0000-000000000001",
+                    "freshcheck_ingredient_id": "FC-MISSING",
+                    "match_method": "MANUAL_REVIEW",
+                    "reviewed_by": "reviewer",
+                }
+            ],
+        }
+    )
+    session = AsyncMock(spec=AsyncSession)
+    session.get.side_effect = (object(), None)
+
+    with pytest.raises(MappingSeedError, match="missing FreshCheck"):
+        await FreshCheckMappingSeedService(session).seed(manifest)
