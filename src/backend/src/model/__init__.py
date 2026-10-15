@@ -8,6 +8,13 @@ from src.model.device_registration_model import DeviceRegistrationModel
 from src.model.favorite_menu_item_model import FavoriteMenuItemModel
 from src.model.favorite_menu_model import FavoriteMenuModel
 from src.model.favorite_recipe_model import FavoriteRecipeModel
+from src.model.freshcheck_model import (
+    FreshCheckArchetypeModel,
+    FreshCheckClaimModel,
+    FreshCheckIngredientModel,
+    FreshCheckKBVersionModel,
+    FreshCheckSourceModel,
+)
 from src.model.history_model import IngredientUsageHistoryModel
 from src.model.ingredient_alias_model import IngredientAliasModel
 from src.model.ingredient_category_model import IngredientCategoryModel
@@ -41,6 +48,11 @@ __all__ = [
     "FavoriteMenuItemModel",
     "FavoriteMenuModel",
     "FavoriteRecipeModel",
+    "FreshCheckArchetypeModel",
+    "FreshCheckClaimModel",
+    "FreshCheckIngredientModel",
+    "FreshCheckKBVersionModel",
+    "FreshCheckSourceModel",
     "IngredientAliasModel",
     "IngredientCategoryModel",
     "IngredientUsageHistoryModel",

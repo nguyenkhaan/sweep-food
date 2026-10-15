@@ -5,6 +5,7 @@ from enum import Enum
 
 class AccountStatus(str, Enum):
     """Current account access state."""
+
     UNVERIFIED = "UNVERIFIED"
     ACTIVE = "ACTIVE"
     BANNED = "BANNED"
@@ -109,6 +110,14 @@ class InventoryLedgerEventType(str, Enum):
     METADATA_UPDATED = "METADATA_UPDATED"
     MOVED = "MOVED"
     ARCHIVED = "ARCHIVED"
+
+
+class FreshCheckKBVersionStatus(str, Enum):
+    """Lifecycle state of an immutable FreshCheck KB release."""
+
+    STAGED = "STAGED"
+    ACTIVE = "ACTIVE"
+    RETIRED = "RETIRED"
 
 
 class RecommendationProviderType(str, Enum):
