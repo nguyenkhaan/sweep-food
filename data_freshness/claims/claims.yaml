@@ -1,0 +1,628 @@
+- id: C-TCVN7046-COLOR
+  statement_vi: "Thịt tươi phải có màu sắc đặc trưng của sản phẩm."
+  source: S-TCVN7046
+  locator: "Yêu cầu kỹ thuật – Chỉ tiêu cảm quan: Màu sắc"
+  conditions: ["thịt tươi (heo, bò, gia cầm)", "đánh giá cảm quan bằng mắt thường"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-TCVN7046-ODOR
+  statement_vi: "Thịt tươi phải có mùi đặc trưng của sản phẩm, không có mùi lạ."
+  source: S-TCVN7046
+  locator: "Yêu cầu kỹ thuật – Chỉ tiêu cảm quan: Mùi"
+  conditions: ["thịt tươi (heo, bò, gia cầm)", "đánh giá cảm quan bằng khứu giác"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-TCVN7046-TOUCH
+  statement_vi: "Thịt tươi phải có bề mặt khô, sạch; có độ đàn hồi, ấn ngón tay vào thịt không để lại vết lõm khi bỏ tay ra."
+  source: S-TCVN7046
+  locator: "Yêu cầu kỹ thuật – Chỉ tiêu cảm quan: Trạng thái"
+  conditions: ["thịt tươi (heo, bò, gia cầm)", "đánh giá cảm quan bằng xúc giác"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-TCVN5277-METHOD
+  statement_vi: "Đánh giá cảm quan thủy sản dựa trên các chỉ tiêu ngoại quan, trạng thái, mùi và vị theo phương pháp chuẩn."
+  source: S-TCVN5277
+  locator: "Phương pháp thử cảm quan – Các chỉ tiêu đánh giá"
+  conditions: ["thủy sản và sản phẩm thủy sản", "làm căn cứ cho rubric FISH_SEAFOOD"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-TCVN5277-GILLS
+  statement_vi: "Mang cá tươi có màu đỏ tươi đặc trưng, sạch; mang xám nâu, có nhớt đục là dấu hiệu cá ươn hỏng."
+  source: S-TCVN5277
+  locator: "Chỉ tiêu cảm quan – Ngoại quan: Mang"
+  conditions: ["cá có vây nguyên con", "đánh giá cảm quan bằng mắt thường"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-TCVN5277-EYES
+  statement_vi: "Mắt cá tươi trong, lồi; mắt lõm, đục là dấu hiệu cá kém tươi."
+  source: S-TCVN5277
+  locator: "Chỉ tiêu cảm quan – Ngoại quan: Mắt"
+  conditions: ["cá có vây nguyên con", "đánh giá cảm quan bằng mắt thường"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-TCVN5277-TOUCH
+  statement_vi: "Thịt cá tươi săn chắc, đàn hồi, bụng nguyên vẹn; cá vỡ bụng, thịt nhũn nát là dấu hiệu ươn hỏng."
+  source: S-TCVN5277
+  locator: "Chỉ tiêu cảm quan – Trạng thái: Thịt và bụng"
+  conditions: ["cá và hải sản tươi nguyên con", "đánh giá cảm quan bằng xúc giác"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-TCVN5277-ODOR
+  statement_vi: "Thủy sản tươi có mùi tự nhiên đặc trưng, không có mùi lạ; mùi khai amoniac hoặc hôi thối là dấu hiệu ươn hỏng."
+  source: S-TCVN5277
+  locator: "Chỉ tiêu cảm quan – Mùi"
+  conditions: ["thủy sản tươi", "đánh giá cảm quan bằng khứu giác"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-FK-PORK-CHOPS
+  statement_vi: "Thịt heo/bò dạng miếng giữ 3–5 ngày ở ngăn mát ≤4°C."
+  source: S-FK
+  locator: "Cold Food Storage Chart – Fresh pork/beef"
+  conditions: ["chuỗi lạnh liên tục", "tủ ≤4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-FK-EGG-CRACKED
+  statement_vi: "Không sử dụng trứng có vỏ nứt vỡ hoặc rỉ dịch; vi khuẩn có thể xâm nhập qua vết nứt."
+  source: S-FK
+  locator: "FoodKeeper – Eggs: Fresh, in shell (Tips) — cần xác minh; nếu không có, chuyển sang FSIS 'Shell Eggs from Farm to Table'"
+  conditions: ["trứng gia cầm còn vỏ", "kiểm tra bằng mắt trước khi bảo quản/sử dụng"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-FK-EGG-SPOILED
+  statement_vi: "Loại bỏ trứng khi đập ra có mùi hôi (lưu huỳnh) hoặc lòng trứng đổi màu bất thường."
+  source: S-FK
+  locator: "FoodKeeper – Eggs: Fresh, in shell (Tips) — cần xác minh; nếu không có, chuyển sang FSIS 'Shell Eggs from Farm to Table'"
+  conditions: ["trứng gia cầm sống, đập ra trước khi nấu", "đánh giá cảm quan bằng mắt và khứu giác"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-LOCAL-EGG-FLOAT
+  statement_vi: "Trứng nổi hẳn trên mặt nước có buồng khí rất lớn (trứng rất cũ); nhóm chọn loại bỏ như một quy tắc thận trọng."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc nội bộ – Thử nổi trứng"
+  conditions: ["trứng gia cầm còn vỏ nguyên", "thử trong cốc nước sạch ở nhiệt độ phòng"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-FDA-VIBRIO-SHELLFISH
+  statement_vi: "Vibrio spp. (V. parahaemolyticus, V. vulnificus) gây bệnh liên quan tới ăn nhuyễn thể có vỏ (đặc biệt là hàu) sống hoặc chưa nấu chín."
+  source: S-FDA-BADBUG
+  locator: "Bad Bug Book, 2nd ed. (2012) – chương Vibrio parahaemolyticus; Vibrio vulnificus"
+  conditions: ["nhuyễn thể có vỏ", "ăn sống hoặc chưa nấu chín kỹ"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-FDA-VIBRIO-DEAD
+  statement_vi: "Nhuyễn thể và giáp xác phải còn sống trước khi chế biến; loại bỏ con đã chết (vỏ há không khép khi gõ, cua/ghẹ không cử động)."
+  source: S-FDA-SEAFOOD
+  locator: "Selecting Shellfish – Tap test (loại bỏ nghêu/sò/vẹm không khép vỏ khi gõ); Check for leg movement (cua/tôm hùm phải cử động chân)"
+  conditions: ["nhuyễn thể có vỏ và giáp xác bán sống", "kiểm tra trước khi chế biến"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-FAO-HUSS-TEMP
+  statement_vi: "Hư hỏng cá tươi chủ yếu do vi khuẩn; nhiệt độ bảo quản là yếu tố quyết định tốc độ hư hỏng, ướp đá gần 0°C kéo dài thời hạn sử dụng rõ rệt."
+  source: S-FAO-HUSS
+  locator: "FAO FTP 348 – Chương 5 (Post mortem changes in fish) và Chương 6 (Quality changes and shelf life of chilled fish)"
+  conditions: ["cá tươi", "bảo quản lạnh/ướp đá"]
+  evidence_level: B
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-LOCAL-SHELLFISH-FLOAT
+  statement_vi: "Nhuyễn thể có vỏ lơ lửng hoặc nổi khi thả vào nước sạch có thể đã chết hoặc tích khí bên trong vỏ; nhóm chỉ dùng như tín hiệu cảnh báo bổ trợ, không dùng làm luật dừng (quy tắc thận trọng)."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc nội bộ – Thử nổi nhuyễn thể"
+  conditions: ["nhuyễn thể hai mảnh vỏ còn nguyên vỏ (nghêu, sò, hến)", "thử trong chậu nước sạch", "không áp dụng cho cua, ghẹ, ốc"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-LOCAL-AXIS-NA
+  statement_vi: "Khi một trục kiểm tra không thể quan sát do đặc điểm giải phẫu của loài, option 'không áp dụng' mang penalty 0.0 và không được dùng để suy ra độ tươi; các trục còn lại giữ nguyên luật dừng (quy tắc thận trọng)."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc nội bộ – Trục không áp dụng (N/A)"
+  conditions: ["mực, bạch tuộc, tôm: không có nắp mang để lật kiểm tra", "cua, ghẹ, ốc: không dùng phép thử nổi"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "vi"
+  reviewed_by: "huy"
+
+- id: C-TCVN10738-SENSORY
+  statement_vi: "Rau củ quả tươi phải giữ được hình dạng, màu sắc đặc trưng, trạng thái căng chắc, cọng giòn; không bị úng nát, chảy nhớt, thâm đen hoặc phát triển nấm mốc."
+  source: S-TCVN10738
+  locator: "Yêu cầu kỹ thuật chung – Chỉ tiêu cảm quan đối với rau củ quả tươi"
+  conditions: ["rau quả tươi", "đánh giá cảm quan bằng mắt thường và xúc giác"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-TCVN10738-ODOR
+  statement_vi: "Rau củ tươi có mùi tự nhiên đặc trưng của từng loại; mùi ủng thối, mùi chua nồng hoặc mùi lạ là dấu hiệu hư hỏng."
+  source: S-TCVN10738
+  locator: "Chỉ tiêu cảm quan – Mùi vị"
+  conditions: ["rau củ quả tươi", "đánh giá cảm quan bằng khứu giác"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-TCVN10738-LEAF-SPOIL
+  statement_vi: "Rau ăn lá có dấu hiệu thối nhũn do vi khuẩn (Pectobacterium/Erwinia), úng nước thâm đen hoặc mọc nấm mốc phải loại bỏ ngay để tránh nhiễm độc."
+  source: S-TCVN10738
+  locator: "Phương pháp kiểm tra chỉ tiêu hư hỏng và khuyết tật cảm quan"
+  conditions: ["rau ăn lá", "phát hiện thối nhũn/mốc"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FRIEDMAN-SOLANINE
+  statement_vi: "Khoai tây mọc mầm hoặc vỏ chuyển xanh tích tụ nồng độ độc tố glycoalkaloid (solanine, chaconine) cao; chất độc này bền nhiệt và không bị phá hủy hoàn toàn khi nấu nướng thông thường."
+  source: S-FRIEDMAN-SOLANINE
+  locator: "Section: Glycoalkaloids in Greened and Sprouted Potatoes; Toxicology"
+  conditions: ["khoai tây", "mọc mầm hoặc xanh vỏ", "nguy cơ ngộ độc tiêu hóa và thần kinh"]
+  evidence_level: B
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-UCDAVIS-POTATO-ETHYLENE
+  statement_vi: "Khí ethylene từ hành tây, táo hoặc chuối thúc đẩy quá trình mọc mầm và quang hóa của khoai tây; bảo quản khoai tây ở nơi khô thoáng, tối và tách biệt khỏi nguồn ethylene."
+  source: S-UCDAVIS-PRODUCE
+  locator: "Produce Facts: Potato, Early and Late Crop – Postharvest handling and temperature management"
+  conditions: ["khoai tây củ", "bảo quản ở nhiệt độ phòng khô tối"]
+  evidence_level: B
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-UCDAVIS-LEAFY-ETHYLENE
+  statement_vi: "Rau ăn lá nhạy cảm cao với khí ethylene; tiếp xúc với ethylene từ quả chín dẫn đến vàng lá, phân hủy diệp lục nhanh chóng và rụng lá."
+  source: S-UCDAVIS-PRODUCE
+  locator: "Produce Facts: Lettuce, Spinach, and Leafy Greens – Ethylene Susceptibility"
+  conditions: ["rau ăn lá (xà lách, cải, rau muống)", "trữ chung với quả chín sinh ethylene"]
+  evidence_level: B
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-LEAFY-NOWASH
+  statement_vi: "Không rửa rau ăn lá trước khi bảo quản tủ lạnh; nước đọng tạo môi trường ẩm ướt thuận lợi cho vi khuẩn thối nhũn phát triển bùng phát (quy tắc thận trọng)."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc bảo quản rau lá khô ráo"
+  conditions: ["rau ăn lá tươi", "bảo quản ngăn mát 2-4°C"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-TOFU-STORAGE
+  statement_vi: "Đậu hũ tươi là môi trường giàu protein và độ ẩm cao, rất dễ nhiễm vi khuẩn sinh nhớt và ôi chua; bảo quản ngập nước sạch trong tủ mát hoặc dùng ngay trong ngày."
+  source: S-FK
+  locator: "FoodKeeper – Tofu: Fresh, refrigerated"
+  conditions: ["đậu hũ tươi", "bảo quản lạnh ≤4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-STARCH-SLIME
+  statement_vi: "Bún tươi, bánh phở khi có biểu hiện nhớt dính kéo màng, mùi chua gắt hoặc đổi màu ố vàng là dấu hiệu vi sinh vật lên men ôi hỏng và tạo biofilm; phải loại bỏ ngay (quy tắc thận trọng)."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc an toàn tinh bột tươi chợ dân sinh"
+  conditions: ["bún tươi, bánh phở, bánh canh", "độ ẩm cao, không chất bảo quản"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-USDA-LEFTOVERS-2HR
+  statement_vi: "Thực phẩm đã nấu chín phải được bảo quản lạnh trong vòng 2 giờ (hoặc 1 giờ nếu nhiệt độ môi trường >32°C); vùng nhiệt độ 5–60°C là Danger Zone vi khuẩn nhân lên nhanh nhất."
+  source: S-USDA-LEFTOVERS
+  locator: "Leftovers and Food Safety – The 2-Hour Rule and Temperature Danger Zone"
+  conditions: ["thức ăn đã nấu chín", "nhiệt độ phòng"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-USDA-LEFTOVERS-REHEAT
+  statement_vi: "Khi sử dụng lại đồ ăn thừa đã nấu chín, bắt buộc phải hâm nóng lại toàn bộ đạt nhiệt độ tâm tối thiểu 165°F (74°C) hoặc đun sôi đều."
+  source: S-USDA-LEFTOVERS
+  locator: "Leftovers and Food Safety – Reheating Leftovers Safely"
+  conditions: ["thức ăn thừa hâm lại", "đun sôi hoặc dùng lò vi sóng"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FDA-CEREUS-RICE
+  statement_vi: "Bào tử Bacillus cereus trong cơm và ngũ cốc nấu chín có thể sống sót sau khi nấu; nếu để ở nhiệt độ phòng, bào tử nảy mầm sinh độc tố nôn mửa (cereulide) chịu nhiệt, nấu sôi lại vẫn không phân hủy được độc tố."
+  source: S-FDA-CEREUS
+  locator: "Bad Bug Book, 2nd ed. – Bacillus cereus and other Bacillus spp."
+  conditions: ["cơm nguội, món chứa tinh bột nấu chín", "để ngoài nhiệt độ phòng quá 2–4 giờ"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-COOKED-SPOIL
+  statement_vi: "Đồ ăn nấu chín để lại nếu có váng mốc, sủi bọt khí hoặc kéo tơ nhớt là dấu hiệu vi sinh vật đã lên men sinh khí và phân hủy protein/tinh bột; phải loại bỏ toàn bộ (quy tắc thận trọng)."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc kiểm tra cảm quan đồ ăn thừa"
+  conditions: ["thức ăn thừa sau nấu", "đánh giá cảm quan trước khi hâm/ăn"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+- id: C-FK-PORK-FREEZE
+  statement_vi: "Thịt heo cấp đông ở -18°C giữ được từ 4–12 tháng (2880h–8640h)."
+  source: S-FK
+  locator: "FoodKeeper – Pork: Fresh, cuts (DOP Freeze)"
+  conditions: ["thịt heo tươi cấp đông", "ngăn đá ≤-18°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-BEEF-STEAK
+  statement_vi: "Thịt bò tươi dạng miếng/thăn giữ 3–5 ngày (72h–120h) ở ngăn mát ≤4°C."
+  source: S-FK
+  locator: "FoodKeeper – Beef: Steaks, roasts (DOP Refrigerate)"
+  conditions: ["thịt bò tươi", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-BEEF-FREEZE
+  statement_vi: "Thịt bò tươi cấp đông ở -18°C giữ được từ 4–12 tháng (2880h–8640h)."
+  source: S-FK
+  locator: "FoodKeeper – Beef: Steaks, roasts (DOP Freeze)"
+  conditions: ["thịt bò cấp đông", "ngăn đá ≤-18°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-POULTRY-PARTS
+  statement_vi: "Thịt gia cầm tươi (gà, vịt) dạng miếng hoặc nguyên con giữ 1–2 ngày (24h–48h) ở ngăn mát ≤4°C."
+  source: S-FK
+  locator: "FoodKeeper – Chicken: Whole or parts (DOP Refrigerate)"
+  conditions: ["thịt gà, vịt tươi", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-POULTRY-FREEZE
+  statement_vi: "Thịt gia cầm tươi cấp đông ở -18°C giữ được từ 9–12 tháng (6480h–8640h)."
+  source: S-FK
+  locator: "FoodKeeper – Chicken: Whole or parts (DOP Freeze)"
+  conditions: ["thịt gia cầm cấp đông", "ngăn đá ≤-18°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-FISH-LEAN
+  statement_vi: "Cá nạc tươi (cá lóc, cá rô phi, cá điêu hồng...) giữ 1–2 ngày (24h–36h) ở ngăn mát ≤4°C."
+  source: S-FK
+  locator: "FoodKeeper – Fish: Lean fish (DOP Refrigerate)"
+  conditions: ["cá nạc tươi", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-FISH-FATTY
+  statement_vi: "Cá béo tươi (cá hồi, cá thu, cá basa...) giữ 1–2 ngày (24h–36h) ở ngăn mát ≤4°C."
+  source: S-FK
+  locator: "FoodKeeper – Fish: Fatty fish (DOP Refrigerate)"
+  conditions: ["cá béo tươi", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-FISH-FREEZE
+  statement_vi: "Cá tươi cấp đông ở -18°C giữ được từ 6–8 tháng (4320h–5760h)."
+  source: S-FK
+  locator: "FoodKeeper – Fish: Lean and fatty fish (DOP Freeze)"
+  conditions: ["cá cấp đông", "ngăn đá ≤-18°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-SHRIMP-FRESH
+  statement_vi: "Tôm tươi giữ 1–2 ngày (24h–48h) ở ngăn mát ≤4°C."
+  source: S-FK
+  locator: "FoodKeeper – Crustaceans: Shrimp, crayfish (DOP Refrigerate)"
+  conditions: ["tôm tươi", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-SHRIMP-FREEZE
+  statement_vi: "Tôm tươi cấp đông ở -18°C giữ được từ 6–18 tháng (4320h–12960h)."
+  source: S-FK
+  locator: "FoodKeeper – Crustaceans: Shrimp, crayfish (DOP Freeze)"
+  conditions: ["tôm cấp đông", "ngăn đá ≤-18°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-SQUID-FRESH
+  statement_vi: "Mực và bạch tuộc tươi giữ 1–2 ngày (24h–48h) ở ngăn mát ≤4°C."
+  source: S-FK
+  locator: "FoodKeeper – Mollusks: Squid (DOP Refrigerate)"
+  conditions: ["mực, bạch tuộc tươi", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-SQUID-FREEZE
+  statement_vi: "Mực và bạch tuộc tươi cấp đông ở -18°C giữ được từ 6–18 tháng (4320h–12960h)."
+  source: S-FK
+  locator: "FoodKeeper – Mollusks: Squid (DOP Freeze)"
+  conditions: ["mực, bạch tuộc cấp đông", "ngăn đá ≤-18°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-SHELLFISH-LIVE
+  statement_vi: "Nhuyễn thể và giáp xác còn sống (nghêu, sò, cua...) phủ khăn ẩm ở ngăn mát 2–4°C giữ được 1–2 ngày (24h–48h)."
+  source: S-FK
+  locator: "FoodKeeper – Shellfish: Live in shell (DOP Refrigerate)"
+  conditions: ["nhuyễn thể sống", "ngăn mát 2–4°C", "không ngâm nước ngọt"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-SHELLFISH-FREEZE
+  statement_vi: "Thịt nhuyễn thể và cua ghẹ sau khi sơ chế/luộc chín cấp đông ở -18°C giữ được từ 2–3 tháng (1440h–2160h)."
+  source: S-FK
+  locator: "FoodKeeper – Shellfish: Shucked or cooked (DOP Freeze)"
+  conditions: ["thịt nhuyễn thể, cua ghẹ đã sơ chế chín", "ngăn đá ≤-18°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-EGG-STORAGE
+  statement_vi: "Trứng gia cầm nguyên vỏ giữ được từ 3–5 tuần (504h–840h) trong ngăn mát tủ lạnh ≤4°C."
+  source: S-FK
+  locator: "FoodKeeper – Eggs: Fresh in shell (DOP Refrigerate)"
+  conditions: ["trứng nguyên vỏ", "ngăn mát 2–4°C", "đầu to hướng lên"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-POTATO-PANTRY
+  statement_vi: "Khoai tây nguyên củ bảo quản nơi khô ráo, thoáng mát và tối giữ được 1–2 tháng (720h–1440h)."
+  source: S-FK
+  locator: "FoodKeeper – Vegetables: Potatoes (DOP Pantry)"
+  conditions: ["khoai tây nguyên củ", "nơi khô mát tối", "không trữ cùng hành tây"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-POTATO-FRIDGE
+  statement_vi: "Khoai tây để ngăn mát giữ được 1–2 tuần (168h–336h), tuy nhiên FoodKeeper khuyến cáo tránh tủ mát vì gây ngọt hóa củ."
+  source: S-FK
+  locator: "FoodKeeper – Vegetables: Potatoes (DOP Refrigerate)"
+  conditions: ["khoai tây", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-SWEETPOTATO-PANTRY
+  statement_vi: "Khoai lang nguyên củ bảo quản nơi khô thoáng ở nhiệt độ phòng giữ được 2–3 tuần (336h–504h)."
+  source: S-FK
+  locator: "FoodKeeper – Vegetables: Yams/sweet potatoes (DOP Pantry)"
+  conditions: ["khoai lang nguyên củ", "nhiệt độ phòng khô thoáng"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-ONION-PANTRY
+  statement_vi: "Hành tây nguyên củ bảo quản nơi khô ráo, thông gió tốt ở nhiệt độ phòng giữ được 1 tháng (720h)."
+  source: S-FK
+  locator: "FoodKeeper – Vegetables: Onions (DOP Pantry)"
+  conditions: ["hành tây nguyên củ", "nhiệt độ phòng khô ráo"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-CARROT-FRIDGE
+  statement_vi: "Cà rốt bảo quản trong ngăn mát tủ lạnh giữ được 2–3 tuần (336h–504h)."
+  source: S-FK
+  locator: "FoodKeeper – Vegetables: Carrots (DOP Refrigerate)"
+  conditions: ["cà rốt nguyên củ", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-RADISH-FRIDGE
+  statement_vi: "Củ cải trắng bảo quản trong ngăn mát tủ lạnh giữ được 1–2 tuần (168h–336h)."
+  source: S-FK
+  locator: "FoodKeeper – Vegetables: Radishes (DOP Refrigerate)"
+  conditions: ["củ cải trắng", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-LEAFY-FRIDGE
+  statement_vi: "Rau ăn lá tươi đóng gói giữ trong ngăn mát tủ lạnh đạt 3–5 ngày (72h–120h)."
+  source: S-FK
+  locator: "FoodKeeper – Vegetables: Bagged greens, leaf (DOP Refrigerate)"
+  conditions: ["rau ăn lá", "ngăn mát 2–4°C", "không đọng nước"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-NOODLE-FRESH
+  statement_vi: "Sợi mì tươi, bún tươi bảo quản ngăn mát tủ lạnh giữ được 1–2 ngày (24h–48h)."
+  source: S-FK
+  locator: "FoodKeeper – Grains: Fresh pasta (Refrigerate)"
+  conditions: ["sợi tươi", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-RICE-FRIDGE
+  statement_vi: "Cơm nấu chín cất kín trong ngăn mát tủ lạnh giữ được 4–6 ngày (96h–144h)."
+  source: S-FK
+  locator: "FoodKeeper – Grains: Cooked rice (DOP Refrigerate)"
+  conditions: ["cơm nguội đậy kín", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-LEFTOVERS-FRIDGE
+  statement_vi: "Đồ ăn thừa nấu chín (canh, món hầm, món kho) cất hộp kín trong ngăn mát tủ lạnh giữ được 3–4 ngày (72h–96h)."
+  source: S-FK
+  locator: "FoodKeeper – Deli & Leftovers: Leftovers / Soup, stews (DOP Refrigerate)"
+  conditions: ["thức ăn thừa nấu chín", "ngăn mát 2–4°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-FK-LEFTOVERS-FREEZE
+  statement_vi: "Đồ ăn thừa nấu chín cấp đông ở -18°C giữ được từ 1–3 tháng (720h–2160h)."
+  source: S-FK
+  locator: "FoodKeeper – Deli & Leftovers: Leftovers / Soup, stews (DOP Freeze)"
+  conditions: ["thức ăn thừa cấp đông", "ngăn đá ≤-18°C"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-HOTMEAT
+  statement_vi: "Thịt nóng ở chợ truyền thống không có chuỗi lạnh, chỉ nên để ở nhiệt độ phòng 25–30°C tối đa 4–6 giờ (quy tắc thận trọng)."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc an toàn thịt nóng chợ dân sinh"
+  conditions: ["thịt tươi mới mổ", "nhiệt độ phòng 25–30°C"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-SOFTFREEZE
+  statement_vi: "Ngăn đông mềm -3°C giữ thịt, cá tươi từ 5–7 ngày (120h–168h) mà không làm rách vách tế bào do tinh thể đá (quy tắc thực nghiệm tủ lạnh Việt Nam)."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc ngăn đông mềm tủ lạnh gia đình Việt Nam"
+  conditions: ["thịt, cá tươi", "ngăn đông mềm -3°C"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-FISH-ROOM
+  statement_vi: "Cá và thủy hải sản tươi để ở nhiệt độ phòng nóng ẩm không ướp đá chỉ nên giữ tối đa 2–4 giờ."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc an toàn thủy hải sản chợ dân sinh"
+  conditions: ["thủy hải sản tươi", "nhiệt độ phòng không ướp đá"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-LEAFY-ROOM
+  statement_vi: "Rau ăn lá ở nhiệt độ phòng nhiệt đới mất nước héo úa trong 24–48 giờ."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc bảo quản rau lá nhiệt độ phòng"
+  conditions: ["rau ăn lá tươi", "nhiệt độ phòng 25–30°C"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-STARCH-ROOM
+  statement_vi: "Bún tươi, bánh phở ở nhiệt độ phòng chợ Việt Nam chỉ nên dùng trong vòng 6–12 giờ trước khi lên men chua."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc an toàn bún tươi truyền thống"
+  conditions: ["bún tươi, bánh phở", "nhiệt độ phòng 25–30°C"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-EGG-ROOM
+  statement_vi: "Trứng gia cầm giữ ở nhiệt độ phòng thoáng mát 25–30°C dùng tốt trong vòng 7–14 ngày (168h–336h)."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc bảo quản trứng gia cầm nhiệt độ phòng"
+  conditions: ["trứng gia cầm nguyên vỏ", "nơi khô mát 25–30°C"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
+
+- id: C-LOCAL-SHELLFISH-ROOM
+  statement_vi: "Nghêu, sò, cua, ốc sống ở nhiệt độ phòng cần giữ ẩm, không để ngập nước đọng, bảo quản tối đa 4–8 giờ."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc bảo quản nhuyễn thể sống nhiệt độ phòng"
+  conditions: ["nhuyễn thể sống", "nhiệt độ phòng có khăn ẩm"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "huy"
+  reviewed_by: "vi"
