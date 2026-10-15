@@ -208,6 +208,9 @@ class AppL10nEn extends AppL10n {
   String get scoreBadgeLabel => 'SCORE';
 
   @override
+  String get rankBadgeLabel => 'RANK';
+
+  @override
   String get confidenceNeedsReview => 'Check this';
 
   @override
@@ -671,6 +674,50 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get scoreFormula => 'Score = 0.4·E + 0.3·A + 0.2·P + 0.1·U';
+
+  @override
+  String rankingSheetTitle(String dish, int rank) {
+    return '$dish · rank #$rank';
+  }
+
+  @override
+  String rankingRawScore(String score) {
+    return 'Raw ranking score: $score (not a percentage)';
+  }
+
+  @override
+  String get rankingCoreCoverage => 'Core ingredient coverage';
+
+  @override
+  String get rankingSecondaryCoverage => 'Secondary ingredient coverage';
+
+  @override
+  String get rankingNutritionConfidence => 'Nutrition-data confidence';
+
+  @override
+  String rankingCoreMissing(int count) {
+    return 'Missing core: $count';
+  }
+
+  @override
+  String rankingShoppingGap(int count) {
+    return 'Shopping gap: $count';
+  }
+
+  @override
+  String rankingRescueWeight(int grams) {
+    return 'Rescues $grams g';
+  }
+
+  @override
+  String rankingNutrition(int kcal, int protein) {
+    return '$kcal kcal · $protein g protein';
+  }
+
+  @override
+  String rankingPrepComplexity(String value) {
+    return 'Prep complexity: $value';
+  }
 
   @override
   String get scoreCompE => 'Uses near-expiry stock';

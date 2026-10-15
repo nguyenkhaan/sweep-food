@@ -13,6 +13,13 @@ abstract class DishSuggestion with _$DishSuggestion {
     required Dish dish,
     required ScoreBreakdown breakdown,
 
+    /// Contract-v2 ranking data. A non-null value means [rankScore] is a raw
+    /// ordering signal, not a percentage score.
+    RankingFeatures? rankingFeatures,
+    @Default(1) int rank,
+    double? rankScore,
+    @Default('') String statusBadge,
+
     /// Names of near-expiry pantry ingredients this dish would use.
     @Default(<String>[]) List<String> nearExpiryIngredients,
 
@@ -35,6 +42,8 @@ abstract class DishSuggestion with _$DishSuggestion {
   String get id => dish.id;
 
   int get score => scoreOverride ?? breakdown.scoreOutOf100;
+
+  bool get usesRankingV2 => rankingFeatures != null;
 
   int get nearExpiryCount => nearExpiryIngredients.length;
 

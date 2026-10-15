@@ -487,6 +487,12 @@ abstract class AppL10n {
   /// **'ĐIỂM'**
   String get scoreBadgeLabel;
 
+  /// No description provided for @rankBadgeLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'HẠNG'**
+  String get rankBadgeLabel;
+
   /// No description provided for @confidenceNeedsReview.
   ///
   /// In vi, this message translates to:
@@ -1266,6 +1272,66 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Điểm = 0.4·E + 0.3·A + 0.2·P + 0.1·U'**
   String get scoreFormula;
+
+  /// No description provided for @rankingSheetTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'{dish} · hạng #{rank}'**
+  String rankingSheetTitle(String dish, int rank);
+
+  /// No description provided for @rankingRawScore.
+  ///
+  /// In vi, this message translates to:
+  /// **'Điểm xếp hạng thô: {score} (không phải phần trăm)'**
+  String rankingRawScore(String score);
+
+  /// No description provided for @rankingCoreCoverage.
+  ///
+  /// In vi, this message translates to:
+  /// **'Độ phủ nguyên liệu chính'**
+  String get rankingCoreCoverage;
+
+  /// No description provided for @rankingSecondaryCoverage.
+  ///
+  /// In vi, this message translates to:
+  /// **'Độ phủ nguyên liệu phụ'**
+  String get rankingSecondaryCoverage;
+
+  /// No description provided for @rankingNutritionConfidence.
+  ///
+  /// In vi, this message translates to:
+  /// **'Độ tin cậy dinh dưỡng'**
+  String get rankingNutritionConfidence;
+
+  /// No description provided for @rankingCoreMissing.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thiếu chính: {count}'**
+  String rankingCoreMissing(int count);
+
+  /// No description provided for @rankingShoppingGap.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cần mua: {count}'**
+  String rankingShoppingGap(int count);
+
+  /// No description provided for @rankingRescueWeight.
+  ///
+  /// In vi, this message translates to:
+  /// **'Giải cứu {grams} g'**
+  String rankingRescueWeight(int grams);
+
+  /// No description provided for @rankingNutrition.
+  ///
+  /// In vi, this message translates to:
+  /// **'{kcal} kcal · {protein} g đạm'**
+  String rankingNutrition(int kcal, int protein);
+
+  /// No description provided for @rankingPrepComplexity.
+  ///
+  /// In vi, this message translates to:
+  /// **'Độ phức tạp sơ chế: {value}'**
+  String rankingPrepComplexity(String value);
 
   /// No description provided for @scoreCompE.
   ///

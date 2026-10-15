@@ -46,8 +46,11 @@ class ScoreBreakdownSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final ranking = suggestion.rankingFeatures;
     return SheetBody(
-      title: l10n.scoreSheetTitle(suggestion.dish.name, suggestion.score),
+      title: ranking == null
+          ? l10n.scoreSheetTitle(suggestion.dish.name, suggestion.score)
+          : l10n.rankingSheetTitle(suggestion.dish.name, suggestion.rank),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -62,7 +65,11 @@ class ScoreBreakdownSheet extends StatelessWidget {
               borderRadius: Radii.brMd,
             ),
             child: Text(
-              l10n.scoreFormula,
+              ranking == null
+                  ? l10n.scoreFormula
+                  : l10n.rankingRawScore(
+                      (suggestion.rankScore ?? 0).toStringAsFixed(3),
+                    ),
               textAlign: TextAlign.center,
               style: context.text.labelMedium?.copyWith(
                 letterSpacing: 0.2,
@@ -134,18 +141,109 @@ class ScoreBreakdownSheet extends StatelessWidget {
             ),
             Gap.gapSm,
           ],
-          for (final c in suggestion.breakdown.components(l10n))
-            Padding(
-              padding: const EdgeInsets.only(bottom: Gap.md),
-              child: _ComponentRow(
-                component: c,
-                reason: _reason(c.letter, l10n),
+          if (ranking != null)
+            _RankingFeaturesView(features: ranking)
+          else
+            for (final c in suggestion.breakdown.components(l10n))
+              Padding(
+                padding: const EdgeInsets.only(bottom: Gap.md),
+                child: _ComponentRow(
+                  component: c,
+                  reason: _reason(c.letter, l10n),
+                ),
               ),
-            ),
         ],
       ),
     );
   }
+}
+
+class _RankingFeaturesView extends StatelessWidget {
+  const _RankingFeaturesView({required this.features});
+
+  final RankingFeatures features;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final normalized = <({String letter, String name, double value})>[
+      (
+        letter: 'C',
+        name: l10n.rankingCoreCoverage,
+        value: features.coreCoverage,
+      ),
+      (
+        letter: 'S',
+        name: l10n.rankingSecondaryCoverage,
+        value: features.secondaryCoverage,
+      ),
+      (
+        letter: 'N',
+        name: l10n.rankingNutritionConfidence,
+        value: features.nutritionConfidence,
+      ),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        for (final metric in normalized)
+          Padding(
+            padding: const EdgeInsets.only(bottom: Gap.md),
+            child: _ComponentRow(
+              component: ScoreComponent(
+                letter: metric.letter,
+                name: metric.name,
+                weightLabel: '${(metric.value * 100).round()}%',
+                value: metric.value,
+              ),
+              reason: '',
+            ),
+          ),
+        Wrap(
+          spacing: Gap.xs,
+          runSpacing: Gap.xs,
+          children: [
+            _MetricChip(
+              label: l10n.rankingCoreMissing(features.coreMissingCount.round()),
+            ),
+            _MetricChip(
+              label: l10n.rankingShoppingGap(features.shoppingGapItems.round()),
+            ),
+            _MetricChip(
+              label: l10n.rankingRescueWeight(features.rescueWeightG.round()),
+            ),
+            _MetricChip(
+              label: l10n.rankingNutrition(
+                features.kcalPerServing.round(),
+                features.proteinPerServing.round(),
+              ),
+            ),
+            _MetricChip(
+              label: l10n.rankingPrepComplexity(
+                features.prepComplexity.toStringAsFixed(1),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _MetricChip extends StatelessWidget {
+  const _MetricChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: Gap.sm, vertical: Gap.xs),
+    decoration: BoxDecoration(
+      color: context.sweep.subtleFill,
+      borderRadius: Radii.brSm,
+    ),
+    child: Text(label, style: context.text.labelSmall),
+  );
 }
 
 class _ComponentRow extends StatelessWidget {

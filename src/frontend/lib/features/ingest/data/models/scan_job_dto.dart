@@ -16,13 +16,19 @@ abstract class ParsedItemDraftDto with _$ParsedItemDraftDto {
 
   const factory ParsedItemDraftDto({
     @Default('') String name,
+    @JsonKey(name: 'raw_name') String? rawName,
+    @JsonKey(name: 'master_ingredient_code') String? masterIngredientCode,
     @Default('') String category,
     @Default(0) double quantity,
+    @JsonKey(name: 'quantity_source') String? quantitySource,
     @Default('g') String unit,
     @JsonKey(name: 'storage_tier') @Default('fridge') String storageTier,
     @JsonKey(name: 'packed_date') DateTime? packedDate,
     @JsonKey(name: 'expiry_date') DateTime? expiryDate,
     @JsonKey(name: 'price_vnd') int? priceVnd,
+    Map<String, dynamic>? nutrition,
+    @JsonKey(name: 'freshness_guide') Map<String, dynamic>? freshnessGuide,
+    @JsonKey(name: 'is_staple') bool? isStaple,
     @JsonKey(name: 'is_expiry_warn') @Default(false) bool isExpiryWarn,
   }) = _ParsedItemDraftDto;
 
@@ -30,16 +36,22 @@ abstract class ParsedItemDraftDto with _$ParsedItemDraftDto {
       _$ParsedItemDraftDtoFromJson(json);
 
   ParsedItemDraft toDraft() => ParsedItemDraft(
-        name: name,
-        category: category,
-        quantity: quantity,
-        unit: MeasurementUnit.fromWire(unit),
-        storageTier: StorageTier.fromWire(storageTier),
-        packedDate: packedDate,
-        expiryDate: expiryDate,
-        priceVnd: priceVnd,
-        isExpiryWarn: isExpiryWarn,
-      );
+    name: name,
+    rawName: rawName,
+    masterIngredientCode: masterIngredientCode,
+    category: category,
+    quantity: quantity,
+    quantitySource: quantitySource,
+    unit: MeasurementUnit.fromWire(unit),
+    storageTier: StorageTier.fromWire(storageTier),
+    packedDate: packedDate,
+    expiryDate: expiryDate,
+    priceVnd: priceVnd,
+    nutrition: nutrition,
+    freshnessGuide: freshnessGuide,
+    isStaple: isStaple,
+    isExpiryWarn: isExpiryWarn,
+  );
 }
 
 /// Wire shape of a completed extraction job returned by `/extractions/*`
@@ -57,6 +69,9 @@ abstract class ScanJobDto with _$ScanJobDto {
     @JsonKey(name: 'store_name') String? storeName,
     @JsonKey(name: 'purchase_date') DateTime? purchaseDate,
     @JsonKey(name: 'field_count') int? fieldCount,
+    String? provider,
+    @Default(<String>[]) List<String> warnings,
+    @Default(false) bool persisted,
 
     /// Label jobs return a single [item]; receipt / voice return [items].
     ParsedItemDraftDto? item,
@@ -75,6 +90,11 @@ abstract class ScanJobDto with _$ScanJobDto {
       final reqId = json['request_id']?.toString() ?? 'job_unknown';
       final statusStr = json['status']?.toString() ?? 'SUCCEEDED';
       final rawText = json['raw_text']?.toString();
+      final provider = json['provider']?.toString();
+      final warnings = (json['warnings'] as List<dynamic>? ?? const [])
+          .map((warning) => warning.toString())
+          .toList();
+      final persisted = json['persisted'] == true;
       final fields = json['fields'] as Map<String, dynamic>? ?? {};
       final confidence = json['confidence'] as Map<String, dynamic>? ?? {};
 
@@ -85,23 +105,30 @@ abstract class ScanJobDto with _$ScanJobDto {
         for (final li in lineItemsRaw) {
           if (li is Map<String, dynamic>) {
             final name = li['name']?.toString() ?? '';
-            final qty = (li['quantity'] as num?)?.toDouble() ?? 1.0;
+            final qty = (li['quantity'] as num?)?.toDouble() ?? 0.0;
             final unitStr = li['unit']?.toString() ?? 'g';
             final unitPrice = (li['unit_price'] as num?)?.round();
             final totalPrice = (li['total_price'] as num?)?.round();
             parsedItems.add(
               ParsedItemDraftDto(
                 name: name,
+                rawName: li['raw_name']?.toString(),
+                masterIngredientCode: li['master_ingredient_code']?.toString(),
+                category: li['category']?.toString() ?? '',
                 quantity: qty,
+                quantitySource: li['quantity_source']?.toString(),
                 unit: unitStr,
                 priceVnd: unitPrice ?? totalPrice,
+                nutrition: _jsonMap(li['nutrition']),
+                freshnessGuide: _jsonMap(li['freshness_guide']),
               ),
             );
           }
         }
         final storeName = fields['vendor_name']?.toString();
-        final purchaseDate =
-            DateTime.tryParse(fields['invoice_date']?.toString() ?? '');
+        final purchaseDate = DateTime.tryParse(
+          fields['invoice_date']?.toString() ?? '',
+        );
 
         return ScanJobDto(
           jobId: reqId,
@@ -111,29 +138,40 @@ abstract class ScanJobDto with _$ScanJobDto {
           storeName: storeName,
           purchaseDate: purchaseDate,
           fieldCount: parsedItems.length,
+          provider: provider,
+          warnings: warnings,
+          persisted: persisted,
           items: parsedItems,
         );
       }
 
       // 2. Barcode Extraction
       if (fields.containsKey('product_name') || fields.containsKey('brand')) {
-        final name = fields['ingredient_name']?.toString() ??
+        final name =
+            fields['ingredient_name']?.toString() ??
             fields['product_name']?.toString() ??
             '';
         final category = fields['category']?.toString() ?? '';
-        final qty = (fields['quantity'] as num?)?.toDouble() ?? 1.0;
+        final qty = (fields['quantity'] as num?)?.toDouble() ?? 0.0;
         final unitStr = fields['unit']?.toString() ?? 'g';
-        final expiresAt =
-            DateTime.tryParse(fields['expires_at']?.toString() ?? '');
+        final expiresAt = DateTime.tryParse(
+          fields['expires_at']?.toString() ?? '',
+        );
         final price = (fields['price'] as num?)?.round();
 
         final item = ParsedItemDraftDto(
           name: name,
+          rawName: fields['raw_name']?.toString(),
+          masterIngredientCode: fields['master_ingredient_code']?.toString(),
           category: category,
           quantity: qty,
+          quantitySource: fields['quantity_source']?.toString(),
           unit: unitStr,
           expiryDate: expiresAt,
           priceVnd: price,
+          nutrition: _jsonMap(fields['nutrition']),
+          freshnessGuide: _jsonMap(fields['freshness_guide']),
+          isStaple: fields['is_staple'] as bool?,
         );
 
         return ScanJobDto(
@@ -142,6 +180,9 @@ abstract class ScanJobDto with _$ScanJobDto {
           status: statusStr,
           rawText: rawText,
           fieldCount: 5,
+          provider: provider,
+          warnings: warnings,
+          persisted: persisted,
           item: item,
           items: const [],
         );
@@ -149,12 +190,14 @@ abstract class ScanJobDto with _$ScanJobDto {
 
       // 3. Label OCR or ASR Extraction
       final name = fields['ingredient_name']?.toString() ?? '';
-      final qty = (fields['quantity'] as num?)?.toDouble() ?? 1.0;
+      final qty = (fields['quantity'] as num?)?.toDouble() ?? 0.0;
       final unitStr = fields['unit']?.toString() ?? 'g';
-      final packedAt =
-          DateTime.tryParse(fields['packaged_at']?.toString() ?? '');
-      final expiresAt =
-          DateTime.tryParse(fields['expires_at']?.toString() ?? '');
+      final packedAt = DateTime.tryParse(
+        fields['packaged_at']?.toString() ?? '',
+      );
+      final expiresAt = DateTime.tryParse(
+        fields['expires_at']?.toString() ?? '',
+      );
       final price = (fields['price'] as num?)?.round();
 
       // Confidence warning: e.g. expires_at confidence < 0.8
@@ -163,15 +206,23 @@ abstract class ScanJobDto with _$ScanJobDto {
 
       final item = ParsedItemDraftDto(
         name: name,
+        rawName: fields['raw_name']?.toString(),
+        masterIngredientCode: fields['master_ingredient_code']?.toString(),
+        category: fields['category']?.toString() ?? '',
         quantity: qty,
+        quantitySource: fields['quantity_source']?.toString(),
         unit: unitStr,
         packedDate: packedAt,
         expiryDate: expiresAt,
         priceVnd: price,
+        nutrition: _jsonMap(fields['nutrition']),
+        freshnessGuide: _jsonMap(fields['freshness_guide']),
+        isStaple: fields['is_staple'] as bool?,
         isExpiryWarn: isExpiryWarn,
       );
 
-      final determinedType = fallbackType?.wire ??
+      final determinedType =
+          fallbackType?.wire ??
           (json['provider']?.toString().toUpperCase().contains('ASR') == true
               ? ScanType.voice.wire
               : ScanType.label.wire);
@@ -183,6 +234,9 @@ abstract class ScanJobDto with _$ScanJobDto {
         rawText: rawText,
         rawTranscript: rawText,
         fieldCount: 5,
+        provider: provider,
+        warnings: warnings,
+        persisted: persisted,
         item: item,
         items: const [],
       );
@@ -200,12 +254,16 @@ abstract class ScanJobDto with _$ScanJobDto {
 
     ParsedItemDraftDto? singleItem;
     if (json['item'] is Map<String, dynamic>) {
-      singleItem = ParsedItemDraftDto.fromJson(json['item'] as Map<String, dynamic>);
+      singleItem = ParsedItemDraftDto.fromJson(
+        json['item'] as Map<String, dynamic>,
+      );
     }
 
     return ScanJobDto(
       jobId: json['job_id']?.toString() ?? '',
-      type: json['type']?.toString() ?? (fallbackType?.wire ?? ScanType.label.wire),
+      type:
+          json['type']?.toString() ??
+          (fallbackType?.wire ?? ScanType.label.wire),
       status: json['status']?.toString() ?? 'completed',
       rawText: json['raw_text']?.toString(),
       rawTranscript: json['raw_transcript']?.toString(),
@@ -214,6 +272,11 @@ abstract class ScanJobDto with _$ScanJobDto {
           ? null
           : DateTime.tryParse(json['purchase_date'].toString()),
       fieldCount: (json['field_count'] as num?)?.toInt(),
+      provider: json['provider']?.toString(),
+      warnings: (json['warnings'] as List<dynamic>? ?? const [])
+          .map((warning) => warning.toString())
+          .toList(),
+      persisted: json['persisted'] == true,
       item: singleItem,
       items: itemsList,
     );
@@ -233,6 +296,12 @@ abstract class ScanJobDto with _$ScanJobDto {
       storeName: storeName,
       purchaseDate: purchaseDate,
       fieldCount: fieldCount,
+      provider: provider,
+      warnings: warnings,
+      persisted: persisted,
     );
   }
 }
+
+Map<String, dynamic>? _jsonMap(dynamic value) =>
+    value is Map ? Map<String, dynamic>.from(value) : null;

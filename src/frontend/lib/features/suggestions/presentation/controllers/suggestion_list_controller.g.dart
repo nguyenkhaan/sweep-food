@@ -97,7 +97,7 @@ final class SuggestionListControllerProvider
 }
 
 String _$suggestionListControllerHash() =>
-    r'465145a831ab0c24fcdd7cde9677852324fe57f7';
+    r'758121dd263bfbf481e4dea1f5eaa34e8137c7f0';
 
 /// S-01 list. Re-fetches whenever the filter changes; the server does the
 /// `0.4E + 0.3A + 0.2P + 0.1U` scoring.

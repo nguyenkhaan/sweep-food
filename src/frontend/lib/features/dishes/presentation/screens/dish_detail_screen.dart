@@ -76,17 +76,22 @@ class DishDetailScreen extends ConsumerWidget {
       body: AsyncValueWidget<Dish>(
         value: async,
         onRetry: () => ref.invalidate(dishByIdProvider(dishId)),
-        data: (_) => _Body(dishId: dishId, score: suggestion?.score),
+        data: (_) => _Body(
+          dishId: dishId,
+          score: suggestion?.score,
+          rank: suggestion?.usesRankingV2 == true ? suggestion?.rank : null,
+        ),
       ),
     );
   }
 }
 
 class _Body extends ConsumerWidget {
-  const _Body({required this.dishId, this.score});
+  const _Body({required this.dishId, this.score, this.rank});
 
   final String dishId;
   final int? score;
+  final int? rank;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -102,7 +107,7 @@ class _Body extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
             children: [
-              _Hero(score: score),
+              _Hero(score: score, rank: rank),
               Gap.gapMd,
               Text(dish.name, style: context.text.headlineSmall),
               const SizedBox(height: 4),
@@ -175,9 +180,10 @@ class _Body extends ConsumerWidget {
 }
 
 class _Hero extends StatelessWidget {
-  const _Hero({this.score});
+  const _Hero({this.score, this.rank});
 
   final int? score;
+  final int? rank;
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +219,7 @@ class _Hero extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '$score',
+                      rank == null ? '$score' : '#$rank',
                       style: context.text.titleMedium?.copyWith(
                         color: context.colors.onPrimary,
                         height: 1,
@@ -296,14 +302,19 @@ class _CookBarState extends ConsumerState<_CookBar> {
     setState(() => _busy = true);
     try {
       final controller = ref.read(cookingControllerProvider.notifier);
-      final servings = (ref.read(dishServingsProvider(widget.dish.id)) ?? widget.dish.servings).toDouble();
+      final servings =
+          (ref.read(dishServingsProvider(widget.dish.id)) ??
+                  widget.dish.servings)
+              .toDouble();
       final preview = await controller.previewForDish(
         dishId: widget.dish.id,
         servings: servings,
       );
       if (preview.hasMissingIngredients) {
         if (mounted) {
-          final names = preview.missingIngredients.map((m) => m.ingredientName).join(', ');
+          final names = preview.missingIngredients
+              .map((m) => m.ingredientName)
+              .join(', ');
           AppSnack.show(context, 'Thiếu nguyên liệu: $names');
         }
         return;

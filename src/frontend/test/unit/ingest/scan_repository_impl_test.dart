@@ -20,104 +20,130 @@ void main() {
     repo = ScanRepositoryImpl(ScanRemoteDataSource(api));
   });
 
-  ScanJob rightOrFail(Result<ScanJob> result) => result.fold(
-        (f) => fail('expected Right, got $f'),
-        (job) => job,
-      );
+  ScanJob rightOrFail(Result<ScanJob> result) =>
+      result.fold((f) => fail('expected Right, got $f'), (job) => job);
 
   test(
-      'scanLabel maps backend ExtractionResponse to a ScanJob and keeps image path',
-      () async {
-    when(
-      () => api.postMultipart(
-        ApiPaths.extractionOcrLabel,
-        fields: any(named: 'fields'),
-        files: any(named: 'files'),
-      ),
-    ).thenAnswer(
-      (_) async => {
-        'request_id': '00000000-0000-0000-0000-000000000001',
-        'status': 'SUCCEEDED',
-        'provider': 'MOCK_OCR',
-        'raw_text': 'Mock OCR label output',
-        'fields': {
-          'ingredient_name': 'Whole Milk',
-          'quantity': 1.0,
-          'unit': 'LITER',
-          'packaged_at': '2026-08-28',
-          'expires_at': '2026-09-05',
-          'price': 35000.0,
-          'currency': 'VND',
-          'barcode': null,
+    'scanLabel maps backend ExtractionResponse to a ScanJob and keeps image path',
+    () async {
+      when(
+        () => api.postMultipart(
+          ApiPaths.extractionOcrLabel,
+          fields: any(named: 'fields'),
+          files: any(named: 'files'),
+        ),
+      ).thenAnswer(
+        (_) async => {
+          'request_id': '00000000-0000-0000-0000-000000000001',
+          'status': 'SUCCEEDED',
+          'provider': 'MOCK_OCR',
+          'raw_text': 'Mock OCR label output',
+          'fields': {
+            'ingredient_name': 'Whole Milk',
+            'raw_name': 'Sữa tươi nguyên kem',
+            'master_ingredient_code': '12001',
+            'category': 'Sữa và chế phẩm',
+            'quantity': 1.0,
+            'quantity_source': 'extracted',
+            'unit': 'LITER',
+            'packaged_at': '2026-08-28',
+            'expires_at': '2026-09-05',
+            'price': 35000.0,
+            'currency': 'VND',
+            'barcode': null,
+            'nutrition': {'energy_kcal': 61},
+            'freshness_guide': {'fridge_hours': 168},
+            'is_staple': false,
+          },
+          'confidence': {'ingredient_name': 0.95, 'expires_at': 0.75},
+          'warnings': <String>[],
+          'persisted': false,
         },
-        'confidence': {'ingredient_name': 0.95, 'expires_at': 0.75},
-        'warnings': <String>[],
-        'persisted': false,
-      },
-    );
+      );
 
-    final job = rightOrFail(await repo.scanLabel('/tmp/label.jpg'));
-    expect(job.type, ScanType.label);
-    expect(job.sourcePath, '/tmp/label.jpg');
-    expect(job.items, hasLength(1));
-    expect(job.items.single.name, 'Whole Milk');
-    expect(job.items.single.quantity, 1.0);
-    expect(job.items.single.unit, MeasurementUnit.liter);
-    expect(job.items.single.priceVnd, 35000);
-    expect(job.items.single.isExpiryWarn, isTrue); // confidence < 0.8
-  });
+      final job = rightOrFail(await repo.scanLabel('/tmp/label.jpg'));
+      expect(job.type, ScanType.label);
+      expect(job.sourcePath, '/tmp/label.jpg');
+      expect(job.items, hasLength(1));
+      expect(job.items.single.name, 'Whole Milk');
+      expect(job.items.single.rawName, 'Sữa tươi nguyên kem');
+      expect(job.items.single.masterIngredientCode, '12001');
+      expect(job.items.single.category, 'Sữa và chế phẩm');
+      expect(job.items.single.quantity, 1.0);
+      expect(job.items.single.quantitySource, 'extracted');
+      expect(job.items.single.unit, MeasurementUnit.liter);
+      expect(job.items.single.priceVnd, 35000);
+      expect(job.items.single.isExpiryWarn, isTrue); // confidence < 0.8
+      expect(job.items.single.nutrition?['energy_kcal'], 61);
+      expect(job.items.single.freshnessGuide?['fridge_hours'], 168);
+      expect(job.items.single.isStaple, isFalse);
+      expect(job.provider, 'MOCK_OCR');
+      expect(job.persisted, isFalse);
+    },
+  );
 
-  test('scanReceipt maps backend InvoiceExtractionResponse with line items',
-      () async {
-    when(
-      () => api.postMultipart(
-        ApiPaths.extractionOcrInvoice,
-        fields: any(named: 'fields'),
-        files: any(named: 'files'),
-      ),
-    ).thenAnswer(
-      (_) async => {
-        'request_id': '00000000-0000-0000-0000-000000000002',
-        'status': 'SUCCEEDED',
-        'provider': 'MOCK_OCR',
-        'raw_text': 'Mock OCR invoice output',
-        'fields': {
-          'line_items': [
-            {
-              'name': 'Whole Milk',
-              'quantity': 2.0,
-              'unit': 'LITER',
-              'unit_price': 35000.0,
-              'total_price': 70000.0,
-            },
-            {
-              'name': 'Bread',
-              'quantity': 1.0,
-              'unit': 'PIECE',
-              'unit_price': 15000.0,
-              'total_price': 15000.0,
-            },
-          ],
-          'total_amount': 85000.0,
-          'currency': 'VND',
-          'invoice_date': '2026-08-30',
-          'vendor_name': 'Mock Grocery Store',
+  test(
+    'scanReceipt maps backend InvoiceExtractionResponse with line items',
+    () async {
+      when(
+        () => api.postMultipart(
+          ApiPaths.extractionOcrInvoice,
+          fields: any(named: 'fields'),
+          files: any(named: 'files'),
+        ),
+      ).thenAnswer(
+        (_) async => {
+          'request_id': '00000000-0000-0000-0000-000000000002',
+          'status': 'SUCCEEDED',
+          'provider': 'MOCK_OCR',
+          'raw_text': 'Mock OCR invoice output',
+          'fields': {
+            'line_items': [
+              {
+                'name': 'Whole Milk',
+                'quantity': 2.0,
+                'unit': 'LITER',
+                'unit_price': 35000.0,
+                'total_price': 70000.0,
+              },
+              {
+                'name': 'Bread',
+                'raw_name': 'Bánh mì',
+                'master_ingredient_code': '15001',
+                'category': 'Ngũ cốc',
+                'quantity': null,
+                'quantity_source': 'default',
+                'unit': null,
+                'unit_price': 15000.0,
+                'total_price': 15000.0,
+                'nutrition': {'energy_kcal': 265},
+                'freshness_guide': {'room_hours': 48},
+              },
+            ],
+            'total_amount': 85000.0,
+            'currency': 'VND',
+            'invoice_date': '2026-08-30',
+            'vendor_name': 'Mock Grocery Store',
+          },
+          'confidence': {'line_items': 0.82},
+          'warnings': <String>[],
+          'persisted': false,
         },
-        'confidence': {'line_items': 0.82},
-        'warnings': <String>[],
-        'persisted': false,
-      },
-    );
+      );
 
-    final job = rightOrFail(await repo.scanReceipt('/tmp/r.jpg'));
-    expect(job.type, ScanType.receipt);
-    expect(job.storeName, 'Mock Grocery Store');
-    expect(job.items, hasLength(2));
-    expect(job.items.map((i) => i.name), ['Whole Milk', 'Bread']);
-    expect(job.items.first.unit, MeasurementUnit.liter);
-    expect(job.items.first.priceVnd, 35000);
-    expect(job.items.last.unit, MeasurementUnit.piece);
-  });
+      final job = rightOrFail(await repo.scanReceipt('/tmp/r.jpg'));
+      expect(job.type, ScanType.receipt);
+      expect(job.storeName, 'Mock Grocery Store');
+      expect(job.items, hasLength(2));
+      expect(job.items.map((i) => i.name), ['Whole Milk', 'Bread']);
+      expect(job.items.first.unit, MeasurementUnit.liter);
+      expect(job.items.first.priceVnd, 35000);
+      expect(job.items.last.quantity, 0);
+      expect(job.items.last.quantitySource, 'default');
+      expect(job.items.last.rawName, 'Bánh mì');
+      expect(job.items.last.masterIngredientCode, '15001');
+    },
+  );
 
   test('lookupBarcode maps BarcodeExtractionResponse to ScanJob', () async {
     when(
@@ -166,6 +192,9 @@ void main() {
     final result = await repo.scanVoice(transcript: 'test');
 
     expect(result.isLeft(), isTrue);
-    result.match((f) => expect(f, isA<Failure>()), (_) => fail('expected Left'));
+    result.match(
+      (f) => expect(f, isA<Failure>()),
+      (_) => fail('expected Left'),
+    );
   });
 }

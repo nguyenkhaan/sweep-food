@@ -15,13 +15,19 @@ abstract class ParsedItemDraft with _$ParsedItemDraft {
 
   const factory ParsedItemDraft({
     @Default('') String name,
+    String? rawName,
+    String? masterIngredientCode,
     @Default('') String category,
     @Default(0) double quantity,
+    String? quantitySource,
     @Default(MeasurementUnit.gram) MeasurementUnit unit,
     @Default(StorageTier.fridge) StorageTier storageTier,
     DateTime? packedDate,
     DateTime? expiryDate,
     int? priceVnd,
+    Map<String, dynamic>? nutrition,
+    Map<String, dynamic>? freshnessGuide,
+    bool? isStaple,
 
     /// The OCR / ASR filled this field with low confidence — flag it for review.
     @Default(false) bool isExpiryWarn,

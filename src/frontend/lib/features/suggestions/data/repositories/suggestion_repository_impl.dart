@@ -22,10 +22,8 @@ SuggestionRepository suggestionRepository(Ref ref) {
 }
 
 class SuggestionRepositoryImpl implements SuggestionRepository {
-  SuggestionRepositoryImpl(
-    this._remote, {
-    DishRemoteDataSource? dishRemote,
-  }) : _dishRemote = dishRemote;
+  SuggestionRepositoryImpl(this._remote, {DishRemoteDataSource? dishRemote})
+    : _dishRemote = dishRemote;
 
   final SuggestionRemoteDataSource _remote;
   final DishRemoteDataSource? _dishRemote;
@@ -38,7 +36,9 @@ class SuggestionRepositoryImpl implements SuggestionRepository {
 
         final futures = response.items.map((item) async {
           Dish dish;
-          if (item.dish != null) {
+          if (item.recipeSummary != null) {
+            dish = item.recipeSummary!.toEntity();
+          } else if (item.dish != null) {
             dish = item.dish!.toEntity();
           } else if (_dishRemote != null && item.recipeId.isNotEmpty) {
             try {
@@ -74,14 +74,27 @@ class SuggestionRepositoryImpl implements SuggestionRepository {
           }
 
           final breakdown = item.scoreComponents.toEntity();
-          final int scoreOut = (item.score * 100).round();
+          final legacyScore = item.score;
+          final scoreOut = legacyScore == null
+              ? 0
+              : (legacyScore * 100).round();
+          final features = item.rankingFeatures;
 
           return DishSuggestion(
             dish: dish,
             breakdown: breakdown,
-            nearExpiryIngredients: item.nearExpiryIngredients,
-            availabilityRatio: item.scoreComponents.availability,
-            toBuyCount: item.missingIngredients.length,
+            rankingFeatures: features?.toEntity(),
+            rank: item.rank,
+            rankScore: item.rankScore,
+            statusBadge: item.statusBadge,
+            nearExpiryIngredients: item.rescuedItems.isNotEmpty
+                ? item.rescuedItems
+                : item.nearExpiryIngredients,
+            availabilityRatio:
+                features?.coreCoverage ?? item.scoreComponents.availability,
+            toBuyCount: features == null
+                ? item.missingIngredients.length
+                : features.shoppingGapItems.round(),
             scoreOverride: scoreOut > 0 ? scoreOut : breakdown.scoreOutOf100,
             explanation: item.explanation.isNotEmpty ? item.explanation : null,
             isMock: isMock,

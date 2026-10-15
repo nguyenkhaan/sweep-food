@@ -66,8 +66,6 @@ class SuggestionListScreen extends ConsumerWidget {
   }
 }
 
-
-
 class _FilterBar extends ConsumerWidget {
   const _FilterBar();
 
@@ -231,6 +229,7 @@ class _SuggestionTile extends StatelessWidget {
         SuggestionCard(
           title: suggestion.dish.name,
           score: suggestion.score,
+          rank: suggestion.usesRankingV2 ? suggestion.rank : null,
           meta: suggestion.dish.shortMeta(l10n),
           chips: suggestion.cardChips(l10n),
           onTap: () => context.push(

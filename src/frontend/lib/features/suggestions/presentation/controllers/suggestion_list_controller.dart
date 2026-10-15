@@ -1,5 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/domain/repositories/pantry_repository.dart';
 import 'package:sweepfood/features/suggestions/data/repositories/suggestion_repository_impl.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
@@ -43,12 +46,25 @@ class SuggestionFilter {
     );
   }
 
-  SuggestionRequest toRequest() => SuggestionRequest(
-        mealType: mealType,
-        maxCookTimeMin: quickCookOnly ? _quickCookMinutes : null,
-        dietaryPreference: dietaryPreference,
-        limit: AppConstants.maxSuggestions,
-      );
+  SuggestionRequest toRequest({
+    List<PantryItem> pantryItems = const <PantryItem>[],
+    DateTime? now,
+  }) => SuggestionRequest(
+    items: [
+      for (final item in pantryItems)
+        if (RecommendationPantryItem.fromPantryItem(
+              item,
+              now: now ?? DateTime.now(),
+            )
+            case final recommendationItem?)
+          recommendationItem,
+    ],
+    prompt: prompt,
+    mealType: mealType,
+    maxCookTimeMin: quickCookOnly ? _quickCookMinutes : null,
+    dietaryPreference: dietaryPreference,
+    limit: AppConstants.maxSuggestions,
+  );
 }
 
 @riverpod
@@ -73,34 +89,46 @@ class SuggestionFilterController extends _$SuggestionFilterController {
 
   void togglePreference(DietaryPreference pref) =>
       state = state.dietaryPreference == pref
-          ? state.copyWith(clearDietaryPreference: true)
-          : state.copyWith(dietaryPreference: pref);
+      ? state.copyWith(clearDietaryPreference: true)
+      : state.copyWith(dietaryPreference: pref);
 }
 
-/// S-01 list. Re-fetches whenever the filter changes; the server does the
-/// `0.4E + 0.3A + 0.2P + 0.1U` scoring.
+/// S-01 list. Re-fetches whenever the filter changes; the server owns ranking.
 @riverpod
 class SuggestionListController extends _$SuggestionListController {
   @override
   Future<List<DishSuggestion>> build() async {
     final filter = ref.watch(suggestionFilterControllerProvider);
-    final res =
-        await ref.watch(suggestionRepositoryProvider).fetch(filter.toRequest());
-    return res.fold(
-      (f) => throw f,
-      (list) {
-        final q = filter.prompt.trim().toLowerCase();
-        if (q.isEmpty) return list;
-        final keywords =
-            q.split(RegExp(r'\s+')).where((k) => k.isNotEmpty).toList();
-        return list.where((item) {
-          final text =
-              '${item.dish.name} ${item.dish.cuisine} ${item.nearExpiryIngredients.join(" ")}'
-                  .toLowerCase();
-          return text.contains(q) || keywords.every((k) => text.contains(k));
-        }).toList();
-      },
+    // Capture watched dependencies before the async gap. Inventory updates
+    // can invalidate this provider while the request is still in flight.
+    final pantryRepository = ref.watch(pantryRepositoryProvider);
+    final suggestionRepository = ref.watch(suggestionRepositoryProvider);
+    final pantryResult = await pantryRepository.list(
+      status: PantryItemStatus.active,
+      sort: PantrySort.priority,
+      page: 1,
     );
+    final pantryItems = pantryResult.fold(
+      (failure) => throw failure,
+      (page) => page.items,
+    );
+    final res = await suggestionRepository.fetch(
+      filter.toRequest(pantryItems: pantryItems),
+    );
+    return res.fold((f) => throw f, (list) {
+      final q = filter.prompt.trim().toLowerCase();
+      if (q.isEmpty) return list;
+      final keywords = q
+          .split(RegExp(r'\s+'))
+          .where((k) => k.isNotEmpty)
+          .toList();
+      return list.where((item) {
+        final text =
+            '${item.dish.name} ${item.dish.cuisine} ${item.nearExpiryIngredients.join(" ")}'
+                .toLowerCase();
+        return text.contains(q) || keywords.every((k) => text.contains(k));
+      }).toList();
+    });
   }
 
   Future<void> refresh() =>

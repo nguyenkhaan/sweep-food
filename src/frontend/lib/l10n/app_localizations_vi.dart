@@ -208,6 +208,9 @@ class AppL10nVi extends AppL10n {
   String get scoreBadgeLabel => 'ĐIỂM';
 
   @override
+  String get rankBadgeLabel => 'HẠNG';
+
+  @override
   String get confidenceNeedsReview => 'Cần kiểm tra';
 
   @override
@@ -667,6 +670,50 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get scoreFormula => 'Điểm = 0.4·E + 0.3·A + 0.2·P + 0.1·U';
+
+  @override
+  String rankingSheetTitle(String dish, int rank) {
+    return '$dish · hạng #$rank';
+  }
+
+  @override
+  String rankingRawScore(String score) {
+    return 'Điểm xếp hạng thô: $score (không phải phần trăm)';
+  }
+
+  @override
+  String get rankingCoreCoverage => 'Độ phủ nguyên liệu chính';
+
+  @override
+  String get rankingSecondaryCoverage => 'Độ phủ nguyên liệu phụ';
+
+  @override
+  String get rankingNutritionConfidence => 'Độ tin cậy dinh dưỡng';
+
+  @override
+  String rankingCoreMissing(int count) {
+    return 'Thiếu chính: $count';
+  }
+
+  @override
+  String rankingShoppingGap(int count) {
+    return 'Cần mua: $count';
+  }
+
+  @override
+  String rankingRescueWeight(int grams) {
+    return 'Giải cứu $grams g';
+  }
+
+  @override
+  String rankingNutrition(int kcal, int protein) {
+    return '$kcal kcal · $protein g đạm';
+  }
+
+  @override
+  String rankingPrepComplexity(String value) {
+    return 'Độ phức tạp sơ chế: $value';
+  }
 
   @override
   String get scoreCompE => 'Dùng đồ cận hạn';

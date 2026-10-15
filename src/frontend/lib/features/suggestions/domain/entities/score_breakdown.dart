@@ -77,3 +77,31 @@ class ScoreComponent {
   /// `0..1`.
   final double value;
 }
+
+/// Contextual values returned by recommendation contract v2.
+///
+/// [rankScore] itself is intentionally not represented here: it is a raw
+/// ranking value and must not be presented as a calibrated 0–100 score.
+class RankingFeatures {
+  const RankingFeatures({
+    this.coreCoverage = 0,
+    this.coreMissingCount = 0,
+    this.secondaryCoverage = 0,
+    this.shoppingGapItems = 0,
+    this.rescueWeightG = 0,
+    this.nutritionConfidence = 0,
+    this.kcalPerServing = 0,
+    this.proteinPerServing = 0,
+    this.prepComplexity = 0,
+  });
+
+  final double coreCoverage;
+  final double coreMissingCount;
+  final double secondaryCoverage;
+  final double shoppingGapItems;
+  final double rescueWeightG;
+  final double nutritionConfidence;
+  final double kcalPerServing;
+  final double proteinPerServing;
+  final double prepComplexity;
+}

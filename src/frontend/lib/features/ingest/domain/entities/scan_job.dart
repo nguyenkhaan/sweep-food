@@ -23,6 +23,11 @@ abstract class ScanJob with _$ScanJob {
     /// OCR raw text (label / receipt) or ASR transcript (voice), for display.
     String? rawText,
 
+    /// Provider diagnostics returned by the extraction envelope.
+    String? provider,
+    @Default(<String>[]) List<String> warnings,
+    @Default(false) bool persisted,
+
     /// Receipt only.
     String? storeName,
     DateTime? purchaseDate,

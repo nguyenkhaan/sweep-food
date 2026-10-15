@@ -16,7 +16,8 @@ mixin _$ScanJob {
 
  String get id; ScanType get type; ScanStatus get status;/// Extracted drafts. Label jobs carry exactly one; receipt / voice carry many.
  List<ParsedItemDraft> get items;/// OCR raw text (label / receipt) or ASR transcript (voice), for display.
- String? get rawText;/// Receipt only.
+ String? get rawText;/// Provider diagnostics returned by the extraction envelope.
+ String? get provider; List<String> get warnings; bool get persisted;/// Receipt only.
  String? get storeName; DateTime? get purchaseDate;/// How many label fields the OCR filled (I-03 banner).
  int? get fieldCount;/// Local path of the captured photo / audio, kept for the review thumbnail.
 /// Filled client-side by the repository, never by the server.
@@ -31,16 +32,16 @@ $ScanJobCopyWith<ScanJob> get copyWith => _$ScanJobCopyWithImpl<ScanJob>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScanJob&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.rawText, rawText) || other.rawText == rawText)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.purchaseDate, purchaseDate) || other.purchaseDate == purchaseDate)&&(identical(other.fieldCount, fieldCount) || other.fieldCount == fieldCount)&&(identical(other.sourcePath, sourcePath) || other.sourcePath == sourcePath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ScanJob&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.rawText, rawText) || other.rawText == rawText)&&(identical(other.provider, provider) || other.provider == provider)&&const DeepCollectionEquality().equals(other.warnings, warnings)&&(identical(other.persisted, persisted) || other.persisted == persisted)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.purchaseDate, purchaseDate) || other.purchaseDate == purchaseDate)&&(identical(other.fieldCount, fieldCount) || other.fieldCount == fieldCount)&&(identical(other.sourcePath, sourcePath) || other.sourcePath == sourcePath));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,type,status,const DeepCollectionEquality().hash(items),rawText,storeName,purchaseDate,fieldCount,sourcePath);
+int get hashCode => Object.hash(runtimeType,id,type,status,const DeepCollectionEquality().hash(items),rawText,provider,const DeepCollectionEquality().hash(warnings),persisted,storeName,purchaseDate,fieldCount,sourcePath);
 
 @override
 String toString() {
-  return 'ScanJob(id: $id, type: $type, status: $status, items: $items, rawText: $rawText, storeName: $storeName, purchaseDate: $purchaseDate, fieldCount: $fieldCount, sourcePath: $sourcePath)';
+  return 'ScanJob(id: $id, type: $type, status: $status, items: $items, rawText: $rawText, provider: $provider, warnings: $warnings, persisted: $persisted, storeName: $storeName, purchaseDate: $purchaseDate, fieldCount: $fieldCount, sourcePath: $sourcePath)';
 }
 
 
@@ -51,7 +52,7 @@ abstract mixin class $ScanJobCopyWith<$Res>  {
   factory $ScanJobCopyWith(ScanJob value, $Res Function(ScanJob) _then) = _$ScanJobCopyWithImpl;
 @useResult
 $Res call({
- String id, ScanType type, ScanStatus status, List<ParsedItemDraft> items, String? rawText, String? storeName, DateTime? purchaseDate, int? fieldCount, String? sourcePath
+ String id, ScanType type, ScanStatus status, List<ParsedItemDraft> items, String? rawText, String? provider, List<String> warnings, bool persisted, String? storeName, DateTime? purchaseDate, int? fieldCount, String? sourcePath
 });
 
 
@@ -68,14 +69,17 @@ class _$ScanJobCopyWithImpl<$Res>
 
 /// Create a copy of ScanJob
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? status = null,Object? items = null,Object? rawText = freezed,Object? storeName = freezed,Object? purchaseDate = freezed,Object? fieldCount = freezed,Object? sourcePath = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? status = null,Object? items = null,Object? rawText = freezed,Object? provider = freezed,Object? warnings = null,Object? persisted = null,Object? storeName = freezed,Object? purchaseDate = freezed,Object? fieldCount = freezed,Object? sourcePath = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ScanType,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ScanStatus,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<ParsedItemDraft>,rawText: freezed == rawText ? _self.rawText : rawText // ignore: cast_nullable_to_non_nullable
-as String?,storeName: freezed == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
+as String?,provider: freezed == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
+as String?,warnings: null == warnings ? _self.warnings : warnings // ignore: cast_nullable_to_non_nullable
+as List<String>,persisted: null == persisted ? _self.persisted : persisted // ignore: cast_nullable_to_non_nullable
+as bool,storeName: freezed == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
 as String?,purchaseDate: freezed == purchaseDate ? _self.purchaseDate : purchaseDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,fieldCount: freezed == fieldCount ? _self.fieldCount : fieldCount // ignore: cast_nullable_to_non_nullable
 as int?,sourcePath: freezed == sourcePath ? _self.sourcePath : sourcePath // ignore: cast_nullable_to_non_nullable
@@ -164,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  ScanType type,  ScanStatus status,  List<ParsedItemDraft> items,  String? rawText,  String? storeName,  DateTime? purchaseDate,  int? fieldCount,  String? sourcePath)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  ScanType type,  ScanStatus status,  List<ParsedItemDraft> items,  String? rawText,  String? provider,  List<String> warnings,  bool persisted,  String? storeName,  DateTime? purchaseDate,  int? fieldCount,  String? sourcePath)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ScanJob() when $default != null:
-return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that.storeName,_that.purchaseDate,_that.fieldCount,_that.sourcePath);case _:
+return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that.provider,_that.warnings,_that.persisted,_that.storeName,_that.purchaseDate,_that.fieldCount,_that.sourcePath);case _:
   return orElse();
 
 }
@@ -185,10 +189,10 @@ return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  ScanType type,  ScanStatus status,  List<ParsedItemDraft> items,  String? rawText,  String? storeName,  DateTime? purchaseDate,  int? fieldCount,  String? sourcePath)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  ScanType type,  ScanStatus status,  List<ParsedItemDraft> items,  String? rawText,  String? provider,  List<String> warnings,  bool persisted,  String? storeName,  DateTime? purchaseDate,  int? fieldCount,  String? sourcePath)  $default,) {final _that = this;
 switch (_that) {
 case _ScanJob():
-return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that.storeName,_that.purchaseDate,_that.fieldCount,_that.sourcePath);case _:
+return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that.provider,_that.warnings,_that.persisted,_that.storeName,_that.purchaseDate,_that.fieldCount,_that.sourcePath);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +209,10 @@ return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  ScanType type,  ScanStatus status,  List<ParsedItemDraft> items,  String? rawText,  String? storeName,  DateTime? purchaseDate,  int? fieldCount,  String? sourcePath)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  ScanType type,  ScanStatus status,  List<ParsedItemDraft> items,  String? rawText,  String? provider,  List<String> warnings,  bool persisted,  String? storeName,  DateTime? purchaseDate,  int? fieldCount,  String? sourcePath)?  $default,) {final _that = this;
 switch (_that) {
 case _ScanJob() when $default != null:
-return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that.storeName,_that.purchaseDate,_that.fieldCount,_that.sourcePath);case _:
+return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that.provider,_that.warnings,_that.persisted,_that.storeName,_that.purchaseDate,_that.fieldCount,_that.sourcePath);case _:
   return null;
 
 }
@@ -220,7 +224,7 @@ return $default(_that.id,_that.type,_that.status,_that.items,_that.rawText,_that
 
 
 class _ScanJob extends ScanJob {
-  const _ScanJob({required this.id, required this.type, this.status = ScanStatus.completed, final  List<ParsedItemDraft> items = const <ParsedItemDraft>[], this.rawText, this.storeName, this.purchaseDate, this.fieldCount, this.sourcePath}): _items = items,super._();
+  const _ScanJob({required this.id, required this.type, this.status = ScanStatus.completed, final  List<ParsedItemDraft> items = const <ParsedItemDraft>[], this.rawText, this.provider, final  List<String> warnings = const <String>[], this.persisted = false, this.storeName, this.purchaseDate, this.fieldCount, this.sourcePath}): _items = items,_warnings = warnings,super._();
   
 
 @override final  String id;
@@ -237,6 +241,16 @@ class _ScanJob extends ScanJob {
 
 /// OCR raw text (label / receipt) or ASR transcript (voice), for display.
 @override final  String? rawText;
+/// Provider diagnostics returned by the extraction envelope.
+@override final  String? provider;
+ final  List<String> _warnings;
+@override@JsonKey() List<String> get warnings {
+  if (_warnings is EqualUnmodifiableListView) return _warnings;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_warnings);
+}
+
+@override@JsonKey() final  bool persisted;
 /// Receipt only.
 @override final  String? storeName;
 @override final  DateTime? purchaseDate;
@@ -256,16 +270,16 @@ _$ScanJobCopyWith<_ScanJob> get copyWith => __$ScanJobCopyWithImpl<_ScanJob>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScanJob&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.rawText, rawText) || other.rawText == rawText)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.purchaseDate, purchaseDate) || other.purchaseDate == purchaseDate)&&(identical(other.fieldCount, fieldCount) || other.fieldCount == fieldCount)&&(identical(other.sourcePath, sourcePath) || other.sourcePath == sourcePath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ScanJob&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.rawText, rawText) || other.rawText == rawText)&&(identical(other.provider, provider) || other.provider == provider)&&const DeepCollectionEquality().equals(other._warnings, _warnings)&&(identical(other.persisted, persisted) || other.persisted == persisted)&&(identical(other.storeName, storeName) || other.storeName == storeName)&&(identical(other.purchaseDate, purchaseDate) || other.purchaseDate == purchaseDate)&&(identical(other.fieldCount, fieldCount) || other.fieldCount == fieldCount)&&(identical(other.sourcePath, sourcePath) || other.sourcePath == sourcePath));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,type,status,const DeepCollectionEquality().hash(_items),rawText,storeName,purchaseDate,fieldCount,sourcePath);
+int get hashCode => Object.hash(runtimeType,id,type,status,const DeepCollectionEquality().hash(_items),rawText,provider,const DeepCollectionEquality().hash(_warnings),persisted,storeName,purchaseDate,fieldCount,sourcePath);
 
 @override
 String toString() {
-  return 'ScanJob(id: $id, type: $type, status: $status, items: $items, rawText: $rawText, storeName: $storeName, purchaseDate: $purchaseDate, fieldCount: $fieldCount, sourcePath: $sourcePath)';
+  return 'ScanJob(id: $id, type: $type, status: $status, items: $items, rawText: $rawText, provider: $provider, warnings: $warnings, persisted: $persisted, storeName: $storeName, purchaseDate: $purchaseDate, fieldCount: $fieldCount, sourcePath: $sourcePath)';
 }
 
 
@@ -276,7 +290,7 @@ abstract mixin class _$ScanJobCopyWith<$Res> implements $ScanJobCopyWith<$Res> {
   factory _$ScanJobCopyWith(_ScanJob value, $Res Function(_ScanJob) _then) = __$ScanJobCopyWithImpl;
 @override @useResult
 $Res call({
- String id, ScanType type, ScanStatus status, List<ParsedItemDraft> items, String? rawText, String? storeName, DateTime? purchaseDate, int? fieldCount, String? sourcePath
+ String id, ScanType type, ScanStatus status, List<ParsedItemDraft> items, String? rawText, String? provider, List<String> warnings, bool persisted, String? storeName, DateTime? purchaseDate, int? fieldCount, String? sourcePath
 });
 
 
@@ -293,14 +307,17 @@ class __$ScanJobCopyWithImpl<$Res>
 
 /// Create a copy of ScanJob
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? status = null,Object? items = null,Object? rawText = freezed,Object? storeName = freezed,Object? purchaseDate = freezed,Object? fieldCount = freezed,Object? sourcePath = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? status = null,Object? items = null,Object? rawText = freezed,Object? provider = freezed,Object? warnings = null,Object? persisted = null,Object? storeName = freezed,Object? purchaseDate = freezed,Object? fieldCount = freezed,Object? sourcePath = freezed,}) {
   return _then(_ScanJob(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ScanType,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ScanStatus,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
 as List<ParsedItemDraft>,rawText: freezed == rawText ? _self.rawText : rawText // ignore: cast_nullable_to_non_nullable
-as String?,storeName: freezed == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
+as String?,provider: freezed == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
+as String?,warnings: null == warnings ? _self._warnings : warnings // ignore: cast_nullable_to_non_nullable
+as List<String>,persisted: null == persisted ? _self.persisted : persisted // ignore: cast_nullable_to_non_nullable
+as bool,storeName: freezed == storeName ? _self.storeName : storeName // ignore: cast_nullable_to_non_nullable
 as String?,purchaseDate: freezed == purchaseDate ? _self.purchaseDate : purchaseDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,fieldCount: freezed == fieldCount ? _self.fieldCount : fieldCount // ignore: cast_nullable_to_non_nullable
 as int?,sourcePath: freezed == sourcePath ? _self.sourcePath : sourcePath // ignore: cast_nullable_to_non_nullable

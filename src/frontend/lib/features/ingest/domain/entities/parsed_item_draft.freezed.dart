@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParsedItemDraft {
 
- String get name; String get category; double get quantity; MeasurementUnit get unit; StorageTier get storageTier; DateTime? get packedDate; DateTime? get expiryDate; int? get priceVnd;/// The OCR / ASR filled this field with low confidence — flag it for review.
+ String get name; String? get rawName; String? get masterIngredientCode; String get category; double get quantity; String? get quantitySource; MeasurementUnit get unit; StorageTier get storageTier; DateTime? get packedDate; DateTime? get expiryDate; int? get priceVnd; Map<String, dynamic>? get nutrition; Map<String, dynamic>? get freshnessGuide; bool? get isStaple;/// The OCR / ASR filled this field with low confidence — flag it for review.
  bool get isExpiryWarn; String? get imagePath;
 /// Create a copy of ParsedItemDraft
 /// with the given fields replaced by the non-null parameter values.
@@ -26,16 +26,16 @@ $ParsedItemDraftCopyWith<ParsedItemDraft> get copyWith => _$ParsedItemDraftCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParsedItemDraft&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&(identical(other.isExpiryWarn, isExpiryWarn) || other.isExpiryWarn == isExpiryWarn)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParsedItemDraft&&(identical(other.name, name) || other.name == name)&&(identical(other.rawName, rawName) || other.rawName == rawName)&&(identical(other.masterIngredientCode, masterIngredientCode) || other.masterIngredientCode == masterIngredientCode)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.quantitySource, quantitySource) || other.quantitySource == quantitySource)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&const DeepCollectionEquality().equals(other.nutrition, nutrition)&&const DeepCollectionEquality().equals(other.freshnessGuide, freshnessGuide)&&(identical(other.isStaple, isStaple) || other.isStaple == isStaple)&&(identical(other.isExpiryWarn, isExpiryWarn) || other.isExpiryWarn == isExpiryWarn)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,packedDate,expiryDate,priceVnd,isExpiryWarn,imagePath);
+int get hashCode => Object.hash(runtimeType,name,rawName,masterIngredientCode,category,quantity,quantitySource,unit,storageTier,packedDate,expiryDate,priceVnd,const DeepCollectionEquality().hash(nutrition),const DeepCollectionEquality().hash(freshnessGuide),isStaple,isExpiryWarn,imagePath);
 
 @override
 String toString() {
-  return 'ParsedItemDraft(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, packedDate: $packedDate, expiryDate: $expiryDate, priceVnd: $priceVnd, isExpiryWarn: $isExpiryWarn, imagePath: $imagePath)';
+  return 'ParsedItemDraft(name: $name, rawName: $rawName, masterIngredientCode: $masterIngredientCode, category: $category, quantity: $quantity, quantitySource: $quantitySource, unit: $unit, storageTier: $storageTier, packedDate: $packedDate, expiryDate: $expiryDate, priceVnd: $priceVnd, nutrition: $nutrition, freshnessGuide: $freshnessGuide, isStaple: $isStaple, isExpiryWarn: $isExpiryWarn, imagePath: $imagePath)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $ParsedItemDraftCopyWith<$Res>  {
   factory $ParsedItemDraftCopyWith(ParsedItemDraft value, $Res Function(ParsedItemDraft) _then) = _$ParsedItemDraftCopyWithImpl;
 @useResult
 $Res call({
- String name, String category, double quantity, MeasurementUnit unit, StorageTier storageTier, DateTime? packedDate, DateTime? expiryDate, int? priceVnd, bool isExpiryWarn, String? imagePath
+ String name, String? rawName, String? masterIngredientCode, String category, double quantity, String? quantitySource, MeasurementUnit unit, StorageTier storageTier, DateTime? packedDate, DateTime? expiryDate, int? priceVnd, Map<String, dynamic>? nutrition, Map<String, dynamic>? freshnessGuide, bool? isStaple, bool isExpiryWarn, String? imagePath
 });
 
 
@@ -63,17 +63,23 @@ class _$ParsedItemDraftCopyWithImpl<$Res>
 
 /// Create a copy of ParsedItemDraft
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? packedDate = freezed,Object? expiryDate = freezed,Object? priceVnd = freezed,Object? isExpiryWarn = null,Object? imagePath = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? rawName = freezed,Object? masterIngredientCode = freezed,Object? category = null,Object? quantity = null,Object? quantitySource = freezed,Object? unit = null,Object? storageTier = null,Object? packedDate = freezed,Object? expiryDate = freezed,Object? priceVnd = freezed,Object? nutrition = freezed,Object? freshnessGuide = freezed,Object? isStaple = freezed,Object? isExpiryWarn = null,Object? imagePath = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String,rawName: freezed == rawName ? _self.rawName : rawName // ignore: cast_nullable_to_non_nullable
+as String?,masterIngredientCode: freezed == masterIngredientCode ? _self.masterIngredientCode : masterIngredientCode // ignore: cast_nullable_to_non_nullable
+as String?,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
-as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as double,quantitySource: freezed == quantitySource ? _self.quantitySource : quantitySource // ignore: cast_nullable_to_non_nullable
+as String?,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as MeasurementUnit,storageTier: null == storageTier ? _self.storageTier : storageTier // ignore: cast_nullable_to_non_nullable
 as StorageTier,packedDate: freezed == packedDate ? _self.packedDate : packedDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,expiryDate: freezed == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,priceVnd: freezed == priceVnd ? _self.priceVnd : priceVnd // ignore: cast_nullable_to_non_nullable
-as int?,isExpiryWarn: null == isExpiryWarn ? _self.isExpiryWarn : isExpiryWarn // ignore: cast_nullable_to_non_nullable
+as int?,nutrition: freezed == nutrition ? _self.nutrition : nutrition // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,freshnessGuide: freezed == freshnessGuide ? _self.freshnessGuide : freshnessGuide // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,isStaple: freezed == isStaple ? _self.isStaple : isStaple // ignore: cast_nullable_to_non_nullable
+as bool?,isExpiryWarn: null == isExpiryWarn ? _self.isExpiryWarn : isExpiryWarn // ignore: cast_nullable_to_non_nullable
 as bool,imagePath: freezed == imagePath ? _self.imagePath : imagePath // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -160,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  DateTime? packedDate,  DateTime? expiryDate,  int? priceVnd,  bool isExpiryWarn,  String? imagePath)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String? rawName,  String? masterIngredientCode,  String category,  double quantity,  String? quantitySource,  MeasurementUnit unit,  StorageTier storageTier,  DateTime? packedDate,  DateTime? expiryDate,  int? priceVnd,  Map<String, dynamic>? nutrition,  Map<String, dynamic>? freshnessGuide,  bool? isStaple,  bool isExpiryWarn,  String? imagePath)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParsedItemDraft() when $default != null:
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn,_that.imagePath);case _:
+return $default(_that.name,_that.rawName,_that.masterIngredientCode,_that.category,_that.quantity,_that.quantitySource,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.nutrition,_that.freshnessGuide,_that.isStaple,_that.isExpiryWarn,_that.imagePath);case _:
   return orElse();
 
 }
@@ -181,10 +187,10 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  DateTime? packedDate,  DateTime? expiryDate,  int? priceVnd,  bool isExpiryWarn,  String? imagePath)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String? rawName,  String? masterIngredientCode,  String category,  double quantity,  String? quantitySource,  MeasurementUnit unit,  StorageTier storageTier,  DateTime? packedDate,  DateTime? expiryDate,  int? priceVnd,  Map<String, dynamic>? nutrition,  Map<String, dynamic>? freshnessGuide,  bool? isStaple,  bool isExpiryWarn,  String? imagePath)  $default,) {final _that = this;
 switch (_that) {
 case _ParsedItemDraft():
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn,_that.imagePath);case _:
+return $default(_that.name,_that.rawName,_that.masterIngredientCode,_that.category,_that.quantity,_that.quantitySource,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.nutrition,_that.freshnessGuide,_that.isStaple,_that.isExpiryWarn,_that.imagePath);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +207,10 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  DateTime? packedDate,  DateTime? expiryDate,  int? priceVnd,  bool isExpiryWarn,  String? imagePath)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String? rawName,  String? masterIngredientCode,  String category,  double quantity,  String? quantitySource,  MeasurementUnit unit,  StorageTier storageTier,  DateTime? packedDate,  DateTime? expiryDate,  int? priceVnd,  Map<String, dynamic>? nutrition,  Map<String, dynamic>? freshnessGuide,  bool? isStaple,  bool isExpiryWarn,  String? imagePath)?  $default,) {final _that = this;
 switch (_that) {
 case _ParsedItemDraft() when $default != null:
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn,_that.imagePath);case _:
+return $default(_that.name,_that.rawName,_that.masterIngredientCode,_that.category,_that.quantity,_that.quantitySource,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.nutrition,_that.freshnessGuide,_that.isStaple,_that.isExpiryWarn,_that.imagePath);case _:
   return null;
 
 }
@@ -216,17 +222,39 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 
 
 class _ParsedItemDraft extends ParsedItemDraft {
-  const _ParsedItemDraft({this.name = '', this.category = '', this.quantity = 0, this.unit = MeasurementUnit.gram, this.storageTier = StorageTier.fridge, this.packedDate, this.expiryDate, this.priceVnd, this.isExpiryWarn = false, this.imagePath}): super._();
+  const _ParsedItemDraft({this.name = '', this.rawName, this.masterIngredientCode, this.category = '', this.quantity = 0, this.quantitySource, this.unit = MeasurementUnit.gram, this.storageTier = StorageTier.fridge, this.packedDate, this.expiryDate, this.priceVnd, final  Map<String, dynamic>? nutrition, final  Map<String, dynamic>? freshnessGuide, this.isStaple, this.isExpiryWarn = false, this.imagePath}): _nutrition = nutrition,_freshnessGuide = freshnessGuide,super._();
   
 
 @override@JsonKey() final  String name;
+@override final  String? rawName;
+@override final  String? masterIngredientCode;
 @override@JsonKey() final  String category;
 @override@JsonKey() final  double quantity;
+@override final  String? quantitySource;
 @override@JsonKey() final  MeasurementUnit unit;
 @override@JsonKey() final  StorageTier storageTier;
 @override final  DateTime? packedDate;
 @override final  DateTime? expiryDate;
 @override final  int? priceVnd;
+ final  Map<String, dynamic>? _nutrition;
+@override Map<String, dynamic>? get nutrition {
+  final value = _nutrition;
+  if (value == null) return null;
+  if (_nutrition is EqualUnmodifiableMapView) return _nutrition;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
+ final  Map<String, dynamic>? _freshnessGuide;
+@override Map<String, dynamic>? get freshnessGuide {
+  final value = _freshnessGuide;
+  if (value == null) return null;
+  if (_freshnessGuide is EqualUnmodifiableMapView) return _freshnessGuide;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
+@override final  bool? isStaple;
 /// The OCR / ASR filled this field with low confidence — flag it for review.
 @override@JsonKey() final  bool isExpiryWarn;
 @override final  String? imagePath;
@@ -241,16 +269,16 @@ _$ParsedItemDraftCopyWith<_ParsedItemDraft> get copyWith => __$ParsedItemDraftCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParsedItemDraft&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&(identical(other.isExpiryWarn, isExpiryWarn) || other.isExpiryWarn == isExpiryWarn)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParsedItemDraft&&(identical(other.name, name) || other.name == name)&&(identical(other.rawName, rawName) || other.rawName == rawName)&&(identical(other.masterIngredientCode, masterIngredientCode) || other.masterIngredientCode == masterIngredientCode)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.quantitySource, quantitySource) || other.quantitySource == quantitySource)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&const DeepCollectionEquality().equals(other._nutrition, _nutrition)&&const DeepCollectionEquality().equals(other._freshnessGuide, _freshnessGuide)&&(identical(other.isStaple, isStaple) || other.isStaple == isStaple)&&(identical(other.isExpiryWarn, isExpiryWarn) || other.isExpiryWarn == isExpiryWarn)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,packedDate,expiryDate,priceVnd,isExpiryWarn,imagePath);
+int get hashCode => Object.hash(runtimeType,name,rawName,masterIngredientCode,category,quantity,quantitySource,unit,storageTier,packedDate,expiryDate,priceVnd,const DeepCollectionEquality().hash(_nutrition),const DeepCollectionEquality().hash(_freshnessGuide),isStaple,isExpiryWarn,imagePath);
 
 @override
 String toString() {
-  return 'ParsedItemDraft(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, packedDate: $packedDate, expiryDate: $expiryDate, priceVnd: $priceVnd, isExpiryWarn: $isExpiryWarn, imagePath: $imagePath)';
+  return 'ParsedItemDraft(name: $name, rawName: $rawName, masterIngredientCode: $masterIngredientCode, category: $category, quantity: $quantity, quantitySource: $quantitySource, unit: $unit, storageTier: $storageTier, packedDate: $packedDate, expiryDate: $expiryDate, priceVnd: $priceVnd, nutrition: $nutrition, freshnessGuide: $freshnessGuide, isStaple: $isStaple, isExpiryWarn: $isExpiryWarn, imagePath: $imagePath)';
 }
 
 
@@ -261,7 +289,7 @@ abstract mixin class _$ParsedItemDraftCopyWith<$Res> implements $ParsedItemDraft
   factory _$ParsedItemDraftCopyWith(_ParsedItemDraft value, $Res Function(_ParsedItemDraft) _then) = __$ParsedItemDraftCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String category, double quantity, MeasurementUnit unit, StorageTier storageTier, DateTime? packedDate, DateTime? expiryDate, int? priceVnd, bool isExpiryWarn, String? imagePath
+ String name, String? rawName, String? masterIngredientCode, String category, double quantity, String? quantitySource, MeasurementUnit unit, StorageTier storageTier, DateTime? packedDate, DateTime? expiryDate, int? priceVnd, Map<String, dynamic>? nutrition, Map<String, dynamic>? freshnessGuide, bool? isStaple, bool isExpiryWarn, String? imagePath
 });
 
 
@@ -278,17 +306,23 @@ class __$ParsedItemDraftCopyWithImpl<$Res>
 
 /// Create a copy of ParsedItemDraft
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? packedDate = freezed,Object? expiryDate = freezed,Object? priceVnd = freezed,Object? isExpiryWarn = null,Object? imagePath = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? rawName = freezed,Object? masterIngredientCode = freezed,Object? category = null,Object? quantity = null,Object? quantitySource = freezed,Object? unit = null,Object? storageTier = null,Object? packedDate = freezed,Object? expiryDate = freezed,Object? priceVnd = freezed,Object? nutrition = freezed,Object? freshnessGuide = freezed,Object? isStaple = freezed,Object? isExpiryWarn = null,Object? imagePath = freezed,}) {
   return _then(_ParsedItemDraft(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String,rawName: freezed == rawName ? _self.rawName : rawName // ignore: cast_nullable_to_non_nullable
+as String?,masterIngredientCode: freezed == masterIngredientCode ? _self.masterIngredientCode : masterIngredientCode // ignore: cast_nullable_to_non_nullable
+as String?,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
-as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as double,quantitySource: freezed == quantitySource ? _self.quantitySource : quantitySource // ignore: cast_nullable_to_non_nullable
+as String?,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as MeasurementUnit,storageTier: null == storageTier ? _self.storageTier : storageTier // ignore: cast_nullable_to_non_nullable
 as StorageTier,packedDate: freezed == packedDate ? _self.packedDate : packedDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,expiryDate: freezed == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,priceVnd: freezed == priceVnd ? _self.priceVnd : priceVnd // ignore: cast_nullable_to_non_nullable
-as int?,isExpiryWarn: null == isExpiryWarn ? _self.isExpiryWarn : isExpiryWarn // ignore: cast_nullable_to_non_nullable
+as int?,nutrition: freezed == nutrition ? _self._nutrition : nutrition // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,freshnessGuide: freezed == freshnessGuide ? _self._freshnessGuide : freshnessGuide // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,isStaple: freezed == isStaple ? _self.isStaple : isStaple // ignore: cast_nullable_to_non_nullable
+as bool?,isExpiryWarn: null == isExpiryWarn ? _self.isExpiryWarn : isExpiryWarn // ignore: cast_nullable_to_non_nullable
 as bool,imagePath: freezed == imagePath ? _self.imagePath : imagePath // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
