@@ -223,6 +223,29 @@ async def test_create_catalog_batch_uses_ingredient_shelf_life_rule() -> None:
 
 
 @pytest.mark.anyio
+async def test_create_batch_preserves_a_provided_manufacturer_expiry() -> None:
+    """An explicitly supplied package date remains the authoritative expiry."""
+    manufacturer_expiry = NOW + timedelta(days=7)
+    database = FakeDatabaseSession([FakeResult(None)])
+    service = InventoryService(cast(AsyncSession, database))
+
+    response = await service.create_batch(
+        USER_ID,
+        CreateInventoryBatchRequestDTO(
+            custom_name="Home-made sauce",
+            quantity=2.0,
+            unit=MeasurementUnit.LITER,
+            storage_mode=StorageMode.REFRIGERATED,
+            expires_at=manufacturer_expiry,
+        ),
+        "create-manufacturer-expiry-1",
+    )
+
+    assert response.expires_at == manufacturer_expiry
+    assert response.expiration_source is ExpirationSource.MANUFACTURER
+
+
+@pytest.mark.anyio
 async def test_expiration_override_is_audited_without_changing_quantity() -> None:
     """A user-provided expiry becomes authoritative and leaves a correction audit."""
     batch = InventoryBatchModel(

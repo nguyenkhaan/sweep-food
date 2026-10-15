@@ -160,7 +160,7 @@ def _shopping_item() -> ShoppingListItemModel:
 
 @pytest.mark.anyio
 async def test_purchase_uses_catalog_default_and_rejects_missing_default() -> None:
-    """An omitted storage mode resolves only from a catalog ingredient default."""
+    """A purchase may omit expiry and resolves storage only from a catalog default."""
     inventory = FakeInventoryService()
     service = ShoppingService(
         cast(AsyncSession, object()),
@@ -176,6 +176,7 @@ async def test_purchase_uses_catalog_default_and_rejects_missing_default() -> No
 
     assert item.is_checked is True
     assert inventory.requests[0].storage_mode is StorageMode.REFRIGERATED
+    assert inventory.requests[0].expires_at is None
 
     with pytest.raises(HTTPException, match="storage_mode") as error:
         await service._check_item(

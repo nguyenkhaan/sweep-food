@@ -47,7 +47,7 @@ class CreateInventoryBatchRequestDTO(BaseModel):
     purchased_at: datetime | None = None
     packaged_at: datetime | None = None
     stored_at: datetime | None = None
-    expires_at: datetime
+    expires_at: datetime | None = None
     unit_cost: float | None = Field(default=None, ge=0)
     note: str | None = Field(default=None, max_length=1000)
     media_url: str | None = Field(default=None, max_length=2048)
