@@ -1,11 +1,17 @@
 """Unit tests for FreshCheck artifact validation and sync planning."""
 
 from copy import deepcopy
+from unittest.mock import AsyncMock, Mock
 
 import pytest
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.model.enum_model import FreshCheckKBVersionStatus
+from src.model.freshcheck_model import FreshCheckKBVersionModel
 from src.service.freshcheck_sync_service import (
     ArtifactValidationError,
+    FreshCheckSyncService,
+    ReleaseConflictError,
     calculate_artifact_checksum,
     parse_freshcheck_artifact,
 )
@@ -110,3 +116,82 @@ def test_parse_freshcheck_artifact_rejects_a_claim_without_its_source() -> None:
 
     with pytest.raises(ArtifactValidationError, match="source"):
         parse_freshcheck_artifact(artifact)
+
+
+@pytest.mark.anyio
+async def test_stage_is_idempotent_for_the_same_version_and_checksum() -> None:
+    """Replaying a staged artifact does not write duplicate KB records."""
+    artifact = parse_freshcheck_artifact(_artifact())
+    existing_version = FreshCheckKBVersionModel(
+        kb_version=artifact.kb_version,
+        status=FreshCheckKBVersionStatus.STAGED,
+        checksum=artifact.checksum,
+        source_commit=artifact.source_commit,
+        stats=artifact.stats,
+        artifact=artifact.raw,
+    )
+    session = AsyncMock(spec=AsyncSession)
+    session.get.return_value = existing_version
+    session.add_all = Mock()
+    service = FreshCheckSyncService(session)
+
+    result = await service.stage(artifact, "unit-test")
+
+    assert result.action == "already_staged"
+    session.add_all.assert_not_called()
+    session.flush.assert_not_awaited()
+
+
+@pytest.mark.anyio
+async def test_stage_rejects_a_checksum_collision() -> None:
+    """An existing version cannot be overwritten with another artifact."""
+    artifact = parse_freshcheck_artifact(_artifact())
+    existing_version = FreshCheckKBVersionModel(
+        kb_version=artifact.kb_version,
+        status=FreshCheckKBVersionStatus.STAGED,
+        checksum=f"sha256:{'b' * 64}",
+        source_commit=artifact.source_commit,
+        stats=artifact.stats,
+        artifact=artifact.raw,
+    )
+    session = AsyncMock(spec=AsyncSession)
+    session.get.return_value = existing_version
+    service = FreshCheckSyncService(session)
+
+    with pytest.raises(ReleaseConflictError, match="checksum"):
+        await service.stage(artifact, "unit-test")
+
+
+@pytest.mark.anyio
+async def test_activate_retires_the_prior_active_release() -> None:
+    """Activation atomically changes the active release while retaining history."""
+    artifact = parse_freshcheck_artifact(_artifact())
+    target_version = FreshCheckKBVersionModel(
+        kb_version=artifact.kb_version,
+        status=FreshCheckKBVersionStatus.STAGED,
+        checksum=artifact.checksum,
+        source_commit=artifact.source_commit,
+        stats=artifact.stats,
+        artifact=artifact.raw,
+    )
+    prior_active_version = FreshCheckKBVersionModel(
+        kb_version="1.2.2",
+        status=FreshCheckKBVersionStatus.ACTIVE,
+        checksum=f"sha256:{'b' * 64}",
+        source_commit="b" * 40,
+        stats={},
+        artifact={},
+    )
+    session = AsyncMock(spec=AsyncSession)
+    session.get.return_value = target_version
+    session.scalar.return_value = prior_active_version
+    service = FreshCheckSyncService(session)
+
+    result = await service.activate(artifact, "unit-test")
+
+    assert result.action == "activated"
+    assert target_version.status is FreshCheckKBVersionStatus.ACTIVE
+    assert target_version.activated_by == "unit-test"
+    assert prior_active_version.status is FreshCheckKBVersionStatus.RETIRED
+    assert prior_active_version.retired_by == "unit-test"
+    session.flush.assert_awaited_once()

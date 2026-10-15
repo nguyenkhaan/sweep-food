@@ -1,9 +1,8 @@
 """
 scripts/sync_to_postgres.py
 
-Đồng bộ một chiều, idempotent từ artifact build/freshcheck_kb.json sang PostgreSQL của backend (handbook §3, §11).
-Chỉ chạy sau khi KB đã build xong và xanh CI.
-Hỗ trợ cả chế độ --dry-run (mặc định nếu chưa cấu hình DATABASE_URL) và chế độ kết nối trực tiếp.
+DEPRECATED: script này không còn được phép ghi trực tiếp PostgreSQL hoặc chạy DDL.
+Hãy dùng `src/backend/scripts/sync_freshcheck_kb.py` với schema do Alembic quản lý.
 """
 
 from __future__ import annotations
@@ -17,51 +16,7 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parent.parent
 KB_PATH = REPO_ROOT / "build/freshcheck_kb.json"
 
-DDL_STATEMENTS = """
--- DDL cho FreshCheck Knowledge Base (Idempotent)
-CREATE TABLE IF NOT EXISTS freshcheck_kb_versions (
-    kb_version VARCHAR(32) PRIMARY KEY,
-    generated_at TIMESTAMPTZ NOT NULL,
-    synced_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    stats JSONB NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS freshcheck_archetypes (
-    archetype_id VARCHAR(64) PRIMARY KEY,
-    name_vi VARCHAR(255) NOT NULL,
-    applies_to_groups JSONB NOT NULL,
-    sensory_tiers JSONB NOT NULL,
-    inspection_rubric JSONB NOT NULL,
-    preservation_protocols JSONB NOT NULL,
-    business_rules JSONB NOT NULL,
-    kb_version VARCHAR(32) REFERENCES freshcheck_kb_versions(kb_version)
-);
-
-CREATE TABLE IF NOT EXISTS freshcheck_ingredients (
-    ingredient_id VARCHAR(64) PRIMARY KEY,
-    code VARCHAR(32) NOT NULL,
-    names_vi JSONB NOT NULL,
-    archetype_id VARCHAR(64) REFERENCES freshcheck_archetypes(archetype_id),
-    base_shelf_life_hours JSONB NOT NULL,
-    kb_version VARCHAR(32) REFERENCES freshcheck_kb_versions(kb_version)
-);
-
-CREATE TABLE IF NOT EXISTS freshcheck_claims (
-    claim_id VARCHAR(64) PRIMARY KEY,
-    statement_vi TEXT NOT NULL,
-    source_id VARCHAR(64) NOT NULL,
-    locator TEXT,
-    conditions JSONB,
-    evidence_level VARCHAR(8) NOT NULL,
-    status VARCHAR(32) NOT NULL,
-    extracted_by VARCHAR(64),
-    reviewed_by VARCHAR(64),
-    kb_version VARCHAR(32) REFERENCES freshcheck_kb_versions(kb_version)
-);
-
-CREATE INDEX IF NOT EXISTS idx_freshcheck_ing_code ON freshcheck_ingredients(code);
-CREATE INDEX IF NOT EXISTS idx_freshcheck_ing_arch ON freshcheck_ingredients(archetype_id);
-"""
+DDL_STATEMENTS = ""
 
 
 def load_kb_payload() -> dict:
@@ -90,7 +45,14 @@ def generate_sync_plan(kb: dict) -> dict:
     }
 
 
-def main():
+def main() -> int:
+    """Stop callers before the removed direct-DDL implementation can run."""
+    print(
+        "Deprecated: use src/backend/scripts/sync_freshcheck_kb.py; "
+        "only Alembic manages FreshCheck schema."
+    )
+    return 2
+
     parser = argparse.ArgumentParser(description="Đồng bộ FreshCheck KB sang PostgreSQL.")
     parser.add_argument(
         "--dry-run",
@@ -240,4 +202,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
