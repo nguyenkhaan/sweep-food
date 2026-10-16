@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
@@ -183,6 +183,28 @@ def test_expiry_check_trusts_printed_rule_matching_the_span() -> None:
     assert japfa["expiry_check"] == "ok"
     assert unaccented["expiry_check"] == "ok"
     assert months["expiry_check"] == "ok"
+
+
+def test_expiry_check_flags_production_date_after_scan_day() -> None:
+    # Model nhỏ đọc "2.10.2026" thành 21/10 ở cả NĐG lẫn HSD: khoảng ngày trông bình thường,
+    # nhưng NĐG sau ngày quét (02/10) là không thể.
+    scan = date(2026, 10, 2)
+    both_misread = check_label_expiry(
+        _label("22/10/2026", production_date="21/10/2026", note="NĐG: 21/10/2026 | HSD: 22/10/2026"),
+        ingredients=CANH_GA_KB, scan_date=scan,
+    )
+    no_expiry = check_label_expiry(
+        _label(None, production_date="21/10/2026"), ingredients=CANH_GA_KB, scan_date=scan
+    )
+    same_day = check_label_expiry(
+        _label("02/10/2026", production_date="02/10/2026"), ingredients=CANH_GA_KB, scan_date=scan
+    )
+
+    assert both_misread["expiry_check"] == "suspicious"
+    assert "sau ngày quét" in both_misread["expiry_check_reason"]
+    assert both_misread["expiry_date"] == "22/10/2026"  # never rewritten
+    assert no_expiry["expiry_check"] == "suspicious"
+    assert same_day["expiry_check"] == "ok"
 
 
 def test_expiry_check_still_flags_when_span_disagrees_with_printed_rule() -> None:

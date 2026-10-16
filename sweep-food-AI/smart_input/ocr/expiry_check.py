@@ -107,19 +107,31 @@ def check_label_expiry(
     item: dict[str, Any],
     ingredients: Optional[dict[str, dict[str, Any]]] = None,
     tolerance_hours: float = EXPIRY_TOLERANCE_HOURS,
+    scan_date: Optional[date] = None,
 ) -> dict[str, Any]:
     """Return item with expiry_check "ok" / "suspicious" (None when it cannot be checked).
 
     A suspicious item also gets expiry_check_reason and the reason appended to note.
+    scan_date is the day the label was scanned (default: today).
     """
     result = {**item, "expiry_check": None, "expiry_check_reason": None}
     produced = _to_date(item.get("production_date"))
     expires = _to_date(item.get("expiry_date"))
+    scan_date = scan_date or date.today()
+
+    reason = None
+    if produced is not None and produced > scan_date:
+        # Small models misread "2.10" as "21.10" on both NSX and HSD, so the span looks
+        # normal; a production date after the scan day is impossible and gives it away.
+        reason = (
+            f"Ngày sản xuất/đóng gói đọc được ({produced:%d/%m/%Y}) sau ngày quét ({scan_date:%d/%m/%Y}), "
+            "có thể đọc nhầm ngày. Kiểm tra lại NSX và HSD trên tem."
+        )
+        return _flag(result, item, reason)
     if produced is None or expires is None:
         return result
 
     span_days = (expires - produced).days
-    reason = None
     if span_days < 0:
         reason = (
             f"HSD {expires:%d/%m/%Y} sớm hơn ngày sản xuất/đóng gói {produced:%d/%m/%Y}, "
@@ -149,6 +161,10 @@ def check_label_expiry(
     if reason is None:
         result["expiry_check"] = "ok"
         return result
+    return _flag(result, item, reason)
+
+
+def _flag(result: dict[str, Any], item: dict[str, Any], reason: str) -> dict[str, Any]:
     note = str(item.get("note") or "").strip()
     result["expiry_check"] = "suspicious"
     result["expiry_check_reason"] = reason
