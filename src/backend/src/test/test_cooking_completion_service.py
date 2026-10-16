@@ -29,6 +29,7 @@ from src.model.enum_model import (
     MeasurementUnit,
     StorageMode,
 )
+from src.model.history_model import IngredientUsageHistoryModel
 from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 from src.model.master_ingredient_model import MasterIngredientModel
@@ -309,15 +310,22 @@ async def test_complete_session_atomically_deducts_and_records_ledger() -> None:
     assert response.updated_batches[0].current_quantity == 0.5
     assert database.commit_count == 1
     assert database.rollback_count == 0
-    assert len(database.added) == 3
+    assert len(database.added) == 4
     assert isinstance(database.added[0], CookingConsumptionModel)
-    assert isinstance(database.added[1], InventoryLedgerEntryModel)
-    ledger_entry = database.added[1]
+    usage_history = database.added[1]
+    assert isinstance(usage_history, IngredientUsageHistoryModel)
+    assert usage_history.user_id == USER_ID
+    assert usage_history.ingredient == {"name": "Fresh milk", "type": "ingredient"}
+    assert usage_history.recipe == {"name": "Fresh milk smoothie", "type": "recipe"}
+    assert usage_history.quantity == 0.5
+    assert usage_history.unit is MeasurementUnit.LITER
+    assert isinstance(database.added[2], InventoryLedgerEntryModel)
+    ledger_entry = database.added[2]
     assert ledger_entry.event_type is InventoryLedgerEventType.COOKING_CONSUMPTION
     assert ledger_entry.quantity_before == 1.0
     assert ledger_entry.quantity_delta == -0.5
     assert ledger_entry.quantity_after == 0.5
-    waste_event = database.added[2]
+    waste_event = database.added[3]
     assert isinstance(waste_event, WasteReductionEventModel)
     assert waste_event.is_eligible is False
     assert waste_event.exclusion_reason == "UNSUPPORTED_UNIT"
