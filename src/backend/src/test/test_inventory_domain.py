@@ -142,7 +142,11 @@ def test_freshness_boundaries_use_the_configured_warning_window() -> None:
         calculate_freshness(now - timedelta(microseconds=1), now, warning_days=3)
         is FreshnessState.EXPIRED
     )
-    assert calculate_freshness(now, now, warning_days=3) is FreshnessState.EXPIRING_SOON
+    assert calculate_freshness(now, now, warning_days=3) is FreshnessState.EXPIRED
+    assert (
+        calculate_freshness(now + timedelta(microseconds=1), now, warning_days=3)
+        is FreshnessState.EXPIRING_SOON
+    )
     assert (
         calculate_freshness(now + timedelta(days=3), now, warning_days=3)
         is FreshnessState.EXPIRING_SOON

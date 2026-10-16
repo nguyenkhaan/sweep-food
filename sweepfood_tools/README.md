@@ -5,9 +5,10 @@ Chi tiết việc của từng người ở tab **Việc cần làm** trong tài
 
 ## can_dung/ – dùng cho vòng 2
 
+API tính năng ① (FreshCheck, module `freshness`) đã có sẵn trên nhánh `dev` (commit `77abd5d`), không cần áp patch nữa.
+
 | File | Ai | Làm gì |
 |---|---|---|
-| `sweep-food_be_freshness-api.patch` | Khả An | API tính năng ① cho repo nguyenkhaan/sweep-food (engine FreshCheck, module `freshness`, router đã đăng ký, kho JSON, 7 test đã pass). Áp: `git apply sweep-food_be_freshness-api.patch` ở gốc repo. |
 | `fridge_report.py` | Khả An | Chạy thử gợi ý món trên tủ lạnh thật, không cần sửa code AI, không cần người chấm. Hướng dẫn định dạng file tủ ở đầu file. `python fridge_report.py fridges` → in 4 con số cho slide 6 + ghi `fridge_top3.csv`. |
 | `feature_gain_slide6.png` | Gia Huy, Thắng Lê | Biểu đồ cho slide 6. |
 

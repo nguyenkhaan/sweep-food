@@ -19,6 +19,11 @@ lists use the real PostgreSQL models and transactions in this increment.
 
 All paths are under `/api` and require a bearer access token.
 
+Status codes: `POST` that creates a resource returns `201 Created`; every
+`DELETE` returns `204 No Content` with an empty body (removing a recipe that
+is not a favourite is still `204`).  Clients must not expect a JSON body or a
+`message` field from a `DELETE`.
+
 ### Recommendations
 
 - `POST /recommendations`

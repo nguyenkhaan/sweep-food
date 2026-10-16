@@ -35,15 +35,16 @@ async def put_recipe_favorite(
 
 
 @favorite_router.delete(
-    "/recipes/{recipe_id}/favorite" 
+    "/recipes/{recipe_id}/favorite", status_code=status.HTTP_204_NO_CONTENT
 )
 async def delete_recipe_favorite(
     recipe_id: UUID,
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
     service: Annotated[FavoriteService, Depends(get_favorite_service)],
-):
+) -> Response:
     """Remove a saved recipe without revealing any other user's state."""
-    return (await service.remove_recipe(user.user_id, recipe_id))
+    await service.remove_recipe(user.user_id, recipe_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @favorite_router.get("/favorite-recipes", response_model=FavoriteRecipeListDTO)
@@ -114,9 +115,11 @@ async def delete_favorite_menu(
     favorite_menu_id: UUID,
     user: Annotated[AuthenticatedUser, Depends(require_authentication)],
     service: Annotated[FavoriteService, Depends(get_favorite_service)],
-):
+) -> Response:
     """Delete an owned favourite menu and all of its entries."""
-    return (await service.remove_menu(user.user_id, favorite_menu_id)) 
+    await service.remove_menu(user.user_id, favorite_menu_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
 
 @favorite_router.post(
     "/favorite-menus/{favorite_menu_id}/items",

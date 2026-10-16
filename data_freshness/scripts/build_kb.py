@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -272,4 +274,7 @@ def build_kb() -> Path:
 
 
 if __name__ == "__main__":
+    # Windows consoles default to a legacy code page that cannot print Vietnamese.
+    if isinstance(sys.stdout, io.TextIOWrapper):
+        sys.stdout.reconfigure(encoding="utf-8")
     build_kb()

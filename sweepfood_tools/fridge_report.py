@@ -62,6 +62,11 @@ def main(fridge_dir, answers=None):
 
 
 if __name__ == "__main__":
+    for stream in (sys.stdout, sys.stderr):  # console Windows mặc định cp1252, không in được tiếng Việt
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
     args = sys.argv[1:]
+    if not args or args[0] == "--answers":
+        sys.exit("Cách dùng: python fridge_report.py <thư_mục_tủ> [--answers fridge_top3.csv]")
     answers = args[args.index("--answers") + 1] if "--answers" in args else None
     main(args[0], answers)

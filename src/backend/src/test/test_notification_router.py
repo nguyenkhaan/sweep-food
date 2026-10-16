@@ -160,7 +160,7 @@ async def test_register_and_disable_android_device_routes(
         f"/api/users/me/devices/{DEVICE_ID}",
     )
 
-    assert register_response.status_code == 200
+    assert register_response.status_code == 201
     assert register_response.json()["device_id"] == str(DEVICE_ID)
     assert disable_response.status_code == 204
 

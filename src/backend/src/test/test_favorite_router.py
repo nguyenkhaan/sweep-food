@@ -212,6 +212,7 @@ async def test_favorite_recipe_routes_write_and_remove_owned_state(
     assert add.status_code == 200
     assert add.json() == {"recipe_id": str(RECIPE_ID), "is_favorite": True}
     assert remove.status_code == 204
+    assert remove.content == b""
 
 
 @pytest.mark.anyio
@@ -254,6 +255,7 @@ async def test_favorite_routes_manage_owned_menus_and_menu_items(
     assert update_item.status_code == 200
     assert remove_item.status_code == 204
     assert remove_menu.status_code == 204
+    assert remove_menu.content == b""
 
 
 @pytest.mark.anyio

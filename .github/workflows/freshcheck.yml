@@ -18,7 +18,7 @@ on:
       - "src/backend/src/test/test_notification_jobs.py"
       - "src/backend/src/test/test_recommendation_ai_service.py"
   push:
-    branches: [main]
+    branches: [dev, main]
     paths:
       - ".github/workflows/freshcheck.yml"
       - "data_freshness/**"
@@ -65,6 +65,8 @@ jobs:
         working-directory: src/backend
         run: |
           uv sync --all-groups --frozen
+          # Settings are read at import time; example values suffice for these unit tests.
+          cp .env.example .env
           uv run python -m scripts.sync_freshcheck_kb --artifact ../../data_freshness/build/freshcheck_kb.json --dry-run
           timeout 100s uv run pytest -q src/test/test_freshcheck_sync_service.py src/test/test_freshcheck_sync_cli.py src/test/test_freshcheck_models.py src/test/test_freshcheck_mapping_model.py src/test/test_freshcheck_migration_chain.py src/test/test_freshcheck_engine.py src/test/test_freshcheck_repository.py src/test/test_freshness_router.py src/test/test_freshness_assessment.py src/test/test_notification_jobs.py src/test/test_recommendation_ai_service.py src/test/test_fefo_service.py
           uv run ruff check scripts/sync_freshcheck_kb.py src/service/freshcheck_sync_service.py src/module/freshness src/module/notification/notification_job_service.py src/module/recommendations/recommendation_ai_service.py
