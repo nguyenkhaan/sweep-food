@@ -1,19 +1,15 @@
-"""Groq Vision OCR Pipeline using Qwen (qwen/qwen3.8-27b).
+"""Vision OCR pipeline for supermarket labels and receipts.
 
 Completely replaces PaddleOCR + VietOCR local pipeline.
-Performs basic image preprocessing (resize, JPEG compression, base64)
-and calls the Groq Cloud API:
-    client = Groq()
-    completion = client.chat.completions.create(
-        model="qwen/qwen3.8-27b",
-        messages=[...],
-        temperature=0.6,
-        max_completion_tokens=2048,
-        top_p=0.95,
-        reasoning_effort="default",
-        stream=True,
-        stop=None
-    )
+Performs basic image preprocessing (resize, WebP compression, base64), sends the
+image with OCR_PROMPT to a vision model and parses the JSON it returns.
+
+This module holds the shared pipeline and the Groq backend (qwen/qwen3.8-27b),
+which is kept as the fallback provider. The default provider lives in
+openai_vision_ocr.py; smart_input.service picks one with OCR_PROVIDER.
+
+hours_to_expire is computed here from expiry_date, never taken from the model:
+the model does not know today's date.
 """
 
 from __future__ import annotations
@@ -22,6 +18,7 @@ import base64
 import json
 import os
 import re
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 import cv2
@@ -33,10 +30,60 @@ try:
 except ImportError:
     HAS_GROQ = False
 
+DEFAULT_HOURS_TO_EXPIRE = 72.0
 
-def _get_groq_api_key() -> str:
-    """Retrieve GROQ_API_KEY from environment or .env file."""
-    key = os.environ.get("GROQ_API_KEY", "")
+# Prompt v2 (16/10/2026): no examples taken from the OCR test images, explicit
+# "leave null when unsure", DD-MM-YYYY date order, separate production_date,
+# expiry_date only from HSD lines, "N ngày kể từ NSX" resolved to a date.
+OCR_PROMPT = """Bạn là bộ đọc tem nhãn thực phẩm và hóa đơn siêu thị Việt Nam. Hãy chép lại chính xác những gì IN TRÊN ẢNH và trả về JSON.
+
+NGUYÊN TẮC CHUNG
+- Chỉ ghi thông tin nhìn thấy trên ảnh. Không đoán, không suy từ kiến thức chung, không thêm địa chỉ, số điện thoại hay cách bảo quản không có trên ảnh.
+- Chữ nào mờ, bị che, hoặc không chắc thì để null và ghi lý do vào "note" (ví dụ: "NSX mờ, không đọc được"). Thà để trống còn hơn ghi sai.
+
+TÊN (name)
+- Chép đúng nguyên văn tên sản phẩm. Chữ in không dấu thì giữ không dấu; chữ in có dấu thì giữ đúng dấu. Không tự thêm dấu.
+- Bỏ logo/thương hiệu đứng riêng (ví dụ chữ "CP" trong vòng tròn) nếu nó không thuộc tên. Nếu chữ đầu tên bị logo che mất, ghi phần đọc được và nói rõ trong note.
+
+KHỐI LƯỢNG (quantity_g)
+- Lấy số cạnh "KL", "KLT", "Khối lượng tịnh", "Trọng lượng", hoặc trong tên (ví dụ "200G"). Quy ra gram: kg × 1000.
+- Dấu phẩy và dấu chấm trong khối lượng là dấu thập phân của kg (ví dụ 0,5 kg = 500 g).
+- Không có khối lượng trên ảnh thì để null.
+
+NGÀY
+- Tem Việt Nam ghi ngày theo thứ tự NGÀY-THÁNG-NĂM (vd "2.10.2026" là ngày 2 tháng 10). Riêng dạng "2026.10.01" là NĂM.THÁNG.NGÀY. Đọc từng chữ số cẩn thận; không gộp hai số riêng thành một.
+- production_date: ngày ghi cạnh NSX, NĐG, "Ngày SX", "Ngày đóng gói", "Ngày sản xuất". Định dạng DD/MM/YYYY.
+- expiry_date: CHỈ lấy ngày ghi cạnh HSD, "Hạn sử dụng", "Ngày hết hạn". Không lấy "Ngày về hàng", "Ngày in" hay ngày khác.
+  - Nếu tem ghi quy tắc "N ngày/tháng kể từ NSX/NĐG" và đọc được NSX/NĐG thì tính ra ngày: lấy NSX/NĐG cộng N ngày (hoặc N tháng). Ghi cả quy tắc gốc vào note.
+  - Nếu tem chỉ ghi "sử dụng khi còn tươi", "xem trên bao bì" hoặc không có HSD thì để null.
+- hours_to_expire: luôn để null (hệ thống tự tính từ expiry_date).
+
+NOTE
+- Ghi lại nguyên văn các dòng ngày đọc được, theo mẫu: "NSX: <như trên tem> | HSD: <như trên tem>", kèm lý do nếu có trường để null.
+
+Mỗi sản phẩm là một phần tử trong "items" (tem cân thường chỉ có 1 sản phẩm; hóa đơn có thể nhiều).
+
+Trả về DUY NHẤT một khối JSON hợp lệ trong cặp thẻ ```json và ```, theo cấu trúc:
+```json
+{
+  "raw_text": "toàn bộ dòng chữ đọc được, mỗi dòng một dòng",
+  "items": [
+    {
+      "name": "tên nguyên văn",
+      "quantity_g": 0.0,
+      "production_date": "DD/MM/YYYY hoặc null",
+      "expiry_date": "DD/MM/YYYY hoặc null",
+      "hours_to_expire": null,
+      "note": "NSX: ... | HSD: ..."
+    }
+  ]
+}
+```"""
+
+
+def _get_api_key(name: str) -> str:
+    """Retrieve an API key from the environment or the project .env file."""
+    key = os.environ.get(name, "")
     if key:
         return key
 
@@ -47,28 +94,98 @@ def _get_groq_api_key() -> str:
             try:
                 with open(env_file, "r", encoding="utf-8") as f:
                     for line in f:
-                        if line.strip().startswith("GROQ_API_KEY="):
+                        if line.strip().startswith(f"{name}="):
                             k = line.strip().split("=", 1)[1].strip("\"'")
                             if k:
-                                os.environ["GROQ_API_KEY"] = k
+                                os.environ[name] = k
                                 return k
             except Exception:
                 pass
     return ""
 
 
+def _get_groq_api_key() -> str:
+    """Retrieve GROQ_API_KEY from environment or .env file."""
+    return _get_api_key("GROQ_API_KEY")
+
+
+def _normalize_date(value: Any) -> Optional[str]:
+    """Return a DD/MM/YYYY date string, or None when value is not a valid date."""
+    m = re.fullmatch(r"\s*(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{4})\s*", str(value or ""))
+    if not m:
+        return None
+    day, month, year = (int(g) for g in m.groups())
+    try:
+        datetime(year, month, day)
+    except ValueError:
+        return None
+    return f"{day:02d}/{month:02d}/{year}"
+
+
+def hours_until_expiry(expiry_date: Optional[str], now: Optional[datetime] = None) -> Optional[float]:
+    """Hours from now until the end of the printed expiry day (0 when already expired)."""
+    normalized = _normalize_date(expiry_date)
+    if normalized is None:
+        return None
+    day, month, year = (int(p) for p in normalized.split("/"))
+    end_of_day = datetime(year, month, day, 23, 59, 59)
+    now = now or datetime.now()
+    return round(max(0.0, (end_of_day - now).total_seconds() / 3600.0), 1)
+
+
 class GroqVisionOCR:
-    """High-accuracy Groq Cloud Vision OCR using Qwen (qwen/qwen3.8-27b)."""
+    """Groq Cloud Vision OCR using Qwen (qwen/qwen3.8-27b); fallback provider."""
+
+    provider_name = "Groq"
+    source_name = "groq_qwen_vision"
+    api_key_name = "GROQ_API_KEY"
 
     def __init__(self, api_key: Optional[str] = None, model: str = "qwen/qwen3.8-27b"):
         self.api_key = api_key or _get_groq_api_key()
         self.model = model
-        self.client: Optional[Groq] = None
+        self.client: Any = None
         if HAS_GROQ and self.api_key:
             self.client = Groq(api_key=self.api_key)
 
+    @property
+    def engine_label(self) -> str:
+        return f"{self.provider_name} API ({self.model})"
+
     def is_available(self) -> bool:
         return self.client is not None
+
+    def _connect(self) -> None:
+        """Retry creating the client when the key was added after startup."""
+        self.api_key = _get_groq_api_key()
+        if HAS_GROQ and self.api_key:
+            self.client = Groq(api_key=self.api_key)
+
+    def _call_model(self, prompt: str, b64_str: str) -> str:
+        """Send prompt + image to the model and return the raw completion text."""
+        assert self.client is not None
+        completion = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {"type": "image_url", "image_url": {"url": f"data:image/webp;base64,{b64_str}"}}
+                    ]
+                }
+            ],
+            temperature=0.0,
+            max_completion_tokens=2048,
+            top_p=0.95,
+            reasoning_effort="default",
+            stream=True,
+            stop=None
+        )
+        text = ""
+        for chunk in completion:
+            if chunk.choices and chunk.choices[0].delta.content:
+                text += chunk.choices[0].delta.content
+        return text
 
     def preprocess_image(
         self,
@@ -114,83 +231,26 @@ class GroqVisionOCR:
         self,
         image_bytes: bytes,
         max_dim: int = 1600,
+        now: Optional[datetime] = None,
     ) -> dict[str, Any]:
-        """Perform basic preprocessing and query Groq Vision API."""
+        """Perform basic preprocessing and query the vision model."""
         if not self.is_available():
-            self.api_key = _get_groq_api_key()
-            if HAS_GROQ and self.api_key:
-                self.client = Groq(api_key=self.api_key)
-            else:
+            self._connect()
+            if not self.is_available():
                 return {
                     "status": "error",
-                    "message": "Groq client chưa được khởi tạo hoặc thiếu GROQ_API_KEY trong .env",
+                    "message": f"{self.provider_name} client chưa được khởi tạo hoặc thiếu {self.api_key_name} trong .env",
                     "items": [],
                     "raw_text": "",
                 }
 
         b64_str, stats = self.preprocess_image(image_bytes, max_dim=max_dim)
 
-        prompt = (
-            "Bạn là hệ thống OCR bóc tách thông tin thực phẩm siêu thị Việt Nam.\n"
-            "Hãy đọc toàn bộ văn bản trong ảnh (tem nhãn bao bì hoặc hóa đơn mua sắm) và trích xuất thành định dạng JSON chuẩn.\n\n"
-            "YÊU CẦU QUAN TRỌNG VỀ ĐỘ CHÍNH XÁC:\n"
-            "1. TÊN THỰC PHẨM (name): Cố gắng nhận diện RAW đúng nguyên văn từng chữ như in trên ảnh. "
-            "Nếu chữ in KHÔNG CÓ DẤU (ví dụ: TOM THE NC, THIT OC MONG TAY, CA BASA MINI, DUI GA GOC TU, CHAN GIO HEO, XUONG HEO CO THIT) "
-            "thì BẮT BUỘC GIỮ NGUYÊN RAW KHÔNG DẤU, tuyệt đối KHÔNG tự thêm dấu hay đoán từ. "
-            "Nếu chữ in CÓ DẤU (ví dụ: Đậu rồng vỉ 200g, Chả cá Nha Trang, Má đùi gà) thì giữ đúng chữ có dấu đó.\n"
-            "2. KHỐI LƯỢNG (quantity_g): Phải cố gắng nhận diện và tính toán thật ĐÚNG, quy đổi chính xác ra số gram thực (float). "
-            "Đọc kỹ chỉ số in cạnh 'KL:', 'KLT:', 'Khối lượng', 'Trọng lượng' hoặc khối lượng tịnh. "
-            "Ví dụ: '0,298 Kg' -> 298.0; '0,384 Kg' -> 384.0; '0.268 kg' -> 268.0; '500g' -> 500.0; '0,748 Kg' -> 748.0; '0.356 kg' -> 356.0. "
-            "Đảm bảo không bị sai đơn vị (lưu ý số thập phân kg nhân 1000 để ra gram).\n"
-            "3. HẠN DÙNG VÀ GHI CHÚ (expiry_date, hours_to_expire, note): Cố gắng nhận diện thật ĐÚNG ngày hết hạn (HSD), "
-            "ngày đóng gói/sản xuất (NĐG/NSX), hoặc hạn bảo quản (ví dụ '3 ngày kể từ NĐG'). "
-            "Định dạng expiry_date chuẩn DD/MM/YYYY nếu có. "
-            "Ghi chú (note) ghi rõ đầy đủ thông tin HSD và NĐG/NSX đọc được trên ảnh (ví dụ: 'HSD: 02/10/2026 | NĐG: 02/10/2026').\n\n"
-            "Trả về DUY NHẤT một khối JSON hợp lệ theo cấu trúc:\n"
-            "```json\n"
-            "{\n"
-            '  "raw_text": "toàn bộ các dòng chữ đọc được trên ảnh theo đúng nguyên bản, phân cách bằng dấu xuống dòng",\n'
-            '  "items": [\n'
-            "    {\n"
-            '      "name": "tên thực phẩm raw nguyên bản (vd: TOM THE NC, THIT OC MONG TAY, hoặc Má đùi gà)",\n'
-            '      "quantity_g": khối_lượng_chính_xác_theo_gram (số thực, vd: 298.0, 384.0, 500.0),\n'
-            '      "expiry_date": "DD/MM/YYYY hoặc null",\n'
-            '      "hours_to_expire": số_giờ_còn_hạn (số thực, vd: 48.0, 72.0),\n'
-            '      "note": "ghi chú chi tiết HSD, NĐG/NSX (vd: HSD: 02/10/2026 | NĐG: 02/10/2026)"\n'
-            "    }\n"
-            "  ]\n"
-            "}\n"
-            "```\n"
-            "Chỉ trả về DUY NHẤT một khối JSON hợp lệ trong cặp thẻ ```json và ```."
-        )
-
         last_err = None
         full_text = ""
         for attempt in range(3):
             try:
-                assert self.client is not None
-                completion = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[
-                        {
-                            "role": "user",
-                            "content": [
-                                {"type": "text", "text": prompt},
-                                {"type": "image_url", "image_url": {"url": f"data:image/webp;base64,{b64_str}"}}
-                            ]
-                        }
-                    ],
-                    temperature=0.6,
-                    max_completion_tokens=2048,
-                    top_p=0.95,
-                    reasoning_effort="default",
-                    stream=True,
-                    stop=None
-                )
-
-                for chunk in completion:
-                    if chunk.choices and chunk.choices[0].delta.content:
-                        full_text += chunk.choices[0].delta.content
+                full_text = self._call_model(OCR_PROMPT, b64_str)
                 last_err = None
                 break
             except Exception as e:
@@ -205,8 +265,8 @@ class GroqVisionOCR:
         if last_err is not None:
             return {
                 "status": "error",
-                "message": f"Lỗi gọi Groq Vision API ({self.model}): {str(last_err)}",
-                "engine": f"Groq API ({self.model})",
+                "message": f"Lỗi gọi {self.engine_label}: {str(last_err)}",
+                "engine": self.engine_label,
                 "raw_text": "",
                 "items_count": 0,
                 "items": [],
@@ -240,13 +300,12 @@ class GroqVisionOCR:
                 except Exception:
                     q_g = 500.0
 
-                hrs = 72.0
-                try:
-                    hrs = float(it.get("hours_to_expire", 72.0))
-                except Exception:
-                    pass
+                exp_date = _normalize_date(it.get("expiry_date"))
+                prod_date = _normalize_date(it.get("production_date"))
+                hrs = hours_until_expiry(exp_date, now=now)
+                if hrs is None:
+                    hrs = DEFAULT_HOURS_TO_EXPIRE
 
-                exp_date = it.get("expiry_date")
                 note = str(it.get("note") or "").strip()
                 if not note:
                     note = f"HSD: {exp_date or 'Theo bao bì'}"
@@ -256,14 +315,15 @@ class GroqVisionOCR:
                     "quantity_g": q_g,
                     "quantity_source": quantity_source,
                     "expiry_date": exp_date,
+                    "production_date": prod_date,
                     "hours_to_expire": hrs,
                     "note": note,
                 })
 
             return {
                 "status": "success",
-                "source": "groq_qwen_vision",
-                "engine": f"Groq API ({self.model})",
+                "source": self.source_name,
+                "engine": self.engine_label,
                 "raw_text": raw_text,
                 "items_count": len(clean_items),
                 "items": clean_items,
@@ -273,8 +333,8 @@ class GroqVisionOCR:
         except Exception as e:
             return {
                 "status": "error",
-                "message": f"Lỗi gọi Groq Vision API ({self.model}): {str(e)}",
-                "engine": f"Groq API ({self.model})",
+                "message": f"Lỗi đọc kết quả {self.engine_label}: {str(e)}",
+                "engine": self.engine_label,
                 "raw_text": "",
                 "items_count": 0,
                 "items": [],

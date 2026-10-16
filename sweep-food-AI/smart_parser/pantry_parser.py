@@ -163,8 +163,12 @@ class PantryEntityParser:
         qty_g = float(raw_item.get("quantity_g") or 200.0)
         storage_mode = raw_item.get("storage_mode") or "fridge_2_4c"
 
-        # Tra cứu hạn dùng và mẹo bảo quản theo nhiệt độ trong FreshCheck KB
-        shelf_hours = float(raw_item.get("hours_to_expire") or 48.0)
+        # Tra cứu hạn dùng và mẹo bảo quản theo nhiệt độ trong FreshCheck KB.
+        # Có hạn in sẵn (expiry_date) thì giữ số giờ tính từ hạn in, không ghi đè bằng KB;
+        # 0 giờ (đã hết hạn) là giá trị hợp lệ, không thay bằng mặc định.
+        raw_hours = raw_item.get("hours_to_expire")
+        shelf_hours = float(raw_hours) if raw_hours is not None else 48.0
+        has_printed_expiry = bool(raw_item.get("expiry_date")) and raw_hours is not None
         freshness_info = None
 
         if self.fresh_kb:
@@ -172,7 +176,7 @@ class PantryEntityParser:
                 f_code = str(f_data.get("code") or "").strip()
                 if (code and f_code == str(code).strip()) or any(raw_name.lower() in n.lower() for n in f_data.get("names_vi", [])):
                     shelf_spec = f_data.get("base_shelf_life_hours", {}).get(storage_mode)
-                    if shelf_spec:
+                    if shelf_spec and not has_printed_expiry:
                         shelf_hours = float(shelf_spec.get("value", 48.0))
                     arch_id = f_data.get("archetype")
                     arch = self.fresh_kb.get("archetypes", {}).get(arch_id, {})

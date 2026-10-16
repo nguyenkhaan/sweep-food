@@ -1,3 +1,6 @@
 *.html linguist-vendored
 *.js linguist-vendored
 *.jsx linguist-vendored
+
+# LightGBM model files store byte offsets (tree_sizes); CRLF conversion on Windows breaks loading
+sweep-food-AI/data/training/*.txt -text
