@@ -122,6 +122,8 @@ class ExtractionService:
         expires_at = _normalize_date(item.expiry_date)
         if expires_at is None:
             warnings.append("EXPIRY_DATE_NOT_EXTRACTED")
+        elif item.expiry_check == "suspicious":
+            warnings.append("EXPIRY_DATE_SUSPICIOUS")
         confidence = (
             {"ingredient_name": item.confidence} if item.confidence is not None else {}
         )

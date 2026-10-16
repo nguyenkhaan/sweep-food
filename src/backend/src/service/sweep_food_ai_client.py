@@ -58,6 +58,8 @@ class AIOcrItemDTO(BaseModel):
     confidence: float | None = Field(default=None, ge=0, le=1)
     expiry_date: str | None = None
     production_date: str | None = None
+    expiry_check: Literal["ok", "suspicious"] | None = None
+    expiry_check_reason: str | None = None
     quantity_source: Literal["extracted", "estimated"] | None = None
     nutrition: dict[str, object] | None = None
     freshness_guide: dict[str, object] | None = None

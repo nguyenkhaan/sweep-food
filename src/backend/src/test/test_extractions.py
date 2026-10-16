@@ -65,6 +65,26 @@ class FakeSweepFoodAIClient:
                     ),
                 ],
             )
+        if "suspicious" in filename:
+            return AIOcrResponseDTO(
+                status="success",
+                source="openai_vision",
+                raw_text="CANH GIUA GA NHAP KHAU NDG 1.10.2026 HSD 4.10.2026",
+                items=[
+                    AIOcrItemDTO(
+                        name="Cánh gà",
+                        raw_name="CANH GIUA GA NHAP KHAU",
+                        code="7087",
+                        quantity_g=296,
+                        quantity_source="extracted",
+                        production_date="01/10/2026",
+                        expiry_date="04/10/2026",
+                        expiry_check="suspicious",
+                        expiry_check_reason="HSD dài hơn mốc FreshCheck.",
+                        confidence=0.9,
+                    )
+                ],
+            )
         return AIOcrResponseDTO(
             status="success",
             source="label",
@@ -152,6 +172,40 @@ async def test_ocr_label_route_returns_200_with_mock_data(
     assert body["fields"]["quantity"] == 500.0
     assert body["fields"]["unit"] == "GRAM"
     assert body["fields"]["expires_at"] == "2026-09-05"
+    assert body["warnings"] == []
+
+
+@pytest.mark.anyio
+async def test_ocr_label_warns_when_ai_flags_suspicious_expiry(
+    api_client: httpx.AsyncClient,
+    _override_extraction_deps: None,
+) -> None:
+    """A FreshCheck-flagged HSD is kept as read but surfaced as a warning."""
+    fake_image = BytesIO(b"\x89PNG fake image content")
+    response = await api_client.post(
+        "/api/extractions/ocr/label",
+        files={"file": ("suspicious.png", fake_image, "image/png")},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "PARTIAL"
+    assert body["fields"]["expires_at"] == "2026-10-04"
+    assert body["warnings"] == ["EXPIRY_DATE_SUSPICIOUS"]
+
+
+def test_ai_ocr_item_keeps_expiry_check_from_ai_payload() -> None:
+    """The AI boundary DTO no longer drops the expiry flag."""
+    item = AIOcrItemDTO.model_validate(
+        {
+            "name": "Cánh gà",
+            "expiry_check": "suspicious",
+            "expiry_check_reason": "Kiểm tra lại HSD",
+            "note": "ignored",
+        }
+    )
+    assert item.expiry_check == "suspicious"
+    assert item.expiry_check_reason == "Kiểm tra lại HSD"
+    assert AIOcrItemDTO(name="Sữa").expiry_check is None
 
 
 @pytest.mark.anyio

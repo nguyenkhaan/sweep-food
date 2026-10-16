@@ -321,11 +321,11 @@ def startup_gpu_warmup():
     # 2. Warm up Smart Input OCR/ASR on GPU
     try:
         ocr_info = warmup_smart_input_gpu()
-        ocr_dev = ocr_info.get("ocr_engine", "Groq Vision API (qwen/qwen3.8-27b)")
+        ocr_dev = ocr_info.get("ocr_engine", "Vision OCR API")
         vram_mb = ocr_info.get("vram_allocated_mb", 0.0)
         print(f"[Smart Input] OCR Engine: {ocr_dev}")
     except Exception as e:
-        ocr_dev = "Groq Vision API (qwen/qwen3.8-27b)"
+        ocr_dev = "Vision OCR API (warm-up failed)"
         vram_mb = 0.0
         print(f"[Smart Input Warning] Warm up error: {e}")
 

@@ -2,7 +2,8 @@
 
 Decoupled from the recommendation engine.
 Features:
-- OCR: Supermarket receipts & food packaging labels through Groq Vision.
+- OCR: Supermarket receipts & food packaging labels through a vision model
+  (OpenAI by default, Groq as fallback; see get_ocr_pipeline).
 - ASR Dual Stream:
     1. Local Gipformer + 16kHz mono FLAC compression & silence stripping via ffmpeg
     2. Cloud Groq Whisper-large-v3-turbo API (<500ms) with 16kHz mono FLAC
@@ -23,8 +24,10 @@ from smart_input.asr.gipformer_engine import GipformerEngine
 from smart_input.asr.groq_whisper import GroqWhisperClient
 from smart_input.asr.sample_transcripts import SAMPLE_VOICE_QUERIES
 from smart_input.asr.speech_parser import parse_vietnamese_speech
+from smart_input.ocr.expiry_check import check_label_expiry
 from smart_input.ocr.groq_vision_ocr import GroqVisionOCR
 from smart_input.ocr.label_parser import FoodLabelParser
+from smart_input.ocr.openai_vision_ocr import OpenAIVisionOCR
 from smart_input.ocr.receipt_parser import parse_receipt_text
 from smart_input.ocr.sample_receipts import SAMPLE_RECEIPTS
 
@@ -66,9 +69,18 @@ def _enrich_contract_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def get_ocr_pipeline() -> GroqVisionOCR:
+    """OCR backend chosen by OCR_PROVIDER: "openai" (default) or "groq".
+
+    Falls back to Groq when OpenAI is selected but OPENAI_API_KEY is missing.
+    """
     global _ocr_pipeline
     if _ocr_pipeline is None:
-        _ocr_pipeline = GroqVisionOCR()
+        provider = os.environ.get("OCR_PROVIDER", "openai").strip().lower()
+        if provider == "openai":
+            openai_ocr = OpenAIVisionOCR()
+            _ocr_pipeline = openai_ocr if openai_ocr.is_available() else GroqVisionOCR()
+        else:
+            _ocr_pipeline = GroqVisionOCR()
     return _ocr_pipeline
 
 
@@ -94,7 +106,7 @@ def get_gipformer_engine() -> GipformerEngine:
 
 
 def warmup_smart_input_gpu() -> dict[str, Any]:
-    """Preloads Groq Vision OCR client and ASR models to eliminate cold-start latency."""
+    """Preloads the vision OCR client and ASR models to eliminate cold-start latency."""
     global _ocr_pipeline
     ocr = get_ocr_pipeline()
 
@@ -115,7 +127,7 @@ def warmup_smart_input_gpu() -> dict[str, Any]:
         except Exception:
             pass
 
-    ocr_status = f"Groq API ({ocr.model})" if ocr.is_available() else "Groq API (Chưa cấu hình API Key)"
+    ocr_status = ocr.engine_label if ocr.is_available() else f"{ocr.engine_label} (Chưa cấu hình API Key)"
     return {
         "cuda_available": cuda_avail,
         "device_name": device_name,
@@ -135,7 +147,7 @@ def process_receipt_input(
 ) -> dict[str, Any]:
     """Processes receipt or food label from image upload, base64, raw text, or sample ID.
 
-    Groq Vision handles image preprocessing and extraction before pantry enrichment.
+    The vision OCR pipeline handles image preprocessing and extraction before pantry enrichment.
     """
     if image_base64:
         try:
@@ -178,7 +190,7 @@ def process_receipt_input(
             ocr = get_ocr_pipeline()
             res = ocr.recognize_image_bytes(image_bytes, max_dim=1600)
 
-            enriched_items = _enrich_contract_items(res.get("items", []))
+            enriched_items = [check_label_expiry(it) for it in _enrich_contract_items(res.get("items", []))]
 
             res["items"] = enriched_items
             res["items_count"] = len(enriched_items)
@@ -186,7 +198,7 @@ def process_receipt_input(
         except Exception as e:
             return {
                 "status": "error",
-                "message": f"Lỗi xử lý Groq Vision OCR: {str(e)}",
+                "message": f"Lỗi xử lý Vision OCR: {str(e)}",
                 "items": [],
                 "raw_text": "",
             }
@@ -205,7 +217,7 @@ def process_receipt_input(
         else:
             items = parse_receipt_text(raw)
 
-        enriched_items = _enrich_contract_items(items)
+        enriched_items = [check_label_expiry(it) for it in _enrich_contract_items(items)]
         return {
             "status": "success",
             "source": "text_input",
