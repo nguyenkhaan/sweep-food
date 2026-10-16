@@ -92,11 +92,10 @@ class FakeFavoriteService:
         assert recipe_id == RECIPE_ID
         return FavoriteRecipeDTO(recipe_id=recipe_id, is_favorite=True)
 
-    async def remove_recipe(self, user_id: UUID, recipe_id: UUID) -> dict:
+    async def remove_recipe(self, user_id: UUID, recipe_id: UUID) -> None:
         """Check the delete route's user and recipe inputs."""
         assert user_id == USER_ID
         assert recipe_id == RECIPE_ID
-        return {"message": "Remove recipe from favorite list successfully"}
 
     async def list_recipes(
         self, user_id: UUID, limit: int, offset: int
@@ -212,10 +211,8 @@ async def test_favorite_recipe_routes_write_and_remove_owned_state(
 
     assert add.status_code == 200
     assert add.json() == {"recipe_id": str(RECIPE_ID), "is_favorite": True}
-    assert remove.status_code == 200
-    assert remove.json() == {
-        "message": "Remove recipe from favorite list successfully"
-    }
+    assert remove.status_code == 204
+    assert remove.content == b""
 
 
 @pytest.mark.anyio
@@ -258,6 +255,7 @@ async def test_favorite_routes_manage_owned_menus_and_menu_items(
     assert update_item.status_code == 200
     assert remove_item.status_code == 204
     assert remove_menu.status_code == 204
+    assert remove_menu.content == b""
 
 
 @pytest.mark.anyio

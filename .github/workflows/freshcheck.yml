@@ -18,7 +18,7 @@ on:
       - "src/backend/src/test/test_notification_jobs.py"
       - "src/backend/src/test/test_recommendation_ai_service.py"
   push:
-    branches: [main]
+    branches: [dev, main]
     paths:
       - ".github/workflows/freshcheck.yml"
       - "data_freshness/**"

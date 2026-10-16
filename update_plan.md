@@ -81,7 +81,7 @@ YAML trong data_freshness (authoring, Git versioned)
 | Thành phần                                          | Vai trò trong đợt tích hợp                                                                 | Cách dùng                                                                                                        |
 | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `data_freshness`                                    | Nguồn authoring chuẩn: ingredient, archetype, shelf-life, rubric cảm quan, claim và source. | Build artifact, validate và sync vào schema PostgreSQL do Alembic quản lý; YAML không là runtime dependency. |
-| `sweepfood_tools/sweep-food_be_freshness-api.patch` | Bản khởi tạo cho engine, module FastAPI, router, DTO và test FreshCheck.                    | Áp dụng có chọn lọc; thay file loader bằng repository PostgreSQL và thêm audit/idempotency.                |
+| `sweepfood_tools/sweep-food_be_freshness-api.patch` | Bản khởi tạo cho engine, module FastAPI, router, DTO và test FreshCheck.                    | Đã gộp vào `dev` (commit `77abd5d`); file patch đã xoá, xem lịch sử git nếu cần tham khảo.                |
 | `sweepfood_tools/fridge_report.py`                  | Công cụ đánh giá offline hiệu quả gợi ý món từ dữ liệu tủ lạnh thật.            | Chạy sau khi luồng BE đã phát hành; không đưa vào API production.                                        |
 
 ## 3. Quyết định kiến trúc đã chốt

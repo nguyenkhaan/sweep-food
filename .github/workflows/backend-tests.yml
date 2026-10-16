@@ -1,0 +1,46 @@
+name: Backend tests
+
+on:
+  pull_request:
+    branches: [dev, main]
+    paths:
+      - ".github/workflows/backend-tests.yml"
+      - "data_freshness/**"
+      - "src/backend/**"
+  push:
+    branches: [dev, main]
+    paths:
+      - ".github/workflows/backend-tests.yml"
+      - "data_freshness/**"
+      - "src/backend/**"
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: src/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.12.5"
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --all-groups --frozen
+
+      # Settings are read at import time; the example values are enough for
+      # unit tests, which never reach PostgreSQL, Redis, FCM, or WireMock.
+      - name: Prepare test environment
+        run: cp .env.example .env
+
+      - name: Check migrations have a single head
+        run: test "$(uv run alembic heads | wc -l)" -eq 1
+
+      - name: Run unit tests
+        run: timeout 300s uv run pytest -q -m "not wiremock"

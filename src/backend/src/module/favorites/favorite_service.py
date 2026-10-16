@@ -93,7 +93,7 @@ class FavoriteService:
             raise
         return FavoriteRecipeDTO(recipe_id=recipe_id, is_favorite=True)
 
-    async def remove_recipe(self, user_id: UUID, recipe_id: UUID) -> dict:
+    async def remove_recipe(self, user_id: UUID, recipe_id: UUID) -> None:
         """Remove a favourite idempotently without exposing other users' state."""
         try:
             await self.db_session.execute(
@@ -103,9 +103,6 @@ class FavoriteService:
                 )
             )
             await self.db_session.commit()
-            return {
-                "message": "Remove recipe from favorite list successfully"
-            }
         except SQLAlchemyError:
             await self.db_session.rollback()
             raise
@@ -205,7 +202,6 @@ class FavoriteService:
     ) -> FavoriteMenuDTO:
         """Update fields explicitly provided by an owned menu request."""
         try:
-            print('Hello world') 
             menu = await self._find_menu(user_id, menu_id, lock=True)
             if "name" in body.model_fields_set and body.name is not None:
                 menu.name = body.name
@@ -217,7 +213,7 @@ class FavoriteService:
             await self.db_session.rollback()
             raise
 
-    async def remove_menu(self, user_id: UUID, menu_id: UUID):
+    async def remove_menu(self, user_id: UUID, menu_id: UUID) -> None:
         """Delete an owned menu together with all of its recipe entries."""
         try:
             menu = await self._find_menu(user_id, menu_id, lock=True)
@@ -228,9 +224,6 @@ class FavoriteService:
             )
             await self.db_session.delete(menu)
             await self.db_session.commit()
-            return {
-                "message": "Drop favorite menu successfully"
-            }
         except (HTTPException, SQLAlchemyError):
             await self.db_session.rollback()
             raise
