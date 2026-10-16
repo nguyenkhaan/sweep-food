@@ -9,6 +9,7 @@ is only flagged so the confirmation screen can ask the user to re-check.
 from __future__ import annotations
 
 import json
+import re
 from datetime import date
 from pathlib import Path
 from typing import Any, Optional
@@ -72,6 +73,28 @@ def find_freshcheck_ingredient(
     return best
 
 
+_PRINTED_RULE = re.compile(
+    r"(?:su dung trong\s+(\d+)\s*(ngay|thang))|(?:(\d+)\s*(ngay|thang)\s+(?:ke tu|tinh tu|tu ngay|sau ngay))"
+)
+
+
+def _printed_rule_matches_span(note: Any, span_days: int) -> bool:
+    """True when the label prints "N ngày/tháng kể từ NSX" and the read dates span exactly that rule.
+
+    The manufacturer then set the shelf life itself (e.g. JAPFA "4 ngày kể từ NSX" for chicken),
+    so a span longer than the FreshCheck reference is not a misread.
+    """
+    text = strip_vietnamese_accents(str(note or ""))
+    for m in _PRINTED_RULE.finditer(text):
+        n = int(m.group(1) or m.group(3))
+        unit = m.group(2) or m.group(4)
+        if unit == "ngay" and span_days in (n - 1, n):
+            return True
+        if unit == "thang" and abs(span_days - n * 30.4) <= 3:
+            return True
+    return False
+
+
 def _to_date(value: Any) -> Optional[date]:
     normalized = _normalize_date(value)
     if normalized is None:
@@ -102,6 +125,8 @@ def check_label_expiry(
             f"HSD {expires:%d/%m/%Y} sớm hơn ngày sản xuất/đóng gói {produced:%d/%m/%Y}, "
             "có thể đọc nhầm ngày. Kiểm tra lại HSD trên tem."
         )
+    elif _printed_rule_matches_span(item.get("note"), span_days):
+        pass  # hạn do nhà sản xuất in theo quy tắc, không so với FreshCheck
     else:
         f_data = find_freshcheck_ingredient(
             load_freshcheck_ingredients() if ingredients is None else ingredients,

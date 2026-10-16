@@ -164,6 +164,36 @@ def test_expiry_check_flags_hsd_longer_than_freshcheck() -> None:
     assert flagged["expiry_check_reason"] in flagged["note"]
 
 
+def test_expiry_check_trusts_printed_rule_matching_the_span() -> None:
+    # Ảnh #17–19: JAPFA in "HSD: 4 ngày kể từ NSX", NSX 29/09 -> 03/10 là hạn nhà sản xuất in, không báo nhầm.
+    japfa = check_label_expiry(
+        _label("03/10/2026", production_date="29/09/2026",
+               note="NSX: 29/09/2026 | HSD: 4 ngày kể từ NSX. Hạn sử dụng được tính bằng NSX cộng 4 ngày."),
+        ingredients=CANH_GA_KB,
+    )
+    unaccented = check_label_expiry(
+        _label("04/10/2026", note="NSX: Ngay san xuat 01/10/26 | HSD: 3 ngay ke tu ngay san xuat"),
+        ingredients=CANH_GA_KB,
+    )
+    months = check_label_expiry(
+        _label("15/03/2027", production_date="15/09/2026", note="NĐG: 15-09-2026 | HSD: 6 THÁNG KỂ TỪ NGÀY ĐÓNG GÓI"),
+        ingredients=CANH_GA_KB,
+    )
+
+    assert japfa["expiry_check"] == "ok"
+    assert unaccented["expiry_check"] == "ok"
+    assert months["expiry_check"] == "ok"
+
+
+def test_expiry_check_still_flags_when_span_disagrees_with_printed_rule() -> None:
+    # Tem in "2 ngày kể từ NĐG" nhưng ngày đọc được cách 5 ngày -> vẫn nghi đọc nhầm.
+    flagged = check_label_expiry(
+        _label("06/10/2026", note="NĐG: 1.10.2026 | HSD: 2 ngày kể từ NĐG"), ingredients=CANH_GA_KB
+    )
+
+    assert flagged["expiry_check"] == "suspicious"
+
+
 def test_expiry_check_accepts_printed_hsd_within_reference() -> None:
     printed = check_label_expiry(_label("02/10/2026"), ingredients=CANH_GA_KB)
     two_days = check_label_expiry(_label("03/10/2026"), ingredients=CANH_GA_KB)
