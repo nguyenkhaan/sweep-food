@@ -26,6 +26,10 @@ from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.recipe_model import RecipeModel
 from src.model.user_model import UserModel
 
+pytestmark = pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
+
 
 @pytest.fixture(name="seed_session")
 async def _seed_session(

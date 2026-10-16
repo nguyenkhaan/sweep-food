@@ -94,7 +94,7 @@ items.
 - Quality: `uv run ruff check . && uv run ruff format --check . && uv run mypy --strict . && uv run pylint **/*.py`
 
 Run commands from `src/backend`.  Database integration tests require an
-explicit disposable `TEST_DATABASE_URL`, never the application database.
+the application database; only unit tests are part of the default verification path.
 
 ## Project Structure and Code Style
 

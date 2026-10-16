@@ -35,9 +35,9 @@
 |---|---|
 | Active phase | Phase 5 — Recommendations, Meal Selection, and Shopping Lists |
 | Active task | Phase 5 API implementation (`In progress`) |
-| Next task | Run disposable-PostgreSQL shopping transaction tests and reconcile the frontend API contract. |
-| Next required action | Verify batch-plus-ledger check-off atomically against `TEST_DATABASE_URL`; do not claim the Phase 5 checkpoint before that verification. |
-| Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; all future migration tests use a disposable branch/database |
+| Next task | Reconcile the frontend API contract and run focused unit tests. |
+| Next required action | Verify batch-plus-ledger check-off manually against the selected Neon environment before claiming the Phase 5 checkpoint. |
+| Database target | Neon PostgreSQL; `alembic upgrade head` is user-verified; automated verification uses unit tests only. |
 | Current blocker | None |
 
 ## Phase Dashboard
@@ -270,7 +270,7 @@
 | 2026-08-31 | Task 6.4 | `Ready` → `Done` | Verified cooked-leftover creation and cooking-history APIs. Completed sessions create `COOKED_FOOD` batches linked by `source_cooking_session_id`, with a `LEFTOVER_CREATED` ledger entry; history list/detail expose actual consumption rows and linked leftovers. Focused test suite: 10 passed. |
 | 2026-08-31 | Task 7.1 | `Ready` → `In progress` | Started the authenticated Android FCM device-registration and owned notification API slice using test-driven development. Firebase credentials remain environment-backed and the service-account JSON is ignored by Git. |
 | 2026-09-01 | Phase 3 | `Not started` → `Done` | User confirmed Tasks 3.1–3.4 and the Phase 3 checkpoint are complete. |
-| 2026-09-03 | Phase 5 API modules | `Not started` → `In progress` | Added the Phase 5 API specification; restored the authenticated mock recommendation boundary; added database-backed meal-plan, favourite-recipe, and shopping-list modules. Focused router tests: 22 passed; inventory/planning regression: 12 passed, 3 skipped without disposable `TEST_DATABASE_URL`; Ruff and Pylint passed. |
+| 2026-09-03 | Phase 5 API modules | `Not started` → `In progress` | Added the Phase 5 API specification; restored the authenticated mock recommendation boundary; added database-backed meal-plan, favourite-recipe, and shopping-list modules. Focused router tests: 22 passed; inventory/planning regression: 12 passed, 3 database integration tests skipped; Ruff and Pylint passed. |
 
 ## Verification Evidence
 

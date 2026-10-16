@@ -460,8 +460,8 @@ Service/DTO/router mapping ngoài model:
 #### 5.8.8 Quy trình nâng cấp, kiểm tra target và rollback
 
 1. **Đối chiếu baseline:** kiểm tra Alembic head/current, kiểu enum, nullability, FK/index/trigger hiện tại. Nếu schema deploy lệch source thì lập migration sửa đúng sai lệch đã kiểm chứng, không reset DB hoặc dùng stamp để bỏ qua schema thiếu.
-2. **Tách DB test đúng cách:** fixture pytest đọc TEST_DATABASE_URL, nhưng alembic/env.py hiện ghi URL từ **DATABASE_URL**; chỉ export TEST_DATABASE_URL không chuyển target của CLI Alembic. Dùng test helper đã guard hai URL khác nhau, sau đó truyền DATABASE_URL=URL test **chỉ trong environment của subprocess Alembic**, giữ URL app gốc cho guard. Không sửa `.env` dùng chung, không in credential hoặc giả định sửa alembic.ini sẽ thắng env.py.
-3. **Kiểm thử upgrade:** trên DB test đã migrate tới head cũ và có fixture dữ liệu, chạy revision mới bằng Alembic. Không dùng metadata.create_all thay thế kiểm tra upgrade. Snapshot row count/PK/FK/số dư/ledger trước và sau; bảng mới rỗng, các bảng cũ không đổi dữ liệu.
+2. **Chọn target migration:** Alembic đọc URL từ **DATABASE_URL**. Xác nhận URL trỏ đúng Neon environment trước khi chạy lệnh; không in credential hoặc sửa `.env` dùng chung ngoài quy trình quản lý môi trường.
+3. **Kiểm thử upgrade:** unit tests xác nhận metadata/model contract. Việc chạy revision mới được xác minh thủ công trên Neon environment đã chọn; không dùng metadata.create_all thay thế Alembic.
 4. **Rà migration sinh tự động:** chỉ có ba bảng/constraint đã chọn. Loại khỏi revision các thao tác drop/rename/type-change ngoài phạm vi hoặc CREATE TYPE trùng enum hiện có; kiểm tra SQL trước khi thực thi.
 5. **Phát hành schema trước code:** app cũ phải chạy được trên schema mới. Chỉ triển khai writer receipt/event/interest sau khi bảng cần dùng đã có; không catch undefined-table rồi lặng lẽ bỏ receipt/evidence. Với Reports, triển khai writer snapshot trước, sau đó reader và FE; khoảng trống mixed-version được coverage phản ánh.
 6. **Rollback:** ưu tiên rollback app, giữ schema/bản ghi mới; receipt/evidence/interest không bị xóa khi quay lại phiên bản cũ. Sau rollback writer Reports, reader phải coi đó là khoảng trống evidence nếu còn được dùng. Không chạy downgrade xóa bảng có dữ liệu hoặc sửa migration cũ. Nếu hỗ trợ downgrade cho DB test, phải fail rõ khi bảng mới không rỗng; không dùng CASCADE để vượt qua dữ liệu tham chiếu.
@@ -705,7 +705,7 @@ Chạy từ `src/backend`, dùng `.venv/bin/python` sẵn có hoặc `uv run pyt
 .venv/bin/python -m alembic current
 ```
 
-Migration upgrade và test DB chỉ chạy trên database test biệt lập theo [conftest.py](../../src/backend/src/test/conftest.py); fixture yêu cầu TEST_DATABASE_URL và có guard khác database ứng dụng. **Alembic CLI vẫn đọc DATABASE_URL từ env.py**, nên phải dùng quy trình subprocess có guard ở mục 5.8.8 để chuyển target sang DB test; không coi TEST_DATABASE_URL là override tự động của Alembic. Cấu hình đó phải có trước test migration/concurrency. Dùng migration đầy đủ, không create/drop toàn schema để thay việc kiểm chứng nâng cấp.
+Migration upgrade chạy trên Neon environment được chọn qua `DATABASE_URL`. Unit tests không kết nối database; xác minh migration/concurrency thực hiện thủ công trước rollout. Dùng migration đầy đủ, không create/drop toàn schema để thay việc kiểm chứng nâng cấp.
 
 Các test mới được đặt tên ở T06/T08/T11–T15 là **file dự kiến**, không phải test đã tồn tại. Khi viết xong, thêm chúng vào lệnh kiểm chứng cho từng task. Quality checks dùng tooling sẵn trong [pyproject.toml](../../src/backend/pyproject.toml), giới hạn file đã thay đổi trước; không sửa format toàn repo ngoài phạm vi.
 

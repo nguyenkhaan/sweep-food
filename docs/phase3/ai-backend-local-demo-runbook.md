@@ -55,7 +55,6 @@ Không chạy service `api` bằng Compose trong runbook này. Backend chạy tr
 Điền các biến sau trong `src/backend/.env`. Dùng giá trị local riêng cho database, JWT và tài khoản seed; không dùng lại placeholder trong môi trường chia sẻ:
 
     DATABASE_URL=postgresql+asyncpg://<user>:<password>@<host>:5432/<database>
-    TEST_DATABASE_URL=postgresql+asyncpg://<user>:<password>@<host>:5432/<test-database>
     SEED_ADMIN_NAME=<local-admin-name>
     SEED_ADMIN_PHONE_E164=<local-e164-phone>
     SEED_ADMIN_EMAIL=<local-admin-email>

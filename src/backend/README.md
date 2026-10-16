@@ -39,6 +39,12 @@ GET /api/health/error
 GET /api/health/text
 ```
 
+## FreshCheck operations
+
+FreshCheck release build, Neon migration, activation, smoke verification, and
+rollback procedures are documented in
+[`docs/freshcheck-operations-runbook.md`](docs/freshcheck-operations-runbook.md).
+
 ## Structure
 
 ```text

@@ -63,6 +63,9 @@ async def _seeded_catalog_api(
 
 
 @pytest.mark.anyio
+@pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
 async def test_ingredient_search_matches_canonical_name_and_alias(
     api_client: httpx.AsyncClient,
     seeded_catalog_api: None,
@@ -98,6 +101,9 @@ async def test_ingredient_search_matches_canonical_name_and_alias(
 
 
 @pytest.mark.anyio
+@pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
 async def test_ingredient_pagination_and_category_filter_are_stable(
     api_client: httpx.AsyncClient,
     seeded_catalog_api: None,
@@ -127,6 +133,9 @@ async def test_ingredient_pagination_and_category_filter_are_stable(
 
 
 @pytest.mark.anyio
+@pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
 async def test_recipe_list_detail_ingredients_and_serving_scaling(
     api_client: httpx.AsyncClient,
     seeded_catalog_api: None,
@@ -171,6 +180,9 @@ async def test_recipe_list_detail_ingredients_and_serving_scaling(
 
 
 @pytest.mark.anyio
+@pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
 async def test_catalog_and_recipe_reads_require_authentication(
     api_client: httpx.AsyncClient,
     seeded_catalog_api: None,

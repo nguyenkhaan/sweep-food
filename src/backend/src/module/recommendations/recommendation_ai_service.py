@@ -1,16 +1,22 @@
 """AI-backed recommendation orchestration for authenticated users."""
 
+from collections.abc import Callable
+from datetime import UTC, datetime
 from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.model.enum_model import InventoryBatchStatus
+from src.model.inventory_batch_model import InventoryBatchModel
+from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.recipe_model import RecipeModel
 from src.module.recommendations.recommendation_dto import (
     MockRecommendationAnalysisDTO,
     RecommendationIngredientDTO,
     RecommendationItemDTO,
     RecommendationListResponseDTO,
+    RecommendationPantryItemDTO,
     RecommendationRankingFeaturesDTO,
     RecommendationRequestDTO,
     RecommendationTimingsDTO,
@@ -26,9 +32,15 @@ from src.service.sweep_food_ai_client import (
 class RecommendationAIService:
     """Forward structured requests and map AI rankings to backend recipes."""
 
-    def __init__(self, db_session: AsyncSession, ai_client: SweepFoodAIClient) -> None:
+    def __init__(
+        self,
+        db_session: AsyncSession,
+        ai_client: SweepFoodAIClient,
+        clock: Callable[[], datetime] | None = None,
+    ) -> None:
         self._db_session = db_session
         self._ai_client = ai_client
+        self._clock = clock or (lambda: datetime.now(UTC))
 
     async def recommend(
         self,
@@ -36,8 +48,9 @@ class RecommendationAIService:
         body: RecommendationRequestDTO,
     ) -> RecommendationListResponseDTO:
         """Return calibrated AI rankings backed by the backend recipe catalog."""
+        effective_request = await self._with_saved_expiries(_user_id, body)
         ai_response = await self._ai_client.recommend(
-            AIRecommendationRequestDTO.model_validate(body.model_dump())
+            AIRecommendationRequestDTO.model_validate(effective_request.model_dump())
         )
 
         warnings: list[str] = []
@@ -60,7 +73,7 @@ class RecommendationAIService:
             )
 
         return RecommendationListResponseDTO(
-            request=body,
+            request=effective_request,
             contract_version=ai_response.contract_version,
             model_version=ai_response.model_version,
             catalog_revision=ai_response.catalog_revision,
@@ -77,6 +90,39 @@ class RecommendationAIService:
             items=items,
             warnings=warnings,
         )
+
+    async def _with_saved_expiries(
+        self,
+        user_id: UUID,
+        request: RecommendationRequestDTO,
+    ) -> RecommendationRequestDTO:
+        """Replace client urgency with the earliest expiry in owned active stock."""
+        if not request.items:
+            return request
+        result = await self._db_session.execute(
+            select(
+                InventoryBatchModel.custom_name,
+                MasterIngredientModel.name,
+                InventoryBatchModel.expires_at,
+            )
+            .outerjoin(
+                MasterIngredientModel,
+                MasterIngredientModel.id == InventoryBatchModel.master_ingredient_id,
+            )
+            .where(
+                InventoryBatchModel.user_id == user_id,
+                InventoryBatchModel.status == InventoryBatchStatus.ACTIVE,
+                InventoryBatchModel.current_quantity > 0,
+            )
+        )
+        saved_expiries = _earliest_expiries(
+            [(row[0], row[1], row[2]) for row in result.all()]
+        )
+        now = self._clock()
+        items = [
+            _with_saved_expiry(item, saved_expiries, now) for item in request.items
+        ]
+        return request.model_copy(update={"items": items})
 
     async def _load_recipes(self, recipe_ids: list[UUID]) -> list[RecipeModel]:
         if not recipe_ids:
@@ -119,3 +165,45 @@ class RecommendationAIService:
             provider="SWEEP_FOOD_AI",
             recipe_summary=to_recipe_summary(recipe),
         )
+
+
+def _earliest_expiries(
+    rows: list[tuple[str | None, str | None, datetime | None]],
+) -> dict[str, datetime | None]:
+    """Select the earliest known batch expiry for each normalized pantry name."""
+    expiries: dict[str, datetime | None] = {}
+    for custom_name, ingredient_name, expires_at in rows:
+        pantry_name = custom_name or ingredient_name
+        if pantry_name is None:
+            continue
+        normalized_name = _normalize_name(pantry_name)
+        current_expiry = expiries.get(normalized_name)
+        if normalized_name not in expiries or (
+            expires_at is not None
+            and (current_expiry is None or expires_at < current_expiry)
+        ):
+            expiries[normalized_name] = expires_at
+    return expiries
+
+
+def _with_saved_expiry(
+    item: RecommendationPantryItemDTO,
+    saved_expiries: dict[str, datetime | None],
+    now: datetime,
+) -> RecommendationPantryItemDTO:
+    """Return one pantry item with server-authoritative expiry urgency when found."""
+    normalized_name = _normalize_name(item.name)
+    if normalized_name not in saved_expiries:
+        return item
+    expires_at = saved_expiries[normalized_name]
+    hours_to_expire = (
+        None
+        if expires_at is None
+        else round(max(0.0, (expires_at - now).total_seconds() / 3600), 1)
+    )
+    return item.model_copy(update={"hours_to_expire": hours_to_expire})
+
+
+def _normalize_name(value: str) -> str:
+    """Normalize an inventory name for case-insensitive request matching."""
+    return " ".join(value.casefold().split())

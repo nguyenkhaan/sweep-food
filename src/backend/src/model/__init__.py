@@ -8,6 +8,8 @@ from src.model.device_registration_model import DeviceRegistrationModel
 from src.model.favorite_menu_item_model import FavoriteMenuItemModel
 from src.model.favorite_menu_model import FavoriteMenuModel
 from src.model.favorite_recipe_model import FavoriteRecipeModel
+from src.model.freshcheck_assessment_model import FreshCheckAssessmentModel
+from src.model.freshcheck_mapping_model import MasterIngredientFreshCheckMappingModel
 from src.model.freshcheck_model import (
     FreshCheckArchetypeModel,
     FreshCheckClaimModel,
@@ -15,7 +17,6 @@ from src.model.freshcheck_model import (
     FreshCheckKBVersionModel,
     FreshCheckSourceModel,
 )
-from src.model.freshcheck_mapping_model import MasterIngredientFreshCheckMappingModel
 from src.model.history_model import IngredientUsageHistoryModel
 from src.model.ingredient_alias_model import IngredientAliasModel
 from src.model.ingredient_category_model import IngredientCategoryModel
@@ -50,16 +51,17 @@ __all__ = [
     "FavoriteMenuModel",
     "FavoriteRecipeModel",
     "FreshCheckArchetypeModel",
+    "FreshCheckAssessmentModel",
     "FreshCheckClaimModel",
     "FreshCheckIngredientModel",
     "FreshCheckKBVersionModel",
     "FreshCheckSourceModel",
-    "MasterIngredientFreshCheckMappingModel",
     "IngredientAliasModel",
     "IngredientCategoryModel",
     "IngredientUsageHistoryModel",
     "InventoryBatchModel",
     "InventoryLedgerEntryModel",
+    "MasterIngredientFreshCheckMappingModel",
     "MasterIngredientModel",
     "MealPlanItemModel",
     "MealPlanModel",

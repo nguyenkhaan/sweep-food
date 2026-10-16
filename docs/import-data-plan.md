@@ -649,7 +649,7 @@ uv run ruff check scripts/ingredient_category_import.py scripts/master_ingredien
 uv run mypy scripts/ingredient_category_import.py scripts/master_ingredient_import.py scripts/recipe_import.py
 ```
 
-Integration test chỉ được chạy với `TEST_DATABASE_URL` trỏ đến database/branch có thể bỏ đi và phải khác database ứng dụng.
+Verification mặc định chỉ chạy unit tests và không kết nối database.
 
 ## 15. Rollback và vận hành an toàn
 

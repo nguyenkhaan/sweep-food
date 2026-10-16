@@ -173,10 +173,13 @@ def test_unknown_revision_is_rejected() -> None:
         choose_path("unknown-revision")
 
 
-def test_target_selection_never_falls_back() -> None:
-    """The requested target does not fall back to another setting."""
-    with pytest.raises(ReconciliationError):
-        select_target("TEST_DATABASE_URL", {"DATABASE_URL": "postgresql://unused"})
+def test_target_selection_rejects_an_unsupported_database_setting() -> None:
+    """Reconciliation only accepts explicitly supported operator targets."""
+    with pytest.raises(ReconciliationError, match="not allowed"):
+        select_target(
+            "UNSUPPORTED_DATABASE_URL",
+            {"UNSUPPORTED_DATABASE_URL": "postgresql://unused"},
+        )
 
 
 @pytest.mark.parametrize(

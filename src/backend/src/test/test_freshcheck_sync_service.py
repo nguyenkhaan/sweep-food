@@ -143,6 +143,26 @@ async def test_stage_is_idempotent_for_the_same_version_and_checksum() -> None:
 
 
 @pytest.mark.anyio
+async def test_stage_flushes_the_kb_version_before_its_dependent_records() -> None:
+    """The database must receive the release parent before children with FK references."""
+    artifact = parse_freshcheck_artifact(_artifact())
+    session = AsyncMock(spec=AsyncSession)
+    session.get.return_value = None
+    session.add = Mock()
+    session.add_all = Mock()
+    service = FreshCheckSyncService(session)
+
+    await service.stage(artifact, "unit-test")
+
+    staged_version = session.add.call_args.args[0]
+    child_records = session.add_all.call_args_list[-1].args[0]
+    assert staged_version.kb_version == artifact.kb_version
+    assert all(record is not staged_version for record in child_records)
+    assert session.add_all.call_count == 4
+    assert session.flush.await_count == 5
+
+
+@pytest.mark.anyio
 async def test_stage_rejects_a_checksum_collision() -> None:
     """An existing version cannot be overwritten with another artifact."""
     artifact = parse_freshcheck_artifact(_artifact())
@@ -194,4 +214,39 @@ async def test_activate_retires_the_prior_active_release() -> None:
     assert target_version.activated_by == "unit-test"
     assert prior_active_version.status is FreshCheckKBVersionStatus.RETIRED
     assert prior_active_version.retired_by == "unit-test"
-    session.flush.assert_awaited_once()
+    assert session.flush.await_count == 2
+
+
+@pytest.mark.anyio
+async def test_rollback_reactivates_a_retired_release() -> None:
+    """Rollback restores an exact prior artifact and retires the current release."""
+    artifact = parse_freshcheck_artifact(_artifact())
+    target_version = FreshCheckKBVersionModel(
+        kb_version=artifact.kb_version,
+        status=FreshCheckKBVersionStatus.RETIRED,
+        checksum=artifact.checksum,
+        source_commit=artifact.source_commit,
+        stats=artifact.stats,
+        artifact=artifact.raw,
+    )
+    current_version = FreshCheckKBVersionModel(
+        kb_version="1.2.4",
+        status=FreshCheckKBVersionStatus.ACTIVE,
+        checksum=f"sha256:{'b' * 64}",
+        source_commit="b" * 40,
+        stats={},
+        artifact={},
+    )
+    session = AsyncMock(spec=AsyncSession)
+    session.get.return_value = target_version
+    session.scalar.return_value = current_version
+    service = FreshCheckSyncService(session)
+
+    result = await service.rollback(artifact, "unit-test-rollback")
+
+    assert result.action == "rolled_back"
+    assert target_version.status is FreshCheckKBVersionStatus.ACTIVE
+    assert target_version.activated_by == "unit-test-rollback"
+    assert target_version.retired_at is None
+    assert current_version.status is FreshCheckKBVersionStatus.RETIRED
+    assert current_version.retired_by == "unit-test-rollback"

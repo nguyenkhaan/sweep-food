@@ -1,0 +1,71 @@
+name: FreshCheck validation
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/freshcheck.yml"
+      - "data_freshness/**"
+      - "src/backend/alembic.ini"
+      - "src/backend/alembic/**"
+      - "src/backend/scripts/*freshcheck*"
+      - "src/backend/src/model/freshcheck*"
+      - "src/backend/src/module/freshness/**"
+      - "src/backend/src/module/notification/**"
+      - "src/backend/src/module/recommendations/**"
+      - "src/backend/src/service/freshcheck*"
+      - "src/backend/src/test/test_freshcheck*"
+      - "src/backend/src/test/test_freshness*"
+      - "src/backend/src/test/test_notification_jobs.py"
+      - "src/backend/src/test/test_recommendation_ai_service.py"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/freshcheck.yml"
+      - "data_freshness/**"
+      - "src/backend/alembic.ini"
+      - "src/backend/alembic/**"
+      - "src/backend/scripts/*freshcheck*"
+      - "src/backend/src/model/freshcheck*"
+      - "src/backend/src/module/freshness/**"
+      - "src/backend/src/module/notification/**"
+      - "src/backend/src/module/recommendations/**"
+      - "src/backend/src/service/freshcheck*"
+      - "src/backend/src/test/test_freshcheck*"
+      - "src/backend/src/test/test_freshness*"
+      - "src/backend/src/test/test_notification_jobs.py"
+      - "src/backend/src/test/test_recommendation_ai_service.py"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.12.5"
+          enable-cache: true
+
+      - name: Build and validate FreshCheck artifact
+        working-directory: data_freshness
+        run: |
+          uv sync --all-groups --frozen
+          uv run python scripts/build_kb.py
+          timeout 100s uv run pytest -q tests
+          uv run ruff check scripts/build_kb.py tests/test_kb_invariants.py
+          uv run ruff format --check scripts/build_kb.py tests/test_kb_invariants.py
+          uv run mypy --strict scripts/build_kb.py
+
+      - name: Validate backend sync, migrations, and downstream contracts
+        working-directory: src/backend
+        run: |
+          uv sync --all-groups --frozen
+          uv run python -m scripts.sync_freshcheck_kb --artifact ../../data_freshness/build/freshcheck_kb.json --dry-run
+          timeout 100s uv run pytest -q src/test/test_freshcheck_sync_service.py src/test/test_freshcheck_sync_cli.py src/test/test_freshcheck_models.py src/test/test_freshcheck_mapping_model.py src/test/test_freshcheck_migration_chain.py src/test/test_freshcheck_engine.py src/test/test_freshcheck_repository.py src/test/test_freshness_router.py src/test/test_freshness_assessment.py src/test/test_notification_jobs.py src/test/test_recommendation_ai_service.py src/test/test_fefo_service.py
+          uv run ruff check scripts/sync_freshcheck_kb.py src/service/freshcheck_sync_service.py src/module/freshness src/module/notification/notification_job_service.py src/module/recommendations/recommendation_ai_service.py
+          uv run ruff format --check scripts/sync_freshcheck_kb.py src/service/freshcheck_sync_service.py src/module/freshness src/module/notification/notification_job_service.py src/module/recommendations/recommendation_ai_service.py

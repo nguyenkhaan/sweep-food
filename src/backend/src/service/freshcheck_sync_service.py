@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
-from dataclasses import dataclass
 import hashlib
 import json
 import re
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import Final, cast
 
 from sqlalchemy import select
@@ -20,6 +20,7 @@ from src.model.freshcheck_model import (
     FreshCheckKBVersionModel,
     FreshCheckSourceModel,
 )
+
 JsonRecord = dict[str, object]
 
 _CHECKSUM_EXCLUDED_KEYS: Final = frozenset({"checksum", "generated_at"})
@@ -70,6 +71,17 @@ class SyncResult:
     record_counts: dict[str, int]
 
 
+@dataclass(frozen=True)
+class ReleaseModels:
+    """Database rows grouped in the order required by their foreign keys."""
+
+    version: FreshCheckKBVersionModel
+    sources: tuple[FreshCheckSourceModel, ...]
+    claims: tuple[FreshCheckClaimModel, ...]
+    archetypes: tuple[FreshCheckArchetypeModel, ...]
+    ingredients: tuple[FreshCheckIngredientModel, ...]
+
+
 class FreshCheckSyncService:
     """Stage and activate validated FreshCheck artifacts in a caller-owned transaction."""
 
@@ -87,8 +99,7 @@ class FreshCheckSyncService:
             _assert_matching_checksum(existing_version, artifact)
             return _sync_result("already_staged", artifact)
 
-        self._session.add_all(_release_models(artifact, actor))
-        await self._session.flush()
+        await _persist_release(self._session, _release_models(artifact, actor))
         return _sync_result("staged", artifact)
 
     async def activate(self, artifact: FreshCheckArtifact, actor: str) -> SyncResult:
@@ -107,11 +118,38 @@ class FreshCheckSyncService:
         if target_version.status is FreshCheckKBVersionStatus.ACTIVE:
             return _sync_result("already_active", artifact)
 
+        await self._replace_active_version(target_version, actor)
+        return _sync_result("activated", artifact)
+
+    async def rollback(self, artifact: FreshCheckArtifact, actor: str) -> SyncResult:
+        """Reactivate one retired release after verifying its exact artifact."""
+        _require_actor(actor)
+        target_version = await self._session.get(
+            FreshCheckKBVersionModel,
+            artifact.kb_version,
+            with_for_update=True,
+        )
+        if target_version is None:
+            raise ReleaseConflictError("Rollback release does not exist.")
+        _assert_matching_checksum(target_version, artifact)
+        if target_version.status is FreshCheckKBVersionStatus.STAGED:
+            raise ReleaseConflictError("Rollback release must have been active before.")
+        if target_version.status is FreshCheckKBVersionStatus.ACTIVE:
+            return _sync_result("already_active", artifact)
+
+        await self._replace_active_version(target_version, actor)
+        return _sync_result("rolled_back", artifact)
+
+    async def _replace_active_version(
+        self,
+        target_version: FreshCheckKBVersionModel,
+        actor: str,
+    ) -> None:
+        """Switch the singleton ACTIVE status without violating its unique index."""
+
         active_version = await self._session.scalar(
             select(FreshCheckKBVersionModel)
-            .where(
-                FreshCheckKBVersionModel.status == FreshCheckKBVersionStatus.ACTIVE
-            )
+            .where(FreshCheckKBVersionModel.status == FreshCheckKBVersionStatus.ACTIVE)
             .with_for_update()
         )
         activated_at = datetime.now(UTC)
@@ -119,17 +157,21 @@ class FreshCheckSyncService:
             active_version.status = FreshCheckKBVersionStatus.RETIRED
             active_version.retired_at = activated_at
             active_version.retired_by = actor
+            await self._session.flush()
         target_version.status = FreshCheckKBVersionStatus.ACTIVE
         target_version.activated_at = activated_at
         target_version.activated_by = actor
+        target_version.retired_at = None
+        target_version.retired_by = None
         await self._session.flush()
-        return _sync_result("activated", artifact)
 
 
 def calculate_artifact_checksum(payload: JsonRecord) -> str:
     """Calculate the canonical checksum emitted by the KB build process."""
     checksum_payload = {
-        key: value for key, value in payload.items() if key not in _CHECKSUM_EXCLUDED_KEYS
+        key: value
+        for key, value in payload.items()
+        if key not in _CHECKSUM_EXCLUDED_KEYS
     }
     serialized_payload = json.dumps(
         checksum_payload,
@@ -171,7 +213,9 @@ def _validate_release_identity(
     payload: JsonRecord,
 ) -> None:
     if not _VERSION_PATTERN.fullmatch(kb_version):
-        raise ArtifactValidationError("Artifact kb_version must use semantic versioning.")
+        raise ArtifactValidationError(
+            "Artifact kb_version must use semantic versioning."
+        )
     if not _CHECKSUM_PATTERN.fullmatch(checksum):
         raise ArtifactValidationError("Artifact checksum has an invalid format.")
     if not _COMMIT_PATTERN.fullmatch(source_commit):
@@ -200,7 +244,9 @@ def _validate_record_shapes(artifact: FreshCheckArtifact) -> None:
         _required_list(claim, "conditions")
     for archetype_id, archetype in artifact.archetypes.items():
         if _required_string(archetype, "archetype") != archetype_id:
-            raise ArtifactValidationError("Archetype key does not match its record identifier.")
+            raise ArtifactValidationError(
+                "Archetype key does not match its record identifier."
+            )
         _require_string_fields(archetype, ("name_vi",))
         _required_list(archetype, "applies_to_groups")
         _required_record(archetype, "sensory_tiers")
@@ -209,7 +255,9 @@ def _validate_record_shapes(artifact: FreshCheckArtifact) -> None:
         _required_list(archetype, "business_rules")
     for ingredient_id, ingredient in artifact.ingredients.items():
         if _required_string(ingredient, "id") != ingredient_id:
-            raise ArtifactValidationError("Ingredient key does not match its record identifier.")
+            raise ArtifactValidationError(
+                "Ingredient key does not match its record identifier."
+            )
         _require_string_fields(ingredient, ("code", "archetype"))
         _required_list(ingredient, "names_vi")
         _required_record(ingredient, "base_shelf_life_hours")
@@ -220,7 +268,9 @@ def _validate_references(artifact: FreshCheckArtifact) -> None:
     claim_ids = {_required_string(claim, "id") for claim in artifact.claims}
     for claim in artifact.claims:
         if _required_string(claim, "source") not in source_ids:
-            raise ArtifactValidationError("Claim references a source outside this artifact.")
+            raise ArtifactValidationError(
+                "Claim references a source outside this artifact."
+            )
     for ingredient in artifact.ingredients.values():
         if _required_string(ingredient, "archetype") not in artifact.archetypes:
             raise ArtifactValidationError("Ingredient references an unknown archetype.")
@@ -229,7 +279,9 @@ def _validate_references(artifact: FreshCheckArtifact) -> None:
             if not isinstance(rule, dict):
                 raise ArtifactValidationError("Shelf-life rules must be objects.")
             if _required_string(rule, "claim") not in claim_ids:
-                raise ArtifactValidationError("Shelf-life rule references an unknown claim.")
+                raise ArtifactValidationError(
+                    "Shelf-life rule references an unknown claim."
+                )
 
 
 def _validate_stats(artifact: FreshCheckArtifact) -> None:
@@ -245,7 +297,9 @@ def _validate_stats(artifact: FreshCheckArtifact) -> None:
 def _required_string(record: JsonRecord, key: str) -> str:
     value = record.get(key)
     if not isinstance(value, str) or not value:
-        raise ArtifactValidationError(f"Artifact field {key} must be a non-empty string.")
+        raise ArtifactValidationError(
+            f"Artifact field {key} must be a non-empty string."
+        )
     return value
 
 
@@ -265,21 +319,25 @@ def _required_records(record: JsonRecord, key: str) -> tuple[JsonRecord, ...]:
     records = _required_list(record, key)
     if not all(isinstance(item, dict) for item in records):
         raise ArtifactValidationError(f"Artifact field {key} must contain objects.")
-    return tuple(dict(item) for item in records)
+    return tuple(dict(cast(dict[str, object], item)) for item in records)
 
 
 def _required_record(record: JsonRecord, key: str) -> JsonRecord:
     value = record.get(key)
     if not isinstance(value, dict):
         raise ArtifactValidationError(f"Artifact field {key} must be an object.")
-    return dict(value)
+    return dict(cast(dict[str, object], value))
 
 
 def _required_record_map(record: JsonRecord, key: str) -> dict[str, JsonRecord]:
     value = _required_record(record, key)
-    if not all(isinstance(name, str) and isinstance(item, dict) for name, item in value.items()):
-        raise ArtifactValidationError(f"Artifact field {key} must map strings to objects.")
-    return {name: dict(item) for name, item in value.items()}
+    if not all(
+        isinstance(name, str) and isinstance(item, dict) for name, item in value.items()
+    ):
+        raise ArtifactValidationError(
+            f"Artifact field {key} must map strings to objects."
+        )
+    return {name: dict(cast(dict[str, object], item)) for name, item in value.items()}
 
 
 def _require_actor(actor: str) -> None:
@@ -292,7 +350,9 @@ def _assert_matching_checksum(
     artifact: FreshCheckArtifact,
 ) -> None:
     if existing_version.checksum != artifact.checksum:
-        raise ReleaseConflictError("KB version already exists with a different checksum.")
+        raise ReleaseConflictError(
+            "KB version already exists with a different checksum."
+        )
 
 
 def _sync_result(action: str, artifact: FreshCheckArtifact) -> SyncResult:
@@ -303,11 +363,25 @@ def _sync_result(action: str, artifact: FreshCheckArtifact) -> SyncResult:
     )
 
 
+async def _persist_release(session: AsyncSession, release: ReleaseModels) -> None:
+    """Flush each FK dependency layer before adding its dependent rows."""
+    session.add(release.version)
+    await session.flush()
+    for records in (
+        release.sources,
+        release.claims,
+        release.archetypes,
+        release.ingredients,
+    ):
+        session.add_all(records)
+        await session.flush()
+
+
 def _release_models(
     artifact: FreshCheckArtifact,
     actor: str,
-) -> list[object]:
-    return [
+) -> ReleaseModels:
+    return ReleaseModels(
         FreshCheckKBVersionModel(
             kb_version=artifact.kb_version,
             status=FreshCheckKBVersionStatus.STAGED,
@@ -317,17 +391,19 @@ def _release_models(
             artifact=artifact.raw,
             staged_by=actor,
         ),
-        *[_source_model(artifact.kb_version, source) for source in artifact.sources],
-        *[_claim_model(artifact.kb_version, claim) for claim in artifact.claims],
-        *[
+        tuple(
+            _source_model(artifact.kb_version, source) for source in artifact.sources
+        ),
+        tuple(_claim_model(artifact.kb_version, claim) for claim in artifact.claims),
+        tuple(
             _archetype_model(artifact.kb_version, archetype_id, archetype)
             for archetype_id, archetype in artifact.archetypes.items()
-        ],
-        *[
+        ),
+        tuple(
             _ingredient_model(artifact.kb_version, ingredient_id, ingredient)
             for ingredient_id, ingredient in artifact.ingredients.items()
-        ],
-    ]
+        ),
+    )
 
 
 def _source_model(kb_version: str, source: JsonRecord) -> FreshCheckSourceModel:

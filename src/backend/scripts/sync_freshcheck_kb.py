@@ -1,4 +1,4 @@
-"""Stage or activate one validated FreshCheck knowledge-base artifact."""
+"""Stage, activate, or roll back one validated FreshCheck KB artifact."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ import argparse
 import asyncio
 import json
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
@@ -24,7 +24,7 @@ from src.service.freshcheck_sync_service import (
 def parse_arguments(arguments: list[str] | None = None) -> argparse.Namespace:
     """Parse a single explicit FreshCheck synchronization operation."""
     parser = argparse.ArgumentParser(
-        description="Stage or activate a versioned FreshCheck KB artifact."
+        description="Stage, activate, or roll back a versioned FreshCheck KB artifact."
     )
     parser.add_argument(
         "--artifact",
@@ -58,6 +58,11 @@ def parse_arguments(arguments: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Activate an already staged artifact and retire the current active release.",
     )
+    operation.add_argument(
+        "--rollback",
+        action="store_true",
+        help="Reactivate an exact retired artifact and retire the current release.",
+    )
     return parser.parse_args(arguments)
 
 
@@ -66,7 +71,9 @@ def load_artifact(artifact_path: Path) -> FreshCheckArtifact:
     try:
         payload = json.loads(artifact_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
-        raise ArtifactValidationError("Unable to read the FreshCheck artifact.") from error
+        raise ArtifactValidationError(
+            "Unable to read the FreshCheck artifact."
+        ) from error
     if not isinstance(payload, dict):
         raise ArtifactValidationError("FreshCheck artifact root must be a JSON object.")
     return parse_freshcheck_artifact(payload)
@@ -99,14 +106,14 @@ async def synchronize(arguments: argparse.Namespace) -> str:
     )
     session_factory = async_sessionmaker(engine, expire_on_commit=False)
     try:
-        async with session_factory() as session:
-            async with session.begin():
-                service = FreshCheckSyncService(session)
-                result = (
-                    await service.stage(artifact, arguments.actor)
-                    if arguments.stage
-                    else await service.activate(artifact, arguments.actor)
-                )
+        async with session_factory() as session, session.begin():
+            service = FreshCheckSyncService(session)
+            if arguments.stage:
+                result = await service.stage(artifact, arguments.actor)
+            elif arguments.activate:
+                result = await service.activate(artifact, arguments.actor)
+            else:
+                result = await service.rollback(artifact, arguments.actor)
     finally:
         await engine.dispose()
     return result.action
@@ -119,8 +126,10 @@ def main(arguments: list[str] | None = None) -> int:
     except (ArtifactValidationError, ReleaseConflictError, ValueError) as error:
         print(f"FreshCheck sync failed: {error}", file=sys.stderr)
         return 2
-    except Exception:
-        print("FreshCheck sync failed before completing its transaction.", file=sys.stderr)
+    except Exception:  # noqa: BLE001 - redact unexpected driver details at the CLI.
+        print(
+            "FreshCheck sync failed before completing its transaction.", file=sys.stderr
+        )
         return 1
     print(f"FreshCheck sync result: {operation}")
     return 0

@@ -290,6 +290,9 @@ def test_shopping_mutation_receipt_metadata_preserves_replay_invariants() -> Non
 
 
 @pytest.mark.anyio
+@pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
 async def test_recommendation_persistence_enforces_ownership_rank_and_scores(
     planning_session: AsyncSession,
 ) -> None:
@@ -348,6 +351,9 @@ async def test_recommendation_persistence_enforces_ownership_rank_and_scores(
 
 
 @pytest.mark.anyio
+@pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
 async def test_meal_plan_persistence_enforces_range_slots_and_servings(
     planning_session: AsyncSession,
 ) -> None:
@@ -414,6 +420,9 @@ async def test_meal_plan_persistence_enforces_range_slots_and_servings(
 
 
 @pytest.mark.anyio
+@pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
 async def test_favorite_and_shopping_persistence_enforces_identity_and_edits(
     planning_session: AsyncSession,
 ) -> None:

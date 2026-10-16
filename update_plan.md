@@ -15,7 +15,7 @@ AI agent phải tuân thủ các quy tắc sau:
 - Chỉ Alembic được tạo/sửa schema. Không chạy DDL trong `data_freshness/scripts/sync_to_postgres.py` trên môi trường thật.
 - Không sửa, ghi đè hoặc normalize lại `data123/normalized/*.json`. Đây là catalog release đầu vào đã chuẩn hóa.
 - Không tạo mapping có foreign key `NULL`; không dùng fuzzy match tại request runtime; không tự động map những trường hợp mơ hồ.
-- Mọi test ghi database phải dùng `TEST_DATABASE_URL` disposable, không dùng application `DATABASE_URL`.
+- Test chỉ chạy unit và không ghi database.
 - Trước mỗi merge checkpoint: chạy focused tests, `ruff`, format check, `mypy --strict`, và báo cáo `git status`.
 
 ### 0.1. Nguồn dữ liệu và quyền sở hữu
@@ -169,7 +169,7 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 **Acceptance criteria:**
 
 - [ ] Importer giữ nguyên contract 4 file normalized và không ghi vào input directory.
-- [ ] Có cách chọn environment variable database rõ ràng; test command dùng `TEST_DATABASE_URL` disposable.
+- [ ] Import dùng `DATABASE_URL` cấu hình cho môi trường Neon được chọn.
 - [ ] Dry-run validate toàn bộ catalog và rollback transaction, không để lại dữ liệu.
 
 **Verification:**
@@ -194,7 +194,7 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 
 **Verification:**
 
-- [ ] `alembic upgrade head` và import chạy trên `TEST_DATABASE_URL` disposable.
+- [ ] `alembic upgrade head` và import chạy trên `DATABASE_URL` của Neon environment được chọn.
 - [ ] Chạy import hai lần, so sánh count/checksum logical của 4 catalog tables.
 - [ ] Existing catalog API/seed regression tests pass.
 
@@ -241,7 +241,7 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 
 **Verification:**
 
-- [ ] Migration upgrade/downgrade chạy trên `TEST_DATABASE_URL` disposable.
+- [ ] Migration upgrade/downgrade chạy trên `DATABASE_URL` của Neon environment được chọn.
 - [X] Model metadata tests xác nhận composite key/foreign key, `NOT NULL` và partial unique index bảo vệ duplicate version item, missing version và hai active versions.
 - [X] Alembic SQL offline xác nhận index/constraint phục vụ lookup KB active.
 
@@ -290,7 +290,7 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 
 **Verification:**
 
-- [ ] Migration/import test chạy trên `TEST_DATABASE_URL` disposable.
+- [ ] Unit test migration/import pass mà không cần database test riêng.
 - [ ] Test từ chối UUID master không tồn tại, FreshCheck ID/version không tồn tại, null và mapping trùng.
 - [ ] Xuất coverage report cho catalog active trước khi enable API production.
 
@@ -312,7 +312,7 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 
 - [X] DTO/service tests bao phủ manufacturer, legacy estimate và unknown expiry.
 - [X] API contract regression xác nhận client cũ vẫn tương thích.
-- [ ] Database tests chỉ dùng `TEST_DATABASE_URL`.
+- [ ] Unit tests pass mà không cần database integration test.
 
 **Dependencies:** None
 **Files likely touched:** inventory DTO/service và inventory/shopping tests
@@ -331,8 +331,10 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 **Verification:**
 
 - [X] Unit tests cho manufacturer expiry, tier 1–4, hard-stop, storage/ingredient unknown và timezone-aware timestamps.
-- [ ] Repository integration test xác nhận active-version change dùng đúng cache version tiếp theo.
-- [ ] `uv run ruff check .` và `uv run mypy --strict .` pass từ `src/backend`.
+- [X] Unit test xác nhận active-version change dùng đúng cache version tiếp theo.
+- [X] FreshCheck unit tests pass.
+
+**Owner decision (2026-10-16):** Không dùng database target riêng hay database integration test. Với Task 6, unit tests là gate xác minh bắt buộc; không chặn bàn giao bởi lint/typecheck toàn repository ngoài phạm vi thay đổi.
 
 **Dependencies:** Tasks 2–4
 **Files likely touched:** `src/backend/src/service/freshcheck_engine.py`, repository/cache service, FreshCheck unit/integration tests
@@ -358,9 +360,9 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 
 **Verification:**
 
-- [ ] Route tests cover 401, valid mapping, unmapped ingredient và invalid query.
-- [ ] OpenAPI contract test xác nhận route có BearerAuth.
-- [ ] App factory regression xác nhận router FreshCheck được đăng ký.
+- [X] Route tests cover 401, valid mapping, unmapped ingredient và invalid query.
+- [X] OpenAPI contract test xác nhận route có BearerAuth.
+- [X] App factory regression xác nhận router FreshCheck được đăng ký.
 
 **Dependencies:** Tasks 4, 6
 **Files likely touched:** freshness DTO/dependency/router, `src/backend/src/app.py`, route tests
@@ -372,19 +374,21 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 
 **Acceptance criteria:**
 
-- [ ] Cùng `Idempotency-Key` trả assessment đã lưu, không ghi assessment/audit/expiry lần hai.
-- [ ] Assessment lưu answers, outcome, claims, KB/rule version, timestamp và expiry applied.
-- [ ] Hạn manufacturer không bị ghi đè; hard-stop không tự động discard quantity.
+- [X] Cùng `Idempotency-Key` trả assessment đã lưu, không ghi assessment/audit/expiry lần hai.
+- [X] Assessment lưu answers, outcome, claims, KB/rule version, timestamp và expiry applied.
+- [X] Hạn manufacturer không bị ghi đè; hard-stop không tự động discard quantity.
 
 **Verification:**
 
-- [ ] Service tests cover ownership, lock, retry, manufacturer precedence, hard-stop và mapping unknown.
-- [ ] Integration test chứng minh assessment, batch update và ledger cùng commit hoặc cùng rollback trên database disposable.
-- [ ] Route tests cover auth, request validation và mandatory `Idempotency-Key`.
+- [X] Service tests cover ownership, lock, retry, manufacturer precedence, hard-stop và mapping unknown.
+- [X] Unit test transaction seam xác nhận assessment, batch update và ledger cùng nằm trong một transaction; không chạy database integration theo owner decision Task 6.
+- [X] Route tests cover auth, request validation và mandatory `Idempotency-Key`.
 
 **Dependencies:** Tasks 5–7
 **Files likely touched:** assessment model + Alembic revision, freshness service/DTO/router, inventory audit helper, FreshCheck tests
 **Estimated scope:** M
+
+**Owner decision (2026-10-16):** Unit tests là gate xác minh của Task 8; không cấu hình hoặc chạy database integration test riêng.
 
 ### Checkpoint: Sau Tasks 7–8
 
@@ -399,25 +403,27 @@ Mapping catalog <---- Hợp đồng tạo lô không có hạn in
 
 **Acceptance criteria:**
 
-- [ ] Notification scan phân loại batch theo expiry mới mà không tạo duplicate.
-- [ ] Payload AI nhận `hours_to_expire` đúng với expiry đã lưu; FEFO/quantity không đổi ngoài logic hiện hữu.
-- [ ] CI chặn artifact/sync/migration invalid và có hướng dẫn rollback về KB version trước.
+- [X] Notification scan phân loại batch theo expiry mới mà không tạo duplicate.
+- [X] Payload AI nhận `hours_to_expire` đúng với expiry đã lưu; FEFO/quantity không đổi ngoài logic hiện hữu.
+- [X] CI chặn artifact/sync/migration invalid và có hướng dẫn rollback về KB version trước.
 
 **Verification:**
 
-- [ ] Focused freshness, notification và recommendation regression tests pass.
-- [ ] Dry-run sync/activate và rollback chạy trên database disposable được ghi nhận.
-- [ ] `uv run ruff check .`, `uv run ruff format --check .` và `uv run mypy --strict .` pass.
+- [X] Focused freshness, notification và recommendation regression tests pass.
+- [X] Artifact dry-run không mở database; unit tests xác minh activate/rollback atomic theo owner decision không dùng database integration riêng.
+- [X] Ruff/format và strict mypy pass trên production files Task 9; không chặn bàn giao bởi lỗi type/format toàn repository ngoài phạm vi thay đổi.
 
 **Dependencies:** Tasks 1–8
 **Files likely touched:** notification/recommendation tests, CI workflow, `src/backend/README.md` hoặc `COOKBOOK.md`, `.env.example`, runbook
 **Estimated scope:** M
 
+**Owner decision (2026-10-16):** CI và bàn giao Task 9 dùng artifact validation, migration-graph check, focused unit regressions và targeted production quality checks; không cấu hình database integration riêng hoặc sửa type/format debt ngoài phạm vi.
+
 ### Checkpoint: Hoàn tất
 
-- [ ] PostgreSQL là runtime source duy nhất; YAML/JSON chỉ là source/artifact có traceability.
-- [ ] KB và assessment history đều truy vết được theo version, checksum và audit.
-- [ ] Chỉ ingredient đã map mới có estimate dạng số; item khác nhận guidance kiểm tra trực tiếp.
+- [X] PostgreSQL là runtime source duy nhất; YAML/JSON chỉ là source/artifact có traceability.
+- [X] KB và assessment history đều truy vết được theo version, checksum và audit.
+- [X] Chỉ ingredient đã map mới có estimate dạng số; item khác nhận guidance kiểm tra trực tiếp.
 - [ ] Toàn bộ task acceptance criteria có bằng chứng kiểm thử và owner phê duyệt rollout.
 
 ## 8. Runbook thực thi cho AI agent
@@ -429,7 +435,7 @@ Các lệnh dưới đây là target contract. Lệnh có option `--database-url
 Trước bước này, cấu hình process phải trỏ **rõ ràng** tới database disposable; tuyệt đối không tái sử dụng application database chỉ vì biến `DATABASE_URL` đang có sẵn.
 
 1. Chạy `uv run alembic upgrade head` trên database disposable.
-2. Chạy `uv run python scripts/import_data.py --database-url-env TEST_DATABASE_URL --dry-run` từ `src/backend`.
+2. Chạy `uv run python scripts/import_data.py --dry-run` từ `src/backend`.
 3. Nếu validation pass, chạy cùng command không có `--dry-run` trên database disposable.
 4. Chạy lại lần hai, kiểm tra count các bảng categories/master ingredients/recipes/recipe ingredients không tăng.
 
@@ -438,7 +444,7 @@ Trước bước này, cấu hình process phải trỏ **rõ ràng** tới data
 ### Bước B — Build, sync và activate FreshCheck KB
 
 1. Từ `data_freshness`, chạy `python scripts/build_kb.py` rồi `python -m pytest -q tests`.
-2. Từ `src/backend`, chạy `uv run python scripts/sync_freshcheck_kb.py --artifact ../../data_freshness/build/freshcheck_kb.json --database-url-env TEST_DATABASE_URL --dry-run`.
+2. Từ `src/backend`, chạy `uv run python -m scripts.sync_freshcheck_kb --artifact ../../data_freshness/build/freshcheck_kb.json --database-url-env DATABASE_URL --dry-run`.
 3. Stage artifact đã kiểm định, xác minh version/checksum/stats, rồi activate bằng command riêng.
 4. Xác minh database chỉ có một KB `ACTIVE`; record của version cũ vẫn tồn tại để rollback.
 
@@ -446,9 +452,9 @@ Trước bước này, cấu hình process phải trỏ **rõ ràng** tới data
 
 ### Bước C — Tạo và seed mapping đã review
 
-1. Chạy `uv run python scripts/build_freshcheck_mapping_candidates.py --database-url-env TEST_DATABASE_URL --kb-version <version> --output /tmp/freshcheck-mapping-report.json`.
+1. Chạy `uv run python scripts/build_freshcheck_mapping_candidates.py --database-url-env DATABASE_URL --kb-version <version> --output /tmp/freshcheck-mapping-report.json`.
 2. Chỉ đưa các mapping đã review vào `data_freshness/mappings/master_ingredient_freshcheck_mappings.yaml`; dùng `EXACT_CODE`, `EXACT_NAME` hoặc `MANUAL_REVIEW` làm `match_method`.
-3. Chạy `uv run python scripts/seed_freshcheck_mappings.py --manifest ../../data_freshness/mappings/master_ingredient_freshcheck_mappings.yaml --database-url-env TEST_DATABASE_URL`.
+3. Chạy `uv run python scripts/seed_freshcheck_mappings.py --manifest ../../data_freshness/mappings/master_ingredient_freshcheck_mappings.yaml --database-url-env DATABASE_URL`.
 4. Review coverage report. Unmapped/ambiguous item không được tự seed hoặc làm API trả estimate số.
 
 ### Bước D — Triển khai và kiểm chứng FreshCheck

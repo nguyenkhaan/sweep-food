@@ -125,6 +125,7 @@ def build_batch(
     batch_id: UUID = BATCH_ID,
     expires_at: datetime,
     batch_type: InventoryBatchType = InventoryBatchType.RAW_INGREDIENT,
+    expiration_source: ExpirationSource = ExpirationSource.MANUFACTURER,
 ) -> InventoryBatchModel:
     """Build one active expiring inventory batch."""
     return InventoryBatchModel(
@@ -139,7 +140,7 @@ def build_batch(
         storage_mode=StorageMode.REFRIGERATED,
         status=InventoryBatchStatus.ACTIVE,
         expires_at=expires_at,
-        expiration_source=ExpirationSource.MANUFACTURER,
+        expiration_source=expiration_source,
         source=InventorySource.MANUAL,
         created_at=NOW,
         updated_at=NOW,
@@ -250,6 +251,37 @@ async def test_expiry_scan_returns_only_new_notification_ids() -> None:
     assert result.created_notification_ids == [NOTIFICATION_ID]
     assert result.selected_count == 1
     assert database.commits == 1
+
+
+@pytest.mark.anyio
+async def test_freshcheck_expiry_scan_does_not_duplicate_notifications() -> None:
+    """Repeated scans deduplicate a notification derived from estimated expiry."""
+    batch = build_batch(
+        expires_at=NOW + timedelta(days=1),
+        expiration_source=ExpirationSource.ESTIMATED,
+    )
+    database = FakeDatabaseSession(
+        [
+            [batch],
+            [build_preference()],
+            NOTIFICATION_ID,
+            [batch],
+            [build_preference()],
+            None,
+        ]
+    )
+    service = ExpirationNotificationService(
+        cast(AsyncSession, database),
+        default_warning_days=3,
+    )
+
+    first_scan = await service.scan(NOW)
+    repeated_scan = await service.scan(NOW)
+
+    assert first_scan.created_notification_ids == [NOTIFICATION_ID]
+    assert repeated_scan.created_notification_ids == []
+    assert first_scan.candidate_count == repeated_scan.candidate_count == 1
+    assert database.commits == 2
 
 
 @pytest.mark.anyio

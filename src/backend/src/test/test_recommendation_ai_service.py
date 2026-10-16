@@ -1,5 +1,6 @@
 """Unit tests for AI-backed recommendation orchestration."""
 
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import cast
 from uuid import UUID
@@ -49,8 +50,8 @@ class _Result:
     def scalars(self) -> "_Result":
         return self
 
-    def all(self) -> list[_Recipe]:
-        return cast(list[_Recipe], self._value)
+    def all(self) -> list[object]:
+        return cast(list[object], self._value)
 
 
 class _Session:
@@ -58,13 +59,24 @@ class _Session:
         self,
         *,
         recipes: list[_Recipe],
+        inventory_expiries: list[object] | None = None,
     ) -> None:
-        self._result = _Result(recipes)
+        self._values: list[object] = [inventory_expiries or [], recipes]
         self.statements: list[object] = []
 
     async def execute(self, statement: object) -> _Result:
         self.statements.append(statement)
-        return self._result
+        return _Result(self._values.pop(0))
+
+
+class _SequenceSession:
+    """Return ordered query results for pantry enrichment tests."""
+
+    def __init__(self, values: list[object]) -> None:
+        self._values = values
+
+    async def execute(self, _statement: object) -> _Result:
+        return _Result(self._values.pop(0))
 
 
 class _AIClient:
@@ -192,7 +204,7 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
     assert response.ranker_model == "LightGBM LambdaMART"
     assert response.analysis.is_mock is False
     assert f"UNKNOWN_RECIPE_ID:{UNKNOWN_RECIPE_ID}" in response.warnings
-    assert len(session.statements) == 1
+    assert len(session.statements) == 2
 
 
 @pytest.mark.anyio
@@ -227,3 +239,48 @@ async def test_empty_pantry_and_empty_ai_result_are_explicit() -> None:
     assert response.items == []
     assert response.analysis.is_mock is False
     assert len(session.statements) == 0
+
+
+@pytest.mark.anyio
+async def test_recommendation_uses_the_earliest_saved_batch_expiry() -> None:
+    """The AI receives server-derived urgency instead of a stale client value."""
+    now = datetime(2026, 10, 16, 10, tzinfo=UTC)
+    session = _SequenceSession(
+        [[(None, "Spinach", now + timedelta(hours=12, minutes=30))]]
+    )
+    ai_client = _AIClient(
+        AIRecommendationResponseDTO(
+            status="empty",
+            contract_version="2",
+            model_version="lgbm-contextual-v1",
+            catalog_revision="catalog-test",
+            ranker_model="LightGBM LambdaMART",
+            timings=AIRecommendationTimingsDTO(
+                total_ms=1,
+                candidate_ms=1,
+                ranker_ms=0,
+            ),
+            recommendations=[],
+        )
+    )
+    service = RecommendationAIService(
+        cast(AsyncSession, session),
+        cast(SweepFoodAIClient, ai_client),
+        clock=lambda: now,
+    )
+
+    response = await service.recommend(
+        USER_ID,
+        RecommendationRequestDTO(
+            items=[
+                {
+                    "name": "Spinach",
+                    "quantity_g": 600,
+                    "hours_to_expire": 999,
+                }
+            ]
+        ),
+    )
+
+    assert ai_client.requests[0].items[0].hours_to_expire == 12.5
+    assert response.request.items[0].hours_to_expire == 12.5

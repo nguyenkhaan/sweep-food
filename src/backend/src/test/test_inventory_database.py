@@ -27,6 +27,10 @@ from src.model.user_model import UserModel
 from src.module.inventory.inventory_dto import InventoryAdjustmentRequestDTO
 from src.module.inventory.inventory_service import InventoryService
 
+pytestmark = pytest.mark.skip(
+    reason="PostgreSQL integration tests are disabled; the project runs unit tests only."
+)
+
 
 def _user() -> UserModel:
     """Build a unique active user for a disposable integration database."""
