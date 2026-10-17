@@ -68,7 +68,8 @@ abstract final class ApiPaths {
   static String scanJob(String id) => '/scan/jobs/$id';
   static String scanJobConfirm(String id) => '/scan/jobs/$id/confirm';
 
-  // Recipes (real backend) — the Dish detail screen reads from here.
+  // Recipes (real backend) — search & detail
+  static const recipes = '/recipes';
   static String recipe(String id) => '/recipes/$id';
   static String recipeFavorite(String id) => '/recipes/$id/favorite';
 
@@ -95,14 +96,22 @@ abstract final class ApiPaths {
   static String mealPlanItem(String planId, String itemId) =>
       '/meal-plans/$planId/items/$itemId';
 
-  // Shopping lists (real backend) — no "list all" / "active list" endpoint;
-  // FE remembers the last generated list id locally. See api-contract.md §8.
+  // Shopping lists (real backend)
+  static const shoppingLists = '/shopping-lists';
   static const shoppingListsGenerate = '/shopping-lists/generate';
   static String shoppingList(String id) => '/shopping-lists/$id';
   static String shoppingListItems(String listId) =>
       '/shopping-lists/$listId/items';
   static String shoppingListItem(String listId, String itemId) =>
       '/shopping-lists/$listId/items/$itemId';
+
+  // Freshness (FreshCheck sensory assessment)
+  static const freshnessQuestions = '/freshness/questions';
+  static String freshnessAssessment(String batchId) =>
+      '/freshness/batches/$batchId/assessment';
+
+  // Rating & Feedback
+  static const rating = '/rating';
 
   // Devices / notifications
   static const devices = '/users/me/devices';

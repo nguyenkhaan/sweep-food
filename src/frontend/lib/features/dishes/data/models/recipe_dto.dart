@@ -146,3 +146,30 @@ double? _asDouble(Object? value) {
   if (value is num) return value.toDouble();
   return double.tryParse(value.toString());
 }
+
+class RecipeListResponseDto {
+  const RecipeListResponseDto({
+    required this.items,
+    required this.total,
+    required this.page,
+    required this.perPage,
+  });
+
+  final List<RecipeDto> items;
+  final int total;
+  final int page;
+  final int perPage;
+
+  factory RecipeListResponseDto.fromJson(Map<String, dynamic> json) {
+    final rawItems = json['items'] as List<dynamic>? ?? [];
+    return RecipeListResponseDto(
+      items: rawItems
+          .map((e) => RecipeDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      total: (json['total'] as num?)?.toInt() ?? rawItems.length,
+      page: (json['page'] as num?)?.toInt() ?? 1,
+      perPage: (json['per_page'] as num?)?.toInt() ?? 20,
+    );
+  }
+}
+

@@ -21,4 +21,23 @@ class DishRepositoryImpl implements DishRepository {
   @override
   Future<Result<Dish>> getById(String id) =>
       runGuarded(() async => (await _remote.getById(id)).toEntity());
+
+  @override
+  Future<Result<List<Dish>>> searchRecipes({
+    String? query,
+    String? tag,
+    int? maxCookingMinutes,
+    int page = 1,
+    int perPage = 20,
+  }) =>
+      runGuarded(() async {
+        final res = await _remote.searchRecipes(
+          query: query,
+          tag: tag,
+          maxCookingMinutes: maxCookingMinutes,
+          page: page,
+          perPage: perPage,
+        );
+        return res.items.map((dto) => dto.toEntity()).toList();
+      });
 }

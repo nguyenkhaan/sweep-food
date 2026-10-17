@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/reports/domain/entities/waste_reduction_summary.dart';
 
 part 'report_dto.freezed.dart';
@@ -45,8 +45,54 @@ abstract class WasteReductionSummaryDto with _$WasteReductionSummaryDto {
     List<WasteCategoryDto> byCategory,
   }) = _WasteReductionSummaryDto;
 
-  factory WasteReductionSummaryDto.fromJson(Map<String, dynamic> json) =>
-      _$WasteReductionSummaryDtoFromJson(json);
+  factory WasteReductionSummaryDto.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('total_saved_kg')) {
+      final periodStr = json['period']?.toString() ?? 'month';
+      final periodLabel = periodStr == 'week'
+          ? 'Tuần này'
+          : (periodStr == 'year' ? 'Năm này' : 'Tháng này');
+      final wasteKg =
+          double.tryParse(json['total_saved_kg']?.toString() ?? '0') ?? 0.0;
+
+      final topSaved = (json['top_saved_ingredients'] as List<dynamic>?) ?? [];
+      final byCategory = <Map<String, dynamic>>[];
+      for (final item in topSaved) {
+        if (item is Map) {
+          final name = item['name']?.toString() ?? '';
+          final savedKg =
+              double.tryParse(item['saved_kg']?.toString() ?? '0') ?? 0.0;
+          byCategory.add({
+            'category': name,
+            'count': (savedKg * 10).round().clamp(1, 999),
+          });
+        }
+      }
+
+      final weeklySeries = (json['weekly_series'] as List<dynamic>?) ?? [];
+      final weeklyLabels = (json['weekly_labels'] as List<dynamic>?) ?? [];
+      final weeklyBars = <Map<String, dynamic>>[];
+      for (var i = 0; i < weeklySeries.length; i++) {
+        final val = double.tryParse(weeklySeries[i]?.toString() ?? '0') ?? 0.0;
+        final label =
+            i < weeklyLabels.length ? weeklyLabels[i].toString() : 'T${i + 1}';
+        weeklyBars.add({
+          'label': label.length > 5 ? label.substring(label.length - 5) : label,
+          'value': (val * 10).round(),
+        });
+      }
+
+      return _$WasteReductionSummaryDtoFromJson({
+        'period': periodStr,
+        'period_label': periodLabel,
+        'items_used_before_expiry': topSaved.length,
+        'waste_avoided_kg': wasteKg,
+        'dishes_cooked': topSaved.length,
+        'weekly_bars': weeklyBars,
+        'by_category': byCategory,
+      });
+    }
+    return _$WasteReductionSummaryDtoFromJson(json);
+  }
 
   WasteReductionSummary toEntity() => WasteReductionSummary(
         period: ReportPeriod.fromWire(period),

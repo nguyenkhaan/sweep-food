@@ -18,19 +18,48 @@ enum MealType {
   };
 }
 
-/// Body for `POST /recommendations`. The real backend accepts `{request: string}`
-/// (1..1000 chars, non-blank) representing the user query prompt.
+/// One pantry item sent to the AI Recommendation engine (BE RecommendationPantryItemDTO).
+class RecommendationPantryItemDraft {
+  const RecommendationPantryItemDraft({
+    required this.name,
+    this.code,
+    this.quantityG = 200.0,
+    this.hoursToExpire,
+    this.isStaple = false,
+  });
+
+  final String name;
+  final String? code;
+  final double quantityG;
+  final double? hoursToExpire;
+  final bool isStaple;
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        if (code != null) 'code': code,
+        'quantity_g': quantityG > 0 ? quantityG : 200.0,
+        if (hoursToExpire != null) 'hours_to_expire': hoursToExpire,
+        'is_staple': isStaple,
+      };
+}
+
+/// Body for `POST /recommendations`. Aligned with backend `RecommendationRequestDTO` (AI v2).
 class SuggestionRequest {
   const SuggestionRequest({
+    this.pantryItems = const [],
     this.request,
     this.prompt,
     this.dietaryPreference,
     this.maxCookTimeMin,
     this.mealType,
+    this.householdSize = 4.0,
+    this.scenarioType,
     this.limit = AppConstants.maxSuggestions,
   });
 
-  /// Explicit free-text request for `POST /recommendations`.
+  final List<RecommendationPantryItemDraft> pantryItems;
+
+  /// Optional free-text query (preserved for backwards-compatibility).
   final String? request;
 
   /// Free-text search/filter prompt typed by the user.
@@ -39,14 +68,19 @@ class SuggestionRequest {
   final DietaryPreference? dietaryPreference;
   final int? maxCookTimeMin;
   final MealType? mealType;
+  final double householdSize;
+  final String? scenarioType;
   final int limit;
 
   SuggestionRequest copyWith({
+    List<RecommendationPantryItemDraft>? pantryItems,
     String? request,
     String? prompt,
     DietaryPreference? dietaryPreference,
     int? maxCookTimeMin,
     MealType? mealType,
+    double? householdSize,
+    String? scenarioType,
     int? limit,
     bool clearRequest = false,
     bool clearPrompt = false,
@@ -55,6 +89,7 @@ class SuggestionRequest {
     bool clearMealType = false,
   }) {
     return SuggestionRequest(
+      pantryItems: pantryItems ?? this.pantryItems,
       request: clearRequest ? null : request ?? this.request,
       prompt: clearPrompt ? null : prompt ?? this.prompt,
       dietaryPreference: clearDietaryPreference
@@ -64,16 +99,47 @@ class SuggestionRequest {
           ? null
           : maxCookTimeMin ?? this.maxCookTimeMin,
       mealType: clearMealType ? null : mealType ?? this.mealType,
+      householdSize: householdSize ?? this.householdSize,
+      scenarioType: scenarioType ?? this.scenarioType,
       limit: limit ?? this.limit,
     );
   }
 
+  /// Builds a payload strictly adhering to Backend `RecommendationRequestDTO`.
   Map<String, dynamic> toBody() {
-    final text = _buildRequestText();
-    return {'request': text};
+    final restrictions = <String>[];
+    if (dietaryPreference != null) {
+      final tag = switch (dietaryPreference!) {
+        DietaryPreference.balanced => 'balanced',
+        DietaryPreference.moreVeg => 'vegetarian',
+        DietaryPreference.highProtein => 'high_protein',
+        DietaryPreference.lowCalorie => 'low_calorie',
+      };
+      restrictions.add(tag);
+    }
+
+    final effectiveScenario = scenarioType ??
+        (mealType != null
+            ? mealType!.wire
+            : (maxCookTimeMin != null && maxCookTimeMin! <= 30
+                ? 'quick_meal'
+                : 'custom'));
+
+    return {
+      'items': pantryItems.map((e) => e.toJson()).toList(),
+      'household_size': householdSize > 0 ? householdSize : 4.0,
+      'max_cooking_time_min': (maxCookTimeMin != null && maxCookTimeMin! > 0)
+          ? maxCookTimeMin!.toDouble()
+          : 45.0,
+      'scenario_type': effectiveScenario,
+      'dietary_restrictions': restrictions,
+      'allergies': <String>[],
+      'disliked_ingredients': <String>[],
+      'preferred_cuisines': <String>[],
+    };
   }
 
-  String _buildRequestText() {
+  String buildRequestText() {
     if (request != null && request!.trim().isNotEmpty) {
       final trimmed = request!.trim();
       return trimmed.length > 1000 ? trimmed.substring(0, 1000) : trimmed;

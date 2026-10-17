@@ -49,10 +49,23 @@ abstract class RecommendationScoreComponentsDto with _$RecommendationScoreCompon
   }) = _RecommendationScoreComponentsDto;
 
   factory RecommendationScoreComponentsDto.fromJson(Map<String, dynamic> json) {
-    final e = _asDoubleDefault(json['expiration_utilization'] ?? json['e']);
-    final a = _asDoubleDefault(json['availability'] ?? json['a']);
-    final p = _asDoubleDefault(json['preference_fit'] ?? json['p']);
-    final u = _asDoubleDefault(json['purchase_minimization'] ?? json['u']);
+    // Supports both legacy E/A/P/U and Backend v2 ranking_features
+    final e = _asDoubleDefault(
+      json['expiration_utilization'] ??
+          json['e'] ??
+          (json['rescue_weight_g'] != null
+              ? ((json['rescue_weight_g'] as num) > 0 ? 1.0 : 0.0)
+              : null),
+    );
+    final a = _asDoubleDefault(
+      json['availability'] ?? json['a'] ?? json['core_coverage'],
+    );
+    final p = _asDoubleDefault(
+      json['preference_fit'] ?? json['p'] ?? json['nutrition_confidence'],
+    );
+    final u = _asDoubleDefault(
+      json['purchase_minimization'] ?? json['u'] ?? json['secondary_coverage'],
+    );
     return RecommendationScoreComponentsDto(
       expirationUtilization: e,
       availability: a,
@@ -81,7 +94,14 @@ abstract class RecommendationMissingIngredientDto with _$RecommendationMissingIn
   }) = _RecommendationMissingIngredientDto;
 
   factory RecommendationMissingIngredientDto.fromJson(Map<String, dynamic> json) =>
-      _$RecommendationMissingIngredientDtoFromJson(json);
+      RecommendationMissingIngredientDto(
+        masterIngredientId:
+            (json['master_ingredient_id'] ?? json['code']) as String?,
+        name: (json['name'] ?? '').toString(),
+        quantity: _asDoubleDefault(json['quantity'] ?? json['required_g']),
+        unit:
+            (json['unit'] ?? (json['required_g'] != null ? 'g' : '')).toString(),
+      );
 }
 
 @freezed
@@ -118,13 +138,14 @@ abstract class RecommendationItemDto with _$RecommendationItemDto {
     final recipeName = (json['recipe_name'] ?? json['name'] ?? dishObj?.name ?? '').toString();
     final rank = (json['rank'] as num?)?.toInt() ?? 1;
 
-    final rawScore = _asDouble(json['score']);
+    final rawScore = _asDouble(json['rank_score'] ?? json['score']);
     final score = rawScore != null
         ? (rawScore > 1.0 ? rawScore / 100.0 : rawScore)
         : 0.0;
 
-    final scoreComponentsJson =
-        (json['score_components'] ?? json['breakdown']) as Map<String, dynamic>?;
+    final scoreComponentsJson = (json['ranking_features'] ??
+            json['score_components'] ??
+            json['breakdown']) as Map<String, dynamic>?;
     final scoreComponents = scoreComponentsJson != null
         ? RecommendationScoreComponentsDto.fromJson(scoreComponentsJson)
         : const RecommendationScoreComponentsDto();
@@ -135,9 +156,10 @@ abstract class RecommendationItemDto with _$RecommendationItemDto {
             .toList() ??
         const <RecommendationMissingIngredientDto>[];
 
-    final nearExpiry = (json['near_expiry_ingredients'] as List<dynamic>?)
-            ?.map((e) => e.toString())
-            .toList() ??
+    final nearExpiry = ((json['rescued_items'] ?? json['near_expiry_ingredients'])
+            as List<dynamic>?)
+        ?.map((e) => e.toString())
+        .toList() ??
         const <String>[];
 
     final explanation = (json['explanation'] ?? '').toString();

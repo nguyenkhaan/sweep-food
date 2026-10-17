@@ -5,16 +5,14 @@ import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
-import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
 import 'package:sweepfood/core/widgets/primary_button.dart';
 import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
 import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan_entry.dart';
 import 'package:sweepfood/features/meal_plan/presentation/controllers/meal_plan_controller.dart';
+import 'package:sweepfood/features/meal_plan/presentation/widgets/dish_picker_sheet.dart';
 import 'package:sweepfood/features/meal_plan/presentation/widgets/meal_slot_cell.dart';
 import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
-import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 
 /// M-01 Thực đơn tuần — 7 days × (Sáng/Trưa/Tối), week nav, and
 /// "Tạo danh sách mua sắm".
@@ -118,20 +116,17 @@ class MealPlanScreen extends ConsumerWidget {
     DateTime day,
     MealSlot slot,
   ) async {
-    final picked = await showAppBottomSheet<DishSuggestion>(
-      context,
-      builder: (_) => const _AssignSheet(),
-    );
+    final picked = await DishPickerSheet.show(context);
     if (picked == null) return;
     await ref
         .read(mealPlanControllerProvider.notifier)
         .assign(
           date: day,
           slot: slot,
-          dishId: picked.id,
-          servings: picked.dish.servings.toDouble(),
-          dishName: picked.dish.name,
-          dishImageUrl: picked.dish.imageUrl,
+          dishId: picked.dishId,
+          servings: picked.servings,
+          dishName: picked.name,
+          dishImageUrl: picked.imageUrl,
         );
   }
 
@@ -217,41 +212,6 @@ class _ColumnHeader extends StatelessWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-/// M-02 — pick a dish for a slot. MVP: choose from the current suggestions.
-class _AssignSheet extends ConsumerWidget {
-  const _AssignSheet();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(suggestionListControllerProvider);
-    return SheetBody(
-      title: context.l10n.mealPlanPickDish,
-      subtitle: context.l10n.mealPlanPickDishSub,
-      child: SizedBox(
-        height: 360,
-        child: AsyncValueWidget<List<DishSuggestion>>(
-          value: async,
-          data: (list) => ListView.separated(
-            shrinkWrap: true,
-            itemCount: list.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
-            itemBuilder: (context, i) {
-              final s = list[i];
-              return ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.restaurant_rounded),
-                title: Text(s.dish.name),
-                subtitle: Text(s.dish.shortMeta(context.l10n)),
-                onTap: () => Navigator.of(context).pop(s),
-              );
-            },
-          ),
-        ),
       ),
     );
   }

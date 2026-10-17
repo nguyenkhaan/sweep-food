@@ -749,6 +749,59 @@ class MockApiClient implements ApiClient {
     log.d('MOCK GET $path ${query ?? ''}');
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null) return _inventoryBatchById(batchId);
+    if (path == ApiPaths.recipes) {
+      final recipeData = await _load('recipe');
+      final list = [recipeData];
+      return {
+        'items': list,
+        'total': list.length,
+        'page': 1,
+        'per_page': 20,
+      };
+    }
+    if (path == ApiPaths.shoppingLists) {
+      return {
+        'items': _shoppingLists
+            .map((l) => {
+                  'id': l['id'],
+                  'meal_plan_id': l['meal_plan_id'],
+                  'status': l['status'] ?? 'ACTIVE',
+                  'generated_at':
+                      l['generated_at'] ?? DateTime.now().toIso8601String(),
+                })
+            .toList(),
+        'total': _shoppingLists.length,
+      };
+    }
+    if (path == ApiPaths.freshnessQuestions) {
+      return {
+        'kb_version': '0.3.0',
+        'freshcheck_ingredient_id': 'fc_mock',
+        'archetype_id': 'leafy_greens',
+        'questions': [
+          {
+            'axis': 'smell',
+            'question_vi': 'Mùi của nguyên liệu như thế nào?',
+            'options': [
+              {'value': 'fresh', 'label_vi': 'Mùi tự nhiên, thơm tươi'},
+              {'value': 'sour', 'label_vi': 'Mùi hơi chua nhẹ'},
+              {'value': 'rotten', 'label_vi': 'Mùi hôi, ủng hỏng'},
+            ],
+            'default': 'fresh',
+          },
+          {
+            'axis': 'appearance',
+            'question_vi': 'Màu sắc và trạng thái bề mặt?',
+            'options': [
+              {'value': 'crisp', 'label_vi': 'Tươi xanh, giòn'},
+              {'value': 'wilted', 'label_vi': 'Hơi héo, thâm viền'},
+              {'value': 'slimy', 'label_vi': 'Nhũn nhớt, đổi màu lạ'},
+            ],
+            'default': 'crisp',
+          },
+        ],
+      };
+    }
     if (path == ApiPaths.mealPlansList) {
       return {
         'items': _mealPlans,
@@ -1094,6 +1147,30 @@ class MockApiClient implements ApiClient {
         'confidence': {'product_name': 0.90},
         'warnings': <String>[],
         'persisted': false,
+      };
+    }
+    if (path.startsWith('/freshness/batches/') && path.endsWith('/assessment')) {
+      final batchId = path.split('/')[3];
+      return {
+        'assessment_id': 'mock-asm-${_autoId++}',
+        'batch_id': batchId,
+        'status': 'ASSESSED',
+        'quality_tier': 'SAFE',
+        'confidence_level': 'HIGH',
+        'estimated_days_remaining': 3,
+        'revised_expiry_date':
+            DateTime.now().add(const Duration(days: 3)).toIso8601String(),
+        'action_recommendation': 'USE_SOON',
+        'advisory_notes': 'Nguyên liệu vẫn tươi ngon. Nên chế biến trong vòng 3 ngày tới.',
+        'storage_advice':
+            'Bảo quản trong hộp kín ở ngăn mát tủ lạnh (0-4°C), tránh nơi ẩm ướt.',
+        'assessed_at': DateTime.now().toIso8601String(),
+      };
+    }
+    if (path.startsWith(ApiPaths.rating)) {
+      return {
+        'success': true,
+        'message': 'Cảm ơn bạn đã gửi đánh giá và góp ý!',
       };
     }
     final fixture = _postFixtureKey(path);

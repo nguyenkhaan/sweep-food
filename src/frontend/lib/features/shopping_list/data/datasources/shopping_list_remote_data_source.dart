@@ -17,6 +17,12 @@ class ShoppingListRemoteDataSource {
     return ShoppingListDto.fromJson(json as Map<String, dynamic>);
   }
 
+  Future<List<Map<String, dynamic>>> listAll() async {
+    final json = await _api.get(ApiPaths.shoppingLists);
+    final items = (json is Map ? json['items'] : json) as List<dynamic>? ?? [];
+    return items.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+  }
+
   Future<ShoppingListDto> generate({required String mealPlanId}) async {
     final json = await _api.post(
       ApiPaths.shoppingListsGenerate,
