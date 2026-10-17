@@ -16,6 +16,7 @@ import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_item_controller.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:sweepfood/features/pantry/presentation/widgets/adjust_quantity_sheet.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/fresh_check_sheet.dart';
 
 /// K-02 — Chi tiết nguyên liệu.
 class PantryItemDetailScreen extends ConsumerStatefulWidget {
@@ -195,6 +196,12 @@ class _PantryItemDetailScreenState
               '${Routes.inventoryLedger}?batchId=${item.id}',
               extra: item.name,
             ),
+          ),
+          Gap.gapSm,
+          SecondaryButton(
+            label: 'Đánh giá độ tươi (FreshCheck)',
+            icon: Icons.health_and_safety_outlined,
+            onPressed: () => FreshCheckSheet.show(context, item),
           ),
         ],
       ),

@@ -31,7 +31,22 @@ class ShoppingListRepositoryImpl implements ShoppingListRepository {
 
   @override
   Future<Result<ShoppingList?>> current() => runGuarded(() async {
-        final id = _savedListId;
+        var id = _savedListId;
+        if (id == null) {
+          try {
+            final lists = await _remote.listAll();
+            final active = lists.firstWhere(
+              (l) => l['status'] == 'ACTIVE',
+              orElse: () => lists.isNotEmpty ? lists.first : <String, dynamic>{},
+            );
+            if (active.containsKey('id')) {
+              id = active['id'].toString();
+              await _prefs.setString(AppConstants.kActiveShoppingListId, id);
+            }
+          } catch (_) {
+            // Ignore error when querying list summary
+          }
+        }
         if (id == null) return null;
         return (await _remote.getById(id)).toEntity();
       });

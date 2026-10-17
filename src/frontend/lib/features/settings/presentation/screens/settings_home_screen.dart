@@ -6,6 +6,7 @@ import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/features/auth/presentation/controllers/session_controller.dart';
+import 'package:sweepfood/features/settings/presentation/widgets/rating_dialog.dart';
 import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
 
 /// P-01 Cá nhân — profile header, plan bar, grouped settings, sign out.
@@ -110,6 +111,11 @@ class SettingsHomeScreen extends ConsumerWidget {
                 icon: Icons.info_outline_rounded,
                 label: l10n.settingsAboutData,
                 onTap: () => context.push(Routes.settingsAbout),
+              ),
+              SettingsRow(
+                icon: Icons.star_rate_rounded,
+                label: 'Đánh giá ứng dụng & Góp ý',
+                onTap: () => RatingDialog.show(context),
               ),
               SettingsRow(
                 icon: Icons.logout_rounded,

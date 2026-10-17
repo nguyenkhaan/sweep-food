@@ -1,9 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:sweepfood/features/suggestions/data/repositories/suggestion_repository_impl.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
+import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 part 'suggestion_list_controller.g.dart';
 
@@ -43,10 +46,15 @@ class SuggestionFilter {
     );
   }
 
-  SuggestionRequest toRequest() => SuggestionRequest(
+  SuggestionRequest toRequest({
+    List<RecommendationPantryItemDraft> pantryDrafts = const [],
+  }) =>
+      SuggestionRequest(
+        pantryItems: pantryDrafts,
         mealType: mealType,
         maxCookTimeMin: quickCookOnly ? _quickCookMinutes : null,
         dietaryPreference: dietaryPreference,
+        prompt: prompt.isNotEmpty ? prompt : null,
         limit: AppConstants.maxSuggestions,
       );
 }
@@ -55,10 +63,6 @@ class SuggestionFilter {
 class SuggestionFilterController extends _$SuggestionFilterController {
   @override
   SuggestionFilter build() => const SuggestionFilter();
-  // TODO(M5 settings slice): seed `dietaryPreference` from
-  // `dietaryPreferenceControllerProvider` (onboarding A-05 / Cài đặt N-01).
-  // Deferred so the suggestions test harness can add a SharedPreferences
-  // override first.
 
   void setPrompt(String prompt) => state = state.copyWith(prompt: prompt);
 
@@ -84,8 +88,34 @@ class SuggestionListController extends _$SuggestionListController {
   @override
   Future<List<DishSuggestion>> build() async {
     final filter = ref.watch(suggestionFilterControllerProvider);
-    final res =
-        await ref.watch(suggestionRepositoryProvider).fetch(filter.toRequest());
+    var drafts = const <RecommendationPantryItemDraft>[];
+    try {
+      final pantryAsync = ref.watch(pantryListControllerProvider);
+      final pantryItems = pantryAsync.asData?.value ?? const <PantryItem>[];
+      drafts = pantryItems
+          .where((p) => p.status == PantryItemStatus.active)
+          .map((p) {
+        double? hours;
+        if (p.expiryDate != null) {
+          hours = p.expiryDate!.difference(DateTime.now()).inHours.toDouble();
+        }
+        final double qtyG = p.unit == MeasurementUnit.kilogram
+            ? p.quantity * 1000.0
+            : p.quantity;
+        return RecommendationPantryItemDraft(
+          name: p.name,
+          code: p.ingredientId,
+          quantityG: qtyG > 0 ? qtyG : 200.0,
+          hoursToExpire: hours,
+        );
+      }).toList();
+    } catch (_) {
+      // In tests or isolated scopes where PantryListController is not wired
+    }
+
+    final res = await ref
+        .watch(suggestionRepositoryProvider)
+        .fetch(filter.toRequest(pantryDrafts: drafts));
     return res.fold(
       (f) => throw f,
       (list) {

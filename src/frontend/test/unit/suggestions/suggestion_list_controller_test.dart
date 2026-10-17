@@ -20,28 +20,61 @@ void main() {
   setUpAll(() => registerFallbackValue(const SuggestionRequest()));
 
   group('SuggestionRequest.toBody()', () {
-    test('defaults to "Gợi ý món ăn hôm nay" when fields are empty', () {
+    test('defaults to empty items and standard defaults when fields are empty', () {
       const req = SuggestionRequest();
-      expect(req.toBody(), {'request': 'Gợi ý món ăn hôm nay'});
+      expect(req.toBody(), {
+        'items': [],
+        'household_size': 4.0,
+        'max_cooking_time_min': 45.0,
+        'scenario_type': 'custom',
+        'dietary_restrictions': [],
+        'allergies': [],
+        'disliked_ingredients': [],
+        'preferred_cuisines': [],
+      });
     });
 
-    test('combines meal, time, preference, and prompt into request string', () {
+    test('combines meal, time, preference, and pantry items into request body', () {
       const req = SuggestionRequest(
         prompt: 'Món cay',
         mealType: MealType.dinner,
         maxCookTimeMin: 30,
         dietaryPreference: DietaryPreference.moreVeg,
+        pantryItems: [
+          RecommendationPantryItemDraft(
+            name: 'Rau chân vịt',
+            code: 'ing-1',
+            quantityG: 300,
+            hoursToExpire: 12,
+          ),
+        ],
       );
       expect(req.toBody(), {
-        'request': 'Món cay, Bữa tối, Nấu nhanh ≤ 30 phút, Nhiều rau',
+        'items': [
+          {
+            'name': 'Rau chân vịt',
+            'code': 'ing-1',
+            'quantity_g': 300.0,
+            'hours_to_expire': 12.0,
+            'is_staple': false,
+          }
+        ],
+        'household_size': 4.0,
+        'max_cooking_time_min': 30.0,
+        'scenario_type': 'dinner',
+        'dietary_restrictions': ['vegetarian'],
+        'allergies': [],
+        'disliked_ingredients': [],
+        'preferred_cuisines': [],
       });
     });
 
-    test('uses explicit request if provided', () {
+    test('uses quick_meal when maxCookTimeMin <= 30 and no mealType', () {
       const req = SuggestionRequest(
-        request: 'Canh rau ngót nấu tôm',
+        maxCookTimeMin: 25,
       );
-      expect(req.toBody(), {'request': 'Canh rau ngót nấu tôm'});
+      expect(req.toBody()['scenario_type'], 'quick_meal');
+      expect(req.toBody()['max_cooking_time_min'], 25.0);
     });
   });
 
