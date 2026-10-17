@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:rgba(0,0,0,0.4);display:flex;align-items:flex-end;justify-content:center;height:100vh}
+    .sheet{width:390px;height:560px;background:var(--surface);border-radius:24px 24px 0 0;padding:16px 20px 20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 -8px 24px rgba(0,0,0,0.12)}
+    .drag{width:36px;height:4px;background:var(--line);border-radius:2px;margin:0 auto 2px}
+    .head{display:flex;align-items:center;justify-content:space-between}
+    .head h2{margin:0;font-size:18px;font-weight:700}
+    .close{width:30px;height:30px;border-radius:50%;background:var(--fill);display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .tabs{display:flex;gap:8px;background:var(--fill);padding:4px;border-radius:12px}
+    .tab{flex:1;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer}
+    .tab.on{background:var(--surface);color:var(--green-700);box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+    .search-box{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 14px}
+    .search-box input{border:none;background:transparent;outline:none;font-size:13px;width:100%;color:var(--ink)}
+    .recipe-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-top:4px}
+    .recipe-card{display:flex;align-items:center;gap:12px;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+    .recipe-img{width:64px;height:64px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+    .recipe-info{flex:1;min-width:0}
+    .recipe-name{font-size:14px;font-weight:700;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .recipe-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink-3)}
+    .recipe-meta span{display:flex;align-items:center;gap:3px}
+    .btn-select{height:32px;padding:0 14px;border-radius:8px;background:var(--green-700);color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;flex:none}
+  </style>
+</helmet>
+<div class="sheet">
+  <div class="drag"></div>
+  <div class="head">
+    <h2>Thêm món vào bữa ăn</h2>
+    <div class="close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab">Gợi ý AI</div>
+    <div class="tab on">Thư viện món</div>
+  </div>
+
+  <div class="search-box">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" placeholder="Tìm kiếm công thức nấu ăn..." value="Canh chua">
+  </div>
+
+  <div class="recipe-list">
+    <div class="recipe-card">
+      <div class="recipe-img">🍲</div>
+      <div class="recipe-info">
+        <div class="recipe-name">Canh chua cá lóc</div>
+        <div class="recipe-meta">
+          <span>⏱️ 25 phút</span>
+          <span>·</span>
+          <span>👤 4 phần</span>
+          <span>·</span>
+          <span>Vừa</span>
+        </div>
+      </div>
+      <button class="btn-select">Chọn</button>
+    </div>
+
+    <div class="recipe-card">
+      <div class="recipe-img">🥣</div>
+      <div class="recipe-info">
+        <div class="recipe-name">Canh chua tôm đậu bắp</div>
+        <div class="recipe-meta">
+          <span>⏱️ 20 phút</span>
+          <span>·</span>
+          <span>👤 3 phần</span>
+          <span>·</span>
+          <span>Dễ</span>
+        </div>
+      </div>
+      <button class="btn-select">Chọn</button>
+    </div>
+
+    <div class="recipe-card">
+      <div class="recipe-img">🥗</div>
+      <div class="recipe-info">
+        <div class="recipe-name">Salad bơ ức gà</div>
+        <div class="recipe-meta">
+          <span>⏱️ 15 phút</span>
+          <span>·</span>
+          <span>👤 2 phần</span>
+          <span>·</span>
+          <span>Dễ</span>
+        </div>
+      </div>
+      <button class="btn-select">Chọn</button>
+    </div>
+
+    <div class="recipe-card">
+      <div class="recipe-img">🍳</div>
+      <div class="recipe-info">
+        <div class="recipe-name">Trứng chiên hành lá</div>
+        <div class="recipe-meta">
+          <span>⏱️ 10 phút</span>
+          <span>·</span>
+          <span>👤 2 phần</span>
+          <span>·</span>
+          <span>Dễ</span>
+        </div>
+      </div>
+      <button class="btn-select">Chọn</button>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
