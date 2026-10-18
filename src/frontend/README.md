@@ -8,28 +8,28 @@
 
 ## Tài liệu
 
-| File | Nội dung |
-| --- | --- |
-| [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md) | Lộ trình code (M0–M6), quy ước, "nhận task thế nào" — **đọc trước khi code** |
-| [`plan.md`](plan.md) | Danh sách screen, IA, hợp đồng API, domain model (giai đoạn design) |
-| Design canvas (Claude Design) | 80 artboard sáng + tối, mỗi artboard ứng 1 screen |
-| [`../../docs/requirement.md`](../../docs/requirement.md) | Đặc tả sản phẩm gốc |
+| File                                                      | Nội dung                                                                                       |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md)       | Lộ trình code (M0–M6), quy ước, "nhận task thế nào" — **đọc trước khi code** |
+| [`plan.md`](plan.md)                                     | Danh sách screen, IA, hợp đồng API, domain model (giai đoạn design)                       |
+| Design canvas (Claude Design)                             | 80 artboard sáng + tối, mỗi artboard ứng 1 screen                                           |
+| [`../../docs/requirement.md`](../../docs/requirement.md) | Đặc tả sản phẩm gốc                                                                       |
 
 ## Công nghệ
 
-| Nhóm | Thư viện |
-| --- | --- |
-| Framework | Flutter / Dart (`sdk: ^3.5.0`) |
+| Nhóm                 | Thư viện                                                                                            |
+| --------------------- | ----------------------------------------------------------------------------------------------------- |
+| Framework             | Flutter / Dart (`sdk: ^3.5.0`)                                                                      |
 | State management + DI | **Riverpod 3** (`flutter_riverpod`, `riverpod_annotation` + `riverpod_generator` codegen) |
-| Model | `freezed` + `json_serializable` (codegen) |
-| Functional | `fpdart` — `Either<Failure, T>` cho repository |
-| Điều hướng | `go_router` (`StatefulShellRoute` cho bottom nav) |
-| HTTP | `dio` — bọc sau `ApiClient` abstract → `DioApiClient` \| `MockApiClient` |
-| Lưu trữ | `shared_preferences` (prefs), `flutter_secure_storage` (token) |
-| Media (M4) | `image_picker`, `image_cropper`, `permission_handler` · `record` (đang comment) |
-| UI / chart | `flutter_svg`, `cached_network_image`, `fl_chart`, `intl` |
-| Thông báo | `flutter_local_notifications` · `firebase_messaging` hoãn tới khi có Firebase project |
-| Lint / test | `flutter_lints`, `custom_lint`, `riverpod_lint` · `mocktail` |
+| Model                 | `freezed` + `json_serializable` (codegen)                                                         |
+| Functional            | `fpdart` — `Either<Failure, T>` cho repository                                                   |
+| Điều hướng        | `go_router` (`StatefulShellRoute` cho bottom nav)                                                 |
+| HTTP                  | `dio` — bọc sau `ApiClient` abstract → `DioApiClient` \| `MockApiClient`                   |
+| Lưu trữ             | `shared_preferences` (prefs), `flutter_secure_storage` (token)                                    |
+| Media (M4)            | `image_picker`, `image_cropper`, `permission_handler` · `record` (đang comment)             |
+| UI / chart            | `flutter_svg`, `cached_network_image`, `fl_chart`, `intl`                                     |
+| Thông báo           | `flutter_local_notifications` · `firebase_messaging` hoãn tới khi có Firebase project         |
+| Lint / test           | `flutter_lints`, `custom_lint`, `riverpod_lint` · `mocktail`                                 |
 
 > Version trong `pubspec.yaml` đang để `any` cho giai đoạn scaffold; `pubspec.lock` đã chốt bộ hoạt động (Riverpod 3.1, freezed 3.2…). Siết lại thành caret range ở M6.
 
@@ -45,7 +45,7 @@ flutter run -d chrome --dart-define-from-file=config/dev.json
 # hoặc:  flutter run -d <emulator-id> --dart-define-from-file=config/dev.json
 ```
 
-**Luôn truyền `--dart-define-from-file=config/dev.json`** — nếu không, `AppConfig` dùng giá trị mặc định (mock, `10.0.2.2:8000`).
+**huowngs daaaLuôn truyền `--dart-define-from-file=config/dev.json`** — nếu không, `AppConfig` dùng giá trị mặc định (mock, `10.0.2.2:8000`).
 Khi code, chạy song song codegen ở chế độ watch:
 
 ```powershell
@@ -58,13 +58,13 @@ Lần đầu build Android có thể cần: `flutter doctor --android-licenses`.
 
 Chạy qua `--dart-define-from-file`; `lib/core/config/app_config.dart` đọc các khóa:
 
-| Khóa | dev.json | Ý nghĩa |
-| --- | --- | --- |
-| `BACKEND` | `mock` | `mock` = đọc `assets/mock/*.json`; `live` = gọi Dio thật |
-| `API_BASE_URL` | `http://10.0.2.2:8000/api/v1` | base URL khi `BACKEND=live` (10.0.2.2 = localhost cho Android emulator) |
-| `PREMIUM_ENABLED` | `false` | MVP mở hết tính năng, không gating |
-| `NEAR_EXPIRY_DAYS` | `3` | ngưỡng "cận hạn" cho xếp hạng gợi ý + đếm chống lãng phí |
-| `FLAVOR` | `dev` | dev / prod |
+| Khóa                | dev.json                        | Ý nghĩa                                                                 |
+| -------------------- | ------------------------------- | ------------------------------------------------------------------------- |
+| `BACKEND`          | `mock`                        | `mock` = đọc `assets/mock/*.json`; `live` = gọi Dio thật        |
+| `API_BASE_URL`     | `http://10.0.2.2:8000/api/v1` | base URL khi `BACKEND=live` (10.0.2.2 = localhost cho Android emulator) |
+| `PREMIUM_ENABLED`  | `false`                       | MVP mở hết tính năng, không gating                                   |
+| `NEAR_EXPIRY_DAYS` | `3`                           | ngưỡng "cận hạn" cho xếp hạng gợi ý + đếm chống lãng phí     |
+| `FLAVOR`           | `dev`                         | dev / prod                                                                |
 
 Không commit token, khóa API, keystore, `.env`. Token đăng nhập lưu bằng `flutter_secure_storage` (không dùng `shared_preferences`).
 
@@ -98,6 +98,7 @@ config/                           # dev.json · prod.json
 ```
 
 Quy tắc:
+
 - Screen/widget nói chuyện với **controller Riverpod** (`@riverpod`), không gọi Dio / prefs trực tiếp.
 - Feature chỉ chạm API qua **repository**; repository trả `Either<Failure, T>` (dùng helper `guard()`), controller đổi thành `AsyncValue` cho UI.
 - DTO (`*_dto.dart`, freezed + json) không đi thẳng vào UI — map về entity.
