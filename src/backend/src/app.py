@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from redis.exceptions import RedisError
 
+from AI.catalog.snapshot import warm_up
 from src.core.exceptions import register_exception_handlers
 from src.core.openapi import BearerOpenAPIFastAPI
 from src.core.setting import DATABASE_URL, REDIS_URL, get_env_var
@@ -51,6 +52,10 @@ async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
     print("Database connected")
     application.state.redis_service = redis_service
     print("Redis connected")
+
+    async with db_session.session() as warm_session:
+        await warm_up(warm_session)
+
     try:
         yield
     finally:

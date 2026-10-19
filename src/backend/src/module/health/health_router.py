@@ -5,20 +5,22 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import PlainTextResponse
 
+from AI.recommendation.engine import RecommendationEngine
 from src.core.exceptions import ErrorResponseDTO
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.middleware.role_middleware import require_role
 from src.model.enum_model import UserRole
 from src.module.health.health_dependency import get_health_service
-from src.module.health.health_dto import AIServiceHealthResponseDTO, LivenessResponseDTO
+from src.module.health.health_dto import AIReadinessResponseDTO, LivenessResponseDTO
 from src.module.health.health_service import HealthService
+from src.module.recommendations.recommendation_dependency import (
+    get_recommendation_engine,
+)
 
 health_router = APIRouter(prefix="/health", tags=["health"])
 
 _AI_HEALTH_ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
-    status.HTTP_502_BAD_GATEWAY: {"model": ErrorResponseDTO},
     status.HTTP_503_SERVICE_UNAVAILABLE: {"model": ErrorResponseDTO},
-    status.HTTP_504_GATEWAY_TIMEOUT: {"model": ErrorResponseDTO},
 }
 
 
@@ -40,14 +42,15 @@ async def get_liveness(
 
 @health_router.get(
     "/ai",
-    response_model=AIServiceHealthResponseDTO,
+    response_model=AIReadinessResponseDTO,
     responses=_AI_HEALTH_ERROR_RESPONSES,
 )
 async def get_ai_readiness(
     service: Annotated[HealthService, Depends(get_health_service)],
-) -> AIServiceHealthResponseDTO:
+    engine: Annotated[RecommendationEngine, Depends(get_recommendation_engine)],
+) -> AIReadinessResponseDTO:
     """Return AI readiness without requiring application authentication."""
-    return await service.get_ai_readiness()
+    return service.get_ai_readiness(engine)
 
 
 @health_router.get("/error")

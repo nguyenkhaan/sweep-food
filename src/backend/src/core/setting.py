@@ -134,25 +134,24 @@ EXTRACTION_PROVIDER_TIMEOUT: Final[int] = get_positive_int_env(
     "EXTRACTION_PROVIDER_TIMEOUT",
     15,
 )
-
-
-AI_BASE_URL: Final[str] = get_http_base_url_env(
-    "AI_BASE_URL",
-    "http://127.0.0.1:8001",
+OPENAI_API_KEY: Final[str] = get_env_var("OPENAI_API_KEY", "")
+OPENAI_BASE_URL: Final[str] = get_http_base_url_env(
+    "OPENAI_BASE_URL", "https://api.openai.com/v1"
 )
-AI_CONNECT_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
-    "AI_CONNECT_TIMEOUT_SECONDS",
-    3,
+OPENAI_OCR_MODEL: Final[str] = get_env_var("OPENAI_OCR_MODEL", "gpt-4o-mini")
+OPENAI_LLM_MODEL: Final[str] = get_env_var("OPENAI_LLM_MODEL", "gpt-4o-mini")
+OPENAI_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
+    "OPENAI_TIMEOUT_SECONDS", 30
 )
-AI_RECOMMEND_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
-    "AI_RECOMMEND_TIMEOUT_SECONDS",
-    10,
+GROQ_API_KEY: Final[str] = get_env_var("GROQ_API_KEY", "")
+GROQ_ASR_MODEL: Final[str] = get_env_var(
+    "GROQ_ASR_MODEL", "whisper-large-v3-turbo"
 )
-AI_OCR_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
-    "AI_OCR_TIMEOUT_SECONDS",
-    30,
+GROQ_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
+    "GROQ_TIMEOUT_SECONDS", 60
 )
-AI_ASR_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
-    "AI_ASR_TIMEOUT_SECONDS",
-    60,
+AI_DATA_DIR: Final[str] = get_env_var("AI_DATA_DIR", "AI/data")
+AI_MODEL_PATH: Final[str] = get_env_var(
+    "AI_MODEL_PATH",
+    "AI/data/training/lgbm_contextual.txt",
 )

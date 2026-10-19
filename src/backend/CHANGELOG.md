@@ -19,6 +19,8 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - Custom JWT service plus authentication and role-authorization dependencies with OpenAPI Bearer-token support and injected access-token secret keys.
 - Redis lifecycle management plus backend-owned OTP challenge, verification-grant, rate-limit, and Argon2id helper services.
 - Provider-neutral OTP delivery contract, deterministic WireMock SMS adapter, and non-delivering local email adapter.
+- Backend-hosted AI under `AI/`: LightGBM recommendation engine over a catalog rebuilt in Postgres from the bundled data (`python -m AI.catalog.importer`), OpenAI-based OCR and LLM text parsing, Groq Whisper ASR, and a four-tier pantry parser. Adds `recipes.ai_features`, `recipe_ingredients.ai_attributes`, and `master_ingredients.source_code` (migration `e2b4f68a10cd`).
+- `GET /api/health/ai` now reports the in-process catalog revision, ranker, and provider configuration.
 
 ### Fixed
 
@@ -32,6 +34,8 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - Split database documentation into table syntax (`DATABASE.txt`) and operational/design notes (`DATABASE_NOTES.md`) for faster schema review.
 - Restored complete PRD data coverage after clarifying that the smaller user-provided schema was a reference, not a request to remove persistent MVP flows.
 - Simplified the database contract from the user-approved `DATABASE.txt`: removed per-user timezone and redundant dimension/seed/version metadata, removed recommendation-event persistence, and aligned all documents to the remaining schema.
+- **Breaking:** `POST /api/recommendations` no longer accepts `max_cooking_time_min`. AI endpoints return HTTP 503 until the catalog has been imported.
+- The backend no longer proxies to a separate SweepFood AI service; `AI_BASE_URL` and `AI_*_TIMEOUT_SECONDS` are removed. OCR now uses OpenAI instead of Groq Vision.
 
 ### Removed
 

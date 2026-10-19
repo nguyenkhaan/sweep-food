@@ -24,6 +24,7 @@
 - Shelf-life day values are non-negative, `max_days >= min_days`, `default_days` lies in
   that range, and the scope must match its sole ingredient or category target.
 - Unit compatibility is inferred from `MeasurementUnit`: `GRAM`/`KG` are mass; `ML`/`LITER` are volume; `PIECE`/`PACK`/`OTHER` do not have automatic cross-unit conversion.
+- AI catalog columns: `recipes.ai_features` and `recipe_ingredients.ai_attributes` (JSONB) hold the bundled catalog columns verbatim for the in-process ranker; `master_ingredients.source_code` is the bundle's master code (unique when set). `python -m AI.catalog.importer` fills them idempotently with deterministic IDs. Ingredient rows without a master code link to a placeholder master (`is_verified = false`, `source_code` null) and keep `master_ingredient_code = ''` in `ai_attributes`.
 
 ## Inventory, FEFO, and Ledger Rules
 

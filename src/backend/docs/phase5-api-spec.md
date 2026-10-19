@@ -24,7 +24,7 @@ is not a favourite is still `204`).  Clients must not expect a JSON body or a
 ### Recommendations
 
 - `POST /recommendations`
-  - Request: structured `items`, household size, cooking-time limit, scenario,
+  - Request: structured `items`, household size, scenario,
     dietary restrictions, allergies, dislikes, and preferred cuisines.
   - Response: catalog-backed ranked recipes, ranking features, explanations,
     model/catalog versions, timings, and warnings.

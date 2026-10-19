@@ -5,24 +5,19 @@ from typing import Never
 
 from fastapi import HTTPException, status
 
+from AI.recommendation.engine import RecommendationEngine
 from src.base.constant.template_file_name import EMAIL_TEMPLATE_FILENAMES
-from src.module.health.health_dto import AIServiceHealthResponseDTO, LivenessResponseDTO
+from src.core.setting import GROQ_API_KEY, OPENAI_API_KEY
+from src.module.health.health_dto import AIReadinessResponseDTO, LivenessResponseDTO
 from src.service.email_service import EmailService
-from src.service.sweep_food_ai_client import (
-    SweepFoodAIClient,
-    SweepFoodAIUnavailableError,
-)
 
 
 class HealthService:
     """Provide basic health responses and a local email-delivery check."""
 
-    def __init__(
-        self, email_service: EmailService, ai_client: SweepFoodAIClient | None = None
-    ) -> None:
+    def __init__(self, email_service: EmailService) -> None:
         """Store the endpoint service dependencies."""
         self._email_service = email_service
-        self._ai_client = ai_client
 
     def get_liveness(self) -> LivenessResponseDTO:
         """Return the application's liveness response."""
@@ -30,17 +25,16 @@ class HealthService:
             message="Build with Cloudian 💙 Cloud",
         )
 
-    async def get_ai_readiness(self) -> AIServiceHealthResponseDTO:
-        """Return readiness only when the AI service has finished warming up."""
-        if self._ai_client is None:
-            raise SweepFoodAIUnavailableError("AI client is not configured")
-
+    def get_ai_readiness(self, engine: RecommendationEngine) -> AIReadinessResponseDTO:
+        """Report the loaded catalog and ranker; provider keys are informational."""
         started_at = perf_counter()
-        health = await self._ai_client.check_health()
-        if not health.warmed_up:
-            raise SweepFoodAIUnavailableError("AI service is still warming up")
-
-        return AIServiceHealthResponseDTO(
+        return AIReadinessResponseDTO(
+            catalog_revision=engine.snapshot.revision,
+            recipe_count=len(engine.snapshot.recipes),
+            ranker_model=engine.ranker.ranker_model_name,
+            model_version=engine.ranker.model_version_string,
+            ocr_configured=bool(OPENAI_API_KEY),
+            asr_configured=bool(GROQ_API_KEY),
             latency_ms=round((perf_counter() - started_at) * 1_000, 2),
         )
 

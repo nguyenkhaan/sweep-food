@@ -6,6 +6,13 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from AI.catalog.errors import CatalogNotLoadedError
+from AI.errors import (
+    ExtractionBadResponseError,
+    ExtractionError,
+    ExtractionTimeoutError,
+    ExtractionUnavailableError,
+)
 from src.service.otp_service import (
     OTPAttemptsCooldownError,
     OTPAttemptsExceededError,
@@ -16,12 +23,6 @@ from src.service.otp_service import (
     OTPPurposeMismatchError,
     OTPRateLimitError,
     OTPResendCooldownError,
-)
-from src.service.sweep_food_ai_client import (
-    SweepFoodAIBadResponseError,
-    SweepFoodAIError,
-    SweepFoodAITimeoutError,
-    SweepFoodAIUnavailableError,
 )
 
 _OTP_ERROR_RESPONSES: dict[type[OTPDomainError], tuple[int, str]] = {
@@ -59,16 +60,16 @@ _OTP_ERROR_RESPONSES: dict[type[OTPDomainError], tuple[int, str]] = {
     ),
 }
 
-_AI_ERROR_RESPONSES: dict[type[SweepFoodAIError], tuple[int, str]] = {
-    SweepFoodAIUnavailableError: (
+_EXTRACTION_ERROR_RESPONSES: dict[type[ExtractionError], tuple[int, str]] = {
+    ExtractionUnavailableError: (
         status.HTTP_503_SERVICE_UNAVAILABLE,
         "AI service is unavailable.",
     ),
-    SweepFoodAITimeoutError: (
+    ExtractionTimeoutError: (
         status.HTTP_504_GATEWAY_TIMEOUT,
         "AI service request timed out.",
     ),
-    SweepFoodAIBadResponseError: (
+    ExtractionBadResponseError: (
         status.HTTP_502_BAD_GATEWAY,
         "AI service returned an invalid response.",
     ),
@@ -168,24 +169,36 @@ async def otp_domain_exception_handler(
     )
 
 
-async def ai_service_exception_handler(
+async def extraction_exception_handler(
     request: Request,
     exception: Exception,
 ) -> JSONResponse:
-    """Translate AI transport and contract failures to stable HTTP errors."""
-    if not isinstance(exception, SweepFoodAIError):
+    """Translate extraction provider failures to stable HTTP errors."""
+    if not isinstance(exception, ExtractionError):
         return create_error_response(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Unexpected AI service exception.",
+            detail="Unexpected AI extraction exception.",
             path=request.url.path,
         )
-    status_code, detail = _AI_ERROR_RESPONSES.get(
+    status_code, detail = _EXTRACTION_ERROR_RESPONSES.get(
         type(exception),
         (status.HTTP_502_BAD_GATEWAY, "AI service request failed."),
     )
     return create_error_response(
         status_code=status_code,
         detail=detail,
+        path=request.url.path,
+    )
+
+
+async def catalog_not_loaded_exception_handler(
+    request: Request,
+    _exception: Exception,
+) -> JSONResponse:
+    """Report that the AI catalog has not been imported into the database."""
+    return create_error_response(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail="AI catalog is not loaded.",
         path=request.url.path,
     )
 
@@ -209,5 +222,8 @@ def register_exception_handlers(application: FastAPI) -> None:
         RequestValidationError, validation_exception_handler
     )
     application.add_exception_handler(OTPDomainError, otp_domain_exception_handler)
-    application.add_exception_handler(SweepFoodAIError, ai_service_exception_handler)
+    application.add_exception_handler(
+        CatalogNotLoadedError, catalog_not_loaded_exception_handler
+    )
+    application.add_exception_handler(ExtractionError, extraction_exception_handler)
     application.add_exception_handler(Exception, unhandled_exception_handler)

@@ -1,6 +1,6 @@
 # Sweep Food Backend
 
-Backend API for inventory batches, expiry tracking, authentication, and meal recommendations.
+Backend API for inventory batches, expiry tracking, authentication, and meal recommendations, including in-process AI (recommendation, OCR, ASR, and pantry text parsing).
 
 ## Technology
 
@@ -50,6 +50,13 @@ rollback procedures are documented in
 ```text
 .
 ├── main.py                  # Application entry point
+├── AI/                      # Central home for all in-process AI workloads
+│   ├── catalog/             # Catalog importer and in-memory snapshot loaded from Postgres
+│   ├── recommendation/      # LightGBM ranking engine and heuristic fallback
+│   ├── extraction/          # OpenAI OCR, Groq ASR, and extraction orchestration
+│   ├── smart_parser/        # Four-tier pantry text parser
+│   ├── llm/                 # Shared OpenAI client
+│   └── data/                # Bundled catalog, master ingredients, and ranker model
 ├── alembic/                 # Async Alembic environment and revisions
 │   └── versions/
 ├── docs/                    # Product planning, database notes, ADRs, and runbooks
@@ -65,9 +72,9 @@ rollback procedures are documented in
 │   ├── module/              # Feature modules
 │   │   ├── auth/            # Registration, login, OTP, and session APIs
 │   │   ├── inventory/       # Batch inventory and ledger-backed mutations
-│   │   ├── recommendations/ # SweepFood AI recommendation integration
+│   │   ├── recommendations/ # Recommendation API over AI.recommendation
 │   │   └── user/            # Current user profile and verified-contact APIs
-│   ├── service/             # Shared auth, delivery, AI-client, and domain services
+│   ├── service/             # Shared auth, delivery, and domain services
 │   ├── template/            # Jinja HTML email templates
 │   └── test/                # Unit, API-contract, and optional integration tests
 ├── wiremock/

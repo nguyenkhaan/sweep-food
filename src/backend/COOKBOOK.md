@@ -12,7 +12,7 @@ This is the practical operating guide for engineers and agents working on the Sw
 | Local SMS simulation | WireMock in Docker |
 | Authentication | Phone/password sign-in; backend-owned OTP verifies registration, recovery, and sensitive identity changes |
 | Seed data | Idempotent admin/catalog seeding at `scripts/seed.py` |
-| Recommendations | `RecommendationAIService` calls SweepFood AI and maps ranked IDs to backend recipes |
+| AI | Hosted in-process under `AI/`: LightGBM recommender over the Postgres catalog, OpenAI OCR and LLM parsing, Groq Whisper ASR |
 
 Neon is PostgreSQL, not a separate database model. Use standard PostgreSQL migrations, transactions, constraints, and `jsonb`; do not introduce database-specific behavior that makes a Neon branch unsafe to migrate or reset.
 
@@ -42,7 +42,7 @@ Use these files as the project context, in this order:
 
 Use a separate, disposable Neon development/test branch (or isolated test database) for local migrations and automated tests. Never run destructive tests, schema resets, seed experiments, or unreviewed migrations against a shared staging or production branch.
 
-Use [`.env.example`](.env.example) and `src/core/setting.py` for supported settings. Access and refresh tokens use separate `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` values. SweepFood AI connectivity is configured through `AI_BASE_URL` and the `AI_*_TIMEOUT_SECONDS` settings.
+Use [`.env.example`](.env.example) and `src/core/setting.py` for supported settings. Access and refresh tokens use separate `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` values. AI providers are configured with `OPENAI_API_KEY` (OCR and LLM text parsing) and `GROQ_API_KEY` (ASR); a missing key returns HTTP 503 for that capability only. `AI_DATA_DIR` and `AI_MODEL_PATH` locate the bundled ranker.
 
 Rules:
 
@@ -144,7 +144,7 @@ The seed script must be idempotent and transactional. It seeds the admin account
 
 ## 7. Provider Modes
 
-Local SMS delivery uses WireMock; local email delivery uses SMTP through Mailpit. In `dev` and `test`, OTP verification uses the configured `DEFAULT_OTP`. Recommendation, OCR, and ASR requests use the SweepFood AI client; consult the current dependencies in `src/module/` rather than assuming every integration uses WireMock.
+Local SMS delivery uses WireMock; local email delivery uses SMTP through Mailpit. In `dev` and `test`, OTP verification uses the configured `DEFAULT_OTP`. Recommendation, OCR, ASR, and text parsing run inside the backend process (`AI/`); only the OpenAI and Groq provider calls leave it.
 
 The backend generates, hashes, expires, and verifies OTPs. OTPs never replace phone/password sign-in. Delivery providers only deliver the message. Do not send real SMS from a personal SIM or attempt to bypass provider/telecom controls.
 
@@ -173,17 +173,17 @@ Never update quantity through a raw SQL shortcut that bypasses the inventory led
 
 ### Run recommendations
 
-1. Validate the structured pantry and preference request.
+1. Validate the structured pantry and preference request (no cooking-time constraint).
 2. Resolve saved expiry information from the authenticated user's active inventory.
-3. Call SweepFood AI through `SweepFoodAIClient`.
+3. Rank candidates with `AI.recommendation.engine.RecommendationEngine` in a worker thread, using the catalog snapshot loaded from Postgres.
 4. Map ranked recipe IDs to the backend catalog and report unknown IDs as warnings.
 
-Use the current recommendation DTOs for request fields, ranking features, and model metadata. The request path does not persist recommendation runs or training events.
+The catalog is rebuilt from the bundled data with `python -m AI.catalog.importer [--dry-run]`; until it has run, AI endpoints return HTTP 503 (`AI catalog is not loaded.`). The request path does not persist recommendation runs or training events.
 
 ### Process extracted input
 
 1. Validate the media/barcode request and provider timeout limit.
-2. Call the configured OCR, ASR, or barcode adapter.
+2. Call OpenAI vision (OCR) or Groq Whisper (ASR) through `AI.extraction`; text is normalized by `AI.smart_parser`.
 3. Normalize the response into the shared extraction envelope.
 4. Return raw/structured result, warnings, confidence, and `persisted: false`.
 5. Remove transient media and redact output from logs.
@@ -210,7 +210,7 @@ Do not create an inventory batch from extraction until a later product phase add
 
 ### Extraction contract test
 
-1. Configure controlled AI-client/provider responses for success, timeout, malformed response, low-confidence, and not-found cases.
+1. Mock the OpenAI/Groq HTTP transport (`httpx.MockTransport`) for success, timeout, malformed response, low-confidence, and not-found cases.
 2. Call OCR, ASR, and barcode endpoints.
 3. Assert a stable error/result envelope and `persisted: false`.
 4. Assert inventory/ledger table counts are unchanged.
@@ -225,7 +225,7 @@ Do not create an inventory batch from extraction until a later product phase add
 | OTP cannot be verified | Challenge TTL/purpose, rate-limit state, mock/provider response | Inspect redacted correlation IDs; never log the OTP |
 | Recommendation looks wrong | Inventory snapshot, units, expiry state, seeded recipe requirements | Add a deterministic unit test before changing weights |
 | Cooking would over-consume stock | Batch row lock, idempotency key, FEFO allocation | Return conflict; do not apply partial deductions |
-| Extraction provider times out | Provider timeout, WireMock fixture, input validation | Return mapped retryable error; do not persist input/output |
+| Extraction provider times out | Provider timeout, API key presence, input validation | Return mapped retryable error; do not persist input/output |
 
 ## 11. Change Management
 
