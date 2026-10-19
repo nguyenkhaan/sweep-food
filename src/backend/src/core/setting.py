@@ -138,7 +138,7 @@ OPENAI_API_KEY: Final[str] = get_env_var("OPENAI_API_KEY", "")
 OPENAI_BASE_URL: Final[str] = get_http_base_url_env(
     "OPENAI_BASE_URL", "https://api.openai.com/v1"
 )
-OPENAI_OCR_MODEL: Final[str] = get_env_var("OPENAI_OCR_MODEL", "gpt-4o-mini")
+OPENAI_OCR_MODEL: Final[str] = get_env_var("OPENAI_OCR_MODEL", "gpt-6.1-sol")
 OPENAI_LLM_MODEL: Final[str] = get_env_var("OPENAI_LLM_MODEL", "gpt-4o-mini")
 OPENAI_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
     "OPENAI_TIMEOUT_SECONDS", 30

@@ -71,8 +71,7 @@ class LLMExtractor:
             data = await self.openai_client.create_chat_completion_json(
                 messages=messages,
                 model=self.model,
-                temperature=0.1,
-                max_tokens=1024,
+                max_completion_tokens=4096,
             )
 
             raw_items: list[Any] = []

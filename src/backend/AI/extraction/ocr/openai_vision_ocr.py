@@ -140,8 +140,7 @@ class OpenAIVisionOCR:
             content = await self.openai_client.create_chat_completion(
                 messages=messages,
                 model=self.model,
-                temperature=0.2,
-                max_tokens=2048,
+                max_completion_tokens=8192,
                 response_format={"type": "json_object"},
                 timeout=self.timeout,
             )

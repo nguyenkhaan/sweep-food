@@ -30,6 +30,10 @@ async def test_openai_client_request_shape_and_success() -> None:
         body = json.loads(request.content.decode("utf-8"))
         assert body["model"] == "gpt-4o-mini"
         assert body["response_format"] == {"type": "json_object"}
+        # Reasoning models (e.g. gpt-6.1-sol) reject `max_tokens` and any non-default temperature.
+        assert body["max_completion_tokens"] == 4096
+        assert "max_tokens" not in body
+        assert "temperature" not in body
         assert len(body["messages"]) == 1
         assert body["messages"][0]["role"] == "user"
 

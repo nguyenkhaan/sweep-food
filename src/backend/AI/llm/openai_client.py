@@ -194,8 +194,7 @@ class OpenAIClient:
         messages: list[dict[str, Any]],
         *,
         model: str | None = None,
-        temperature: float = 0.1,
-        max_tokens: int | None = 1024,
+        max_completion_tokens: int | None = 4096,
         response_format: dict[str, Any] | None = None,
         timeout: float | None = None,
     ) -> str:
@@ -203,10 +202,9 @@ class OpenAIClient:
         payload: dict[str, Any] = {
             "model": model or self.model,
             "messages": messages,
-            "temperature": temperature,
         }
-        if max_tokens is not None:
-            payload["max_tokens"] = max_tokens
+        if max_completion_tokens is not None:
+            payload["max_completion_tokens"] = max_completion_tokens
         if response_format is not None:
             payload["response_format"] = response_format
 
@@ -238,16 +236,14 @@ class OpenAIClient:
         messages: list[dict[str, Any]],
         *,
         model: str | None = None,
-        temperature: float = 0.1,
-        max_tokens: int | None = 1024,
+        max_completion_tokens: int | None = 4096,
         timeout: float | None = None,
     ) -> Any:
         """Call OpenAI chat completion in JSON mode and parse the resulting JSON object."""
         content = await self.create_chat_completion(
             messages=messages,
             model=model,
-            temperature=temperature,
-            max_tokens=max_tokens,
+            max_completion_tokens=max_completion_tokens,
             response_format={"type": "json_object"},
             timeout=timeout,
         )
