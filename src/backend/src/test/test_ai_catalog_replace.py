@@ -116,7 +116,7 @@ def test_topological_deletion_sorter() -> None:
 
 
 @pytest.mark.skipif(not PGSERVER_AVAILABLE, reason="pgserver is not available in environment")
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_replace_catalog_protective_and_delete_user_data_modes(tmp_path: Path) -> None:
     """Comprehensive test exercising both protective retention and cascade deletion."""
     import asyncio

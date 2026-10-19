@@ -287,7 +287,7 @@ def test_alembic_migration_schema_and_operations() -> None:
         assert ("recipes", "ai_features") in dropped_columns
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_importer_cli_parsing_and_dry_run(monkeypatch: pytest.MonkeyPatch) -> None:
     """CLI argument parsing and dry-run execution run end-to-end without crashing."""
     # Never reach a real database: an unreachable URL forces the offline dry-run path.
@@ -379,7 +379,7 @@ def test_missing_recipe_media_raises_clean_error(tmp_path: Path) -> None:
         load_recipe_media(missing_path)
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_classification_unchanged_rerun_and_changed_media_url() -> None:
     """Unchanged rerun reports all records unchanged; modified media_url reports exactly 1 updated."""
     bundle = load_catalog_bundle(DEFAULT_BUNDLE_DIR)

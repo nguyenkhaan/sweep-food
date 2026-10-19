@@ -199,7 +199,7 @@ def test_normalize_step_and_normalize_steps() -> None:
     assert normalize_steps(None, None) == []
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_validate_image_url_with_mock_transport() -> None:
     """validate_image_url verifies status 200/206 and image/* content type using MockTransport."""
     def handler(request: httpx.Request) -> httpx.Response:
@@ -254,7 +254,7 @@ async def test_validate_image_url_with_mock_transport() -> None:
         assert reason == "status_403"
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_validate_image_url_network_errors() -> None:
     """validate_image_url maps httpx network exceptions to structured failure reasons."""
     def timeout_handler(request: httpx.Request) -> httpx.Response:
