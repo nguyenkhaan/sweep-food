@@ -16,6 +16,7 @@ class SuggestionCard extends StatelessWidget {
     required this.score,
     required this.meta,
     required this.chips,
+    this.rank,
     this.imageUrl,
     this.onTap,
     super.key,
@@ -25,6 +26,10 @@ class SuggestionCard extends StatelessWidget {
 
   /// 0–100 match score.
   final int score;
+
+  /// AI-defined order. When present, it is more meaningful than the raw
+  /// LightGBM score and is shown instead of pretending that score is 0–100.
+  final int? rank;
 
   /// e.g. "15 phút · Dễ · 320 kcal / khẩu phần".
   final String meta;
@@ -62,7 +67,7 @@ class SuggestionCard extends StatelessWidget {
                   Positioned(
                     top: 12,
                     right: 12,
-                    child: _ScoreBadge(score: score),
+                    child: _ScoreBadge(score: score, rank: rank),
                   ),
                 ],
               ),
@@ -98,8 +103,9 @@ class SuggestionCard extends StatelessWidget {
 }
 
 class _ScoreBadge extends StatelessWidget {
-  const _ScoreBadge({required this.score});
+  const _ScoreBadge({required this.score, this.rank});
   final int score;
+  final int? rank;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +122,7 @@ class _ScoreBadge extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '$score',
+            rank == null ? '$score' : '#$rank',
             style: context.text.titleSmall?.copyWith(
               color: context.colors.onPrimary,
               fontSize: 15,
@@ -124,7 +130,7 @@ class _ScoreBadge extends StatelessWidget {
             ),
           ),
           Text(
-            context.l10n.scoreBadgeLabel,
+            rank == null ? context.l10n.scoreBadgeLabel : 'AI',
             style: TextStyle(
               color: context.colors.onPrimary.withValues(alpha: 0.85),
               fontSize: 7,

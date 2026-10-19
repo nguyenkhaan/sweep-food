@@ -20,104 +20,115 @@ void main() {
     repo = ScanRepositoryImpl(ScanRemoteDataSource(api));
   });
 
-  ScanJob rightOrFail(Result<ScanJob> result) => result.fold(
-        (f) => fail('expected Right, got $f'),
-        (job) => job,
-      );
+  ScanJob rightOrFail(Result<ScanJob> result) =>
+      result.fold((f) => fail('expected Right, got $f'), (job) => job);
 
   test(
-      'scanLabel maps backend ExtractionResponse to a ScanJob and keeps image path',
-      () async {
-    when(
-      () => api.postMultipart(
-        ApiPaths.extractionOcrLabel,
-        fields: any(named: 'fields'),
-        files: any(named: 'files'),
-      ),
-    ).thenAnswer(
-      (_) async => {
-        'request_id': '00000000-0000-0000-0000-000000000001',
-        'status': 'SUCCEEDED',
-        'provider': 'MOCK_OCR',
-        'raw_text': 'Mock OCR label output',
-        'fields': {
-          'ingredient_name': 'Whole Milk',
-          'quantity': 1.0,
-          'unit': 'LITER',
-          'packaged_at': '2026-08-28',
-          'expires_at': '2026-09-05',
-          'price': 35000.0,
-          'currency': 'VND',
-          'barcode': null,
+    'scanLabel maps backend ExtractionResponse to a ScanJob and keeps image path',
+    () async {
+      when(
+        () => api.postMultipart(
+          ApiPaths.extractionOcrLabel,
+          fields: any(named: 'fields'),
+          files: any(named: 'files'),
+          receiveTimeout: any(named: 'receiveTimeout'),
+        ),
+      ).thenAnswer(
+        (_) async => {
+          'request_id': '00000000-0000-0000-0000-000000000001',
+          'status': 'SUCCEEDED',
+          'provider': 'MOCK_OCR',
+          'raw_text': 'Mock OCR label output',
+          'fields': {
+            'ingredient_name': 'Whole Milk',
+            'quantity': 1.0,
+            'unit': 'LITER',
+            'packaged_at': '2026-08-28',
+            'expires_at': '2026-09-05',
+            'price': 35000.0,
+            'currency': 'VND',
+            'barcode': null,
+          },
+          'confidence': {'ingredient_name': 0.95, 'expires_at': 0.75},
+          'warnings': <String>[],
+          'persisted': false,
         },
-        'confidence': {'ingredient_name': 0.95, 'expires_at': 0.75},
-        'warnings': <String>[],
-        'persisted': false,
-      },
-    );
+      );
 
-    final job = rightOrFail(await repo.scanLabel('/tmp/label.jpg'));
-    expect(job.type, ScanType.label);
-    expect(job.sourcePath, '/tmp/label.jpg');
-    expect(job.items, hasLength(1));
-    expect(job.items.single.name, 'Whole Milk');
-    expect(job.items.single.quantity, 1.0);
-    expect(job.items.single.unit, MeasurementUnit.liter);
-    expect(job.items.single.priceVnd, 35000);
-    expect(job.items.single.isExpiryWarn, isTrue); // confidence < 0.8
-  });
+      final job = rightOrFail(await repo.scanLabel('/tmp/label.jpg'));
+      verify(
+        () => api.postMultipart(
+          ApiPaths.extractionOcrLabel,
+          fields: any(named: 'fields'),
+          files: any(named: 'files'),
+          receiveTimeout: const Duration(seconds: 75),
+        ),
+      ).called(1);
+      expect(job.type, ScanType.label);
+      expect(job.sourcePath, '/tmp/label.jpg');
+      expect(job.items, hasLength(1));
+      expect(job.items.single.name, 'Whole Milk');
+      expect(job.items.single.quantity, 1.0);
+      expect(job.items.single.unit, MeasurementUnit.liter);
+      expect(job.items.single.priceVnd, 35000);
+      expect(job.items.single.isExpiryWarn, isTrue); // confidence < 0.8
+    },
+  );
 
-  test('scanReceipt maps backend InvoiceExtractionResponse with line items',
-      () async {
-    when(
-      () => api.postMultipart(
-        ApiPaths.extractionOcrInvoice,
-        fields: any(named: 'fields'),
-        files: any(named: 'files'),
-      ),
-    ).thenAnswer(
-      (_) async => {
-        'request_id': '00000000-0000-0000-0000-000000000002',
-        'status': 'SUCCEEDED',
-        'provider': 'MOCK_OCR',
-        'raw_text': 'Mock OCR invoice output',
-        'fields': {
-          'line_items': [
-            {
-              'name': 'Whole Milk',
-              'quantity': 2.0,
-              'unit': 'LITER',
-              'unit_price': 35000.0,
-              'total_price': 70000.0,
-            },
-            {
-              'name': 'Bread',
-              'quantity': 1.0,
-              'unit': 'PIECE',
-              'unit_price': 15000.0,
-              'total_price': 15000.0,
-            },
-          ],
-          'total_amount': 85000.0,
-          'currency': 'VND',
-          'invoice_date': '2026-08-30',
-          'vendor_name': 'Mock Grocery Store',
+  test(
+    'scanReceipt maps backend InvoiceExtractionResponse with line items',
+    () async {
+      when(
+        () => api.postMultipart(
+          ApiPaths.extractionOcrInvoice,
+          fields: any(named: 'fields'),
+          files: any(named: 'files'),
+          receiveTimeout: any(named: 'receiveTimeout'),
+        ),
+      ).thenAnswer(
+        (_) async => {
+          'request_id': '00000000-0000-0000-0000-000000000002',
+          'status': 'SUCCEEDED',
+          'provider': 'MOCK_OCR',
+          'raw_text': 'Mock OCR invoice output',
+          'fields': {
+            'line_items': [
+              {
+                'name': 'Whole Milk',
+                'quantity': 2.0,
+                'unit': 'LITER',
+                'unit_price': 35000.0,
+                'total_price': 70000.0,
+              },
+              {
+                'name': 'Bread',
+                'quantity': 1.0,
+                'unit': 'PIECE',
+                'unit_price': 15000.0,
+                'total_price': 15000.0,
+              },
+            ],
+            'total_amount': 85000.0,
+            'currency': 'VND',
+            'invoice_date': '2026-08-30',
+            'vendor_name': 'Mock Grocery Store',
+          },
+          'confidence': {'line_items': 0.82},
+          'warnings': <String>[],
+          'persisted': false,
         },
-        'confidence': {'line_items': 0.82},
-        'warnings': <String>[],
-        'persisted': false,
-      },
-    );
+      );
 
-    final job = rightOrFail(await repo.scanReceipt('/tmp/r.jpg'));
-    expect(job.type, ScanType.receipt);
-    expect(job.storeName, 'Mock Grocery Store');
-    expect(job.items, hasLength(2));
-    expect(job.items.map((i) => i.name), ['Whole Milk', 'Bread']);
-    expect(job.items.first.unit, MeasurementUnit.liter);
-    expect(job.items.first.priceVnd, 35000);
-    expect(job.items.last.unit, MeasurementUnit.piece);
-  });
+      final job = rightOrFail(await repo.scanReceipt('/tmp/r.jpg'));
+      expect(job.type, ScanType.receipt);
+      expect(job.storeName, 'Mock Grocery Store');
+      expect(job.items, hasLength(2));
+      expect(job.items.map((i) => i.name), ['Whole Milk', 'Bread']);
+      expect(job.items.first.unit, MeasurementUnit.liter);
+      expect(job.items.first.priceVnd, 35000);
+      expect(job.items.last.unit, MeasurementUnit.piece);
+    },
+  );
 
   test('lookupBarcode maps BarcodeExtractionResponse to ScanJob', () async {
     when(
@@ -160,12 +171,63 @@ void main() {
         ApiPaths.extractionAsr,
         fields: any(named: 'fields'),
         files: any(named: 'files'),
+        receiveTimeout: any(named: 'receiveTimeout'),
       ),
     ).thenThrow(Exception('boom'));
 
     final result = await repo.scanVoice(transcript: 'test');
 
     expect(result.isLeft(), isTrue);
-    result.match((f) => expect(f, isA<Failure>()), (_) => fail('expected Left'));
+    result.match(
+      (f) => expect(f, isA<Failure>()),
+      (_) => fail('expected Left'),
+    );
   });
+
+  test(
+    'scanVoice uploads recorded WAV with the backend-supported MIME type',
+    () async {
+      when(
+        () => api.postMultipart(
+          ApiPaths.extractionAsr,
+          fields: any(named: 'fields'),
+          files: any(named: 'files'),
+          receiveTimeout: any(named: 'receiveTimeout'),
+        ),
+      ).thenAnswer(
+        (_) async => {
+          'request_id': '00000000-0000-0000-0000-000000000004',
+          'status': 'SUCCEEDED',
+          'provider': 'SWEEP_FOOD_AI',
+          'raw_text': 'hai tram gam thit bo',
+          'fields': {
+            'ingredient_name': 'Thịt bò',
+            'quantity': 200.0,
+            'unit': 'GRAM',
+          },
+          'confidence': {'ingredient_name': 0.9},
+          'warnings': <String>[],
+        },
+      );
+
+      final result = await repo.scanVoice(audioPath: '/tmp/voice.wav');
+
+      expect(result.isRight(), isTrue);
+      verify(
+        () => api.postMultipart(
+          ApiPaths.extractionAsr,
+          fields: const <String, dynamic>{},
+          files: const [
+            (
+              field: 'file',
+              path: '/tmp/voice.wav',
+              filename: null,
+              contentType: 'audio/wav',
+            ),
+          ],
+          receiveTimeout: const Duration(seconds: 75),
+        ),
+      ).called(1);
+    },
+  );
 }

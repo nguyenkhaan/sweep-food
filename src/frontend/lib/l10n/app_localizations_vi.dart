@@ -1102,6 +1102,16 @@ class AppL10nVi extends AppL10n {
   }
 
   @override
+  String get reviewReceiptPartialTitle => 'Chưa tách được nguyên liệu';
+
+  @override
+  String get reviewReceiptPartialBody =>
+      'AI đã xử lý ảnh nhưng chưa tạo được danh sách nguyên liệu. Bạn có thể chụp lại rõ hơn hoặc nhập tay.';
+
+  @override
+  String get reviewReceiptRawText => 'Nội dung AI đọc được';
+
+  @override
   String reviewSelectedOf(int count) {
     return ' / $count mục được chọn';
   }

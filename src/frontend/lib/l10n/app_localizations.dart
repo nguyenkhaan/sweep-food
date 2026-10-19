@@ -2041,6 +2041,24 @@ abstract class AppL10n {
   /// **'Hóa đơn — {count} mục'**
   String reviewReceiptTitle(int count);
 
+  /// No description provided for @reviewReceiptPartialTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa tách được nguyên liệu'**
+  String get reviewReceiptPartialTitle;
+
+  /// No description provided for @reviewReceiptPartialBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'AI đã xử lý ảnh nhưng chưa tạo được danh sách nguyên liệu. Bạn có thể chụp lại rõ hơn hoặc nhập tay.'**
+  String get reviewReceiptPartialBody;
+
+  /// No description provided for @reviewReceiptRawText.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nội dung AI đọc được'**
+  String get reviewReceiptRawText;
+
   /// No description provided for @reviewSelectedOf.
   ///
   /// In vi, this message translates to:

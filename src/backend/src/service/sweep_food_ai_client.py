@@ -1,5 +1,6 @@
 """Typed HTTP boundary for the internal SweepFood AI service."""
 
+import logging
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from types import TracebackType
@@ -16,6 +17,8 @@ from src.core.setting import (
     AI_OCR_TIMEOUT_SECONDS,
     AI_RECOMMEND_TIMEOUT_SECONDS,
 )
+
+LOGGER = logging.getLogger(__name__)
 
 
 class SweepFoodAIError(Exception):
@@ -309,7 +312,10 @@ class SweepFoodAIClient:
             "/api/recommend",
             timeout_seconds=AI_RECOMMEND_TIMEOUT_SECONDS,
             body=_RequestBody(
-                json_payload=request.model_dump(),
+                # The AI boundary applies defaults only when optional values are
+                # omitted. Forwarding JSON null for `hours_to_expire` violates
+                # its PantryItem schema, so strip nested None values here.
+                json_payload=request.model_dump(exclude_none=True),
             ),
         )
         return self._validate_payload(AIRecommendationResponseDTO, payload)
@@ -337,15 +343,39 @@ class SweepFoodAIClient:
                 data=request_body.data,
             )
         except httpx.TimeoutException as error:
+            LOGGER.warning(
+                "AI request timed out method=%s path=%s timeout_seconds=%s",
+                method,
+                path,
+                timeout_seconds,
+            )
             raise SweepFoodAITimeoutError("AI service request timed out") from error
         except httpx.RequestError as error:
+            LOGGER.warning(
+                "AI request failed method=%s path=%s error_type=%s",
+                method,
+                path,
+                type(error).__name__,
+            )
             raise SweepFoodAIUnavailableError("AI service is unavailable") from error
 
         if not response.is_success:
+            LOGGER.warning(
+                "AI returned HTTP error method=%s path=%s status_code=%s",
+                method,
+                path,
+                response.status_code,
+            )
             raise SweepFoodAIBadResponseError("AI service returned an error response")
         try:
             payload: object = response.json()
         except ValueError as error:
+            LOGGER.warning(
+                "AI returned invalid JSON method=%s path=%s content_type=%s",
+                method,
+                path,
+                response.headers.get("content-type"),
+            )
             raise SweepFoodAIBadResponseError(
                 "AI service returned invalid JSON"
             ) from error
@@ -359,6 +389,28 @@ class SweepFoodAIClient:
         try:
             return model.model_validate(payload)
         except ValidationError as error:
+            payload_status = (
+                payload.get("status") if isinstance(payload, dict) else None
+            )
+            payload_message = (
+                payload.get("message") if isinstance(payload, dict) else None
+            )
+            validation_errors = [
+                {
+                    "location": list(item["loc"]),
+                    "message": item["msg"],
+                    "type": item["type"],
+                }
+                for item in error.errors(include_input=False)
+            ]
+            LOGGER.warning(
+                "AI response contract violation model=%s status=%r message=%r "
+                "validation_errors=%s",
+                model.__name__,
+                payload_status,
+                payload_message,
+                validation_errors,
+            )
             raise SweepFoodAIBadResponseError(
                 "AI service response violated its contract"
             ) from error

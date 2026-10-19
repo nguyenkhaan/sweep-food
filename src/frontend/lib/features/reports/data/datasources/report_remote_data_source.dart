@@ -18,26 +18,22 @@ class ReportRemoteDataSource {
   }
 
   Future<FoodUsageHistoryDto> usageHistory(ReportPeriod period) async {
-    final json = await _api.get(
-      ApiPaths.reportsUsageHistory,
-      query: {'period': period.wire},
+    throw UnsupportedError(
+      'Backend does not expose a food usage history report yet.',
     );
-    return FoodUsageHistoryDto.fromJson(json as Map<String, dynamic>);
   }
 
   Future<WasteStatisticsDto> wasteStatistics(ReportPeriod period) async {
-    final json = await _api.get(
-      ApiPaths.reportsWasteStatistics,
-      query: {'period': period.wire},
+    throw UnsupportedError(
+      'Backend does not expose aggregated waste statistics yet.',
     );
-    return WasteStatisticsDto.fromJson(json as Map<String, dynamic>);
   }
 
-  Future<EfficiencyEvaluationDto> efficiencyEvaluation(ReportPeriod period) async {
-    final json = await _api.get(
-      ApiPaths.reportsEfficiency,
-      query: {'period': period.wire},
+  Future<EfficiencyEvaluationDto> efficiencyEvaluation(
+    ReportPeriod period,
+  ) async {
+    throw UnsupportedError(
+      'Backend does not expose an efficiency evaluation yet.',
     );
-    return EfficiencyEvaluationDto.fromJson(json as Map<String, dynamic>);
   }
 }

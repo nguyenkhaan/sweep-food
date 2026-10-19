@@ -8,6 +8,13 @@ import 'package:sweepfood/l10n/app_localizations.dart';
 /// (`home_screen`) so the two never show different chips for the same dish.
 extension SuggestionCardChips on DishSuggestion {
   List<SuggestionChip> cardChips(AppL10n l10n) => [
+    if (!isMock)
+      (
+        label: statusLabel,
+        tone: statusBadge == 'shopping'
+            ? SuggestionChipTone.toBuy
+            : SuggestionChipTone.available,
+      ),
     if (nearExpiryCount > 0)
       (
         label: l10n.chipUseNearExpiry(nearExpiryCount),

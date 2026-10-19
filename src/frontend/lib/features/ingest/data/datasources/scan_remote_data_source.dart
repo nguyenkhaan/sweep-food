@@ -1,3 +1,4 @@
+import 'package:sweepfood/core/config/app_constants.dart';
 import 'package:sweepfood/core/network/api_client.dart';
 import 'package:sweepfood/core/network/api_paths.dart';
 import 'package:sweepfood/features/ingest/data/models/scan_job_dto.dart';
@@ -18,12 +19,19 @@ class ScanRemoteDataSource {
     final json = await _api.postMultipart(
       type.endpoint,
       fields: {
-        if (transcript != null && transcript.isNotEmpty) 'transcript': transcript,
+        if (transcript != null && transcript.isNotEmpty)
+          'transcript': transcript,
       },
       files: [
         if (mediaPath != null && mediaPath.isNotEmpty)
-          (field: 'file', path: mediaPath, filename: null),
+          (
+            field: 'file',
+            path: mediaPath,
+            filename: null,
+            contentType: type == ScanType.voice ? 'audio/wav' : null,
+          ),
       ],
+      receiveTimeout: AppConstants.aiUploadReceiveTimeout,
     );
     return ScanJobDto.fromJson(
       json as Map<String, dynamic>,

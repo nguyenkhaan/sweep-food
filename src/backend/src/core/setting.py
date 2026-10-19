@@ -150,7 +150,7 @@ AI_RECOMMEND_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
 )
 AI_OCR_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
     "AI_OCR_TIMEOUT_SECONDS",
-    30,
+    60,
 )
 AI_ASR_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
     "AI_ASR_TIMEOUT_SECONDS",
