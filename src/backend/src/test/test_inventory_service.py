@@ -174,8 +174,8 @@ async def test_create_custom_batch_persists_initial_stock_atomically() -> None:
 
 
 @pytest.mark.anyio
-async def test_create_catalog_batch_uses_ingredient_shelf_life_rule() -> None:
-    """Missing manufacturer expiry is estimated from the narrowest seeded rule."""
+async def test_create_catalog_batch_without_printed_expiry_is_not_estimated() -> None:
+    """A missing package date stays unknown even when a seeded shelf-life rule exists."""
     ingredient_id = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b208")
     category_id = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b209")
     ingredient = MasterIngredientModel(
@@ -187,22 +187,8 @@ async def test_create_catalog_batch_uses_ingredient_shelf_life_rule() -> None:
         default_storage_mode=StorageMode.REFRIGERATED,
         other_nutrients={},
     )
-    rule = ShelfLifeRuleModel(
-        master_ingredient_id=ingredient_id,
-        category_id=None,
-        scope=ShelfLifeRuleScope.INGREDIENT,
-        storage_mode=StorageMode.REFRIGERATED,
-        min_days=3,
-        max_days=5,
-        default_days=4,
-    )
     database = FakeDatabaseSession(
-        [
-            FakeResult(None),
-            FakeResult(ingredient),
-            FakeResult([rule]),
-            FakeResult(ingredient),
-        ]
+        [FakeResult(None), FakeResult(ingredient), FakeResult(ingredient)]
     )
     service = InventoryService(cast(AsyncSession, database))
 
@@ -218,8 +204,8 @@ async def test_create_catalog_batch_uses_ingredient_shelf_life_rule() -> None:
         "create-catalog-1",
     )
 
-    assert response.expiration_source is ExpirationSource.ESTIMATED
-    assert response.expires_at == NOW + timedelta(days=4)
+    assert response.expiration_source is ExpirationSource.UNKNOWN
+    assert response.expires_at is None
 
 
 @pytest.mark.anyio
