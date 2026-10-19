@@ -96,6 +96,30 @@ def derive_nutrition_status(incomplete_flag: object, anomaly_flag: object) -> st
         return "INCOMPLETE"
     return "PARTIAL" if anom else "COMPLETE"
 
+def values_differ(val1: object, val2: object) -> bool:
+    """Compare two database column values for equality across Decimals, Enums, and JSONB."""
+    if val1 == val2:
+        return False
+    if val1 is None and val2 is None:
+        return False
+    if (val1 is None) != (val2 is None):
+        return True
+    if hasattr(val1, "value"):
+        val1 = val1.value
+    if hasattr(val2, "value"):
+        val2 = val2.value
+    if val1 == val2:
+        return False
+    if isinstance(val1, (int, float, Decimal)) and isinstance(val2, (int, float, Decimal)):
+        try:
+            return abs(float(val1) - float(val2)) > 1e-6
+        except (ValueError, TypeError):
+            return True
+    if isinstance(val1, dict) and isinstance(val2, dict):
+        return val1 != val2
+    if isinstance(val1, str) and isinstance(val2, str):
+        return val1.strip() != val2.strip()
+    return True
 
 @dataclass
 class ImportReport:
@@ -178,6 +202,7 @@ class CatalogTransformedData:
     aliases: list[dict[str, object]]
     recipes: list[dict[str, object]]
     recipe_ingredients: list[dict[str, object]]
+    placeholder_ids: set[UUID] = field(default_factory=set)
 
 
 def load_csv_rows(path: Path) -> list[dict[str, str]]:
@@ -493,7 +518,6 @@ def transform_recipe_ingredients(
                     "is_verified": False,
                     "source_code": None,
                 }
-                report.add("created (placeholder)", f"master_ingredient (placeholder):{placeholder_id} {cleaned_name}")
             master_uuid = placeholder_id
         elif code not in master_code_to_id:
             report.add("rejected", f"recipe_ingredient:{ingredient_uuid} unknown master code: {raw_code!r}")
@@ -585,6 +609,7 @@ def transform_catalog_bundle(
     )
 
     all_masters = masters + list(placeholder_masters.values())
+    placeholder_ids = set(placeholder_masters.keys())
 
     data = CatalogTransformedData(
         categories=categories,
@@ -592,6 +617,7 @@ def transform_catalog_bundle(
         aliases=aliases,
         recipes=recipes,
         recipe_ingredients=recipe_ingredients,
+        placeholder_ids=placeholder_ids,
     )
     return data, report
 
@@ -623,23 +649,42 @@ async def _classify_and_upsert_table(
     *,
     dry_run: bool,
     batch_size: int,
+    placeholder_ids: set[UUID] | None = None,
 ) -> None:
     """Classify rows as created/updated/unchanged and upsert them if not dry-run."""
     if not rows:
         return
 
-    existing_result = await session.execute(select(table.c.id))
-    existing_ids = set(existing_result.scalars().all())
+    existing_result = await session.execute(select(table))
+    existing_by_id = {row_mapping["id"]: row_mapping for row_mapping in existing_result.mappings()}
+
+    rows_to_upsert: list[dict[str, object]] = []
 
     for row in rows:
-        row_id = row["id"]
-        if row_id in existing_ids:
-            report.add("updated", f"{table_label}:{row_id}")
+        row_id = cast(UUID, row["id"])
+        existing = existing_by_id.get(row_id)
+        if existing is None:
+            if placeholder_ids and row_id in placeholder_ids:
+                report.add("created (placeholder)", f"{table_label}:{row_id}")
+            else:
+                report.add("created", f"{table_label}:{row_id}")
+            rows_to_upsert.append(row)
         else:
-            report.add("created", f"{table_label}:{row_id}")
+            changed = False
+            for col_name, val in row.items():
+                if col_name in existing:
+                    existing_val = existing[col_name]
+                    if values_differ(val, existing_val):
+                        changed = True
+                        break
+            if changed:
+                report.add("updated", f"{table_label}:{row_id}")
+                rows_to_upsert.append(row)
+            else:
+                report.add("unchanged", f"{table_label}:{row_id}")
 
-    if not dry_run:
-        await _upsert_table_batch(session, table, rows, batch_size)
+    if not dry_run and rows_to_upsert:
+        await _upsert_table_batch(session, table, rows_to_upsert, batch_size)
 
 
 async def import_catalog(
@@ -656,7 +701,10 @@ async def import_catalog(
         for cat in data.categories:
             report.add("created", f"category:{cat['id']}")
         for m in data.masters:
-            report.add("created", f"master_ingredient:{m['id']}")
+            if m["id"] in data.placeholder_ids:
+                report.add("created (placeholder)", f"master_ingredient:{m['id']}")
+            else:
+                report.add("created", f"master_ingredient:{m['id']}")
         for a in data.aliases:
             report.add("created", f"ingredient_alias:{a['id']}")
         for r in data.recipes:
@@ -687,6 +735,7 @@ async def import_catalog(
                     report,
                     dry_run=dry_run,
                     batch_size=batch_size,
+                    placeholder_ids=data.placeholder_ids,
                 )
                 await _classify_and_upsert_table(
                     session,
@@ -726,7 +775,10 @@ async def import_catalog(
             for cat in data.categories:
                 report.add("created", f"category:{cat['id']}")
             for m in data.masters:
-                report.add("created", f"master_ingredient:{m['id']}")
+                if m["id"] in data.placeholder_ids:
+                    report.add("created (placeholder)", f"master_ingredient:{m['id']}")
+                else:
+                    report.add("created", f"master_ingredient:{m['id']}")
             for a in data.aliases:
                 report.add("created", f"ingredient_alias:{a['id']}")
             for r in data.recipes:

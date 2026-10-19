@@ -19,6 +19,7 @@ from AI.catalog.importer import (
     run_importer,
     transform_catalog_bundle,
     transform_recipe_ingredients,
+    values_differ,
 )
 from src.model.enum_model import MeasurementUnit
 
@@ -99,11 +100,11 @@ def test_pure_transformation_recipe_contract_and_constraints() -> None:
 def test_pure_transformation_ingredient_contract_and_quantities() -> None:
     """Ingredient rows satisfy schema constraints, quantity rules, and foreign keys."""
     bundle = load_catalog_bundle(DEFAULT_BUNDLE_DIR)
-    data, report = transform_catalog_bundle(bundle)
+    data, _report = transform_catalog_bundle(bundle)
 
     # All 10406 rows retained: 10381 canonical + 25 linked to 21 placeholder masters
     assert len(data.recipe_ingredients) == 10406
-    assert len(report.created_placeholders) == 21
+    assert len(data.placeholder_ids) == 21
     # Check that canonical masters + placeholder masters match
     assert len(data.masters) == 1399 + 21
 
@@ -291,7 +292,7 @@ async def test_importer_cli_parsing_and_dry_run() -> None:
     assert parsed.bundle_dir == DEFAULT_BUNDLE_DIR
 
     report = await run_importer(bundle_dir=DEFAULT_BUNDLE_DIR, dry_run=True)
-    assert len(report.created) == 27406
+    assert len(report.created) == 27385
     assert len(report.created_placeholders) == 21
     assert len(report.rejected) == 301
     assert len(report.redirected) == 0
@@ -302,6 +303,22 @@ async def test_importer_cli_parsing_and_dry_run() -> None:
     assert breakdown["duplicate_recipe_urls"] == 0
     assert breakdown["unknown_master_codes"] == 0
 
-    assert "created=27406" in report.summary()
+    assert "created=27385" in report.summary()
+    assert "[placeholders=21]" in report.summary()
     assert "rejected=301" in report.summary()
     assert "alias_duplicates=301" in report.summary()
+
+def test_values_differ_classification_without_postgres() -> None:
+    """Classification comparison handles numeric tolerances, enums, JSONB dicts, and None."""
+    assert not values_differ(Decimal("4.000"), 4.0)
+    assert not values_differ(Decimal("4.0000001"), 4.0)
+    assert values_differ(Decimal("4.001"), 4.0)
+    assert not values_differ(MeasurementUnit.GRAM, "GRAM")
+    assert not values_differ("GRAM", MeasurementUnit.GRAM)
+    assert values_differ(MeasurementUnit.GRAM, MeasurementUnit.KG)
+    assert not values_differ(None, None)
+    assert values_differ(None, 0.0)
+    assert values_differ("hello", "world")
+    assert not values_differ("  hello  ", "hello")
+    assert not values_differ({"steps": []}, {"steps": []})
+    assert values_differ({"steps": [{"step": 1}]}, {"steps": []})

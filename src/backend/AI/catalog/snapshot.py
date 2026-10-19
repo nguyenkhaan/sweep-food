@@ -135,16 +135,24 @@ async def load_snapshot(session: AsyncSession) -> CatalogSnapshot:
     from src.model.recipe_ingredient_model import RecipeIngredientModel
     from src.model.recipe_model import RecipeModel
 
-    recipes_result = await session.execute(select(RecipeModel))
+    recipes_result = await session.execute(
+        select(RecipeModel).order_by(RecipeModel.id)
+    )
     recipe_models = list(recipes_result.scalars().all())
 
-    ings_result = await session.execute(select(RecipeIngredientModel))
+    ings_result = await session.execute(
+        select(RecipeIngredientModel).order_by(RecipeIngredientModel.id)
+    )
     ing_models = list(ings_result.scalars().all())
 
-    master_result = await session.execute(select(MasterIngredientModel))
+    master_result = await session.execute(
+        select(MasterIngredientModel).order_by(MasterIngredientModel.id)
+    )
     master_models = list(master_result.scalars().all())
 
-    aliases_result = await session.execute(select(IngredientAliasModel))
+    aliases_result = await session.execute(
+        select(IngredientAliasModel).order_by(IngredientAliasModel.id)
+    )
     alias_models = list(aliases_result.scalars().all())
 
     aliases_by_master_id: dict[str, list[str]] = defaultdict(list)
@@ -223,10 +231,36 @@ async def load_snapshot(session: AsyncSession) -> CatalogSnapshot:
 
     master_alias_index = build_master_alias_index(master_rows)
 
-    hash_material = f"{len(recipes)}:{len(ingredients)}:{len(master_rows)}"
-    if recipes:
-        hash_material += ":" + ":".join(sorted(r["id"] for r in recipes[:20]))
-    rev_hash = hashlib.sha256(hash_material.encode("utf-8")).hexdigest()[:12]
+    content_canonical = json.dumps(
+        {
+            "recipes": [
+                {
+                    "id": str(r.id),
+                    "ai_features": getattr(r, "ai_features", None) or {},
+                }
+                for r in sorted(recipe_models, key=lambda r: str(r.id))
+            ],
+            "ingredients": [
+                {
+                    "id": str(ing.id),
+                    "recipe_id": str(ing.recipe_id),
+                    "ai_attributes": getattr(ing, "ai_attributes", None) or {},
+                }
+                for ing in sorted(ing_models, key=lambda i: str(i.id))
+            ],
+            "masters": [
+                {
+                    "id": str(m.id),
+                    "source_code": getattr(m, "source_code", None) or "",
+                }
+                for m in sorted(master_models, key=lambda m: str(m.id))
+            ],
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
+    rev_hash = hashlib.sha256(content_canonical).hexdigest()[:12]
     revision = f"catalog-db-{len(recipes)}-{rev_hash}"
 
     return CatalogSnapshot(

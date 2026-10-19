@@ -305,3 +305,90 @@ async def test_snapshot_caching_and_invalidation() -> None:
     s3 = await get_catalog_snapshot(cast(AsyncSession, _PopulatedSession()))
     assert s3 is not s1
     assert s3.revision == s1.revision
+
+@pytest.mark.anyio
+async def test_deterministic_revision_order_independence() -> None:
+    """Same rows returned in different order produce identical revision string."""
+    from decimal import Decimal
+    from AI.catalog.snapshot import load_snapshot
+
+    class _R:
+        def __init__(self, r_id: UUID, name: str, features: dict[str, object] | None = None) -> None:
+            self.id = r_id
+            self.name = name
+            self.default_servings = Decimal(4)
+            self.estimated_cooking_minutes = 20
+            self.total_calories = Decimal(100)
+            self.total_protein_g = Decimal(10)
+            self.total_fat_g = Decimal(5)
+            self.total_carbs_g = Decimal(15)
+            self.total_sugar_g = Decimal(2)
+            self.ai_features = features or {"dish_type": "Main"}
+
+    r1 = _R(UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b102"), "R1")
+    r2 = _R(UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b103"), "R2")
+
+    class _SessionOrder:
+        def __init__(self, recipe_list: list[object]) -> None:
+            self.calls: list[list[object]] = [recipe_list, [], [], []]
+
+        async def execute(self, _statement: object) -> object:
+            items = self.calls.pop(0) if self.calls else []
+
+            class _Result:
+                def scalars(self) -> "_Result":
+                    return self
+
+                def all(self) -> list[object]:
+                    return items
+
+            return _Result()
+
+    snap_order_1 = await load_snapshot(cast(AsyncSession, _SessionOrder([r1, r2])))
+    snap_order_2 = await load_snapshot(cast(AsyncSession, _SessionOrder([r2, r1])))
+    assert snap_order_1.revision == snap_order_2.revision
+
+
+@pytest.mark.anyio
+async def test_deterministic_revision_changes_on_feature_update() -> None:
+    """Updating a recipe's ai_features produces a different revision string."""
+    from decimal import Decimal
+    from AI.catalog.snapshot import load_snapshot
+
+    class _R:
+        def __init__(self, r_id: UUID, name: str, features: dict[str, object]) -> None:
+            self.id = r_id
+            self.name = name
+            self.default_servings = Decimal(4)
+            self.estimated_cooking_minutes = 20
+            self.total_calories = Decimal(100)
+            self.total_protein_g = Decimal(10)
+            self.total_fat_g = Decimal(5)
+            self.total_carbs_g = Decimal(15)
+            self.total_sugar_g = Decimal(2)
+            self.ai_features = features
+
+    r_orig = _R(UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b102"), "R1", {"dish_type": "Main"})
+    r_updated = _R(UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b102"), "R1", {"dish_type": "Soup"})
+
+    class _SessionSimple:
+        def __init__(self, recipe_list: list[object]) -> None:
+            self.calls: list[list[object]] = [recipe_list, [], [], []]
+
+        async def execute(self, _statement: object) -> object:
+            items = self.calls.pop(0) if self.calls else []
+
+            class _Result:
+                def scalars(self) -> "_Result":
+                    return self
+
+                def all(self) -> list[object]:
+                    return items
+
+            return _Result()
+
+    snap_orig = await load_snapshot(cast(AsyncSession, _SessionSimple([r_orig])))
+    snap_updated = await load_snapshot(cast(AsyncSession, _SessionSimple([r_updated])))
+    assert snap_orig.revision != snap_updated.revision
+    assert snap_orig.revision.startswith("catalog-db-1-")
+    assert snap_updated.revision.startswith("catalog-db-1-")

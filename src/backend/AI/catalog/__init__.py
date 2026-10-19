@@ -1,4 +1,5 @@
 """AI Catalog package providing snapshots, master ingredient indexing, and DB loading."""
+# ruff: noqa: N999
 
 from AI.catalog.errors import CatalogNotLoadedError
 from AI.catalog.master_index import (
