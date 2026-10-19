@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/recipe_image.dart';
 
 /// A coloured chip under a suggestion ("Dùng 3 đồ cận hạn", "Có sẵn 80%"…).
 enum SuggestionChipTone { nearExpiry, available, toBuy }
@@ -53,15 +54,9 @@ class SuggestionCard extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: ColoredBox(
-                      color: context.sweep.subtleFill,
-                      child: imageUrl == null
-                          ? Icon(
-                              Icons.restaurant_rounded,
-                              size: 34,
-                              color: context.sweep.textTertiary,
-                            )
-                          : Image.network(imageUrl!, fit: BoxFit.cover),
+                    child: RecipeImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.cover,
                     ),
                   ),
                   Positioned(

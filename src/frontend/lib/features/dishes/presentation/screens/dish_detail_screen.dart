@@ -5,6 +5,7 @@ import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
 import 'package:sweepfood/core/widgets/section_header.dart';
+import 'package:sweepfood/core/widgets/recipe_image.dart';
 import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
 import 'package:sweepfood/features/cooking/presentation/widgets/post_cook_confirm_sheet.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
@@ -102,7 +103,7 @@ class _Body extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
             children: [
-              _Hero(score: score),
+              _Hero(imageUrl: dish.imageUrl, score: score),
               Gap.gapMd,
               Text(dish.name, style: context.text.headlineSmall),
               const SizedBox(height: 4),
@@ -175,8 +176,9 @@ class _Body extends ConsumerWidget {
 }
 
 class _Hero extends StatelessWidget {
-  const _Hero({this.score});
+  const _Hero({this.imageUrl, this.score});
 
+  final String? imageUrl;
   final int? score;
 
   @override
@@ -187,13 +189,14 @@ class _Hero extends StatelessWidget {
         color: context.sweep.subtleFill,
         borderRadius: Radii.brLg,
       ),
+      clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          Center(
-            child: Icon(
-              Icons.restaurant_rounded,
-              size: 44,
-              color: context.sweep.textTertiary,
+          Positioned.fill(
+            child: RecipeImage(
+              imageUrl: imageUrl,
+              fit: BoxFit.cover,
+              iconSize: 44,
             ),
           ),
           if (score != null)

@@ -7,6 +7,7 @@ import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
 import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/core/widgets/recipe_image.dart';
 import 'package:sweepfood/features/favorites/domain/entities/favorite_menu.dart';
 import 'package:sweepfood/features/favorites/presentation/controllers/favorite_menus_controller.dart';
 import 'package:sweepfood/features/favorites/presentation/widgets/create_edit_menu_dialog.dart';
@@ -157,23 +158,13 @@ class FavoriteMenuDetailScreen extends ConsumerWidget {
                             horizontal: Gap.md,
                             vertical: Gap.xs,
                           ),
-                          leading: ClipRRect(
+                          leading: RecipeImage(
+                            imageUrl: item.mediaUrl,
+                            width: 48,
+                            height: 48,
+                            iconSize: 24,
+                            iconColor: Colors.grey,
                             borderRadius: Radii.brSm,
-                            child: Container(
-                              width: 48,
-                              height: 48,
-                              color: context.sweep.subtleFill,
-                              child: item.mediaUrl != null && item.mediaUrl!.isNotEmpty
-                                  ? Image.network(
-                                      item.mediaUrl!,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) => const Icon(
-                                        Icons.restaurant_rounded,
-                                        color: Colors.grey,
-                                      ),
-                                    )
-                                  : const Icon(Icons.restaurant_rounded, color: Colors.grey),
-                            ),
                           ),
                           title: Text(item.recipeName, style: context.text.titleSmall),
                           subtitle: item.recipeDescription.isNotEmpty
