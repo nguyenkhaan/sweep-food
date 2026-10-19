@@ -3,7 +3,7 @@
 Optimizes images from image upload and camera snapshots:
 1. Downsampling high-resolution smartphone photos (up to 4000x3000) to max 1600px via cv2.INTER_AREA.
 2. Contrast-Limited Adaptive Histogram Equalization (CLAHE) on the L-channel to enhance faint receipts and food packaging labels.
-3. High-efficiency WebP compression (quality 85) to reduce payload size while preserving text legibility.
+3. High-efficiency JPEG compression (quality 85) to reduce payload size by >90% while preserving text legibility.
 """
 
 from __future__ import annotations
@@ -58,11 +58,6 @@ def preprocess_ocr_image(
         # Assuming input is BGR from cv2.imdecode
         img_rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
-    gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY)
-    polarity_inverted = float(np.median(gray)) < 127
-    if polarity_inverted:
-        img_rgb = cv2.bitwise_not(img_rgb)
-
     # 2. CLAHE Contrast Enhancement for faint receipts and glossy food packaging
     if enhance_contrast:
         try:
@@ -82,7 +77,6 @@ def preprocess_ocr_image(
         "processed_height": cur_h,
         "scale_factor": round(scale_factor, 3),
         "downscaled": scale_factor < 1.0,
-        "polarity_inverted": polarity_inverted,
         "contrast_enhanced": enhance_contrast,
     }
 
@@ -104,7 +98,7 @@ def preprocess_image_bytes(
         enhance_contrast: Whether to apply CLAHE.
 
     Returns:
-        (compressed_webp_bytes, processed_image_rgb, stats_dict)
+        (compressed_jpeg_bytes, processed_image_rgb, stats_dict)
     """
     orig_bytes_len = len(image_bytes)
     nparr = np.frombuffer(image_bytes, np.uint8)

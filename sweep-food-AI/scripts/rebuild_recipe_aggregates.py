@@ -680,7 +680,14 @@ def rebuild_recipe_aggregates(
                 "nutrition_anomaly_reasons": "|".join(anomaly_reasons),
             })
 
-    df_report = pd.DataFrame(report_rows).sort_values("id")
+    if report_rows:
+        df_report = pd.DataFrame(report_rows).sort_values("id")
+    else:
+        df_report = pd.DataFrame(columns=[
+            "id", "name", "old_incomplete_flag", "new_incomplete_flag", "incomplete_reasons",
+            "old_veg", "new_veg", "animal_evidence", "old_nutrition_anomaly_flag",
+            "new_nutrition_anomaly_flag", "nutrition_anomaly_reasons"
+        ])
     report_csv_path.parent.mkdir(parents=True, exist_ok=True)
     buf_rep = io.StringIO()
     df_report.to_csv(buf_rep, index=False, encoding="utf-8", lineterminator="\r\n")
@@ -754,113 +761,11 @@ def rebuild_recipe_aggregates(
         print(outlier_df.head(10).to_string(index=False))
         print("=" * 80)
 
-    # Missing Named Animal Detailed Audit
+    # Recipes missing a named animal ingredient
     missing_named_animal_df = df_recipes[missing_named_animal_series][["id", "name"]].copy()
-    print(f"MISSING NAMED ANIMAL AUDIT: {len(missing_named_animal_df)} recipes")
+    print(f"MISSING NAMED ANIMAL: {len(missing_named_animal_df)} recipes")
     print("=" * 80)
     print(missing_named_animal_df.to_string(index=False))
-    print("=" * 80)
-
-    # Verification of specific recipe IDs requested by Parent:
-    print("PARENT AUDIT RECIPES TABLE")
-    print("=" * 80)
-    parent_check_groups = [
-        ("Item 1 (lose Ăn chay due to dầu hào)", ["1fd3a1a9", "3cbbde8b", "49e4cc14", "6acbc580", "c0c48604", "cbf90dfe", "d0b28d0d"]),
-        ("Item 2 (regain Ăn chay)", ["32a46dbf", "6a29dd7f", "63265048", "9a057266"]),
-        ("Item 3 (suspected parser noise)", ["d238cfbc", "0b2e1d97"]),
-        ("Item 4 (no longer missing_named_animal)", ["c4758088", "22b33d06", "b72d1cf0", "e3e910bf", "831fa111", "4d28e5f3", "8b99dc87"]),
-    ]
-    for group_name, p_ids in parent_check_groups:
-        print(f"--- {group_name} ---")
-        p_rows = []
-        for p_id in p_ids:
-            sub = df_recipes[df_recipes["id"].str.startswith(p_id)]
-            if len(sub) == 0:
-                continue
-            r_item = sub.iloc[0]
-            rid = r_item["id"]
-
-            r_reasons = []
-            if r_item["core_ingredients_count"] == 0:
-                r_reasons.append("no_core")
-            own_cal_val = dish_own_cal_per_serving.loc[df_recipes["id"] == rid].iloc[0]
-            if pd.isna(own_cal_val) or own_cal_val < 50.0:
-                r_reasons.append("kcal_lt_50")
-            if missing_named_animal_series.loc[df_recipes["id"] == rid].iloc[0]:
-                r_reasons.append("missing_named_animal")
-
-            f_ev = first_ev_series.loc[df_recipes["id"] == rid].iloc[0]
-            n_ev = name_first_term_series.loc[df_recipes["id"] == rid].iloc[0]
-            ev = f_ev if f_ev else (n_ev if n_ev else "")
-            if (rid, ev) in SUSPECTED_PARSER_NOISE:
-                ev = f"parser_noise_suspect:{ev}"
-
-            base_tags = base_map.get(rid, {}).get("diet_tags", "")
-            p_rows.append({
-                "id_prefix": p_id,
-                "name": r_item["name"],
-                "old_veg": "Ăn chay" in str(base_tags),
-                "new_veg": "Ăn chay" in str(r_item["diet_tags"]),
-                "incomplete_flag": int(r_item["incomplete_flag"]),
-                "reasons": "|".join(r_reasons) or "none",
-                "evidence": ev,
-            })
-        print(pd.DataFrame(p_rows).to_string(index=False))
-    print("=" * 80)
-
-    # Verification of the 9 test recipes
-    test_names = [
-        "Khoai tây xào thịt bằm",
-        "Thịt rim sa tế",
-        "Sườn non rim nước tương",
-        "Steak bò sốt phomai",
-        "Cá bống mú hấp cay",
-        "Bánh xếp chay",
-        "Cuốn đậu hủ kho gừng",
-        "Nấm đùi gà hấp cải xanh",
-        "Bánh da lợn nước cốt dừa",
-    ]
-    print("ORIGINAL 9 TEST RECIPES AUDIT TABLE")
-    print("=" * 80)
-    test_results = []
-    for name in test_names:
-        sub = df_recipes[df_recipes["name"] == name]
-        if len(sub) == 0:
-            continue
-        row = sub.iloc[0]
-        rid = row["id"]
-        is_veg = "Ăn chay" in str(row["diet_tags"])
-
-        r_reasons = []
-        if row["core_ingredients_count"] == 0:
-            r_reasons.append("no_core")
-        own_cal_val = dish_own_cal_per_serving.loc[df_recipes["id"] == rid].iloc[0]
-        if pd.isna(own_cal_val) or own_cal_val < 50.0:
-            r_reasons.append("kcal_lt_50")
-        if missing_named_animal_series.loc[df_recipes["id"] == rid].iloc[0]:
-            r_reasons.append("missing_named_animal")
-
-        f_ev = first_ev_series.loc[df_recipes["id"] == rid].iloc[0]
-        n_ev = name_first_term_series.loc[df_recipes["id"] == rid].iloc[0]
-        ev = f_ev if f_ev else (n_ev if n_ev else "")
-        if (rid, ev) in SUSPECTED_PARSER_NOISE:
-            ev = f"parser_noise_suspect:{ev}"
-
-        test_results.append({
-            "name": name,
-            "incomplete_flag": int(row["incomplete_flag"]),
-            "incomplete_reasons": "|".join(r_reasons) or "none",
-            "is_veg": is_veg,
-            "animal_evidence": ev,
-        })
-    df_test = pd.DataFrame(test_results)
-    print(df_test.to_string(index=False))
-    print("=" * 80)
-
-    # Confirm 'Khoai tây xào thịt bằm' incomplete=1 explicitly
-    kt_row = df_recipes[df_recipes["name"] == "Khoai tây xào thịt bằm"].iloc[0]
-    assert int(kt_row["incomplete_flag"]) == 1, f"Expected Khoai tây xào thịt bằm incomplete=1, got {kt_row['incomplete_flag']}"
-    print("CONFIRMATION: 'Khoai tây xào thịt bằm' incomplete_flag == 1 (PASSED)")
     print("=" * 80)
 
     return df_recipes, records_json

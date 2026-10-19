@@ -115,24 +115,6 @@ def parse_spoken_quantity_grams(segment: str, food_name: str) -> float:
     return 250.0
 
 
-def _has_spoken_quantity(segment: str) -> bool:
-    """Return whether the local phrase contains an explicit amount and unit."""
-    normalized = segment.lower()
-    units = "|".join(re.escape(unit) for unit in UNIT_MULTIPLIERS)
-    if re.search(rf"\d+(?:[.,]\d+)?\s*(?:{units})\b", normalized):
-        return True
-    if any(
-        phrase in normalized
-        for phrase in ("ký rưỡi", "cân rưỡi", "nửa cân", "nửa ký", "nửa kg")
-    ):
-        return True
-    return any(
-        f"{number} {unit}" in normalized
-        for number in NUMBER_WORDS
-        for unit in UNIT_MULTIPLIERS
-    )
-
-
 def parse_vietnamese_speech(transcript: str) -> list[dict[str, Any]]:
     """Analyzes spoken Vietnamese transcript and returns structured culinary items."""
     t = transcript.lower()
@@ -187,7 +169,6 @@ def parse_vietnamese_speech(transcript: str) -> list[dict[str, Any]]:
             "spoken_phrase": local_context,
             "quantity_g": weight_g,
             "unit": "g",
-            "quantity_source": "extracted" if _has_spoken_quantity(local_context) else "estimated",
             "hours_to_expire": expiry_h,
             "is_staple": is_staple,
             "confidence": 0.95

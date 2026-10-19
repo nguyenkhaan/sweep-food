@@ -921,7 +921,7 @@
   },
   {
     "original_recipe_id":"05b2c135-e250-4078-971f-0b3b35942364",
-    "original_recipe_name":"Canh Giò Heo Nấu Hành Lá",
+    "original_recipe_name":"Canh giò heo nấu hành lá",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/15466411",
     "canonical_recipe_id":"05b2c135-e250-4078-971f-0b3b35942364",
     "canonical_dish_name":"canh giò heo nấu hành lá",
@@ -1014,14 +1014,6 @@
     "canonical_recipe_id":"05ee9f06-3c29-46a9-8ff6-5d8e817e144b",
     "canonical_dish_name":"nấm hấp sả",
     "selection_score":"[\"1\", \"1\", \"14\/15\", \"-1\/15\", \"-1\/5\", \"-2\/5\", \"-2\/15\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"05fa2bee-47d7-4f0e-bd60-9c78672ba38e",
-    "original_recipe_name":"Canh nấm chay",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/3-cach-nau-canh-nam-chay-thom-ngot-bo-duong-ai-cung-me-01605",
-    "canonical_recipe_id":"05fa2bee-47d7-4f0e-bd60-9c78672ba38e",
-    "canonical_dish_name":"canh nấm chay",
-    "selection_score":"[\"1\", \"1\", \"12\/13\", \"-1\/13\", \"0\", \"0\", \"-2\/13\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"062b5f8a-e351-42f0-b4bd-a5c21a241b0b",
@@ -1198,14 +1190,6 @@
     "canonical_recipe_id":"07c2ca16-b658-4210-b8c5-78548cac13bb",
     "canonical_dish_name":"bánh rán vị chanh",
     "selection_score":"[\"1\", \"1\", \"2\/5\", \"-3\/5\", \"-1\/5\", \"-2\/5\", \"-3\/5\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"07d074db-ed63-4db2-b190-ea687f38b4d6",
-    "original_recipe_name":"Tim gà kho tiêu",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-tim-ga-kho-tieu-va-kho-gung-thom-ngon-dam-da-huong-09114",
-    "canonical_recipe_id":"07d074db-ed63-4db2-b190-ea687f38b4d6",
-    "canonical_dish_name":"tim gà kho tiêu",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"-1\/15\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"07dc720b-1139-4266-8550-d613f74dea6b",
@@ -1481,7 +1465,7 @@
   },
   {
     "original_recipe_id":"09b8a702-b2dd-4ee8-83c9-da12739f7df6",
-    "original_recipe_name":"Canh Khổ Qua Nhồi Thịt",
+    "original_recipe_name":"Canh khổ qua nhồi thịt",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/26351790",
     "canonical_recipe_id":"09b8a702-b2dd-4ee8-83c9-da12739f7df6",
     "canonical_dish_name":"canh khổ qua nhồi thịt",
@@ -2368,14 +2352,6 @@
     "selection_score":"[\"1\", \"1\", \"3\/4\", \"-1\/4\", \"-1\/4\", \"-1\/2\", \"-1\/4\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"0f870e99-785b-43e9-8b57-c896f4030250",
-    "original_recipe_name":"Canh kim chi thịt bò",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-canh-kim-chi-thit-bo-cuc-de-nong-hoi-an-la-ngat-ngay-00184",
-    "canonical_recipe_id":"0f870e99-785b-43e9-8b57-c896f4030250",
-    "canonical_dish_name":"canh kim chi thịt bò",
-    "selection_score":"[\"1\", \"1\", \"16\/17\", \"-1\/17\", \"-1\/17\", \"-1\/17\", \"-2\/17\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"0fa9ed40-d5ee-4c69-b0d7-1d86bc07a981",
     "original_recipe_name":"Mắm chưng khô cá sửu và thịt heo ba rọi",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/15063087",
@@ -2470,14 +2446,6 @@
     "canonical_recipe_id":"105158e2-f766-4b05-a6f0-fc7a1b77ad53",
     "canonical_dish_name":"sốt kho tiêu",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-2\/13\", \"-1\/13\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"10541b89-c6df-4ef9-9530-2770a8444e6a",
-    "original_recipe_name":"Canh bí đao nấu tôm",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-bi-dao-nau-tom-tuoi-ngon-ngot-thanh-mat-don-11608",
-    "canonical_recipe_id":"10541b89-c6df-4ef9-9530-2770a8444e6a",
-    "canonical_dish_name":"canh bí đao nấu tôm",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-1\/11\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"1059b2c2-63c9-427b-b877-b24742493255",
@@ -2640,14 +2608,6 @@
     "selection_score":"[\"1\", \"1\", \"3\/4\", \"-1\/4\", \"-1\/4\", \"-1\/2\", \"-1\/4\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"117f4f1b-153b-448a-b598-ec41f312a090",
-    "original_recipe_name":"Canh cá diếc",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-canh-ca-diec-nau-ngai-cuu-va-nau-rau-ram-thom-ngon-08420",
-    "canonical_recipe_id":"117f4f1b-153b-448a-b598-ec41f312a090",
-    "canonical_dish_name":"canh cá diếc",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"-1\/11\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"1180e8fe-4a36-4e42-a208-4dd611026620",
     "original_recipe_name":"Cơm thập cẩm kiểu Nhật",
     "original_source_url":"https:\/\/monngonmoingay.com\/com-thap-cam-kieu-nhat\/",
@@ -2673,10 +2633,10 @@
   },
   {
     "original_recipe_id":"119d7b18-32e4-4829-aa20-6c704695e696",
-    "original_recipe_name":"Canh đuôi heo hầm bia",
+    "original_recipe_name":"Canh đuôi heo hầm hạt sen",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-duoi-heo-ham-hat-sen-beo-bui-thom-ngon-bo-duong-08253",
     "canonical_recipe_id":"119d7b18-32e4-4829-aa20-6c704695e696",
-    "canonical_dish_name":"canh đuôi heo hầm bia",
+    "canonical_dish_name":"canh đuôi heo hầm hạt sen",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -3120,14 +3080,6 @@
     "selection_score":"[\"1\", \"1\", \"6\/7\", \"-1\/7\", \"-3\/7\", \"-6\/7\", \"-2\/7\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"13e9e1d3-e853-451a-ba00-a83d56f8274e",
-    "original_recipe_name":"Canh cua nấu rau muống",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-canh-cua-nau-rau-muong-ngon-ngot-dam-da-cho-bua-com-13640",
-    "canonical_recipe_id":"13e9e1d3-e853-451a-ba00-a83d56f8274e",
-    "canonical_dish_name":"canh cua nấu rau muống",
-    "selection_score":"[\"1\", \"1\", \"5\/6\", \"-1\/6\", \"-1\/12\", \"-1\/6\", \"-1\/6\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"13eab330-b376-445b-940d-833bc7cef7fd",
     "original_recipe_name":"Lẩu bầu cua",
     "original_source_url":"https:\/\/monngonmoingay.com\/lau-bau-cua\/",
@@ -3569,10 +3521,10 @@
   },
   {
     "original_recipe_id":"16eab469-bc37-4556-878e-e6be4c178280",
-    "original_recipe_name":"Canh cá rô phi",
+    "original_recipe_name":"Canh cá rô phi lá giang",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-ca-ro-phi-la-giang-sieu-hap-dan-don-gian-cho-15509",
     "canonical_recipe_id":"16eab469-bc37-4556-878e-e6be4c178280",
-    "canonical_dish_name":"canh cá rô phi",
+    "canonical_dish_name":"canh cá rô phi lá giang",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-1\/7\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -3590,14 +3542,6 @@
     "canonical_recipe_id":"17005f01-34ed-4308-8cce-33cb2869cd94",
     "canonical_dish_name":"mít non om nước cốt dừa",
     "selection_score":"[\"1\", \"1\", \"4\/7\", \"-3\/7\", \"-5\/14\", \"-4\/7\", \"-1\/2\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"17063ce4-2140-4c14-b493-064b13ff46a8",
-    "original_recipe_name":"Thịt kho quẹt",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-thit-kho-quet-ngon-dam-da-chuan-vi-cho-bua-com-08204",
-    "canonical_recipe_id":"17063ce4-2140-4c14-b493-064b13ff46a8",
-    "canonical_dish_name":"thịt kho quẹt",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"17125aab-daf7-4265-8dda-5300719e5cbd",
@@ -4193,10 +4137,10 @@
   },
   {
     "original_recipe_id":"1a8e913e-ca26-4a13-8593-feb3447c225f",
-    "original_recipe_name":"Canh cá hồi",
+    "original_recipe_name":"Canh cá hồi nấu ngót",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-ca-hoi-nau-ngot-thom-ngon-doc-dao-tai-nha-06558",
     "canonical_recipe_id":"1a8e913e-ca26-4a13-8593-feb3447c225f",
-    "canonical_dish_name":"canh cá hồi",
+    "canonical_dish_name":"canh cá hồi nấu ngót",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -4432,14 +4376,6 @@
     "selection_score":"[\"1\", \"1\", \"1\/2\", \"-1\/2\", \"0\", \"0\", \"-1\/2\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"1bc33fdb-aa3b-440d-b3dc-a480ed167280",
-    "original_recipe_name":"Lòng bò khìa",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-long-bo-khia-bang-noi-ap-suat-va-chao-bat-com-don-09731",
-    "canonical_recipe_id":"1bc33fdb-aa3b-440d-b3dc-a480ed167280",
-    "canonical_dish_name":"lòng bò khìa",
-    "selection_score":"[\"1\", \"1\", \"6\/7\", \"-1\/7\", \"-1\/7\", \"-1\/7\", \"-5\/21\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"1bc501a7-1788-4a14-a2f3-cbead71471f9",
     "original_recipe_name":"Thịt heo luộc chấm muối hồng",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/25001341",
@@ -4510,14 +4446,6 @@
     "canonical_recipe_id":"1c29e3a8-03eb-4cee-872f-818564919902",
     "canonical_dish_name":"bánh gà nhân phô mai",
     "selection_score":"[\"1\", \"1\", \"7\/9\", \"-2\/9\", \"-5\/9\", \"-7\/9\", \"-2\/9\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"1c2e9d91-3a75-49cb-98f6-700cc2e8c024",
-    "original_recipe_name":"Măng kho chay",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/3-cach-lam-mang-kho-chay-la-mieng-doc-dao-thom-ngon-cho-bua-05620",
-    "canonical_recipe_id":"1c2e9d91-3a75-49cb-98f6-700cc2e8c024",
-    "canonical_dish_name":"măng kho chay",
-    "selection_score":"[\"1\", \"1\", \"17\/19\", \"-2\/19\", \"0\", \"-1\/19\", \"-2\/19\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"1c2fc4c1-e396-4c5a-8349-be8e8796486e",
@@ -4617,7 +4545,7 @@
   },
   {
     "original_recipe_id":"1d37cb1f-674c-4fb4-9593-b8652d32d39c",
-    "original_recipe_name":"Rau Tiến Vua Xào Thịt Bò Bằm",
+    "original_recipe_name":"Rau tiến vua xào thịt bò bằm",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24672965",
     "canonical_recipe_id":"1d37cb1f-674c-4fb4-9593-b8652d32d39c",
     "canonical_dish_name":"rau tiến vua xào thịt bò bằm",
@@ -5249,7 +5177,7 @@
   },
   {
     "original_recipe_id":"21c8fe63-1ad6-4d12-bbb1-12a78813dfa7",
-    "original_recipe_name":"Đọt Su Xào Tôm",
+    "original_recipe_name":"Đọt su xào tôm",
     "original_source_url":"https:\/\/monngonmoingay.com\/dot-su-xao-tom-2\/",
     "canonical_recipe_id":"21c8fe63-1ad6-4d12-bbb1-12a78813dfa7",
     "canonical_dish_name":"đọt su xào tôm",
@@ -5345,7 +5273,7 @@
   },
   {
     "original_recipe_id":"226d284b-e1c8-48ca-970e-50b3d506cb91",
-    "original_recipe_name":"Su Su Xào Thịt Băm",
+    "original_recipe_name":"Su su xào thịt băm",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/25290252",
     "canonical_recipe_id":"226d284b-e1c8-48ca-970e-50b3d506cb91",
     "canonical_dish_name":"su su xào thịt băm",
@@ -5438,14 +5366,6 @@
     "canonical_recipe_id":"22cea7e3-a1cd-4c75-8af8-42875c01420b",
     "canonical_dish_name":"bún bò trộn",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"22dfc9e5-583d-4dea-ac9b-3bdff7fe3f0c",
-    "original_recipe_name":"Canh trai nấu mồng tơi",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-nau-canh-trai-nau-mong-toi-thanh-mat-ngon-don-gian-de-12174",
-    "canonical_recipe_id":"22dfc9e5-583d-4dea-ac9b-3bdff7fe3f0c",
-    "canonical_dish_name":"canh trai nấu mồng tơi",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-1\/10\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"22faf00e-b64e-4dbe-aa3f-4b0946037a8a",
@@ -5542,14 +5462,6 @@
     "canonical_recipe_id":"234a4cec-810d-479a-baf5-6ac7462f3ff1",
     "canonical_dish_name":"canh chua cá miền nam",
     "selection_score":"[\"1\", \"1\", \"4\/5\", \"-1\/5\", \"-2\/5\", \"-1\/2\", \"-3\/10\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"2350eb59-2ea0-4b74-89a1-ef2fe1f48ee8",
-    "original_recipe_name":"Canh cá dìa",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-ca-dia-nau-canh-chua-thanh-nhiet-hap-dan-de-lam-12945",
-    "canonical_recipe_id":"2350eb59-2ea0-4b74-89a1-ef2fe1f48ee8",
-    "canonical_dish_name":"canh cá dìa",
-    "selection_score":"[\"1\", \"1\", \"17\/20\", \"-3\/20\", \"0\", \"-1\/20\", \"-3\/20\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"236b2333-174d-4419-a4e7-9373447e7026",
@@ -5769,10 +5681,10 @@
   },
   {
     "original_recipe_id":"24e5d7f9-e7d3-46ce-9025-0906146784b0",
-    "original_recipe_name":"Cá dìa kho",
+    "original_recipe_name":"Cá dìa kho thơm",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-ca-dia-kho-thom-hap-dan-cuc-hao-com-15220",
     "canonical_recipe_id":"24e5d7f9-e7d3-46ce-9025-0906146784b0",
-    "canonical_dish_name":"cá dìa kho",
+    "canonical_dish_name":"cá dìa kho thơm",
     "selection_score":"[\"1\", \"1\", \"7\/8\", \"-1\/8\", \"0\", \"0\", \"-1\/8\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -6048,14 +5960,6 @@
     "selection_score":"[\"1\", \"1\", \"4\/5\", \"-1\/5\", \"-1\/5\", \"-3\/10\", \"-1\/4\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"263f6f77-c77f-4f3d-8b48-f35983bc4db9",
-    "original_recipe_name":"Súp gà măng tây",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-nau-sup-ga-mang-tay-va-sup-ga-bi-do-ngon-ngot-bo-duong-08196",
-    "canonical_recipe_id":"263f6f77-c77f-4f3d-8b48-f35983bc4db9",
-    "canonical_dish_name":"súp gà măng tây",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"264f0033-c0a0-451c-959a-e7d04d77138b",
     "original_recipe_name":"Cơm rau củ nấm hương",
     "original_source_url":"https:\/\/monngonmoingay.com\/com-rau-cu-nam-huong\/",
@@ -6313,10 +6217,10 @@
   },
   {
     "original_recipe_id":"27d43fd5-5dfb-46e5-86cb-34ac3c75b87c",
-    "original_recipe_name":"Canh cải cúc (tần ô) nấu thịt bò",
+    "original_recipe_name":"Canh cải cúc nấu thịt bò",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-cai-cuc-tan-o-nau-thit-bo-ngon-ngot-thanh-mat-11032",
     "canonical_recipe_id":"27d43fd5-5dfb-46e5-86cb-34ac3c75b87c",
-    "canonical_dish_name":"canh cải cúc (tần ô) nấu thịt bò",
+    "canonical_dish_name":"canh cải cúc nấu thịt bò",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -6390,14 +6294,6 @@
     "canonical_recipe_id":"2876c88b-ed9c-4c7e-81eb-3a2ebe1158b4",
     "canonical_dish_name":"gà kho củ cải muối",
     "selection_score":"[\"1\", \"1\", \"10\/11\", \"-1\/11\", \"-5\/11\", \"-8\/11\", \"-1\/11\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"28783489-e923-429a-b813-3ba2d562bc78",
-    "original_recipe_name":"Chân gà hầm đậu đen",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-chan-ga-ham-dau-den-bo-duong-thanh-mat-cho-gia-dinh-06169",
-    "canonical_recipe_id":"28783489-e923-429a-b813-3ba2d562bc78",
-    "canonical_dish_name":"chân gà hầm đậu đen",
-    "selection_score":"[\"1\", \"1\", \"11\/12\", \"-1\/12\", \"0\", \"-1\/12\", \"-1\/6\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"287f70dc-f1c6-4b60-876c-949a6f91d676",
@@ -6680,14 +6576,6 @@
     "selection_score":"[\"1\", \"1\", \"5\/6\", \"-1\/6\", \"-1\/6\", \"-1\/3\", \"-1\/6\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"2a788ace-4168-4447-9ac5-2403585563ef",
-    "original_recipe_name":"Sườn rim khế",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-suon-rim-sua-va-rim-khe-thom-ngon-hap-dan-de-lam-09935",
-    "canonical_recipe_id":"2a788ace-4168-4447-9ac5-2403585563ef",
-    "canonical_dish_name":"sườn rim khế",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-1\/12\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"2a81aa48-67d7-48da-bef0-2941ca63997a",
     "original_recipe_name":"Gỏi hải sản phương Đông",
     "original_source_url":"https:\/\/monngonmoingay.com\/goi-hai-san-phuong-dong\/",
@@ -6902,14 +6790,6 @@
     "canonical_recipe_id":"2ba1de42-6f8e-4d05-901d-0f708ca77d1a",
     "canonical_dish_name":"canh sườn non hầm củ sen, cà rốt, táo đỏ và kỷ tử",
     "selection_score":"[\"1\", \"1\", \"1\/3\", \"-2\/3\", \"-1\/6\", \"-1\/6\", \"-2\/3\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"2bb5e886-77ce-44d8-9070-a79acac78444",
-    "original_recipe_name":"Canh khổ qua nấu tôm khô",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-kho-qua-tom-kho-ngon-ngot-don-gian-tai-nha-06878",
-    "canonical_recipe_id":"2bb5e886-77ce-44d8-9070-a79acac78444",
-    "canonical_dish_name":"canh khổ qua nấu tôm khô",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/12\", \"-1\/12\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"2bc7f57d-8fec-4627-9884-272d10ff720f",
@@ -7392,14 +7272,6 @@
     "selection_score":"[\"1\", \"1\", \"1\/2\", \"-1\/2\", \"-5\/8\", \"-3\/4\", \"-1\/2\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"2e7e32db-4519-4c3a-8f1b-57e27d81f044",
-    "original_recipe_name":"Canh mồng tơi với thịt",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-nau-canh-mong-toi-voi-thit-thom-ngon-thanh-mat-de-lam-06262",
-    "canonical_recipe_id":"2e7e32db-4519-4c3a-8f1b-57e27d81f044",
-    "canonical_dish_name":"canh mồng tơi với thịt",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"2e835efc-e0e9-4c51-aedd-a35eb540d0cc",
     "original_recipe_name":"Giá đỗ xào thịt ba chỉ heo",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/17077503",
@@ -7425,7 +7297,7 @@
   },
   {
     "original_recipe_id":"2e8d7ac9-7277-4217-9af8-8f6167ad5583",
-    "original_recipe_name":"Thịt Bò Xào Nui Nơ",
+    "original_recipe_name":"Thịt bò xào nui nơ",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24727531",
     "canonical_recipe_id":"2e8d7ac9-7277-4217-9af8-8f6167ad5583",
     "canonical_dish_name":"thịt bò xào nui nơ",
@@ -7688,14 +7560,6 @@
     "selection_score":"[\"1\", \"1\", \"2\/3\", \"-1\/3\", \"-1\/9\", \"-1\/3\", \"-4\/9\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"2fb04301-1fe1-4bad-b032-b15858d054bc",
-    "original_recipe_name":"Củ sen kho chay",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-cu-sen-kho-tieu-cho-mam-com-chay-them-thom-ngon-03207",
-    "canonical_recipe_id":"2fb04301-1fe1-4bad-b032-b15858d054bc",
-    "canonical_dish_name":"củ sen kho chay",
-    "selection_score":"[\"1\", \"1\", \"17\/18\", \"-1\/18\", \"-1\/18\", \"-1\/18\", \"-1\/18\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"2fbd5aeb-dc19-4ad5-b2f7-1d09016fad48",
     "original_recipe_name":"Thịt lợn nướng lá mắc mật",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/17178113",
@@ -7953,7 +7817,7 @@
   },
   {
     "original_recipe_id":"31ab43df-ad67-49ee-a046-6d3793bfb5b6",
-    "original_recipe_name":"Canh Cải Ngọt Nấu Thịt Heo",
+    "original_recipe_name":"Canh cải ngọt nấu thịt heo",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/15344055",
     "canonical_recipe_id":"31ab43df-ad67-49ee-a046-6d3793bfb5b6",
     "canonical_dish_name":"canh cải ngọt nấu thịt heo",
@@ -8033,10 +7897,10 @@
   },
   {
     "original_recipe_id":"320a6724-4d50-42a5-a547-f128eec3a6d0",
-    "original_recipe_name":"Canh cá ngát nấu măng",
+    "original_recipe_name":"Canh cá ngát nấu măng chua",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-ca-ngat-nau-mang-chua-thom-ngon-bat-vi-cho-bua-13711",
     "canonical_recipe_id":"320a6724-4d50-42a5-a547-f128eec3a6d0",
-    "canonical_dish_name":"canh cá ngát nấu măng",
+    "canonical_dish_name":"canh cá ngát nấu măng chua",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -8289,7 +8153,7 @@
   },
   {
     "original_recipe_id":"334c1e76-571b-4f13-b08a-59d200f17fc0",
-    "original_recipe_name":"Sườn Xào Chua Ngọt",
+    "original_recipe_name":"Sườn xào chua ngọt",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/25009284",
     "canonical_recipe_id":"334c1e76-571b-4f13-b08a-59d200f17fc0",
     "canonical_dish_name":"sườn xào chua ngọt",
@@ -9465,10 +9329,10 @@
   },
   {
     "original_recipe_id":"39edb5fb-14e8-447f-babe-b15163b8cbf4",
-    "original_recipe_name":"Canh chua cá thu",
+    "original_recipe_name":"Canh chua đầu cá thu",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-dau-ca-thu-nau-canh-chua-cuc-ngon-an-la-ghien-15315",
     "canonical_recipe_id":"39edb5fb-14e8-447f-babe-b15163b8cbf4",
-    "canonical_dish_name":"canh chua cá thu",
+    "canonical_dish_name":"canh chua đầu cá thu",
     "selection_score":"[\"1\", \"1\", \"10\/11\", \"0\", \"-1\/11\", \"-1\/11\", \"-1\/11\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -10273,10 +10137,10 @@
   },
   {
     "original_recipe_id":"3fac4756-97df-47c0-9fec-3d80c3e3d281",
-    "original_recipe_name":"Canh cá ngân",
+    "original_recipe_name":"Canh chua cá ngân",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-mon-ca-ngan-nau-canh-chua-thanh-mat-giai-nhiet-cho-11602",
     "canonical_recipe_id":"3fac4756-97df-47c0-9fec-3d80c3e3d281",
-    "canonical_dish_name":"canh cá ngân",
+    "canonical_dish_name":"canh chua cá ngân",
     "selection_score":"[\"1\", \"1\", \"7\/9\", \"-2\/9\", \"-1\/9\", \"-1\/9\", \"-2\/9\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -11801,10 +11665,10 @@
   },
   {
     "original_recipe_id":"4baf55c4-f4a9-4237-b194-add9553f09de",
-    "original_recipe_name":"Mì xào ba chỉ trứng",
+    "original_recipe_name":"Mì xào ba chỉ bò trứng",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/15281466",
     "canonical_recipe_id":"4baf55c4-f4a9-4237-b194-add9553f09de",
-    "canonical_dish_name":"mì xào ba chỉ trứng",
+    "canonical_dish_name":"mì xào ba chỉ bò trứng",
     "selection_score":"[\"1\", \"1\", \"1\/3\", \"-2\/3\", \"0\", \"0\", \"-2\/3\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -12137,7 +12001,7 @@
   },
   {
     "original_recipe_id":"4d632ec0-6549-4c45-9ee3-2a3e44d7784e",
-    "original_recipe_name":"Cốt Lết Heo Ram Nước Mắm",
+    "original_recipe_name":"Cốt lết heo ram nước mắm",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/15864231",
     "canonical_recipe_id":"4d632ec0-6549-4c45-9ee3-2a3e44d7784e",
     "canonical_dish_name":"cốt lết heo ram nước mắm",
@@ -12281,7 +12145,7 @@
   },
   {
     "original_recipe_id":"4e89086b-be70-4fcb-96a6-1270d4d0394b",
-    "original_recipe_name":"Cháo nấm - Gà trộn é tía",
+    "original_recipe_name":"Cháo nấm - gà trộn é tía",
     "original_source_url":"https:\/\/monngonmoingay.com\/chao-nam-ga-tron-e-tia\/",
     "canonical_recipe_id":"4e89086b-be70-4fcb-96a6-1270d4d0394b",
     "canonical_dish_name":"cháo nấm - gà trộn é tía",
@@ -12409,10 +12273,10 @@
   },
   {
     "original_recipe_id":"4f746a25-9a5e-4b89-a9fb-0b414609a0fb",
-    "original_recipe_name":"Canh gà lá ngải",
+    "original_recipe_name":"Gà ác hầm ngải cứu",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-ga-ac-tan-ham-ngai-cuu-cuc-ngon-bo-mau-huyet-01384",
     "canonical_recipe_id":"4f746a25-9a5e-4b89-a9fb-0b414609a0fb",
-    "canonical_dish_name":"canh gà lá ngải",
+    "canonical_dish_name":"gà ác hầm ngải cứu",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-1\/6\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -12542,14 +12406,6 @@
     "canonical_recipe_id":"5080fcfb-ce36-421d-92df-340da4f96aee",
     "canonical_dish_name":"canh bí đao móng heo",
     "selection_score":"[\"1\", \"1\", \"8\/9\", \"-1\/9\", \"-4\/9\", \"-1\", \"-1\/9\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"50848a3e-92a8-43e5-92d2-dc69d8e8dd4b",
-    "original_recipe_name":"Cá bông lau kho tộ",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-ca-bong-lau-kho-to-va-kho-thom-dam-da-hap-dan-02002",
-    "canonical_recipe_id":"50848a3e-92a8-43e5-92d2-dc69d8e8dd4b",
-    "canonical_dish_name":"cá bông lau kho tộ",
-    "selection_score":"[\"1\", \"1\", \"5\/6\", \"-1\/6\", \"0\", \"0\", \"-1\/6\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"508aab9b-09b8-4aeb-80a9-8a7e801f3a64",
@@ -12744,14 +12600,6 @@
     "selection_score":"[\"1\", \"1\", \"9\/10\", \"-1\/10\", \"-3\/10\", \"-7\/10\", \"-1\/10\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"51d435c4-fa1e-40d9-b92f-57f6a2a26ed5",
-    "original_recipe_name":"Canh nghêu",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-canh-ngheu-nau-khe-va-nau-rong-bien-thom-ngon-04918",
-    "canonical_recipe_id":"51d435c4-fa1e-40d9-b92f-57f6a2a26ed5",
-    "canonical_dish_name":"canh nghêu",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"-1\/18\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"51d6ac01-9fc8-499a-8505-fcf5d7b4a716",
     "original_recipe_name":"Đậu hũ kho dứa",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-dau-hu-kho-thom-dua-dam-vi-thom-ngon-cuc-don-gian-13427",
@@ -12761,10 +12609,10 @@
   },
   {
     "original_recipe_id":"51d921cf-fdd6-4388-996c-a06fb78e68c9",
-    "original_recipe_name":"Thịt nọng kho trứng cút, nước dừa",
+    "original_recipe_name":"Thịt nọng kho trứng cút nước dừa",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/16330097",
     "canonical_recipe_id":"51d921cf-fdd6-4388-996c-a06fb78e68c9",
-    "canonical_dish_name":"thịt nọng kho trứng cút, nước dừa",
+    "canonical_dish_name":"thịt nọng kho trứng cút nước dừa",
     "selection_score":"[\"1\", \"1\", \"3\/4\", \"-1\/4\", \"0\", \"0\", \"-1\/4\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -12817,7 +12665,7 @@
   },
   {
     "original_recipe_id":"524a18c6-9fd3-4b8e-a429-b93121c7c712",
-    "original_recipe_name":"Canh Bầu Chua Nấu Tôm Thịt",
+    "original_recipe_name":"Canh bầu chua nấu tôm thịt",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/25290237",
     "canonical_recipe_id":"524a18c6-9fd3-4b8e-a429-b93121c7c712",
     "canonical_dish_name":"canh bầu chua nấu tôm thịt",
@@ -14344,14 +14192,6 @@
     "selection_score":"[\"1\", \"1\", \"7\/8\", \"-1\/8\", \"-1\/8\", \"-1\/8\", \"-1\/8\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"5c1c7b8f-1d4e-40bc-bc89-1c032b3348d9",
-    "original_recipe_name":"Kho quẹt chay",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-kho-quet-chay-ngon-ngat-ngay-de-lam-tai-nha-01264",
-    "canonical_recipe_id":"5c1c7b8f-1d4e-40bc-bc89-1c032b3348d9",
-    "canonical_dish_name":"kho quẹt chay",
-    "selection_score":"[\"1\", \"1\", \"23\/25\", \"-2\/25\", \"-2\/25\", \"-4\/25\", \"-2\/25\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"5c294089-08c9-4803-8321-d0888511f12d",
     "original_recipe_name":"Canh nấm rong biển",
     "original_source_url":"https:\/\/monngonmoingay.com\/canh-nam-rong-bien\/",
@@ -14478,14 +14318,6 @@
     "canonical_recipe_id":"5cdcb725-db6d-44ff-bb05-4e6a9d263e94",
     "canonical_dish_name":"canh cải thìa con nấu thịt vai xay",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"5cdccbad-be6d-42b8-91ce-e2b8166f256d",
-    "original_recipe_name":"Canh ếch chua",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-nau-canh-chua-muc-va-canh-chua-ech-thom-ngon-don-gian-04860",
-    "canonical_recipe_id":"5cdccbad-be6d-42b8-91ce-e2b8166f256d",
-    "canonical_dish_name":"canh ếch chua",
-    "selection_score":"[\"1\", \"1\", \"36\/43\", \"-6\/43\", \"-2\/43\", \"-5\/43\", \"-10\/43\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"5cdcda43-4b48-4950-b784-077df40c2f67",
@@ -14737,10 +14569,10 @@
   },
   {
     "original_recipe_id":"5e6cd1ba-818b-4044-8fa8-a365d951861b",
-    "original_recipe_name":"Sò huyết nấu canh",
+    "original_recipe_name":"Canh sò huyết",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-so-huyet-nau-canh-thom-ngon-moi-la-don-gian-cho-bua-07782",
     "canonical_recipe_id":"5e6cd1ba-818b-4044-8fa8-a365d951861b",
-    "canonical_dish_name":"sò huyết nấu canh",
+    "canonical_dish_name":"canh sò huyết",
     "selection_score":"[\"1\", \"1\", \"9\/10\", \"-1\/10\", \"0\", \"-1\/10\", \"-1\/10\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -15465,10 +15297,10 @@
   },
   {
     "original_recipe_id":"62df7196-3946-4a6b-a7fa-9068b9bc88b0",
-    "original_recipe_name":"Canh đọt khổ qua rừng",
+    "original_recipe_name":"Canh đọt khổ qua rừng nấu tôm",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-dot-kho-qua-rung-tom-the-thom-ngon-la-mieng-06824",
     "canonical_recipe_id":"62df7196-3946-4a6b-a7fa-9068b9bc88b0",
-    "canonical_dish_name":"canh đọt khổ qua rừng",
+    "canonical_dish_name":"canh đọt khổ qua rừng nấu tôm",
     "selection_score":"[\"1\", \"1\", \"2\/3\", \"-1\/3\", \"-1\/6\", \"-1\/3\", \"-1\/3\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -15766,14 +15598,6 @@
     "canonical_recipe_id":"64ad0085-3e57-4af4-b817-725ce5462cd8",
     "canonical_dish_name":"canh rạm rau muống khoai sọ",
     "selection_score":"[\"1\", \"1\", \"4\/5\", \"-1\/5\", \"0\", \"-1\/5\", \"-1\/5\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"64afae91-f02b-4bca-a23c-4e0246b1330a",
-    "original_recipe_name":"Canh nấm",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/3-cach-nau-canh-nam-dam-da-thanh-mat-don-gian-de-lam-01596",
-    "canonical_recipe_id":"64afae91-f02b-4bca-a23c-4e0246b1330a",
-    "canonical_dish_name":"canh nấm",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"-1\/22\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"64b1fb64-12c7-4187-b0ef-3aaada988c95",
@@ -16160,14 +15984,6 @@
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-1\/7\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"66f4ae7b-c03b-4077-890e-11408306a664",
-    "original_recipe_name":"Canh chua cá kèo",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-nau-canh-chua-ca-keo-va-ca-lang-don-gian-dam-vi-mien-04679",
-    "canonical_recipe_id":"66f4ae7b-c03b-4077-890e-11408306a664",
-    "canonical_dish_name":"canh chua cá kèo",
-    "selection_score":"[\"1\", \"1\", \"25\/28\", \"-3\/28\", \"0\", \"-1\/14\", \"-3\/28\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"672145fc-7902-4b73-808e-3429319c56e8",
     "original_recipe_name":"Cá lăng om dưa chua",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-ca-lang-om-dua-chua-don-gian-la-mieng-vo-cung-thom-10496",
@@ -16278,14 +16094,6 @@
     "canonical_recipe_id":"67aef59b-7b41-44df-8f7a-d8213afebbb0",
     "canonical_dish_name":"pancake chocolate trái cây nhiệt đới",
     "selection_score":"[\"1\", \"1\", \"6\/7\", \"-1\/7\", \"0\", \"0\", \"-1\/7\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"67b30004-f8c5-47a2-b33d-fa895350e92e",
-    "original_recipe_name":"Canh cải ngọt",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/4-cach-nau-canh-cai-ngot-thanh-mat-ngon-mieng-de-lam-cho-09230",
-    "canonical_recipe_id":"67b30004-f8c5-47a2-b33d-fa895350e92e",
-    "canonical_dish_name":"canh cải ngọt",
-    "selection_score":"[\"1\", \"1\", \"26\/27\", \"-1\/27\", \"-4\/27\", \"-4\/27\", \"-1\/27\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"67c107d2-3ea7-4537-9dee-33cd801535d9",
@@ -16694,14 +16502,6 @@
     "canonical_recipe_id":"6a5e3d3a-7017-4243-aaa5-d20178aed87b",
     "canonical_dish_name":"cháo sườn heo cà rốt",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"6a6b411f-6a45-40b0-b24f-16ba3bd225c3",
-    "original_recipe_name":"Mít kho chay",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-mon-mit-kho-tau-chay-thom-ngon-nut-mui-02495",
-    "canonical_recipe_id":"6a6b411f-6a45-40b0-b24f-16ba3bd225c3",
-    "canonical_dish_name":"mít kho chay",
-    "selection_score":"[\"1\", \"1\", \"9\/10\", \"-1\/10\", \"0\", \"0\", \"-1\/10\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"6a730068-f200-42c8-896e-76a1d3857bde",
@@ -18465,10 +18265,10 @@
   },
   {
     "original_recipe_id":"75ab0d53-97b8-4485-982c-3ac8f88c336f",
-    "original_recipe_name":"Canh cá chim ngót",
+    "original_recipe_name":"Canh cá chim nấu ngót",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-canh-ca-chim-nau-ngot-thom-ngon-don-gian-de-lam-07776",
     "canonical_recipe_id":"75ab0d53-97b8-4485-982c-3ac8f88c336f",
-    "canonical_dish_name":"canh cá chim ngót",
+    "canonical_dish_name":"canh cá chim nấu ngót",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -18550,14 +18350,6 @@
     "canonical_recipe_id":"760e5e2e-7b70-41a8-9b6b-91a72cdafe2d",
     "canonical_dish_name":"khổ qua xào trứng thịt bằm",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-3\/13\", \"-6\/13\", \"-1\/13\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"760fcc21-0e11-4df9-a201-1fa226057391",
-    "original_recipe_name":"Đuôi heo kho tiêu",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-duoi-heo-kho-tieu-va-kho-sa-ot-hap-dan-hao-com-ai-04919",
-    "canonical_recipe_id":"760fcc21-0e11-4df9-a201-1fa226057391",
-    "canonical_dish_name":"đuôi heo kho tiêu",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"-1\/17\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"76299766-9442-4e6e-a90a-1b06e4010f93",
@@ -18769,10 +18561,10 @@
   },
   {
     "original_recipe_id":"77e6a5be-023d-41b6-bba8-f887f02079ba",
-    "original_recipe_name":"Bún chả",
+    "original_recipe_name":"Bún chả chan",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-bun-cha-chan-thom-ngon-dam-da-tai-nha-chuan-vi-nhu-24433",
     "canonical_recipe_id":"77e6a5be-023d-41b6-bba8-f887f02079ba",
-    "canonical_dish_name":"bún chả",
+    "canonical_dish_name":"bún chả chan",
     "selection_score":"[\"1\", \"1\", \"11\/12\", \"-1\/12\", \"-1\/6\", \"-1\/6\", \"-1\/12\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -18854,14 +18646,6 @@
     "canonical_recipe_id":"7877b3b7-116c-477f-9ef4-6117b2afc7e7",
     "canonical_dish_name":"kimbap bánh chưng",
     "selection_score":"[\"1\", \"1\", \"2\/3\", \"-1\/3\", \"-2\/9\", \"-1\/3\", \"-1\/3\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"787ef7f7-3a92-4495-b3b3-8991fff33fda",
-    "original_recipe_name":"Gà kho sả ớt",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-mon-ga-kho-sa-ot-chuan-vi-mien-nam-thom-ngon-01340",
-    "canonical_recipe_id":"787ef7f7-3a92-4495-b3b3-8991fff33fda",
-    "canonical_dish_name":"gà kho sả ớt",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/14\", \"-1\/14\", \"-1\/14\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"78813e07-6bf6-4bf1-87b0-f74ef8d85022",
@@ -19129,10 +18913,10 @@
   },
   {
     "original_recipe_id":"7a42ab85-1391-40a3-bd08-34add25c86ff",
-    "original_recipe_name":"Nạc nọng BBQ",
+    "original_recipe_name":"Nạc nọng nướng BBQ",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/16584418",
     "canonical_recipe_id":"7a42ab85-1391-40a3-bd08-34add25c86ff",
-    "canonical_dish_name":"nạc nọng bbq",
+    "canonical_dish_name":"nạc nọng nướng bbq",
     "selection_score":"[\"1\", \"1\", \"1\/4\", \"-3\/4\", \"-3\/4\", \"-3\/4\", \"-3\/4\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -19377,10 +19161,10 @@
   },
   {
     "original_recipe_id":"7ba3389b-9bf9-46a0-8b96-177e3e279108",
-    "original_recipe_name":"Đậu cove xào tim gan",
+    "original_recipe_name":"Đậu cô ve xào tim gan",
     "original_source_url":"https:\/\/monngonmoingay.com\/dau-cove-xao-tim-gan\/",
     "canonical_recipe_id":"7ba3389b-9bf9-46a0-8b96-177e3e279108",
-    "canonical_dish_name":"đậu cove xào tim gan",
+    "canonical_dish_name":"đậu cô ve xào tim gan",
     "selection_score":"[\"1\", \"1\", \"17\/18\", \"-1\/18\", \"-1\/2\", \"-2\/3\", \"-1\/18\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -20785,7 +20569,7 @@
   },
   {
     "original_recipe_id":"86be1299-9ffc-4f4d-bcae-e5f30161b2cb",
-    "original_recipe_name":"Bạch tuộc sốt cajun",
+    "original_recipe_name":"Bạch tuộc sốt Cajun",
     "original_source_url":"https:\/\/monngonmoingay.com\/bach-tuoc-sot-cajun\/",
     "canonical_recipe_id":"86be1299-9ffc-4f4d-bcae-e5f30161b2cb",
     "canonical_dish_name":"bạch tuộc sốt cajun",
@@ -20806,14 +20590,6 @@
     "canonical_recipe_id":"86ef8fac-4163-4168-8a83-d4be1b013cf3",
     "canonical_dish_name":"cá thác lác trộn thịt heo chiên",
     "selection_score":"[\"1\", \"1\", \"5\/8\", \"-3\/8\", \"-5\/8\", \"-3\/4\", \"-1\/2\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"86f66ac8-faaa-4f77-bce0-d293cc72f7e2",
-    "original_recipe_name":"Canh xương hầm khoai tây",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-xuong-ham-khoai-tay-ca-rot-ngon-ngot-don-gian-12538",
-    "canonical_recipe_id":"86f66ac8-faaa-4f77-bce0-d293cc72f7e2",
-    "canonical_dish_name":"canh xương hầm khoai tây",
-    "selection_score":"[\"1\", \"1\", \"8\/9\", \"-1\/9\", \"-1\/9\", \"-1\/9\", \"-1\/9\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"87149030-460f-430c-8530-3a38fafe18f5",
@@ -24065,10 +23841,10 @@
   },
   {
     "original_recipe_id":"9b95c0dc-3c14-477c-b4c7-9f86971253ed",
-    "original_recipe_name":"Canh chua cá chẽm",
+    "original_recipe_name":"Canh cá chẽm nấu ngót",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-ca-chem-nau-ngot-thanh-nhiet-thom-ngon-dam-da-06841",
     "canonical_recipe_id":"9b95c0dc-3c14-477c-b4c7-9f86971253ed",
-    "canonical_dish_name":"canh chua cá chẽm",
+    "canonical_dish_name":"canh cá chẽm nấu ngót",
     "selection_score":"[\"1\", \"1\", \"9\/10\", \"-1\/10\", \"0\", \"0\", \"-1\/10\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -24392,14 +24168,6 @@
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"9de375ba-a910-41c0-b890-cca126f454ef",
-    "original_recipe_name":"Canh mồng tơi nấu ngao",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-mong-toi-nau-ngao-ngheu-thanh-mat-ngon-mieng-de-06202",
-    "canonical_recipe_id":"9de375ba-a910-41c0-b890-cca126f454ef",
-    "canonical_dish_name":"canh mồng tơi nấu ngao",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"9e1afeba-3735-43ad-9f2a-746dd69876fb",
     "original_recipe_name":"Canh nghêu kim chi tía tô",
     "original_source_url":"https:\/\/monngonmoingay.com\/canh-ngheu-kim-chi-tia-to\/",
@@ -24713,18 +24481,18 @@
   },
   {
     "original_recipe_id":"a0f614ef-08df-4224-994c-b82003b5d017",
-    "original_recipe_name":"Cá kho",
+    "original_recipe_name":"Cá trắm kho riềng nồi nấu chậm",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-kho-ca-bang-noi-nau-cham-don-gian-ca-mem-ruc-khong-nat-23852",
     "canonical_recipe_id":"a0f614ef-08df-4224-994c-b82003b5d017",
-    "canonical_dish_name":"cá kho",
+    "canonical_dish_name":"cá trắm kho riềng nồi nấu chậm",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/4\", \"-1\/4\", \"-1\/4\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"a105f81a-8411-47d0-9eb7-c9f387b6a05a",
-    "original_recipe_name":"Khoai tây, bí ngô xào thịt bò",
+    "original_recipe_name":"Khoai tây bí ngô xào thịt bò",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24114150",
     "canonical_recipe_id":"a105f81a-8411-47d0-9eb7-c9f387b6a05a",
-    "canonical_dish_name":"khoai tây, bí ngô xào thịt bò",
+    "canonical_dish_name":"khoai tây bí ngô xào thịt bò",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/3\", \"-1\/2\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -26057,10 +25825,10 @@
   },
   {
     "original_recipe_id":"aa2c29d5-53d5-409c-9a19-3d7698c3308c",
-    "original_recipe_name":"Salad sốt mè rang bò trứng",
+    "original_recipe_name":"Salad bò trứng sốt mè rang",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24601046",
     "canonical_recipe_id":"aa2c29d5-53d5-409c-9a19-3d7698c3308c",
-    "canonical_dish_name":"salad sốt mè rang bò trứng",
+    "canonical_dish_name":"salad bò trứng sốt mè rang",
     "selection_score":"[\"1\", \"1\", \"5\/8\", \"-3\/8\", \"0\", \"0\", \"-3\/8\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -27113,10 +26881,10 @@
   },
   {
     "original_recipe_id":"b1b7ddfb-1f90-47e1-b70a-e69aef592a58",
-    "original_recipe_name":"Canh cá diêu hồng ngót",
+    "original_recipe_name":"Canh cá diêu hồng nấu ngót",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-ca-dieu-hong-nau-ngot-thanh-ngot-thom-ngon-don-10146",
     "canonical_recipe_id":"b1b7ddfb-1f90-47e1-b70a-e69aef592a58",
-    "canonical_dish_name":"canh cá diêu hồng ngót",
+    "canonical_dish_name":"canh cá diêu hồng nấu ngót",
     "selection_score":"[\"1\", \"1\", \"16\/19\", \"-3\/19\", \"-3\/19\", \"-4\/19\", \"-3\/19\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -28289,10 +28057,10 @@
   },
   {
     "original_recipe_id":"b9d7ad2a-4b7a-4a76-b1f3-9f69a1e549f5",
-    "original_recipe_name":"Cốt lếch rim chao",
+    "original_recipe_name":"Cốt lết rim chao",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/16620577",
     "canonical_recipe_id":"b9d7ad2a-4b7a-4a76-b1f3-9f69a1e549f5",
-    "canonical_dish_name":"cốt lếch rim chao",
+    "canonical_dish_name":"cốt lết rim chao",
     "selection_score":"[\"1\", \"1\", \"7\/10\", \"-3\/10\", \"0\", \"0\", \"-3\/10\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -28553,7 +28321,7 @@
   },
   {
     "original_recipe_id":"bb802556-aa32-4708-b14a-94c7f571f2e8",
-    "original_recipe_name":"Đuôi heo hầm thuốc Bắc",
+    "original_recipe_name":"Đuôi heo hầm thuốc bắc",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-duoi-heo-ham-thuoc-bac-thom-ngon-dam-da-bo-duong-tai-08243",
     "canonical_recipe_id":"bb802556-aa32-4708-b14a-94c7f571f2e8",
     "canonical_dish_name":"đuôi heo hầm thuốc bắc",
@@ -28897,10 +28665,10 @@
   },
   {
     "original_recipe_id":"bddd37c0-05be-4de1-b57b-67c47b3e7af6",
-    "original_recipe_name":"Trứng đúc thịt hấp nồi cơm",
+    "original_recipe_name":"Trứng đúc thịt hấp",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/25650158",
     "canonical_recipe_id":"bddd37c0-05be-4de1-b57b-67c47b3e7af6",
-    "canonical_dish_name":"trứng đúc thịt hấp nồi cơm",
+    "canonical_dish_name":"trứng đúc thịt hấp",
     "selection_score":"[\"1\", \"1\", \"5\/6\", \"-1\/6\", \"-1\/6\", \"-1\/3\", \"-1\/6\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -29504,14 +29272,6 @@
     "selection_score":"[\"1\", \"1\", \"24\/31\", \"-7\/31\", \"0\", \"-2\/31\", \"-8\/31\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"c222a5a2-0e2b-4d60-a5f0-35484327c209",
-    "original_recipe_name":"Lưỡi heo và bao tử nấu lagu",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-luoi-heo-va-bao-tu-nau-lagu-thom-beo-de-lam-tai-05464",
-    "canonical_recipe_id":"c222a5a2-0e2b-4d60-a5f0-35484327c209",
-    "canonical_dish_name":"lưỡi heo và bao tử nấu lagu",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/24\", \"-1\/12\", \"-1\/24\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"c2254d6b-eb59-4cfb-b0c9-f40772ab1c12",
     "original_recipe_name":"Thịt vai heo luộc cạn",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24331763",
@@ -29808,14 +29568,6 @@
     "selection_score":"[\"1\", \"1\", \"17\/19\", \"-2\/19\", \"-5\/19\", \"-12\/19\", \"-4\/19\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"c3c25380-1c34-43c2-b519-d45eac044cd8",
-    "original_recipe_name":"Canh ngao nấu bầu",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-ngao-ngheu-nau-bau-bat-com-ngon-mieng-07442",
-    "canonical_recipe_id":"c3c25380-1c34-43c2-b519-d45eac044cd8",
-    "canonical_dish_name":"canh ngao nấu bầu",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/12\", \"-1\/6\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"c3c7be3a-919b-4256-85ec-aa663d8a67a7",
     "original_recipe_name":"Tôm rim thịt thơm",
     "original_source_url":"https:\/\/monngonmoingay.com\/tom-rim-thit-thom\/",
@@ -29985,7 +29737,7 @@
   },
   {
     "original_recipe_id":"c4f6a315-de02-4af9-a085-d058664b4c17",
-    "original_recipe_name":"Thịt Bò Xào Bầu",
+    "original_recipe_name":"Thịt bò xào bầu",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24678464",
     "canonical_recipe_id":"c4f6a315-de02-4af9-a085-d058664b4c17",
     "canonical_dish_name":"thịt bò xào bầu",
@@ -30256,14 +30008,6 @@
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/3\", \"-7\/15\", \"-1\/15\", \"0\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"c6497b1e-d282-4940-8850-0e2056fddee7",
-    "original_recipe_name":"Cá cam canh chua",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-ca-cam-nau-canh-chua-thanh-nhiet-de-lam-cho-bua-07639",
-    "canonical_recipe_id":"c6497b1e-d282-4940-8850-0e2056fddee7",
-    "canonical_dish_name":"cá cam canh chua",
-    "selection_score":"[\"1\", \"1\", \"15\/16\", \"-1\/16\", \"-1\/8\", \"-5\/16\", \"-1\/16\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"c64f9a50-74a9-44dc-a03a-e509db0c4953",
     "original_recipe_name":"Thịt lợn luộc kiểu Hàn",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24413047",
@@ -30289,7 +30033,7 @@
   },
   {
     "original_recipe_id":"c6765c62-e76b-429f-85d4-4a8b1c19a984",
-    "original_recipe_name":"Canh Đu Đủ Thịt Heo Xay",
+    "original_recipe_name":"Canh đu đủ thịt heo xay",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/17147010",
     "canonical_recipe_id":"c6765c62-e76b-429f-85d4-4a8b1c19a984",
     "canonical_dish_name":"canh đu đủ thịt heo xay",
@@ -31640,14 +31384,6 @@
     "selection_score":"[\"1\", \"1\", \"5\/6\", \"-1\/6\", \"0\", \"0\", \"-1\/6\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"cf25d8e7-ad2a-4fa4-b4b1-1220844a4fbe",
-    "original_recipe_name":"Canh chua cá chép",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-nau-canh-chua-ca-chep-nau-doc-mung-va-nau-khe-thom-05725",
-    "canonical_recipe_id":"cf25d8e7-ad2a-4fa4-b4b1-1220844a4fbe",
-    "canonical_dish_name":"canh chua cá chép",
-    "selection_score":"[\"1\", \"1\", \"19\/20\", \"-1\/20\", \"-3\/20\", \"-1\/5\", \"-1\/20\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"cf3429d4-21fc-4a21-aa0a-1b62bc1b9e81",
     "original_recipe_name":"Cá nục bông kho thịt ba chỉ",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/17089035",
@@ -31790,14 +31526,6 @@
     "canonical_recipe_id":"d01030f9-d3b5-4af7-9e88-5f8c313f45b2",
     "canonical_dish_name":"hủ tiếu mì xào",
     "selection_score":"[\"1\", \"1\", \"13\/15\", \"-2\/15\", \"-2\/5\", \"-3\/5\", \"-1\/5\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"d022ee4c-d599-4977-aa11-72f722fe413c",
-    "original_recipe_name":"Hoa chuối nấu móng giò",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-hoa-chuoi-nau-mong-gio-thom-ngon-don-gian-tai-nha-08768",
-    "canonical_recipe_id":"d022ee4c-d599-4977-aa11-72f722fe413c",
-    "canonical_dish_name":"hoa chuối nấu móng giò",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"d0421b2b-29bf-4d70-84b9-cb6e272580fb",
@@ -32041,10 +31769,10 @@
   },
   {
     "original_recipe_id":"d1df0bd4-9bd4-4585-97ad-5142a4619cad",
-    "original_recipe_name":"Canh đuôi heo hầm hạt sen",
+    "original_recipe_name":"Đuôi heo hầm bia",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-duoi-heo-ham-du-du-va-ham-bia-thom-ngon-02352",
     "canonical_recipe_id":"d1df0bd4-9bd4-4585-97ad-5142a4619cad",
-    "canonical_dish_name":"canh đuôi heo hầm hạt sen",
+    "canonical_dish_name":"đuôi heo hầm bia",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -32297,10 +32025,10 @@
   },
   {
     "original_recipe_id":"d375cd0f-81cf-4ca1-afb2-3e3e8882d691",
-    "original_recipe_name":"Mì xào thịt heo, xúc xích",
+    "original_recipe_name":"Mì xào thịt heo xúc xích",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/15529396",
     "canonical_recipe_id":"d375cd0f-81cf-4ca1-afb2-3e3e8882d691",
-    "canonical_dish_name":"mì xào thịt heo, xúc xích",
+    "canonical_dish_name":"mì xào thịt heo xúc xích",
     "selection_score":"[\"1\", \"1\", \"11\/12\", \"-1\/12\", \"-1\/2\", \"-1\", \"-1\/12\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -32585,10 +32313,10 @@
   },
   {
     "original_recipe_id":"d581415d-769a-4e3b-9085-587ecea2f1bd",
-    "original_recipe_name":"Canh gà ác",
+    "original_recipe_name":"Canh gà ác chanh muối",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-ga-ac-chanh-muoi-la-mieng-ngon-quen-loi-ve-07710",
     "canonical_recipe_id":"d581415d-769a-4e3b-9085-587ecea2f1bd",
-    "canonical_dish_name":"canh gà ác",
+    "canonical_dish_name":"canh gà ác chanh muối",
     "selection_score":"[\"1\", \"1\", \"7\/8\", \"-1\/8\", \"-1\/8\", \"-1\/8\", \"-1\/8\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -32710,14 +32438,6 @@
     "canonical_recipe_id":"d637970a-5d23-4f13-854d-3793e318a6b6",
     "canonical_dish_name":"lẩu khổ qua hải sản",
     "selection_score":"[\"1\", \"1\", \"13\/15\", \"-2\/15\", \"-4\/15\", \"-8\/15\", \"-1\/5\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"d63abcd1-f19d-4679-9739-ac44bae0e78a",
-    "original_recipe_name":"Sake kho tiêu xanh chay",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-sake-kho-tieu-xanh-chay-thom-ngon-dam-da-02112",
-    "canonical_recipe_id":"d63abcd1-f19d-4679-9739-ac44bae0e78a",
-    "canonical_dish_name":"sake kho tiêu xanh chay",
-    "selection_score":"[\"1\", \"1\", \"2\/5\", \"-3\/5\", \"-1\/5\", \"-1\/5\", \"-3\/5\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"d64422ff-54ec-42b6-aaa7-d1a24c6a4bf2",
@@ -32945,10 +32665,10 @@
   },
   {
     "original_recipe_id":"d7da365d-9af6-4918-b1fc-f29f6b4da721",
-    "original_recipe_name":"Canh cải thảo cuộn thịt gà nấm",
+    "original_recipe_name":"Canh cải thảo cuộn thịt gà nấm hương",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-cai-thao-cuon-thit-ga-nam-huong-tuyet-ngon-06736",
     "canonical_recipe_id":"d7da365d-9af6-4918-b1fc-f29f6b4da721",
-    "canonical_dish_name":"canh cải thảo cuộn thịt gà nấm",
+    "canonical_dish_name":"canh cải thảo cuộn thịt gà nấm hương",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -33217,10 +32937,10 @@
   },
   {
     "original_recipe_id":"d9f360db-8521-4ac8-b2ef-02ccee878250",
-    "original_recipe_name":"Bò Xào Đậu Hoà Lan",
+    "original_recipe_name":"Bò xào đậu Hà Lan",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24234746",
     "canonical_recipe_id":"d9f360db-8521-4ac8-b2ef-02ccee878250",
-    "canonical_dish_name":"bò xào đậu hoà lan",
+    "canonical_dish_name":"bò xào đậu hà lan",
     "selection_score":"[\"1\", \"1\", \"1\/2\", \"-1\/2\", \"0\", \"0\", \"-1\/2\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -33329,10 +33049,10 @@
   },
   {
     "original_recipe_id":"da7cc78a-b88e-44bd-9370-b18cc6f7f0e0",
-    "original_recipe_name":"Canh cà xanh với thịt ba chỉ, đậu hũ",
+    "original_recipe_name":"Canh cà xanh thịt ba chỉ đậu hũ",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/huong-dan-cach-nau-canh-ca-xanh-voi-thit-ba-chi-dau-hu-cuc-ky-24460",
     "canonical_recipe_id":"da7cc78a-b88e-44bd-9370-b18cc6f7f0e0",
-    "canonical_dish_name":"canh cà xanh với thịt ba chỉ, đậu hũ",
+    "canonical_dish_name":"canh cà xanh thịt ba chỉ đậu hũ",
     "selection_score":"[\"1\", \"1\", \"6\/7\", \"-1\/7\", \"-1\/7\", \"-3\/7\", \"-1\/7\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -33513,7 +33233,7 @@
   },
   {
     "original_recipe_id":"db873a71-e86d-4f65-8865-bce651c63f4f",
-    "original_recipe_name":"Bánh Mì Chảo",
+    "original_recipe_name":"Bánh mì chảo",
     "original_source_url":"https:\/\/monngonmoingay.com\/banh-mi-chao\/",
     "canonical_recipe_id":"db873a71-e86d-4f65-8865-bce651c63f4f",
     "canonical_dish_name":"bánh mì chảo",
@@ -33673,7 +33393,7 @@
   },
   {
     "original_recipe_id":"dcae09cd-cec1-43a1-bf63-4065c36c38f2",
-    "original_recipe_name":"Đậu Cô Ve Xào Thịt Heo",
+    "original_recipe_name":"Đậu cô ve xào thịt heo",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/17126848",
     "canonical_recipe_id":"dcae09cd-cec1-43a1-bf63-4065c36c38f2",
     "canonical_dish_name":"đậu cô ve xào thịt heo",
@@ -33793,10 +33513,10 @@
   },
   {
     "original_recipe_id":"dd8e367d-b832-4f10-8bb0-59ebce5b6063",
-    "original_recipe_name":"Ốc hương xào củ dừa",
+    "original_recipe_name":"Ốc hương xào củ hũ dừa",
     "original_source_url":"https:\/\/monngonmoingay.com\/oc-huong-xao-cu-hu-dua\/",
     "canonical_recipe_id":"dd8e367d-b832-4f10-8bb0-59ebce5b6063",
-    "canonical_dish_name":"ốc hương xào củ dừa",
+    "canonical_dish_name":"ốc hương xào củ hũ dừa",
     "selection_score":"[\"1\", \"1\", \"13\/16\", \"-3\/16\", \"-5\/16\", \"-1\/2\", \"-5\/16\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -33952,14 +33672,6 @@
     "selection_score":"[\"1\", \"1\", \"2\/3\", \"-1\/3\", \"0\", \"0\", \"-1\/3\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"de98e323-7756-4883-a1f5-085478e2192e",
-    "original_recipe_name":"Lòng bò khìa ngũ vị và nước dừa",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-long-bo-khia-ngu-vi-va-nuoc-dua-thom-ngon-don-gian-06975",
-    "canonical_recipe_id":"de98e323-7756-4883-a1f5-085478e2192e",
-    "canonical_dish_name":"lòng bò khìa ngũ vị và nước dừa",
-    "selection_score":"[\"1\", \"1\", \"19\/23\", \"-4\/23\", \"0\", \"0\", \"-6\/23\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"dea2161a-4a58-418a-9125-fe3e3996b8a4",
     "original_recipe_name":"Đậu Hà Lan xào ba rọi bò Mỹ",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/17134359",
@@ -34062,14 +33774,6 @@
     "canonical_recipe_id":"df14038c-9725-48a3-bced-4f21f1980cdd",
     "canonical_dish_name":"cá tai tượng nấu canh chua",
     "selection_score":"[\"1\", \"1\", \"11\/12\", \"-1\/12\", \"0\", \"0\", \"-1\/12\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"df1556e6-7810-44c7-9c87-618fce5eca91",
-    "original_recipe_name":"Cá đục kho tiêu",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-ca-duc-kho-tieu-va-kho-to-thom-ngon-de-lam-dam-da-08507",
-    "canonical_recipe_id":"df1556e6-7810-44c7-9c87-618fce5eca91",
-    "canonical_dish_name":"cá đục kho tiêu",
-    "selection_score":"[\"1\", \"1\", \"7\/8\", \"-1\/8\", \"0\", \"0\", \"-1\/8\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"df1dc20b-2831-424b-aaa4-66ff0162d5b5",
@@ -34190,22 +33894,6 @@
     "canonical_recipe_id":"dfb5d6af-b625-4afd-ba92-b502d2f983d4",
     "canonical_dish_name":"canh nấm khoai từ",
     "selection_score":"[\"1\", \"1\", \"3\/7\", \"-4\/7\", \"-2\/7\", \"-4\/7\", \"-4\/7\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"dfbbc663-9b0c-4caf-81e1-5fef82c233ab",
-    "original_recipe_name":"Cá bống nấu canh chua",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-ca-bong-nau-canh-chua-khong-tanh-bang-noi-thuy-22350",
-    "canonical_recipe_id":"dfbbc663-9b0c-4caf-81e1-5fef82c233ab",
-    "canonical_dish_name":"cá bống nấu canh chua",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-3\/11\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"dfd64a7a-3439-4781-9aa0-ba07c7aa4227",
-    "original_recipe_name":"Canh cải thìa nấu tôm",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-cai-thia-nau-tom-tuoi-ngot-mat-don-gian-cho-bua-11478",
-    "canonical_recipe_id":"dfd64a7a-3439-4781-9aa0-ba07c7aa4227",
-    "canonical_dish_name":"canh cải thìa nấu tôm",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"dfe1f66f-efd0-41ab-a1a5-fb044fa99bf0",
@@ -34704,14 +34392,6 @@
     "selection_score":"[\"1\", \"1\", \"4\/9\", \"-5\/9\", \"-1\/9\", \"-1\/3\", \"-2\/3\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"e30c7a37-4805-41d1-b69f-65a25fa7ecaa",
-    "original_recipe_name":"Súp rong biển đậu hũ",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-canh-dau-phu-rong-bien-thanh-mat-cang-an-cang-00350",
-    "canonical_recipe_id":"e30c7a37-4805-41d1-b69f-65a25fa7ecaa",
-    "canonical_dish_name":"súp rong biển đậu hũ",
-    "selection_score":"[\"1\", \"1\", \"9\/11\", \"-2\/11\", \"-1\/11\", \"-1\/11\", \"-2\/11\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"e31e6826-941e-4408-a1c0-85d0ad2cf598",
     "original_recipe_name":"Dưa cải muối xào ba chỉ",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/11325067",
@@ -34745,10 +34425,10 @@
   },
   {
     "original_recipe_id":"e3273e34-d554-49e8-98f9-fdbf2f2c6fa9",
-    "original_recipe_name":"Canh chua cá mẻ dọc mùng",
+    "original_recipe_name":"Canh chua cá nấu mẻ dọc mùng",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-doc-mung-nau-canh-chua-ca-me-thom-ngon-dam-da-cay-23584",
     "canonical_recipe_id":"e3273e34-d554-49e8-98f9-fdbf2f2c6fa9",
-    "canonical_dish_name":"canh chua cá mẻ dọc mùng",
+    "canonical_dish_name":"canh chua cá nấu mẻ dọc mùng",
     "selection_score":"[\"1\", \"1\", \"9\/10\", \"-1\/10\", \"0\", \"-1\/10\", \"-1\/10\", \"-4\", \"1\", \"1\"]"
   },
   {
@@ -35174,14 +34854,6 @@
     "canonical_recipe_id":"e5daf63f-ddf1-4bbd-9b72-527b94895f77",
     "canonical_dish_name":"tép khô rim mặn ngọt",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/5\", \"-1\/5\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"e5df1aa1-a6f7-4a7d-a1da-9ad761030ed4",
-    "original_recipe_name":"Canh kim chi đậu phụ nấm kim châm",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-kim-dau-phu-chay-thom-ngon-don-gian-00186",
-    "canonical_recipe_id":"e5df1aa1-a6f7-4a7d-a1da-9ad761030ed4",
-    "canonical_dish_name":"canh kim chi đậu phụ nấm kim châm",
-    "selection_score":"[\"1\", \"1\", \"11\/12\", \"-1\/12\", \"0\", \"0\", \"-1\/12\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"e5fc1ccb-3f35-4b9c-a833-0002c862f7b3",
@@ -36440,14 +36112,6 @@
     "selection_score":"[\"1\", \"1\", \"3\/4\", \"-1\/4\", \"-1\/8\", \"-1\/4\", \"-1\/4\", \"-4\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"ee3374d2-758b-4815-99ba-26ed6603a1fe",
-    "original_recipe_name":"Bồ câu hầm ngải cứu",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-ham-chim-bo-cau-voi-ngai-cuu-mem-ngon-dam-da-don-13310",
-    "canonical_recipe_id":"ee3374d2-758b-4815-99ba-26ed6603a1fe",
-    "canonical_dish_name":"bồ câu hầm ngải cứu",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/16\", \"-3\/16\", \"-1\/16\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"ee57dafd-bf2b-455f-aa3a-3029c1e56b93",
     "original_recipe_name":"Thăn bò nướng",
     "original_source_url":"https:\/\/monngonmoingay.com\/than-bo-nuong\/",
@@ -36510,14 +36174,6 @@
     "canonical_recipe_id":"ee9cdbd2-ca6a-48ba-b143-600219c2cfdb",
     "canonical_dish_name":"bánh gạo xào cay",
     "selection_score":"[\"1\", \"1\", \"5\/6\", \"-1\/6\", \"-1\/3\", \"-1\/2\", \"-1\/4\", \"-4\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"eea91eab-650e-418c-85f4-bd4932a625f5",
-    "original_recipe_name":"Canh bí đỏ thịt bằm",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-bi-do-thit-bam-ngon-ngot-hap-dan-cho-bua-com-10185",
-    "canonical_recipe_id":"eea91eab-650e-418c-85f4-bd4932a625f5",
-    "canonical_dish_name":"canh bí đỏ thịt bằm",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"eeb962c4-5e0d-4f91-8e69-cbb42c2d4bae",
@@ -36721,10 +36377,10 @@
   },
   {
     "original_recipe_id":"eff5d103-b464-4d81-ab36-ca958a813adf",
-    "original_recipe_name":"Canh bò hầm đu đủ",
+    "original_recipe_name":"Đuôi bò hầm đu đủ",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-duoi-bo-ham-du-du-thom-ngon-bo-duong-chieu-dai-gia-09397",
     "canonical_recipe_id":"eff5d103-b464-4d81-ab36-ca958a813adf",
-    "canonical_dish_name":"canh bò hầm đu đủ",
+    "canonical_dish_name":"đuôi bò hầm đu đủ",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-1\/14\", \"-1\/7\", \"-1\/14\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -36758,14 +36414,6 @@
     "canonical_recipe_id":"f0207d8f-6423-41c3-9af1-e6884effa81c",
     "canonical_dish_name":"thịt ba chỉ xào bạch tuộc",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"f027fe55-22b3-411c-a3cb-4ffebde9b59b",
-    "original_recipe_name":"Canh dưa chua tôm và cá",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-canh-dua-chua-tom-va-ca-thom-ngon-de-lam-tai-nha-04591",
-    "canonical_recipe_id":"f027fe55-22b3-411c-a3cb-4ffebde9b59b",
-    "canonical_dish_name":"canh dưa chua tôm và cá",
-    "selection_score":"[\"1\", \"1\", \"17\/19\", \"-2\/19\", \"-1\/19\", \"-1\/19\", \"-2\/19\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"f02cba31-75a4-47f4-b344-17de0da5e41e",
@@ -37593,10 +37241,10 @@
   },
   {
     "original_recipe_id":"f5c1a554-ce8f-481c-a0db-d86996a266c8",
-    "original_recipe_name":"Canh đậu que ngọt",
+    "original_recipe_name":"Canh đậu que",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-canh-dau-que-ngot-thom-thanh-mat-don-gian-ngay-tai-15647",
     "canonical_recipe_id":"f5c1a554-ce8f-481c-a0db-d86996a266c8",
-    "canonical_dish_name":"canh đậu que ngọt",
+    "canonical_dish_name":"canh đậu que",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
@@ -38248,14 +37896,6 @@
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"0\", \"0\", \"0\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"fa28516d-183c-44a4-9f33-a407b94b18f7",
-    "original_recipe_name":"Cá diêu hồng kho cà chua",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-lam-ca-dieu-hong-kho-ca-chua-ngon-mieng-dam-da-de-lam-07698",
-    "canonical_recipe_id":"fa28516d-183c-44a4-9f33-a407b94b18f7",
-    "canonical_dish_name":"cá diêu hồng kho cà chua",
-    "selection_score":"[\"1\", \"1\", \"18\/19\", \"-1\/19\", \"0\", \"-1\/19\", \"-1\/19\", \"-4\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"fa292824-b0a2-442b-bbd3-de87b512bf5b",
     "original_recipe_name":"Rau đậu hòa lan xào thịt bò",
     "original_source_url":"https:\/\/cookpad.com\/vn\/cong-thuc\/24683954",
@@ -38566,14 +38206,6 @@
     "canonical_recipe_id":"fc25adb2-19c7-4eca-af7c-0141df4ca8c4",
     "canonical_dish_name":"bò xào rau muống",
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-1\/4\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
-    "original_recipe_id":"fc273375-f726-4167-bc1d-fc2999b5fd79",
-    "original_recipe_name":"Súp rong biển",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-sup-rong-bien-thom-ngon-thanh-dam-02692",
-    "canonical_recipe_id":"fc273375-f726-4167-bc1d-fc2999b5fd79",
-    "canonical_dish_name":"súp rong biển",
-    "selection_score":"[\"1\", \"1\", \"15\/17\", \"-2\/17\", \"-1\/17\", \"-1\/17\", \"-3\/17\", \"-4\", \"1\", \"1\"]"
   },
   {
     "original_recipe_id":"fc2d3a2d-5ca7-49a5-a4d7-2d6656e8263b",
@@ -38936,14 +38568,6 @@
     "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"-3\/17\", \"-6\/17\", \"-1\/17\", \"0\", \"1\", \"1\"]"
   },
   {
-    "original_recipe_id":"fe54f25e-3241-4ff3-a40a-ae4e13dea850",
-    "original_recipe_name":"Cá diêu hồng kho tiêu",
-    "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/2-cach-lam-ca-dieu-hong-kho-tieu-va-om-dua-don-gian-dam-da-04121",
-    "canonical_recipe_id":"fe54f25e-3241-4ff3-a40a-ae4e13dea850",
-    "canonical_dish_name":"cá diêu hồng kho tiêu",
-    "selection_score":"[\"1\", \"1\", \"1\", \"0\", \"0\", \"-1\/15\", \"0\", \"0\", \"1\", \"1\"]"
-  },
-  {
     "original_recipe_id":"fe65f611-10f4-432a-81e1-442f3cf903b9",
     "original_recipe_name":"Súp cua gà xé",
     "original_source_url":"https:\/\/www.dienmayxanh.com\/vao-bep\/cach-nau-sup-cua-ga-xe-don-gian-nong-hoi-thom-ngon-va-cuc-ki-09998",
@@ -39158,5 +38782,61 @@
     "canonical_recipe_id":"ffe04f67-5774-4342-ba25-08853e265f19",
     "canonical_dish_name":"bánh canh xương bò viên",
     "selection_score":"[\"1\", \"1\", \"9\/10\", \"-1\/10\", \"-1\/5\", \"-2\/5\", \"-1\/5\", \"-4\", \"1\", \"1\"]"
+  },
+  {
+    "original_recipe_id":"4d7a2558-9c7b-5750-844c-f0ca902223a0",
+    "original_recipe_name":"Rau muống xào tỏi",
+    "original_source_url":"https:\/\/beptruong.edu.vn\/cach-lam-rau-muong-xao-toi-ngon",
+    "canonical_recipe_id":"4d7a2558-9c7b-5750-844c-f0ca902223a0",
+    "canonical_dish_name":"rau muống xào tỏi",
+    "selection_score":"[]"
+  },
+  {
+    "original_recipe_id":"2316d42e-fbe6-5443-98e4-81cf0c34a145",
+    "original_recipe_name":"Bắp cải luộc chấm nước mắm trứng",
+    "original_source_url":"https:\/\/ngoisao.vnexpress.net\/bap-cai-luoc-cham-nuoc-mam-trung-2564190.html",
+    "canonical_recipe_id":"2316d42e-fbe6-5443-98e4-81cf0c34a145",
+    "canonical_dish_name":"bắp cải luộc chấm nước mắm trứng",
+    "selection_score":"[]"
+  },
+  {
+    "original_recipe_id":"05dae86b-448a-514e-a4dc-2a81394b5dbd",
+    "original_recipe_name":"Đậu hũ chiên sả ớt",
+    "original_source_url":"https:\/\/cooponline.vn\/tin-tuc\/cong-thuc-nau-an\/dau-hu-chien-sa-ot-mon-chay-gion-thom-cay-nong-hap-dan\/",
+    "canonical_recipe_id":"05dae86b-448a-514e-a4dc-2a81394b5dbd",
+    "canonical_dish_name":"đậu hũ chiên sả ớt",
+    "selection_score":"[]"
+  },
+  {
+    "original_recipe_id":"c5270778-4e98-584b-8b9f-4b8eb39b9afd",
+    "original_recipe_name":"Xôi xéo Hà Nội",
+    "original_source_url":"https:\/\/vnexpress.net\/doi-song-cooking-xoi-xeo-ha-noi-4800338.html",
+    "canonical_recipe_id":"c5270778-4e98-584b-8b9f-4b8eb39b9afd",
+    "canonical_dish_name":"xôi xéo hà nội",
+    "selection_score":"[]"
+  },
+  {
+    "original_recipe_id":"de9e2f72-4152-56c5-ad24-b2d11d232d67",
+    "original_recipe_name":"Cháo sườn sụn",
+    "original_source_url":"https:\/\/vnexpress.net\/chao-suon-sun-gion-san-sat-4325217.html",
+    "canonical_recipe_id":"de9e2f72-4152-56c5-ad24-b2d11d232d67",
+    "canonical_dish_name":"cháo sườn sụn",
+    "selection_score":"[]"
+  },
+  {
+    "original_recipe_id":"e4792ee5-a1be-52be-99ff-0264e7e19dc5",
+    "original_recipe_name":"Trứng rán hành lá",
+    "original_source_url":"https:\/\/phunutoday.vn\/ran-trung-ngoai-hanh-la-dau-an-phai-them-thu-nay-de-trung-mem-xop-vang-uom-d433833.html",
+    "canonical_recipe_id":"e4792ee5-a1be-52be-99ff-0264e7e19dc5",
+    "canonical_dish_name":"trứng rán hành lá",
+    "selection_score":"[]"
+  },
+  {
+    "original_recipe_id":"4b767868-aae2-5b64-b459-fce529d7e0c9",
+    "original_recipe_name":"Acai bowl (tô açaí chuối)",
+    "original_source_url":"https:\/\/www.bakerita.com\/acai-bowl\/",
+    "canonical_recipe_id":"4b767868-aae2-5b64-b459-fce529d7e0c9",
+    "canonical_dish_name":"acai bowl (tô açaí chuối)",
+    "selection_score":"[]"
   }
 ]

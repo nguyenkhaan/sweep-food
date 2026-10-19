@@ -1,0 +1,184 @@
+[
+  {
+    "recipe_id": "9a491daa-39d1-4826-a374-57f842f30500",
+    "recipe_name": "Bánh bạch tuộc Takoyaki",
+    "note": "Lưu ý bánh này không phải là bánh chính, sẽ được dùng cho bữa phụ, ăn vui vui",
+    "revision": 1,
+    "updated_at": "2026-10-15T02:49:06+00:00"
+  },
+  {
+    "recipe_id": "ad101eed-5fc7-483c-94b0-ad010212a716",
+    "recipe_name": "Bánh chuối chiên",
+    "note": "Lưu ý bánh này không phải là bánh chính, sẽ được dùng cho bữa phụ, ăn vui vui",
+    "revision": 2,
+    "updated_at": "2026-10-15T02:49:15+00:00"
+  },
+  {
+    "recipe_id": "315f6b5f-9354-4a1a-9a63-0f9795e7af89",
+    "recipe_name": "Bánh gà chiên xốt mè",
+    "note": "Lưu ý bánh này không phải là bánh chính, sẽ được dùng cho bữa phụ, ăn vui vui",
+    "revision": 3,
+    "updated_at": "2026-10-15T02:49:20+00:00"
+  },
+  {
+    "recipe_id": "859b4dc7-d944-4099-818f-7ab2e93bc5ab",
+    "recipe_name": "Bắp bò nhúng mắm ruốc",
+    "note": "Món này là món chính, thường là 1 bữa lớn, nghĩa là món này sẽ là món độc lập (bữa ăn chỉ cần 1 món)",
+    "revision": 4,
+    "updated_at": "2026-10-15T02:53:35+00:00"
+  },
+  {
+    "recipe_id": "da0b37b0-31e7-4647-9cc3-61530dee8dbb",
+    "recipe_name": "Bắp bò nhúng mẻ",
+    "note": "Món này là món chính, thường là 1 bữa lớn, nghĩa là món này sẽ là món độc lập (bữa ăn chỉ cần 1 món)",
+    "revision": 5,
+    "updated_at": "2026-10-15T02:54:20+00:00"
+  },
+  {
+    "recipe_id": "9a9c7e18-7469-4f5f-9b8a-2b58bfde927b",
+    "recipe_name": "Bí đao kho nước tương",
+    "note": "món chay",
+    "revision": 6,
+    "updated_at": "2026-10-15T02:59:53+00:00"
+  },
+  {
+    "recipe_id": "12111b2f-6c8e-4f12-9e6e-783d1b739733",
+    "recipe_name": "Bí đao luộc",
+    "note": "món chay",
+    "revision": 7,
+    "updated_at": "2026-10-15T03:01:02+00:00"
+  },
+  {
+    "recipe_id": "0c68c2f8-f323-45e5-9a85-6c072ab61ced",
+    "recipe_name": "Bông bí chiên giòn chay",
+    "note": "món chay",
+    "revision": 8,
+    "updated_at": "2026-10-15T03:20:59+00:00"
+  },
+  {
+    "recipe_id": "eaf0ac00-bd05-4da3-a071-c6b4841c801c",
+    "recipe_name": "Bông cải xào nước tương",
+    "note": "món chay",
+    "revision": 9,
+    "updated_at": "2026-10-15T03:24:03+00:00"
+  },
+  {
+    "recipe_id": "0b271bc5-80e4-4a80-8b0b-c0d590dddf0d",
+    "recipe_name": "Thịt ba rọi rang tiêu",
+    "note": "món chiên",
+    "revision": 13,
+    "updated_at": "2026-10-15T19:42:48+00:00"
+  },
+  {
+    "recipe_id": "4361e88a-9607-4462-941c-3355bb3588de",
+    "recipe_name": "Thịt ba rọi rang sả ớt",
+    "note": "món chiên",
+    "revision": 12,
+    "updated_at": "2026-10-15T19:42:42+00:00"
+  },
+  {
+    "recipe_id": "b6f732bb-8b8e-4b7a-b920-4576656b0737",
+    "recipe_name": "Sườn nướng xốt cay",
+    "note": "món nướng",
+    "revision": 15,
+    "updated_at": "2026-10-15T19:50:05+00:00"
+  },
+  {
+    "recipe_id": "33e799d3-1371-4d8b-ae1a-77ff25429ba6",
+    "recipe_name": "Súp gà khoai tây",
+    "note": "CANH/SÚP",
+    "revision": 16,
+    "updated_at": "2026-10-15T21:12:11+00:00"
+  },
+  {
+    "recipe_id": "8cf85ad6-b217-45ea-8625-0daced51d776",
+    "recipe_name": "Canh khoai lang sườn non",
+    "note": "món canh",
+    "revision": 17,
+    "updated_at": "2026-10-16T06:24:29+00:00"
+  },
+  {
+    "recipe_id": "3c7fc9af-8317-499b-8cdb-96f70667809b",
+    "recipe_name": "Canh khoai lang thịt nạc",
+    "note": "món canh",
+    "revision": 18,
+    "updated_at": "2026-10-16T06:24:37+00:00"
+  },
+  {
+    "recipe_id": "2f0e49c0-1c76-4d97-804f-b9681e9fdc55",
+    "recipe_name": "Canh khoai môn nấu sườn",
+    "note": "canh",
+    "revision": 20,
+    "updated_at": "2026-10-16T06:24:52+00:00"
+  },
+  {
+    "recipe_id": "9e85e7f2-1c1d-4d38-aa3b-7cea0b43afa6",
+    "recipe_name": "Canh khoai môn hầm xương",
+    "note": "canh",
+    "revision": 19,
+    "updated_at": "2026-10-16T06:24:47+00:00"
+  },
+  {
+    "recipe_id": "d906891a-c630-4f5d-b70b-6c7f392c4a42",
+    "recipe_name": "Canh khoai môn thịt bằm",
+    "note": "món canh",
+    "revision": 21,
+    "updated_at": "2026-10-16T06:25:10+00:00"
+  },
+  {
+    "recipe_id": "20f72aa1-3d21-4169-bf13-631fcf92638f",
+    "recipe_name": "Canh khoai tây sườn non",
+    "note": "món canh",
+    "revision": 24,
+    "updated_at": "2026-10-16T06:25:45+00:00"
+  },
+  {
+    "recipe_id": "4d7a2558-9c7b-5750-844c-f0ca902223a0",
+    "recipe_name": "Rau muống xào tỏi",
+    "note": "Ghi chú bổ sung catalog: Dùng cách 1 của nguồn, có nước mắm nên không gắn ăn chay. 4 phần và 20 phút là ước tính. Muối và dầu trong nước chần bị đổ đi không tính vào lượng ăn; dầu xào tính toàn bộ. Tỏi ước tính 25 g/củ.\nNguồn công thức: https://beptruong.edu.vn/cach-lam-rau-muong-xao-toi-ngon",
+    "revision": 25,
+    "updated_at": "2026-10-16T07:17:09+00:00"
+  },
+  {
+    "recipe_id": "2316d42e-fbe6-5443-98e4-81cf0c34a145",
+    "recipe_name": "Bắp cải luộc chấm nước mắm trứng",
+    "note": "Ghi chú bổ sung catalog: Nguồn nêu nửa bắp cải và một trứng; trọng lượng, lượng nước mắm, 2 phần và tổng 20 phút là ước tính. Dinh dưỡng tính cả bát nước chấm; thực tế có thể còn dư.\nNguồn công thức: https://ngoisao.vnexpress.net/bap-cai-luoc-cham-nuoc-mam-trung-2564190.html",
+    "revision": 26,
+    "updated_at": "2026-10-16T07:17:09+00:00"
+  },
+  {
+    "recipe_id": "05dae86b-448a-514e-a4dc-2a81394b5dbd",
+    "recipe_name": "Đậu hũ chiên sả ớt",
+    "note": "Ghi chú bổ sung catalog: Giữ bản nguyên liệu có nước mắm của nguồn, không gắn ăn chay. Nguồn không xác định cỡ muỗng/khối lượng miếng đậu/khẩu phần: quy đổi 100 g/miếng đậu, 4 phần ước tính; gia vị muỗng nhỏ theo ghi chú raw_text. Tính toàn bộ 75 g dầu đã cấp vào, có thể cao hơn dầu thực sự giữ lại sau chiên. Không dùng bảng macro thiếu nhất quán của bài viết.\nNguồn công thức: https://cooponline.vn/tin-tuc/cong-thuc-nau-an/dau-hu-chien-sa-ot-mon-chay-gion-thom-cay-nong-hap-dan/",
+    "revision": 27,
+    "updated_at": "2026-10-16T07:17:09+00:00"
+  },
+  {
+    "recipe_id": "c5270778-4e98-584b-8b9f-4b8eb39b9afd",
+    "recipe_name": "Xôi xéo Hà Nội",
+    "note": "Ghi chú bổ sung catalog: Chọn 6 người trong khoảng 5–6 của nguồn; giữ 90 phút của nguồn, không gồm ngâm gạo 6–8 giờ và đỗ 4 giờ. Mỡ, muối, nghệ nguồn không định lượng: 50/5/2 g là ước tính, không phải số đo từ bài. Dùng mỡ gà nên không gắn ăn chay.\nNguồn công thức: https://vnexpress.net/doi-song-cooking-xoi-xeo-ha-noi-4800338.html",
+    "revision": 28,
+    "updated_at": "2026-10-16T07:17:09+00:00"
+  },
+  {
+    "recipe_id": "de9e2f72-4152-56c5-ad24-b2d11d232d67",
+    "recipe_name": "Cháo sườn sụn",
+    "note": "Ghi chú bổ sung catalog: 4 phần và 120 phút là ước tính, chưa gồm ngâm gạo 2–3 giờ. Sườn sụn ánh xạ gần đúng sang thịt sườn non heo 20482; không có mã sụn riêng. Dinh dưỡng gồm 100 g quẩy theo quy tắc aggregate hiện tại. Hành phi, rau mùi tùy thích không tính; bột ngọt nhắc ở bước nêm nhưng không định lượng nên không thêm mặc định.\nNguồn công thức: https://vnexpress.net/chao-suon-sun-gion-san-sat-4325217.html",
+    "revision": 29,
+    "updated_at": "2026-10-16T07:17:09+00:00"
+  },
+  {
+    "recipe_id": "e4792ee5-a1be-52be-99ff-0264e7e19dc5",
+    "recipe_name": "Trứng rán hành lá",
+    "note": "Ghi chú bổ sung catalog: Bản cơ bản từ hướng dẫn trứng rán hành lá của nguồn; toàn bộ định lượng, 2 phần và 10 phút là biên soạn ước tính vì nguồn không cung cấp công thức định lượng. Không thêm các gợi ý tùy chọn như bơ/rượu/bột/thịt. Không coi định lượng này là số đo của tác giả.\nNguồn công thức: https://phunutoday.vn/ran-trung-ngoai-hanh-la-dau-an-phai-them-thu-nay-de-trung-mem-xop-vang-uom-d433833.html",
+    "revision": 30,
+    "updated_at": "2026-10-16T07:17:09+00:00"
+  },
+  {
+    "recipe_id": "4b767868-aae2-5b64-b459-fce529d7e0c9",
+    "recipe_name": "Acai bowl (tô açaí chuối)",
+    "note": "Ghi chú bổ sung catalog: Công thức Bakerita: 100 g açaí không đường + 1 chuối đông lạnh + 1/4 cốc sữa thực vật, 1 tô, 5 phút. Chọn sữa đậu nành không đường; quy đổi chuối tiêu 120 g ăn được và sữa 60 ml ≈ 60 g là ước tính. Xay các nguyên liệu đến sánh đặc, thêm sữa từng chút nếu cần và dùng ngay. Thời gian không gồm làm đông chuối. Granola/trái cây/bơ hạt là topping tùy chọn, chưa tính vào nguyên liệu bắt buộc hay dinh dưỡng. Dinh dưỡng açaí theo ảnh nhãn SAMBAZON 80 kcal/100 g; mô tả trang hãng ghi 70 kcal nhưng nhãn bao bì ghi 80 kcal. Không thay açaí bằng việt quất hoặc nguyên liệu khác. Các vi chất không công bố để trống; nutrition_confidence để null vì chưa chấm theo pipeline. Nguồn: https://www.bakerita.com/acai-bowl/ | https://www.sambazon.com/cdn/shop/files/sfp_pu_4pk_bag_back.webp?v=1703206032\nNguồn công thức: https://www.bakerita.com/acai-bowl/",
+    "revision": 31,
+    "updated_at": "2026-10-16T07:17:09+00:00"
+  }
+]

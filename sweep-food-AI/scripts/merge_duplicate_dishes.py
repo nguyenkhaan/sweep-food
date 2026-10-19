@@ -13,9 +13,9 @@ differ by:
 
 Connected components (via union-find) are formed over recipes linked by either condition.
 For each connected group, exactly one canonical recipe is kept, chosen by explicit,
-deterministic lexicographic quality criteria (AGENTS.md §3). Every other recipe in the
+deterministic lexicographic quality criteria. Every other recipe in the
 group is removed from the canonical recipe and ingredient datasets, and all rows in
-recipe_canonical_mapping are re-pointed to the selected winner recipe (AGENTS.md §4).
+recipe_canonical_mapping are re-pointed to the selected winner recipe.
 
 Selection criteria (lexicographic, first decisive criterion is reported):
     1. valid_match_rate        higher  (rows with master match / total rows)

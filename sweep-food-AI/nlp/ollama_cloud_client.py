@@ -16,9 +16,11 @@ from pathlib import Path
 from typing import Any
 
 OLLAMA_CLOUD_BASE_URL = "https://ollama.com/v1"
-DEFAULT_MODEL = "gpt-oss:120b"
-KEY_FILE_PATH = Path("C:/Users/HUYPNG/Desktop/key.txt")
-
+DEFAULT_MODEL = "gpt-oss:120b-cloud"
+KEY_FILE_PATHS = [
+    Path(r"C:\Users\HUYPNG\Downloads\key.txt"),
+    Path(r"C:\Users\HUYPNG\Desktop\key.txt"),
+]
 
 def load_keys() -> list[str]:
     """Load all valid Ollama Cloud API keys from key.txt and environment."""
@@ -27,18 +29,18 @@ def load_keys() -> list[str]:
     if env_key and "." in env_key:
         keys.append(env_key.strip())
 
-    if KEY_FILE_PATH.exists():
-        text = KEY_FILE_PATH.read_text(encoding="utf-8", errors="ignore")
-        for line in text.splitlines():
-            line = line.strip()
-            # Look for 32hex.token pattern
-            parts = line.split()
-            for p in parts:
-                p = p.strip(" -:,")
-                if "." in p and len(p.split(".")[0]) == 32:
-                    if p not in keys:
-                        keys.append(p)
-
+    for kp in KEY_FILE_PATHS:
+        if kp.exists():
+            text = kp.read_text(encoding="utf-8", errors="ignore")
+            for line in text.splitlines():
+                line = line.strip()
+                # Look for 32hex.token pattern
+                parts = line.split()
+                for p in parts:
+                    p = p.strip(" -:,")
+                    if "." in p and len(p.split(".")[0]) == 32:
+                        if p not in keys:
+                            keys.append(p)
     return keys
 
 
@@ -51,7 +53,7 @@ class OllamaCloudClient:
         else:
             self.keys = load_keys()
         if not self.keys:
-            raise ValueError("No Ollama Cloud API key found in Desktop/key.txt or OLLAMA_API_KEY env var.")
+            raise ValueError("No Ollama Cloud API key found in Downloads/key.txt, Desktop/key.txt or OLLAMA_API_KEY env var.")
         self._key_index = 0
     def get_current_key(self) -> str:
         return self.keys[self._key_index % len(self.keys)]

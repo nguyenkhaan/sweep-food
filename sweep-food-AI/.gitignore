@@ -44,12 +44,13 @@ scratch/
 .agents/
 skills-lock.json
 walkthrough.md
+data_freshness/
 
 # Training Data & Model Artifacts (keep lightweight production weights, ignore large CSVs)
 data/training/*
 !data/training/metadata.json
-!data/training/lgbm_contextual.txt
 !data/training/xgb_full.json
+!data/training/lgbm_contextual.txt
 data/benchmark/*.csv
 # Copyright-sensitive verbatim crawl snapshot (kept local for reproducibility only)
 data/raw/recipes_raw_scraped.json

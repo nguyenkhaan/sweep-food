@@ -110,7 +110,6 @@ class FoodLabelParser:
 
         # 3. Extract Weight / Net Content (KLT / Trọng lượng / KL / TL)
         weight_g = 500.0  # Default standard pack weight
-        quantity_source = "estimated"
         weight_match = re.search(
             r'(?:KLT|Khối\s*lượng\s*tịnh|khoi\s*luong\s*tinh|Trọng\s*lượng|trong\s*luong|KL|TL)[\s:]*([0-9]+(?:[.,][0-9]+)?)\s*(kg|ks|km|ka|k9|kp|g|gam|gram)?',
             full_text,
@@ -125,7 +124,6 @@ class FoodLabelParser:
                     weight_g = round(val * 1000.0, 1)
                 else:
                     weight_g = round(val, 1)
-                quantity_source = "extracted"
             except ValueError:
                 pass
         else:
@@ -140,7 +138,6 @@ class FoodLabelParser:
                         weight_g = round(val * 1000.0, 1)
                     else:
                         weight_g = round(val, 1)
-                    quantity_source = "extracted"
                 except ValueError:
                     pass
             else:
@@ -149,7 +146,6 @@ class FoodLabelParser:
                     try:
                         val = float(dec_match.group(1).replace(",", "."))
                         weight_g = round(val * 1000.0, 1)
-                        quantity_source = "extracted"
                     except ValueError:
                         pass
 
@@ -177,7 +173,6 @@ class FoodLabelParser:
         return {
             "name": product_name,
             "quantity_g": weight_g,
-            "quantity_source": quantity_source,
             "hours_to_expire": hours_to_expire,
             "expiry_date": expiry_date_str,
             "production_date": nsx_str,
