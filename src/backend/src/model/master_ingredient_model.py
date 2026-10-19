@@ -33,6 +33,12 @@ class MasterIngredientModel(TimestampedUUIDModel):
             text("lower(name)"),
             unique=True,
         ),
+        Index(
+            "uq_master_ingredients_source_code",
+            "source_code",
+            unique=True,
+            postgresql_where=text("source_code IS NOT NULL"),
+        ),
     )
 
     name: Mapped[str] = mapped_column(String, nullable=False)
@@ -68,6 +74,10 @@ class MasterIngredientModel(TimestampedUUIDModel):
         default=True,
         server_default=text("true"),
         nullable=False,
+    )
+    source_code: Mapped[str | None] = mapped_column(
+        String(32),
+        nullable=True,
     )
     category: Mapped["IngredientCategoryModel"] = relationship(
         back_populates="master_ingredients",

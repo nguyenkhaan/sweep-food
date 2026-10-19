@@ -79,6 +79,12 @@ class RecipeModel(TimestampedUUIDModel):
         server_default=text("'{}'::jsonb"),
         nullable=False,
     )
+    ai_features: Mapped[dict[str, object]] = mapped_column(
+        JSONB,
+        default=dict,
+        server_default=text("'{}'::jsonb"),
+        nullable=False,
+    )
     recipe_ingredients: Mapped[list["RecipeIngredientModel"]] = relationship(
         back_populates="recipe",
     )
