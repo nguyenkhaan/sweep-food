@@ -21,6 +21,7 @@ from AI.extraction.ocr.image_guard import (
 from AI.extraction.ocr.openai_vision_ocr import OpenAIVisionOCR
 from AI.extraction.service import AIExtractionService
 from src.app import app
+from src.core.setting import OPENAI_OCR_REASONING_EFFORT
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.model.enum_model import UserRole
 from src.module.extractions.extraction_dependency import get_extraction_service
@@ -607,13 +608,13 @@ def _png_bytes() -> bytes:
 @pytest.mark.anyio
 @pytest.mark.parametrize(
     ("effort", "expected"),
-    [(None, "medium"), ("high", "high"), ("", None)],
+    [(None, OPENAI_OCR_REASONING_EFFORT), ("high", "high"), ("", None)],
 )
 async def test_ocr_sends_reasoning_effort_only_when_configured(
     effort: str | None,
     expected: str | None,
 ) -> None:
-    """OCR defaults to medium reasoning; an empty value omits it for non-reasoning models."""
+    """OCR uses configured reasoning; an empty value omits the request field."""
     bodies: list[dict[str, Any]] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -626,7 +627,7 @@ async def test_ocr_sends_reasoning_effort_only_when_configured(
     http_client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
     ocr = OpenAIVisionOCR(
         api_key="test-key",
-        model="gpt-6.1-sol",
+        model="gpt-5.6-terra",
         reasoning_effort=effort,
         http_client=http_client,
     )
@@ -635,7 +636,7 @@ async def test_ocr_sends_reasoning_effort_only_when_configured(
     finally:
         await http_client.aclose()
 
-    assert bodies[0]["model"] == "gpt-6.1-sol"
+    assert bodies[0]["model"] == "gpt-5.6-terra"
     assert bodies[0].get("reasoning_effort") == expected
     assert "max_tokens" not in bodies[0]
     assert "temperature" not in bodies[0]
