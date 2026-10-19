@@ -1,0 +1,2 @@
+# Published bundle bytes must not change: LightGBM model offsets and catalog manifest hashes depend on them.
+data/** -text
