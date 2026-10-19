@@ -7,7 +7,7 @@ from fastapi import HTTPException, status
 
 from AI.recommendation.engine import RecommendationEngine
 from src.base.constant.template_file_name import EMAIL_TEMPLATE_FILENAMES
-from src.core.setting import GROQ_API_KEY, OPENAI_API_KEY
+from src.core.setting import ENV, GROQ_API_KEY, OPENAI_API_KEY
 from src.module.health.health_dto import AIReadinessResponseDTO, LivenessResponseDTO
 from src.service.email_service import EmailService
 
@@ -51,6 +51,8 @@ class HealthService:
 
     async def send_test_email(self) -> str:
         """Send a basic rendered email to Mailpit's local test inbox."""
+        if ENV.strip().lower() not in {"dev", "development", "test"}:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
         return await self._email_service.send_email(
             subject="Sweep Food email service test",
             payload={"recipient": "mailpit-test@sweep-food.local"},

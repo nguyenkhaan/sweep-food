@@ -8,9 +8,12 @@ services:
     env_file:
       - .env
     environment:
+      ENV: dev
       REDIS_URL: redis://redis:6379/0
       WIREMOCK_URL: http://wiremock:8080
       EMAIL_SMTP_HOST: mailpit
+      EMAIL_SMTP_PORT: 1025
+      EMAIL_SMTP_USE_STARTTLS: "false"
     ports:
       - "4000:4000"
     depends_on:

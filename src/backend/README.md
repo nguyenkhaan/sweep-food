@@ -31,6 +31,32 @@ Set `DATABASE_URL` in `.env`, or contact Cloudian for the project environment fi
 
 The API runs at `http://localhost:4000/api`.
 
+## Email delivery
+
+Development uses Mailpit without SMTP authentication. `docker compose up` overrides
+the API's SMTP host to `mailpit:1025`; its inbox UI is at
+`http://localhost:8025`. For a direct local run, `.env.example` points to
+`localhost:1025` instead.
+
+On Render, configure the API service with these environment variables:
+
+```text
+ENV=production
+EMAIL_SMTP_HOST=smtp.gmail.com
+EMAIL_SMTP_PORT=587
+EMAIL_SMTP_USERNAME=<your Gmail address>
+EMAIL_SMTP_PASSWORD=<new Google App Password, stored as a secret>
+EMAIL_SMTP_USE_STARTTLS=true
+EMAIL_FROM=<the same Gmail address or a verified send-as alias>
+```
+
+Production requires STARTTLS and credentials; missing values fail closed. The
+public `/api/health/test-email` route is development-only and is unavailable in
+production. Verify production delivery through a real OTP flow. Render Free Web
+Services block outbound SMTP ports, including 587, so Gmail SMTP requires a
+paid Render instance or a different delivery provider/API. Never put the App
+Password in the image, repository, or shared `.env` file.
+
 You can visit API docs here: `http://localhost:4000/docs`
 
 ```text

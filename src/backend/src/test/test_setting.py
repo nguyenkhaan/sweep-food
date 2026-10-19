@@ -2,7 +2,25 @@
 
 import pytest
 
-from src.core.setting import get_http_base_url_env, get_positive_int_env
+from src.core.setting import get_bool_env, get_http_base_url_env, get_positive_int_env
+
+
+@pytest.mark.parametrize("value,expected", [("true", True), ("FALSE", False)])
+def test_boolean_setting_accepts_explicit_values(
+    monkeypatch: pytest.MonkeyPatch, value: str, expected: bool
+) -> None:
+    monkeypatch.setenv("TEST_BOOL", value)
+
+    assert get_bool_env("TEST_BOOL", False) is expected
+
+
+def test_boolean_setting_rejects_ambiguous_values(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("TEST_BOOL", "maybe")
+
+    with pytest.raises(ValueError, match="TEST_BOOL must be true or false"):
+        get_bool_env("TEST_BOOL", False)
 
 
 def test_http_base_url_uses_normalized_default(
