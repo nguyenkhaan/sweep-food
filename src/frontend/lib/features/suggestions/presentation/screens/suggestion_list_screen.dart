@@ -92,12 +92,6 @@ class _FilterBar extends ConsumerWidget {
             const SizedBox(width: Gap.xs),
           ],
           _Chip(
-            label: l10n.suggestionsQuickCook,
-            selected: filter.quickCookOnly,
-            onTap: notifier.toggleQuickCook,
-          ),
-          const SizedBox(width: Gap.xs),
-          _Chip(
             label: DietaryPreference.moreVeg.label(l10n),
             selected: filter.dietaryPreference == DietaryPreference.moreVeg,
             onTap: () => notifier.togglePreference(DietaryPreference.moreVeg),

@@ -748,9 +748,13 @@ class MockApiClient implements ApiClient {
     if (batchId != null) return _inventoryBatchById(batchId);
     if (path == ApiPaths.aiHealth) {
       return {
-        'service': 'sweep-food-ai',
         'status': 'ready',
-        'provider': 'SWEEP_FOOD_AI',
+        'catalog_revision': 'catalog-mock-r1',
+        'recipe_count': 120,
+        'ranker_model': 'LightGBM LambdaMART',
+        'model_version': 'lgbm-contextual-v3.1.0',
+        'ocr_configured': true,
+        'asr_configured': true,
         'latency_ms': 8.0,
       };
     }

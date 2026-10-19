@@ -28,26 +28,44 @@ class SuggestionRemoteDataSource {
 
 class AiServiceHealthDto {
   const AiServiceHealthDto({
-    required this.service,
     required this.status,
-    required this.provider,
+    required this.catalogRevision,
+    required this.recipeCount,
+    required this.rankerModel,
+    required this.modelVersion,
+    required this.ocrConfigured,
+    required this.asrConfigured,
     required this.latencyMs,
   });
 
-  final String service;
   final String status;
-  final String provider;
+  final String catalogRevision;
+  final int recipeCount;
+  final String rankerModel;
+  final String modelVersion;
+  final bool ocrConfigured;
+  final bool asrConfigured;
   final double latencyMs;
 
   bool get isReady => status == 'ready';
 
   factory AiServiceHealthDto.fromJson(Map<String, dynamic> json) =>
       AiServiceHealthDto(
-        service: (json['service'] ?? '').toString(),
         status: (json['status'] ?? '').toString(),
-        provider: (json['provider'] ?? '').toString(),
+        catalogRevision: (json['catalog_revision'] ?? '').toString(),
+        recipeCount: _readInt(json['recipe_count']),
+        rankerModel: (json['ranker_model'] ?? '').toString(),
+        modelVersion: (json['model_version'] ?? '').toString(),
+        ocrConfigured: _readBool(json['ocr_configured']),
+        asrConfigured: _readBool(json['asr_configured']),
         latencyMs: _readDouble(json['latency_ms']),
       );
+
+  static int _readInt(Object? value) =>
+      value is num ? value.toInt() : int.tryParse('$value') ?? 0;
+
+  static bool _readBool(Object? value) =>
+      value is bool ? value : value == 'true' || value == 1;
 
   static double _readDouble(Object? value) =>
       value is num ? value.toDouble() : double.tryParse('$value') ?? 0;

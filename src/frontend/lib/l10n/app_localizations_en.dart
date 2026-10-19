@@ -629,9 +629,6 @@ class AppL10nEn extends AppL10n {
   String get suggestionsTitle => 'Suggestions for you';
 
   @override
-  String get suggestionsQuickCook => '≤ 30 min';
-
-  @override
   String get suggestionsEmptyTitle => 'Not enough ingredients to suggest';
 
   @override

@@ -19,27 +19,21 @@ final aiServiceHealthProvider = FutureProvider.autoDispose(
   ).health(),
 );
 
-/// Fixed cook-time cap offered by the "≤ 30 phút" quick chip.
-const _quickCookMinutes = 30;
-
 /// UI filter state for S-01. Maps to a [SuggestionRequest] for the API.
 class SuggestionFilter {
   const SuggestionFilter({
     this.mealType,
-    this.quickCookOnly = false,
     this.dietaryPreference,
     this.prompt = '',
   });
 
   /// `null` = "Tất cả".
   final MealType? mealType;
-  final bool quickCookOnly;
   final DietaryPreference? dietaryPreference;
   final String prompt;
 
   SuggestionFilter copyWith({
     MealType? mealType,
-    bool? quickCookOnly,
     DietaryPreference? dietaryPreference,
     String? prompt,
     bool clearMealType = false,
@@ -47,7 +41,6 @@ class SuggestionFilter {
   }) {
     return SuggestionFilter(
       mealType: clearMealType ? null : mealType ?? this.mealType,
-      quickCookOnly: quickCookOnly ?? this.quickCookOnly,
       dietaryPreference: clearDietaryPreference
           ? null
           : dietaryPreference ?? this.dietaryPreference,
@@ -61,7 +54,6 @@ class SuggestionFilter {
       SuggestionRequest(
         pantryItems: pantryDrafts,
         mealType: mealType,
-        maxCookTimeMin: quickCookOnly ? _quickCookMinutes : null,
         dietaryPreference: dietaryPreference,
         prompt: prompt.isNotEmpty ? prompt : null,
         limit: AppConstants.maxSuggestions,
@@ -80,9 +72,6 @@ class SuggestionFilterController extends _$SuggestionFilterController {
   void toggleMeal(MealType meal) => state = state.mealType == meal
       ? state.copyWith(clearMealType: true)
       : state.copyWith(mealType: meal);
-
-  void toggleQuickCook() =>
-      state = state.copyWith(quickCookOnly: !state.quickCookOnly);
 
   void togglePreference(DietaryPreference pref) =>
       state = state.dietaryPreference == pref

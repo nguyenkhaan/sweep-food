@@ -27,7 +27,6 @@ void main() {
         expect(req.toBody(), {
           'items': [],
           'household_size': 4.0,
-          'max_cooking_time_min': 45.0,
           'scenario_type': 'custom',
           'dietary_restrictions': [],
           'allergies': [],
@@ -38,12 +37,11 @@ void main() {
     );
 
     test(
-      'combines meal, time, preference, and pantry items into request body',
+      'combines meal, preference, and pantry items into request body',
       () {
         const req = SuggestionRequest(
           prompt: 'Món cay',
           mealType: MealType.dinner,
-          maxCookTimeMin: 30,
           dietaryPreference: DietaryPreference.moreVeg,
           pantryItems: [
             RecommendationPantryItemDraft(
@@ -65,7 +63,6 @@ void main() {
             },
           ],
           'household_size': 4.0,
-          'max_cooking_time_min': 30.0,
           'scenario_type': 'dinner',
           'dietary_restrictions': ['vegetarian'],
           'allergies': [],
@@ -75,10 +72,9 @@ void main() {
       },
     );
 
-    test('uses quick_meal when maxCookTimeMin <= 30 and no mealType', () {
-      const req = SuggestionRequest(maxCookTimeMin: 25);
-      expect(req.toBody()['scenario_type'], 'quick_meal');
-      expect(req.toBody()['max_cooking_time_min'], 25.0);
+    test('never includes max_cooking_time_min in the request body', () {
+      const req = SuggestionRequest();
+      expect(req.toBody().containsKey('max_cooking_time_min'), isFalse);
     });
   });
 
@@ -374,6 +370,49 @@ void main() {
 
       expect(captured!.mealType, MealType.dinner);
       verify(() => repo.fetch(any())).called(2);
+    });
+  });
+
+  group('AiServiceHealthDto', () {
+    test('parses ready backend payload correctly', () {
+      final dto = AiServiceHealthDto.fromJson({
+        'status': 'ready',
+        'catalog_revision': 'catalog-test-r1',
+        'recipe_count': 100,
+        'ranker_model': 'LightGBM LambdaMART',
+        'model_version': 'lgbm-contextual-v3.1.0',
+        'ocr_configured': true,
+        'asr_configured': false,
+        'latency_ms': 12.5,
+      });
+
+      expect(dto.isReady, isTrue);
+      expect(dto.status, 'ready');
+      expect(dto.catalogRevision, 'catalog-test-r1');
+      expect(dto.recipeCount, 100);
+      expect(dto.rankerModel, 'LightGBM LambdaMART');
+      expect(dto.modelVersion, 'lgbm-contextual-v3.1.0');
+      expect(dto.ocrConfigured, isTrue);
+      expect(dto.asrConfigured, isFalse);
+      expect(dto.latencyMs, 12.5);
+    });
+
+    test('handles fallback defaults defensively on unexpected/503 payload', () {
+      final dto = AiServiceHealthDto.fromJson({
+        'status_code': 503,
+        'detail': 'AI catalog is not loaded.',
+        'path': '/api/health/ai',
+      });
+
+      expect(dto.isReady, isFalse);
+      expect(dto.status, '');
+      expect(dto.catalogRevision, '');
+      expect(dto.recipeCount, 0);
+      expect(dto.rankerModel, '');
+      expect(dto.modelVersion, '');
+      expect(dto.ocrConfigured, isFalse);
+      expect(dto.asrConfigured, isFalse);
+      expect(dto.latencyMs, 0.0);
     });
   });
 }

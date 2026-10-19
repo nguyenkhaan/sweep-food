@@ -625,9 +625,6 @@ class AppL10nVi extends AppL10n {
   String get suggestionsTitle => 'Gợi ý cho bạn';
 
   @override
-  String get suggestionsQuickCook => '≤ 30 phút';
-
-  @override
   String get suggestionsEmptyTitle => 'Chưa đủ nguyên liệu để gợi ý';
 
   @override

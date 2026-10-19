@@ -1201,12 +1201,6 @@ abstract class AppL10n {
   /// **'Gợi ý cho bạn'**
   String get suggestionsTitle;
 
-  /// No description provided for @suggestionsQuickCook.
-  ///
-  /// In vi, this message translates to:
-  /// **'≤ 30 phút'**
-  String get suggestionsQuickCook;
-
   /// No description provided for @suggestionsEmptyTitle.
   ///
   /// In vi, this message translates to:

@@ -233,7 +233,6 @@
   "onbPantryCta": "Add your first ingredient",
 
   "suggestionsTitle": "Suggestions for you",
-  "suggestionsQuickCook": "≤ 30 min",
   "suggestionsEmptyTitle": "Not enough ingredients to suggest",
   "suggestionsEmptyBody": "Add a few ingredients to your pantry to get 3–5 dish suggestions.",
   "suggestionsCaption": "{count} best dishes for your current pantry · near-expiry first",

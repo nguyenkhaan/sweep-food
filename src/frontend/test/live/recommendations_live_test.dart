@@ -152,7 +152,6 @@ void main() {
           RecommendationPantryItemDraft(name: 'cà chua', quantityG: 200),
         ],
         mealType: MealType.dinner,
-        maxCookTimeMin: 30,
       );
 
       final result = await repo.fetch(request);
