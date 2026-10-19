@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import csv
+import json
 import logging
 from collections.abc import Sequence
 from dataclasses import dataclass, field
@@ -191,7 +192,7 @@ class CatalogBundleRaw:
     recipe_ingredients: list[dict[str, str]]
     master_nutrition: list[dict[str, str]]
     redirects: list[dict[str, str]]
-
+    recipe_media: list[dict[str, object]] = field(default_factory=list)
 
 @dataclass(frozen=True)
 class CatalogTransformedData:
@@ -213,6 +214,25 @@ def load_csv_rows(path: Path) -> list[dict[str, str]]:
         reader = csv.DictReader(file_handle)
         return list(reader)
 
+def load_recipe_media(path: Path) -> list[dict[str, object]]:
+    """Load and validate recipe_media.json next to the catalog bundle."""
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"Recipe media file not found: {path} (run 'python -m AI.catalog.media_builder' to generate it)"
+        )
+    try:
+        with path.open(mode="r", encoding="utf-8") as file_handle:
+            data = json.load(file_handle)
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise ValueError(f"Recipe media file is malformed JSON: {path}: {exc}") from exc
+    if not isinstance(data, list):
+        raise TypeError(f"Recipe media file must contain a JSON list: {path}")
+    for item in data:
+        if not isinstance(item, dict) or "id" not in item:
+            raise TypeError(f"Recipe media entries must be objects with 'id': {path}")
+    return cast(list[dict[str, object]], data)
+
+
 
 def load_catalog_bundle(bundle_dir: Path) -> CatalogBundleRaw:
     """Read every required CSV file from the given bundle directory."""
@@ -223,17 +243,20 @@ def load_catalog_bundle(bundle_dir: Path) -> CatalogBundleRaw:
     recipe_ings_path = catalog_dir / "recipe_ingredients.csv"
     master_path = master_dir / "master_ingredients_nutrition.csv"
     redirects_path = master_dir / "master_code_redirects.csv"
+    media_path = catalog_dir / "recipe_media.json"
 
     recipes = load_csv_rows(recipes_path)
     recipe_ingredients = load_csv_rows(recipe_ings_path)
     master_nutrition = load_csv_rows(master_path)
     redirects = load_csv_rows(redirects_path) if redirects_path.exists() else []
+    recipe_media = load_recipe_media(media_path)
 
     return CatalogBundleRaw(
         recipes=recipes,
         recipe_ingredients=recipe_ingredients,
         master_nutrition=master_nutrition,
         redirects=redirects,
+        recipe_media=recipe_media,
     )
 
 
@@ -346,6 +369,7 @@ def transform_aliases(
 def transform_recipes(
     recipe_rows: list[dict[str, str]],
     report: ImportReport,
+    media_by_id: dict[str, dict[str, object]] | None = None,
 ) -> list[dict[str, object]]:
     """Transform and validate recipes.csv rows into recipes table rows."""
     recipes: list[dict[str, object]] = []
@@ -432,12 +456,62 @@ def transform_recipes(
             key: parse_csv_value(val) for key, val in row.items() if key != "id"
         }
 
+        media_entry = media_by_id.get(str(recipe_uuid)) if media_by_id else None
+        media_url: str | None = None
+        instructions: dict[str, object] = {"steps": []}
+
+        if media_entry:
+            raw_media = media_entry.get("media_url")
+            if isinstance(raw_media, str) and raw_media.strip():
+                media_url = raw_media.strip()
+
+            raw_steps = media_entry.get("steps")
+            if isinstance(raw_steps, list) and raw_steps:
+                formatted_steps: list[dict[str, object]] = []
+                for s in raw_steps:
+                    if isinstance(s, str) and s.strip():
+                        order = len(formatted_steps) + 1
+                        formatted_steps.append({"order": order, "text": s.strip()})
+                    elif isinstance(s, dict):
+                        step_val = s.get("step")
+                        if step_val is None:
+                            step_val = s.get("order")
+                        order = (
+                            int(step_val)
+                            if isinstance(step_val, int)
+                            else len(formatted_steps) + 1
+                        )
+                        raw_title = s.get("title")
+                        title = str(raw_title).strip() if raw_title is not None else ""
+                        raw_content = s.get("content")
+                        content = str(raw_content).strip() if raw_content is not None else ""
+                        if not content and isinstance(s.get("text"), str):
+                            content = cast(str, s["text"]).strip()
+
+                        if title and title != f"Bước {order}" and not content.startswith(title):
+                            text = f"{title}: {content}" if content else title
+                        else:
+                            text = content or title
+
+                        if not text:
+                            continue
+
+                        step_dict: dict[str, object] = {
+                            "order": order,
+                            "text": text,
+                        }
+                        if "duration_min" in s and s["duration_min"] is not None:
+                            step_dict["duration_min"] = s["duration_min"]
+                        formatted_steps.append(step_dict)
+
+                instructions = {"steps": formatted_steps}
+
         recipes.append({
             "id": recipe_uuid,
             "name": name,
             "description": factual_description(name, dish_type, cooking_method, str(default_servings)),
-            "instructions": {"steps": []},
-            "media_url": None,
+            "instructions": instructions,
+            "media_url": media_url,
             "source_platform": normalize_text(row.get("source_platform", "internal")),
             "source_url": source_url,
             "default_servings": default_servings,
@@ -594,7 +668,12 @@ def transform_catalog_bundle(
 
     aliases = transform_aliases(bundle.master_nutrition, master_code_to_id, report)
 
-    recipes = transform_recipes(bundle.recipes, report)
+    media_by_id = {
+        str(item["id"]).strip(): item
+        for item in bundle.recipe_media
+        if isinstance(item, dict) and "id" in item
+    }
+    recipes = transform_recipes(bundle.recipes, report, media_by_id)
     valid_recipe_ids = {cast(UUID, r["id"]) for r in recipes}
 
     placeholder_masters: dict[UUID, dict[str, object]] = {}

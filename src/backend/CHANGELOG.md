@@ -6,6 +6,7 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 
 ### Added
 
+- Recipe media and cooking steps backfill for the catalog importer, populating validated media URLs and structured instruction steps from source article scraping and sweep-food-AI dataset commits.
 - Catalog and recipe schema hardening migration with lossless Numeric conversions,
   case-insensitive catalog uniqueness, lookup indexes, and shelf-life validation.
 - Backend Product Requirements Document defining the approved Sweep Food MVP scope.

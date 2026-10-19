@@ -5,7 +5,7 @@ from __future__ import annotations
 import importlib.util
 from decimal import Decimal
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import UUID
 
 import pytest
@@ -13,7 +13,9 @@ import pytest
 from AI.catalog.importer import (
     DEFAULT_BUNDLE_DIR,
     ImportReport,
+    _classify_and_upsert_table,
     load_catalog_bundle,
+    load_recipe_media,
     parse_args,
     resolve_ingredient_id,
     run_importer,
@@ -22,6 +24,7 @@ from AI.catalog.importer import (
     values_differ,
 )
 from src.model.enum_model import MeasurementUnit
+from src.model.recipe_model import RecipeModel
 
 BACKEND_ROOT = Path(__file__).resolve().parents[2]
 MIGRATION_PATH = BACKEND_ROOT / "alembic" / "versions" / "e2b4f68a10cd_add_ai_catalog_columns.py"
@@ -322,3 +325,86 @@ def test_values_differ_classification_without_postgres() -> None:
     assert not values_differ("  hello  ", "hello")
     assert not values_differ({"steps": []}, {"steps": []})
     assert values_differ({"steps": [{"step": 1}]}, {"steps": []})
+
+
+def test_recipe_media_transformed_counts_match_artifact() -> None:
+    """Transformed recipe counts with media and steps exactly match recipe_media.json."""
+    bundle = load_catalog_bundle(DEFAULT_BUNDLE_DIR)
+    report = ImportReport()
+    data, _ = transform_catalog_bundle(bundle, report)
+
+    assert len(data.recipes) == 1075
+
+    recipes_with_media = [r for r in data.recipes if r["media_url"] is not None]
+    artifact_with_media = [m for m in bundle.recipe_media if m.get("media_url") is not None]
+    assert len(recipes_with_media) == len(artifact_with_media) == 1048
+
+    recipes_with_steps = [r for r in data.recipes if bool(r["instructions"].get("steps"))]
+    artifact_with_steps = [m for m in bundle.recipe_media if bool(m.get("steps"))]
+    assert len(recipes_with_steps) == len(artifact_with_steps) == 1068
+
+    # Validate step structure contract (order and text only, no redundant duplicate keys)
+    for r in recipes_with_steps:
+        steps = r["instructions"]["steps"]
+        assert isinstance(steps, list) and len(steps) > 0
+        for idx, step in enumerate(steps, start=1):
+            assert isinstance(step, dict)
+            assert step["order"] == idx
+            assert isinstance(step["text"], str) and step["text"].strip()
+            assert "title" not in step
+            assert "content" not in step
+
+
+def test_missing_recipe_media_raises_clean_error(tmp_path: Path) -> None:
+    """Missing recipe_media.json raises a clean FileNotFoundError referencing media_builder."""
+    missing_path = tmp_path / "catalog" / "recipe_media.json"
+    with pytest.raises(FileNotFoundError, match="media_builder"):
+        load_recipe_media(missing_path)
+
+
+@pytest.mark.asyncio
+async def test_classification_unchanged_rerun_and_changed_media_url() -> None:
+    """Unchanged rerun reports all records unchanged; modified media_url reports exactly 1 updated."""
+    bundle = load_catalog_bundle(DEFAULT_BUNDLE_DIR)
+    data, _ = transform_catalog_bundle(bundle, ImportReport())
+
+    recipes_sample = data.recipes[:10]
+    existing_rows = [dict(r) for r in recipes_sample]
+
+    session = AsyncMock()
+    result_mock = MagicMock()
+    result_mock.mappings.return_value = existing_rows
+    session.execute.return_value = result_mock
+
+    # Unchanged rerun
+    report_unchanged = ImportReport()
+    await _classify_and_upsert_table(
+        session,
+        RecipeModel.__table__,
+        recipes_sample,
+        "recipe",
+        report_unchanged,
+        dry_run=True,
+        batch_size=500,
+    )
+    assert len(report_unchanged.created) == 0
+    assert len(report_unchanged.updated) == 0
+    assert len(report_unchanged.unchanged) == len(recipes_sample)
+
+    # Mutate media_url of exactly 1 recipe
+    mutated_sample = [dict(r) for r in recipes_sample]
+    mutated_sample[0]["media_url"] = "https://example.com/new-image-for-test.jpg"
+
+    report_updated = ImportReport()
+    await _classify_and_upsert_table(
+        session,
+        RecipeModel.__table__,
+        mutated_sample,
+        "recipe",
+        report_updated,
+        dry_run=True,
+        batch_size=500,
+    )
+    assert len(report_updated.created) == 0
+    assert len(report_updated.updated) == 1
+    assert len(report_updated.unchanged) == len(recipes_sample) - 1
