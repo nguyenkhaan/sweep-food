@@ -13,6 +13,8 @@ from src.module.freshness.freshness_dependency import (
 from src.module.freshness.freshness_dto import (
     FreshnessAssessmentRequestDTO,
     FreshnessAssessmentResponseDTO,
+    FreshnessPreviewRequestDTO,
+    FreshnessPreviewResponseDTO,
     FreshnessQuestionsResponseDTO,
 )
 from src.module.freshness.freshness_service import (
@@ -34,6 +36,19 @@ async def get_freshness_questions(
 ) -> FreshnessQuestionsResponseDTO:
     """Return the active sensory rubric for one reviewed master ingredient mapping."""
     return await service.questions(master_ingredient_id)
+
+
+@freshness_router.post("/previews", response_model=FreshnessPreviewResponseDTO)
+async def post_freshness_preview(
+    body: FreshnessPreviewRequestDTO,
+    _user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[
+        FreshnessQuestionService,
+        Depends(get_freshness_questions_service),
+    ],
+) -> FreshnessPreviewResponseDTO:
+    """Estimate an expiry for an unsaved ingredient; nothing is persisted."""
+    return await service.preview(body)
 
 
 @freshness_router.post(

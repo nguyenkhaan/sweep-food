@@ -16,6 +16,8 @@ from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 from src.module.freshness.freshness_dto import (
     FreshnessAssessmentRequestDTO,
     FreshnessAssessmentResponseDTO,
+    FreshnessPreviewRequestDTO,
+    FreshnessPreviewResponseDTO,
     FreshnessQuestionDTO,
     FreshnessQuestionOptionDTO,
     FreshnessQuestionsResponseDTO,
@@ -71,12 +73,14 @@ class FreshnessQuestionService:
         self,
         session: AsyncSession,
         cache: FreshCheckKnowledgeBaseCache | None = None,
+        engine: FreshCheckEngine | None = None,
     ) -> None:
         self._session = session
         self._repository = FreshCheckKnowledgeBaseRepository(
             session,
             cache or FreshCheckKnowledgeBaseCache(),
         )
+        self._engine = engine or FreshCheckEngine()
 
     async def questions(
         self, master_ingredient_id: UUID
@@ -101,6 +105,49 @@ class FreshnessQuestionService:
             questions=tuple(
                 _question_from_rubric_axis(axis) for axis in archetype.inspection_rubric
             ),
+        )
+
+    async def preview(
+        self,
+        body: FreshnessPreviewRequestDTO,
+        *,
+        now: datetime | None = None,
+    ) -> FreshnessPreviewResponseDTO:
+        """Estimate an expiry for an unsaved ingredient without persisting anything."""
+        assessed_at = now or datetime.now(UTC)
+        knowledge_base, freshcheck_ingredient_id = await _resolve_active_mapping(
+            self._session,
+            self._repository,
+            body.master_ingredient_id,
+        )
+        _validate_answers(knowledge_base, freshcheck_ingredient_id, body.answers)
+        result = self._engine.assess(
+            knowledge_base,
+            FreshCheckAssessmentRequest(
+                freshcheck_ingredient_id=freshcheck_ingredient_id,
+                storage_mode=body.storage_mode,
+                purchased_at=body.purchased_at or assessed_at,
+                answers=body.answers,
+                now=assessed_at,
+            ),
+        )
+        return FreshnessPreviewResponseDTO(
+            kb_version=result.kb_version,
+            freshcheck_ingredient_id=freshcheck_ingredient_id,
+            archetype_id=result.archetype_id,
+            blocked=result.blocked,
+            tier=result.tier,
+            score=result.score,
+            remaining_hours_min=result.remaining_hours_min,
+            remaining_hours_max=result.remaining_hours_max,
+            remaining_days_min=result.remaining_days_min,
+            remaining_days_max=result.remaining_days_max,
+            reason_code=result.reason_code,
+            reasons_vi=result.reasons_vi,
+            storage_tips_vi=result.storage_tips_vi,
+            claims=result.claims,
+            rule_version=result.rule_version,
+            expires_at=_estimated_expiry(result, assessed_at),
         )
 
 
@@ -284,6 +331,18 @@ async def _resolve_active_mapping(
     return knowledge_base, mapping.freshcheck_ingredient_id
 
 
+def _estimated_expiry(
+    result: FreshCheckAssessmentResult,
+    assessed_at: datetime,
+) -> datetime | None:
+    """Return the conservative expiry implied by a FreshCheck result, if any."""
+    if result.blocked and result.tier == "tier_4_spoiled":
+        return assessed_at
+    if not result.blocked and result.remaining_hours_min is not None:
+        return assessed_at + timedelta(hours=result.remaining_hours_min)
+    return None
+
+
 def _apply_safe_expiry(
     batch: InventoryBatchModel,
     result: FreshCheckAssessmentResult,
@@ -292,14 +351,12 @@ def _apply_safe_expiry(
     """Apply only a conservative FreshCheck expiry, never a printed expiry."""
     if batch.expiration_source is ExpirationSource.MANUFACTURER:
         return None
-    if result.blocked and result.tier == "tier_4_spoiled":
-        batch.expires_at = assessed_at
-    elif not result.blocked and result.remaining_hours_min is not None:
-        batch.expires_at = assessed_at + timedelta(hours=result.remaining_hours_min)
-    else:
+    expires_at = _estimated_expiry(result, assessed_at)
+    if expires_at is None:
         return None
+    batch.expires_at = expires_at
     batch.expiration_source = ExpirationSource.ESTIMATED
-    return batch.expires_at
+    return expires_at
 
 
 def _validate_answers(
