@@ -318,6 +318,8 @@ Mọi datetime **bắt buộc có timezone**. Response batch:
 
 > **[CẬP NHẬT — thay mục "Multimodal Scan" `/scan/*` cũ]** Envelope chung, **`persisted` luôn `false`** — không endpoint nào ghi kho. OCR chạy qua OpenAI, ASR qua Groq Whisper (cần `OPENAI_API_KEY` / `GROQ_API_KEY`, thiếu key trả `503`). `label`/`invoice`/`asr` là `multipart/form-data`; `barcode` là **query param**, không upload.
 
+**Ảnh sai loại:** `ocr/label` và `ocr/invoice` chạy một bước kiểm tra nhẹ trước OCR; ảnh không phải tem nhãn/bao bì thực phẩm hay hóa đơn (ảnh người, phong cảnh, món đã nấu, tài liệu khác, ảnh trống/mờ) bị từ chối với `422` và không tốn lượt OCR.
+
 ```text
 POST /extractions/ocr/label     (auth) multipart file=<image> -> ExtractionResponse
 POST /extractions/ocr/invoice   (auth) multipart file=<image> -> InvoiceExtractionResponse

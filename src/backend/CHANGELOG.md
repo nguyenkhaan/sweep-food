@@ -29,6 +29,8 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - Alembic revision template now includes dialect-specific imports emitted during autogeneration, allowing PostgreSQL `JSONB` migrations to run.
 - Pantry matcher no longer maps labels onto the wrong ingredient: aliases and the query are scored together (IDF-weighted token F1 over ordered tokens, graded tone / d-đ agreement, head-noun position, recipe popularity as the tie-break) instead of sequential tiers, brand and preparation noise (`C.P`, `làm sạch`, `nguyên con`) is stripped, regional synonyms no longer override real catalog names, and ambiguous or unknown labels return no match with a `match_confidence`.
 - OpenAI OCR/guard HTTP client is no longer closed after every call, which broke concurrent extraction requests on the shared service.
+- `PATCH /api/inventory/batches/{id}`, `POST /api/inventory/batches/{id}/move` and `PATCH /api/favorite-menus/{id}` no longer return 500: server-side `updated_at` is now fetched eagerly (`eager_defaults`) instead of lazily loaded outside the async context.
+- `DELETE /api/shopping-lists/{id}/items/{item_id}` no longer always returns 409: an empty receipt body is stored as SQL `NULL` (`JSONB(none_as_null=True)`) so it satisfies the 204-with-no-body check constraint.
 
 ### Changed
 
