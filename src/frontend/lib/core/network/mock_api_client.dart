@@ -36,7 +36,6 @@ class MockApiClient implements ApiClient {
     ApiPaths.ingredients: 'ingredients',
     ApiPaths.inventoryBatches: 'inventory_batches',
     ApiPaths.recommendations: 'recommendations',
-    ApiPaths.suggestions: 'recommendations',
     '/recipes/': 'recipe',
     ApiPaths.notifications: 'notifications',
     ApiPaths.subscription: 'subscription',
@@ -47,16 +46,12 @@ class MockApiClient implements ApiClient {
     ApiPaths.extractionOcrLabel: 'scan_label',
     ApiPaths.extractionOcrInvoice: 'scan_receipt',
     ApiPaths.extractionAsr: 'scan_voice',
-    ApiPaths.scanLabel: 'scan_label',
-    ApiPaths.scanReceipt: 'scan_receipt',
-    ApiPaths.scanVoice: 'scan_voice',
   };
 
   /// Read-shaped POST endpoints that return a canned fixture instead of echoing
   /// the request body (dish scoring). Matched exact-or-prefix.
   static final Map<String, String> _postFixtures = {
     ApiPaths.recommendations: 'recommendations',
-    ApiPaths.suggestions: 'recommendations',
   };
 
   String? _postFixtureKey(String path) {
@@ -470,7 +465,9 @@ class MockApiClient implements ApiClient {
   Map<String, dynamic> _updateFavoriteMenu(String menuId, Map<String, dynamic> body) {
     final menu = _findFavoriteMenu(menuId);
     if (body.containsKey('name')) menu['name'] = body['name'];
-    if (body.containsKey('description')) menu['description'] = body['description'];
+    if (body.containsKey('description')) {
+      menu['description'] = body['description'];
+    }
     menu['updated_at'] = DateTime.now().toIso8601String();
     return menu;
   }
@@ -749,6 +746,14 @@ class MockApiClient implements ApiClient {
     log.d('MOCK GET $path ${query ?? ''}');
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null) return _inventoryBatchById(batchId);
+    if (path == ApiPaths.aiHealth) {
+      return {
+        'service': 'sweep-food-ai',
+        'status': 'ready',
+        'provider': 'SWEEP_FOOD_AI',
+        'latency_ms': 8.0,
+      };
+    }
     if (path == ApiPaths.recipes) {
       final recipeData = await _load('recipe');
       final list = [recipeData];
@@ -871,7 +876,7 @@ class MockApiClient implements ApiClient {
       }
       return _clone(recipe);
     }
-    if (path == ApiPaths.reportsUsageHistory) {
+    if (path == '/reports/usage-history') {
       final period = query?['period'] ?? 'month';
       return {
         'period': period,
@@ -934,7 +939,7 @@ class MockApiClient implements ApiClient {
         'total': 5,
       };
     }
-    if (path == ApiPaths.reportsWasteStatistics) {
+    if (path == '/reports/waste-statistics') {
       final period = query?['period'] ?? 'month';
       return {
         'period': period,
@@ -980,7 +985,7 @@ class MockApiClient implements ApiClient {
         ],
       };
     }
-    if (path == ApiPaths.reportsEfficiency) {
+    if (path == '/reports/efficiency') {
       final period = query?['period'] ?? 'month';
       return {
         'period': period,
@@ -1278,6 +1283,7 @@ class MockApiClient implements ApiClient {
     String path, {
     Map<String, dynamic> fields = const {},
     List<UploadFile> files = const [],
+    Duration? receiveTimeout,
   }) async {
     await Future<void>.delayed(_latency * 2);
     log.d('MOCK MULTIPART $path (${files.length} file)');

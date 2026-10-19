@@ -24,6 +24,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 
+try:
+    import torch
+except ModuleNotFoundError:
+    torch = None
+
 
 class SmartInputOcrRequest(BaseModel):
     image_base64: str | None = None
@@ -189,9 +194,12 @@ def startup_gpu_warmup():
     print("=" * 60)
 
     try:
-        import torch
-        cuda_avail = torch.cuda.is_available()
-        device_name = torch.cuda.get_device_name(0) if cuda_avail else "CPU"
+        cuda_avail = torch is not None and torch.cuda.is_available()
+        device_name = (
+            torch.cuda.get_device_name(0)
+            if cuda_avail and torch is not None
+            else "CPU"
+        )
     except Exception:
         cuda_avail = False
         device_name = "CPU"
@@ -296,9 +304,8 @@ def autocomplete(q: str = ""):
 @app.get("/api/system/status")
 def get_system_status():
     """Returns GPU status, VRAM usage, and active inference engines."""
-    import torch
     status = dict(SYSTEM_GPU_STATUS)
-    if torch.cuda.is_available():
+    if torch is not None and torch.cuda.is_available():
         status["vram_allocated_mb"] = round(torch.cuda.memory_allocated() / (1024 ** 2), 2)
         status["vram_reserved_mb"] = round(torch.cuda.memory_reserved() / (1024 ** 2), 2)
     return status

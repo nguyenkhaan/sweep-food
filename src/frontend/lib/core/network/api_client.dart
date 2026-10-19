@@ -1,5 +1,10 @@
 /// One local file to attach to a multipart request.
-typedef UploadFile = ({String field, String path, String? filename});
+typedef UploadFile = ({
+  String field,
+  String path,
+  String? filename,
+  String? contentType,
+});
 
 /// HTTP surface the repositories talk to. Two implementations:
 /// [DioApiClient] (live) and `MockApiClient` (serves `assets/mock/*.json`).
@@ -35,5 +40,6 @@ abstract interface class ApiClient {
     String path, {
     Map<String, dynamic> fields = const {},
     List<UploadFile> files = const [],
+    Duration? receiveTimeout,
   });
 }

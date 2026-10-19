@@ -1,5 +1,6 @@
 """Extraction service: validate media input and map typed AI responses."""
 
+import logging
 from datetime import date
 from uuid import uuid4
 
@@ -25,6 +26,8 @@ from src.module.extractions.extraction_dto import (
     InvoiceLineItem,
 )
 from src.module.extractions.extraction_provider import mock_barcode_lookup
+
+LOGGER = logging.getLogger(__name__)
 
 
 class ExtractionValidationError(Exception):
@@ -203,6 +206,12 @@ class ExtractionService:
         warnings = ["INVOICE_FINANCIAL_FIELDS_NOT_AVAILABLE"]
         if not line_items:
             warnings.append("NO_ITEMS_EXTRACTED")
+        LOGGER.info(
+            "AI invoice OCR mapped item_count=%s has_raw_text=%s warnings=%s",
+            len(line_items),
+            bool(raw_text.strip()),
+            warnings,
+        )
 
         return InvoiceExtractionResponse(
             request_id=uuid4(),

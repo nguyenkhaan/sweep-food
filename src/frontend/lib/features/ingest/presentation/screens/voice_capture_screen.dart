@@ -14,6 +14,7 @@ import 'package:sweepfood/core/media/audio_recorder_service.dart';
 import 'package:sweepfood/core/media/media_providers.dart';
 import 'package:sweepfood/core/permissions/permission_prime_sheet.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/logger.dart';
 import 'package:sweepfood/core/widgets/waveform_recorder.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/scan_controller.dart';
@@ -62,10 +63,14 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
     if (!mounted) return;
 
     setState(() {
-      _listening = granted;
+      _listening = capturing;
       _capturing = capturing;
       _amplitude = _recorder.amplitude();
     });
+    if (!capturing) {
+      log.w('Voice capture did not start granted=$granted');
+      return;
+    }
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) setState(() => _seconds++);
     });
@@ -81,11 +86,26 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
       path = await _recorder.stop();
     }
 
+    if (path == null || path.isEmpty) {
+      log.w('Voice submission skipped because no audio file was captured');
+      if (mounted) {
+        context.pushReplacement(
+          '${Routes.pantry}/${Routes.scanFailed}',
+          extra: ScanType.voice,
+        );
+      }
+      return;
+    }
+
     try {
       final job = await ref
           .read(scanControllerProvider.notifier)
           .scanVoice(audioPath: path);
       if (!mounted) return;
+      log.d(
+        'Scan result type=voice status=${job.status.name} '
+        'items=${job.items.length} hasTranscript=${job.rawText?.isNotEmpty == true}',
+      );
       if (job.isFailed || !job.hasItems) {
         context.pushReplacement(
           '${Routes.pantry}/${Routes.scanFailed}',
@@ -97,7 +117,8 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
         '${Routes.pantry}/${Routes.scanVoiceReview}',
         extra: job,
       );
-    } on Object {
+    } on Object catch (error, stackTrace) {
+      log.e('Voice scan flow failed', error: error, stackTrace: stackTrace);
       if (mounted) {
         context.pushReplacement(
           '${Routes.pantry}/${Routes.scanFailed}',

@@ -3,6 +3,6 @@ import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.d
 import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
 
 abstract interface class SuggestionRepository {
-  /// The 3–5 top-ranked dishes for the current pantry (`POST /suggestions/dishes`).
+  /// AI-ranked dishes for the current pantry (`POST /recommendations`).
   Future<Result<List<DishSuggestion>>> fetch(SuggestionRequest request);
 }

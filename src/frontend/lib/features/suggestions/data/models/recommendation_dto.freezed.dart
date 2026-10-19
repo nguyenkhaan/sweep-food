@@ -548,6 +548,562 @@ as double,
 
 
 /// @nodoc
+mixin _$RecommendationRankingFeaturesDto {
+
+@JsonKey(name: 'core_coverage', fromJson: _asDoubleDefault) double get coreCoverage;@JsonKey(name: 'core_missing_count', fromJson: _asDoubleDefault) double get coreMissingCount;@JsonKey(name: 'secondary_coverage', fromJson: _asDoubleDefault) double get secondaryCoverage;@JsonKey(name: 'shopping_gap_items', fromJson: _asDoubleDefault) double get shoppingGapItems;@JsonKey(name: 'rescue_weight_g', fromJson: _asDoubleDefault) double get rescueWeightG;@JsonKey(name: 'nutrition_confidence', fromJson: _asDoubleDefault) double get nutritionConfidence;@JsonKey(name: 'kcal_per_serving', fromJson: _asDoubleDefault) double get kcalPerServing;@JsonKey(name: 'protein_per_serving', fromJson: _asDoubleDefault) double get proteinPerServing;@JsonKey(name: 'prep_complexity', fromJson: _asDoubleDefault) double get prepComplexity;
+/// Create a copy of RecommendationRankingFeaturesDto
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RecommendationRankingFeaturesDtoCopyWith<RecommendationRankingFeaturesDto> get copyWith => _$RecommendationRankingFeaturesDtoCopyWithImpl<RecommendationRankingFeaturesDto>(this as RecommendationRankingFeaturesDto, _$identity);
+
+  /// Serializes this RecommendationRankingFeaturesDto to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecommendationRankingFeaturesDto&&(identical(other.coreCoverage, coreCoverage) || other.coreCoverage == coreCoverage)&&(identical(other.coreMissingCount, coreMissingCount) || other.coreMissingCount == coreMissingCount)&&(identical(other.secondaryCoverage, secondaryCoverage) || other.secondaryCoverage == secondaryCoverage)&&(identical(other.shoppingGapItems, shoppingGapItems) || other.shoppingGapItems == shoppingGapItems)&&(identical(other.rescueWeightG, rescueWeightG) || other.rescueWeightG == rescueWeightG)&&(identical(other.nutritionConfidence, nutritionConfidence) || other.nutritionConfidence == nutritionConfidence)&&(identical(other.kcalPerServing, kcalPerServing) || other.kcalPerServing == kcalPerServing)&&(identical(other.proteinPerServing, proteinPerServing) || other.proteinPerServing == proteinPerServing)&&(identical(other.prepComplexity, prepComplexity) || other.prepComplexity == prepComplexity));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,coreCoverage,coreMissingCount,secondaryCoverage,shoppingGapItems,rescueWeightG,nutritionConfidence,kcalPerServing,proteinPerServing,prepComplexity);
+
+@override
+String toString() {
+  return 'RecommendationRankingFeaturesDto(coreCoverage: $coreCoverage, coreMissingCount: $coreMissingCount, secondaryCoverage: $secondaryCoverage, shoppingGapItems: $shoppingGapItems, rescueWeightG: $rescueWeightG, nutritionConfidence: $nutritionConfidence, kcalPerServing: $kcalPerServing, proteinPerServing: $proteinPerServing, prepComplexity: $prepComplexity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RecommendationRankingFeaturesDtoCopyWith<$Res>  {
+  factory $RecommendationRankingFeaturesDtoCopyWith(RecommendationRankingFeaturesDto value, $Res Function(RecommendationRankingFeaturesDto) _then) = _$RecommendationRankingFeaturesDtoCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'core_coverage', fromJson: _asDoubleDefault) double coreCoverage,@JsonKey(name: 'core_missing_count', fromJson: _asDoubleDefault) double coreMissingCount,@JsonKey(name: 'secondary_coverage', fromJson: _asDoubleDefault) double secondaryCoverage,@JsonKey(name: 'shopping_gap_items', fromJson: _asDoubleDefault) double shoppingGapItems,@JsonKey(name: 'rescue_weight_g', fromJson: _asDoubleDefault) double rescueWeightG,@JsonKey(name: 'nutrition_confidence', fromJson: _asDoubleDefault) double nutritionConfidence,@JsonKey(name: 'kcal_per_serving', fromJson: _asDoubleDefault) double kcalPerServing,@JsonKey(name: 'protein_per_serving', fromJson: _asDoubleDefault) double proteinPerServing,@JsonKey(name: 'prep_complexity', fromJson: _asDoubleDefault) double prepComplexity
+});
+
+
+
+
+}
+/// @nodoc
+class _$RecommendationRankingFeaturesDtoCopyWithImpl<$Res>
+    implements $RecommendationRankingFeaturesDtoCopyWith<$Res> {
+  _$RecommendationRankingFeaturesDtoCopyWithImpl(this._self, this._then);
+
+  final RecommendationRankingFeaturesDto _self;
+  final $Res Function(RecommendationRankingFeaturesDto) _then;
+
+/// Create a copy of RecommendationRankingFeaturesDto
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? coreCoverage = null,Object? coreMissingCount = null,Object? secondaryCoverage = null,Object? shoppingGapItems = null,Object? rescueWeightG = null,Object? nutritionConfidence = null,Object? kcalPerServing = null,Object? proteinPerServing = null,Object? prepComplexity = null,}) {
+  return _then(_self.copyWith(
+coreCoverage: null == coreCoverage ? _self.coreCoverage : coreCoverage // ignore: cast_nullable_to_non_nullable
+as double,coreMissingCount: null == coreMissingCount ? _self.coreMissingCount : coreMissingCount // ignore: cast_nullable_to_non_nullable
+as double,secondaryCoverage: null == secondaryCoverage ? _self.secondaryCoverage : secondaryCoverage // ignore: cast_nullable_to_non_nullable
+as double,shoppingGapItems: null == shoppingGapItems ? _self.shoppingGapItems : shoppingGapItems // ignore: cast_nullable_to_non_nullable
+as double,rescueWeightG: null == rescueWeightG ? _self.rescueWeightG : rescueWeightG // ignore: cast_nullable_to_non_nullable
+as double,nutritionConfidence: null == nutritionConfidence ? _self.nutritionConfidence : nutritionConfidence // ignore: cast_nullable_to_non_nullable
+as double,kcalPerServing: null == kcalPerServing ? _self.kcalPerServing : kcalPerServing // ignore: cast_nullable_to_non_nullable
+as double,proteinPerServing: null == proteinPerServing ? _self.proteinPerServing : proteinPerServing // ignore: cast_nullable_to_non_nullable
+as double,prepComplexity: null == prepComplexity ? _self.prepComplexity : prepComplexity // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [RecommendationRankingFeaturesDto].
+extension RecommendationRankingFeaturesDtoPatterns on RecommendationRankingFeaturesDto {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RecommendationRankingFeaturesDto value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RecommendationRankingFeaturesDto() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RecommendationRankingFeaturesDto value)  $default,){
+final _that = this;
+switch (_that) {
+case _RecommendationRankingFeaturesDto():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RecommendationRankingFeaturesDto value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RecommendationRankingFeaturesDto() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'core_coverage', fromJson: _asDoubleDefault)  double coreCoverage, @JsonKey(name: 'core_missing_count', fromJson: _asDoubleDefault)  double coreMissingCount, @JsonKey(name: 'secondary_coverage', fromJson: _asDoubleDefault)  double secondaryCoverage, @JsonKey(name: 'shopping_gap_items', fromJson: _asDoubleDefault)  double shoppingGapItems, @JsonKey(name: 'rescue_weight_g', fromJson: _asDoubleDefault)  double rescueWeightG, @JsonKey(name: 'nutrition_confidence', fromJson: _asDoubleDefault)  double nutritionConfidence, @JsonKey(name: 'kcal_per_serving', fromJson: _asDoubleDefault)  double kcalPerServing, @JsonKey(name: 'protein_per_serving', fromJson: _asDoubleDefault)  double proteinPerServing, @JsonKey(name: 'prep_complexity', fromJson: _asDoubleDefault)  double prepComplexity)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RecommendationRankingFeaturesDto() when $default != null:
+return $default(_that.coreCoverage,_that.coreMissingCount,_that.secondaryCoverage,_that.shoppingGapItems,_that.rescueWeightG,_that.nutritionConfidence,_that.kcalPerServing,_that.proteinPerServing,_that.prepComplexity);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'core_coverage', fromJson: _asDoubleDefault)  double coreCoverage, @JsonKey(name: 'core_missing_count', fromJson: _asDoubleDefault)  double coreMissingCount, @JsonKey(name: 'secondary_coverage', fromJson: _asDoubleDefault)  double secondaryCoverage, @JsonKey(name: 'shopping_gap_items', fromJson: _asDoubleDefault)  double shoppingGapItems, @JsonKey(name: 'rescue_weight_g', fromJson: _asDoubleDefault)  double rescueWeightG, @JsonKey(name: 'nutrition_confidence', fromJson: _asDoubleDefault)  double nutritionConfidence, @JsonKey(name: 'kcal_per_serving', fromJson: _asDoubleDefault)  double kcalPerServing, @JsonKey(name: 'protein_per_serving', fromJson: _asDoubleDefault)  double proteinPerServing, @JsonKey(name: 'prep_complexity', fromJson: _asDoubleDefault)  double prepComplexity)  $default,) {final _that = this;
+switch (_that) {
+case _RecommendationRankingFeaturesDto():
+return $default(_that.coreCoverage,_that.coreMissingCount,_that.secondaryCoverage,_that.shoppingGapItems,_that.rescueWeightG,_that.nutritionConfidence,_that.kcalPerServing,_that.proteinPerServing,_that.prepComplexity);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'core_coverage', fromJson: _asDoubleDefault)  double coreCoverage, @JsonKey(name: 'core_missing_count', fromJson: _asDoubleDefault)  double coreMissingCount, @JsonKey(name: 'secondary_coverage', fromJson: _asDoubleDefault)  double secondaryCoverage, @JsonKey(name: 'shopping_gap_items', fromJson: _asDoubleDefault)  double shoppingGapItems, @JsonKey(name: 'rescue_weight_g', fromJson: _asDoubleDefault)  double rescueWeightG, @JsonKey(name: 'nutrition_confidence', fromJson: _asDoubleDefault)  double nutritionConfidence, @JsonKey(name: 'kcal_per_serving', fromJson: _asDoubleDefault)  double kcalPerServing, @JsonKey(name: 'protein_per_serving', fromJson: _asDoubleDefault)  double proteinPerServing, @JsonKey(name: 'prep_complexity', fromJson: _asDoubleDefault)  double prepComplexity)?  $default,) {final _that = this;
+switch (_that) {
+case _RecommendationRankingFeaturesDto() when $default != null:
+return $default(_that.coreCoverage,_that.coreMissingCount,_that.secondaryCoverage,_that.shoppingGapItems,_that.rescueWeightG,_that.nutritionConfidence,_that.kcalPerServing,_that.proteinPerServing,_that.prepComplexity);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _RecommendationRankingFeaturesDto extends RecommendationRankingFeaturesDto {
+  const _RecommendationRankingFeaturesDto({@JsonKey(name: 'core_coverage', fromJson: _asDoubleDefault) this.coreCoverage = 0.0, @JsonKey(name: 'core_missing_count', fromJson: _asDoubleDefault) this.coreMissingCount = 0.0, @JsonKey(name: 'secondary_coverage', fromJson: _asDoubleDefault) this.secondaryCoverage = 0.0, @JsonKey(name: 'shopping_gap_items', fromJson: _asDoubleDefault) this.shoppingGapItems = 0.0, @JsonKey(name: 'rescue_weight_g', fromJson: _asDoubleDefault) this.rescueWeightG = 0.0, @JsonKey(name: 'nutrition_confidence', fromJson: _asDoubleDefault) this.nutritionConfidence = 0.0, @JsonKey(name: 'kcal_per_serving', fromJson: _asDoubleDefault) this.kcalPerServing = 0.0, @JsonKey(name: 'protein_per_serving', fromJson: _asDoubleDefault) this.proteinPerServing = 0.0, @JsonKey(name: 'prep_complexity', fromJson: _asDoubleDefault) this.prepComplexity = 0.0}): super._();
+  factory _RecommendationRankingFeaturesDto.fromJson(Map<String, dynamic> json) => _$RecommendationRankingFeaturesDtoFromJson(json);
+
+@override@JsonKey(name: 'core_coverage', fromJson: _asDoubleDefault) final  double coreCoverage;
+@override@JsonKey(name: 'core_missing_count', fromJson: _asDoubleDefault) final  double coreMissingCount;
+@override@JsonKey(name: 'secondary_coverage', fromJson: _asDoubleDefault) final  double secondaryCoverage;
+@override@JsonKey(name: 'shopping_gap_items', fromJson: _asDoubleDefault) final  double shoppingGapItems;
+@override@JsonKey(name: 'rescue_weight_g', fromJson: _asDoubleDefault) final  double rescueWeightG;
+@override@JsonKey(name: 'nutrition_confidence', fromJson: _asDoubleDefault) final  double nutritionConfidence;
+@override@JsonKey(name: 'kcal_per_serving', fromJson: _asDoubleDefault) final  double kcalPerServing;
+@override@JsonKey(name: 'protein_per_serving', fromJson: _asDoubleDefault) final  double proteinPerServing;
+@override@JsonKey(name: 'prep_complexity', fromJson: _asDoubleDefault) final  double prepComplexity;
+
+/// Create a copy of RecommendationRankingFeaturesDto
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RecommendationRankingFeaturesDtoCopyWith<_RecommendationRankingFeaturesDto> get copyWith => __$RecommendationRankingFeaturesDtoCopyWithImpl<_RecommendationRankingFeaturesDto>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RecommendationRankingFeaturesDtoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecommendationRankingFeaturesDto&&(identical(other.coreCoverage, coreCoverage) || other.coreCoverage == coreCoverage)&&(identical(other.coreMissingCount, coreMissingCount) || other.coreMissingCount == coreMissingCount)&&(identical(other.secondaryCoverage, secondaryCoverage) || other.secondaryCoverage == secondaryCoverage)&&(identical(other.shoppingGapItems, shoppingGapItems) || other.shoppingGapItems == shoppingGapItems)&&(identical(other.rescueWeightG, rescueWeightG) || other.rescueWeightG == rescueWeightG)&&(identical(other.nutritionConfidence, nutritionConfidence) || other.nutritionConfidence == nutritionConfidence)&&(identical(other.kcalPerServing, kcalPerServing) || other.kcalPerServing == kcalPerServing)&&(identical(other.proteinPerServing, proteinPerServing) || other.proteinPerServing == proteinPerServing)&&(identical(other.prepComplexity, prepComplexity) || other.prepComplexity == prepComplexity));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,coreCoverage,coreMissingCount,secondaryCoverage,shoppingGapItems,rescueWeightG,nutritionConfidence,kcalPerServing,proteinPerServing,prepComplexity);
+
+@override
+String toString() {
+  return 'RecommendationRankingFeaturesDto(coreCoverage: $coreCoverage, coreMissingCount: $coreMissingCount, secondaryCoverage: $secondaryCoverage, shoppingGapItems: $shoppingGapItems, rescueWeightG: $rescueWeightG, nutritionConfidence: $nutritionConfidence, kcalPerServing: $kcalPerServing, proteinPerServing: $proteinPerServing, prepComplexity: $prepComplexity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RecommendationRankingFeaturesDtoCopyWith<$Res> implements $RecommendationRankingFeaturesDtoCopyWith<$Res> {
+  factory _$RecommendationRankingFeaturesDtoCopyWith(_RecommendationRankingFeaturesDto value, $Res Function(_RecommendationRankingFeaturesDto) _then) = __$RecommendationRankingFeaturesDtoCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'core_coverage', fromJson: _asDoubleDefault) double coreCoverage,@JsonKey(name: 'core_missing_count', fromJson: _asDoubleDefault) double coreMissingCount,@JsonKey(name: 'secondary_coverage', fromJson: _asDoubleDefault) double secondaryCoverage,@JsonKey(name: 'shopping_gap_items', fromJson: _asDoubleDefault) double shoppingGapItems,@JsonKey(name: 'rescue_weight_g', fromJson: _asDoubleDefault) double rescueWeightG,@JsonKey(name: 'nutrition_confidence', fromJson: _asDoubleDefault) double nutritionConfidence,@JsonKey(name: 'kcal_per_serving', fromJson: _asDoubleDefault) double kcalPerServing,@JsonKey(name: 'protein_per_serving', fromJson: _asDoubleDefault) double proteinPerServing,@JsonKey(name: 'prep_complexity', fromJson: _asDoubleDefault) double prepComplexity
+});
+
+
+
+
+}
+/// @nodoc
+class __$RecommendationRankingFeaturesDtoCopyWithImpl<$Res>
+    implements _$RecommendationRankingFeaturesDtoCopyWith<$Res> {
+  __$RecommendationRankingFeaturesDtoCopyWithImpl(this._self, this._then);
+
+  final _RecommendationRankingFeaturesDto _self;
+  final $Res Function(_RecommendationRankingFeaturesDto) _then;
+
+/// Create a copy of RecommendationRankingFeaturesDto
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? coreCoverage = null,Object? coreMissingCount = null,Object? secondaryCoverage = null,Object? shoppingGapItems = null,Object? rescueWeightG = null,Object? nutritionConfidence = null,Object? kcalPerServing = null,Object? proteinPerServing = null,Object? prepComplexity = null,}) {
+  return _then(_RecommendationRankingFeaturesDto(
+coreCoverage: null == coreCoverage ? _self.coreCoverage : coreCoverage // ignore: cast_nullable_to_non_nullable
+as double,coreMissingCount: null == coreMissingCount ? _self.coreMissingCount : coreMissingCount // ignore: cast_nullable_to_non_nullable
+as double,secondaryCoverage: null == secondaryCoverage ? _self.secondaryCoverage : secondaryCoverage // ignore: cast_nullable_to_non_nullable
+as double,shoppingGapItems: null == shoppingGapItems ? _self.shoppingGapItems : shoppingGapItems // ignore: cast_nullable_to_non_nullable
+as double,rescueWeightG: null == rescueWeightG ? _self.rescueWeightG : rescueWeightG // ignore: cast_nullable_to_non_nullable
+as double,nutritionConfidence: null == nutritionConfidence ? _self.nutritionConfidence : nutritionConfidence // ignore: cast_nullable_to_non_nullable
+as double,kcalPerServing: null == kcalPerServing ? _self.kcalPerServing : kcalPerServing // ignore: cast_nullable_to_non_nullable
+as double,proteinPerServing: null == proteinPerServing ? _self.proteinPerServing : proteinPerServing // ignore: cast_nullable_to_non_nullable
+as double,prepComplexity: null == prepComplexity ? _self.prepComplexity : prepComplexity // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$RecommendationTimingsDto {
+
+@JsonKey(name: 'total_ms', fromJson: _asDoubleDefault) double get totalMs;@JsonKey(name: 'candidate_ms', fromJson: _asDoubleDefault) double get candidateMs;@JsonKey(name: 'ranker_ms', fromJson: _asDoubleDefault) double get rankerMs;
+/// Create a copy of RecommendationTimingsDto
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$RecommendationTimingsDtoCopyWith<RecommendationTimingsDto> get copyWith => _$RecommendationTimingsDtoCopyWithImpl<RecommendationTimingsDto>(this as RecommendationTimingsDto, _$identity);
+
+  /// Serializes this RecommendationTimingsDto to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecommendationTimingsDto&&(identical(other.totalMs, totalMs) || other.totalMs == totalMs)&&(identical(other.candidateMs, candidateMs) || other.candidateMs == candidateMs)&&(identical(other.rankerMs, rankerMs) || other.rankerMs == rankerMs));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,totalMs,candidateMs,rankerMs);
+
+@override
+String toString() {
+  return 'RecommendationTimingsDto(totalMs: $totalMs, candidateMs: $candidateMs, rankerMs: $rankerMs)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $RecommendationTimingsDtoCopyWith<$Res>  {
+  factory $RecommendationTimingsDtoCopyWith(RecommendationTimingsDto value, $Res Function(RecommendationTimingsDto) _then) = _$RecommendationTimingsDtoCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: 'total_ms', fromJson: _asDoubleDefault) double totalMs,@JsonKey(name: 'candidate_ms', fromJson: _asDoubleDefault) double candidateMs,@JsonKey(name: 'ranker_ms', fromJson: _asDoubleDefault) double rankerMs
+});
+
+
+
+
+}
+/// @nodoc
+class _$RecommendationTimingsDtoCopyWithImpl<$Res>
+    implements $RecommendationTimingsDtoCopyWith<$Res> {
+  _$RecommendationTimingsDtoCopyWithImpl(this._self, this._then);
+
+  final RecommendationTimingsDto _self;
+  final $Res Function(RecommendationTimingsDto) _then;
+
+/// Create a copy of RecommendationTimingsDto
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? totalMs = null,Object? candidateMs = null,Object? rankerMs = null,}) {
+  return _then(_self.copyWith(
+totalMs: null == totalMs ? _self.totalMs : totalMs // ignore: cast_nullable_to_non_nullable
+as double,candidateMs: null == candidateMs ? _self.candidateMs : candidateMs // ignore: cast_nullable_to_non_nullable
+as double,rankerMs: null == rankerMs ? _self.rankerMs : rankerMs // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [RecommendationTimingsDto].
+extension RecommendationTimingsDtoPatterns on RecommendationTimingsDto {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _RecommendationTimingsDto value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _RecommendationTimingsDto() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _RecommendationTimingsDto value)  $default,){
+final _that = this;
+switch (_that) {
+case _RecommendationTimingsDto():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _RecommendationTimingsDto value)?  $default,){
+final _that = this;
+switch (_that) {
+case _RecommendationTimingsDto() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'total_ms', fromJson: _asDoubleDefault)  double totalMs, @JsonKey(name: 'candidate_ms', fromJson: _asDoubleDefault)  double candidateMs, @JsonKey(name: 'ranker_ms', fromJson: _asDoubleDefault)  double rankerMs)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _RecommendationTimingsDto() when $default != null:
+return $default(_that.totalMs,_that.candidateMs,_that.rankerMs);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'total_ms', fromJson: _asDoubleDefault)  double totalMs, @JsonKey(name: 'candidate_ms', fromJson: _asDoubleDefault)  double candidateMs, @JsonKey(name: 'ranker_ms', fromJson: _asDoubleDefault)  double rankerMs)  $default,) {final _that = this;
+switch (_that) {
+case _RecommendationTimingsDto():
+return $default(_that.totalMs,_that.candidateMs,_that.rankerMs);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'total_ms', fromJson: _asDoubleDefault)  double totalMs, @JsonKey(name: 'candidate_ms', fromJson: _asDoubleDefault)  double candidateMs, @JsonKey(name: 'ranker_ms', fromJson: _asDoubleDefault)  double rankerMs)?  $default,) {final _that = this;
+switch (_that) {
+case _RecommendationTimingsDto() when $default != null:
+return $default(_that.totalMs,_that.candidateMs,_that.rankerMs);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _RecommendationTimingsDto implements RecommendationTimingsDto {
+  const _RecommendationTimingsDto({@JsonKey(name: 'total_ms', fromJson: _asDoubleDefault) this.totalMs = 0.0, @JsonKey(name: 'candidate_ms', fromJson: _asDoubleDefault) this.candidateMs = 0.0, @JsonKey(name: 'ranker_ms', fromJson: _asDoubleDefault) this.rankerMs = 0.0});
+  factory _RecommendationTimingsDto.fromJson(Map<String, dynamic> json) => _$RecommendationTimingsDtoFromJson(json);
+
+@override@JsonKey(name: 'total_ms', fromJson: _asDoubleDefault) final  double totalMs;
+@override@JsonKey(name: 'candidate_ms', fromJson: _asDoubleDefault) final  double candidateMs;
+@override@JsonKey(name: 'ranker_ms', fromJson: _asDoubleDefault) final  double rankerMs;
+
+/// Create a copy of RecommendationTimingsDto
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$RecommendationTimingsDtoCopyWith<_RecommendationTimingsDto> get copyWith => __$RecommendationTimingsDtoCopyWithImpl<_RecommendationTimingsDto>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$RecommendationTimingsDtoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecommendationTimingsDto&&(identical(other.totalMs, totalMs) || other.totalMs == totalMs)&&(identical(other.candidateMs, candidateMs) || other.candidateMs == candidateMs)&&(identical(other.rankerMs, rankerMs) || other.rankerMs == rankerMs));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,totalMs,candidateMs,rankerMs);
+
+@override
+String toString() {
+  return 'RecommendationTimingsDto(totalMs: $totalMs, candidateMs: $candidateMs, rankerMs: $rankerMs)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$RecommendationTimingsDtoCopyWith<$Res> implements $RecommendationTimingsDtoCopyWith<$Res> {
+  factory _$RecommendationTimingsDtoCopyWith(_RecommendationTimingsDto value, $Res Function(_RecommendationTimingsDto) _then) = __$RecommendationTimingsDtoCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: 'total_ms', fromJson: _asDoubleDefault) double totalMs,@JsonKey(name: 'candidate_ms', fromJson: _asDoubleDefault) double candidateMs,@JsonKey(name: 'ranker_ms', fromJson: _asDoubleDefault) double rankerMs
+});
+
+
+
+
+}
+/// @nodoc
+class __$RecommendationTimingsDtoCopyWithImpl<$Res>
+    implements _$RecommendationTimingsDtoCopyWith<$Res> {
+  __$RecommendationTimingsDtoCopyWithImpl(this._self, this._then);
+
+  final _RecommendationTimingsDto _self;
+  final $Res Function(_RecommendationTimingsDto) _then;
+
+/// Create a copy of RecommendationTimingsDto
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? totalMs = null,Object? candidateMs = null,Object? rankerMs = null,}) {
+  return _then(_RecommendationTimingsDto(
+totalMs: null == totalMs ? _self.totalMs : totalMs // ignore: cast_nullable_to_non_nullable
+as double,candidateMs: null == candidateMs ? _self.candidateMs : candidateMs // ignore: cast_nullable_to_non_nullable
+as double,rankerMs: null == rankerMs ? _self.rankerMs : rankerMs // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$RecommendationMissingIngredientDto {
 
 @JsonKey(name: 'master_ingredient_id') String? get masterIngredientId; String get name;@JsonKey(fromJson: _asDoubleDefault) double get quantity; String get unit;
@@ -821,7 +1377,7 @@ as String,
 /// @nodoc
 mixin _$RecommendationItemDto {
 
-@JsonKey(name: 'recipe_id') String get recipeId;@JsonKey(name: 'recipe_name') String get recipeName; int get rank;@JsonKey(fromJson: _asDoubleDefault) double get score;@JsonKey(name: 'score_components') RecommendationScoreComponentsDto get scoreComponents;@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> get missingIngredients;@JsonKey(name: 'near_expiry_ingredients') List<String> get nearExpiryIngredients; String get explanation; String get provider;@JsonKey(name: 'model_version') String get modelVersion;// Optional embedded dish for backward compatibility with legacy fixtures/mocks
+@JsonKey(name: 'recipe_id') String get recipeId;@JsonKey(name: 'recipe_name') String get recipeName; int get rank;@JsonKey(fromJson: _asDoubleDefault) double get score;@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double get rankScore;@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto get rankingFeatures;@JsonKey(name: 'score_components') RecommendationScoreComponentsDto get scoreComponents;@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> get missingIngredients;@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> get matchedIngredients;@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> get optionalIngredients;@JsonKey(name: 'near_expiry_ingredients') List<String> get nearExpiryIngredients; String get explanation; String get provider;@JsonKey(name: 'status_badge') String get statusBadge;@JsonKey(name: 'model_version') String get modelVersion;// Optional embedded dish for backward compatibility with legacy fixtures/mocks
  DishDto? get dish;
 /// Create a copy of RecommendationItemDto
 /// with the given fields replaced by the non-null parameter values.
@@ -833,16 +1389,16 @@ $RecommendationItemDtoCopyWith<RecommendationItemDto> get copyWith => _$Recommen
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecommendationItemDto&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.score, score) || other.score == score)&&(identical(other.scoreComponents, scoreComponents) || other.scoreComponents == scoreComponents)&&const DeepCollectionEquality().equals(other.missingIngredients, missingIngredients)&&const DeepCollectionEquality().equals(other.nearExpiryIngredients, nearExpiryIngredients)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.dish, dish) || other.dish == dish));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecommendationItemDto&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.score, score) || other.score == score)&&(identical(other.rankScore, rankScore) || other.rankScore == rankScore)&&(identical(other.rankingFeatures, rankingFeatures) || other.rankingFeatures == rankingFeatures)&&(identical(other.scoreComponents, scoreComponents) || other.scoreComponents == scoreComponents)&&const DeepCollectionEquality().equals(other.missingIngredients, missingIngredients)&&const DeepCollectionEquality().equals(other.matchedIngredients, matchedIngredients)&&const DeepCollectionEquality().equals(other.optionalIngredients, optionalIngredients)&&const DeepCollectionEquality().equals(other.nearExpiryIngredients, nearExpiryIngredients)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.statusBadge, statusBadge) || other.statusBadge == statusBadge)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.dish, dish) || other.dish == dish));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,recipeId,recipeName,rank,score,scoreComponents,const DeepCollectionEquality().hash(missingIngredients),const DeepCollectionEquality().hash(nearExpiryIngredients),explanation,provider,modelVersion,dish);
+int get hashCode => Object.hash(runtimeType,recipeId,recipeName,rank,score,rankScore,rankingFeatures,scoreComponents,const DeepCollectionEquality().hash(missingIngredients),const DeepCollectionEquality().hash(matchedIngredients),const DeepCollectionEquality().hash(optionalIngredients),const DeepCollectionEquality().hash(nearExpiryIngredients),explanation,provider,statusBadge,modelVersion,dish);
 
 @override
 String toString() {
-  return 'RecommendationItemDto(recipeId: $recipeId, recipeName: $recipeName, rank: $rank, score: $score, scoreComponents: $scoreComponents, missingIngredients: $missingIngredients, nearExpiryIngredients: $nearExpiryIngredients, explanation: $explanation, provider: $provider, modelVersion: $modelVersion, dish: $dish)';
+  return 'RecommendationItemDto(recipeId: $recipeId, recipeName: $recipeName, rank: $rank, score: $score, rankScore: $rankScore, rankingFeatures: $rankingFeatures, scoreComponents: $scoreComponents, missingIngredients: $missingIngredients, matchedIngredients: $matchedIngredients, optionalIngredients: $optionalIngredients, nearExpiryIngredients: $nearExpiryIngredients, explanation: $explanation, provider: $provider, statusBadge: $statusBadge, modelVersion: $modelVersion, dish: $dish)';
 }
 
 
@@ -853,11 +1409,11 @@ abstract mixin class $RecommendationItemDtoCopyWith<$Res>  {
   factory $RecommendationItemDtoCopyWith(RecommendationItemDto value, $Res Function(RecommendationItemDto) _then) = _$RecommendationItemDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String recipeName, int rank,@JsonKey(fromJson: _asDoubleDefault) double score,@JsonKey(name: 'score_components') RecommendationScoreComponentsDto scoreComponents,@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> missingIngredients,@JsonKey(name: 'near_expiry_ingredients') List<String> nearExpiryIngredients, String explanation, String provider,@JsonKey(name: 'model_version') String modelVersion, DishDto? dish
+@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String recipeName, int rank,@JsonKey(fromJson: _asDoubleDefault) double score,@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double rankScore,@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto rankingFeatures,@JsonKey(name: 'score_components') RecommendationScoreComponentsDto scoreComponents,@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> missingIngredients,@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> matchedIngredients,@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> optionalIngredients,@JsonKey(name: 'near_expiry_ingredients') List<String> nearExpiryIngredients, String explanation, String provider,@JsonKey(name: 'status_badge') String statusBadge,@JsonKey(name: 'model_version') String modelVersion, DishDto? dish
 });
 
 
-$RecommendationScoreComponentsDtoCopyWith<$Res> get scoreComponents;$DishDtoCopyWith<$Res>? get dish;
+$RecommendationRankingFeaturesDtoCopyWith<$Res> get rankingFeatures;$RecommendationScoreComponentsDtoCopyWith<$Res> get scoreComponents;$DishDtoCopyWith<$Res>? get dish;
 
 }
 /// @nodoc
@@ -870,23 +1426,37 @@ class _$RecommendationItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of RecommendationItemDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? recipeId = null,Object? recipeName = null,Object? rank = null,Object? score = null,Object? scoreComponents = null,Object? missingIngredients = null,Object? nearExpiryIngredients = null,Object? explanation = null,Object? provider = null,Object? modelVersion = null,Object? dish = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? recipeId = null,Object? recipeName = null,Object? rank = null,Object? score = null,Object? rankScore = null,Object? rankingFeatures = null,Object? scoreComponents = null,Object? missingIngredients = null,Object? matchedIngredients = null,Object? optionalIngredients = null,Object? nearExpiryIngredients = null,Object? explanation = null,Object? provider = null,Object? statusBadge = null,Object? modelVersion = null,Object? dish = freezed,}) {
   return _then(_self.copyWith(
 recipeId: null == recipeId ? _self.recipeId : recipeId // ignore: cast_nullable_to_non_nullable
 as String,recipeName: null == recipeName ? _self.recipeName : recipeName // ignore: cast_nullable_to_non_nullable
 as String,rank: null == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
 as int,score: null == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
-as double,scoreComponents: null == scoreComponents ? _self.scoreComponents : scoreComponents // ignore: cast_nullable_to_non_nullable
+as double,rankScore: null == rankScore ? _self.rankScore : rankScore // ignore: cast_nullable_to_non_nullable
+as double,rankingFeatures: null == rankingFeatures ? _self.rankingFeatures : rankingFeatures // ignore: cast_nullable_to_non_nullable
+as RecommendationRankingFeaturesDto,scoreComponents: null == scoreComponents ? _self.scoreComponents : scoreComponents // ignore: cast_nullable_to_non_nullable
 as RecommendationScoreComponentsDto,missingIngredients: null == missingIngredients ? _self.missingIngredients : missingIngredients // ignore: cast_nullable_to_non_nullable
+as List<RecommendationMissingIngredientDto>,matchedIngredients: null == matchedIngredients ? _self.matchedIngredients : matchedIngredients // ignore: cast_nullable_to_non_nullable
+as List<RecommendationMissingIngredientDto>,optionalIngredients: null == optionalIngredients ? _self.optionalIngredients : optionalIngredients // ignore: cast_nullable_to_non_nullable
 as List<RecommendationMissingIngredientDto>,nearExpiryIngredients: null == nearExpiryIngredients ? _self.nearExpiryIngredients : nearExpiryIngredients // ignore: cast_nullable_to_non_nullable
 as List<String>,explanation: null == explanation ? _self.explanation : explanation // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
+as String,statusBadge: null == statusBadge ? _self.statusBadge : statusBadge // ignore: cast_nullable_to_non_nullable
 as String,modelVersion: null == modelVersion ? _self.modelVersion : modelVersion // ignore: cast_nullable_to_non_nullable
 as String,dish: freezed == dish ? _self.dish : dish // ignore: cast_nullable_to_non_nullable
 as DishDto?,
   ));
 }
 /// Create a copy of RecommendationItemDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RecommendationRankingFeaturesDtoCopyWith<$Res> get rankingFeatures {
+
+  return $RecommendationRankingFeaturesDtoCopyWith<$Res>(_self.rankingFeatures, (value) {
+    return _then(_self.copyWith(rankingFeatures: value));
+  });
+}/// Create a copy of RecommendationItemDto
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -989,10 +1559,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients,  String explanation,  String provider, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RecommendationItemDto() when $default != null:
-return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.scoreComponents,_that.missingIngredients,_that.nearExpiryIngredients,_that.explanation,_that.provider,_that.modelVersion,_that.dish);case _:
+return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
   return orElse();
 
 }
@@ -1010,10 +1580,10 @@ return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.sco
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients,  String explanation,  String provider, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)  $default,) {final _that = this;
 switch (_that) {
 case _RecommendationItemDto():
-return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.scoreComponents,_that.missingIngredients,_that.nearExpiryIngredients,_that.explanation,_that.provider,_that.modelVersion,_that.dish);case _:
+return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1030,10 +1600,10 @@ return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.sco
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients,  String explanation,  String provider, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)?  $default,) {final _that = this;
 switch (_that) {
 case _RecommendationItemDto() when $default != null:
-return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.scoreComponents,_that.missingIngredients,_that.nearExpiryIngredients,_that.explanation,_that.provider,_that.modelVersion,_that.dish);case _:
+return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
   return null;
 
 }
@@ -1045,19 +1615,35 @@ return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.sco
 
 
 class _RecommendationItemDto extends RecommendationItemDto {
-  const _RecommendationItemDto({@JsonKey(name: 'recipe_id') required this.recipeId, @JsonKey(name: 'recipe_name') required this.recipeName, this.rank = 1, @JsonKey(fromJson: _asDoubleDefault) this.score = 0.0, @JsonKey(name: 'score_components') this.scoreComponents = const RecommendationScoreComponentsDto(), @JsonKey(name: 'missing_ingredients') final  List<RecommendationMissingIngredientDto> missingIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'near_expiry_ingredients') final  List<String> nearExpiryIngredients = const <String>[], this.explanation = '', this.provider = '', @JsonKey(name: 'model_version') this.modelVersion = '', this.dish}): _missingIngredients = missingIngredients,_nearExpiryIngredients = nearExpiryIngredients,super._();
+  const _RecommendationItemDto({@JsonKey(name: 'recipe_id') required this.recipeId, @JsonKey(name: 'recipe_name') required this.recipeName, this.rank = 1, @JsonKey(fromJson: _asDoubleDefault) this.score = 0.0, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) this.rankScore = 0.0, @JsonKey(name: 'ranking_features') this.rankingFeatures = const RecommendationRankingFeaturesDto(), @JsonKey(name: 'score_components') this.scoreComponents = const RecommendationScoreComponentsDto(), @JsonKey(name: 'missing_ingredients') final  List<RecommendationMissingIngredientDto> missingIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'matched_ingredients') final  List<RecommendationMissingIngredientDto> matchedIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'optional_ingredients') final  List<RecommendationMissingIngredientDto> optionalIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'near_expiry_ingredients') final  List<String> nearExpiryIngredients = const <String>[], this.explanation = '', this.provider = '', @JsonKey(name: 'status_badge') this.statusBadge = '', @JsonKey(name: 'model_version') this.modelVersion = '', this.dish}): _missingIngredients = missingIngredients,_matchedIngredients = matchedIngredients,_optionalIngredients = optionalIngredients,_nearExpiryIngredients = nearExpiryIngredients,super._();
   
 
 @override@JsonKey(name: 'recipe_id') final  String recipeId;
 @override@JsonKey(name: 'recipe_name') final  String recipeName;
 @override@JsonKey() final  int rank;
 @override@JsonKey(fromJson: _asDoubleDefault) final  double score;
+@override@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) final  double rankScore;
+@override@JsonKey(name: 'ranking_features') final  RecommendationRankingFeaturesDto rankingFeatures;
 @override@JsonKey(name: 'score_components') final  RecommendationScoreComponentsDto scoreComponents;
  final  List<RecommendationMissingIngredientDto> _missingIngredients;
 @override@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> get missingIngredients {
   if (_missingIngredients is EqualUnmodifiableListView) return _missingIngredients;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_missingIngredients);
+}
+
+ final  List<RecommendationMissingIngredientDto> _matchedIngredients;
+@override@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> get matchedIngredients {
+  if (_matchedIngredients is EqualUnmodifiableListView) return _matchedIngredients;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_matchedIngredients);
+}
+
+ final  List<RecommendationMissingIngredientDto> _optionalIngredients;
+@override@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> get optionalIngredients {
+  if (_optionalIngredients is EqualUnmodifiableListView) return _optionalIngredients;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_optionalIngredients);
 }
 
  final  List<String> _nearExpiryIngredients;
@@ -1069,6 +1655,7 @@ class _RecommendationItemDto extends RecommendationItemDto {
 
 @override@JsonKey() final  String explanation;
 @override@JsonKey() final  String provider;
+@override@JsonKey(name: 'status_badge') final  String statusBadge;
 @override@JsonKey(name: 'model_version') final  String modelVersion;
 // Optional embedded dish for backward compatibility with legacy fixtures/mocks
 @override final  DishDto? dish;
@@ -1083,16 +1670,16 @@ _$RecommendationItemDtoCopyWith<_RecommendationItemDto> get copyWith => __$Recom
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecommendationItemDto&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.score, score) || other.score == score)&&(identical(other.scoreComponents, scoreComponents) || other.scoreComponents == scoreComponents)&&const DeepCollectionEquality().equals(other._missingIngredients, _missingIngredients)&&const DeepCollectionEquality().equals(other._nearExpiryIngredients, _nearExpiryIngredients)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.dish, dish) || other.dish == dish));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecommendationItemDto&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.score, score) || other.score == score)&&(identical(other.rankScore, rankScore) || other.rankScore == rankScore)&&(identical(other.rankingFeatures, rankingFeatures) || other.rankingFeatures == rankingFeatures)&&(identical(other.scoreComponents, scoreComponents) || other.scoreComponents == scoreComponents)&&const DeepCollectionEquality().equals(other._missingIngredients, _missingIngredients)&&const DeepCollectionEquality().equals(other._matchedIngredients, _matchedIngredients)&&const DeepCollectionEquality().equals(other._optionalIngredients, _optionalIngredients)&&const DeepCollectionEquality().equals(other._nearExpiryIngredients, _nearExpiryIngredients)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.statusBadge, statusBadge) || other.statusBadge == statusBadge)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.dish, dish) || other.dish == dish));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,recipeId,recipeName,rank,score,scoreComponents,const DeepCollectionEquality().hash(_missingIngredients),const DeepCollectionEquality().hash(_nearExpiryIngredients),explanation,provider,modelVersion,dish);
+int get hashCode => Object.hash(runtimeType,recipeId,recipeName,rank,score,rankScore,rankingFeatures,scoreComponents,const DeepCollectionEquality().hash(_missingIngredients),const DeepCollectionEquality().hash(_matchedIngredients),const DeepCollectionEquality().hash(_optionalIngredients),const DeepCollectionEquality().hash(_nearExpiryIngredients),explanation,provider,statusBadge,modelVersion,dish);
 
 @override
 String toString() {
-  return 'RecommendationItemDto(recipeId: $recipeId, recipeName: $recipeName, rank: $rank, score: $score, scoreComponents: $scoreComponents, missingIngredients: $missingIngredients, nearExpiryIngredients: $nearExpiryIngredients, explanation: $explanation, provider: $provider, modelVersion: $modelVersion, dish: $dish)';
+  return 'RecommendationItemDto(recipeId: $recipeId, recipeName: $recipeName, rank: $rank, score: $score, rankScore: $rankScore, rankingFeatures: $rankingFeatures, scoreComponents: $scoreComponents, missingIngredients: $missingIngredients, matchedIngredients: $matchedIngredients, optionalIngredients: $optionalIngredients, nearExpiryIngredients: $nearExpiryIngredients, explanation: $explanation, provider: $provider, statusBadge: $statusBadge, modelVersion: $modelVersion, dish: $dish)';
 }
 
 
@@ -1103,11 +1690,11 @@ abstract mixin class _$RecommendationItemDtoCopyWith<$Res> implements $Recommend
   factory _$RecommendationItemDtoCopyWith(_RecommendationItemDto value, $Res Function(_RecommendationItemDto) _then) = __$RecommendationItemDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String recipeName, int rank,@JsonKey(fromJson: _asDoubleDefault) double score,@JsonKey(name: 'score_components') RecommendationScoreComponentsDto scoreComponents,@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> missingIngredients,@JsonKey(name: 'near_expiry_ingredients') List<String> nearExpiryIngredients, String explanation, String provider,@JsonKey(name: 'model_version') String modelVersion, DishDto? dish
+@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String recipeName, int rank,@JsonKey(fromJson: _asDoubleDefault) double score,@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double rankScore,@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto rankingFeatures,@JsonKey(name: 'score_components') RecommendationScoreComponentsDto scoreComponents,@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> missingIngredients,@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> matchedIngredients,@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> optionalIngredients,@JsonKey(name: 'near_expiry_ingredients') List<String> nearExpiryIngredients, String explanation, String provider,@JsonKey(name: 'status_badge') String statusBadge,@JsonKey(name: 'model_version') String modelVersion, DishDto? dish
 });
 
 
-@override $RecommendationScoreComponentsDtoCopyWith<$Res> get scoreComponents;@override $DishDtoCopyWith<$Res>? get dish;
+@override $RecommendationRankingFeaturesDtoCopyWith<$Res> get rankingFeatures;@override $RecommendationScoreComponentsDtoCopyWith<$Res> get scoreComponents;@override $DishDtoCopyWith<$Res>? get dish;
 
 }
 /// @nodoc
@@ -1120,17 +1707,22 @@ class __$RecommendationItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of RecommendationItemDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? recipeId = null,Object? recipeName = null,Object? rank = null,Object? score = null,Object? scoreComponents = null,Object? missingIngredients = null,Object? nearExpiryIngredients = null,Object? explanation = null,Object? provider = null,Object? modelVersion = null,Object? dish = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? recipeId = null,Object? recipeName = null,Object? rank = null,Object? score = null,Object? rankScore = null,Object? rankingFeatures = null,Object? scoreComponents = null,Object? missingIngredients = null,Object? matchedIngredients = null,Object? optionalIngredients = null,Object? nearExpiryIngredients = null,Object? explanation = null,Object? provider = null,Object? statusBadge = null,Object? modelVersion = null,Object? dish = freezed,}) {
   return _then(_RecommendationItemDto(
 recipeId: null == recipeId ? _self.recipeId : recipeId // ignore: cast_nullable_to_non_nullable
 as String,recipeName: null == recipeName ? _self.recipeName : recipeName // ignore: cast_nullable_to_non_nullable
 as String,rank: null == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
 as int,score: null == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
-as double,scoreComponents: null == scoreComponents ? _self.scoreComponents : scoreComponents // ignore: cast_nullable_to_non_nullable
+as double,rankScore: null == rankScore ? _self.rankScore : rankScore // ignore: cast_nullable_to_non_nullable
+as double,rankingFeatures: null == rankingFeatures ? _self.rankingFeatures : rankingFeatures // ignore: cast_nullable_to_non_nullable
+as RecommendationRankingFeaturesDto,scoreComponents: null == scoreComponents ? _self.scoreComponents : scoreComponents // ignore: cast_nullable_to_non_nullable
 as RecommendationScoreComponentsDto,missingIngredients: null == missingIngredients ? _self._missingIngredients : missingIngredients // ignore: cast_nullable_to_non_nullable
+as List<RecommendationMissingIngredientDto>,matchedIngredients: null == matchedIngredients ? _self._matchedIngredients : matchedIngredients // ignore: cast_nullable_to_non_nullable
+as List<RecommendationMissingIngredientDto>,optionalIngredients: null == optionalIngredients ? _self._optionalIngredients : optionalIngredients // ignore: cast_nullable_to_non_nullable
 as List<RecommendationMissingIngredientDto>,nearExpiryIngredients: null == nearExpiryIngredients ? _self._nearExpiryIngredients : nearExpiryIngredients // ignore: cast_nullable_to_non_nullable
 as List<String>,explanation: null == explanation ? _self.explanation : explanation // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
+as String,statusBadge: null == statusBadge ? _self.statusBadge : statusBadge // ignore: cast_nullable_to_non_nullable
 as String,modelVersion: null == modelVersion ? _self.modelVersion : modelVersion // ignore: cast_nullable_to_non_nullable
 as String,dish: freezed == dish ? _self.dish : dish // ignore: cast_nullable_to_non_nullable
 as DishDto?,
@@ -1138,6 +1730,15 @@ as DishDto?,
 }
 
 /// Create a copy of RecommendationItemDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RecommendationRankingFeaturesDtoCopyWith<$Res> get rankingFeatures {
+
+  return $RecommendationRankingFeaturesDtoCopyWith<$Res>(_self.rankingFeatures, (value) {
+    return _then(_self.copyWith(rankingFeatures: value));
+  });
+}/// Create a copy of RecommendationItemDto
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -1164,7 +1765,7 @@ $DishDtoCopyWith<$Res>? get dish {
 /// @nodoc
 mixin _$RecommendationListResponseDto {
 
- String get request; MockRecommendationAnalysisDto get analysis; List<RecommendationItemDto> get items;
+@JsonKey(fromJson: _asStringMap) Map<String, dynamic> get request;@JsonKey(name: 'contract_version') String get contractVersion;@JsonKey(name: 'model_version') String get modelVersion;@JsonKey(name: 'catalog_revision') String get catalogRevision;@JsonKey(name: 'ranker_model') String get rankerModel; RecommendationTimingsDto get timings; MockRecommendationAnalysisDto get analysis; List<RecommendationItemDto> get items; List<String> get warnings;
 /// Create a copy of RecommendationListResponseDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1175,16 +1776,16 @@ $RecommendationListResponseDtoCopyWith<RecommendationListResponseDto> get copyWi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecommendationListResponseDto&&(identical(other.request, request) || other.request == request)&&(identical(other.analysis, analysis) || other.analysis == analysis)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecommendationListResponseDto&&const DeepCollectionEquality().equals(other.request, request)&&(identical(other.contractVersion, contractVersion) || other.contractVersion == contractVersion)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.catalogRevision, catalogRevision) || other.catalogRevision == catalogRevision)&&(identical(other.rankerModel, rankerModel) || other.rankerModel == rankerModel)&&(identical(other.timings, timings) || other.timings == timings)&&(identical(other.analysis, analysis) || other.analysis == analysis)&&const DeepCollectionEquality().equals(other.items, items)&&const DeepCollectionEquality().equals(other.warnings, warnings));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,request,analysis,const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(request),contractVersion,modelVersion,catalogRevision,rankerModel,timings,analysis,const DeepCollectionEquality().hash(items),const DeepCollectionEquality().hash(warnings));
 
 @override
 String toString() {
-  return 'RecommendationListResponseDto(request: $request, analysis: $analysis, items: $items)';
+  return 'RecommendationListResponseDto(request: $request, contractVersion: $contractVersion, modelVersion: $modelVersion, catalogRevision: $catalogRevision, rankerModel: $rankerModel, timings: $timings, analysis: $analysis, items: $items, warnings: $warnings)';
 }
 
 
@@ -1195,11 +1796,11 @@ abstract mixin class $RecommendationListResponseDtoCopyWith<$Res>  {
   factory $RecommendationListResponseDtoCopyWith(RecommendationListResponseDto value, $Res Function(RecommendationListResponseDto) _then) = _$RecommendationListResponseDtoCopyWithImpl;
 @useResult
 $Res call({
- String request, MockRecommendationAnalysisDto analysis, List<RecommendationItemDto> items
+@JsonKey(fromJson: _asStringMap) Map<String, dynamic> request,@JsonKey(name: 'contract_version') String contractVersion,@JsonKey(name: 'model_version') String modelVersion,@JsonKey(name: 'catalog_revision') String catalogRevision,@JsonKey(name: 'ranker_model') String rankerModel, RecommendationTimingsDto timings, MockRecommendationAnalysisDto analysis, List<RecommendationItemDto> items, List<String> warnings
 });
 
 
-$MockRecommendationAnalysisDtoCopyWith<$Res> get analysis;
+$RecommendationTimingsDtoCopyWith<$Res> get timings;$MockRecommendationAnalysisDtoCopyWith<$Res> get analysis;
 
 }
 /// @nodoc
@@ -1212,15 +1813,30 @@ class _$RecommendationListResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of RecommendationListResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? request = null,Object? analysis = null,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? request = null,Object? contractVersion = null,Object? modelVersion = null,Object? catalogRevision = null,Object? rankerModel = null,Object? timings = null,Object? analysis = null,Object? items = null,Object? warnings = null,}) {
   return _then(_self.copyWith(
 request: null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
-as String,analysis: null == analysis ? _self.analysis : analysis // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,contractVersion: null == contractVersion ? _self.contractVersion : contractVersion // ignore: cast_nullable_to_non_nullable
+as String,modelVersion: null == modelVersion ? _self.modelVersion : modelVersion // ignore: cast_nullable_to_non_nullable
+as String,catalogRevision: null == catalogRevision ? _self.catalogRevision : catalogRevision // ignore: cast_nullable_to_non_nullable
+as String,rankerModel: null == rankerModel ? _self.rankerModel : rankerModel // ignore: cast_nullable_to_non_nullable
+as String,timings: null == timings ? _self.timings : timings // ignore: cast_nullable_to_non_nullable
+as RecommendationTimingsDto,analysis: null == analysis ? _self.analysis : analysis // ignore: cast_nullable_to_non_nullable
 as MockRecommendationAnalysisDto,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<RecommendationItemDto>,
+as List<RecommendationItemDto>,warnings: null == warnings ? _self.warnings : warnings // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 /// Create a copy of RecommendationListResponseDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RecommendationTimingsDtoCopyWith<$Res> get timings {
+
+  return $RecommendationTimingsDtoCopyWith<$Res>(_self.timings, (value) {
+    return _then(_self.copyWith(timings: value));
+  });
+}/// Create a copy of RecommendationListResponseDto
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -1311,10 +1927,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String request,  MockRecommendationAnalysisDto analysis,  List<RecommendationItemDto> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _asStringMap)  Map<String, dynamic> request, @JsonKey(name: 'contract_version')  String contractVersion, @JsonKey(name: 'model_version')  String modelVersion, @JsonKey(name: 'catalog_revision')  String catalogRevision, @JsonKey(name: 'ranker_model')  String rankerModel,  RecommendationTimingsDto timings,  MockRecommendationAnalysisDto analysis,  List<RecommendationItemDto> items,  List<String> warnings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RecommendationListResponseDto() when $default != null:
-return $default(_that.request,_that.analysis,_that.items);case _:
+return $default(_that.request,_that.contractVersion,_that.modelVersion,_that.catalogRevision,_that.rankerModel,_that.timings,_that.analysis,_that.items,_that.warnings);case _:
   return orElse();
 
 }
@@ -1332,10 +1948,10 @@ return $default(_that.request,_that.analysis,_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String request,  MockRecommendationAnalysisDto analysis,  List<RecommendationItemDto> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _asStringMap)  Map<String, dynamic> request, @JsonKey(name: 'contract_version')  String contractVersion, @JsonKey(name: 'model_version')  String modelVersion, @JsonKey(name: 'catalog_revision')  String catalogRevision, @JsonKey(name: 'ranker_model')  String rankerModel,  RecommendationTimingsDto timings,  MockRecommendationAnalysisDto analysis,  List<RecommendationItemDto> items,  List<String> warnings)  $default,) {final _that = this;
 switch (_that) {
 case _RecommendationListResponseDto():
-return $default(_that.request,_that.analysis,_that.items);case _:
+return $default(_that.request,_that.contractVersion,_that.modelVersion,_that.catalogRevision,_that.rankerModel,_that.timings,_that.analysis,_that.items,_that.warnings);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1352,10 +1968,10 @@ return $default(_that.request,_that.analysis,_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String request,  MockRecommendationAnalysisDto analysis,  List<RecommendationItemDto> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: _asStringMap)  Map<String, dynamic> request, @JsonKey(name: 'contract_version')  String contractVersion, @JsonKey(name: 'model_version')  String modelVersion, @JsonKey(name: 'catalog_revision')  String catalogRevision, @JsonKey(name: 'ranker_model')  String rankerModel,  RecommendationTimingsDto timings,  MockRecommendationAnalysisDto analysis,  List<RecommendationItemDto> items,  List<String> warnings)?  $default,) {final _that = this;
 switch (_that) {
 case _RecommendationListResponseDto() when $default != null:
-return $default(_that.request,_that.analysis,_that.items);case _:
+return $default(_that.request,_that.contractVersion,_that.modelVersion,_that.catalogRevision,_that.rankerModel,_that.timings,_that.analysis,_that.items,_that.warnings);case _:
   return null;
 
 }
@@ -1367,16 +1983,34 @@ return $default(_that.request,_that.analysis,_that.items);case _:
 
 
 class _RecommendationListResponseDto extends RecommendationListResponseDto {
-  const _RecommendationListResponseDto({this.request = '', this.analysis = const MockRecommendationAnalysisDto(), final  List<RecommendationItemDto> items = const <RecommendationItemDto>[]}): _items = items,super._();
+  const _RecommendationListResponseDto({@JsonKey(fromJson: _asStringMap) final  Map<String, dynamic> request = const <String, dynamic>{}, @JsonKey(name: 'contract_version') this.contractVersion = '', @JsonKey(name: 'model_version') this.modelVersion = '', @JsonKey(name: 'catalog_revision') this.catalogRevision = '', @JsonKey(name: 'ranker_model') this.rankerModel = '', this.timings = const RecommendationTimingsDto(), this.analysis = const MockRecommendationAnalysisDto(), final  List<RecommendationItemDto> items = const <RecommendationItemDto>[], final  List<String> warnings = const <String>[]}): _request = request,_items = items,_warnings = warnings,super._();
   
 
-@override@JsonKey() final  String request;
+ final  Map<String, dynamic> _request;
+@override@JsonKey(fromJson: _asStringMap) Map<String, dynamic> get request {
+  if (_request is EqualUnmodifiableMapView) return _request;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_request);
+}
+
+@override@JsonKey(name: 'contract_version') final  String contractVersion;
+@override@JsonKey(name: 'model_version') final  String modelVersion;
+@override@JsonKey(name: 'catalog_revision') final  String catalogRevision;
+@override@JsonKey(name: 'ranker_model') final  String rankerModel;
+@override@JsonKey() final  RecommendationTimingsDto timings;
 @override@JsonKey() final  MockRecommendationAnalysisDto analysis;
  final  List<RecommendationItemDto> _items;
 @override@JsonKey() List<RecommendationItemDto> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_items);
+}
+
+ final  List<String> _warnings;
+@override@JsonKey() List<String> get warnings {
+  if (_warnings is EqualUnmodifiableListView) return _warnings;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_warnings);
 }
 
 
@@ -1390,16 +2024,16 @@ _$RecommendationListResponseDtoCopyWith<_RecommendationListResponseDto> get copy
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecommendationListResponseDto&&(identical(other.request, request) || other.request == request)&&(identical(other.analysis, analysis) || other.analysis == analysis)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecommendationListResponseDto&&const DeepCollectionEquality().equals(other._request, _request)&&(identical(other.contractVersion, contractVersion) || other.contractVersion == contractVersion)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.catalogRevision, catalogRevision) || other.catalogRevision == catalogRevision)&&(identical(other.rankerModel, rankerModel) || other.rankerModel == rankerModel)&&(identical(other.timings, timings) || other.timings == timings)&&(identical(other.analysis, analysis) || other.analysis == analysis)&&const DeepCollectionEquality().equals(other._items, _items)&&const DeepCollectionEquality().equals(other._warnings, _warnings));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,request,analysis,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_request),contractVersion,modelVersion,catalogRevision,rankerModel,timings,analysis,const DeepCollectionEquality().hash(_items),const DeepCollectionEquality().hash(_warnings));
 
 @override
 String toString() {
-  return 'RecommendationListResponseDto(request: $request, analysis: $analysis, items: $items)';
+  return 'RecommendationListResponseDto(request: $request, contractVersion: $contractVersion, modelVersion: $modelVersion, catalogRevision: $catalogRevision, rankerModel: $rankerModel, timings: $timings, analysis: $analysis, items: $items, warnings: $warnings)';
 }
 
 
@@ -1410,11 +2044,11 @@ abstract mixin class _$RecommendationListResponseDtoCopyWith<$Res> implements $R
   factory _$RecommendationListResponseDtoCopyWith(_RecommendationListResponseDto value, $Res Function(_RecommendationListResponseDto) _then) = __$RecommendationListResponseDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String request, MockRecommendationAnalysisDto analysis, List<RecommendationItemDto> items
+@JsonKey(fromJson: _asStringMap) Map<String, dynamic> request,@JsonKey(name: 'contract_version') String contractVersion,@JsonKey(name: 'model_version') String modelVersion,@JsonKey(name: 'catalog_revision') String catalogRevision,@JsonKey(name: 'ranker_model') String rankerModel, RecommendationTimingsDto timings, MockRecommendationAnalysisDto analysis, List<RecommendationItemDto> items, List<String> warnings
 });
 
 
-@override $MockRecommendationAnalysisDtoCopyWith<$Res> get analysis;
+@override $RecommendationTimingsDtoCopyWith<$Res> get timings;@override $MockRecommendationAnalysisDtoCopyWith<$Res> get analysis;
 
 }
 /// @nodoc
@@ -1427,16 +2061,31 @@ class __$RecommendationListResponseDtoCopyWithImpl<$Res>
 
 /// Create a copy of RecommendationListResponseDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? request = null,Object? analysis = null,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? request = null,Object? contractVersion = null,Object? modelVersion = null,Object? catalogRevision = null,Object? rankerModel = null,Object? timings = null,Object? analysis = null,Object? items = null,Object? warnings = null,}) {
   return _then(_RecommendationListResponseDto(
-request: null == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
-as String,analysis: null == analysis ? _self.analysis : analysis // ignore: cast_nullable_to_non_nullable
+request: null == request ? _self._request : request // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>,contractVersion: null == contractVersion ? _self.contractVersion : contractVersion // ignore: cast_nullable_to_non_nullable
+as String,modelVersion: null == modelVersion ? _self.modelVersion : modelVersion // ignore: cast_nullable_to_non_nullable
+as String,catalogRevision: null == catalogRevision ? _self.catalogRevision : catalogRevision // ignore: cast_nullable_to_non_nullable
+as String,rankerModel: null == rankerModel ? _self.rankerModel : rankerModel // ignore: cast_nullable_to_non_nullable
+as String,timings: null == timings ? _self.timings : timings // ignore: cast_nullable_to_non_nullable
+as RecommendationTimingsDto,analysis: null == analysis ? _self.analysis : analysis // ignore: cast_nullable_to_non_nullable
 as MockRecommendationAnalysisDto,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<RecommendationItemDto>,
+as List<RecommendationItemDto>,warnings: null == warnings ? _self._warnings : warnings // ignore: cast_nullable_to_non_nullable
+as List<String>,
   ));
 }
 
 /// Create a copy of RecommendationListResponseDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$RecommendationTimingsDtoCopyWith<$Res> get timings {
+
+  return $RecommendationTimingsDtoCopyWith<$Res>(_self.timings, (value) {
+    return _then(_self.copyWith(timings: value));
+  });
+}/// Create a copy of RecommendationListResponseDto
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
