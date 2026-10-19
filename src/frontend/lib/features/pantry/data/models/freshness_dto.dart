@@ -109,3 +109,43 @@ class FreshnessAssessmentResponseDto {
             : null,
       );
 }
+
+/// Non-persisted FreshCheck result from `POST /freshness/previews`.
+class FreshnessPreviewDto {
+  const FreshnessPreviewDto({
+    required this.blocked,
+    this.tier,
+    this.remainingDaysMin,
+    this.remainingDaysMax,
+    required this.reasonsVi,
+    required this.storageTipsVi,
+    this.expiresAt,
+  });
+
+  final bool blocked;
+  final String? tier;
+  final int? remainingDaysMin;
+  final int? remainingDaysMax;
+  final List<String> reasonsVi;
+  final List<String> storageTipsVi;
+
+  /// Estimate that would be applied on save; `null` when there is no safe basis.
+  final DateTime? expiresAt;
+
+  factory FreshnessPreviewDto.fromJson(Map<String, dynamic> json) =>
+      FreshnessPreviewDto(
+        blocked: json['blocked'] as bool? ?? false,
+        tier: json['tier'] as String?,
+        remainingDaysMin: json['remaining_days_min'] as int?,
+        remainingDaysMax: json['remaining_days_max'] as int?,
+        reasonsVi: (json['reasons_vi'] as List<dynamic>? ?? [])
+            .map((e) => e.toString())
+            .toList(),
+        storageTipsVi: (json['storage_tips_vi'] as List<dynamic>? ?? [])
+            .map((e) => e.toString())
+            .toList(),
+        expiresAt: json['expires_at'] != null
+            ? DateTime.tryParse(json['expires_at'].toString())
+            : null,
+      );
+}

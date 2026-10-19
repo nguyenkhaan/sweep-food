@@ -37,6 +37,7 @@ class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
     required String batchId,
     required Map<String, String> answers,
     String? storageMode,
+    DateTime? purchasedAt,
   }) async {
     value = const FreshnessAssessmentState(isLoading: true);
 
@@ -46,6 +47,7 @@ class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
         batchId,
         answers: answers,
         storageMode: storageMode,
+        purchasedAt: purchasedAt,
       );
       value = FreshnessAssessmentState(result: res);
 

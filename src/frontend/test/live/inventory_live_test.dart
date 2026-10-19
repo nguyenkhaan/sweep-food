@@ -13,6 +13,7 @@ import 'package:sweepfood/core/network/interceptors/auth_interceptor.dart';
 import 'package:sweepfood/core/storage/secure_storage.dart';
 import 'package:sweepfood/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:sweepfood/features/pantry/data/datasources/freshness_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/data/datasources/pantry_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
 import 'package:sweepfood/features/pantry/domain/entities/inventory_ledger.dart';
@@ -73,7 +74,10 @@ void main() {
     );
     session.fold((f) => fail('sign-in failed: $f'), (_) {});
 
-    pantry = PantryRepositoryImpl(PantryRemoteDataSource(api));
+    pantry = PantryRepositoryImpl(
+      PantryRemoteDataSource(api),
+      FreshnessRemoteDataSource(api),
+    );
   });
 
   Future<PantryItem> addBatch({

@@ -268,6 +268,7 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                           batchId: item.id,
                           answers: _answers,
                           storageMode: item.storageTier.backendWire,
+                          purchasedAt: item.addedAt,
                         );
                         if (res != null) {
                           if (!context.mounted) return;

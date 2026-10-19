@@ -58,6 +58,7 @@ abstract final class ApiPaths {
   static const extractionOcrLabel = '/extractions/ocr/label';
   static const extractionOcrInvoice = '/extractions/ocr/invoice';
   static const extractionAsr = '/extractions/asr';
+  static const extractionText = '/extractions/text';
   static String extractionBarcode(String barcode) =>
       '/extractions/barcode?barcode=$barcode';
 
@@ -100,6 +101,7 @@ abstract final class ApiPaths {
   static const freshnessQuestions = '/freshness/questions';
   static String freshnessAssessment(String batchId) =>
       '/freshness/batches/$batchId/assessment';
+  static const freshnessPreview = '/freshness/previews';
 
   // Rating & Feedback
   static const rating = '/rating';

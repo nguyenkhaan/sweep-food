@@ -14,7 +14,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PantryItemDraft {
 
- String get name; String get category; double get quantity; MeasurementUnit get unit; StorageTier get storageTier; PantrySource get source; String? get ingredientId; DateTime? get packedDate; DateTime? get expiryDate; int? get referenceShelfLifeDays; int? get priceVnd;
+ String get name; String get category; double get quantity; MeasurementUnit get unit; StorageTier get storageTier; PantrySource get source; String? get ingredientId; DateTime? get packedDate; DateTime? get expiryDate; int? get referenceShelfLifeDays; int? get priceVnd;/// FreshCheck estimate accepted in place of a printed expiry date; applied
+/// through the batch assessment after the item is saved.
+ FreshnessEstimate? get freshness;
 /// Create a copy of PantryItemDraft
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +27,16 @@ $PantryItemDraftCopyWith<PantryItemDraft> get copyWith => _$PantryItemDraftCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PantryItemDraft&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.source, source) || other.source == source)&&(identical(other.ingredientId, ingredientId) || other.ingredientId == ingredientId)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.referenceShelfLifeDays, referenceShelfLifeDays) || other.referenceShelfLifeDays == referenceShelfLifeDays)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PantryItemDraft&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.source, source) || other.source == source)&&(identical(other.ingredientId, ingredientId) || other.ingredientId == ingredientId)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.referenceShelfLifeDays, referenceShelfLifeDays) || other.referenceShelfLifeDays == referenceShelfLifeDays)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&(identical(other.freshness, freshness) || other.freshness == freshness));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,source,ingredientId,packedDate,expiryDate,referenceShelfLifeDays,priceVnd);
+int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,source,ingredientId,packedDate,expiryDate,referenceShelfLifeDays,priceVnd,freshness);
 
 @override
 String toString() {
-  return 'PantryItemDraft(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, source: $source, ingredientId: $ingredientId, packedDate: $packedDate, expiryDate: $expiryDate, referenceShelfLifeDays: $referenceShelfLifeDays, priceVnd: $priceVnd)';
+  return 'PantryItemDraft(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, source: $source, ingredientId: $ingredientId, packedDate: $packedDate, expiryDate: $expiryDate, referenceShelfLifeDays: $referenceShelfLifeDays, priceVnd: $priceVnd, freshness: $freshness)';
 }
 
 
@@ -45,11 +47,11 @@ abstract mixin class $PantryItemDraftCopyWith<$Res>  {
   factory $PantryItemDraftCopyWith(PantryItemDraft value, $Res Function(PantryItemDraft) _then) = _$PantryItemDraftCopyWithImpl;
 @useResult
 $Res call({
- String name, String category, double quantity, MeasurementUnit unit, StorageTier storageTier, PantrySource source, String? ingredientId, DateTime? packedDate, DateTime? expiryDate, int? referenceShelfLifeDays, int? priceVnd
+ String name, String category, double quantity, MeasurementUnit unit, StorageTier storageTier, PantrySource source, String? ingredientId, DateTime? packedDate, DateTime? expiryDate, int? referenceShelfLifeDays, int? priceVnd, FreshnessEstimate? freshness
 });
 
 
-
+$FreshnessEstimateCopyWith<$Res>? get freshness;
 
 }
 /// @nodoc
@@ -62,7 +64,7 @@ class _$PantryItemDraftCopyWithImpl<$Res>
 
 /// Create a copy of PantryItemDraft
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? source = null,Object? ingredientId = freezed,Object? packedDate = freezed,Object? expiryDate = freezed,Object? referenceShelfLifeDays = freezed,Object? priceVnd = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? source = null,Object? ingredientId = freezed,Object? packedDate = freezed,Object? expiryDate = freezed,Object? referenceShelfLifeDays = freezed,Object? priceVnd = freezed,Object? freshness = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -75,10 +77,23 @@ as String?,packedDate: freezed == packedDate ? _self.packedDate : packedDate // 
 as DateTime?,expiryDate: freezed == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,referenceShelfLifeDays: freezed == referenceShelfLifeDays ? _self.referenceShelfLifeDays : referenceShelfLifeDays // ignore: cast_nullable_to_non_nullable
 as int?,priceVnd: freezed == priceVnd ? _self.priceVnd : priceVnd // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,freshness: freezed == freshness ? _self.freshness : freshness // ignore: cast_nullable_to_non_nullable
+as FreshnessEstimate?,
   ));
 }
+/// Create a copy of PantryItemDraft
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$FreshnessEstimateCopyWith<$Res>? get freshness {
+    if (_self.freshness == null) {
+    return null;
+  }
 
+  return $FreshnessEstimateCopyWith<$Res>(_self.freshness!, (value) {
+    return _then(_self.copyWith(freshness: value));
+  });
+}
 }
 
 
@@ -160,10 +175,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  PantrySource source,  String? ingredientId,  DateTime? packedDate,  DateTime? expiryDate,  int? referenceShelfLifeDays,  int? priceVnd)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  PantrySource source,  String? ingredientId,  DateTime? packedDate,  DateTime? expiryDate,  int? referenceShelfLifeDays,  int? priceVnd,  FreshnessEstimate? freshness)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PantryItemDraft() when $default != null:
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.source,_that.ingredientId,_that.packedDate,_that.expiryDate,_that.referenceShelfLifeDays,_that.priceVnd);case _:
+return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.source,_that.ingredientId,_that.packedDate,_that.expiryDate,_that.referenceShelfLifeDays,_that.priceVnd,_that.freshness);case _:
   return orElse();
 
 }
@@ -181,10 +196,10 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  PantrySource source,  String? ingredientId,  DateTime? packedDate,  DateTime? expiryDate,  int? referenceShelfLifeDays,  int? priceVnd)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  PantrySource source,  String? ingredientId,  DateTime? packedDate,  DateTime? expiryDate,  int? referenceShelfLifeDays,  int? priceVnd,  FreshnessEstimate? freshness)  $default,) {final _that = this;
 switch (_that) {
 case _PantryItemDraft():
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.source,_that.ingredientId,_that.packedDate,_that.expiryDate,_that.referenceShelfLifeDays,_that.priceVnd);case _:
+return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.source,_that.ingredientId,_that.packedDate,_that.expiryDate,_that.referenceShelfLifeDays,_that.priceVnd,_that.freshness);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +216,10 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  PantrySource source,  String? ingredientId,  DateTime? packedDate,  DateTime? expiryDate,  int? referenceShelfLifeDays,  int? priceVnd)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String category,  double quantity,  MeasurementUnit unit,  StorageTier storageTier,  PantrySource source,  String? ingredientId,  DateTime? packedDate,  DateTime? expiryDate,  int? referenceShelfLifeDays,  int? priceVnd,  FreshnessEstimate? freshness)?  $default,) {final _that = this;
 switch (_that) {
 case _PantryItemDraft() when $default != null:
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.source,_that.ingredientId,_that.packedDate,_that.expiryDate,_that.referenceShelfLifeDays,_that.priceVnd);case _:
+return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.source,_that.ingredientId,_that.packedDate,_that.expiryDate,_that.referenceShelfLifeDays,_that.priceVnd,_that.freshness);case _:
   return null;
 
 }
@@ -216,7 +231,7 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 
 
 class _PantryItemDraft extends PantryItemDraft {
-  const _PantryItemDraft({this.name = '', this.category = '', this.quantity = 0, this.unit = MeasurementUnit.gram, this.storageTier = StorageTier.fridge, this.source = PantrySource.manual, this.ingredientId, this.packedDate, this.expiryDate, this.referenceShelfLifeDays, this.priceVnd}): super._();
+  const _PantryItemDraft({this.name = '', this.category = '', this.quantity = 0, this.unit = MeasurementUnit.gram, this.storageTier = StorageTier.fridge, this.source = PantrySource.manual, this.ingredientId, this.packedDate, this.expiryDate, this.referenceShelfLifeDays, this.priceVnd, this.freshness}): super._();
   
 
 @override@JsonKey() final  String name;
@@ -230,6 +245,9 @@ class _PantryItemDraft extends PantryItemDraft {
 @override final  DateTime? expiryDate;
 @override final  int? referenceShelfLifeDays;
 @override final  int? priceVnd;
+/// FreshCheck estimate accepted in place of a printed expiry date; applied
+/// through the batch assessment after the item is saved.
+@override final  FreshnessEstimate? freshness;
 
 /// Create a copy of PantryItemDraft
 /// with the given fields replaced by the non-null parameter values.
@@ -241,16 +259,16 @@ _$PantryItemDraftCopyWith<_PantryItemDraft> get copyWith => __$PantryItemDraftCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PantryItemDraft&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.source, source) || other.source == source)&&(identical(other.ingredientId, ingredientId) || other.ingredientId == ingredientId)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.referenceShelfLifeDays, referenceShelfLifeDays) || other.referenceShelfLifeDays == referenceShelfLifeDays)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PantryItemDraft&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.source, source) || other.source == source)&&(identical(other.ingredientId, ingredientId) || other.ingredientId == ingredientId)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.referenceShelfLifeDays, referenceShelfLifeDays) || other.referenceShelfLifeDays == referenceShelfLifeDays)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&(identical(other.freshness, freshness) || other.freshness == freshness));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,source,ingredientId,packedDate,expiryDate,referenceShelfLifeDays,priceVnd);
+int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,source,ingredientId,packedDate,expiryDate,referenceShelfLifeDays,priceVnd,freshness);
 
 @override
 String toString() {
-  return 'PantryItemDraft(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, source: $source, ingredientId: $ingredientId, packedDate: $packedDate, expiryDate: $expiryDate, referenceShelfLifeDays: $referenceShelfLifeDays, priceVnd: $priceVnd)';
+  return 'PantryItemDraft(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, source: $source, ingredientId: $ingredientId, packedDate: $packedDate, expiryDate: $expiryDate, referenceShelfLifeDays: $referenceShelfLifeDays, priceVnd: $priceVnd, freshness: $freshness)';
 }
 
 
@@ -261,11 +279,11 @@ abstract mixin class _$PantryItemDraftCopyWith<$Res> implements $PantryItemDraft
   factory _$PantryItemDraftCopyWith(_PantryItemDraft value, $Res Function(_PantryItemDraft) _then) = __$PantryItemDraftCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String category, double quantity, MeasurementUnit unit, StorageTier storageTier, PantrySource source, String? ingredientId, DateTime? packedDate, DateTime? expiryDate, int? referenceShelfLifeDays, int? priceVnd
+ String name, String category, double quantity, MeasurementUnit unit, StorageTier storageTier, PantrySource source, String? ingredientId, DateTime? packedDate, DateTime? expiryDate, int? referenceShelfLifeDays, int? priceVnd, FreshnessEstimate? freshness
 });
 
 
-
+@override $FreshnessEstimateCopyWith<$Res>? get freshness;
 
 }
 /// @nodoc
@@ -278,7 +296,7 @@ class __$PantryItemDraftCopyWithImpl<$Res>
 
 /// Create a copy of PantryItemDraft
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? source = null,Object? ingredientId = freezed,Object? packedDate = freezed,Object? expiryDate = freezed,Object? referenceShelfLifeDays = freezed,Object? priceVnd = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? source = null,Object? ingredientId = freezed,Object? packedDate = freezed,Object? expiryDate = freezed,Object? referenceShelfLifeDays = freezed,Object? priceVnd = freezed,Object? freshness = freezed,}) {
   return _then(_PantryItemDraft(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -291,11 +309,24 @@ as String?,packedDate: freezed == packedDate ? _self.packedDate : packedDate // 
 as DateTime?,expiryDate: freezed == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,referenceShelfLifeDays: freezed == referenceShelfLifeDays ? _self.referenceShelfLifeDays : referenceShelfLifeDays // ignore: cast_nullable_to_non_nullable
 as int?,priceVnd: freezed == priceVnd ? _self.priceVnd : priceVnd // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,freshness: freezed == freshness ? _self.freshness : freshness // ignore: cast_nullable_to_non_nullable
+as FreshnessEstimate?,
   ));
 }
 
+/// Create a copy of PantryItemDraft
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$FreshnessEstimateCopyWith<$Res>? get freshness {
+    if (_self.freshness == null) {
+    return null;
+  }
 
+  return $FreshnessEstimateCopyWith<$Res>(_self.freshness!, (value) {
+    return _then(_self.copyWith(freshness: value));
+  });
+}
 }
 
 // dart format on
