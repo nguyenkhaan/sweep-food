@@ -130,29 +130,62 @@ def load_snapshot_from_bundle(
 
 async def load_snapshot(session: AsyncSession) -> CatalogSnapshot:
     """Load an immutable CatalogSnapshot from the database per shared contract."""
+    from sqlalchemy import text
+
+    from AI.catalog.errors import CatalogNotLoadedError
     from src.model.ingredient_alias_model import IngredientAliasModel
     from src.model.master_ingredient_model import MasterIngredientModel
     from src.model.recipe_ingredient_model import RecipeIngredientModel
     from src.model.recipe_model import RecipeModel
 
     recipes_result = await session.execute(
-        select(RecipeModel).order_by(RecipeModel.id)
+        select(RecipeModel)
+        .where(RecipeModel.ai_features != text("'{}'::jsonb"))
+        .order_by(RecipeModel.id)
     )
     recipe_models = list(recipes_result.scalars().all())
 
+    if not recipe_models:
+        raise CatalogNotLoadedError(
+            "No AI recipes found in the database. Run 'python -m AI.catalog.importer' to populate the catalog."
+        )
+
+    ai_recipe_ids = [r.id for r in recipe_models]
+
     ings_result = await session.execute(
-        select(RecipeIngredientModel).order_by(RecipeIngredientModel.id)
+        select(RecipeIngredientModel)
+        .where(
+            RecipeIngredientModel.recipe_id.in_(ai_recipe_ids),
+            RecipeIngredientModel.ai_attributes != text("'{}'::jsonb"),
+        )
+        .order_by(RecipeIngredientModel.id)
     )
     ing_models = list(ings_result.scalars().all())
 
+    used_master_ids = {ing.master_ingredient_id for ing in ing_models}
+    if used_master_ids:
+        master_filter = (MasterIngredientModel.source_code.is_not(None)) | (
+            MasterIngredientModel.id.in_(used_master_ids)
+        )
+    else:
+        master_filter = MasterIngredientModel.source_code.is_not(None)
+
     master_result = await session.execute(
-        select(MasterIngredientModel).order_by(MasterIngredientModel.id)
+        select(MasterIngredientModel).where(master_filter).order_by(MasterIngredientModel.id)
     )
     master_models = list(master_result.scalars().all())
+    master_ids = [m.id for m in master_models]
 
-    aliases_result = await session.execute(
-        select(IngredientAliasModel).order_by(IngredientAliasModel.id)
-    )
+    if master_ids:
+        aliases_result = await session.execute(
+            select(IngredientAliasModel)
+            .where(IngredientAliasModel.master_ingredient_id.in_(master_ids))
+            .order_by(IngredientAliasModel.id)
+        )
+    else:
+        aliases_result = await session.execute(
+            select(IngredientAliasModel).order_by(IngredientAliasModel.id)
+        )
     alias_models = list(aliases_result.scalars().all())
 
     aliases_by_master_id: dict[str, list[str]] = defaultdict(list)

@@ -793,7 +793,11 @@ async def import_catalog(
         return report
 
     try:
-        engine = create_async_engine(build_async_database_url(cast(str, database_url)), pool_pre_ping=True)
+        engine = create_async_engine(
+            build_async_database_url(cast(str, database_url)),
+            connect_args={"statement_cache_size": 0},
+            pool_pre_ping=True,
+        )
         session_factory = async_sessionmaker(engine, expire_on_commit=False)
         try:
             async with session_factory() as session, session.begin():
@@ -893,6 +897,24 @@ def parse_args(args: Sequence[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Database URL (default: DATABASE_URL environment setting).",
     )
+    parser.add_argument(
+        "--replace-catalog",
+        action="store_true",
+        default=False,
+        help="Replace live catalog with bundle, protecting or cascading user activity.",
+    )
+    parser.add_argument(
+        "--delete-user-data",
+        action="store_true",
+        default=False,
+        help="When --replace-catalog is set, cascade-delete user activity referencing removed catalog rows.",
+    )
+    parser.add_argument(
+        "--backup-dir",
+        type=Path,
+        default=None,
+        help="Directory to write pre-mutation JSONL backups.",
+    )
     return parser.parse_args(args)
 
 def resolve_database_url(url: str | None = None) -> str | None:
@@ -939,15 +961,26 @@ async def run_importer(
 def main(args: Sequence[str] | None = None) -> None:
     """CLI entrypoint for python -m AI.catalog.importer."""
     parsed = parse_args(args)
-    report = asyncio.run(
-        run_importer(
-            bundle_dir=parsed.bundle_dir,
-            database_url=parsed.database_url,
-            dry_run=parsed.dry_run,
-        )
-    )
-    print(f"Catalog import completed: {report.summary()}")
+    if parsed.replace_catalog:
+        from AI.catalog.replace import ReplaceOptions, run_replace_catalog
 
+        options = ReplaceOptions(
+            bundle_dir=parsed.bundle_dir,
+            backup_dir=parsed.backup_dir,
+            delete_user_data=parsed.delete_user_data,
+            dry_run=parsed.dry_run,
+            database_url=parsed.database_url,
+        )
+        asyncio.run(run_replace_catalog(options))
+    else:
+        report = asyncio.run(
+            run_importer(
+                bundle_dir=parsed.bundle_dir,
+                database_url=parsed.database_url,
+                dry_run=parsed.dry_run,
+            )
+        )
+        print(f"Catalog import completed: {report.summary()}")
 
 if __name__ == "__main__":
     main()

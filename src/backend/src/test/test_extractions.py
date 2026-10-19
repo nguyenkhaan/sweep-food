@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections.abc import Generator
 from io import BytesIO
 from typing import Any
@@ -9,6 +10,7 @@ from uuid import UUID
 
 import httpx
 import pytest
+from PIL import Image
 
 from AI.extraction.asr.groq_whisper import GroqWhisperClient
 from AI.extraction.ocr.openai_vision_ocr import OpenAIVisionOCR
@@ -435,6 +437,49 @@ async def test_ocr_label_route_openai_success(
         app.dependency_overrides.pop(get_extraction_service, None)
         await mock_client.aclose()
 
+
+def _png_bytes() -> bytes:
+    """Return a tiny valid PNG so image preprocessing succeeds."""
+    buffer = BytesIO()
+    Image.new("RGB", (32, 32), "white").save(buffer, "PNG")
+    return buffer.getvalue()
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    ("effort", "expected"),
+    [(None, "medium"), ("high", "high"), ("", None)],
+)
+async def test_ocr_sends_reasoning_effort_only_when_configured(
+    effort: str | None,
+    expected: str | None,
+) -> None:
+    """OCR defaults to medium reasoning; an empty value omits it for non-reasoning models."""
+    bodies: list[dict[str, Any]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        bodies.append(json.loads(request.content))
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"content": '{"raw_text": "x", "items": []}'}}]},
+        )
+
+    http_client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    ocr = OpenAIVisionOCR(
+        api_key="test-key",
+        model="gpt-6.1-sol",
+        reasoning_effort=effort,
+        http_client=http_client,
+    )
+    try:
+        await ocr.recognize_image_bytes(_png_bytes())
+    finally:
+        await http_client.aclose()
+
+    assert bodies[0]["model"] == "gpt-6.1-sol"
+    assert bodies[0].get("reasoning_effort") == expected
+    assert "max_tokens" not in bodies[0]
+    assert "temperature" not in bodies[0]
 
 @pytest.mark.anyio
 async def test_ocr_label_route_openai_timeout_maps_to_504(

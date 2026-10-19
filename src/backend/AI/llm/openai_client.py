@@ -195,6 +195,7 @@ class OpenAIClient:
         *,
         model: str | None = None,
         max_completion_tokens: int | None = 4096,
+        reasoning_effort: str | None = None,
         response_format: dict[str, Any] | None = None,
         timeout: float | None = None,
     ) -> str:
@@ -205,6 +206,8 @@ class OpenAIClient:
         }
         if max_completion_tokens is not None:
             payload["max_completion_tokens"] = max_completion_tokens
+        if reasoning_effort:
+            payload["reasoning_effort"] = reasoning_effort
         if response_format is not None:
             payload["response_format"] = response_format
 
@@ -237,6 +240,7 @@ class OpenAIClient:
         *,
         model: str | None = None,
         max_completion_tokens: int | None = 4096,
+        reasoning_effort: str | None = None,
         timeout: float | None = None,
     ) -> Any:
         """Call OpenAI chat completion in JSON mode and parse the resulting JSON object."""
@@ -244,6 +248,7 @@ class OpenAIClient:
             messages=messages,
             model=model,
             max_completion_tokens=max_completion_tokens,
+            reasoning_effort=reasoning_effort,
             response_format={"type": "json_object"},
             timeout=timeout,
         )

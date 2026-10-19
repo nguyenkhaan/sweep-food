@@ -18,6 +18,7 @@ from src.core.setting import (
     OPENAI_API_KEY,
     OPENAI_BASE_URL,
     OPENAI_OCR_MODEL,
+    OPENAI_OCR_REASONING_EFFORT,
     OPENAI_TIMEOUT_SECONDS,
 )
 
@@ -65,6 +66,7 @@ class OpenAIVisionOCR:
         api_key: str | None = None,
         base_url: str | None = None,
         model: str | None = None,
+        reasoning_effort: str | None = None,
         timeout: float | None = None,
         http_client: httpx.AsyncClient | None = None,
         openai_client: OpenAIClient | None = None,
@@ -72,6 +74,11 @@ class OpenAIVisionOCR:
         self.api_key = api_key if api_key is not None else OPENAI_API_KEY
         self.base_url = (base_url or OPENAI_BASE_URL).rstrip("/")
         self.model = model or OPENAI_OCR_MODEL
+        self.reasoning_effort = (
+            reasoning_effort
+            if reasoning_effort is not None
+            else OPENAI_OCR_REASONING_EFFORT
+        )
         self.timeout = (
             timeout if timeout is not None else float(OPENAI_TIMEOUT_SECONDS)
         )
@@ -141,6 +148,7 @@ class OpenAIVisionOCR:
                 messages=messages,
                 model=self.model,
                 max_completion_tokens=8192,
+                reasoning_effort=self.reasoning_effort or None,
                 response_format={"type": "json_object"},
                 timeout=self.timeout,
             )
