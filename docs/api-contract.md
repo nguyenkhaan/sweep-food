@@ -322,6 +322,7 @@ Mọi datetime **bắt buộc có timezone**. Response batch:
 POST /extractions/ocr/label     (auth) multipart file=<image> -> ExtractionResponse
 POST /extractions/ocr/invoice   (auth) multipart file=<image> -> InvoiceExtractionResponse
 POST /extractions/asr           (auth) multipart file=<audio> -> ExtractionResponse
+POST /extractions/text          (auth) { "text": "<1..500 ký tự>" } -> ExtractionResponse   // smart parser cho chữ gõ tay, chỉ trả món đầu tiên
 POST /extractions/barcode?barcode=<string>  (auth, không upload) -> BarcodeExtractionResponse
 ```
 
@@ -329,12 +330,21 @@ POST /extractions/barcode?barcode=<string>  (auth, không upload) -> BarcodeExtr
 ```json
 {
   "request_id": "uuid", "status": "SUCCEEDED|FAILED|PARTIAL", "provider": "string", "raw_text": "string",
-  "fields": { "ingredient_name": null, "quantity": null, "unit": null, "packaged_at": null, "expires_at": null, "price": null, "currency": null, "barcode": null },
+  "fields": { "ingredient_name": "tên đã khớp smart parser", "raw_name": "tên gốc OCR/ASR", "master_ingredient_id": "uuid|null", "quantity": null, "unit": null, "packaged_at": null, "expires_at": null },
   "confidence": { "ingredient_name": 0.9 }, "warnings": [], "persisted": false
 }
 ```
-**`InvoiceExtractionResponse.fields`:** `{ "line_items": [{ "name", "quantity", "unit", "unit_price", "total_price" }], "total_amount", "currency", "invoice_date", "vendor_name" }`.
+`ingredient_name` là kết quả khớp của smart parser; `raw_name` là chuỗi gốc đọc được. `master_ingredient_id` là UUID nguyên liệu chuẩn trong `master_ingredients` (khớp qua `source_code`), `null` khi không khớp — FE gửi lại giá trị này ở `POST /inventory/batches` và dùng cho `/freshness/questions`. `quantity`/`unit` chỉ có khi số lượng thực sự được đọc từ ảnh/giọng nói (không điền số ước lượng). `packaged_at`/`expires_at` (ISO `YYYY-MM-DD`) chỉ có khi nhãn in ngày. Không trả `nutrition`, `freshness_guide`, `category`, `master_ingredient_code`, `is_staple`, `price`, `currency`, `barcode` — các thông tin đó do bước lưu kho/enrichment xử lý riêng.
+**`InvoiceExtractionResponse.fields`:** `{ "line_items": [{ "name", "raw_name", "master_ingredient_id", "quantity", "unit", "unit_price", "total_price" }], "total_amount", "currency", "invoice_date", "vendor_name" }`.
 **`BarcodeExtractionResponse.fields`:** `{ "barcode", "product_name", "brand", "category", "ingredient_name", "quantity", "unit", "expires_at", "price", "currency" }` — không tìm thấy vẫn trả `200` với field rỗng, **không phải `404`**.
+
+**Thiếu hạn sử dụng → FreshCheck (luồng quét/nhập):** món có `master_ingredient_id` nhưng `expires_at == null` được hỏi dấu hiệu cảm quan ngay ở màn review, trước khi lưu kho.
+```text
+GET  /freshness/questions?master_ingredient_id=<uuid>  (auth) -> { kb_version, freshcheck_ingredient_id, archetype_id, questions: [{ axis, question_vi, options: [{ value, label_vi }], default }] }
+POST /freshness/previews                               (auth) { master_ingredient_id, storage_mode, purchased_at?, answers: { <axis>: <value> } } -> FreshnessPreviewResponse
+POST /freshness/batches/{batch_id}/assessment          (auth, Idempotency-Key) { purchased_at?, storage_mode?, answers } -> FreshnessAssessmentResponse
+```
+`/freshness/previews` **không ghi dữ liệu**; trả cùng các trường kết quả như assessment (`blocked`, `tier`, `score`, `remaining_hours_min/max`, `remaining_days_min/max`, `reasons_vi`, `storage_tips_vi`, `claims`, `rule_version`, `kb_version`, `freshcheck_ingredient_id`, `archetype_id`, `reason_code`) và `expires_at` = hạn ước tính sẽ được áp dụng (`null` khi không đủ cơ sở). Nguyên liệu không có mapping FreshCheck trả `MAPPING_UNAVAILABLE` — FE bỏ qua bước hỏi dấu hiệu, không báo lỗi. Sau khi người dùng bấm lưu, FE tạo batch (`POST /inventory/batches`) rồi gọi assessment với **cùng `answers`** để ghi hạn `ESTIMATED` và audit; hạn in trên nhãn (`MANUFACTURER`) không bao giờ bị ghi đè.
 
 ---
 

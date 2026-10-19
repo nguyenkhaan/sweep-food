@@ -13,6 +13,11 @@ import pytest
 from PIL import Image
 
 from AI.extraction.asr.groq_whisper import GroqWhisperClient
+from AI.extraction.ocr.image_guard import (
+    GuardVerdict,
+    ImageCategory,
+    OpenAIImageGuard,
+)
 from AI.extraction.ocr.openai_vision_ocr import OpenAIVisionOCR
 from AI.extraction.service import AIExtractionService
 from src.app import app
@@ -22,6 +27,45 @@ from src.module.extractions.extraction_dependency import get_extraction_service
 from src.module.extractions.extraction_service import ExtractionService
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a051")
+MILK_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a0a1")
+
+
+class _MasterRows:
+    """Rows returned by the fake master-ingredient lookup."""
+
+    def __init__(self, rows: list[tuple[str, UUID]]) -> None:
+        self._rows = rows
+
+    def all(self) -> list[tuple[str, UUID]]:
+        return self._rows
+
+
+class FakeMasterSession:
+    """Resolve only the Milk catalog code, as the master_ingredients table would."""
+
+    async def execute(self, _statement: object) -> _MasterRows:
+        return _MasterRows([("10001", MILK_ID)])
+
+
+def make_extraction_service(ai_service: Any) -> ExtractionService:
+    """Build the service with a fake master lookup and a stubbed AI service."""
+    return ExtractionService(FakeMasterSession(), ai_service=ai_service)  # type: ignore[arg-type]
+
+
+class AcceptingGuard:
+    """Image guard stub that accepts every image."""
+
+    async def classify(self, image_bytes: bytes) -> GuardVerdict:
+        del image_bytes
+        return GuardVerdict(ImageCategory.FOOD_LABEL, 0.99, "")
+
+
+class RejectingGuard:
+    """Image guard stub that rejects every image."""
+
+    async def classify(self, image_bytes: bytes) -> GuardVerdict:
+        del image_bytes
+        return GuardVerdict(ImageCategory.OTHER, 0.97, "Ảnh chụp phong cảnh.")
 
 
 class FakeAIExtractionService:
@@ -132,6 +176,25 @@ class FakeAIExtractionService:
             ],
         }
 
+    async def process_text_input(self, text: str) -> dict[str, Any]:
+        """Resolve typed text to one catalog item plus a second omitted item."""
+        return {
+            "status": "success",
+            "engine": "smart_parser",
+            "text": text,
+            "items": [
+                {
+                    "name": "Milk",
+                    "raw_name": "sua tuoi",
+                    "code": "10001",
+                    "quantity_g": 200.0,
+                    "quantity_source": "estimated",
+                    "confidence": 0.95,
+                },
+                {"name": "Bread", "raw_name": "banh mi", "code": None},
+            ],
+        }
+
 
 @pytest.fixture()
 def _override_extraction_deps() -> Generator[None]:
@@ -141,7 +204,7 @@ def _override_extraction_deps() -> Generator[None]:
         return AuthenticatedUser(USER_ID, (UserRole.USER,))
 
     def get_fake_service() -> ExtractionService:
-        return ExtractionService(ai_service=FakeAIExtractionService())  # type: ignore[arg-type]
+        return make_extraction_service(FakeAIExtractionService())
 
     app.dependency_overrides[require_authentication] = get_user
     app.dependency_overrides[get_extraction_service] = get_fake_service
@@ -168,13 +231,18 @@ async def test_ocr_label_route_returns_200_with_mock_data(
     assert body["persisted"] is False
     assert body["fields"]["ingredient_name"] == "Whole Milk"
     assert body["fields"]["raw_name"] == "MILK"
-    assert body["fields"]["master_ingredient_code"] == "10001"
-    assert body["fields"]["category"] == "Dairy"
-    assert body["fields"]["quantity_source"] == "extracted"
-    assert body["fields"]["nutrition"] == {"energy_kcal": 74.0}
-    assert body["fields"]["freshness_guide"] == {
-        "storage_tips": ["Keep cold"]
+    assert body["fields"]["master_ingredient_id"] == str(MILK_ID)
+    assert set(body["fields"]) == {
+        "ingredient_name",
+        "raw_name",
+        "master_ingredient_id",
+        "quantity",
+        "unit",
+        "packaged_at",
+        "expires_at",
     }
+    assert body["fields"]["quantity"] == 500.0
+    assert body["fields"]["unit"] == "GRAM"
     assert body["fields"]["packaged_at"] == "2026-08-28"
     assert body["fields"]["expires_at"] == "2026-09-05"
     assert body["confidence"]["ingredient_name"] == 0.95
@@ -248,9 +316,21 @@ async def test_ocr_invoice_route_returns_200_with_mock_data(
     assert body["persisted"] is False
     assert isinstance(body["fields"]["line_items"], list)
     assert len(body["fields"]["line_items"]) == 2
-    assert body["fields"]["line_items"][0]["quantity_source"] == "extracted"
+    assert body["fields"]["line_items"][0]["master_ingredient_id"] == str(MILK_ID)
+    assert body["fields"]["line_items"][1]["master_ingredient_id"] is None
+    assert set(body["fields"]["line_items"][0]) == {
+        "name",
+        "raw_name",
+        "master_ingredient_id",
+        "quantity",
+        "unit",
+        "unit_price",
+        "total_price",
+    }
+    assert body["fields"]["line_items"][0]["name"] == "Whole Milk"
+    assert body["fields"]["line_items"][0]["raw_name"] == "MILK"
+    assert body["fields"]["line_items"][0]["quantity"] == 500.0
     assert body["fields"]["line_items"][1]["quantity"] is None
-    assert body["fields"]["line_items"][1]["quantity_source"] == "estimated"
     assert body["fields"]["total_amount"] is None
     assert body["fields"]["currency"] is None
     assert body["fields"]["vendor_name"] == "Test Grocery"
@@ -291,12 +371,91 @@ async def test_asr_route_returns_200_with_mock_data(
     assert "sữa" in body["raw_text"].lower()
     assert body["fields"]["ingredient_name"] == "Milk"
     assert body["fields"]["raw_name"] == "sữa"
-    assert body["fields"]["master_ingredient_code"] == "10001"
-    assert body["fields"]["category"] == "Dairy"
-    assert body["fields"]["quantity_source"] == "extracted"
+    assert body["fields"]["master_ingredient_id"] == str(MILK_ID)
+    assert set(body["fields"]) == {
+        "ingredient_name",
+        "raw_name",
+        "master_ingredient_id",
+        "quantity",
+        "unit",
+        "packaged_at",
+        "expires_at",
+    }
     assert body["fields"]["quantity"] == 500.0
     assert body["fields"]["unit"] == "GRAM"
     assert body["confidence"]["ingredient_name"] == 0.92
+
+
+@pytest.mark.anyio
+async def test_text_route_returns_matched_ingredient_without_estimated_quantity(
+    api_client: httpx.AsyncClient,
+    _override_extraction_deps: None,
+) -> None:
+    """POST /extractions/text keeps the catalog match but never reports a guessed quantity."""
+    response = await api_client.post(
+        "/api/extractions/text", json={"text": "  sua tuoi  "}
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["status"] == "PARTIAL"
+    assert body["raw_text"] == "sua tuoi"
+    assert body["fields"]["ingredient_name"] == "Milk"
+    assert body["fields"]["master_ingredient_id"] == str(MILK_ID)
+    assert body["fields"]["quantity"] is None
+    assert body["fields"]["unit"] is None
+    assert body["warnings"] == ["ADDITIONAL_ITEMS_OMITTED", "QUANTITY_NOT_EXTRACTED"]
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("payload", [{"text": "   "}, {"text": "x" * 501}, {}])
+async def test_text_route_rejects_blank_oversized_or_missing_text(
+    api_client: httpx.AsyncClient,
+    _override_extraction_deps: None,
+    payload: dict[str, str],
+) -> None:
+    """The text endpoint bounds its input before reaching the smart parser."""
+    response = await api_client.post("/api/extractions/text", json=payload)
+
+    assert response.status_code == 422
+
+
+@pytest.mark.anyio
+async def test_text_route_runs_the_real_smart_parser(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """Typed text with a quantity resolves through the bundled catalog parser."""
+    from AI.catalog.snapshot import load_snapshot_from_bundle
+    from AI.extraction.pantry_parser import CatalogPantryParser
+
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    snapshot = load_snapshot_from_bundle()
+    ai_service = AIExtractionService(
+        pantry_parser=CatalogPantryParser(
+            master_alias_index=snapshot.master_alias_index,
+            master_by_code=snapshot.master_by_code,
+        )
+    )
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
+    )
+    try:
+        response = await api_client.post(
+            "/api/extractions/text", json={"text": "thịt ba rọi 500g"}
+        )
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+
+    assert response.status_code == 200
+    fields = response.json()["fields"]
+    assert "ba chỉ" in fields["ingredient_name"].lower()
+    assert fields["raw_name"]
+    assert fields["quantity"] == 500.0
+    assert fields["unit"] == "GRAM"
 
 
 @pytest.mark.anyio
@@ -415,10 +574,10 @@ async def test_ocr_label_route_openai_success(
     ocr_client = OpenAIVisionOCR(
         api_key="test-key", http_client=mock_client
     )
-    ai_service = AIExtractionService(ocr_client=ocr_client)
+    ai_service = AIExtractionService(ocr_client=ocr_client, image_guard=AcceptingGuard())  # type: ignore[arg-type]
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
-        ai_service=ai_service
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
     )
 
     try:
@@ -497,11 +656,11 @@ async def test_ocr_label_route_openai_timeout_maps_to_504(
     ocr_client = OpenAIVisionOCR(
         api_key="test-key", http_client=mock_client
     )
-    ai_service = AIExtractionService(ocr_client=ocr_client)
+    ai_service = AIExtractionService(ocr_client=ocr_client, image_guard=AcceptingGuard())  # type: ignore[arg-type]
 
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
-        ai_service=ai_service
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
     )
 
     try:
@@ -534,11 +693,11 @@ async def test_ocr_label_route_openai_service_unavailable_maps_to_503(
     ocr_client = OpenAIVisionOCR(
         api_key="test-key", http_client=mock_client
     )
-    ai_service = AIExtractionService(ocr_client=ocr_client)
+    ai_service = AIExtractionService(ocr_client=ocr_client, image_guard=AcceptingGuard())  # type: ignore[arg-type]
 
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
-        ai_service=ai_service
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
     )
 
     try:
@@ -571,11 +730,11 @@ async def test_ocr_label_route_openai_bad_response_maps_to_502(
     ocr_client = OpenAIVisionOCR(
         api_key="test-key", http_client=mock_client
     )
-    ai_service = AIExtractionService(ocr_client=ocr_client)
+    ai_service = AIExtractionService(ocr_client=ocr_client, image_guard=AcceptingGuard())  # type: ignore[arg-type]
 
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
-        ai_service=ai_service
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
     )
 
     try:
@@ -612,8 +771,8 @@ async def test_asr_route_whisper_success(
     ai_service = AIExtractionService(whisper_client=whisper_client)
 
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
-        ai_service=ai_service
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
     )
 
     try:
@@ -652,8 +811,8 @@ async def test_asr_route_whisper_timeout_maps_to_504(
     ai_service = AIExtractionService(whisper_client=whisper_client)
 
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
-        ai_service=ai_service
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
     )
 
     try:
@@ -688,8 +847,8 @@ async def test_asr_route_whisper_unavailable_maps_to_503(
     ai_service = AIExtractionService(whisper_client=whisper_client)
 
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
-        ai_service=ai_service
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
     )
 
     try:
@@ -724,8 +883,8 @@ async def test_asr_route_whisper_bad_response_maps_to_502(
     ai_service = AIExtractionService(whisper_client=whisper_client)
 
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
-        ai_service=ai_service
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
     )
 
     try:
@@ -838,3 +997,94 @@ def test_pantry_parser_master_code_matching_and_enrichment() -> None:
     assert enriched["quantity_g"] == 500.0
     assert enriched["quantity_source"] == "extracted"
     assert enriched["nutrition"] is not None
+
+
+# =========================================================================
+# Pre-OCR image guard
+# =========================================================================
+
+
+def _guard_with_reply(content: str) -> tuple[OpenAIImageGuard, httpx.AsyncClient]:
+    transport = httpx.MockTransport(
+        lambda req: httpx.Response(
+            200, json={"choices": [{"message": {"content": content}}]}
+        )
+    )
+    client = httpx.AsyncClient(transport=transport)
+    return OpenAIImageGuard(api_key="test-key", http_client=client), client
+
+
+def _png_bytes() -> bytes:
+    buffer = BytesIO()
+    Image.new("RGB", (32, 32), "white").save(buffer, "PNG")
+    return buffer.getvalue()
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    ("category", "accepted"),
+    [("food_label", True), ("invoice", True), ("other", False)],
+)
+async def test_image_guard_accepts_only_labels_and_invoices(
+    category: str, accepted: bool
+) -> None:
+    """Only food labels and invoices pass; everything else is rejected."""
+    guard, client = _guard_with_reply(
+        json.dumps({"category": category, "confidence": 0.9, "reason": "r"})
+    )
+    try:
+        verdict = await guard.classify(_png_bytes())
+    finally:
+        await client.aclose()
+    assert verdict.accepted is accepted
+
+
+@pytest.mark.anyio
+async def test_image_guard_unknown_category_is_a_provider_error() -> None:
+    """An unparseable verdict never silently lets an image through."""
+    from AI.errors import ExtractionBadResponseError
+
+    guard, client = _guard_with_reply('{"category": "maybe"}')
+    try:
+        with pytest.raises(ExtractionBadResponseError):
+            await guard.classify(_png_bytes())
+    finally:
+        await client.aclose()
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("path", ["label", "invoice"])
+async def test_rejected_image_returns_422_and_never_calls_ocr(
+    api_client: httpx.AsyncClient, path: str
+) -> None:
+    """A non-food, non-invoice image gets 422 and the OCR model is not called."""
+    ocr_calls: list[httpx.Request] = []
+
+    def ocr_handler(request: httpx.Request) -> httpx.Response:
+        ocr_calls.append(request)
+        return httpx.Response(200, json={"choices": [{"message": {"content": "{}"}}]})
+
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    ocr_http = httpx.AsyncClient(transport=httpx.MockTransport(ocr_handler))
+    ai_service = AIExtractionService(
+        ocr_client=OpenAIVisionOCR(api_key="test-key", http_client=ocr_http),
+        image_guard=RejectingGuard(),  # type: ignore[arg-type]
+    )
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
+    )
+    try:
+        resp = await api_client.post(
+            f"/api/extractions/ocr/{path}",
+            files={"file": ("photo.png", BytesIO(_png_bytes()), "image/png")},
+        )
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await ocr_http.aclose()
+    assert resp.status_code == 422
+    assert "phong cảnh" in resp.json()["detail"]
+    assert ocr_calls == []

@@ -22,14 +22,21 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - Provider-neutral OTP delivery contract, deterministic WireMock SMS adapter, and non-delivering local email adapter.
 - Backend-hosted AI under `AI/`: LightGBM recommendation engine over a catalog rebuilt in Postgres from the bundled data (`python -m AI.catalog.importer`), OpenAI-based OCR and LLM text parsing, Groq Whisper ASR, and a four-tier pantry parser. Adds `recipes.ai_features`, `recipe_ingredients.ai_attributes`, and `master_ingredients.source_code` (migration `e2b4f68a10cd`).
 - `GET /api/health/ai` now reports the in-process catalog revision, ranker, and provider configuration.
+- Pre-OCR image guard (`OPENAI_OCR_GUARD_MODEL`, default `gpt-4o-mini`): images that are neither a food label/packaging nor an invoice are rejected with HTTP 422 before the OCR model is called.
 
 ### Fixed
 
 - Alembic revision template now includes dialect-specific imports emitted during autogeneration, allowing PostgreSQL `JSONB` migrations to run.
+- Pantry matcher no longer maps labels onto the wrong ingredient: aliases and the query are scored together (IDF-weighted token F1 over ordered tokens, graded tone / d-đ agreement, head-noun position, recipe popularity as the tie-break) instead of sequential tiers, brand and preparation noise (`C.P`, `làm sạch`, `nguyên con`) is stripped, regional synonyms no longer override real catalog names, and ambiguous or unknown labels return no match with a `match_confidence`.
+- OpenAI OCR/guard HTTP client is no longer closed after every call, which broke concurrent extraction requests on the shared service.
 
 ### Changed
 
 - **Breaking authentication change:** registration now requires phone OTP verification followed by password creation; sign-in now uses phone number and password. OTP is reserved for registration, password recovery/change, identity changes, and step-up authentication.
+- **Breaking extraction contract change:** `POST /api/extractions/ocr/label|ocr/invoice|asr` now return only `ingredient_name`, `raw_name`, `master_ingredient_id`, `quantity`, `unit`, `packaged_at` and `expires_at` (invoice lines: `name`, `raw_name`, `master_ingredient_id`, `quantity`, `unit`, `unit_price`, `total_price`). `nutrition`, `freshness_guide`, `is_staple`, `category`, `master_ingredient_code`, `quantity_source`, `price`, `currency` and `barcode` were removed. `master_ingredient_id` is resolved from the AI catalog code through `master_ingredients.source_code` and is `null` when no master ingredient matches.
+- **Inventory batches are no longer estimated at creation:** `POST /api/inventory/batches` without `expires_at` now stores `expires_at = null` and `expiration_source = UNKNOWN` instead of applying a seeded shelf-life rule. A printed `expires_at` is still stored as `MANUFACTURER`; FreshCheck assessments record `ESTIMATED` expiries. Moving a batch between storage modes still recalculates `ESTIMATED`/`UNKNOWN` expiries from shelf-life rules.
+- `POST /api/extractions/text` runs typed ingredient text through the smart parser (dictionary and regex tiers) and returns the same envelope as label/ASR extraction. The smart parser's text fallback now propagates `quantity_source`, so a quantity stated in the text is reported as extracted.
+- `POST /api/freshness/previews` estimates an expiry for an unsaved ingredient from sensory answers without persisting anything.
 - Backend database planning now targets Neon PostgreSQL instead of a local PostgreSQL container.
 - Replaced the early conceptual database notes with the canonical MVP schema contract covering identity, catalog, batch inventory, FEFO audit data, recommendations, planning, cooking, shopping, and notifications.
 - Split database documentation into table syntax (`DATABASE.txt`) and operational/design notes (`DATABASE_NOTES.md`) for faster schema review.
