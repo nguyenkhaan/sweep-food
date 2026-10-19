@@ -5,12 +5,15 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from AI.errors import ImageNotSupportedError
 from AI.extraction.asr.groq_whisper import GroqWhisperClient
 from AI.extraction.asr.speech_parser import parse_vietnamese_speech
+from AI.extraction.ocr.image_guard import OpenAIImageGuard
 from AI.extraction.ocr.label_parser import FoodLabelParser
 from AI.extraction.ocr.openai_vision_ocr import OpenAIVisionOCR
 from AI.extraction.ocr.receipt_parser import parse_receipt_text
 from AI.extraction.pantry_parser import CatalogPantryParser, PantryItemMatcher
+from AI.smart_parser.matching import count_master_usage
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +30,9 @@ class AIExtractionService:
         whisper_client: GroqWhisperClient | None = None,
         label_parser: FoodLabelParser | None = None,
         pantry_parser: PantryItemMatcher | None = None,
+        image_guard: OpenAIImageGuard | None = None,
     ) -> None:
+        self.image_guard = image_guard or OpenAIImageGuard()
         self.ocr_client = ocr_client or OpenAIVisionOCR()
         self.whisper_client = whisper_client or GroqWhisperClient()
         self.label_parser = label_parser or FoodLabelParser()
@@ -38,7 +43,16 @@ class AIExtractionService:
         image_bytes: bytes,
         filename: str = "receipt.jpg",
     ) -> dict[str, Any]:
-        """Process receipt or food packaging label image via OpenAI Vision OCR and enrich items."""
+        """Guard, then OCR a food label or receipt image and enrich items.
+
+        Raises ImageNotSupportedError before any OCR call when the image is
+        neither a food label/packaging nor an invoice.
+        """
+        verdict = await self.image_guard.classify(image_bytes)
+        if not verdict.accepted:
+            raise ImageNotSupportedError(
+                verdict.reason or "Image is not a food label or an invoice."
+            )
         ocr_res = await self.ocr_client.recognize_image_bytes(image_bytes)
 
         raw_items = ocr_res.get("items", [])
@@ -138,12 +152,30 @@ class AIExtractionService:
             "items": enriched_items,
         }
 
+    async def process_text_input(self, text: str) -> dict[str, Any]:
+        """Parse typed text with the local smart parser tiers and enrich items.
+
+        The LLM tier is skipped: typed entries are short and interactive, so the
+        deterministic dictionary and regex tiers keep latency and cost predictable.
+        """
+        items = await self.pantry_parser.aparse_input_to_pantry(
+            text, prefer_llm=False
+        )
+        return {
+            "status": "success",
+            "engine": "smart_parser",
+            "text": text,
+            "items_count": len(items),
+            "items": items,
+        }
+
 
 def build_ai_extraction_service(
     *,
     pantry_matcher: PantryItemMatcher | None = None,
     ocr_client: OpenAIVisionOCR | None = None,
     whisper_client: GroqWhisperClient | None = None,
+    image_guard: OpenAIImageGuard | None = None,
 ) -> AIExtractionService:
     """Construct an AIExtractionService, loading catalog snapshot if matcher not supplied."""
     if pantry_matcher is None:
@@ -154,6 +186,7 @@ def build_ai_extraction_service(
             pantry_matcher = CatalogPantryParser(
                 master_alias_index=snapshot.master_alias_index,
                 master_by_code=snapshot.master_by_code,
+                master_usage=count_master_usage(snapshot.ingredients),
             )
         except (OSError, ValueError, KeyError) as exc:
             logger.warning(
@@ -165,6 +198,7 @@ def build_ai_extraction_service(
         ocr_client=ocr_client,
         whisper_client=whisper_client,
         pantry_parser=pantry_matcher,
+        image_guard=image_guard,
     )
 
 
@@ -174,3 +208,13 @@ def get_ai_extraction_service() -> AIExtractionService:
     if _GLOBAL_EXTRACTION_SERVICE is None:
         _GLOBAL_EXTRACTION_SERVICE = build_ai_extraction_service()
     return _GLOBAL_EXTRACTION_SERVICE
+
+
+async def close_ai_extraction_service() -> None:
+    """Close the shared OpenAI connection pools of the cached service, if built."""
+    global _GLOBAL_EXTRACTION_SERVICE
+    service = _GLOBAL_EXTRACTION_SERVICE
+    _GLOBAL_EXTRACTION_SERVICE = None
+    if service is not None:
+        await service.ocr_client.aclose()
+        await service.image_guard.aclose()

@@ -14,7 +14,7 @@ from typing import Any
 from AI.llm.openai_client import OpenAIClient
 from AI.smart_parser.enrichment import PantryEnricher
 from AI.smart_parser.llm_tier import LLMExtractor
-from AI.smart_parser.matching import PantryMatcher
+from AI.smart_parser.matching import PantryMatcher, count_master_usage
 from AI.smart_parser.normalization import (
     detect_storage_mode,
     parse_quantity_and_clean_name,
@@ -50,12 +50,14 @@ class PantryParser:
         master_by_code: Mapping[str, dict[str, Any]] | None = None,
         fresh_kb: dict[str, Any] | None = None,
         openai_client: OpenAIClient | None = None,
+        master_usage: Mapping[str, int] | None = None,
     ) -> None:
         self.fresh_kb = fresh_kb if fresh_kb is not None else _load_fresh_kb()
         self.matcher = PantryMatcher(
             master_alias_index=master_alias_index,
             master_by_code=master_by_code,
             fresh_kb=self.fresh_kb,
+            master_usage=master_usage,
         )
         self.enricher = PantryEnricher(self.matcher, fresh_kb=self.fresh_kb)
         self.llm_extractor = LLMExtractor(openai_client=openai_client)
@@ -144,13 +146,14 @@ class PantryParser:
                 # Remove line numbering (e.g. '1. ') and price tokens (e.g. '45.000d', '59,000đ')
                 cleaned_line = re.sub(r"^\d+[\.\)]\s*", "", line)
                 cleaned_line = re.sub(r"\b\d+(?:[\.,]\d+)?\s*(?:đ|d|vnd)\b", "", cleaned_line, flags=re.IGNORECASE)
-                name, qty_g, _ = parse_quantity_and_clean_name(cleaned_line)
+                name, qty_g, qty_source = parse_quantity_and_clean_name(cleaned_line)
                 if name and len(name) >= 2:
                     items.append(
                         {
                             "name": name,
                             "raw_text": line,
                             "quantity_g": qty_g,
+                            "quantity_source": qty_source,
                             "storage_mode": storage_mode,
                         }
                     )
@@ -173,13 +176,14 @@ class PantryParser:
             p_clean = part.strip()
             if not p_clean or len(p_clean) < 2:
                 continue
-            name, qty_g, _ = parse_quantity_and_clean_name(p_clean)
+            name, qty_g, qty_source = parse_quantity_and_clean_name(p_clean)
             if name and len(name) >= 2:
                 items.append(
                     {
                         "name": name,
                         "raw_text": p_clean,
                         "quantity_g": qty_g,
+                        "quantity_source": qty_source,
                         "storage_mode": storage_mode,
                     }
                 )
@@ -188,8 +192,16 @@ class PantryParser:
             return items
 
         # Fallback single item
-        name, qty_g, _ = parse_quantity_and_clean_name(text)
-        return [{"name": name, "raw_text": text, "quantity_g": qty_g, "storage_mode": storage_mode}]
+        name, qty_g, qty_source = parse_quantity_and_clean_name(text)
+        return [
+            {
+                "name": name,
+                "raw_text": text,
+                "quantity_g": qty_g,
+                "quantity_source": qty_source,
+                "storage_mode": storage_mode,
+            }
+        ]
 
 
 def get_pantry_parser(
@@ -207,6 +219,7 @@ def get_pantry_parser(
             _PARSER_INSTANCE = PantryParser(
                 master_alias_index=snapshot.master_alias_index,
                 master_by_code=snapshot.master_by_code,
+                master_usage=count_master_usage(snapshot.ingredients),
                 openai_client=openai_client,
             )
         except (OSError, FileNotFoundError, json.JSONDecodeError, ValueError, KeyError) as exc:

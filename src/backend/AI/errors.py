@@ -23,5 +23,9 @@ class ExtractionBadResponseError(ExtractionError):
     """Raised when an AI provider returns an invalid or unparseable response."""
 
 
+class ImageNotSupportedError(ExtractionError):
+    """Raised when an image is neither a food label/packaging nor an invoice."""
+
+
 class AudioPreprocessingError(ExtractionError):
     """Raised when audio conversion or preprocessing fails (e.g. missing ffmpeg)."""

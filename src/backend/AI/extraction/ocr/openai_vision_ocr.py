@@ -143,98 +143,94 @@ class OpenAIVisionOCR:
                 ],
             }
         ]
-        try:
-            content = await self.openai_client.create_chat_completion(
-                messages=messages,
-                model=self.model,
-                max_completion_tokens=8192,
-                reasoning_effort=self.reasoning_effort or None,
-                response_format={"type": "json_object"},
-                timeout=self.timeout,
-            )
-            parsed_data = self._parse_llm_json(content)
-            raw_text = parsed_data.get("raw_text", "") or content
-            store_name = parsed_data.get("store_name")
-            items = parsed_data.get("items", [])
+        content = await self.openai_client.create_chat_completion(
+            messages=messages,
+            model=self.model,
+            max_completion_tokens=8192,
+            reasoning_effort=self.reasoning_effort or None,
+            response_format={"type": "json_object"},
+            timeout=self.timeout,
+        )
+        parsed_data = self._parse_llm_json(content)
+        raw_text = parsed_data.get("raw_text", "") or content
+        store_name = parsed_data.get("store_name")
+        items = parsed_data.get("items", [])
 
-            clean_items: list[dict[str, Any]] = []
-            now_date = ref_date or datetime.date.today()
+        clean_items: list[dict[str, Any]] = []
+        now_date = ref_date or datetime.date.today()
 
-            for it in items:
-                name = str(it.get("name") or "").strip()
-                if not name or len(name) < 2:
-                    continue
+        for it in items:
+            name = str(it.get("name") or "").strip()
+            if not name or len(name) < 2:
+                continue
 
-                raw_q = it.get("quantity_g")
-                is_extracted = False
-                q_g: float | None = None
-                if raw_q is not None:
-                    try:
-                        if isinstance(raw_q, str):
-                            raw_q = float(
-                                raw_q.replace("g", "")
-                                .replace("kg", "")
-                                .replace(",", ".")
-                                .strip()
-                            )
-                        parsed_val = float(raw_q)
-                        if 0.0 < parsed_val < 5.0:  # kg -> g
-                            q_g = round(parsed_val * 1000.0, 1)
-                        else:
-                            q_g = round(parsed_val, 1)
-                        is_extracted = True
-                    except (ValueError, TypeError):
-                        q_g = None
-
-                hrs: float | None = None
+            raw_q = it.get("quantity_g")
+            is_extracted = False
+            q_g: float | None = None
+            if raw_q is not None:
                 try:
-                    if it.get("hours_to_expire") is not None:
-                        hrs = float(it["hours_to_expire"])
-                except (ValueError, TypeError):
-                    hrs = None
-
-                exp_date_str = it.get("expiry_date")
-                prod_date_str = it.get("production_date")
-                note = str(it.get("note") or "").strip()
-                if not note and exp_date_str:
-                    note = f"HSD: {exp_date_str}"
-
-                # Evaluate expiry check
-                expiry_check: str | None = None
-                if exp_date_str:
-                    exp_date = parse_vietnamese_date(exp_date_str)
-                    if exp_date is not None:
-                        expiry_check = (
-                            "suspicious" if exp_date < now_date else "ok"
+                    if isinstance(raw_q, str):
+                        raw_q = float(
+                            raw_q.replace("g", "")
+                            .replace("kg", "")
+                            .replace(",", ".")
+                            .strip()
                         )
+                    parsed_val = float(raw_q)
+                    if 0.0 < parsed_val < 5.0:  # kg -> g
+                        q_g = round(parsed_val * 1000.0, 1)
+                    else:
+                        q_g = round(parsed_val, 1)
+                    is_extracted = True
+                except (ValueError, TypeError):
+                    q_g = None
 
-                clean_items.append(
-                    {
-                        "name": name,
-                        "raw_name": name,
-                        "quantity_g": q_g if q_g is not None else 500.0,
-                        "quantity_source": (
-                            "extracted" if is_extracted else "estimated"
-                        ),
-                        "expiry_date": exp_date_str,
-                        "production_date": prod_date_str,
-                        "hours_to_expire": hrs or 72.0,
-                        "expiry_check": expiry_check,
-                        "note": note,
-                        "confidence": 0.95,
-                    }
-                )
+            hrs: float | None = None
+            try:
+                if it.get("hours_to_expire") is not None:
+                    hrs = float(it["hours_to_expire"])
+            except (ValueError, TypeError):
+                hrs = None
 
-            return {
-                "status": "success",
-                "source": "openai_vision",
-                "engine": f"OpenAI ({self.model})",
-                "store_name": store_name,
-                "raw_text": raw_text,
-                "items_count": len(clean_items),
-                "items": clean_items,
-                "preprocess_stats": stats,
-            }
-        finally:
-            if self._client is None:
-                await self.openai_client.aclose()
+            exp_date_str = it.get("expiry_date")
+            prod_date_str = it.get("production_date")
+            note = str(it.get("note") or "").strip()
+            if not note and exp_date_str:
+                note = f"HSD: {exp_date_str}"
+
+            # Evaluate expiry check
+            expiry_check: str | None = None
+            if exp_date_str:
+                exp_date = parse_vietnamese_date(exp_date_str)
+                if exp_date is not None:
+                    expiry_check = "suspicious" if exp_date < now_date else "ok"
+
+            clean_items.append(
+                {
+                    "name": name,
+                    "raw_name": name,
+                    "quantity_g": q_g if q_g is not None else 500.0,
+                    "quantity_source": ("extracted" if is_extracted else "estimated"),
+                    "expiry_date": exp_date_str,
+                    "production_date": prod_date_str,
+                    "hours_to_expire": hrs or 72.0,
+                    "expiry_check": expiry_check,
+                    "note": note,
+                    "confidence": 0.95,
+                }
+            )
+
+        return {
+            "status": "success",
+            "source": "openai_vision",
+            "engine": f"OpenAI ({self.model})",
+            "store_name": store_name,
+            "raw_text": raw_text,
+            "items_count": len(clean_items),
+            "items": clean_items,
+            "preprocess_stats": stats,
+        }
+
+    async def aclose(self) -> None:
+        """Close the shared HTTP connection pool owned by this client."""
+        await self.openai_client.aclose()

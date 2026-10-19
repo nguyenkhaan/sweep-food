@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from redis.exceptions import RedisError
 
 from AI.catalog.snapshot import warm_up
+from AI.extraction.service import close_ai_extraction_service
 from src.core.exceptions import register_exception_handlers
 from src.core.openapi import BearerOpenAPIFastAPI
 from src.core.setting import DATABASE_URL, REDIS_URL, get_env_var
@@ -59,6 +60,7 @@ async def lifespan(application: FastAPI) -> AsyncGenerator[None, None]:
     try:
         yield
     finally:
+        await close_ai_extraction_service()
         await redis_service.close()
         print("Redis closed")
         await db_session.close()

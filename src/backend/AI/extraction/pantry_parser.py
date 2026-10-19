@@ -24,6 +24,12 @@ class PantryItemMatcher(Protocol):
         """Enrich extracted entity with master code, category, nutrition, and staple flags."""
         ...
 
+    async def aparse_input_to_pantry(
+        self, input_text: str, prefer_llm: bool = True
+    ) -> list[dict[str, Any]]:
+        """Parse typed text into enriched pantry items."""
+        ...
+
 
 class CatalogPantryParser(PantryParser):
     """Matches raw food names to master ingredients and enriches pantry items.
@@ -37,8 +43,10 @@ class CatalogPantryParser(PantryParser):
             Mapping[str, tuple[str, ...] | list[str] | set[str]] | None
         ) = None,
         master_by_code: Mapping[str, dict[str, Any]] | None = None,
+        master_usage: Mapping[str, int] | None = None,
     ) -> None:
         super().__init__(
             master_alias_index=master_alias_index,
             master_by_code=master_by_code,
+            master_usage=master_usage,
         )

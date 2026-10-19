@@ -151,6 +151,9 @@ OPENAI_BASE_URL: Final[str] = get_http_base_url_env(
     "OPENAI_BASE_URL", "https://api.openai.com/v1"
 )
 OPENAI_OCR_MODEL: Final[str] = get_env_var("OPENAI_OCR_MODEL", "gpt-6.1-sol")
+OPENAI_OCR_GUARD_MODEL: Final[str] = get_env_var(
+    "OPENAI_OCR_GUARD_MODEL", "gpt-4o-mini"
+)
 OPENAI_OCR_REASONING_EFFORT: Final[str] = get_reasoning_effort_env(
     "OPENAI_OCR_REASONING_EFFORT", "medium"
 )

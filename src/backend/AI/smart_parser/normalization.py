@@ -11,7 +11,14 @@ CLASSIFIER_PREFIX_REGEX = re.compile(
 )
 
 BRAND_NOISE_REGEX = re.compile(
-    r"\b(?:cp|vissan|meat\s*deli|g\s*kitchen|ba\s*huân|vinmart|winmart|bhx|ls|kg|gr?|gram)\b",
+    r"\b(?:c\.p|cp|vissan|meat\s*deli|g\s*kitchen|ba\s*huân|vinmart|winmart|bhx|ls|kg|gr?|gram)\b",
+    re.IGNORECASE,
+)
+
+# Preparation / presentation phrases that describe how an item is sold, not what it is.
+PREPARATION_NOISE_REGEX = re.compile(
+    r"\b(?:làm\s+sạch|lam\s+sach|cắt\s+khúc|cat\s+khuc|cắt\s+lát|cat\s+lat|"
+    r"nguyên\s+con|nguyen\s+con|đông\s+lạnh|dong\s+lanh|nhập\s+khẩu|nhap\s+khau)\b",
     re.IGNORECASE,
 )
 
@@ -100,8 +107,8 @@ def strip_classifier_prefix(text: str) -> str:
 
 
 def strip_brand_noise(text: str) -> str:
-    """Remove supermarket brand names and noise tokens (CP, Vissan, Meat Deli, etc.)."""
-    cleaned = BRAND_NOISE_REGEX.sub("", text)
+    """Remove brand names, packaging/preparation phrases and unit noise from a label."""
+    cleaned = BRAND_NOISE_REGEX.sub("", PREPARATION_NOISE_REGEX.sub("", text))
     return re.sub(r"\s+", " ", cleaned).strip()
 
 

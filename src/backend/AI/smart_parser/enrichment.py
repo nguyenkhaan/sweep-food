@@ -112,6 +112,7 @@ class PantryEnricher:
             "raw_name": raw_name,
             "raw_text": raw_name,
             "code": code,
+            "match_confidence": matched.get("match_score") if matched else None,
             "category": category or None,
             "quantity_g": round(qty_g, 1),
             "quantity_source": qty_source,

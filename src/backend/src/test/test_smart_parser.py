@@ -384,3 +384,48 @@ def test_ai_modules_fresh_interpreter_import_no_cycles(module_name: str) -> None
         f"Fresh interpreter import failed for {module_name}:\n"
         f"STDOUT: {result.stdout}\nSTDERR: {result.stderr}"
     )
+
+
+@pytest.mark.parametrize(
+    ("label", "expected_name"),
+    [
+        # Unaccented print must not collapse onto a homograph (dúi vs đùi) and a brand
+        # suffix ("C.P") must not break the match.
+        ("THIT DUI HEO C.P", "Thịt nạc đùi heo"),
+        # Extra words ("nhập khẩu") must not let a one-word alias (canh) win.
+        ("CANH GIUA GA NHAP KHAU", "Cánh gà"),
+        ("CÁNH GÀ - 500G", "Cánh gà"),
+        ("MÁ ĐÙI GÀ - 500G", "Đùi gà"),
+        # Tone-only and d/đ spelling variants still resolve to the right word.
+        ("Đậu hủ trắng", "Đậu phụ (đậu hũ)"),
+        ("CÁ DIÊU HỒNG LÀM SẠCH 450G", "Cá điêu hồng"),
+        # Preparation words and the head noun order.
+        ("CÁ TRỨNG NGUYÊN CON", "Cá trứng"),
+        ("Cá Bống Biển Làm Sạch", "Cá bống"),
+        # "nhỏ" is not the grape ("nho").
+        ("BÚN NHỎ", "Bún tươi"),
+        # A recipe-style alias that lacks the species word must not beat the plain name.
+        ("CÁ ĐÙ MỘT NẮNG", "Cá đù"),
+    ],
+)
+def test_pantry_matcher_resolves_ocr_labels_to_the_right_master(
+    label: str, expected_name: str
+) -> None:
+    """Real OCR label spellings resolve to the intended catalog ingredient."""
+    resolved = get_pantry_parser().resolve_master_ingredient(label)
+    assert resolved is not None
+    assert resolved["name"] == expected_name
+    assert 0.5 <= resolved["match_score"] <= 1.0
+
+
+@pytest.mark.parametrize(
+    "label",
+    [
+        "XƯƠNG GÀ - 500G",  # no chicken-bone master: 'xương' and 'gà' are rival partial matches
+        "TÁO CHERRY HỘP 500G",  # no cherry-apple master: must not fall back to a juice
+        "HÀNH LÁ NGÒ RÍ (GÓI)",  # a bundle of two ingredients
+    ],
+)
+def test_pantry_matcher_prefers_no_match_over_a_wrong_one(label: str) -> None:
+    """A label the catalog cannot name returns None instead of a confident guess."""
+    assert get_pantry_parser().resolve_master_ingredient(label) is None
