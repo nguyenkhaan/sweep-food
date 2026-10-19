@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
@@ -16,7 +17,10 @@ class LabelReviewController extends _$LabelReviewController {
   ParsedItemDraft build(ScanJob job) =>
       job.single.copyWith(imagePath: job.sourcePath);
 
-  void setName(String name) => state = state.copyWith(name: name);
+  /// Renaming detaches the item from its catalog match and FreshCheck estimate.
+  void setName(String name) => state = name == state.name
+      ? state
+      : state.copyWith(name: name, ingredientId: null, freshness: null);
 
   void setQuantity(double quantity) =>
       state = state.copyWith(quantity: quantity);
@@ -28,11 +32,15 @@ class LabelReviewController extends _$LabelReviewController {
   void setPackedDate(DateTime? date) =>
       state = state.copyWith(packedDate: date);
 
-  void setExpiryDate(DateTime? date) =>
-      state = state.copyWith(expiryDate: date, isExpiryWarn: false);
+  /// A manual date and a FreshCheck estimate are mutually exclusive.
+  void setExpiry(DateTime? date, FreshnessEstimate? freshness) => state =
+      state.copyWith(expiryDate: date, freshness: freshness, isExpiryWarn: false);
 
-  void setStorageTier(StorageTier tier) =>
-      state = state.copyWith(storageTier: tier);
+  /// FreshCheck depends on where the item is stored.
+  void setStorageTier(StorageTier tier) => state = state.copyWith(
+    storageTier: tier,
+    freshness: tier == state.storageTier ? state.freshness : null,
+  );
 
   void setCategory(String category) =>
       state = state.copyWith(category: category);

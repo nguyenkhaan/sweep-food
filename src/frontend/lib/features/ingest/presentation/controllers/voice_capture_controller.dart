@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
@@ -40,6 +41,26 @@ class VoiceCaptureController extends _$VoiceCaptureController {
     list[index] = item;
     state = state.copyWith(items: list);
   }
+
+  /// Renaming detaches the row from its catalog match and FreshCheck estimate.
+  void renameItem(int index, String name) {
+    final item = state.items[index];
+    if (name == item.name) return;
+    updateItem(
+      index,
+      item.copyWith(name: name, ingredientId: null, freshness: null),
+    );
+  }
+
+  /// A manual date and a FreshCheck estimate are mutually exclusive.
+  void setItemExpiry(
+    int index,
+    DateTime? expiry,
+    FreshnessEstimate? freshness,
+  ) => updateItem(
+    index,
+    state.items[index].copyWith(expiryDate: expiry, freshness: freshness),
+  );
 
   void addItem(ParsedItemDraft item) =>
       state = state.copyWith(items: [...state.items, item]);

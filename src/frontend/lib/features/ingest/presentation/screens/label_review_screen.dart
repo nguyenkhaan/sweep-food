@@ -15,6 +15,7 @@ import 'package:sweepfood/core/widgets/confidence_field.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/label_review_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/expiry_freshness_row.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
 
@@ -61,43 +62,28 @@ class LabelReviewScreen extends ConsumerWidget {
             onTap: () => _editQuantity(context, draft, controller),
           ),
           Gap.gapSm,
-          Row(
-            children: [
-              Expanded(
-                child: ConfidenceField(
-                  label: l10n.reviewPackedDate,
-                  value: draft.packedDate.ddMMyyyyOrDash,
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: draft.packedDate ?? DateTime.now(),
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime(2030),
-                    );
-                    if (date != null) controller.setPackedDate(date);
-                  },
-                ),
-              ),
-              const SizedBox(width: Gap.sm),
-              Expanded(
-                child: ConfidenceField(
-                  label: l10n.pantryFieldExpiry,
-                  value: draft.expiryDate.ddMMyyyyOrDash,
-                  needsReview: draft.isExpiryWarn,
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate:
-                          draft.expiryDate ??
-                          DateTime.now().add(const Duration(days: 7)),
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime(2030),
-                    );
-                    if (date != null) controller.setExpiryDate(date);
-                  },
-                ),
-              ),
-            ],
+          ConfidenceField(
+            label: l10n.reviewPackedDate,
+            value: draft.packedDate.ddMMyyyyOrDash,
+            onTap: () async {
+              final date = await showDatePicker(
+                context: context,
+                initialDate: draft.packedDate ?? DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime(2030),
+              );
+              if (date != null) controller.setPackedDate(date);
+            },
+          ),
+          Gap.gapMd,
+          ExpiryFreshnessRow(
+            itemName: draft.name,
+            storageTier: draft.storageTier,
+            expiryDate: draft.expiryDate,
+            freshness: draft.freshness,
+            masterIngredientId: draft.ingredientId,
+            needsReview: draft.isExpiryWarn,
+            onChanged: controller.setExpiry,
           ),
           Gap.gapMd,
           Text(

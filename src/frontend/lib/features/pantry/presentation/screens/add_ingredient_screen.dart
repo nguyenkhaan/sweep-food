@@ -10,6 +10,7 @@ import 'package:sweepfood/core/widgets/primary_button.dart';
 import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
 import 'package:sweepfood/features/catalog/presentation/controllers/ingredient_search_controller.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/add_ingredient_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/expiry_freshness_row.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
 
@@ -48,7 +49,9 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
     _categoryCtrl.text = draft.category;
     if (draft.quantity > 0) _qtyCtrl.text = _fmtQty(draft.quantity);
     _nameFocus.addListener(() {
-      if (!_nameFocus.hasFocus && mounted) setState(() {});
+      if (_nameFocus.hasFocus || !mounted) return;
+      setState(() {});
+      _matchName();
     });
   }
 
@@ -85,17 +88,20 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
     _categoryCtrl.text = ing.category;
     _query = '';
     _nameFocus.unfocus();
-    // Suggest an expiry date if we now know a reference shelf life.
-    _maybeAutoExpiry();
     setState(() {});
   }
 
-  void _maybeAutoExpiry() {
+  /// Smart parser: once the user leaves the name field, match the typed text to
+  /// a catalog ingredient (enables FreshCheck) and fill the normalized name.
+  Future<void> _matchName() async {
+    final changed = await _ctrl.matchTypedName();
+    if (!changed || !mounted) return;
     final draft = ref.read(addIngredientControllerProvider(_key));
-    if (draft.expiryDate != null) return;
-    final days = draft.referenceShelfLifeDays;
-    final from = draft.packedDate ?? DateTime.now();
-    if (days != null) _ctrl.setExpiryDate(from.add(Duration(days: days)));
+    _nameCtrl.text = draft.name;
+    if (draft.quantity > 0 && _qtyCtrl.text.isEmpty) {
+      _qtyCtrl.text = _fmtQty(draft.quantity);
+    }
+    setState(() {});
   }
 
   Future<void> _pickDate({
@@ -221,39 +227,26 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             ],
           ),
           Gap.gapMd,
-          Row(
-            children: [
-              Expanded(
-                child: _DateField(
-                  label: l10n.pantryDetailPacked,
-                  value: draft.packedDate,
-                  onTap: () => _pickDate(
-                    initial: draft.packedDate,
-                    onPicked: (d) {
-                      _ctrl.setPackedDate(d);
-                      _maybeAutoExpiry();
-                    },
-                  ),
-                  onClear: draft.packedDate == null
-                      ? null
-                      : () => _ctrl.setPackedDate(null),
-                ),
-              ),
-              const SizedBox(width: Gap.sm),
-              Expanded(
-                child: _DateField(
-                  label: l10n.pantryFieldExpiry,
-                  value: draft.expiryDate,
-                  onTap: () => _pickDate(
-                    initial: draft.expiryDate,
-                    onPicked: (d) => _ctrl.setExpiryDate(d),
-                  ),
-                  onClear: draft.expiryDate == null
-                      ? null
-                      : () => _ctrl.setExpiryDate(null),
-                ),
-              ),
-            ],
+          _DateField(
+            label: l10n.pantryDetailPacked,
+            value: draft.packedDate,
+            onTap: () => _pickDate(
+              initial: draft.packedDate,
+              onPicked: _ctrl.setPackedDate,
+            ),
+            onClear: draft.packedDate == null
+                ? null
+                : () => _ctrl.setPackedDate(null),
+          ),
+          Gap.gapMd,
+          ExpiryFreshnessRow(
+            itemName: draft.name,
+            storageTier: draft.storageTier,
+            expiryDate: draft.expiryDate,
+            freshness: draft.freshness,
+            masterIngredientId: draft.ingredientId,
+            allowFreshness: !_isEditing,
+            onChanged: _ctrl.setExpiry,
           ),
           Gap.gapXl,
           PrimaryButton(

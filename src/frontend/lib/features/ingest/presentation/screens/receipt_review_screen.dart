@@ -15,6 +15,7 @@ import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/receipt_review_controller.dart';
 import 'package:sweepfood/features/ingest/presentation/widgets/parsed_item_row.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/expiry_freshness_row.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
 
@@ -132,7 +133,19 @@ class ReceiptReviewScreen extends ConsumerWidget {
                 onToggle: () => controller.toggleItem(i),
                 onEdit: () => _editItem(context, i, state.items[i], controller),
               ),
-              const SizedBox(height: Gap.xs + 2),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(Gap.sm, Gap.xs, Gap.sm, 0),
+                child: ExpiryFreshnessRow(
+                  itemName: state.items[i].name,
+                  storageTier: state.items[i].storageTier,
+                  expiryDate: state.items[i].expiryDate,
+                  freshness: state.items[i].freshness,
+                  masterIngredientId: state.items[i].ingredientId,
+                  onChanged: (expiry, freshness) =>
+                      controller.setItemExpiry(i, expiry, freshness),
+                ),
+              ),
+              const SizedBox(height: Gap.sm),
             ],
           ],
         ],
@@ -359,15 +372,21 @@ class ReceiptReviewScreen extends ConsumerWidget {
                         final qty =
                             double.tryParse(qtyController.text.trim()) ??
                             item.quantity;
+                        final newName = nameController.text.trim();
+                        final renamed = newName != item.name;
                         controller.updateItem(
                           index,
                           item.copyWith(
-                            name: nameController.text.trim(),
+                            name: newName,
                             quantity: qty,
                             unit: selectedUnit,
                             category: selectedCategory,
                             storageTier: selectedTier,
                             isExpiryWarn: false,
+                            ingredientId: renamed ? null : item.ingredientId,
+                            freshness: renamed || selectedTier != item.storageTier
+                                ? null
+                                : item.freshness,
                           ),
                         );
                         ctx.pop();
