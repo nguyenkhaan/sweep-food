@@ -6,7 +6,9 @@ from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.concurrency import run_in_threadpool
 
+from AI.recommendation.engine import EngineRecommendation, RecommendationEngine
 from src.model.enum_model import InventoryBatchStatus
 from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.master_ingredient_model import MasterIngredientModel
@@ -22,11 +24,6 @@ from src.module.recommendations.recommendation_dto import (
     RecommendationTimingsDTO,
 )
 from src.module.recommendations.recommendation_mapper import to_recipe_summary
-from src.service.sweep_food_ai_client import (
-    AIRecommendationItemDTO,
-    AIRecommendationRequestDTO,
-    SweepFoodAIClient,
-)
 
 
 class RecommendationAIService:
@@ -35,11 +32,11 @@ class RecommendationAIService:
     def __init__(
         self,
         db_session: AsyncSession,
-        ai_client: SweepFoodAIClient,
+        engine: RecommendationEngine,
         clock: Callable[[], datetime] | None = None,
     ) -> None:
         self._db_session = db_session
-        self._ai_client = ai_client
+        self._engine = engine
         self._clock = clock or (lambda: datetime.now(UTC))
 
     async def recommend(
@@ -49,8 +46,9 @@ class RecommendationAIService:
     ) -> RecommendationListResponseDTO:
         """Return calibrated AI rankings backed by the backend recipe catalog."""
         effective_request = await self._with_saved_expiries(_user_id, body)
-        ai_response = await self._ai_client.recommend(
-            AIRecommendationRequestDTO.model_validate(effective_request.model_dump())
+        ai_response = await run_in_threadpool(
+            self._engine.recommend,
+            effective_request,
         )
 
         warnings: list[str] = []
@@ -134,7 +132,7 @@ class RecommendationAIService:
 
     @staticmethod
     def _map_recommendation(
-        recommendation: AIRecommendationItemDTO,
+        recommendation: EngineRecommendation,
         recipe: RecipeModel,
         *,
         rank: int,

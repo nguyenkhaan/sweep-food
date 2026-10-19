@@ -8,19 +8,18 @@ from uuid import UUID
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from AI.recommendation.engine import (
+    EngineIngredient,
+    EngineRankingFeatures,
+    EngineRecommendation,
+    EngineResult,
+    EngineTimings,
+    RecommendationEngine,
+)
 from src.module.recommendations.recommendation_ai_service import (
     RecommendationAIService,
 )
 from src.module.recommendations.recommendation_dto import RecommendationRequestDTO
-from src.service.sweep_food_ai_client import (
-    AIRecommendationIngredientDTO,
-    AIRecommendationItemDTO,
-    AIRecommendationRankingFeaturesDTO,
-    AIRecommendationRequestDTO,
-    AIRecommendationResponseDTO,
-    AIRecommendationTimingsDTO,
-    SweepFoodAIClient,
-)
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b101")
 RECIPE_ONE_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b102")
@@ -79,53 +78,51 @@ class _SequenceSession:
         return _Result(self._values.pop(0))
 
 
-class _AIClient:
-    def __init__(self, response: AIRecommendationResponseDTO) -> None:
+class _FakeEngine:
+    def __init__(self, response: EngineResult) -> None:
         self.response = response
-        self.requests: list[AIRecommendationRequestDTO] = []
+        self.requests: list[RecommendationRequestDTO] = []
 
-    async def recommend(
-        self, request: AIRecommendationRequestDTO
-    ) -> AIRecommendationResponseDTO:
+    def recommend(self, request: RecommendationRequestDTO) -> EngineResult:
         self.requests.append(request)
         return self.response
 
 
-def _ai_item(recipe_id: UUID, rank_score: float) -> AIRecommendationItemDTO:
-    return AIRecommendationItemDTO(
+def _engine_item(recipe_id: UUID, rank_score: float) -> EngineRecommendation:
+    return EngineRecommendation(
         id=recipe_id,
         name="AI display name",
         rank_score=rank_score,
-        ranking_features=AIRecommendationRankingFeaturesDTO(
+        ranking_features=EngineRankingFeatures(
             core_coverage=0.8,
-            core_missing_count=1,
+            core_missing_count=1.0,
             secondary_coverage=0.7,
-            shopping_gap_items=1,
-            rescue_weight_g=300,
+            shopping_gap_items=1.0,
+            rescue_weight_g=300.0,
             nutrition_confidence=0.9,
-            kcal_per_serving=450,
-            protein_per_serving=25,
+            kcal_per_serving=450.0,
+            protein_per_serving=25.0,
             prep_complexity=3.2,
         ),
         matched_ingredients=[
-            AIRecommendationIngredientDTO(
+            EngineIngredient(
                 name="Spinach",
                 code="4001",
-                required_g=300,
+                required_g=300.0,
             )
         ],
         missing_ingredients=[
-            AIRecommendationIngredientDTO(
+            EngineIngredient(
                 name="Salt",
                 code="13001",
-                required_g=5,
+                required_g=5.0,
             )
         ],
         optional_ingredients=[
-            AIRecommendationIngredientDTO(
+            EngineIngredient(
                 name="Pepper",
                 code="13002",
-                required_g=1,
+                required_g=1.0,
             )
         ],
         rescued_items=["Spinach"],
@@ -141,28 +138,28 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
             _Recipe(RECIPE_TWO_ID, "Backend salad"),
         ],
     )
-    ai_client = _AIClient(
-        AIRecommendationResponseDTO(
+    fake_engine = _FakeEngine(
+        EngineResult(
             status="success",
             contract_version="2",
-            model_version="lgbm-contextual-v1",
+            model_version="lgbm-contextual-v3.1.0",
             catalog_revision="catalog-test",
             ranker_model="LightGBM LambdaMART",
-            timings=AIRecommendationTimingsDTO(
+            timings=EngineTimings(
                 total_ms=20.1,
                 candidate_ms=2.3,
                 ranker_ms=4.8,
             ),
             recommendations=[
-                _ai_item(RECIPE_TWO_ID, 1.9),
-                _ai_item(UNKNOWN_RECIPE_ID, 1.8),
-                _ai_item(RECIPE_ONE_ID, 1.7),
+                _engine_item(RECIPE_TWO_ID, 1.9),
+                _engine_item(UNKNOWN_RECIPE_ID, 1.8),
+                _engine_item(RECIPE_ONE_ID, 1.7),
             ],
         )
     )
     service = RecommendationAIService(
         cast(AsyncSession, session),
-        cast(SweepFoodAIClient, ai_client),
+        cast(RecommendationEngine, fake_engine),
     )
 
     response = await service.recommend(
@@ -177,18 +174,17 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
                 }
             ],
             household_size=2,
-            max_cooking_time_min=25,
             allergies=["peanut"],
         ),
     )
 
-    request = ai_client.requests[0]
+    assert len(fake_engine.requests) == 1
+    request = fake_engine.requests[0]
     assert len(request.items) == 1
     assert request.items[0].quantity_g == 600
     assert request.items[0].hours_to_expire == 0
     assert request.items[0].code == "4001"
     assert request.household_size == 2
-    assert request.max_cooking_time_min == 25
     assert request.allergies == ["peanut"]
     assert [item.recipe_id for item in response.items] == [
         RECIPE_TWO_ID,
@@ -197,7 +193,7 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
     assert response.items[0].recipe_name == "Backend salad"
     assert response.items[0].rank_score == 1.9
     assert response.items[0].matched_ingredients[0].code == "4001"
-    assert response.items[0].missing_ingredients[0].required_g == 5
+    assert response.items[0].missing_ingredients[0].required_g == 5.0
     assert response.items[0].optional_ingredients[0].name == "Pepper"
     assert response.items[0].provider == "SWEEP_FOOD_AI"
     assert response.contract_version == "2"
@@ -210,24 +206,24 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
 @pytest.mark.anyio
 async def test_empty_pantry_and_empty_ai_result_are_explicit() -> None:
     session = _Session(recipes=[])
-    ai_client = _AIClient(
-        AIRecommendationResponseDTO(
+    fake_engine = _FakeEngine(
+        EngineResult(
             status="empty",
             contract_version="2",
-            model_version="lgbm-contextual-v1",
+            model_version="lgbm-contextual-v3.1.0",
             catalog_revision="catalog-test",
             ranker_model="LightGBM LambdaMART",
-            timings=AIRecommendationTimingsDTO(
-                total_ms=1,
-                candidate_ms=1,
-                ranker_ms=0,
+            timings=EngineTimings(
+                total_ms=1.0,
+                candidate_ms=1.0,
+                ranker_ms=0.0,
             ),
             recommendations=[],
         )
     )
     service = RecommendationAIService(
         cast(AsyncSession, session),
-        cast(SweepFoodAIClient, ai_client),
+        cast(RecommendationEngine, fake_engine),
     )
 
     response = await service.recommend(
@@ -235,7 +231,7 @@ async def test_empty_pantry_and_empty_ai_result_are_explicit() -> None:
         RecommendationRequestDTO(items=[]),
     )
 
-    assert ai_client.requests[0].items == []
+    assert fake_engine.requests[0].items == []
     assert response.items == []
     assert response.analysis.is_mock is False
     assert len(session.statements) == 0
@@ -243,29 +239,29 @@ async def test_empty_pantry_and_empty_ai_result_are_explicit() -> None:
 
 @pytest.mark.anyio
 async def test_recommendation_uses_the_earliest_saved_batch_expiry() -> None:
-    """The AI receives server-derived urgency instead of a stale client value."""
+    """The engine receives server-derived urgency instead of a stale client value."""
     now = datetime(2026, 10, 16, 10, tzinfo=UTC)
     session = _SequenceSession(
         [[(None, "Spinach", now + timedelta(hours=12, minutes=30))]]
     )
-    ai_client = _AIClient(
-        AIRecommendationResponseDTO(
+    fake_engine = _FakeEngine(
+        EngineResult(
             status="empty",
             contract_version="2",
-            model_version="lgbm-contextual-v1",
+            model_version="lgbm-contextual-v3.1.0",
             catalog_revision="catalog-test",
             ranker_model="LightGBM LambdaMART",
-            timings=AIRecommendationTimingsDTO(
-                total_ms=1,
-                candidate_ms=1,
-                ranker_ms=0,
+            timings=EngineTimings(
+                total_ms=1.0,
+                candidate_ms=1.0,
+                ranker_ms=0.0,
             ),
             recommendations=[],
         )
     )
     service = RecommendationAIService(
         cast(AsyncSession, session),
-        cast(SweepFoodAIClient, ai_client),
+        cast(RecommendationEngine, fake_engine),
         clock=lambda: now,
     )
 
@@ -282,5 +278,5 @@ async def test_recommendation_uses_the_earliest_saved_batch_expiry() -> None:
         ),
     )
 
-    assert ai_client.requests[0].items[0].hours_to_expire == 12.5
+    assert fake_engine.requests[0].items[0].hours_to_expire == 12.5
     assert response.request.items[0].hours_to_expire == 12.5
