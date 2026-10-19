@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sweepfood/core/error/failure.dart';
 import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/ingest/data/repositories/scan_repository_impl.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/scan_controller.dart';
 
 import '../../helpers/ingest_fixtures.dart';
@@ -10,29 +13,55 @@ import '../../helpers/mocks.dart';
 import '../../helpers/test_providers.dart';
 
 void main() {
-  test('scanLabel returns the job from the repository and stores AsyncData',
-      () async {
-    final repo = MockScanRepository();
-    final job = labelScanJob();
-    when(() => repo.scanLabel(any())).thenAnswer((_) async => Right(job));
+  test(
+    'stays alive until a slow receipt scan completes without listeners',
+    () async {
+      final repo = MockScanRepository();
+      final job = receiptScanJob();
+      final response = Completer<Result<ScanJob>>();
+      when(() => repo.scanReceipt(any())).thenAnswer((_) => response.future);
 
-    final container = createContainer(
-      overrides: [scanRepositoryProvider.overrideWithValue(repo)],
-    );
-    final notifier = container.read(scanControllerProvider.notifier);
+      final container = createContainer(
+        overrides: [scanRepositoryProvider.overrideWithValue(repo)],
+      );
 
-    final result = await notifier.scanLabel('/tmp/x.jpg');
+      final scan = container
+          .read(scanControllerProvider.notifier)
+          .scanReceipt('/tmp/receipt.jpg');
+      await container.pump();
+      response.complete(Right(job));
 
-    expect(result.id, job.id);
-    expect(container.read(scanControllerProvider).value, job);
-    verify(() => repo.scanLabel('/tmp/x.jpg')).called(1);
-  });
+      await expectLater(scan, completion(job));
+      expect(container.read(scanControllerProvider).value, job);
+    },
+  );
+
+  test(
+    'scanLabel returns the job from the repository and stores AsyncData',
+    () async {
+      final repo = MockScanRepository();
+      final job = labelScanJob();
+      when(() => repo.scanLabel(any())).thenAnswer((_) async => Right(job));
+
+      final container = createContainer(
+        overrides: [scanRepositoryProvider.overrideWithValue(repo)],
+      );
+      final notifier = container.read(scanControllerProvider.notifier);
+
+      final result = await notifier.scanLabel('/tmp/x.jpg');
+
+      expect(result.id, job.id);
+      expect(container.read(scanControllerProvider).value, job);
+      verify(() => repo.scanLabel('/tmp/x.jpg')).called(1);
+    },
+  );
 
   test('lookupBarcode returns the job from the repository', () async {
     final repo = MockScanRepository();
     final job = labelScanJob();
-    when(() => repo.lookupBarcode('8934567890123'))
-        .thenAnswer((_) async => Right(job));
+    when(
+      () => repo.lookupBarcode('8934567890123'),
+    ).thenAnswer((_) async => Right(job));
 
     final container = createContainer(
       overrides: [scanRepositoryProvider.overrideWithValue(repo)],
@@ -49,8 +78,9 @@ void main() {
   test('a repository Failure is rethrown and stored as AsyncError', () async {
     final repo = MockScanRepository();
     const failure = ServerFailure(message: 'boom');
-    when(() => repo.scanVoice(audioPath: any(named: 'audioPath')))
-        .thenAnswer((_) async => const Left(failure));
+    when(
+      () => repo.scanVoice(audioPath: any(named: 'audioPath')),
+    ).thenAnswer((_) async => const Left(failure));
 
     final container = createContainer(
       overrides: [scanRepositoryProvider.overrideWithValue(repo)],

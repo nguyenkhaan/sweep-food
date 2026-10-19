@@ -22,10 +22,8 @@ SuggestionRepository suggestionRepository(Ref ref) {
 }
 
 class SuggestionRepositoryImpl implements SuggestionRepository {
-  SuggestionRepositoryImpl(
-    this._remote, {
-    DishRemoteDataSource? dishRemote,
-  }) : _dishRemote = dishRemote;
+  SuggestionRepositoryImpl(this._remote, {DishRemoteDataSource? dishRemote})
+    : _dishRemote = dishRemote;
 
   final SuggestionRemoteDataSource _remote;
   final DishRemoteDataSource? _dishRemote;
@@ -75,12 +73,61 @@ class SuggestionRepositoryImpl implements SuggestionRepository {
 
           final breakdown = item.scoreComponents.toEntity();
           final int scoreOut = (item.score * 100).round();
-
+          final features = RecommendationRankingFeatures(
+            coreCoverage: item.rankingFeatures.coreCoverage,
+            coreMissingCount: item.rankingFeatures.coreMissingCount,
+            secondaryCoverage: item.rankingFeatures.secondaryCoverage,
+            shoppingGapItems: item.rankingFeatures.shoppingGapItems,
+            rescueWeightG: item.rankingFeatures.rescueWeightG,
+            nutritionConfidence: item.rankingFeatures.nutritionConfidence,
+            kcalPerServing: item.rankingFeatures.kcalPerServing,
+            proteinPerServing: item.rankingFeatures.proteinPerServing,
+            prepComplexity: item.rankingFeatures.prepComplexity,
+          );
           return DishSuggestion(
             dish: dish,
             breakdown: breakdown,
+            rank: item.rank,
+            rankScore: item.rankScore,
+            rankingFeatures: features,
+            matchedIngredients: item.matchedIngredients
+                .map(
+                  (value) => RecommendationIngredient(
+                    name: value.name,
+                    code: value.masterIngredientId,
+                    requiredG: value.quantity,
+                  ),
+                )
+                .toList(),
+            missingIngredients: item.missingIngredients
+                .map(
+                  (value) => RecommendationIngredient(
+                    name: value.name,
+                    code: value.masterIngredientId,
+                    requiredG: value.quantity,
+                  ),
+                )
+                .toList(),
+            optionalIngredients: item.optionalIngredients
+                .map(
+                  (value) => RecommendationIngredient(
+                    name: value.name,
+                    code: value.masterIngredientId,
+                    requiredG: value.quantity,
+                  ),
+                )
+                .toList(),
+            statusBadge: item.statusBadge,
+            provider: item.provider,
+            modelVersion: response.modelVersion.isNotEmpty
+                ? response.modelVersion
+                : item.modelVersion,
+            rankerModel: response.rankerModel,
+            totalLatencyMs: response.timings.totalMs,
             nearExpiryIngredients: item.nearExpiryIngredients,
-            availabilityRatio: item.scoreComponents.availability,
+            availabilityRatio: response.contractVersion == '2'
+                ? item.rankingFeatures.coreCoverage
+                : item.scoreComponents.availability,
             toBuyCount: item.missingIngredients.length,
             scoreOverride: scoreOut > 0 ? scoreOut : breakdown.scoreOutOf100,
             explanation: item.explanation.isNotEmpty ? item.explanation : null,

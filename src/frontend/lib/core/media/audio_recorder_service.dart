@@ -1,57 +1,81 @@
-import 'dart:async';
-import 'dart:math' as math;
+import 'package:path_provider/path_provider.dart';
+import 'package:record/record.dart';
+import 'package:sweepfood/core/utils/logger.dart';
 
 /// Records the microphone for voice ingestion (I-06).
 ///
-/// The real capture path is built on the `record` plugin and lives behind this
-/// class's API (`start` / `stop` / [amplitude]). It is currently **disabled**:
-/// the plugin version available in this workspace ships a `record_web` that does
-/// not compile against `record_platform_interface >= 1.5.0`, which breaks
-/// `flutter build web`. Until the plugin stack realigns, this stub keeps the
-/// flow working end-to-end — [start] reports failure, so `VoiceCaptureScreen`
-/// falls back to the canned ASR result — while [amplitude] still emits a gentle
-/// synthetic level so the waveform reads as "listening".
-///
-/// To re-enable: add `record` back to `pubspec.yaml`, then swap the bodies below
-/// for `AudioRecorder()` calls (`hasPermission` / `start(RecordConfig(), path:)`
-/// / `stop` / `onAmplitudeChanged`).
+/// Records a 16 kHz mono WAV that can be uploaded directly to the ASR service.
 class AudioRecorderService {
-  AudioRecorderService();
+  AudioRecorderService({AudioRecorder? recorder})
+    : _recorder = recorder ?? AudioRecorder();
 
+  final AudioRecorder _recorder;
   bool _recording = false;
 
   bool get isRecording => _recording;
 
-  Future<bool> hasPermission() async => false;
+  Future<bool> hasPermission() => _recorder.hasPermission();
 
-  /// Returns `false` — real recording is disabled (see class docs).
   Future<bool> start() async {
-    _recording = false;
-    return false;
-  }
-
-  Future<String?> stop() async {
-    _recording = false;
-    return null;
-  }
-
-  Future<void> cancel() async {
-    _recording = false;
-  }
-
-  /// A slow synthetic 0.0–1.0 level so the visualizer animates while the user
-  /// speaks, even though no audio is captured.
-  Stream<double> amplitude({
-    Duration interval = const Duration(milliseconds: 120),
-  }) async* {
-    var t = 0.0;
-    while (true) {
-      await Future<void>.delayed(interval);
-      t += 0.35;
-      yield (0.28 + 0.22 * math.sin(t) + 0.12 * math.sin(t * 2.7))
-          .clamp(0.05, 1.0);
+    try {
+      if (!await _recorder.hasPermission()) return false;
+      final directory = await getTemporaryDirectory();
+      final path =
+          '${directory.path}/sweepfood_voice_'
+          '${DateTime.now().millisecondsSinceEpoch}.wav';
+      await _recorder.start(
+        const RecordConfig(
+          encoder: AudioEncoder.wav,
+          sampleRate: 16000,
+          numChannels: 1,
+        ),
+        path: path,
+      );
+      _recording = true;
+      log.d('Voice capture started');
+      return true;
+    } on Object catch (error, stackTrace) {
+      _recording = false;
+      log.e(
+        'Unable to start voice capture',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      return false;
     }
   }
 
-  Future<void> dispose() async {}
+  Future<String?> stop() async {
+    if (!_recording) return null;
+    try {
+      final path = await _recorder.stop();
+      log.d('Voice capture stopped hasFile=${path?.isNotEmpty == true}');
+      return path;
+    } on Object catch (error, stackTrace) {
+      log.e(
+        'Unable to stop voice capture',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      return null;
+    } finally {
+      _recording = false;
+    }
+  }
+
+  Future<void> cancel() async {
+    try {
+      await _recorder.cancel();
+    } finally {
+      _recording = false;
+    }
+  }
+
+  Stream<double> amplitude({
+    Duration interval = const Duration(milliseconds: 120),
+  }) => _recorder
+      .onAmplitudeChanged(interval)
+      .map((value) => ((value.current + 60) / 60).clamp(0.0, 1.0));
+
+  Future<void> dispose() => _recorder.dispose();
 }

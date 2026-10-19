@@ -29,17 +29,25 @@ class ScanController extends _$ScanController {
   Future<ScanJob> _run(
     Future<Result<ScanJob>> Function(ScanRepository repo) call,
   ) async {
-    state = const AsyncValue<ScanJob?>.loading();
-    final result = await call(ref.read(scanRepositoryProvider));
-    return result.fold(
-      (failure) {
-        state = AsyncValue<ScanJob?>.error(failure, StackTrace.current);
-        throw failure;
-      },
-      (job) {
-        state = AsyncValue<ScanJob?>.data(job);
-        return job;
-      },
-    );
+    // This provider is intentionally auto-disposed, but camera screens invoke
+    // it with ref.read rather than watching it. Keep it alive until the upload
+    // and OCR request completes so a slow AI response can still update state.
+    final keepAliveLink = ref.keepAlive();
+    try {
+      state = const AsyncValue<ScanJob?>.loading();
+      final result = await call(ref.read(scanRepositoryProvider));
+      return await result.fold(
+        (failure) {
+          state = AsyncValue<ScanJob?>.error(failure, StackTrace.current);
+          throw failure;
+        },
+        (job) {
+          state = AsyncValue<ScanJob?>.data(job);
+          return job;
+        },
+      );
+    } finally {
+      keepAliveLink.close();
+    }
   }
 }

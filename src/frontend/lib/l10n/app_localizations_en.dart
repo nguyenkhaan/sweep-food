@@ -1111,6 +1111,16 @@ class AppL10nEn extends AppL10n {
   }
 
   @override
+  String get reviewReceiptPartialTitle => 'No ingredients were extracted';
+
+  @override
+  String get reviewReceiptPartialBody =>
+      'AI processed the image but could not build an ingredient list. You can retake a clearer photo or enter the items manually.';
+
+  @override
+  String get reviewReceiptRawText => 'Text read by AI';
+
+  @override
   String reviewSelectedOf(int count) {
     return ' / $count items selected';
   }

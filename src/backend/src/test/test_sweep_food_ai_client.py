@@ -1,5 +1,6 @@
 """Contract tests for the internal SweepFood AI HTTP client."""
 
+import json
 from collections.abc import Callable, Coroutine
 
 import httpx
@@ -132,9 +133,11 @@ async def test_recommend_posts_structured_json() -> None:
     """Recommendation sends typed pantry data and validates ranked results."""
 
     async def handler(request: httpx.Request) -> httpx.Response:
+        raw_payload = json.loads(request.content)
         payload = AIRecommendationRequestDTO.model_validate_json(request.content)
         assert request.url.path == "/api/recommend"
         assert payload.items[0].code == "ingredient-id"
+        assert "hours_to_expire" not in raw_payload["items"][1]
         return httpx.Response(
             200,
             json={
@@ -177,7 +180,8 @@ async def test_recommend_posts_structured_json() -> None:
                 code="ingredient-id",
                 quantity_g=300,
                 hours_to_expire=12,
-            )
+            ),
+            AIPantryItemDTO(name="Tomato", quantity_g=200),
         ]
     )
     async with _client(handler) as client:

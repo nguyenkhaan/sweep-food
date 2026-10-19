@@ -1,7 +1,10 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
+import 'package:sweepfood/features/suggestions/data/datasources/suggestion_remote_data_source.dart';
 import 'package:sweepfood/features/suggestions/data/repositories/suggestion_repository_impl.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
@@ -9,6 +12,12 @@ import 'package:sweepfood/shared/domain/dietary_preference.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 part 'suggestion_list_controller.g.dart';
+
+final aiServiceHealthProvider = FutureProvider.autoDispose(
+  (ref) => SuggestionRemoteDataSource(
+    ref.watch(apiClientProvider),
+  ).health(),
+);
 
 /// Fixed cook-time cap offered by the "≤ 30 phút" quick chip.
 const _quickCookMinutes = 30;

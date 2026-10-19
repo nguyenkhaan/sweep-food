@@ -2,7 +2,7 @@
 library;
 
 /// Exercises the recommendations data layer (POST /recommendations + DTO parsing +
-/// parallel recipe fetching) against a running backend with the seed dataset loaded.
+/// embedded recipe-summary mapping) against a running backend and SweepFood AI.
 /// Skipped unless `LIVE_BASE_URL` is set:
 ///
 ///   flutter test test/live/recommendations_live_test.dart --run-skipped \
@@ -48,8 +48,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live recommendations (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live recommendations (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -57,7 +60,7 @@ void main() {
   late SuggestionRemoteDataSource remote;
   late SuggestionRepositoryImpl repo;
 
-  setUp(() async {
+  setUpAll(() async {
     final store = _MemStore();
     final dio = Dio(BaseOptions(baseUrl: _baseUrl))
       ..interceptors.add(AuthInterceptor(store, baseUrl: _baseUrl));
@@ -86,56 +89,95 @@ void main() {
     );
   });
 
-  test('POST /recommendations returns RecommendationListResponseDTO shape',
-      () async {
-    const request = SuggestionRequest(
-      request: 'Gợi ý món ăn tối nay nhiều rau',
-    );
+  test(
+    'POST /recommendations returns RecommendationListResponseDTO shape',
+    () async {
+      const request = SuggestionRequest(
+        pantryItems: [
+          RecommendationPantryItemDraft(
+            name: 'thịt bò',
+            quantityG: 300,
+            hoursToExpire: 12,
+          ),
+          RecommendationPantryItemDraft(
+            name: 'cà chua',
+            quantityG: 200,
+            hoursToExpire: 36,
+          ),
+        ],
+        householdSize: 2,
+      );
 
-    final response = await remote.fetch(request);
+      final response = await remote.fetch(request);
 
-    expect(response.request, 'Gợi ý món ăn tối nay nhiều rau');
-    expect(response.analysis.isMock, isTrue);
-    expect(response.analysis.intent, isNotEmpty);
-    expect(response.analysis.summary, isNotEmpty);
-    expect(response.items, isNotEmpty);
-    expect(response.items.length, inInclusiveRange(1, 5));
+      expect(response.request['household_size'], 2.0);
+      expect(response.contractVersion, '2');
+      expect(response.modelVersion, isNotEmpty);
+      expect(response.rankerModel, contains('LightGBM'));
+      expect(response.timings.totalMs, greaterThanOrEqualTo(0));
+      expect(response.analysis.isMock, isFalse);
+      expect(response.analysis.intent, isNotEmpty);
+      expect(response.analysis.summary, isNotEmpty);
+      expect(response.items, isNotEmpty);
+      expect(response.items.length, inInclusiveRange(1, 7));
 
-    final first = response.items.first;
-    expect(first.recipeId, isNotEmpty);
-    expect(first.recipeName, isNotEmpty);
-    expect(first.rank, 1);
-    expect(first.score, inInclusiveRange(0.0, 1.0));
-    expect(first.scoreComponents.expirationUtilization, inInclusiveRange(0.0, 1.0));
-    expect(first.scoreComponents.availability, inInclusiveRange(0.0, 1.0));
-    expect(first.scoreComponents.preferenceFit, inInclusiveRange(0.0, 1.0));
-    expect(first.scoreComponents.purchaseMinimization, inInclusiveRange(0.0, 1.0));
-    expect(first.explanation, isNotEmpty);
-    expect(first.provider, isNotEmpty);
-  });
+      final first = response.items.first;
+      expect(first.recipeId, isNotEmpty);
+      expect(first.recipeName, isNotEmpty);
+      expect(first.rank, 1);
+      expect(first.rankScore.isFinite, isTrue);
+      expect(first.rankingFeatures.coreCoverage, inInclusiveRange(0.0, 1.0));
+      expect(
+        first.rankingFeatures.secondaryCoverage,
+        inInclusiveRange(0.0, 1.0),
+      );
+      expect(
+        first.rankingFeatures.nutritionConfidence,
+        inInclusiveRange(0.0, 1.0),
+      );
+      expect(first.statusBadge, isNotEmpty);
+      expect(first.dish, isNotNull);
+      expect(first.explanation, isNotEmpty);
+      expect(first.provider, isNotEmpty);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 
-  test('SuggestionRepositoryImpl.fetch maps recommendations into DishSuggestion with recipes',
-      () async {
-    const request = SuggestionRequest(
-      mealType: MealType.dinner,
-      maxCookTimeMin: 30,
-    );
+  test(
+    'SuggestionRepositoryImpl.fetch maps recommendations into DishSuggestion with recipes',
+    () async {
+      const request = SuggestionRequest(
+        pantryItems: [
+          RecommendationPantryItemDraft(name: 'thịt bò', quantityG: 300),
+          RecommendationPantryItemDraft(name: 'cà chua', quantityG: 200),
+        ],
+        mealType: MealType.dinner,
+        maxCookTimeMin: 30,
+      );
 
-    final result = await repo.fetch(request);
-    final suggestions =
-        result.fold((f) => fail('fetch recommendations failed: $f'), (s) => s);
+      final result = await repo.fetch(request);
+      final suggestions = result.fold(
+        (f) => fail('fetch recommendations failed: $f'),
+        (s) => s,
+      );
 
-    expect(suggestions, isNotEmpty);
-    expect(suggestions.length, inInclusiveRange(1, 5));
+      expect(suggestions, isNotEmpty);
+      expect(suggestions.length, inInclusiveRange(1, 7));
 
-    final first = suggestions.first;
-    expect(first.id, isNotEmpty);
-    expect(first.dish.name, isNotEmpty);
-    expect(first.score, inInclusiveRange(0, 100));
-    expect(first.breakdown.e, inInclusiveRange(0.0, 1.0));
-    expect(first.breakdown.a, inInclusiveRange(0.0, 1.0));
-    expect(first.breakdown.p, inInclusiveRange(0.0, 1.0));
-    expect(first.breakdown.u, inInclusiveRange(0.0, 1.0));
-    expect(first.isMock, isTrue);
-  });
+      final first = suggestions.first;
+      expect(first.id, isNotEmpty);
+      expect(first.dish.name, isNotEmpty);
+      expect(first.rank, 1);
+      expect(first.rankScore.isFinite, isTrue);
+      expect(first.score, inInclusiveRange(0, 100));
+      expect(first.breakdown.e, inInclusiveRange(0.0, 1.0));
+      expect(first.breakdown.a, inInclusiveRange(0.0, 1.0));
+      expect(first.breakdown.p, inInclusiveRange(0.0, 1.0));
+      expect(first.breakdown.u, inInclusiveRange(0.0, 1.0));
+      expect(first.modelVersion, isNotEmpty);
+      expect(first.rankerModel, contains('LightGBM'));
+      expect(first.isMock, isFalse);
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 }

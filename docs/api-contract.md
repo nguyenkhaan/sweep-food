@@ -1,7 +1,7 @@
 # SweepFood API Contract
 
-> **Phiên bản:** M7 — 2026-09-05 · Đối chiếu trực tiếp với code BE (`src/backend/src/module/**`) cho **Auth, Users, Catalog, Recipes, Inventory, Cooking, Recommendations, Meal Plans, Shopping Lists, Favorites, Devices, Notifications, Reports và Subscription**. Reports/Subscription cần migration và kiểm chứng database riêng trước khi FE bỏ mock.
-> **Tác giả:** Frontend team, đối chiếu BE ngày 2026-09-05
+> **Phiên bản:** 2026-10-19 · Đối chiếu với OpenAPI đang chạy và code BE (`src/backend/src/module/**`).
+> **Trạng thái:** FE live dùng đúng các route được mô tả; Recommendations gọi SweepFood AI contract v2, không còn là mock boundary.
 > **Base URL:** `{API_BASE_URL}` (env) — BE chạy cổng **`4000`**, prefix `/api`, **không có `/v1`**. Local: `http://localhost:4000/api` (web/desktop) hoặc `http://10.0.2.2:4000/api` (Android emulator) / `http://127.0.0.1:4000/api` (USB + `adb reverse tcp:4000 tcp:4000`). Cổng `8000` trong `docker-compose.yaml` là WireMock, không phải API.
 > **Auth:** Bearer token (JWT access token) trong header `Authorization: Bearer <token>` cho mọi route trừ `POST /auth/register`, `/auth/register/resend-otp`, `/auth/verify/register`, `/auth/login`, `/auth/token/refresh`, `/auth/password/reset`.
 > **Định dạng:** JSON (`Content-Type: application/json`). Ghi (POST/PATCH/DELETE) trên `Inventory` và `Shopping Lists` **bắt buộc** header `Idempotency-Key: <uuid bất kỳ, duy nhất theo request>`.
@@ -105,41 +105,66 @@ Không truyền `servings` → BE dùng `default_servings`. Trả về **định
 
 ## 3. Recommendations — `POST /recommendations`
 
-> **[MỚI — thay `/suggestions/dishes`]** BE hiện là **mock provider** (`analysis.is_mock: true`)
+BE chuyển request có cấu trúc sang `sweep-food-AI`, bổ sung hạn dùng authoritative từ kho người dùng, rồi map kết quả về recipe catalog. `analysis.is_mock` là `false`.
 
 **Request:**
 ```json
-{ "request": "Tôi muốn nấu món có ức gà, dưới 30 phút" }
+{
+  "items": [
+    { "name": "Thịt bò", "code": "7003", "quantity_g": 300, "hours_to_expire": 12, "is_staple": false }
+  ],
+  "household_size": 2,
+  "max_cooking_time_min": 30,
+  "scenario_type": "quick_meal",
+  "dietary_restrictions": [],
+  "allergies": [],
+  "disliked_ingredients": [],
+  "preferred_cuisines": []
+}
 ```
-Một chuỗi tự do duy nhất — **không có** field filter cấu trúc (`meal_type`, `max_time_min`...). BE tự diễn giải.
+
+`hours_to_expire` và `code` có thể bỏ qua. Khi `hours_to_expire` không có, BE không forward JSON `null`; AI tự áp dụng mặc định. Nếu tên nguyên liệu khớp một batch active của user, BE dùng hạn sớm nhất trong kho.
 
 **Response 200:**
 ```json
 {
-  "request": "Tôi muốn nấu món có ức gà, dưới 30 phút",
-  "analysis": { "intent": "string", "summary": "string", "is_mock": true },
+  "request": { "items": [], "household_size": 2, "max_cooking_time_min": 30, "scenario_type": "quick_meal", "dietary_restrictions": [], "allergies": [], "disliked_ingredients": [], "preferred_cuisines": [] },
+  "contract_version": "2",
+  "model_version": "lgbm-contextual-v1",
+  "catalog_revision": "sha256:...",
+  "ranker_model": "LightGBM LambdaMART",
+  "timings": { "total_ms": 720.75, "candidate_ms": 510.78, "ranker_ms": 69.87 },
+  "analysis": { "intent": "meal_recommendation", "summary": "...", "is_mock": false },
   "items": [
     {
-      "recipe_id": "uuid", "recipe_name": "Grilled chicken breast",
-      "rank": 1, "score": 0.82,
-      "score_components": {
-        "expiration_utilization": 0.9, "availability": 0.8,
-        "preference_fit": 0.7, "purchase_minimization": 0.6
+      "recipe_id": "uuid", "recipe_name": "Bò xào cà chua", "rank": 1,
+      "rank_score": 4.1098,
+      "ranking_features": {
+        "core_coverage": 0.9, "core_missing_count": 0,
+        "secondary_coverage": 0.75, "shopping_gap_items": 1,
+        "rescue_weight_g": 300, "nutrition_confidence": 0.8,
+        "kcal_per_serving": 420, "protein_per_serving": 32,
+        "prep_complexity": 2.5
       },
-      "missing_ingredients": [
-        { "master_ingredient_id": "uuid", "name": "Olive oil", "quantity": 15.0, "unit": "ML" }
-      ],
-      "near_expiry_ingredients": ["Chicken breast"],
-      "explanation": "string",
-      "provider": "string",
-      "model_version": "string"
+      "matched_ingredients": [{ "name": "Thịt bò", "code": "7003", "required_g": 250 }],
+      "missing_ingredients": [{ "name": "Hành tây", "code": "4039", "required_g": 50 }],
+      "optional_ingredients": [],
+      "rescued_items": ["Thịt bò"],
+      "status_badge": "elastic",
+      "explanation": "AI-ranked from pantry availability, expiry, and shopping gaps.",
+      "provider": "SWEEP_FOOD_AI",
+      "recipe_summary": {
+        "id": "uuid", "name": "Bò xào cà chua", "media_url": "https://...",
+        "estimated_cooking_minutes": 30, "default_servings": "2.00",
+        "nutrition": { "calories": "840", "protein_g": "64", "fat_g": "30", "carbs_g": "40", "sugar_g": "8", "other_nutrients": {} }
+      }
     }
-  ]
+  ],
+  "warnings": []
 }
 ```
-`score_components` ↔ công thức PRD `0.4E + 0.3A + 0.2P + 0.1U`: `e=expiration_utilization`, `a=availability`, `p=preference_fit`, `u=purchase_minimization`. **Chỉ trả `recipe_id`+`recipe_name`, không nhúng recipe đầy đủ** — FE cần gọi thêm `GET /recipes/{recipe_id}` để lấy nutrition/instructions/ingredients cho card/detail.
 
-Yêu cầu tối cao: vẫn thực hiện việc mock dữ liệu response trả về 
+`rank_score` là điểm raw, không bị chặn trong `0..1` và **không được hiển thị như phần trăm**. Thứ tự chính thức là `rank`, vì AI còn áp dụng feasibility tier/diversity sau điểm LightGBM. `status_badge` ∈ `ready|elastic|shopping`. Card dùng `recipe_summary`; màn chi tiết vẫn gọi `GET /recipes/{recipe_id}`.
 ---
 
 ## 4. Cooking — `/cooking`
@@ -203,9 +228,10 @@ DELETE /meal-plans/{id}/items/{item_id}  (auth) -> 204
 
 ## 6. Shopping Lists — `/shopping-lists`
 
-> **[CẬP NHẬT]** **Không có** `GET /shopping-lists` (danh sách "hiện tại"). Chỉ có generate-từ-plan và đọc theo `id`. Mọi lệnh ghi cần header `Idempotency-Key`.
+> **[CẬP NHẬT]** Có `GET /shopping-lists` để lấy danh sách của user. Mọi lệnh ghi cần header `Idempotency-Key`.
 
 ```text
+GET    /shopping-lists                          (auth) -> danh sách shopping list
 POST   /shopping-lists/generate                (auth, Idempotency-Key) { meal_plan_id } -> ShoppingList (201)
 GET    /shopping-lists/{list_id}                (auth) -> ShoppingList
 POST   /shopping-lists/{list_id}/items          (auth, Idempotency-Key) { master_ingredient_id?|custom_name?, quantity, unit, estimated_cost? } -> item (201)
@@ -230,7 +256,7 @@ List: `{ "id", "meal_plan_id", "status": "ACTIVE|ARCHIVED", "generated_at", "ite
 
 Shopping list đã generate là snapshot: hoàn tất meal-plan item không tự tính lại, xóa hoặc thay item trong ACTIVE list. Khi tạo list mới theo luồng hiện có, chỉ meal-plan item còn `PLANNED` mới đóng góp requirement.
 
-**FE muốn màn "Danh sách mua sắm hiện tại" cần tự lưu `list_id` cục bộ** (từ response `generate`) — không có endpoint "lấy list đang active của tôi".
+FE có thể lấy list mới nhất từ `GET /shopping-lists`; `list_id` cục bộ chỉ dùng để giữ lựa chọn hiện tại.
 
 ---
 
@@ -381,9 +407,9 @@ Ví dụ tính tay với warning window 3 ngày:
 - Dùng raw LITER trong warning window: `UNSUPPORTED_UNIT`, `mass_kg=null`, không đóng góp.
 - Dùng cooked leftover, dù có/không có hạn hoặc unit không đổi được: `COOKED_FOOD`, không đóng góp.
 
-FE tiếp tục giữ mock cho tới Checkpoint Phase 5: migration DB-02 phải được người phụ trách tạo và áp dụng, sau đó evidence writer/reader cần được kiểm chứng trên database test biệt lập.
+FE live dùng endpoint này. Ba mục phía dưới là đề xuất cũ và **không tồn tại trong OpenAPI hiện tại**; màn Reports không gọi chúng.
 
-### GET `/reports/usage-history`
+### Chưa triển khai: `GET /reports/usage-history`
 
 > **[MỚI]** Lịch sử sử dụng thực phẩm: xem danh sách các lần nguyên liệu/thực phẩm được đưa vào sử dụng (từ phiên nấu ăn hoặc tiêu thụ thủ công).
 
@@ -426,7 +452,7 @@ FE tiếp tục giữ mock cho tới Checkpoint Phase 5: migration DB-02 phải 
 
 ---
 
-### GET `/reports/waste-statistics`
+### Chưa triển khai: `GET /reports/waste-statistics`
 
 > **[MỚI]** Thống kê thực phẩm lãng phí: lượng thực phẩm bị quá hạn hoặc bị vứt bỏ trong kỳ.
 
@@ -464,7 +490,7 @@ FE tiếp tục giữ mock cho tới Checkpoint Phase 5: migration DB-02 phải 
 
 ---
 
-### GET `/reports/efficiency`
+### Chưa triển khai: `GET /reports/efficiency`
 
 > **[MỚI]** Đánh giá hiệu quả sử dụng thực phẩm: chấm điểm hiệu quả quản lý bếp gia đình, so sánh xu hướng và đề xuất thông minh.
 
@@ -566,7 +592,7 @@ Cập nhật `name` hoặc `preferences` (gồm cờ onboarding và tùy chọn 
 
 **Response 200:** Trả về `UserProfileDTO` đã cập nhật.
 
-### POST `/users/onboarding/complete` (Tùy chọn dedicated route)
+### Chưa triển khai: `POST /users/onboarding/complete`
 
 **Headers:** `Authorization: Bearer <token>`
 
@@ -595,10 +621,10 @@ Cập nhật `name` hoặc `preferences` (gồm cờ onboarding và tùy chọn 
 
 | # | Endpoint / mục | Ghi chú |
 |---|---|---|
-| 2 | `GET /shopping-lists` (list-all) | FE cần 1 cách lấy "shopping list đang active của tôi" mà không phải tự nhớ `list_id` (ví dụ sau khi cài lại app / đổi máy). Đề xuất: thêm `GET /shopping-lists?status=ACTIVE` trả list mới nhất theo user, hoặc field `active_shopping_list_id` trong response `GET /meal-plans/{id}`. |
+| 2 | `GET /shopping-lists` | Đã triển khai; FE dùng list-all và giữ `list_id` được chọn cục bộ. |
 | 3 | `POST /cooking/sessions` yêu cầu `meal_plan_item_id` | Xác nhận đây là chủ đích sản phẩm (không "nấu nhanh" ngoài kế hoạch)? Nếu đúng, FE sẽ luôn tạo/dùng 1 meal-plan item ẩn khi user bấm "Đã nấu món này" từ màn Dish detail — xin BE xác nhận việc tự tạo meal-plan item kiểu này không vi phạm ràng buộc nghiệp vụ nào khác (ví dụ báo cáo/thống kê theo meal plan thật). |
 | 4 | `PATCH /shopping-lists/{list}/items/{item}` khi check item generated | Yêu cầu object `purchase` đầy đủ ngay trong request check — FE cần 1 form nhập tối thiểu (storage_mode + hạn dùng) trước khi tick, sẽ tăng số bước thao tác. Có thể chấp nhận default `storage_mode` theo `default_storage_mode` của ingredient để giảm bước? |
-| 5 | `GET /recommendations` không nhúng recipe | Với danh sách 3-5 gợi ý, FE phải gọi thêm N lần `GET /recipes/{id}` để hiện đủ thumbnail/thời gian nấu/dinh dưỡng. Cân nhắc BE nhúng thẳng 1 bản rút gọn recipe (name, media_url, estimated_cooking_minutes) trong mỗi `item` để tránh N+1? |
-| 6 | Reports / Subscription | Route đã triển khai; FE chỉ bỏ mock sau checkpoint từng Phase, gồm migration và kiểm chứng database test. Đã bổ sung 3 endpoint thống kê mới: `usage-history`, `waste-statistics`, `efficiency`. |
+| 5 | `POST /recommendations` | Đã nhúng `recipe_summary`; FE không còn N+1 ở danh sách. |
+| 6 | Reports | Hiện chỉ có `/reports/waste-reduction`; ba endpoint analytics mở rộng chưa có trong OpenAPI và đã bị loại khỏi `ApiPaths`. |
 | 7 | `POST /extractions/barcode` là query param | FE hiện gọi multipart cho 3 loại quét còn lại; xác nhận barcode luôn là query string (không upload ảnh mã vạch) để FE không thiết kế nhầm luồng nhập liệu. |
-| 8 | Onboarding & User Preferences | FE đã chuẩn hóa hợp đồng lưu trữ `onboarding_completed` và `dietary_preference` trong `preferences` của `PATCH /users/profile` hoặc qua `POST /users/onboarding/complete`. |
+| 8 | Onboarding & User Preferences | Không có dedicated onboarding endpoint; FE lưu cờ onboarding cục bộ và chỉ đồng bộ các field thật sự được `PATCH /users/profile` hỗ trợ. |
