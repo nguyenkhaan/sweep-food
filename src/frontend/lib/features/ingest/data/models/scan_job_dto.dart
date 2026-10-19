@@ -24,6 +24,7 @@ abstract class ParsedItemDraftDto with _$ParsedItemDraftDto {
     @JsonKey(name: 'expiry_date') DateTime? expiryDate,
     @JsonKey(name: 'price_vnd') int? priceVnd,
     @JsonKey(name: 'is_expiry_warn') @Default(false) bool isExpiryWarn,
+    @JsonKey(name: 'master_ingredient_id') String? masterIngredientId,
   }) = _ParsedItemDraftDto;
 
   factory ParsedItemDraftDto.fromJson(Map<String, dynamic> json) =>
@@ -39,6 +40,7 @@ abstract class ParsedItemDraftDto with _$ParsedItemDraftDto {
         expiryDate: expiryDate,
         priceVnd: priceVnd,
         isExpiryWarn: isExpiryWarn,
+        ingredientId: masterIngredientId,
       );
 }
 
@@ -95,6 +97,7 @@ abstract class ScanJobDto with _$ScanJobDto {
                 quantity: qty,
                 unit: unitStr,
                 priceVnd: unitPrice ?? totalPrice,
+                masterIngredientId: li['master_ingredient_id']?.toString(),
               ),
             );
           }
@@ -155,7 +158,6 @@ abstract class ScanJobDto with _$ScanJobDto {
           DateTime.tryParse(fields['packaged_at']?.toString() ?? '');
       final expiresAt =
           DateTime.tryParse(fields['expires_at']?.toString() ?? '');
-      final price = (fields['price'] as num?)?.round();
 
       // Confidence warning: e.g. expires_at confidence < 0.8
       final expiryConf = (confidence['expires_at'] as num?)?.toDouble();
@@ -167,8 +169,8 @@ abstract class ScanJobDto with _$ScanJobDto {
         unit: unitStr,
         packedDate: packedAt,
         expiryDate: expiresAt,
-        priceVnd: price,
         isExpiryWarn: isExpiryWarn,
+        masterIngredientId: fields['master_ingredient_id']?.toString(),
       );
 
       final determinedType = fallbackType?.wire ??

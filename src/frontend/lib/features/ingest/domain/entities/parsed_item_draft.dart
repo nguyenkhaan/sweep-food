@@ -1,4 +1,5 @@
 ﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
@@ -23,6 +24,13 @@ abstract class ParsedItemDraft with _$ParsedItemDraft {
     DateTime? expiryDate,
     int? priceVnd,
 
+    /// Catalog `master_ingredient_id` matched by the smart parser; enables
+    /// FreshCheck and links the saved batch to the catalog.
+    String? ingredientId,
+
+    /// FreshCheck estimate accepted when no printed expiry date exists.
+    FreshnessEstimate? freshness,
+
     /// The OCR / ASR filled this field with low confidence — flag it for review.
     @Default(false) bool isExpiryWarn,
     String? imagePath,
@@ -43,6 +51,8 @@ abstract class ParsedItemDraft with _$ParsedItemDraft {
       packedDate: packedDate,
       expiryDate: expiryDate,
       priceVnd: priceVnd,
+      ingredientId: ingredientId,
+      freshness: freshness,
     );
   }
 }

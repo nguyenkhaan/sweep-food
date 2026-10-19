@@ -45,9 +45,8 @@ void main() {
             'unit': 'LITER',
             'packaged_at': '2026-08-28',
             'expires_at': '2026-09-05',
-            'price': 35000.0,
-            'currency': 'VND',
-            'barcode': null,
+            'raw_name': 'sua tuoi',
+            'master_ingredient_id': 'ing-9',
           },
           'confidence': {'ingredient_name': 0.95, 'expires_at': 0.75},
           'warnings': <String>[],
@@ -70,7 +69,8 @@ void main() {
       expect(job.items.single.name, 'Whole Milk');
       expect(job.items.single.quantity, 1.0);
       expect(job.items.single.unit, MeasurementUnit.liter);
-      expect(job.items.single.priceVnd, 35000);
+      expect(job.items.single.priceVnd, isNull);
+      expect(job.items.single.ingredientId, 'ing-9');
       expect(job.items.single.isExpiryWarn, isTrue); // confidence < 0.8
     },
   );
@@ -95,6 +95,7 @@ void main() {
             'line_items': [
               {
                 'name': 'Whole Milk',
+                'master_ingredient_id': 'ing-9',
                 'quantity': 2.0,
                 'unit': 'LITER',
                 'unit_price': 35000.0,
@@ -126,6 +127,8 @@ void main() {
       expect(job.items.map((i) => i.name), ['Whole Milk', 'Bread']);
       expect(job.items.first.unit, MeasurementUnit.liter);
       expect(job.items.first.priceVnd, 35000);
+      expect(job.items.first.ingredientId, 'ing-9');
+      expect(job.items.last.ingredientId, isNull);
       expect(job.items.last.unit, MeasurementUnit.piece);
     },
   );
