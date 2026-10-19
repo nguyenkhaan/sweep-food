@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_BUNDLE_DIR = Path(__file__).resolve().parent.parent / "data"
 DEFAULT_OUTPUT_PATH = DEFAULT_BUNDLE_DIR / "catalog" / "recipe_media.json"
+DEFAULT_OVERRIDES_PATH = DEFAULT_BUNDLE_DIR / "catalog" / "recipe_media_overrides.json"
 DEFAULT_USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 "
@@ -54,6 +55,46 @@ def clean_url(url: str | None, base_url: str) -> str | None:
     return resolved
 
 
+def rank_image_candidate(url: str) -> tuple[int, int, int]:
+    """Rank an image candidate URL for quality and resolution.
+
+    Returns a tuple ordered for descending comparison:
+    (format_rank, size_score, is_original)
+    - format_rank: 1 for jpg/png/etc., 0 for webp (prefer jpg/png over webp)
+    - size_score: 10000 for unsuffixed original, max(w,h) for -NNNxMMM, N for -N
+    - is_original: 1 if unsuffixed original, 0 otherwise
+    """
+    path = urlparse(url).path
+    filename = path.rsplit("/", 1)[-1]
+    name_part, ext = Path(filename).stem, Path(filename).suffix.lower()
+
+    format_rank = 0 if ext == ".webp" else 1
+
+    dim_match = re.search(r"-(\d+)x(\d+)$", name_part)
+    if dim_match:
+        size_score = max(int(dim_match.group(1)), int(dim_match.group(2)))
+        is_original = 0
+    else:
+        single_match = re.search(r"-(\d+)(?:-\d+)?$", name_part)
+        if single_match:
+            size_score = int(single_match.group(1))
+            is_original = 0
+        else:
+            size_score = 10000
+            is_original = 1
+
+    return (format_rank, size_score, is_original)
+
+
+def select_best_image_candidate(candidates: list[str]) -> str | None:
+    """Select the highest quality, non-thumbnail candidate from a list of URLs."""
+    valid = [c.strip() for c in candidates if isinstance(c, str) and c.strip()]
+    if not valid:
+        return None
+    valid.sort(key=rank_image_candidate, reverse=True)
+    return valid[0]
+
+
 def extract_image_from_html(html: str, page_url: str) -> str | None:
     """Extract a representative recipe image URL from HTML content.
 
@@ -70,7 +111,7 @@ def extract_image_from_html(html: str, page_url: str) -> str | None:
     )
     for block in json_ld_blocks:
         try:
-            data = json.loads(block.strip())
+            data = json.loads(block.strip(), strict=False)
         except (json.JSONDecodeError, UnicodeDecodeError):
             continue
 
@@ -101,25 +142,22 @@ def extract_image_from_html(html: str, page_url: str) -> str | None:
                 continue
 
             img_val = node["image"]
-            candidate: str | None = None
+            candidate_list: list[str] = []
             if isinstance(img_val, str):
-                candidate = img_val
-            elif isinstance(img_val, list) and img_val:
-                # Prefer the highest resolution or last entry in the list
-                for item in reversed(img_val):
+                candidate_list.append(img_val)
+            elif isinstance(img_val, list):
+                for item in img_val:
                     if isinstance(item, str) and item.strip():
-                        candidate = item
-                        break
-                    if isinstance(item, dict) and "url" in item:
-                        candidate = str(item["url"])
-                        break
+                        candidate_list.append(item)
+                    elif isinstance(item, dict) and "url" in item:
+                        candidate_list.append(str(item["url"]))
             elif isinstance(img_val, dict) and "url" in img_val:
-                candidate = str(img_val["url"])
+                candidate_list.append(str(img_val["url"]))
 
-            cleaned = clean_url(candidate, page_url)
+            best = select_best_image_candidate(candidate_list)
+            cleaned = clean_url(best, page_url)
             if cleaned is not None:
                 return cleaned
-
     # 2. og:image
     og_patterns = (
         r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']',
@@ -277,18 +315,57 @@ def load_catalog_recipes(bundle_dir: Path) -> list[dict[str, str]]:
         return list(reader)
 
 
+def load_recipe_overrides(
+    overrides_path: Path | None, valid_recipe_ids: set[str]
+) -> dict[str, dict[str, object]]:
+    """Load and validate curated recipe overrides from a JSON file.
+
+    Raises ValueError or TypeError if an entry is malformed or references an unknown recipe id.
+    """
+    if overrides_path is None or not overrides_path.is_file():
+        return {}
+
+    with overrides_path.open(mode="r", encoding="utf-8") as file_handle:
+        data = json.load(file_handle)
+
+    if not isinstance(data, list):
+        raise TypeError(f"Overrides file must contain a JSON list: {overrides_path}")
+
+    overrides_by_id: dict[str, dict[str, object]] = {}
+    for item in data:
+        if not isinstance(item, dict):
+            raise TypeError(f"Override entry must be an object: {item}")
+        raw_id = item.get("id")
+        if not isinstance(raw_id, str) or not raw_id.strip():
+            raise ValueError(f"Override entry missing required 'id': {item}")
+        recipe_id = raw_id.strip()
+        if recipe_id not in valid_recipe_ids:
+            raise ValueError(f"Unknown recipe id in overrides: {recipe_id}")
+
+        steps = item.get("steps")
+        if steps is not None and not isinstance(steps, list):
+            raise TypeError(f"Override steps must be a list: {recipe_id}")
+
+        overrides_by_id[recipe_id] = item
+
+    return overrides_by_id
+
 async def run_builder(
     raw_path: Path,
     detailed_path: Path,
     bundle_dir: Path,
     output_path: Path,
     *,
+    overrides_path: Path | None = None,
     no_network: bool = False,
 ) -> list[dict[str, object]]:
     """Execute the full recipe media build and validation pipeline."""
     catalog_recipes = load_catalog_recipes(bundle_dir)
     raw_records = load_json_records(raw_path)
     detailed_records = load_json_records(detailed_path)
+
+    valid_recipe_ids = {r["id"].strip() for r in catalog_recipes}
+    overrides_by_id = load_recipe_overrides(overrides_path, valid_recipe_ids)
 
     detailed_by_id: dict[str, dict[str, object]] = {}
     for item in detailed_records:
@@ -308,6 +385,7 @@ async def run_builder(
 
     steps_detailed_count = 0
     steps_raw_count = 0
+    steps_override_count = 0
 
     for recipe_row in catalog_recipes:
         recipe_id = recipe_row["id"].strip()
@@ -317,20 +395,36 @@ async def run_builder(
         det = detailed_by_id.get(recipe_id)
         raw = raw_by_url.get(source_url)
 
+        override = overrides_by_id.get(recipe_id)
+
         det_steps = cast(list[dict[str, object]] | None, det.get("steps") if det else None)
         raw_instructions = cast(
             list[dict[str, object]] | None, raw.get("instructions") if raw else None
         )
 
-        if det_steps:
+        if override and override.get("steps") is not None:
+            override_steps = cast(list[dict[str, object]], override["steps"])
+            steps = normalize_steps(override_steps, None)
+            steps_source: str | None = str(override.get("steps_source") or "override")
+            steps_override_count += 1
+        elif det_steps:
+            steps = normalize_steps(det_steps, raw_instructions)
+            steps_source = "detailed"
             steps_detailed_count += 1
         elif raw_instructions:
+            steps = normalize_steps(None, raw_instructions)
+            steps_source = "raw"
             steps_raw_count += 1
-
-        steps = normalize_steps(det_steps, raw_instructions)
+        else:
+            steps = []
+            steps_source = None
 
         chef_tips: str | None = None
-        if det and det.get("chef_tips"):
+        if override and "chef_tips" in override:
+            raw_tips = override.get("chef_tips")
+            if raw_tips:
+                chef_tips = str(raw_tips).strip()
+        elif det and det.get("chef_tips"):
             raw_tips = str(det["chef_tips"]).strip()
             if raw_tips:
                 chef_tips = raw_tips
@@ -343,7 +437,13 @@ async def run_builder(
         media_url: str | None = raw_media
         media_source: str | None = "scraped" if raw_media else None
 
-        if not raw_media and not no_network:
+        if override and override.get("media_url"):
+            override_media = clean_url(str(override["media_url"]), source_url)
+            if override_media:
+                media_url = override_media
+                media_source = "override"
+
+        if not media_url and not no_network:
             recipes_needing_scrape.append(recipe_row)
 
         intermediate.append({
@@ -352,6 +452,7 @@ async def run_builder(
             "source_url": source_url,
             "media_url": media_url,
             "media_source": media_source,
+            "steps_source": steps_source,
             "steps": steps,
             "chef_tips": chef_tips,
         })
@@ -455,11 +556,11 @@ async def run_builder(
             "id": item["id"],
             "media_url": item["media_url"],
             "media_source": item["media_source"],
+            "steps_source": item["steps_source"],
             "steps": item["steps"],
             "chef_tips": item["chef_tips"],
         })
 
-    # Summary reporting
     total_recipes = len(final_records)
     with_image_count = sum(1 for r in final_records if r["media_url"] is not None)
     with_steps_count = sum(1 for r in final_records if bool(r["steps"]))
@@ -474,6 +575,7 @@ async def run_builder(
     print(
         f"Steps coverage: {with_steps_count}/{total_recipes} "
         f"(from detailed: {steps_detailed_count}, from raw: {steps_raw_count}, "
+        f"from overrides: {steps_override_count}, "
         f"missing steps: {total_recipes - with_steps_count})"
     )
     print(f"Validated media URLs: {with_image_count}/{total_recipes}")
@@ -532,6 +634,12 @@ def parse_args(args: Sequence[str] | None = None) -> argparse.Namespace:
         help="Path to destination recipe_media.json",
     )
     parser.add_argument(
+        "--overrides",
+        type=Path,
+        default=DEFAULT_OVERRIDES_PATH if DEFAULT_OVERRIDES_PATH.is_file() else None,
+        help=f"Path to recipe_media_overrides.json (default: {DEFAULT_OVERRIDES_PATH})",
+    )
+    parser.add_argument(
         "--no-network",
         action="store_true",
         help="Skip network scraping and image validation",
@@ -549,6 +657,7 @@ def main(args: Sequence[str] | None = None) -> int:
             detailed_path=parsed.detailed,
             bundle_dir=parsed.bundle_dir,
             output_path=parsed.output,
+            overrides_path=parsed.overrides,
             no_network=parsed.no_network,
         )
     )

@@ -31,6 +31,7 @@ To regenerate or update `recipe_media.json`, run the media builder CLI:
 python -m AI.catalog.media_builder \
   --raw /path/to/recipes_raw_scraped.json \
   --detailed /path/to/recipes_restructured_detailed.json \
+  [--overrides AI/data/catalog/recipe_media_overrides.json] \
   [--bundle-dir AI/data] \
   [--output AI/data/catalog/recipe_media.json] \
   [--no-network]
@@ -38,9 +39,14 @@ python -m AI.catalog.media_builder \
 
 The builder:
 1. Matches catalog recipes to structured instructions from `recipes_restructured_detailed.json` (or raw scraped instructions as fallback).
-2. Extracts raw media URLs and scrapes missing images directly from article pages (`source_url`) using JSON-LD, `og:image`, and `twitter:image` metadata with bounded concurrency (<= 4) and polite delays.
-3. Validates every candidate image URL over HTTP (status 200/206 with `image/*` MIME type, concurrency <= 8). Failed validations set `media_url` to `null`.
-4. Atomically writes the sorted JSON artifact.
+2. Applies curated overrides from `recipe_media_overrides.json` (replacing `steps`, `chef_tips`, and optional `media_url` for specified recipe IDs, recording `steps_source`).
+3. Extracts raw media URLs and scrapes missing images directly from article pages (`source_url`) using JSON-LD, `og:image`, and `twitter:image` metadata with bounded concurrency (<= 4) and polite delays. JSON-LD parsing tolerates unescaped control characters (`strict=False`) commonly found in Vietnamese recipe portals and prioritizes unsuffixed original images over thumbnails (`-300`, `-500`, `-NNNxMMM`) and JPG/PNG over WebP.
+4. Validates every candidate image URL over HTTP (status 200/206 with `image/*` MIME type, concurrency <= 8). Failed validations set `media_url` to `null`.
+5. Atomically writes the sorted JSON artifact.
+
+### Overrides (`recipe_media_overrides.json`)
+
+`AI/data/catalog/recipe_media_overrides.json` contains hand-curated, structured cooking steps and tips for catalog recipes whose source articles lacked structured instruction blocks in the raw scrape. The builder enforces that all override entries reference valid catalog recipe IDs and assigns their `steps_source` attribute (e.g. `article_rewritten`).
 
 ### Source Repository Commits
 

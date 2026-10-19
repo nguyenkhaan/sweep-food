@@ -8,11 +8,14 @@ import httpx
 import pytest
 
 from AI.catalog.media_builder import (
+    DEFAULT_BUNDLE_DIR,
     clean_url,
     extract_image_from_html,
+    load_recipe_overrides,
     normalize_step,
     normalize_steps,
     parse_args,
+    select_best_image_candidate,
     validate_image_url,
 )
 
@@ -277,3 +280,142 @@ def test_parse_args_cli() -> None:
     assert args.raw == Path("raw.json")
     assert args.detailed == Path("detailed.json")
     assert args.no_network is True
+
+
+def test_extract_image_json_ld_with_control_characters() -> None:
+    """extract_image_from_html parses JSON-LD containing raw tabs and newlines inside strings."""
+    # Raw newline and unescaped tab inside recipe description/name string
+    html_with_control_chars = """
+    <html>
+      <head>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Recipe",
+          "name": "Tom Vien Dau Hu\n\tXot Ca",
+          "description": "Mon ngon moi ngay\tvuong tron\nhuong vi",
+          "image": [
+            "https://monngonmoingay.com/wp-content/uploads/2023/08/tom-vien-300.jpg",
+            "https://monngonmoingay.com/wp-content/uploads/2023/08/tom-vien-500.jpg",
+            "https://monngonmoingay.com/wp-content/uploads/2023/08/tom-vien.jpg"
+          ]
+        }
+        </script>
+      </head>
+    </html>
+    """
+    extracted = extract_image_from_html(html_with_control_chars, "https://monngonmoingay.com")
+    assert extracted == "https://monngonmoingay.com/wp-content/uploads/2023/08/tom-vien.jpg"
+
+
+def test_thumbnail_preference_and_ranking() -> None:
+    """select_best_image_candidate prefers unsuffixed originals, larger sizes, and jpg over webp."""
+    # Unsuffixed original beats -500 and -300
+    cands1 = [
+        "https://example.com/tom-vien-300.jpg",
+        "https://example.com/tom-vien-500.jpg",
+        "https://example.com/tom-vien.jpg",
+    ]
+    assert select_best_image_candidate(cands1) == "https://example.com/tom-vien.jpg"
+
+    # When no unsuffixed exists, -500 beats -300
+    cands2 = [
+        "https://example.com/my-can-300.jpg",
+        "https://example.com/my-can-500.jpg",
+    ]
+    assert select_best_image_candidate(cands2) == "https://example.com/my-can-500.jpg"
+
+    # JPG format preferred over WEBP even when webp has higher dimension suffix
+    cands3 = [
+        "https://example.com/dau-hu-300.jpg",
+        "https://example.com/dau-hu-500.jpg",
+        "https://example.com/dau-hu-880.webp",
+    ]
+    assert select_best_image_candidate(cands3) == "https://example.com/dau-hu-500.jpg"
+
+    # Dimension suffix -1024x202 beats -300x150
+    cands4 = [
+        "https://example.com/dish-300x150.jpg",
+        "https://example.com/dish-1024x202.jpg",
+    ]
+    assert select_best_image_candidate(cands4) == "https://example.com/dish-1024x202.jpg"
+
+    # Empty candidate list
+    assert select_best_image_candidate([]) is None
+
+
+def test_load_recipe_overrides_application_and_validation(tmp_path: Path) -> None:
+    """load_recipe_overrides validates known IDs and malformed inputs."""
+    valid_ids = {"uuid-1", "uuid-2"}
+
+    # Valid override file
+    valid_file = tmp_path / "valid_overrides.json"
+    valid_file.write_text(
+        '[{"id": "uuid-1", "name": "Dish 1", "steps": [{"step": 1, "text": "Step 1"}], "steps_source": "manual"}]',
+        encoding="utf-8",
+    )
+    loaded = load_recipe_overrides(valid_file, valid_ids)
+    assert "uuid-1" in loaded
+    assert loaded["uuid-1"]["steps_source"] == "manual"
+
+    # Unknown recipe id raises ValueError
+    unknown_file = tmp_path / "unknown_overrides.json"
+    unknown_file.write_text(
+        '[{"id": "non-existent-uuid", "name": "Fake", "steps": []}]',
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="Unknown recipe id in overrides"):
+        load_recipe_overrides(unknown_file, valid_ids)
+
+    # Malformed overrides: not a list
+    not_list_file = tmp_path / "not_list.json"
+    not_list_file.write_text('{"id": "uuid-1"}', encoding="utf-8")
+    with pytest.raises(TypeError, match="must contain a JSON list"):
+        load_recipe_overrides(not_list_file, valid_ids)
+
+    # Missing id in entry
+    missing_id_file = tmp_path / "missing_id.json"
+    missing_id_file.write_text('[{"name": "No ID"}]', encoding="utf-8")
+    with pytest.raises(ValueError, match="missing required 'id'"):
+        load_recipe_overrides(missing_id_file, valid_ids)
+
+    # None or non-existent path returns empty dict
+    assert load_recipe_overrides(None, valid_ids) == {}
+    assert load_recipe_overrides(tmp_path / "does_not_exist.json", valid_ids) == {}
+
+
+def test_recipe_media_builder_determinism_and_steps_source() -> None:
+    """Artifact records have steps_source and are deterministically sorted by ID."""
+    import json
+
+    media_artifact = DEFAULT_BUNDLE_DIR / "catalog" / "recipe_media.json"
+    assert media_artifact.is_file(), f"Missing artifact: {media_artifact}"
+
+    with media_artifact.open(mode="r", encoding="utf-8") as f:
+        records = json.load(f)
+
+    assert len(records) == 1075
+
+    # Deterministic ID ordering
+    ids = [str(r["id"]) for r in records]
+    assert ids == sorted(ids), "recipe_media.json records must be sorted deterministically by ID"
+
+    # Every entry has steps_source set
+    valid_sources = {"detailed", "raw", "article_rewritten", "composed_from_article_tips"}
+    for r in records:
+        assert "steps_source" in r, f"Record {r['id']} missing steps_source"
+        assert r["steps_source"] in valid_sources, f"Record {r['id']} has invalid steps_source: {r['steps_source']}"
+
+    # The 7 curated recipes specifically have their override steps_source
+    overridden_ids = {
+        "05dae86b-448a-514e-a4dc-2a81394b5dbd",
+        "2316d42e-fbe6-5443-98e4-81cf0c34a145",
+        "4b767868-aae2-5b64-b459-fce529d7e0c9",
+        "4d7a2558-9c7b-5750-844c-f0ca902223a0",
+        "c5270778-4e98-584b-8b9f-4b8eb39b9afd",
+        "de9e2f72-4152-56c5-ad24-b2d11d232d67",
+        "e4792ee5-a1be-52be-99ff-0264e7e19dc5",
+    }
+    for r in records:
+        if r["id"] in overridden_ids:
+            assert r["steps_source"] in {"article_rewritten", "composed_from_article_tips"}

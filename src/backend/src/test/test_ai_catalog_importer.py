@@ -337,11 +337,26 @@ def test_recipe_media_transformed_counts_match_artifact() -> None:
 
     recipes_with_media = [r for r in data.recipes if r["media_url"] is not None]
     artifact_with_media = [m for m in bundle.recipe_media if m.get("media_url") is not None]
-    assert len(recipes_with_media) == len(artifact_with_media) == 1048
+    assert len(recipes_with_media) == len(artifact_with_media) == 1075
 
     recipes_with_steps = [r for r in data.recipes if bool(r["instructions"].get("steps"))]
     artifact_with_steps = [m for m in bundle.recipe_media if bool(m.get("steps"))]
-    assert len(recipes_with_steps) == len(artifact_with_steps) == 1068
+    assert len(recipes_with_steps) == len(artifact_with_steps) == 1075
+
+    # Check that the 7 overridden recipes carry 4-6 steps each
+    overridden_ids = {
+        "05dae86b-448a-514e-a4dc-2a81394b5dbd",
+        "2316d42e-fbe6-5443-98e4-81cf0c34a145",
+        "4b767868-aae2-5b64-b459-fce529d7e0c9",
+        "4d7a2558-9c7b-5750-844c-f0ca902223a0",
+        "c5270778-4e98-584b-8b9f-4b8eb39b9afd",
+        "de9e2f72-4152-56c5-ad24-b2d11d232d67",
+        "e4792ee5-a1be-52be-99ff-0264e7e19dc5",
+    }
+    for r in data.recipes:
+        if str(r["id"]) in overridden_ids:
+            step_count = len(r["instructions"]["steps"])
+            assert 4 <= step_count <= 6, f"Overridden recipe {r['id']} has {step_count} steps"
 
     # Validate step structure contract (order and text only, no redundant duplicate keys)
     for r in recipes_with_steps:
