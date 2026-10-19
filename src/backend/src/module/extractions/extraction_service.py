@@ -5,6 +5,10 @@ from uuid import uuid4
 
 from fastapi import UploadFile
 
+from AI.extraction.service import (
+    AIExtractionService,
+    get_ai_extraction_service,
+)
 from src.core.setting import (
     EXTRACTION_ALLOWED_AUDIO_TYPES,
     EXTRACTION_ALLOWED_IMAGE_TYPES,
@@ -21,7 +25,6 @@ from src.module.extractions.extraction_dto import (
     InvoiceLineItem,
 )
 from src.module.extractions.extraction_provider import mock_barcode_lookup
-from src.service.sweep_food_ai_client import SweepFoodAIClient
 
 
 class ExtractionValidationError(Exception):
@@ -86,102 +89,116 @@ def _normalize_date(raw_date: str | None) -> str | None:
 
 
 class ExtractionService:
-    """Validate uploads, call the AI service, and map its typed responses."""
+    """Validate uploads, call in-process AI extraction, and map response DTOs."""
 
-    def __init__(self, ai_client: SweepFoodAIClient) -> None:
-        self._ai_client = ai_client
+    def __init__(self, ai_service: AIExtractionService | None = None) -> None:
+        self._ai_service = ai_service or get_ai_extraction_service()
 
     async def extract_ocr_label(self, file: UploadFile) -> ExtractionResponse:
         """Extract one product label without inventing missing fields."""
         content = await file.read()
         _validate_image(file, content)
-        result = await self._ai_client.extract_ocr(
+        result = await self._ai_service.process_receipt_input(
+            image_bytes=content,
             filename=file.filename or "label",
-            content=content,
-            content_type=file.content_type,
         )
-        if not result.items:
+        items = result.get("items", [])
+        raw_text = str(result.get("raw_text") or "")
+        if not items:
             return ExtractionResponse(
                 request_id=uuid4(),
                 status=ExtractionStatus.FAILED,
                 provider="SWEEP_FOOD_AI",
-                raw_text=result.raw_text,
+                raw_text=raw_text,
                 fields=ExtractionFields(),
                 confidence={},
                 warnings=["NO_ITEMS_EXTRACTED"],
             )
 
-        item = result.items[0]
+        item = items[0]
         warnings: list[str] = []
-        quantity = item.quantity_g if item.quantity_source == "extracted" else None
+        quantity = (
+            item.get("quantity_g")
+            if item.get("quantity_source") == "extracted"
+            else None
+        )
         if quantity is None:
             warnings.append("QUANTITY_NOT_EXTRACTED")
-        packaged_at = _normalize_date(item.production_date)
+        packaged_at = _normalize_date(item.get("production_date"))
         if packaged_at is None:
             warnings.append("PRODUCTION_DATE_NOT_EXTRACTED")
-        expires_at = _normalize_date(item.expiry_date)
+        expires_at = _normalize_date(item.get("expiry_date"))
         if expires_at is None:
             warnings.append("EXPIRY_DATE_NOT_EXTRACTED")
-        elif item.expiry_check == "suspicious":
+        elif item.get("expiry_check") == "suspicious":
             warnings.append("EXPIRY_DATE_SUSPICIOUS")
+        item_conf = item.get("confidence")
         confidence = (
-            {"ingredient_name": item.confidence} if item.confidence is not None else {}
+            {"ingredient_name": item_conf} if item_conf is not None else {}
         )
-        if item.confidence is None:
+        if item_conf is None:
             warnings.append("CONFIDENCE_NOT_AVAILABLE")
 
         return ExtractionResponse(
             request_id=uuid4(),
-            status=ExtractionStatus.PARTIAL if warnings else ExtractionStatus.SUCCEEDED,
+            status=(
+                ExtractionStatus.PARTIAL if warnings else ExtractionStatus.SUCCEEDED
+            ),
             provider="SWEEP_FOOD_AI",
-            raw_text=result.raw_text,
+            raw_text=raw_text,
             fields=ExtractionFields(
-                ingredient_name=item.name,
-                raw_name=item.raw_name,
-                master_ingredient_code=item.code,
-                category=item.category,
+                ingredient_name=item.get("name"),
+                raw_name=item.get("raw_name"),
+                master_ingredient_code=item.get("code"),
+                category=item.get("category"),
                 quantity=quantity,
-                quantity_source=item.quantity_source,
+                quantity_source=item.get("quantity_source"),
                 unit="GRAM" if quantity is not None else None,
                 packaged_at=packaged_at,
                 expires_at=expires_at,
-                nutrition=item.nutrition,
-                freshness_guide=item.freshness_guide,
-                is_staple=item.is_staple,
+                nutrition=item.get("nutrition"),
+                freshness_guide=item.get("freshness_guide"),
+                is_staple=item.get("is_staple"),
             ),
             confidence=confidence,
             warnings=warnings,
         )
 
-    async def extract_ocr_invoice(self, file: UploadFile) -> InvoiceExtractionResponse:
+    async def extract_ocr_invoice(
+        self, file: UploadFile
+    ) -> InvoiceExtractionResponse:
         """Return the provable subset of the current generic OCR response."""
         content = await file.read()
         _validate_image(file, content)
-        result = await self._ai_client.extract_ocr(
+        result = await self._ai_service.process_receipt_input(
+            image_bytes=content,
             filename=file.filename or "invoice",
-            content=content,
-            content_type=file.content_type,
         )
+        items = result.get("items", [])
+        raw_text = str(result.get("raw_text") or "")
+        vendor_name = result.get("store_name")
         line_items = [
             InvoiceLineItem(
-                name=item.name,
-                raw_name=item.raw_name,
-                master_ingredient_code=item.code,
-                category=item.category,
+                name=item["name"],
+                raw_name=item.get("raw_name"),
+                master_ingredient_code=item.get("code"),
+                category=item.get("category"),
                 quantity=(
-                    item.quantity_g if item.quantity_source == "extracted" else None
-                ),
-                quantity_source=item.quantity_source,
-                unit=(
-                    "GRAM"
-                    if item.quantity_g is not None
-                    and item.quantity_source == "extracted"
+                    item.get("quantity_g")
+                    if item.get("quantity_source") == "extracted"
                     else None
                 ),
-                nutrition=item.nutrition,
-                freshness_guide=item.freshness_guide,
+                quantity_source=item.get("quantity_source"),
+                unit=(
+                    "GRAM"
+                    if item.get("quantity_g") is not None
+                    and item.get("quantity_source") == "extracted"
+                    else None
+                ),
+                nutrition=item.get("nutrition"),
+                freshness_guide=item.get("freshness_guide"),
             )
-            for item in result.items
+            for item in items
         ]
         warnings = ["INVOICE_FINANCIAL_FIELDS_NOT_AVAILABLE"]
         if not line_items:
@@ -191,10 +208,10 @@ class ExtractionService:
             request_id=uuid4(),
             status=ExtractionStatus.PARTIAL,
             provider="SWEEP_FOOD_AI",
-            raw_text=result.raw_text,
+            raw_text=raw_text,
             fields=InvoiceExtractionFields(
                 line_items=line_items,
-                vendor_name=result.store_name,
+                vendor_name=vendor_name,
             ),
             confidence={},
             warnings=warnings,
@@ -204,49 +221,59 @@ class ExtractionService:
         """Map the first spoken ingredient and report any omitted items."""
         content = await file.read()
         _validate_audio(file, content)
-        result = await self._ai_client.extract_asr(
-            filename=file.filename or "audio",
-            content=content,
-            content_type=file.content_type,
+        result = await self._ai_service.process_voice_input(
+            audio_bytes=content,
+            filename=file.filename or "audio.wav",
         )
-        if not result.items:
+        items = result.get("items", [])
+        transcript = str(result.get("transcript") or "")
+        if not items:
             return ExtractionResponse(
                 request_id=uuid4(),
                 status=ExtractionStatus.FAILED,
                 provider="SWEEP_FOOD_AI",
-                raw_text=result.transcript,
+                raw_text=transcript,
                 fields=ExtractionFields(),
                 confidence={},
                 warnings=["NO_ITEMS_EXTRACTED"],
             )
 
-        item = result.items[0]
+        item = items[0]
         warnings: list[str] = []
-        if len(result.items) > 1:
+        if len(items) > 1:
             warnings.append("ADDITIONAL_ITEMS_OMITTED")
-        quantity = item.quantity_g if item.quantity_source == "extracted" else None
+        quantity = (
+            item.get("quantity_g")
+            if item.get("quantity_source") == "extracted"
+            else None
+        )
         if quantity is None:
             warnings.append("QUANTITY_NOT_EXTRACTED")
+        item_conf = item.get("confidence")
         confidence = (
-            {"ingredient_name": item.confidence} if item.confidence is not None else {}
+            {"ingredient_name": item_conf} if item_conf is not None else {}
         )
+        if item_conf is None:
+            warnings.append("CONFIDENCE_NOT_AVAILABLE")
 
         return ExtractionResponse(
             request_id=uuid4(),
-            status=ExtractionStatus.PARTIAL if warnings else ExtractionStatus.SUCCEEDED,
+            status=(
+                ExtractionStatus.PARTIAL if warnings else ExtractionStatus.SUCCEEDED
+            ),
             provider="SWEEP_FOOD_AI",
-            raw_text=result.transcript,
+            raw_text=transcript,
             fields=ExtractionFields(
-                ingredient_name=item.name,
-                raw_name=item.raw_name,
-                master_ingredient_code=item.code,
-                category=item.category,
+                ingredient_name=item.get("name"),
+                raw_name=item.get("raw_name"),
+                master_ingredient_code=item.get("code"),
+                category=item.get("category"),
                 quantity=quantity,
-                quantity_source=item.quantity_source,
+                quantity_source=item.get("quantity_source"),
                 unit="GRAM" if quantity is not None else None,
-                nutrition=item.nutrition,
-                freshness_guide=item.freshness_guide,
-                is_staple=item.is_staple,
+                nutrition=item.get("nutrition"),
+                freshness_guide=item.get("freshness_guide"),
+                is_staple=item.get("is_staple"),
             ),
             confidence=confidence,
             warnings=warnings,

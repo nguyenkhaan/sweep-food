@@ -1,18 +1,11 @@
 """Dependencies for extraction endpoints."""
 
-from typing import Annotated
+from __future__ import annotations
 
-from fastapi import Depends
-
+from AI.extraction.service import get_ai_extraction_service
 from src.module.extractions.extraction_service import ExtractionService
-from src.service.sweep_food_ai_client import (
-    SweepFoodAIClient,
-    get_sweep_food_ai_client,
-)
 
 
-async def get_extraction_service(
-    ai_client: Annotated[SweepFoodAIClient, Depends(get_sweep_food_ai_client)],
-) -> ExtractionService:
-    """Create an extraction service backed by the request-scoped AI client."""
-    return ExtractionService(ai_client)
+def get_extraction_service() -> ExtractionService:
+    """Create an extraction service backed by in-process AI extraction service."""
+    return ExtractionService(ai_service=get_ai_extraction_service())

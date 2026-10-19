@@ -2,146 +2,150 @@
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator, Generator
+from collections.abc import Generator
 from io import BytesIO
+from typing import Any
 from uuid import UUID
 
 import httpx
 import pytest
 
+from AI.extraction.asr.groq_whisper import GroqWhisperClient
+from AI.extraction.ocr.openai_vision_ocr import OpenAIVisionOCR
+from AI.extraction.service import AIExtractionService
 from src.app import app
 from src.middleware.auth_middleware import AuthenticatedUser, require_authentication
 from src.model.enum_model import UserRole
-from src.service.sweep_food_ai_client import (
-    AIAsrItemDTO,
-    AIAsrResponseDTO,
-    AIOcrItemDTO,
-    AIOcrResponseDTO,
-    get_sweep_food_ai_client,
-)
+from src.module.extractions.extraction_dependency import get_extraction_service
+from src.module.extractions.extraction_service import ExtractionService
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a051")
 
 
-class FakeExtractionUserService:
-    """Provide authenticated user for extraction routes."""
+class FakeAIExtractionService:
+    """Return deterministic extraction results without network access."""
 
-
-class FakeSweepFoodAIClient:
-    """Return deterministic typed AI responses without network access."""
-
-    async def extract_ocr(
+    async def process_receipt_input(
         self,
-        *,
-        filename: str,
-        content: bytes,
-        content_type: str | None,
-    ) -> AIOcrResponseDTO:
-        del content, content_type
+        image_bytes: bytes,
+        filename: str = "receipt.jpg",
+    ) -> dict[str, Any]:
+        del image_bytes
         if "invoice" in filename:
-            return AIOcrResponseDTO(
-                status="success",
-                source="receipt",
-                store_name="Test Grocery",
-                raw_text="Milk 500g\nBread",
-                items=[
-                    AIOcrItemDTO(
-                        name="Whole Milk",
-                        raw_name="MILK",
-                        code="10001",
-                        category="Dairy",
-                        quantity_g=500,
-                        quantity_source="extracted",
-                        nutrition={"energy_kcal": 74.0},
-                        freshness_guide={"storage_tips": ["Keep cold"]},
-                    ),
-                    AIOcrItemDTO(
-                        name="Bread",
-                        raw_name="BREAD",
-                        code="20001",
-                        category="Grains",
-                        quantity_g=250,
-                        quantity_source="estimated",
-                    ),
+            return {
+                "status": "success",
+                "source": "receipt",
+                "store_name": "Test Grocery",
+                "raw_text": "Milk 500g\nBread",
+                "items": [
+                    {
+                        "name": "Whole Milk",
+                        "raw_name": "MILK",
+                        "code": "10001",
+                        "category": "Dairy",
+                        "quantity_g": 500.0,
+                        "quantity_source": "extracted",
+                        "nutrition": {"energy_kcal": 74.0},
+                        "freshness_guide": {"storage_tips": ["Keep cold"]},
+                        "is_staple": False,
+                    },
+                    {
+                        "name": "Bread",
+                        "raw_name": "BREAD",
+                        "code": "20001",
+                        "category": "Grains",
+                        "quantity_g": 250.0,
+                        "quantity_source": "estimated",
+                        "is_staple": False,
+                    },
                 ],
-            )
+            }
         if "suspicious" in filename:
-            return AIOcrResponseDTO(
-                status="success",
-                source="openai_vision",
-                raw_text="CANH GIUA GA NHAP KHAU NDG 1.10.2026 HSD 4.10.2026",
-                items=[
-                    AIOcrItemDTO(
-                        name="Cánh gà",
-                        raw_name="CANH GIUA GA NHAP KHAU",
-                        code="7087",
-                        quantity_g=296,
-                        quantity_source="extracted",
-                        production_date="01/10/2026",
-                        expiry_date="04/10/2026",
-                        expiry_check="suspicious",
-                        expiry_check_reason="HSD dài hơn mốc FreshCheck.",
-                        confidence=0.9,
-                    )
+            return {
+                "status": "success",
+                "source": "label",
+                "raw_text": "KLT: 0.296 kg\nNSX: 01/10/2026\nHSD: 04/10/2026",
+                "items": [
+                    {
+                        "name": "Ground Pork",
+                        "raw_name": "THIT HEO XAY",
+                        "code": "20002",
+                        "category": "Meat",
+                        "quantity_g": 296.0,
+                        "quantity_source": "extracted",
+                        "production_date": "01/10/2026",
+                        "expiry_date": "04/10/2026",
+                        "expiry_check": "suspicious",
+                        "confidence": 0.95,
+                        "is_staple": False,
+                    }
                 ],
-            )
-        return AIOcrResponseDTO(
-            status="success",
-            source="label",
-            raw_text="Whole Milk 500g NSX 28/08/2026 HSD 05/09/2026",
-            items=[
-                AIOcrItemDTO(
-                    name="Whole Milk",
-                    raw_name="MILK",
-                    code="10001",
-                    category="Dairy",
-                    quantity_g=500,
-                    quantity_source="extracted",
-                    production_date="28/08/2026",
-                    expiry_date="05/09/2026",
-                    confidence=0.95,
-                    nutrition={"energy_kcal": 74.0},
-                    freshness_guide={"storage_tips": ["Keep cold"]},
-                )
+            }
+        return {
+            "status": "success",
+            "source": "label",
+            "raw_text": "Milk 500g",
+            "items": [
+                {
+                    "name": "Whole Milk",
+                    "raw_name": "MILK",
+                    "code": "10001",
+                    "category": "Dairy",
+                    "quantity_g": 500.0,
+                    "quantity_source": "extracted",
+                    "production_date": "28/08/2026",
+                    "expiry_date": "05/09/2026",
+                    "confidence": 0.95,
+                    "nutrition": {"energy_kcal": 74.0},
+                    "freshness_guide": {"storage_tips": ["Keep cold"]},
+                    "is_staple": False,
+                }
             ],
-        )
+        }
 
-    async def extract_asr(self, **_kwargs: object) -> AIAsrResponseDTO:
-        return AIAsrResponseDTO(
-            status="success",
-            engine="groq_whisper",
-            transcript="Tôi có năm trăm gram sữa",
-            items=[
-                AIAsrItemDTO(
-                    name="Milk",
-                    raw_name="sữa",
-                    code="10001",
-                    category="Dairy",
-                    quantity_g=500,
-                    quantity_source="extracted",
-                    confidence=0.92,
-                    nutrition={"energy_kcal": 74.0},
-                    freshness_guide={"storage_tips": ["Keep cold"]},
-                )
+    async def process_voice_input(
+        self,
+        audio_bytes: bytes | None = None,
+        transcript: str | None = None,
+        filename: str = "audio.wav",
+    ) -> dict[str, Any]:
+        del audio_bytes, transcript, filename
+        return {
+            "status": "success",
+            "engine": "groq_whisper_turbo",
+            "transcript": "năm trăm gram sữa tươi",
+            "items": [
+                {
+                    "name": "Milk",
+                    "raw_name": "sữa",
+                    "code": "10001",
+                    "category": "Dairy",
+                    "quantity_g": 500.0,
+                    "quantity_source": "extracted",
+                    "confidence": 0.92,
+                    "nutrition": {"energy_kcal": 74.0},
+                    "freshness_guide": {"storage_tips": ["Keep cold"]},
+                    "is_staple": False,
+                }
             ],
-        )
+        }
 
 
 @pytest.fixture()
 def _override_extraction_deps() -> Generator[None]:
-    """Override authentication dependency for extraction API contract tests."""
+    """Override authentication and extraction service dependency for contract tests."""
 
     async def get_user() -> AuthenticatedUser:
         return AuthenticatedUser(USER_ID, (UserRole.USER,))
 
-    async def get_ai_client() -> AsyncIterator[FakeSweepFoodAIClient]:
-        yield FakeSweepFoodAIClient()
+    def get_fake_service() -> ExtractionService:
+        return ExtractionService(ai_service=FakeAIExtractionService())  # type: ignore[arg-type]
 
     app.dependency_overrides[require_authentication] = get_user
-    app.dependency_overrides[get_sweep_food_ai_client] = get_ai_client
+    app.dependency_overrides[get_extraction_service] = get_fake_service
     yield
     app.dependency_overrides.pop(require_authentication, None)
-    app.dependency_overrides.pop(get_sweep_food_ai_client, None)
+    app.dependency_overrides.pop(get_extraction_service, None)
 
 
 @pytest.mark.anyio
@@ -169,9 +173,9 @@ async def test_ocr_label_route_returns_200_with_mock_data(
     assert body["fields"]["freshness_guide"] == {
         "storage_tips": ["Keep cold"]
     }
-    assert body["fields"]["quantity"] == 500.0
-    assert body["fields"]["unit"] == "GRAM"
+    assert body["fields"]["packaged_at"] == "2026-08-28"
     assert body["fields"]["expires_at"] == "2026-09-05"
+    assert body["confidence"]["ingredient_name"] == 0.95
     assert body["warnings"] == []
 
 
@@ -180,7 +184,7 @@ async def test_ocr_label_warns_when_ai_flags_suspicious_expiry(
     api_client: httpx.AsyncClient,
     _override_extraction_deps: None,
 ) -> None:
-    """A FreshCheck-flagged HSD is kept as read but surfaced as a warning."""
+    """A flagged HSD is kept as read but surfaced as a warning."""
     fake_image = BytesIO(b"\x89PNG fake image content")
     response = await api_client.post(
         "/api/extractions/ocr/label",
@@ -191,21 +195,6 @@ async def test_ocr_label_warns_when_ai_flags_suspicious_expiry(
     assert body["status"] == "PARTIAL"
     assert body["fields"]["expires_at"] == "2026-10-04"
     assert body["warnings"] == ["EXPIRY_DATE_SUSPICIOUS"]
-
-
-def test_ai_ocr_item_keeps_expiry_check_from_ai_payload() -> None:
-    """The AI boundary DTO no longer drops the expiry flag."""
-    item = AIOcrItemDTO.model_validate(
-        {
-            "name": "Cánh gà",
-            "expiry_check": "suspicious",
-            "expiry_check_reason": "Kiểm tra lại HSD",
-            "note": "ignored",
-        }
-    )
-    assert item.expiry_check == "suspicious"
-    assert item.expiry_check_reason == "Kiểm tra lại HSD"
-    assert AIOcrItemDTO(name="Sữa").expiry_check is None
 
 
 @pytest.mark.anyio
@@ -389,3 +378,418 @@ def test_all_extraction_openapi_paths_exist() -> None:
     ]
     for expected_path in expected_paths:
         assert expected_path in paths, f"{expected_path} missing from OpenAPI"
+
+
+# =========================================================================
+# MockTransport-backed Route Tests (OpenAI OCR & Groq Whisper Error Mapping)
+# =========================================================================
+
+
+@pytest.mark.anyio
+async def test_ocr_label_route_openai_success(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """POST /extractions/ocr/label returns 200 with MockTransport OpenAI response."""
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    mock_resp = {
+        "choices": [
+            {
+                "message": {
+                    "content": (
+                        '{"store_name": "Bách Hóa Xanh", "raw_text": "Cải thìa 500g", '
+                        '"items": [{"name": "Cải thìa", "quantity_g": 500.0, "expiry_date": "20/12/2026"}]}'
+                    )
+                }
+            }
+        ]
+    }
+
+    mock_transport = httpx.MockTransport(
+        lambda req: httpx.Response(200, json=mock_resp)
+    )
+    mock_client = httpx.AsyncClient(transport=mock_transport)
+    ocr_client = OpenAIVisionOCR(
+        api_key="test-key", http_client=mock_client
+    )
+    ai_service = AIExtractionService(ocr_client=ocr_client)
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
+        ai_service=ai_service
+    )
+
+    try:
+        fake_img = BytesIO(b"\x89PNG test image")
+        resp = await api_client.post(
+            "/api/extractions/ocr/label",
+            files={"file": ("label.png", fake_img, "image/png")},
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["status"] in ("SUCCEEDED", "PARTIAL")
+        assert data["fields"]["ingredient_name"] == "Cải thìa"
+        assert data["fields"]["quantity"] == 500.0
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await mock_client.aclose()
+
+
+@pytest.mark.anyio
+async def test_ocr_label_route_openai_timeout_maps_to_504(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """POST /extractions/ocr/label maps OpenAI timeout to HTTP 504."""
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    def timeout_handler(req: httpx.Request) -> httpx.Response:
+        raise httpx.ReadTimeout("Request timed out", request=req)
+
+    mock_transport = httpx.MockTransport(timeout_handler)
+    mock_client = httpx.AsyncClient(transport=mock_transport)
+    ocr_client = OpenAIVisionOCR(
+        api_key="test-key", http_client=mock_client
+    )
+    ai_service = AIExtractionService(ocr_client=ocr_client)
+
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
+        ai_service=ai_service
+    )
+
+    try:
+        fake_img = BytesIO(b"\x89PNG test image")
+        resp = await api_client.post(
+            "/api/extractions/ocr/label",
+            files={"file": ("label.png", fake_img, "image/png")},
+        )
+        assert resp.status_code == 504
+        assert "timed out" in resp.json()["detail"].lower()
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await mock_client.aclose()
+
+
+@pytest.mark.anyio
+async def test_ocr_label_route_openai_service_unavailable_maps_to_503(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """POST /extractions/ocr/label maps 503 or connect error to HTTP 503."""
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    def error_handler(req: httpx.Request) -> httpx.Response:
+        return httpx.Response(503, text="Service Unavailable", request=req)
+
+    mock_transport = httpx.MockTransport(error_handler)
+    mock_client = httpx.AsyncClient(transport=mock_transport)
+    ocr_client = OpenAIVisionOCR(
+        api_key="test-key", http_client=mock_client
+    )
+    ai_service = AIExtractionService(ocr_client=ocr_client)
+
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
+        ai_service=ai_service
+    )
+
+    try:
+        fake_img = BytesIO(b"\x89PNG test image")
+        resp = await api_client.post(
+            "/api/extractions/ocr/label",
+            files={"file": ("label.png", fake_img, "image/png")},
+        )
+        assert resp.status_code == 503
+        assert "unavailable" in resp.json()["detail"].lower()
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await mock_client.aclose()
+
+
+@pytest.mark.anyio
+async def test_ocr_label_route_openai_bad_response_maps_to_502(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """POST /extractions/ocr/label maps malformed response to HTTP 502."""
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    def bad_response_handler(req: httpx.Request) -> httpx.Response:
+        return httpx.Response(500, text="Internal Server Error", request=req)
+
+    mock_transport = httpx.MockTransport(bad_response_handler)
+    mock_client = httpx.AsyncClient(transport=mock_transport)
+    ocr_client = OpenAIVisionOCR(
+        api_key="test-key", http_client=mock_client
+    )
+    ai_service = AIExtractionService(ocr_client=ocr_client)
+
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
+        ai_service=ai_service
+    )
+
+    try:
+        fake_img = BytesIO(b"\x89PNG test image")
+        resp = await api_client.post(
+            "/api/extractions/ocr/label",
+            files={"file": ("label.png", fake_img, "image/png")},
+        )
+        assert resp.status_code == 502
+        assert "invalid" in resp.json()["detail"].lower()
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await mock_client.aclose()
+
+
+@pytest.mark.anyio
+async def test_asr_route_whisper_success(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """POST /extractions/asr returns 200 with MockTransport Whisper response."""
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    mock_transport = httpx.MockTransport(
+        lambda req: httpx.Response(
+            200, json={"text": "Tôi vừa mua nửa cân thịt bò tươi"}
+        )
+    )
+    mock_client = httpx.AsyncClient(transport=mock_transport)
+    whisper_client = GroqWhisperClient(
+        api_key="test-key", http_client=mock_client
+    )
+    ai_service = AIExtractionService(whisper_client=whisper_client)
+
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
+        ai_service=ai_service
+    )
+
+    try:
+        fake_audio = BytesIO(b"\xff\xfb\x90 audio bytes")
+        resp = await api_client.post(
+            "/api/extractions/asr",
+            files={"file": ("voice.mp3", fake_audio, "audio/mpeg")},
+        )
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["status"] in ("SUCCEEDED", "PARTIAL")
+        assert body["fields"]["ingredient_name"] == "Thịt bò"
+        assert body["fields"]["quantity"] == 500.0
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await mock_client.aclose()
+
+
+@pytest.mark.anyio
+async def test_asr_route_whisper_timeout_maps_to_504(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """POST /extractions/asr maps Groq Whisper timeout to HTTP 504."""
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    def timeout_handler(req: httpx.Request) -> httpx.Response:
+        raise httpx.ReadTimeout("Whisper timed out", request=req)
+
+    mock_transport = httpx.MockTransport(timeout_handler)
+    mock_client = httpx.AsyncClient(transport=mock_transport)
+    whisper_client = GroqWhisperClient(
+        api_key="test-key", http_client=mock_client
+    )
+    ai_service = AIExtractionService(whisper_client=whisper_client)
+
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
+        ai_service=ai_service
+    )
+
+    try:
+        fake_audio = BytesIO(b"\xff\xfb\x90 audio bytes")
+        resp = await api_client.post(
+            "/api/extractions/asr",
+            files={"file": ("voice.mp3", fake_audio, "audio/mpeg")},
+        )
+        assert resp.status_code == 504
+        assert "timed out" in resp.json()["detail"].lower()
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await mock_client.aclose()
+
+
+@pytest.mark.anyio
+async def test_asr_route_whisper_unavailable_maps_to_503(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """POST /extractions/asr maps Groq 503 or connect failure to HTTP 503."""
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    mock_transport = httpx.MockTransport(
+        lambda req: httpx.Response(503, text="Groq Unavailable", request=req)
+    )
+    mock_client = httpx.AsyncClient(transport=mock_transport)
+    whisper_client = GroqWhisperClient(
+        api_key="test-key", http_client=mock_client
+    )
+    ai_service = AIExtractionService(whisper_client=whisper_client)
+
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
+        ai_service=ai_service
+    )
+
+    try:
+        fake_audio = BytesIO(b"\xff\xfb\x90 audio bytes")
+        resp = await api_client.post(
+            "/api/extractions/asr",
+            files={"file": ("voice.mp3", fake_audio, "audio/mpeg")},
+        )
+        assert resp.status_code == 503
+        assert "unavailable" in resp.json()["detail"].lower()
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await mock_client.aclose()
+
+
+@pytest.mark.anyio
+async def test_asr_route_whisper_bad_response_maps_to_502(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """POST /extractions/asr maps malformed Whisper JSON to HTTP 502."""
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    mock_transport = httpx.MockTransport(
+        lambda req: httpx.Response(200, text="not valid json", request=req)
+    )
+    mock_client = httpx.AsyncClient(transport=mock_transport)
+    whisper_client = GroqWhisperClient(
+        api_key="test-key", http_client=mock_client
+    )
+    ai_service = AIExtractionService(whisper_client=whisper_client)
+
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: ExtractionService(
+        ai_service=ai_service
+    )
+
+    try:
+        fake_audio = BytesIO(b"\xff\xfb\x90 audio bytes")
+        resp = await api_client.post(
+            "/api/extractions/asr",
+            files={"file": ("voice.mp3", fake_audio, "audio/mpeg")},
+        )
+        assert resp.status_code == 502
+        assert "invalid" in resp.json()["detail"].lower()
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+        await mock_client.aclose()
+
+
+# =========================================================================
+# Parser Tests on Reference Sample Strings (Receipt, Label, Speech, Pantry)
+# =========================================================================
+
+
+def test_receipt_parser_on_sample_receipt() -> None:
+    """Receipt parser extracts items, weights, and filters out non-food lines."""
+    from AI.extraction.ocr.receipt_parser import parse_receipt_text
+
+    sample_receipt = (
+        "WINMART+ 124 NGUYEN THI THAP\n"
+        "1. THIT BO UC NHAP   0.45 kg 280,000 126,000\n"
+        "2. CA DIEU HONG LAM SACH 0.70 kg 85,000 59,500\n"
+        "3. RAU MUONG NUOC 500G 1.00 go 15,000  15,000\n"
+        "4. CA CHUA DA LAT    0.35 kg  32,000  11,200\n"
+        "5. TOI CO DON VIET   0.15 kg  90,000  13,500\n"
+        "6. NUOC RUA CHEN SUNLIGHT 1.00 chai 35,000 35,000\n"
+    )
+    items = parse_receipt_text(sample_receipt)
+    assert len(items) == 5
+    names = [it["name"] for it in items]
+    assert "Thịt bò" in names
+    assert "Cá điêu hồng" in names
+    assert "Rau muống" in names
+    assert "Cà chua" in names
+    assert "Tỏi" in names
+    # Check weight extraction
+    beef = next(it for it in items if it["name"] == "Thịt bò")
+    assert beef["quantity_g"] == 450.0
+    assert beef["quantity_source"] == "extracted"
+
+
+def test_label_parser_on_sample_label() -> None:
+    """Label parser extracts product name, weight, and expiry date."""
+    from AI.extraction.ocr.label_parser import FoodLabelParser
+
+    sample_label = (
+        "SIEU THI BACH HOA XANH\n"
+        "CAI THIA SACH DA LAT VIETGAP\n"
+        "KLT: 500g\n"
+        "NSX: 05/09/2026\n"
+        "HSD: 09/09/2026\n"
+        "DON GIA: 26,000 D/KG\n"
+    )
+    parser = FoodLabelParser()
+    res = parser.parse_label_text(sample_label)
+    assert "CAI THIA SACH" in res["name"]
+    assert res["quantity_g"] == 500.0
+    assert res["quantity_source"] == "extracted"
+    assert res["expiry_date"] == "09/09/2026"
+    assert res["production_date"] == "05/09/2026"
+
+
+def test_speech_parser_on_sample_voice() -> None:
+    """Speech parser extracts culinary items with quantities from spoken Vietnamese."""
+    from AI.extraction.asr.speech_parser import parse_vietnamese_speech
+
+    transcript = "Hôm nay tôi vừa đi chợ mua nửa cân thịt bò và hai lạng tỏi với một bó hành lá."
+    items = parse_vietnamese_speech(transcript)
+    assert len(items) == 3
+    names = [it["name"] for it in items]
+    assert "Thịt bò" in names
+    assert "Tỏi" in names
+    assert "Hành lá" in names
+    beef = next(it for it in items if it["name"] == "Thịt bò")
+    assert beef["quantity_g"] == 500.0
+    assert beef["quantity_source"] == "extracted"
+    garlic = next(it for it in items if it["name"] == "Tỏi")
+    assert garlic["quantity_g"] == 200.0
+    assert garlic["quantity_source"] == "extracted"
+
+
+def test_pantry_parser_master_code_matching_and_enrichment() -> None:
+    """CatalogPantryParser matches items against bundle catalog and enriches nutrition."""
+    from AI.catalog.snapshot import load_snapshot_from_bundle
+    from AI.extraction.pantry_parser import CatalogPantryParser
+
+    snapshot = load_snapshot_from_bundle()
+    parser = CatalogPantryParser(
+        master_alias_index=snapshot.master_alias_index,
+        master_by_code=snapshot.master_by_code,
+    )
+    matched = parser.resolve_master_ingredient("Thịt bò")
+    assert matched is not None
+    assert matched["code"] == "20362"
+    assert matched["category"] == "Thịt và sản phẩm chế biến"
+    assert matched["nutrition"] is not None
+    assert matched["nutrition"]["energy_kcal"] > 0
+
+    enriched = parser.enrich_item(
+        {"name": "0.5kg thịt bò tươi", "quantity_g": 500.0, "quantity_source": "extracted"}
+    )
+    assert enriched["code"] == "20362"
+    assert enriched["quantity_g"] == 500.0
+    assert enriched["quantity_source"] == "extracted"
+    assert enriched["nutrition"] is not None
