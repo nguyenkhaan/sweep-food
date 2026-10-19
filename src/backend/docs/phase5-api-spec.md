@@ -2,18 +2,15 @@
 
 ## Objective
 
-Deliver authenticated backend APIs that let one user request three to five
-mock recipe recommendations, create a meal plan from a selected recipe, and
-generate and complete a shopping list without creating duplicate inventory.
+Authenticated APIs let one user request AI-ranked recipe recommendations,
+create a meal plan from a selected recipe, and generate and complete a shopping
+list without creating duplicate inventory.
 
-The recommendation endpoint is an integration-ready production boundary, but
-this increment deliberately returns deterministic mock rankings.  It accepts a
-free-text `request`; no model, prompt, or raw request text is persisted yet.
-The later ML provider may consume that text after a privacy and model contract
-are approved.
-
-This is the only mocked Phase 5 API.  Meal plans, favourites, and shopping
-lists use the real PostgreSQL models and transactions in this increment.
+Recommendation requests use structured pantry items and preferences. The current
+request and response fields are defined in
+[`recommendation_dto.py`](../src/module/recommendations/recommendation_dto.py);
+the request dependency selects
+[`RecommendationAIService`](../src/module/recommendations/recommendation_ai_service.py).
 
 ## Canonical API Contract
 
@@ -27,12 +24,11 @@ is not a favourite is still `204`).  Clients must not expect a JSON body or a
 ### Recommendations
 
 - `POST /recommendations`
-  - Request: `{ "request": "string" }`, after trimming, 1--1,000 characters.
-  - Response: the received request, a mock interpretation, and three to five
-    ranked recipe cards.  Each card contains a real seeded `recipe_id`, score,
-    E/A/P/U components, missing ingredients, and an explanation.
-  - It is read-only: it does not alter inventory or persist a recommendation
-    run in this mock increment.
+  - Request: structured `items`, household size, cooking-time limit, scenario,
+    dietary restrictions, allergies, dislikes, and preferred cuisines.
+  - Response: catalog-backed ranked recipes, ranking features, explanations,
+    model/catalog versions, timings, and warnings.
+  - It does not alter inventory or persist a recommendation run.
 
 ### Meal plans and favourites
 
@@ -98,8 +94,8 @@ items.
 - Planning API tests: `uv run pytest -q src/test/test_meal_plan_router.py src/test/test_favorite_router.py src/test/test_shopping_router.py`
 - Quality: `uv run ruff check . && uv run ruff format --check . && uv run mypy --strict . && uv run pylint **/*.py`
 
-Run commands from `src/backend`.  Database integration tests require an
-the application database; only unit tests are part of the default verification path.
+Run commands from `src/backend`. Database integration tests require an isolated,
+disposable PostgreSQL database, never the shared application database.
 
 ## Project Structure and Code Style
 
@@ -111,23 +107,10 @@ src/module/shopping_lists/   -> dependency, router, service, dto
 src/test/                    -> focused service and API-contract tests
 ```
 
-Each module keeps the established four-file structure.  Services are typed,
-receive the request-scoped `AsyncSession`, and place ownership predicates in
-their database queries:
-
-```python
-async def get_plan(self, user_id: UUID, plan_id: UUID) -> MealPlanDTO:
-    result = await self.db_session.execute(
-        select(MealPlanModel).where(
-            MealPlanModel.id == plan_id,
-            MealPlanModel.user_id == user_id,
-        )
-    )
-    plan = result.scalar_one_or_none()
-    if plan is None:
-        raise MealPlanNotFoundError()
-    return self._to_dto(plan)
-```
+Each module keeps typed services and request-scoped dependencies. Services
+receive the authenticated user ID explicitly and place ownership predicates in
+their database queries. Consult the current service implementation rather than
+copying an implementation sketch.
 
 ## Testing Strategy
 
@@ -143,34 +126,19 @@ async def get_plan(self, user_id: UUID, plan_id: UUID) -> MealPlanDTO:
 - Always: use authenticated ownership queries, validate all public input,
   require idempotency for shopping mutations, and run focused tests after each
   vertical slice.
-- Ask first: add a dependency, alter the database schema, change the frontend
-  API contract, or connect an external AI/model service.
-- Never: store raw recommendation text, create inventory outside the shopping
+- Ask first: add a dependency, alter the database schema, or change the frontend
+  API contract.
+- Never: persist sensitive raw recommendation input, create inventory outside the shopping
   transaction, create a second batch for a checked item, or bypass existing
   inventory expiration and ledger rules.
 
 ## Success Criteria
 
-- An authenticated recommendation request returns deterministic mock results
-  shaped for recipe selection and no inventory write.
+- An authenticated recommendation request calls SweepFood AI and maps returned
+  recipe IDs to catalog entries without writing inventory.
 - A user can manage only their own plan, favourites, and shopping lists.
 - A generated list excludes sufficient usable stock and keeps source recipes.
 - Checking an item produces exactly one traceable inventory batch and one
   `INITIAL_STOCK` entry, including under a retry.
 - Focused unit and route tests pass; existing quality checks remain clean.
 
-## Implementation Slices
-
-1. Restore the authenticated recommendation module with the new `request`
-   contract and route tests.
-2. Add meal-plan CRUD and favourite recipe endpoints with ownership tests.
-3. Add shopping-list generation and read APIs with aggregation tests.
-4. Add manual-item and check-off mutations, reusing inventory batch creation in
-   one transaction, with idempotency and integration tests.
-
-## Open Questions
-
-- This spec treats the backend PRD routes as canonical.  `docs/api-contract.md`
-  currently specifies alternative frontend routes (`/suggestions/dishes` and
-  weekly `GET`/`PUT /meal-plans`); that contract must be reconciled before
-  frontend integration.

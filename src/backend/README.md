@@ -52,7 +52,7 @@ rollback procedures are documented in
 ├── main.py                  # Application entry point
 ├── alembic/                 # Async Alembic environment and revisions
 │   └── versions/
-├── docs/                    # PRD, database contract, ADRs, and task specs
+├── docs/                    # Product planning, database notes, ADRs, and runbooks
 ├── src/
 │   ├── app.py               # FastAPI application factory and lifespan
 │   ├── db.py                # Async SQLAlchemy session lifecycle
@@ -64,9 +64,10 @@ rollback procedures are documented in
 │   ├── model/               # SQLAlchemy base, enums, and one *_model.py per table
 │   ├── module/              # Feature modules
 │   │   ├── auth/            # Registration, login, OTP, and session APIs
-│   │   ├── health/          # Health and local service-test APIs
-│   │   └── user/            # Current user profile, email, and phone APIs
-│   ├── service/             # JWT, Redis, OTP, SMS, and email services
+│   │   ├── inventory/       # Batch inventory and ledger-backed mutations
+│   │   ├── recommendations/ # SweepFood AI recommendation integration
+│   │   └── user/            # Current user profile and verified-contact APIs
+│   ├── service/             # Shared auth, delivery, AI-client, and domain services
 │   ├── template/            # Jinja HTML email templates
 │   └── test/                # Unit, API-contract, and optional integration tests
 ├── wiremock/

@@ -28,8 +28,8 @@ All OTP issuance remains production-shaped: a random OTP is stored hashed in Red
 ## Verification
 
 ```bash
-.venv/bin/pytest -q
-PYLINTHOME=/tmp/sweep-food-pylint .venv/bin/ruff check src/module/user src/test/test_user_service.py src/test/test_user_router.py
-PYLINTHOME=/tmp/sweep-food-pylint .venv/bin/mypy src/module/user src/test/test_user_service.py src/test/test_user_router.py
-PYLINTHOME=/tmp/sweep-food-pylint .venv/bin/pylint src/module/user src/test/test_user_service.py src/test/test_user_router.py
+uv run pytest -q
+uv run ruff check src/module/user src/test/test_user_service.py src/test/test_user_router.py
+uv run mypy --strict src/module/user src/test/test_user_service.py src/test/test_user_router.py
+uv run pylint src/module/user src/test/test_user_service.py src/test/test_user_router.py
 ```

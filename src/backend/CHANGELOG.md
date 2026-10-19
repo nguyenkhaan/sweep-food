@@ -33,6 +33,13 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - Restored complete PRD data coverage after clarifying that the smaller user-provided schema was a reference, not a request to remove persistent MVP flows.
 - Simplified the database contract from the user-approved `DATABASE.txt`: removed per-user timezone and redundant dimension/seed/version metadata, removed recommendation-event persistence, and aligned all documents to the remaining schema.
 
+### Removed
+
+- Obsolete scaffold/phase prerequisites, speculative environment/provider setup,
+  and mock recommendation guidance from backend operating documentation.
+- Superseded Phase 5 implementation checklist, conceptual database migration
+  mapping, and unrelated PyTorch/GPU instructions from the backend protocol.
+
 ### Security
 
 - Database credentials are supplied only through the ignored `.env` file; connection strings must never be committed or copied into logs, tests, fixtures, or documentation.

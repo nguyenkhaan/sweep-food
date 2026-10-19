@@ -39,7 +39,7 @@
 
 ## Recommendations, Plans, Cooking, and Shopping
 
-- `recommendation_items.rank` is unique within a recommendation run. The run records the provider and optional model version; MVP uses `RULE_BASED_MVP` and later supports XGBoost or LightGBM.
+- `recommendation_items.rank` is unique within a stored recommendation run. These tables do not imply that the current AI-backed recommendation request path writes a run.
 - Recommendation interaction events are intentionally not persisted in MVP. Future model training may add them in a separate migration.
 - A meal-plan item date must fall within its parent plan range. `(meal_plan_id, planned_for, meal_slot)` is unique.
 - Cooking completion creates exact `cooking_consumptions`, matching `COOKING_CONSUMPTION` ledger records, and updates the cooking session atomically.
@@ -65,34 +65,7 @@
 - Meal-plan/user/date, cooking-session/user/status/time, consumption/session/batch, shopping-list/user/status, and shopping-item/list indexes.
 - Unique favorite recipe pair, favorite-menu item pair, device token hash, notification preference user, notification deduplication key, and notification user/status/created-time indexes.
 
-## Migration Mapping and Order
-
-The legacy conceptual names below are mapping aids only. `DATABASE.txt` remains the source of truth for the migration and model names.
-
-| Original conceptual item | Approved destination | Migration decision |
-|---|---|---|
-| `user` | `users` | Renamed and expanded for phone/email verification, password hash, role, status, preferences, and timestamps. |
-| `master_ingredient` | `ingredient_categories` + `master_ingredients` | Category is normalized into its own table; nutrition and default storage remain on the ingredient. |
-| `user_ingredient` | `inventory_batches` + `inventory_ledger_entries` | Split into operational batch balance and immutable quantity history to support FEFO. |
-| `media` | Direct `media_url` fields | Removed; the MVP does not need a shared media entity. |
-| `recipe` | `recipes` | Renamed; recipe instructions, nutrition, tags, and servings are retained. |
-| `recipe_ingredient` | `recipe_ingredients` | Renamed and extended with optional/preparation information. |
-| `ai_meal_plan` | `recommendation_runs`, `recommendation_items`, `meal_plans`, `meal_plan_items` | Split between ranked recommendations and explicit user meal selections. |
-| `shoopping_plan` | `shopping_lists`, `shopping_list_items` | Split into list header and editable line items. |
-| `cooking_history` | `cooking_sessions`, `cooking_consumptions` | Split into cooking header and exact batch consumption records. |
-| `user_favorite_recipe` | `favorite_recipes` | Renamed. |
-| `user_favorite_menu`, `user_favorite_menu_item` | `favorite_menus`, `favorite_menu_items` | Renamed; MVP uses creation order rather than a stored position. |
-| No original equivalent | `auth_sessions`, `ingredient_aliases`, `shelf_life_rules`, `device_registrations`, `user_notification_preferences`, `notifications` | Added because they are required by the approved PRD flows. |
-
-Create migrations in this dependency order:
-
-1. Create the 22 PostgreSQL enums, then `users` and `auth_sessions`.
-2. Create `ingredient_categories`, `master_ingredients`, `ingredient_aliases`, and `shelf_life_rules`.
-3. Create `recipes` and `recipe_ingredients`.
-4. Create `recommendation_runs`, `recommendation_items`, `meal_plans`, and `meal_plan_items`.
-5. Create `cooking_sessions`, then `inventory_batches`, `cooking_consumptions`, and `inventory_ledger_entries`. Add the nullable `inventory_batches.source_cooking_session_id` constraint after `cooking_sessions` exists to resolve the circular leftover relationship.
-6. Create `shopping_lists`, `shopping_list_items`, favorites, devices, notification preferences, and notifications.
-7. Add indexes, unique/check constraints, immutable-ledger protection, and seed the admin/catalog data only after the tables exist.
+## Relationship Constraints
 
 Fields documented as `// table.id` in `DATABASE.txt` are relationship constraints in the implementation migration. Nullable references use `SET NULL` only where preserving historical data is required; user-owned data is not cascade-deleted in MVP.
 

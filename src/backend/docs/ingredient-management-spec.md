@@ -20,11 +20,11 @@ Unknown master ingredients and batches return `404`; invalid input returns `422`
 
 ## Tech stack and commands
 
-Python 3.11, FastAPI, Pydantic, async SQLAlchemy, PostgreSQL. From `src/backend`: `timeout 100s uv run pytest -q src/test/test_ingredient_management.py`; `uv run mypy --strict .`; `uv run ruff check .`; `uv run ruff format --check .`.
+Python 3.11, FastAPI, Pydantic, async SQLAlchemy, PostgreSQL. From `src/backend`: `uv run pytest -q src/test/test_ingredient_management.py src/test/test_ingredient_service.py`; `uv run mypy --strict .`; `uv run ruff check .`; `uv run ruff format --check .`.
 
 ## Project structure and style
 
-Place router, service, DTO, and dependency in `src/module/ingredient/`. Register one router in `src/app.py`; place focused tests in `src/test/`. Follow existing typed dependency and service methods, for example `async def update_category(self, ingredient_id: UUID, category_id: UUID) -> IngredientDetailDTO:`.
+Place router, service, DTO, and dependency in `src/module/ingredient/`. Register one router in `src/app.py`; place focused tests in `src/test/`. Follow the existing typed dependencies and DTO-based service methods.
 
 ## Testing strategy
 
