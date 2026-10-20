@@ -1,10 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
-import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/features/auth/presentation/controllers/session_controller.dart';
 import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
 
@@ -75,47 +74,8 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ],
           ),
-          Gap.gapMd,
-          SettingsGroup(
-            rows: [
-              SettingsRow(
-                icon: Icons.delete_outline_rounded,
-                label: l10n.profileDeleteAccount,
-                danger: true,
-                onTap: () => _confirmDelete(context, ref),
-              ),
-            ],
-          ),
         ],
       ),
     );
-  }
-
-  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
-    final l10n = context.l10n;
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.profileDeleteConfirmTitle),
-        content: Text(l10n.profileDeleteConfirmBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.commonCancel),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.error,
-            ),
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.commonDelete),
-          ),
-        ],
-      ),
-    );
-    if ((ok ?? false) && context.mounted) {
-      AppSnack.show(context, l10n.profileDeleteRequested);
-      await ref.read(sessionControllerProvider.notifier).logOut();
-    }
   }
 }

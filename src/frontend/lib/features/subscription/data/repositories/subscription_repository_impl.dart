@@ -24,11 +24,6 @@ class SubscriptionRepositoryImpl implements SubscriptionRepository {
       runGuarded(() async => (await _remote.current()).toEntity());
 
   @override
-  Future<Result<void>> registerPremiumInterest({
-    String? planId,
-    String? email,
-  }) =>
-      guardVoid(
-        () => _remote.registerPremiumInterest(planId: planId, email: email),
-      );
+  Future<Result<void>> registerPremiumInterest() =>
+      guardVoid(_remote.registerPremiumInterest);
 }

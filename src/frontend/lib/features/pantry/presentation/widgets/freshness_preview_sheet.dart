@@ -39,7 +39,7 @@ class FreshnessPreviewSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<FreshnessEstimate>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      useSafeArea: true,
       builder: (_) => FreshnessPreviewSheet(
         masterIngredientId: masterIngredientId,
         itemName: itemName,
@@ -106,98 +106,109 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
       freshnessQuestionsProvider(widget.masterIngredientId),
     );
 
-    return SheetBody(
-      title: 'Kiểm tra hạn nhanh (FreshCheck)',
-      subtitle: widget.itemName,
-      child: questionsAsync.when(
-        loading: () => const SizedBox(
-          height: 200,
-          child: Center(child: CircularProgressIndicator.adaptive()),
-        ),
-        error: (_, _) => const _Message(
-          icon: Icons.info_outline_rounded,
-          text: 'Nguyên liệu này chưa có bộ câu hỏi cảm quan FreshCheck. '
-              'Bạn có thể nhập hạn sử dụng thủ công.',
-        ),
-        data: (kb) {
-          if (!_initialized) {
-            for (final q in kb.questions) {
-              _answers[q.axis] =
-                  widget.initialAnswers?[q.axis] ?? q.defaultValue;
-            }
-            _initialized = true;
-          }
-          if (kb.questions.isEmpty) {
-            return const _Message(
-              icon: Icons.info_outline_rounded,
-              text: 'Không có câu hỏi cảm quan cho nguyên liệu này.',
-            );
-          }
-          final result = _result;
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                for (final q in kb.questions) ...[
-                  Text(
-                    q.questionVi,
-                    style: context.text.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Gap.gapXs,
-                  Wrap(
-                    spacing: Gap.xs,
-                    runSpacing: 4,
+    return SafeArea(
+      top: false,
+      child: FractionallySizedBox(
+        heightFactor: 0.9,
+        child: SheetBody(
+          title: 'Kiểm tra hạn nhanh (FreshCheck)',
+          subtitle: widget.itemName,
+          child: Expanded(
+            child: questionsAsync.when(
+              loading: () => const SizedBox(
+                height: 200,
+                child: Center(child: CircularProgressIndicator.adaptive()),
+              ),
+              error: (_, _) => const _Message(
+                icon: Icons.info_outline_rounded,
+                text:
+                    'Nguyên liệu này chưa có bộ câu hỏi cảm quan FreshCheck. '
+                    'Bạn có thể nhập hạn sử dụng thủ công.',
+              ),
+              data: (kb) {
+                if (!_initialized) {
+                  for (final q in kb.questions) {
+                    _answers[q.axis] =
+                        widget.initialAnswers?[q.axis] ?? q.defaultValue;
+                  }
+                  _initialized = true;
+                }
+                if (kb.questions.isEmpty) {
+                  return const _Message(
+                    icon: Icons.info_outline_rounded,
+                    text: 'Không có câu hỏi cảm quan cho nguyên liệu này.',
+                  );
+                }
+                final result = _result;
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (final opt in q.options)
-                        ChoiceChip(
-                          label: Text(opt.labelVi),
-                          selected: _answers[q.axis] == opt.value,
-                          onSelected: _loading
-                              ? null
-                              : (selected) {
-                                  if (!selected) return;
-                                  setState(() {
-                                    _answers[q.axis] = opt.value;
-                                    _result = null;
-                                  });
-                                },
+                      for (final q in kb.questions) ...[
+                        Text(
+                          q.questionVi,
+                          style: context.text.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Gap.gapXs,
+                        Wrap(
+                          spacing: Gap.xs,
+                          runSpacing: 4,
+                          children: [
+                            for (final opt in q.options)
+                              ChoiceChip(
+                                label: Text(opt.labelVi),
+                                selected: _answers[q.axis] == opt.value,
+                                onSelected: _loading
+                                    ? null
+                                    : (selected) {
+                                        if (!selected) return;
+                                        setState(() {
+                                          _answers[q.axis] = opt.value;
+                                          _result = null;
+                                        });
+                                      },
+                              ),
+                          ],
+                        ),
+                        Gap.gapMd,
+                      ],
+                      if (_error != null) ...[
+                        Text(
+                          _error!,
+                          style: context.text.bodySmall?.copyWith(
+                            color: context.colors.error,
+                          ),
+                        ),
+                        Gap.gapSm,
+                      ],
+                      if (result != null) ...[
+                        _ResultCard(result: result),
+                        Gap.gapMd,
+                      ],
+                      if (result == null ||
+                          result.expiresAt == null ||
+                          result.blocked)
+                        PrimaryButton(
+                          label: result == null
+                              ? 'Xem hạn ước tính'
+                              : 'Tính lại',
+                          loading: _loading,
+                          onPressed: _preview,
+                        )
+                      else
+                        PrimaryButton(
+                          label: 'Dùng hạn này (${result.expiresAt!.ddMMyyyy})',
+                          onPressed: () => _accept(result),
                         ),
                     ],
                   ),
-                  Gap.gapMd,
-                ],
-                if (_error != null) ...[
-                  Text(
-                    _error!,
-                    style: context.text.bodySmall?.copyWith(
-                      color: context.colors.error,
-                    ),
-                  ),
-                  Gap.gapSm,
-                ],
-                if (result != null) ...[
-                  _ResultCard(result: result),
-                  Gap.gapMd,
-                ],
-                if (result == null || result.expiresAt == null || result.blocked)
-                  PrimaryButton(
-                    label: result == null
-                        ? 'Xem hạn ước tính'
-                        : 'Tính lại',
-                    loading: _loading,
-                    onPressed: _preview,
-                  )
-                else
-                  PrimaryButton(
-                    label: 'Dùng hạn này (${result.expiresAt!.ddMMyyyy})',
-                    onPressed: () => _accept(result),
-                  ),
-              ],
+                );
+              },
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -219,8 +230,8 @@ class _ResultCard extends StatelessWidget {
     final headline = blocked
         ? 'Không nên sử dụng'
         : noEstimate
-            ? 'Chưa đủ cơ sở để ước tính hạn'
-            : 'Hạn ước tính: ${result.expiresAt!.ddMMyyyy}';
+        ? 'Chưa đủ cơ sở để ước tính hạn'
+        : 'Hạn ước tính: ${result.expiresAt!.ddMMyyyy}';
 
     return Container(
       width: double.infinity,

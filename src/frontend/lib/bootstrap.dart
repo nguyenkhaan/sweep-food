@@ -12,6 +12,7 @@ import 'package:sweepfood/core/config/app_config_provider.dart';
 import 'package:sweepfood/core/notifications/fcm_service.dart';
 import 'package:sweepfood/core/storage/prefs.dart';
 import 'package:sweepfood/core/utils/logger.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/session_controller.dart';
 
 /// Single async entry: load what must exist before the first frame, then run
 /// the app inside a guarded zone so uncaught errors are logged (not swallowed).
@@ -29,20 +30,42 @@ Future<void> bootstrap() async {
 
       FlutterError.onError = (details) {
         FlutterError.presentError(details);
-        log.e('FlutterError', error: details.exception, stackTrace: details.stack);
+        log.e(
+          'FlutterError',
+          error: details.exception,
+          stackTrace: details.stack,
+        );
       };
 
+      final container = ProviderContainer(
+        overrides: [
+          appConfigProvider.overrideWithValue(config),
+          sharedPreferencesProvider.overrideWithValue(prefs),
+        ],
+      );
+
+      // Keep Android's branded launch screen visible until auth restoration is
+      // complete. The first Flutter frame can then be the actual destination
+      // instead of a second splash/loading screen.
+      try {
+        await container.read(sessionControllerProvider.future);
+      } catch (error, stackTrace) {
+        log.w(
+          'Session prewarm failed; continuing signed out',
+          error: error,
+          stackTrace: stackTrace,
+        );
+      }
+
       runApp(
-        ProviderScope(
-          overrides: [
-            appConfigProvider.overrideWithValue(config),
-            sharedPreferencesProvider.overrideWithValue(prefs),
-          ],
+        UncontrolledProviderScope(
+          container: container,
           child: const SweepFoodApp(),
         ),
       );
     },
-    (error, stack) => log.e('Uncaught zone error', error: error, stackTrace: stack),
+    (error, stack) =>
+        log.e('Uncaught zone error', error: error, stackTrace: stack),
   );
 }
 

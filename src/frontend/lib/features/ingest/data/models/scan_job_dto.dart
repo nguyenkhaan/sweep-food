@@ -31,17 +31,17 @@ abstract class ParsedItemDraftDto with _$ParsedItemDraftDto {
       _$ParsedItemDraftDtoFromJson(json);
 
   ParsedItemDraft toDraft() => ParsedItemDraft(
-        name: name,
-        category: category,
-        quantity: quantity,
-        unit: MeasurementUnit.fromWire(unit),
-        storageTier: StorageTier.fromWire(storageTier),
-        packedDate: packedDate,
-        expiryDate: expiryDate,
-        priceVnd: priceVnd,
-        isExpiryWarn: isExpiryWarn,
-        ingredientId: masterIngredientId,
-      );
+    name: name,
+    category: category,
+    quantity: quantity,
+    unit: MeasurementUnit.fromWire(unit),
+    storageTier: StorageTier.fromWire(storageTier),
+    packedDate: packedDate,
+    expiryDate: expiryDate,
+    priceVnd: priceVnd,
+    isExpiryWarn: isExpiryWarn,
+    ingredientId: masterIngredientId,
+  );
 }
 
 /// Wire shape of a completed extraction job returned by `/extractions/*`
@@ -103,8 +103,9 @@ abstract class ScanJobDto with _$ScanJobDto {
           }
         }
         final storeName = fields['vendor_name']?.toString();
-        final purchaseDate =
-            DateTime.tryParse(fields['invoice_date']?.toString() ?? '');
+        final purchaseDate = DateTime.tryParse(
+          fields['invoice_date']?.toString() ?? '',
+        );
 
         return ScanJobDto(
           jobId: reqId,
@@ -120,14 +121,19 @@ abstract class ScanJobDto with _$ScanJobDto {
 
       // 2. Barcode Extraction
       if (fields.containsKey('product_name') || fields.containsKey('brand')) {
-        final name = fields['ingredient_name']?.toString() ??
+        final rawName =
+            fields['ingredient_name']?.toString() ??
             fields['product_name']?.toString() ??
             '';
-        final category = fields['category']?.toString() ?? '';
+        final name = _barcodeNameVi(rawName);
+        final category = _barcodeCategoryVi(
+          fields['category']?.toString() ?? '',
+        );
         final qty = (fields['quantity'] as num?)?.toDouble() ?? 1.0;
         final unitStr = fields['unit']?.toString() ?? 'g';
-        final expiresAt =
-            DateTime.tryParse(fields['expires_at']?.toString() ?? '');
+        final expiresAt = DateTime.tryParse(
+          fields['expires_at']?.toString() ?? '',
+        );
         final price = (fields['price'] as num?)?.round();
 
         final item = ParsedItemDraftDto(
@@ -143,7 +149,11 @@ abstract class ScanJobDto with _$ScanJobDto {
           jobId: reqId,
           type: (fallbackType ?? ScanType.label).wire,
           status: statusStr,
-          rawText: rawText,
+          rawText:
+              json['provider']?.toString().toUpperCase().contains('MOCK') ==
+                  true
+              ? '__MOCK_BARCODE__'
+              : rawText,
           fieldCount: 5,
           item: item,
           items: const [],
@@ -154,10 +164,12 @@ abstract class ScanJobDto with _$ScanJobDto {
       final name = fields['ingredient_name']?.toString() ?? '';
       final qty = (fields['quantity'] as num?)?.toDouble() ?? 1.0;
       final unitStr = fields['unit']?.toString() ?? 'g';
-      final packedAt =
-          DateTime.tryParse(fields['packaged_at']?.toString() ?? '');
-      final expiresAt =
-          DateTime.tryParse(fields['expires_at']?.toString() ?? '');
+      final packedAt = DateTime.tryParse(
+        fields['packaged_at']?.toString() ?? '',
+      );
+      final expiresAt = DateTime.tryParse(
+        fields['expires_at']?.toString() ?? '',
+      );
 
       // Confidence warning: e.g. expires_at confidence < 0.8
       final expiryConf = (confidence['expires_at'] as num?)?.toDouble();
@@ -173,7 +185,8 @@ abstract class ScanJobDto with _$ScanJobDto {
         masterIngredientId: fields['master_ingredient_id']?.toString(),
       );
 
-      final determinedType = fallbackType?.wire ??
+      final determinedType =
+          fallbackType?.wire ??
           (json['provider']?.toString().toUpperCase().contains('ASR') == true
               ? ScanType.voice.wire
               : ScanType.label.wire);
@@ -202,12 +215,16 @@ abstract class ScanJobDto with _$ScanJobDto {
 
     ParsedItemDraftDto? singleItem;
     if (json['item'] is Map<String, dynamic>) {
-      singleItem = ParsedItemDraftDto.fromJson(json['item'] as Map<String, dynamic>);
+      singleItem = ParsedItemDraftDto.fromJson(
+        json['item'] as Map<String, dynamic>,
+      );
     }
 
     return ScanJobDto(
       jobId: json['job_id']?.toString() ?? '',
-      type: json['type']?.toString() ?? (fallbackType?.wire ?? ScanType.label.wire),
+      type:
+          json['type']?.toString() ??
+          (fallbackType?.wire ?? ScanType.label.wire),
       status: json['status']?.toString() ?? 'completed',
       rawText: json['raw_text']?.toString(),
       rawTranscript: json['raw_transcript']?.toString(),
@@ -238,3 +255,15 @@ abstract class ScanJobDto with _$ScanJobDto {
     );
   }
 }
+
+String _barcodeNameVi(String value) => switch (value.trim().toLowerCase()) {
+  'whole milk' => 'Sữa tươi nguyên kem',
+  _ => value,
+};
+
+String _barcodeCategoryVi(String value) => switch (value.trim().toLowerCase()) {
+  'dairy' => 'Sữa và chế phẩm từ sữa',
+  'beverages' || 'beverage' => 'Đồ uống',
+  'snacks' || 'snack' => 'Đồ ăn nhẹ',
+  _ => value,
+};

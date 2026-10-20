@@ -52,10 +52,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen>
       ),
       body: TabBarView(
         controller: _tabCtrl,
-        children: const [
-          _FavoriteRecipesTab(),
-          _FavoriteMenusTab(),
-        ],
+        children: const [_FavoriteRecipesTab(), _FavoriteMenusTab()],
       ),
     );
   }
@@ -69,7 +66,8 @@ class _FavoriteRecipesTab extends ConsumerWidget {
     final async = ref.watch(favoriteRecipesControllerProvider);
 
     return RefreshIndicator(
-      onRefresh: () => ref.read(favoriteRecipesControllerProvider.notifier).refresh(),
+      onRefresh: () =>
+          ref.read(favoriteRecipesControllerProvider.notifier).refresh(),
       child: AsyncValueWidget<List<FavoriteRecipe>>(
         value: async,
         onRetry: () => ref.invalidate(favoriteRecipesControllerProvider),
@@ -80,7 +78,8 @@ class _FavoriteRecipesTab extends ConsumerWidget {
                 const SizedBox(height: 100),
                 EmptyState(
                   title: 'Chưa có món yêu thích',
-                  message: 'Khi xem chi tiết món ăn, bấm biểu tượng trái tim để lưu lại vào đây.',
+                  message:
+                      'Khi xem chi tiết món ăn, bấm biểu tượng trái tim để lưu lại vào đây.',
                   icon: Icons.favorite_border_rounded,
                   actionLabel: 'Khám phá món gợi ý',
                   onAction: () => context.go(Routes.suggestions),
@@ -162,7 +161,8 @@ class _FavoriteMenusTab extends ConsumerWidget {
 
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: () => ref.read(favoriteMenusControllerProvider.notifier).refresh(),
+        onRefresh: () =>
+            ref.read(favoriteMenusControllerProvider.notifier).refresh(),
         child: AsyncValueWidget<List<FavoriteMenu>>(
           value: async,
           onRetry: () => ref.invalidate(favoriteMenusControllerProvider),
@@ -173,7 +173,8 @@ class _FavoriteMenusTab extends ConsumerWidget {
                   const SizedBox(height: 100),
                   EmptyState(
                     title: 'Chưa có thực đơn mẫu nào',
-                    message: 'Tạo thực đơn mẫu để nhóm các món ăn yêu thích cho các dịp khác nhau.',
+                    message:
+                        'Tạo thực đơn mẫu để nhóm các món ăn yêu thích cho các dịp khác nhau.',
                     icon: Icons.menu_book_rounded,
                     actionLabel: 'Tạo thực đơn mới',
                     onAction: () async {
@@ -181,7 +182,10 @@ class _FavoriteMenusTab extends ConsumerWidget {
                       if (res != null) {
                         await ref
                             .read(favoriteMenusControllerProvider.notifier)
-                            .createMenu(name: res.name, description: res.description);
+                            .createMenu(
+                              name: res.name,
+                              description: res.description,
+                            );
                       }
                     },
                   ),
@@ -219,7 +223,8 @@ class _FavoriteMenusTab extends ConsumerWidget {
                       ),
                     ),
                     title: Text(menu.name, style: context.text.titleSmall),
-                    subtitle: menu.description != null && menu.description!.isNotEmpty
+                    subtitle:
+                        menu.description != null && menu.description!.isNotEmpty
                         ? Text(
                             menu.description!,
                             maxLines: 2,
@@ -238,19 +243,21 @@ class _FavoriteMenusTab extends ConsumerWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'favorite_menu_fab',
-        onPressed: () async {
-          final res = await CreateEditMenuDialog.show(context);
-          if (res != null) {
-            await ref
-                .read(favoriteMenusControllerProvider.notifier)
-                .createMenu(name: res.name, description: res.description);
-          }
-        },
-        icon: const Icon(Icons.add_rounded),
-        label: const Text('Tạo thực đơn'),
-      ),
+      floatingActionButton: async.asData?.value.isNotEmpty == true
+          ? FloatingActionButton.extended(
+              heroTag: 'favorite_menu_fab',
+              onPressed: () async {
+                final res = await CreateEditMenuDialog.show(context);
+                if (res != null) {
+                  await ref
+                      .read(favoriteMenusControllerProvider.notifier)
+                      .createMenu(name: res.name, description: res.description);
+                }
+              },
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Tạo thực đơn'),
+            )
+          : null,
     );
   }
 }

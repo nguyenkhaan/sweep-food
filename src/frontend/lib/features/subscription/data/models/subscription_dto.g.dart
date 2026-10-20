@@ -8,7 +8,7 @@ part of 'subscription_dto.dart';
 
 _SubscriptionDto _$SubscriptionDtoFromJson(Map<String, dynamic> json) =>
     _SubscriptionDto(
-      tier: json['tier'] as String,
+      tier: json['plan'] as String,
       perks:
           (json['perks'] as List<dynamic>?)?.map((e) => e as String).toList() ??
           const <String>[],
@@ -18,7 +18,7 @@ _SubscriptionDto _$SubscriptionDtoFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$SubscriptionDtoToJson(_SubscriptionDto instance) =>
     <String, dynamic>{
-      'tier': instance.tier,
+      'plan': instance.tier,
       'perks': instance.perks,
       'premium_interest_registered': instance.premiumInterestRegistered,
     };

@@ -87,14 +87,6 @@ class SubscriptionScreen extends ConsumerWidget {
                   ? null
                   : () => context.push(Routes.paywall),
             ),
-            Gap.gapMd,
-            Text(
-              l10n.subDisclaimer,
-              style: context.text.bodySmall?.copyWith(
-                color: context.sweep.textTertiary,
-                height: 1.5,
-              ),
-            ),
           ],
         ),
       ),

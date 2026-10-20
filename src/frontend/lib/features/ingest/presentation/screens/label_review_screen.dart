@@ -32,6 +32,7 @@ class LabelReviewScreen extends ConsumerWidget {
     final controller = ref.read(labelReviewControllerProvider(job).notifier);
     final sweep = context.sweep;
     final fieldCount = job.fieldCount ?? 0;
+    final isMockBarcode = job.rawText == '__MOCK_BARCODE__';
 
     return Scaffold(
       appBar: AppBar(
@@ -44,8 +45,15 @@ class LabelReviewScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 3),
         children: [
-          _Thumbnail(onRetake: () => context.pop()),
+          _Thumbnail(isBarcode: isMockBarcode, onRetake: () => context.pop()),
           Gap.gapMd,
+          if (isMockBarcode) ...[
+            const _Banner(
+              text:
+                  'Dữ liệu mã vạch hiện là dữ liệu thử nghiệm. Hãy kiểm tra và chỉnh sửa trước khi lưu.',
+            ),
+            Gap.gapMd,
+          ],
           if (fieldCount > 0) ...[
             _Banner(text: l10n.reviewFieldsRead(fieldCount)),
             Gap.gapMd,
@@ -325,8 +333,9 @@ class LabelReviewScreen extends ConsumerWidget {
 }
 
 class _Thumbnail extends StatelessWidget {
-  const _Thumbnail({required this.onRetake});
+  const _Thumbnail({required this.isBarcode, required this.onRetake});
 
+  final bool isBarcode;
   final VoidCallback onRetake;
 
   @override
@@ -343,8 +352,8 @@ class _Thumbnail extends StatelessWidget {
             border: Border.all(color: sweep.hairline),
             borderRadius: Radii.brMd,
           ),
-          child: const Icon(
-            Icons.receipt_long_outlined,
+          child: Icon(
+            isBarcode ? Icons.qr_code_2_rounded : Icons.receipt_long_outlined,
             size: 24,
             color: BrandPalette.green700,
           ),
@@ -354,7 +363,9 @@ class _Thumbnail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              context.l10n.reviewLabelPhoto,
+              isBarcode
+                  ? context.l10n.reviewBarcodePhoto
+                  : context.l10n.reviewLabelPhoto,
               style: context.text.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),

@@ -2023,6 +2023,12 @@ abstract class AppL10n {
   /// **'Ảnh tem nhãn'**
   String get reviewLabelPhoto;
 
+  /// No description provided for @reviewBarcodePhoto.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ảnh mã vạch'**
+  String get reviewBarcodePhoto;
+
   /// No description provided for @reviewRetake.
   ///
   /// In vi, this message translates to:

@@ -407,6 +407,7 @@
   "reviewPriceHint": "e.g. 18000",
   "reviewPickCategory": "Pick a category",
   "reviewLabelPhoto": "Label photo",
+  "reviewBarcodePhoto": "Barcode photo",
   "reviewRetake": "Retake",
   "reviewReceiptTitle": "Receipt — {count} items",
   "@reviewReceiptTitle": { "placeholders": { "count": { "type": "int" } } },

@@ -14,7 +14,6 @@ import 'package:sweepfood/features/suggestions/domain/entities/suggestion_reques
 import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/score_breakdown_sheet.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
-import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 /// S-01 — AI-ranked dishes for the current pantry + quick filters.
 class SuggestionListScreen extends ConsumerWidget {
@@ -26,27 +25,7 @@ class SuggestionListScreen extends ConsumerWidget {
     final aiHealth = ref.watch(aiServiceHealthProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.suggestionsTitle),
-        actions: [
-          IconButton(
-            tooltip: 'Bộ lọc',
-            style: IconButton.styleFrom(
-              backgroundColor: context.sweep.subtleFill,
-              shape: RoundedRectangleBorder(
-                borderRadius: Radii.brMd,
-                side: BorderSide(color: context.sweep.hairline),
-              ),
-            ),
-            icon: Icon(
-              Icons.filter_list_rounded,
-              color: context.colors.onSurfaceVariant,
-            ),
-            onPressed: () {},
-          ),
-          const SizedBox(width: Gap.md),
-        ],
-      ),
+      appBar: AppBar(title: Text(context.l10n.suggestionsTitle)),
       body: Column(
         children: [
           _AiStatusBanner(health: aiHealth),
@@ -91,11 +70,6 @@ class _FilterBar extends ConsumerWidget {
             ),
             const SizedBox(width: Gap.xs),
           ],
-          _Chip(
-            label: DietaryPreference.moreVeg.label(l10n),
-            selected: filter.dietaryPreference == DietaryPreference.moreVeg,
-            onTap: () => notifier.togglePreference(DietaryPreference.moreVeg),
-          ),
         ],
       ),
     );
@@ -273,7 +247,6 @@ class _AiStatusBanner extends ConsumerWidget {
         : failed
         ? 'SweepFood AI chưa kết nối'
         : 'Đang kiểm tra SweepFood AI…';
-    final latency = healthValue?.latencyMs;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.sm),
@@ -301,11 +274,6 @@ class _AiStatusBanner extends ConsumerWidget {
                 style: context.text.labelMedium?.copyWith(color: color),
               ),
             ),
-            if (latency != null)
-              Text(
-                '${latency.toStringAsFixed(0)} ms',
-                style: context.text.labelSmall?.copyWith(color: color),
-              ),
             if (failed)
               IconButton(
                 visualDensity: VisualDensity.compact,
@@ -327,9 +295,6 @@ class _ModelSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = suggestion.rankerModel.isEmpty
-        ? 'SweepFood AI'
-        : suggestion.rankerModel;
     return Container(
       padding: const EdgeInsets.all(Gap.sm),
       decoration: BoxDecoration(
@@ -348,13 +313,13 @@ class _ModelSummary extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$model · ${suggestion.modelVersion}',
+                  'Gợi ý được cá nhân hóa bởi SweepFood AI',
                   style: context.text.labelMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
-                  'Xếp hạng theo độ phủ nguyên liệu, hạn dùng, dinh dưỡng và phần cần mua · ${suggestion.totalLatencyMs.toStringAsFixed(0)} ms',
+                  'Ưu tiên nguyên liệu sẵn có, hạn dùng, dinh dưỡng và phần cần mua.',
                   style: context.text.labelSmall?.copyWith(
                     color: context.sweep.textSecondary,
                     letterSpacing: 0,

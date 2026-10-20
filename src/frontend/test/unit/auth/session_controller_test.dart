@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sweepfood/core/error/failure.dart';
+import 'package:sweepfood/core/storage/prefs.dart';
 import 'package:sweepfood/core/storage/secure_storage.dart';
 import 'package:sweepfood/core/storage/storage_providers.dart';
 import 'package:sweepfood/core/utils/result.dart';
@@ -15,19 +17,27 @@ class _MockAuthRepository extends Mock implements AuthRepository {}
 
 class _MockSecureStore extends Mock implements SecureStore {}
 
-const _user = User(id: 'u1', phone: '+84901234567', name: 'A', email: 'a@b.com');
-const _session =
-    Session(user: _user, accessToken: 'at', refreshToken: 'rt');
+class _MockPreferences extends Mock implements SharedPreferences {}
+
+const _user = User(
+  id: 'u1',
+  phone: '+84901234567',
+  name: 'A',
+  email: 'a@b.com',
+);
+const _session = Session(user: _user, accessToken: 'at', refreshToken: 'rt');
 
 void main() {
   late _MockAuthRepository repo;
   late _MockSecureStore store;
+  late _MockPreferences preferences;
 
   ProviderContainer makeContainer() {
     final c = ProviderContainer(
       overrides: [
         authRepositoryProvider.overrideWithValue(repo),
         secureStoreProvider.overrideWithValue(store),
+        sharedPreferencesProvider.overrideWithValue(preferences),
       ],
     );
     addTearDown(c.dispose);
@@ -37,9 +47,15 @@ void main() {
   setUp(() {
     repo = _MockAuthRepository();
     store = _MockSecureStore();
+    preferences = _MockPreferences();
     when(() => store.readAccessToken()).thenAnswer((_) async => 'at');
     when(() => store.readRefreshToken()).thenAnswer((_) async => 'rt');
     when(store.clear).thenAnswer((_) async {});
+    when(() => preferences.getString(any())).thenReturn(null);
+    when(
+      () => preferences.setString(any(), any()),
+    ).thenAnswer((_) async => true);
+    when(() => preferences.remove(any())).thenAnswer((_) async => true);
   });
 
   test('cold start with no stored token resolves to signed-out', () async {
@@ -52,23 +68,25 @@ void main() {
     verifyNever(repo.me);
   });
 
-  test('cold start with a valid token revives the session from the profile',
-      () async {
-    when(repo.hasStoredSession).thenAnswer((_) async => true);
-    when(repo.me).thenAnswer((_) async => const Right<Failure, User>(_user));
-    final c = makeContainer();
+  test(
+    'cold start with a valid token revives the session from the profile',
+    () async {
+      when(repo.hasStoredSession).thenAnswer((_) async => true);
+      when(repo.me).thenAnswer((_) async => const Right<Failure, User>(_user));
+      final c = makeContainer();
 
-    final result = await c.read(sessionControllerProvider.future);
+      final result = await c.read(sessionControllerProvider.future);
 
-    expect(result?.user.id, 'u1');
-    expect(result?.accessToken, 'at');
-  });
+      expect(result?.user.id, 'u1');
+      expect(result?.accessToken, 'at');
+    },
+  );
 
   test('a failing profile call resolves to signed-out (no throw)', () async {
     when(repo.hasStoredSession).thenAnswer((_) async => true);
-    when(repo.me).thenAnswer(
-      (_) async => const Left<Failure, User>(ServerFailure()),
-    );
+    when(
+      repo.me,
+    ).thenAnswer((_) async => const Left<Failure, User>(ServerFailure()));
     final c = makeContainer();
 
     expect(await c.read(sessionControllerProvider.future), isNull);
@@ -76,8 +94,12 @@ void main() {
 
   test('logIn moves the notifier to AsyncData(session)', () async {
     when(repo.hasStoredSession).thenAnswer((_) async => false);
-    when(() => repo.login(phone: any(named: 'phone'), password: any(named: 'password')))
-        .thenAnswer((_) async => const Right<Failure, Session>(_session));
+    when(
+      () => repo.login(
+        phone: any(named: 'phone'),
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((_) async => const Right<Failure, Session>(_session));
     final c = makeContainer();
     await c.read(sessionControllerProvider.future);
 
@@ -90,8 +112,14 @@ void main() {
 
   test('logIn rethrows the Failure on bad credentials', () async {
     when(repo.hasStoredSession).thenAnswer((_) async => false);
-    when(() => repo.login(phone: any(named: 'phone'), password: any(named: 'password')))
-        .thenAnswer((_) async => const Left<Failure, Session>(UnauthorizedFailure()));
+    when(
+      () => repo.login(
+        phone: any(named: 'phone'),
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer(
+      (_) async => const Left<Failure, Session>(UnauthorizedFailure()),
+    );
     final c = makeContainer();
     await c.read(sessionControllerProvider.future);
 

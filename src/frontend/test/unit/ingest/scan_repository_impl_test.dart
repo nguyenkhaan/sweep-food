@@ -162,7 +162,9 @@ void main() {
 
     final job = rightOrFail(await repo.lookupBarcode('8934567890123'));
     expect(job.items, hasLength(1));
-    expect(job.items.single.name, 'Whole Milk');
+    expect(job.items.single.name, 'Sữa tươi nguyên kem');
+    expect(job.items.single.category, 'Sữa và chế phẩm từ sữa');
+    expect(job.rawText, '__MOCK_BARCODE__');
     expect(job.items.single.quantity, 1.0);
     expect(job.items.single.unit, MeasurementUnit.liter);
     expect(job.items.single.priceVnd, 35000);
@@ -233,4 +235,59 @@ void main() {
       ).called(1);
     },
   );
+
+  test('scanVoice recovers every clause omitted by the ASR envelope', () async {
+    when(
+      () => api.postMultipart(
+        ApiPaths.extractionAsr,
+        fields: any(named: 'fields'),
+        files: any(named: 'files'),
+        receiveTimeout: any(named: 'receiveTimeout'),
+      ),
+    ).thenAnswer(
+      (_) async => {
+        'request_id': '00000000-0000-0000-0000-000000000005',
+        'status': 'PARTIAL',
+        'provider': 'SWEEP_FOOD_AI',
+        'raw_text': '2 lạng thịt bò, 1 bó cải bó xôi, 3 quả trứng',
+        'fields': {
+          'ingredient_name': 'Thịt bò',
+          'quantity': 200.0,
+          'unit': 'GRAM',
+        },
+        'confidence': {'ingredient_name': 0.9},
+        'warnings': ['ADDITIONAL_ITEMS_OMITTED'],
+      },
+    );
+
+    final names = ['Thịt bò', 'Cải bó xôi', 'Trứng gà'];
+    final quantities = [200.0, 300.0, 150.0];
+    var call = 0;
+    when(
+      () => api.post(ApiPaths.extractionText, body: any(named: 'body')),
+    ).thenAnswer((_) async {
+      final index = call++;
+      return {
+        'request_id': 'text-$index',
+        'status': 'SUCCEEDED',
+        'provider': 'SWEEP_FOOD_AI',
+        'raw_text': names[index],
+        'fields': {
+          'ingredient_name': names[index],
+          'quantity': quantities[index],
+          'unit': 'GRAM',
+        },
+        'confidence': {'ingredient_name': 0.9},
+        'warnings': <String>[],
+      };
+    });
+
+    final job = rightOrFail(await repo.scanVoice(audioPath: '/tmp/voice.wav'));
+
+    expect(job.items.map((item) => item.name), names);
+    expect(job.items.map((item) => item.quantity), quantities);
+    verify(
+      () => api.post(ApiPaths.extractionText, body: any(named: 'body')),
+    ).called(3);
+  });
 }

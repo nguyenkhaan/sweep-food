@@ -1091,6 +1091,9 @@ class AppL10nVi extends AppL10n {
   String get reviewLabelPhoto => 'Ảnh tem nhãn';
 
   @override
+  String get reviewBarcodePhoto => 'Ảnh mã vạch';
+
+  @override
   String get reviewRetake => 'Chụp lại';
 
   @override

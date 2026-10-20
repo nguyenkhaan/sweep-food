@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/primary_button.dart';
-import 'package:sweepfood/features/subscription/domain/entities/plan_option.dart';
 import 'package:sweepfood/features/subscription/presentation/controllers/paywall_controller.dart';
-import 'package:sweepfood/features/subscription/presentation/widgets/plan_option_card.dart';
 
 /// G-05 Paywall — MVP is interest capture only ("Nhận thông báo khi ra mắt").
 class PaywallScreen extends ConsumerWidget {
@@ -14,14 +12,6 @@ class PaywallScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final benefits = [
-      l10n.paywallBenefit1,
-      l10n.paywallBenefit2,
-      l10n.paywallBenefit3,
-      l10n.paywallBenefit4,
-      l10n.paywallBenefit5,
-      l10n.paywallBenefit6,
-    ];
     final state = ref.watch(paywallControllerProvider);
     final ctrl = ref.read(paywallControllerProvider.notifier);
 
@@ -50,31 +40,6 @@ class PaywallScreen extends ConsumerWidget {
             ),
           ),
           Gap.gapLg,
-          for (final b in benefits)
-            Padding(
-              padding: const EdgeInsets.only(bottom: Gap.xs),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.check_circle_rounded,
-                    size: 18,
-                    color: context.colors.primary,
-                  ),
-                  Gap.gapXs,
-                  Expanded(child: Text(b, style: context.text.bodyMedium)),
-                ],
-              ),
-            ),
-          Gap.gapMd,
-          for (final p in PlanOption.all)
-            Padding(
-              padding: const EdgeInsets.only(bottom: Gap.xs),
-              child: PlanOptionCard(
-                plan: p,
-                selected: state.selectedPlanId == p.id && !p.comingSoon,
-                onTap: () => ctrl.selectPlan(p.id),
-              ),
-            ),
           if (state.error != null) ...[
             Gap.gapSm,
             Text(

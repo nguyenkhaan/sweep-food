@@ -17,6 +17,7 @@ import 'package:sweepfood/features/pantry/presentation/controllers/pantry_item_c
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:sweepfood/features/pantry/presentation/widgets/adjust_quantity_sheet.dart';
 import 'package:sweepfood/features/pantry/presentation/widgets/fresh_check_sheet.dart';
+import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 
 /// K-02 — Chi tiết nguyên liệu.
 class PantryItemDetailScreen extends ConsumerStatefulWidget {
@@ -186,7 +187,12 @@ class _PantryItemDetailScreenState
           SecondaryButton(
             label: l10n.pantryFindDishes,
             icon: Icons.restaurant_menu_rounded,
-            onPressed: () => context.go(Routes.suggestions),
+            onPressed: () {
+              ref
+                  .read(suggestionFilterControllerProvider.notifier)
+                  .setPrompt(item.name);
+              context.go(Routes.suggestions);
+            },
           ),
           Gap.gapSm,
           SecondaryButton(
