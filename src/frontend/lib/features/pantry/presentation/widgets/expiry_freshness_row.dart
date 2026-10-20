@@ -51,11 +51,16 @@ class ExpiryFreshnessRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final id = masterIngredientId;
     final hasAnyExpiry = expiryDate != null || freshness != null;
+    // Keep watching the same provider after an unsupported ingredient returns
+    // 422. Conditionally dropping the watch on error disposed the autoDispose
+    // provider, then the next rebuild recreated it and retried forever.
+    final questions = id == null
+        ? null
+        : ref.watch(freshnessQuestionsProvider(id));
     final freshCheckSupported =
         allowFreshness &&
         id != null &&
-        (hasAnyExpiry ||
-            !ref.watch(freshnessQuestionsProvider(id)).hasError);
+        (hasAnyExpiry || questions?.hasValue == true);
 
     final chips = <Widget>[];
     if (expiryDate != null) {
@@ -98,10 +103,7 @@ class ExpiryFreshnessRow extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'HẠN SỬ DỤNG',
-          style: context.text.labelSmall,
-        ),
+        Text('HẠN SỬ DỤNG', style: context.text.labelSmall),
         const SizedBox(height: Gap.xxs),
         Wrap(spacing: Gap.xs, runSpacing: Gap.xxs, children: chips),
         if (!hasAnyExpiry) ...[

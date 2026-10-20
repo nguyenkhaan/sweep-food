@@ -4,8 +4,8 @@ import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
-import 'package:sweepfood/core/widgets/section_header.dart';
 import 'package:sweepfood/core/widgets/recipe_image.dart';
+import 'package:sweepfood/core/widgets/section_header.dart';
 import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
 import 'package:sweepfood/features/cooking/presentation/widgets/post_cook_confirm_sheet.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
@@ -77,23 +77,29 @@ class DishDetailScreen extends ConsumerWidget {
       body: AsyncValueWidget<Dish>(
         value: async,
         onRetry: () => ref.invalidate(dishByIdProvider(dishId)),
-        data: (_) => _Body(dishId: dishId, score: suggestion?.score),
+        data: (_) => _Body(
+          dishId: dishId,
+          score: suggestion?.score,
+          suggestion: suggestion,
+        ),
       ),
     );
   }
 }
 
 class _Body extends ConsumerWidget {
-  const _Body({required this.dishId, this.score});
+  const _Body({required this.dishId, this.score, this.suggestion});
 
   final String dishId;
   final int? score;
+  final DishSuggestion? suggestion;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final dish = ref.watch(scaledDishProvider(dishId));
-    if (dish == null) return const SizedBox.shrink();
+    final fetchedDish = ref.watch(scaledDishProvider(dishId));
+    if (fetchedDish == null) return const SizedBox.shrink();
+    final dish = _withRecommendationContext(fetchedDish, suggestion);
 
     final servings = ref.watch(dishServingsProvider(dishId)) ?? dish.servings;
 
@@ -173,6 +179,67 @@ class _Body extends ConsumerWidget {
       ],
     );
   }
+}
+
+Dish _withRecommendationContext(Dish dish, DishSuggestion? suggestion) {
+  if (suggestion == null) return dish;
+
+  String key(String value) => value
+      .toLowerCase()
+      .replaceAll(RegExp(r'[^a-z0-9\u00c0-\u024f\u1e00-\u1eff ]'), '')
+      .replaceAll(RegExp(r'\s+'), ' ')
+      .trim();
+
+  final matched = {
+    for (final item in suggestion.matchedIngredients) key(item.name),
+  };
+  final missing = {
+    for (final item in suggestion.missingIngredients) key(item.name),
+  };
+  final nearExpiry = {
+    for (final name in suggestion.nearExpiryIngredients) key(name),
+  };
+  final recommendationSaysEverythingIsAvailable =
+      suggestion.toBuyCount == 0 && suggestion.availabilityRatio >= 0.995;
+
+  bool containsName(Set<String> values, String name) {
+    final normalized = key(name);
+    return values.any(
+      (value) =>
+          value == normalized ||
+          value.contains(normalized) ||
+          normalized.contains(value),
+    );
+  }
+
+  return dish.copyWith(
+    prepTimeMin: dish.totalTimeMin == 0
+        ? suggestion.dish.prepTimeMin
+        : dish.prepTimeMin,
+    cookTimeMin: dish.totalTimeMin == 0
+        ? suggestion.dish.cookTimeMin
+        : dish.cookTimeMin,
+    ingredients: [
+      for (final ingredient in dish.ingredients)
+        if (ingredient.isSeasoning)
+          ingredient
+        else if (containsName(matched, ingredient.name))
+          ingredient.copyWith(
+            availableInPantry: true,
+            missingQty: 0,
+            nearExpiry: containsName(nearExpiry, ingredient.name),
+          )
+        else if (containsName(missing, ingredient.name))
+          ingredient.copyWith(
+            availableInPantry: false,
+            missingQty: ingredient.quantity,
+          )
+        else if (recommendationSaysEverythingIsAvailable)
+          ingredient.copyWith(availableInPantry: true, missingQty: 0)
+        else
+          ingredient,
+    ],
+  );
 }
 
 class _Hero extends StatelessWidget {
@@ -261,6 +328,7 @@ class _ServingsRow extends StatelessWidget {
           Text(context.l10n.dishServingsLabel, style: context.text.titleSmall),
           const Spacer(),
           IconButton.filledTonal(
+            tooltip: 'Giảm khẩu phần',
             onPressed: servings > 1 ? () => onChanged(servings - 1) : null,
             icon: const Icon(Icons.remove_rounded, size: 18),
             visualDensity: VisualDensity.compact,
@@ -272,6 +340,7 @@ class _ServingsRow extends StatelessWidget {
           ),
           const SizedBox(width: Gap.sm),
           IconButton.filledTonal(
+            tooltip: 'Tăng khẩu phần',
             onPressed: servings < 12 ? () => onChanged(servings + 1) : null,
             icon: const Icon(Icons.add_rounded, size: 18),
             visualDensity: VisualDensity.compact,
@@ -299,14 +368,19 @@ class _CookBarState extends ConsumerState<_CookBar> {
     setState(() => _busy = true);
     try {
       final controller = ref.read(cookingControllerProvider.notifier);
-      final servings = (ref.read(dishServingsProvider(widget.dish.id)) ?? widget.dish.servings).toDouble();
+      final servings =
+          (ref.read(dishServingsProvider(widget.dish.id)) ??
+                  widget.dish.servings)
+              .toDouble();
       final preview = await controller.previewForDish(
         dishId: widget.dish.id,
         servings: servings,
       );
       if (preview.hasMissingIngredients) {
         if (mounted) {
-          final names = preview.missingIngredients.map((m) => m.ingredientName).join(', ');
+          final names = preview.missingIngredients
+              .map((m) => m.ingredientName)
+              .join(', ');
           AppSnack.show(context, 'Thiếu nguyên liệu: $names');
         }
         return;

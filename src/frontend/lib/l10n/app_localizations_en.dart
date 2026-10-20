@@ -1100,6 +1100,9 @@ class AppL10nEn extends AppL10n {
   String get reviewLabelPhoto => 'Label photo';
 
   @override
+  String get reviewBarcodePhoto => 'Barcode photo';
+
+  @override
   String get reviewRetake => 'Retake';
 
   @override

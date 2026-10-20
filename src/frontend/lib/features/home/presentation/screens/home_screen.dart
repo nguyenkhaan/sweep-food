@@ -52,6 +52,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
+            tooltip: 'Thông báo',
             icon: Stack(
               clipBehavior: Clip.none,
               children: [

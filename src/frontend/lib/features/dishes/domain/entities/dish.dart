@@ -51,7 +51,7 @@ abstract class Dish with _$Dish {
 
   /// "15 phút chuẩn bị · Dễ · món trộn" — the detail subtitle.
   String metaLine(AppL10n l10n) {
-    final parts = <String>[l10n.dishMetaPrep(prepTimeMin)];
+    final parts = <String>[l10n.minutesLabel(totalTimeMin)];
     if (difficulty.isNotEmpty) parts.add(difficulty);
     if (cuisine.isNotEmpty) parts.add(cuisine);
     return parts.join(' · ');

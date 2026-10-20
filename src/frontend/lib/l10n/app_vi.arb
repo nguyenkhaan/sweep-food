@@ -407,6 +407,7 @@
   "reviewPriceHint": "Ví dụ: 18000",
   "reviewPickCategory": "Chọn danh mục",
   "reviewLabelPhoto": "Ảnh tem nhãn",
+  "reviewBarcodePhoto": "Ảnh mã vạch",
   "reviewRetake": "Chụp lại",
   "reviewReceiptTitle": "Hóa đơn — {count} mục",
   "@reviewReceiptTitle": { "placeholders": { "count": { "type": "int" } } },

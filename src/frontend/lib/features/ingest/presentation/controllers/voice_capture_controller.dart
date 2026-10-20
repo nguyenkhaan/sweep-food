@@ -17,6 +17,34 @@ class VoiceReviewState {
   final String transcript;
   final List<ParsedItemDraft> items;
 
+  int get spokenClauseCount => transcript
+      .split(
+        RegExp(
+          r'\s*(?:,|;|\bvà\b|\bvới\b|\brồi\b|\bkèm\b|\bthêm\b)\s*',
+          caseSensitive: false,
+        ),
+      )
+      .where((part) => part.trim().isNotEmpty)
+      .length;
+
+  int get suspectedMissingCount {
+    final missing = spokenClauseCount - items.length;
+    return missing > 0 ? missing : 0;
+  }
+
+  bool get hasSuspiciousQuantity {
+    final mentionsLargeUnit = RegExp(
+      r'\b(?:kg|kí|ký|kilo|kilô|cân)\b',
+      caseSensitive: false,
+    ).hasMatch(transcript);
+    return !mentionsLargeUnit &&
+        items.any(
+          (item) => item.unit == MeasurementUnit.gram && item.quantity >= 1000,
+        );
+  }
+
+  bool get needsReview => suspectedMissingCount > 0 || hasSuspiciousQuantity;
+
   VoiceReviewState copyWith({
     String? transcript,
     List<ParsedItemDraft>? items,
@@ -31,10 +59,8 @@ class VoiceReviewState {
 @riverpod
 class VoiceCaptureController extends _$VoiceCaptureController {
   @override
-  VoiceReviewState build(ScanJob job) => VoiceReviewState(
-        transcript: job.rawText ?? '',
-        items: job.items,
-      );
+  VoiceReviewState build(ScanJob job) =>
+      VoiceReviewState(transcript: job.rawText ?? '', items: job.items);
 
   void updateItem(int index, ParsedItemDraft item) {
     final list = List<ParsedItemDraft>.from(state.items);

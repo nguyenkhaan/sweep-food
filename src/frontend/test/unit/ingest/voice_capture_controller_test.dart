@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/voice_capture_controller.dart';
 import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
@@ -38,12 +41,33 @@ void main() {
       expect(state.items[0].name, 'Thịt bò');
       expect(state.items[1].name, 'Cải bó xôi');
       expect(state.items[2].name, 'Trứng gà');
+      expect(state.needsReview, isFalse);
+    });
+
+    test('flags omitted clauses and suspicious gram quantities', () {
+      const faultyJob = ScanJob(
+        id: 'faulty-asr',
+        type: ScanType.voice,
+        rawText: '2 loại thịt bò, 1 bụng cải bó xuôi, 3 quả trứng',
+        items: [
+          ParsedItemDraft(name: 'Thịt bò', quantity: 2000),
+          ParsedItemDraft(name: 'Trứng gà', quantity: 1),
+        ],
+      );
+      final container = createContainer();
+      final state = container.read(voiceCaptureControllerProvider(faultyJob));
+
+      expect(state.spokenClauseCount, 3);
+      expect(state.suspectedMissingCount, 1);
+      expect(state.hasSuspiciousQuantity, isTrue);
+      expect(state.needsReview, isTrue);
     });
 
     test('addItem, updateItem, removeItem update the item list', () {
       final container = createContainer();
-      final notifier =
-          container.read(voiceCaptureControllerProvider(job).notifier);
+      final notifier = container.read(
+        voiceCaptureControllerProvider(job).notifier,
+      );
 
       notifier.addItem(kBlankVoiceDraft);
       var state = container.read(voiceCaptureControllerProvider(job));

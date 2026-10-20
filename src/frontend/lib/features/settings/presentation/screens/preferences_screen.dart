@@ -42,11 +42,6 @@ class PreferencesScreen extends ConsumerWidget {
                 trailing: prefs.defaultUnit.label,
                 onTap: () => _pickUnit(context, ref),
               ),
-              SettingsRow(
-                icon: Icons.payments_outlined,
-                label: l10n.prefsCurrency,
-                trailing: l10n.prefsCurrencyValue,
-              ),
             ],
           ),
           Gap.gapMd,

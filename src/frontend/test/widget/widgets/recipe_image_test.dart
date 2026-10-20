@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,9 +27,7 @@ void main() {
   Widget buildTestApp(Widget child) {
     return MaterialApp(
       theme: AppTheme.light,
-      home: Scaffold(
-        body: Center(child: child),
-      ),
+      home: Scaffold(body: Center(child: child)),
     );
   }
 
@@ -38,25 +35,19 @@ void main() {
     testWidgets('null url renders restaurant placeholder icon', (tester) async {
       await tester.pumpWidget(
         buildTestApp(
-          const RecipeImage(
-            imageUrl: null,
-            width: 100,
-            height: 100,
-          ),
+          const RecipeImage(imageUrl: null, width: 100, height: 100),
         ),
       );
 
       expect(find.byIcon(Icons.restaurant_rounded), findsOneWidget);
     });
 
-    testWidgets('empty url renders restaurant placeholder icon', (tester) async {
+    testWidgets('empty url renders restaurant placeholder icon', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         buildTestApp(
-          const RecipeImage(
-            imageUrl: '   ',
-            width: 100,
-            height: 100,
-          ),
+          const RecipeImage(imageUrl: '   ', width: 100, height: 100),
         ),
       );
 

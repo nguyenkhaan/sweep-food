@@ -247,7 +247,6 @@ class _AiStatusBanner extends ConsumerWidget {
         : failed
         ? 'SweepFood AI chưa kết nối'
         : 'Đang kiểm tra SweepFood AI…';
-    final latency = healthValue?.latencyMs;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.sm),
@@ -275,11 +274,6 @@ class _AiStatusBanner extends ConsumerWidget {
                 style: context.text.labelMedium?.copyWith(color: color),
               ),
             ),
-            if (latency != null)
-              Text(
-                '${latency.toStringAsFixed(0)} ms',
-                style: context.text.labelSmall?.copyWith(color: color),
-              ),
             if (failed)
               IconButton(
                 visualDensity: VisualDensity.compact,
@@ -301,9 +295,6 @@ class _ModelSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = suggestion.rankerModel.isEmpty
-        ? 'SweepFood AI'
-        : suggestion.rankerModel;
     return Container(
       padding: const EdgeInsets.all(Gap.sm),
       decoration: BoxDecoration(
@@ -322,13 +313,13 @@ class _ModelSummary extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '$model · ${suggestion.modelVersion}',
+                  'Gợi ý được cá nhân hóa bởi SweepFood AI',
                   style: context.text.labelMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
-                  'Xếp hạng theo độ phủ nguyên liệu, hạn dùng, dinh dưỡng và phần cần mua · ${suggestion.totalLatencyMs.toStringAsFixed(0)} ms',
+                  'Ưu tiên nguyên liệu sẵn có, hạn dùng, dinh dưỡng và phần cần mua.',
                   style: context.text.labelSmall?.copyWith(
                     color: context.sweep.textSecondary,
                     letterSpacing: 0,
