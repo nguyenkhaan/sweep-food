@@ -8,7 +8,6 @@ import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/features/settings/presentation/controllers/preferences_controller.dart';
 import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
-import 'package:sweepfood/shared/domain/dietary_preference.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 /// P-03 Tùy chọn — dietary preference, default unit, language, theme.
@@ -37,12 +36,6 @@ class PreferencesScreen extends ConsumerWidget {
           SettingsGroup(
             label: l10n.prefsGroupMeal,
             rows: [
-              SettingsRow(
-                icon: Icons.tune_rounded,
-                label: l10n.prefsDietary,
-                trailing: prefs.dietaryPreference.label(l10n),
-                onTap: () => _pickDietary(context, ref),
-              ),
               SettingsRow(
                 icon: Icons.straighten_rounded,
                 label: l10n.prefsUnit,
@@ -81,26 +74,6 @@ class PreferencesScreen extends ConsumerWidget {
         ],
       ),
     );
-  }
-
-  Future<void> _pickDietary(BuildContext context, WidgetRef ref) async {
-    final l10n = context.l10n;
-    final selected = await showAppBottomSheet<DietaryPreference>(
-      context,
-      builder: (_) => _OptionSheet<DietaryPreference>(
-        title: l10n.prefsDietary,
-        options: [
-          for (final p in DietaryPreference.values)
-            (value: p, label: p.label(l10n), subtitle: p.description(l10n)),
-        ],
-        current: ref.read(preferencesControllerProvider).dietaryPreference,
-      ),
-    );
-    if (selected != null) {
-      await ref
-          .read(preferencesControllerProvider.notifier)
-          .setDietaryPreference(selected);
-    }
   }
 
   Future<void> _pickUnit(BuildContext context, WidgetRef ref) async {

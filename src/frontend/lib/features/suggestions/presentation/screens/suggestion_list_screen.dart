@@ -14,7 +14,6 @@ import 'package:sweepfood/features/suggestions/domain/entities/suggestion_reques
 import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/score_breakdown_sheet.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
-import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 /// S-01 — AI-ranked dishes for the current pantry + quick filters.
 class SuggestionListScreen extends ConsumerWidget {
@@ -26,27 +25,7 @@ class SuggestionListScreen extends ConsumerWidget {
     final aiHealth = ref.watch(aiServiceHealthProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.suggestionsTitle),
-        actions: [
-          IconButton(
-            tooltip: 'Bộ lọc',
-            style: IconButton.styleFrom(
-              backgroundColor: context.sweep.subtleFill,
-              shape: RoundedRectangleBorder(
-                borderRadius: Radii.brMd,
-                side: BorderSide(color: context.sweep.hairline),
-              ),
-            ),
-            icon: Icon(
-              Icons.filter_list_rounded,
-              color: context.colors.onSurfaceVariant,
-            ),
-            onPressed: () {},
-          ),
-          const SizedBox(width: Gap.md),
-        ],
-      ),
+      appBar: AppBar(title: Text(context.l10n.suggestionsTitle)),
       body: Column(
         children: [
           _AiStatusBanner(health: aiHealth),
@@ -91,11 +70,6 @@ class _FilterBar extends ConsumerWidget {
             ),
             const SizedBox(width: Gap.xs),
           ],
-          _Chip(
-            label: DietaryPreference.moreVeg.label(l10n),
-            selected: filter.dietaryPreference == DietaryPreference.moreVeg,
-            onTap: () => notifier.togglePreference(DietaryPreference.moreVeg),
-          ),
         ],
       ),
     );
