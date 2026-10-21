@@ -150,11 +150,7 @@ abstract class ScanJobDto with _$ScanJobDto {
           jobId: reqId,
           type: (fallbackType ?? ScanType.label).wire,
           status: statusStr,
-          rawText:
-              json['provider']?.toString().toUpperCase().contains('MOCK') ==
-                  true
-              ? '__MOCK_BARCODE__'
-              : rawText,
+          rawText: rawText,
           fieldCount: 5,
           item: item,
           items: const [],

@@ -23,15 +23,12 @@ class ActiveSessionsController extends _$ActiveSessionsController {
   /// screen can show a snackbar.
   Future<void> revoke(String id) async {
     final res = await ref.read(authRepositoryProvider).revokeSession(id);
-    res.fold(
-      (f) => throw f,
-      (_) {
-        final current = state.asData?.value ?? const [];
-        state = AsyncData([
-          for (final s in current)
-            if (s.id != id) s,
-        ]);
-      },
-    );
+    res.fold((f) => throw f, (_) {
+      final current = state.asData?.value ?? const [];
+      state = AsyncData([
+        for (final s in current)
+          if (s.id != id) s,
+      ]);
+    });
   }
 }

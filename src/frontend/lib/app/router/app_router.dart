@@ -45,7 +45,6 @@ import 'package:sweepfood/features/settings/presentation/screens/change_password
 import 'package:sweepfood/features/settings/presentation/screens/change_phone_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/edit_profile_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/notification_settings_screen.dart';
-import 'package:sweepfood/features/settings/presentation/screens/pantry_sharing_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/preferences_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/profile_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/settings_home_screen.dart';
@@ -149,8 +148,11 @@ GoRouter appRouter(Ref ref) {
                     path: Routes.cookableRecipes, // '/pantry/recipes'
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) {
-                      if (state.extra is ({List<PantryItem> items, String prompt})) {
-                        final record = state.extra as ({List<PantryItem> items, String prompt});
+                      if (state.extra
+                          is ({List<PantryItem> items, String prompt})) {
+                        final record =
+                            state.extra
+                                as ({List<PantryItem> items, String prompt});
                         return CookableRecipesScreen(
                           selectedItems: record.items,
                           initialPrompt: record.prompt,
@@ -172,9 +174,7 @@ GoRouter appRouter(Ref ref) {
                       final modeQuery = state.uri.queryParameters['mode'];
                       final initialMode = modeQuery == 'receipt'
                           ? CameraScanMode.receipt
-                          : (modeQuery == 'barcode'
-                              ? CameraScanMode.barcode
-                              : CameraScanMode.label);
+                          : CameraScanMode.label;
                       return CameraCaptureScreen(initialMode: initialMode);
                     },
                   ),
@@ -182,20 +182,24 @@ GoRouter appRouter(Ref ref) {
                     path: Routes.scanLabelReview, // '/pantry/scan/label-review'
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) => LabelReviewScreen(
-                      job: state.extra as ScanJob? ??
+                      job:
+                          state.extra as ScanJob? ??
                           const ScanJob(id: 'manual', type: ScanType.label),
                     ),
                   ),
                   GoRoute(
-                    path: Routes.scanReceiptReview, // '/pantry/scan/receipt-review'
+                    path: Routes
+                        .scanReceiptReview, // '/pantry/scan/receipt-review'
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) => ReceiptReviewScreen(
-                      job: state.extra as ScanJob? ??
+                      job:
+                          state.extra as ScanJob? ??
                           const ScanJob(id: 'manual', type: ScanType.receipt),
                     ),
                   ),
                   GoRoute(
-                    path: Routes.scanVoiceCapture, // '/pantry/scan/voice-capture'
+                    path:
+                        Routes.scanVoiceCapture, // '/pantry/scan/voice-capture'
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) => const VoiceCaptureScreen(),
                   ),
@@ -203,7 +207,8 @@ GoRouter appRouter(Ref ref) {
                     path: Routes.scanVoiceReview, // '/pantry/scan/voice-review'
                     parentNavigatorKey: _rootKey,
                     builder: (context, state) => VoiceReviewScreen(
-                      job: state.extra as ScanJob? ??
+                      job:
+                          state.extra as ScanJob? ??
                           const ScanJob(id: 'manual', type: ScanType.voice),
                     ),
                   ),
@@ -270,9 +275,8 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: Routes.cookHistoryDetail,
         parentNavigatorKey: _rootKey,
-        builder: (context, state) => CookingHistoryDetailScreen(
-          sessionId: state.pathParameters['id']!,
-        ),
+        builder: (context, state) =>
+            CookingHistoryDetailScreen(sessionId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: Routes.inventoryLedger,
@@ -300,9 +304,8 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: Routes.favoriteMenuDetail,
         parentNavigatorKey: _rootKey,
-        builder: (context, state) => FavoriteMenuDetailScreen(
-          menuId: state.pathParameters['id']!,
-        ),
+        builder: (context, state) =>
+            FavoriteMenuDetailScreen(menuId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: Routes.reports,
@@ -353,11 +356,6 @@ GoRouter appRouter(Ref ref) {
         path: Routes.settingsNotifications,
         parentNavigatorKey: _rootKey,
         builder: (context, state) => const NotificationSettingsScreen(),
-      ),
-      GoRoute(
-        path: Routes.settingsPantrySharing,
-        parentNavigatorKey: _rootKey,
-        builder: (context, state) => const PantrySharingScreen(),
       ),
       GoRoute(
         path: Routes.settingsSubscription,

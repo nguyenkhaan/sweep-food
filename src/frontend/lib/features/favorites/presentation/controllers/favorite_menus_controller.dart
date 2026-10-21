@@ -10,43 +10,45 @@ class FavoriteMenusController extends _$FavoriteMenusController {
   Future<List<FavoriteMenu>> build() async {
     final repo = ref.watch(favoriteRepositoryProvider);
     final res = await repo.fetchFavoriteMenus();
-    return res.fold(
-      (f) => throw f,
-      (menus) => menus,
-    );
+    return res.fold((f) => throw f, (menus) => menus);
   }
 
-  Future<FavoriteMenu> createMenu({required String name, String? description}) async {
+  Future<FavoriteMenu> createMenu({
+    required String name,
+    String? description,
+  }) async {
     final repo = ref.read(favoriteRepositoryProvider);
-    final res = await repo.createFavoriteMenu(name: name, description: description);
-    return res.fold(
-      (f) => throw f,
-      (menu) {
-        ref.invalidateSelf();
-        return menu;
-      },
+    final res = await repo.createFavoriteMenu(
+      name: name,
+      description: description,
     );
+    return res.fold((f) => throw f, (menu) {
+      ref.invalidateSelf();
+      return menu;
+    });
   }
 
-  Future<void> updateMenu(String menuId, {String? name, String? description}) async {
+  Future<void> updateMenu(
+    String menuId, {
+    String? name,
+    String? description,
+  }) async {
     final repo = ref.read(favoriteRepositoryProvider);
-    final res = await repo.updateFavoriteMenu(menuId, name: name, description: description);
-    res.fold(
-      (f) => throw f,
-      (_) {
-        ref.invalidateSelf();
-        ref.invalidate(favoriteMenuDetailControllerProvider(menuId));
-      },
+    final res = await repo.updateFavoriteMenu(
+      menuId,
+      name: name,
+      description: description,
     );
+    res.fold((f) => throw f, (_) {
+      ref.invalidateSelf();
+      ref.invalidate(favoriteMenuDetailControllerProvider(menuId));
+    });
   }
 
   Future<void> deleteMenu(String menuId) async {
     final repo = ref.read(favoriteRepositoryProvider);
     final res = await repo.deleteFavoriteMenu(menuId);
-    res.fold(
-      (f) => throw f,
-      (_) => ref.invalidateSelf(),
-    );
+    res.fold((f) => throw f, (_) => ref.invalidateSelf());
   }
 
   Future<void> refresh() async {
@@ -61,34 +63,25 @@ class FavoriteMenuDetailController extends _$FavoriteMenuDetailController {
   Future<FavoriteMenuDetail> build(String menuId) async {
     final repo = ref.watch(favoriteRepositoryProvider);
     final res = await repo.fetchFavoriteMenuDetail(menuId);
-    return res.fold(
-      (f) => throw f,
-      (detail) => detail,
-    );
+    return res.fold((f) => throw f, (detail) => detail);
   }
 
   Future<void> addRecipe(String recipeId) async {
     final repo = ref.read(favoriteRepositoryProvider);
     final res = await repo.addMenuItem(menuId, recipeId);
-    res.fold(
-      (f) => throw f,
-      (_) {
-        ref.invalidateSelf();
-        ref.invalidate(favoriteMenusControllerProvider);
-      },
-    );
+    res.fold((f) => throw f, (_) {
+      ref.invalidateSelf();
+      ref.invalidate(favoriteMenusControllerProvider);
+    });
   }
 
   Future<void> removeRecipe(String itemId) async {
     final repo = ref.read(favoriteRepositoryProvider);
     final res = await repo.removeMenuItem(menuId, itemId);
-    res.fold(
-      (f) => throw f,
-      (_) {
-        ref.invalidateSelf();
-        ref.invalidate(favoriteMenusControllerProvider);
-      },
-    );
+    res.fold((f) => throw f, (_) {
+      ref.invalidateSelf();
+      ref.invalidate(favoriteMenusControllerProvider);
+    });
   }
 
   Future<void> refresh() async {

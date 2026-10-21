@@ -66,9 +66,6 @@ class AppL10nVi extends AppL10n {
   String get commonSkip => 'Bỏ qua';
 
   @override
-  String get commonComingSoon => 'Sắp có';
-
-  @override
   String get tierEatSoon => 'Ăn liền / Nấu trong ngày';
 
   @override
@@ -1464,9 +1461,6 @@ class AppL10nVi extends AppL10n {
   String get settingsPremiumSoon => 'Premium sắp có';
 
   @override
-  String get settingsPantrySharing => 'Chia sẻ tủ bếp';
-
-  @override
   String get settingsGroupMealPlanning => 'Kế hoạch bữa ăn';
 
   @override
@@ -1564,26 +1558,6 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get notifDndEnd => 'Kết thúc không làm phiền';
-
-  @override
-  String get pantrySharingIntro =>
-      'Mời tối đa 4 người cùng xem và cập nhật tủ bếp. Mọi thay đổi được đồng bộ cho tất cả thành viên.';
-
-  @override
-  String get pantrySharingFootnote =>
-      'Thành viên có thể thêm, sửa, xóa nguyên liệu và xem gợi ý món. Chỉ chủ tủ bếp mới xóa được thành viên.';
-
-  @override
-  String get pantrySharingInvite => 'Mời thành viên';
-
-  @override
-  String get pantryMemberInvited => 'Đã mời · chờ xác nhận';
-
-  @override
-  String get pantryRoleOwner => 'Chủ tủ bếp';
-
-  @override
-  String get pantryRoleEditor => 'Có thể chỉnh sửa';
 
   @override
   String get profileGroupInfo => 'Thông tin';

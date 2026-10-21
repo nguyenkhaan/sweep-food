@@ -68,8 +68,10 @@ class FoodUsageHistoryDto {
     final rawItems = json['items'] as List<dynamic>? ?? [];
     return FoodUsageHistoryDto(
       period: json['period'] as String? ?? 'month',
-      totalUsedCount: (json['total_used_count'] as num?)?.toInt() ?? rawItems.length,
-      totalUsedKg: double.tryParse(json['total_used_kg']?.toString() ?? '0') ??
+      totalUsedCount:
+          (json['total_used_count'] as num?)?.toInt() ?? rawItems.length,
+      totalUsedKg:
+          double.tryParse(json['total_used_kg']?.toString() ?? '0') ??
           (json['total_used_kg'] as num?)?.toDouble() ??
           0.0,
       items: rawItems
@@ -109,19 +111,23 @@ class WasteStatisticsDto {
   factory WasteStatisticsDto.fromJson(Map<String, dynamic> json) {
     return WasteStatisticsDto(
       period: json['period'] as String? ?? 'month',
-      totalWastedKg: double.tryParse(json['total_wasted_kg']?.toString() ?? '0') ??
+      totalWastedKg:
+          double.tryParse(json['total_wasted_kg']?.toString() ?? '0') ??
           (json['total_wasted_kg'] as num?)?.toDouble() ??
           0.0,
       wastedItemsCount: (json['wasted_items_count'] as num?)?.toInt() ?? 0,
-      byCategory: (json['by_category'] as List<dynamic>?)
+      byCategory:
+          (json['by_category'] as List<dynamic>?)
               ?.whereType<Map<String, dynamic>>()
               .toList() ??
           [],
-      wasteReasons: (json['waste_reasons'] as List<dynamic>?)
+      wasteReasons:
+          (json['waste_reasons'] as List<dynamic>?)
               ?.whereType<Map<String, dynamic>>()
               .toList() ??
           [],
-      wastedBatches: (json['wasted_batches'] as List<dynamic>?)
+      wastedBatches:
+          (json['wasted_batches'] as List<dynamic>?)
               ?.whereType<Map<String, dynamic>>()
               .toList() ??
           [],
@@ -137,7 +143,8 @@ class WasteStatisticsDto {
         final catName = c['category_name'] as String? ?? 'Khác';
         return WasteCategoryShare(
           categoryName: catName,
-          wastedKg: double.tryParse(c['wasted_kg']?.toString() ?? '0') ??
+          wastedKg:
+              double.tryParse(c['wasted_kg']?.toString() ?? '0') ??
               (c['wasted_kg'] as num?)?.toDouble() ??
               0.0,
           percentage: (c['percentage'] as num?)?.toDouble() ?? 0.0,
@@ -200,12 +207,13 @@ class EfficiencyEvaluationDto {
   factory EfficiencyEvaluationDto.fromJson(Map<String, dynamic> json) {
     return EfficiencyEvaluationDto(
       period: json['period'] as String? ?? 'month',
-      efficiencyScore: (json['efficiency_score'] as num?)?.toInt() ?? 75,
-      ratingLevel: json['rating_level'] as String? ?? 'GOOD',
-      utilizationRate: (json['utilization_rate'] as num?)?.toDouble() ?? 85.0,
-      wasteRate: (json['waste_rate'] as num?)?.toDouble() ?? 15.0,
+      efficiencyScore: (json['efficiency_score'] as num?)?.toInt() ?? 0,
+      ratingLevel: json['rating_level'] as String? ?? 'POOR',
+      utilizationRate: (json['utilization_rate'] as num?)?.toDouble() ?? 0.0,
+      wasteRate: (json['waste_rate'] as num?)?.toDouble() ?? 0.0,
       trend: (json['trend_vs_previous_period'] as Map<String, dynamic>?) ?? {},
-      insights: (json['insights'] as List<dynamic>?)
+      insights:
+          (json['insights'] as List<dynamic>?)
               ?.whereType<Map<String, dynamic>>()
               .toList() ??
           [],
@@ -221,7 +229,8 @@ class EfficiencyEvaluationDto {
       wasteRate: wasteRate,
       trend: EfficiencyTrend(
         scoreDelta: (trend['score_delta'] as num?)?.toDouble() ?? 0.0,
-        wasteKgDelta: double.tryParse(trend['waste_kg_delta']?.toString() ?? '0') ??
+        wasteKgDelta:
+            double.tryParse(trend['waste_kg_delta']?.toString() ?? '0') ??
             (trend['waste_kg_delta'] as num?)?.toDouble() ??
             0.0,
       ),
