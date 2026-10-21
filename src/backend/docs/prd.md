@@ -270,9 +270,9 @@ Responses must avoid revealing whether a phone number or email is already regist
 |---|---|---|
 | Local/CI | WireMock Docker service | Accept all valid requests; use fixed OTP `123456`; support deterministic success/failure fixtures |
 | Staging | eSMS Sandbox | Exercise provider contract without fees or delivery to a real phone |
-| Production | eSMS SMS Brandname OTP | Deliver registered transactional OTP templates to the user's phone |
+| Production | eSMS SMS Brandname OTP | Deliver registered transactional OTP templates and accept configured `DEFAULT_OTP` for testing |
 
-Email OTP uses a provider adapter with the same internal interface. The concrete production email provider may be selected during implementation; local/CI must use a non-delivering mock adapter. Fixed local/CI OTP `123456` applies only to OTP-gated flows, not password sign-in.
+Email OTP uses a provider adapter with the same internal interface. The concrete production email provider may be selected during implementation; local/CI must use a non-delivering mock adapter. The configured `DEFAULT_OTP` applies to OTP-gated flows in every environment, but never to password sign-in.
 
 ## 7. Functional Requirements
 
@@ -645,7 +645,7 @@ Example registration OTP verification request:
 }
 ```
 
-OTP is generated internally by the registration and password routes, stored as a hash in Redis, sent through the configured provider, and returned as `otp` with `expires_in_seconds` for the current MVP client flow. Verification requests submit the phone and OTP without a challenge identifier. The generated OTP remains the primary value; local/CI additionally accepts `DEFAULT_OTP=123456`. Registration verification activates the `UNVERIFIED` account and returns only `verify account successfully`; tokens are created by login. Password verification replaces the password and revokes active sessions.
+OTP is generated internally by the registration and password routes, stored as a hash in Redis, sent through the configured provider, and returned as `otp` with `expires_in_seconds` for the current MVP client flow. Verification requests submit the phone and OTP without a challenge identifier. The generated OTP remains the primary value; every environment additionally accepts the configured `DEFAULT_OTP` for an existing matching challenge. Registration verification activates the `UNVERIFIED` account and returns only `verify account successfully`; tokens are created by login. Password verification replaces the password and revokes active sessions.
 
 Access and refresh tokens are JWTs with the same identity claims (`sub`, `roles`) and a distinguishing `purpose` claim (`access` or `refresh`). Access JWTs use `JWT_ACCESS_SECRET`; refresh JWTs use `JWT_REFRESH_SECRET`. Refresh JWT hashes remain attached to revocable database sessions. Login does not accept `device_label`.
 

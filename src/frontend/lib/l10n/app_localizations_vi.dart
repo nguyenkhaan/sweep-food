@@ -262,7 +262,7 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get failUnauthorized =>
-      'Phiên đăng nhập đã hết hạn. Đăng nhập lại nhé.';
+      'Thông tin đăng nhập không hợp lệ. Đăng nhập lại nhé.';
 
   @override
   String get failForbidden => 'Bạn không có quyền thực hiện thao tác này.';

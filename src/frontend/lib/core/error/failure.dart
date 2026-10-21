@@ -47,7 +47,7 @@ class TimeoutFailure extends Failure {
 /// 401 — token missing / expired and refresh failed. Triggers logout.
 class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure({super.cause, super.stackTrace})
-    : super('Phiên đăng nhập đã hết hạn. Đăng nhập lại nhé.');
+    : super('Thông tin đăng nhập không hợp lệ. Đăng nhập lại nhé.');
 }
 
 /// 403 — authenticated but not allowed.

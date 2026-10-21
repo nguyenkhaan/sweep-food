@@ -144,7 +144,7 @@ The seed script must be idempotent and transactional. It seeds the admin account
 
 ## 7. Provider Modes
 
-Local SMS delivery uses WireMock; local email delivery uses SMTP through Mailpit. In `dev` and `test`, OTP verification uses the configured `DEFAULT_OTP`. Recommendation, OCR, ASR, and text parsing run inside the backend process (`AI/`); only the OpenAI and Groq provider calls leave it.
+Local SMS delivery uses WireMock; local email delivery uses SMTP through Mailpit. In every environment, OTP verification accepts the configured `DEFAULT_OTP` for an existing matching challenge. Recommendation, OCR, ASR, and text parsing run inside the backend process (`AI/`); only the OpenAI and Groq provider calls leave it.
 
 The backend generates, hashes, expires, and verifies OTPs. OTPs never replace phone/password sign-in. Delivery providers only deliver the message. Do not send real SMS from a personal SIM or attempt to bypass provider/telecom controls.
 
