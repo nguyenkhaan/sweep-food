@@ -51,7 +51,7 @@ final class SessionControllerProvider
   SessionController create() => SessionController();
 }
 
-String _$sessionControllerHash() => r'4b750826192c2785be6cf7418f711a1a5d3f14f4';
+String _$sessionControllerHash() => r'6f290689567d7e3df4e7d65348ccbd4f3fd568d9';
 
 /// App-wide auth state. `AsyncData(null)` = signed out, `AsyncData(session)` =
 /// signed in, `AsyncLoading` = still reviving a persisted session (Splash).

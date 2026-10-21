@@ -65,7 +65,7 @@ final class LabelReviewControllerProvider
 }
 
 String _$labelReviewControllerHash() =>
-    r'7be696fdadf5d8958ff99d243dd7ac349c7d3950';
+    r'8104f0ec151624f8d651aa0b0feb6e52ed14c44d';
 
 /// Holds the single editable draft on the Label Review screen (I-03), seeded
 /// from the OCR [ScanJob].

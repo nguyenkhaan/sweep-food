@@ -9,19 +9,19 @@ part of 'dish_detail_controller.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Loads the full recipe once (`GET /dishes/{id}`). Kept at the base serving
-/// count — [scaledDish] applies the user's choice from [DishServings].
+/// count - [scaledDish] applies the user's choice from [DishServings].
 
 @ProviderFor(dishById)
 final dishByIdProvider = DishByIdFamily._();
 
 /// Loads the full recipe once (`GET /dishes/{id}`). Kept at the base serving
-/// count — [scaledDish] applies the user's choice from [DishServings].
+/// count - [scaledDish] applies the user's choice from [DishServings].
 
 final class DishByIdProvider
     extends $FunctionalProvider<AsyncValue<Dish>, Dish, FutureOr<Dish>>
     with $FutureModifier<Dish>, $FutureProvider<Dish> {
   /// Loads the full recipe once (`GET /dishes/{id}`). Kept at the base serving
-  /// count — [scaledDish] applies the user's choice from [DishServings].
+  /// count - [scaledDish] applies the user's choice from [DishServings].
   DishByIdProvider._({
     required DishByIdFamily super.from,
     required String super.argument,
@@ -65,10 +65,10 @@ final class DishByIdProvider
   }
 }
 
-String _$dishByIdHash() => r'90ea8cd3a4e0ad4d5c442d7fb25a9c2a5796beb6';
+String _$dishByIdHash() => r'0b9c41e247181a8ae40412578b6cba2829ee2d4c';
 
 /// Loads the full recipe once (`GET /dishes/{id}`). Kept at the base serving
-/// count — [scaledDish] applies the user's choice from [DishServings].
+/// count - [scaledDish] applies the user's choice from [DishServings].
 
 final class DishByIdFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Dish>, String> {
@@ -82,7 +82,7 @@ final class DishByIdFamily extends $Family
       );
 
   /// Loads the full recipe once (`GET /dishes/{id}`). Kept at the base serving
-  /// count — [scaledDish] applies the user's choice from [DishServings].
+  /// count - [scaledDish] applies the user's choice from [DishServings].
 
   DishByIdProvider call(String dishId) =>
       DishByIdProvider._(argument: dishId, from: this);

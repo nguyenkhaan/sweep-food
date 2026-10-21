@@ -22,44 +22,68 @@ class ScoreBreakdownSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return SheetBody(
       title: '#${suggestion.rank} ${suggestion.dish.name}',
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _AiResultHeader(suggestion: suggestion),
-          Gap.gapMd,
-          if (suggestion.explanation != null &&
-              suggestion.explanation!.isNotEmpty) ...[
-            Container(
-              padding: const EdgeInsets.all(Gap.sm),
-              decoration: BoxDecoration(
-                color: context.sweep.subtleFill,
-                borderRadius: Radii.brMd,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * 0.68,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _AiResultHeader(suggestion: suggestion),
+              Gap.gapMd,
+              Text(
+                context.l10n.scoreFormula,
+                style: context.text.labelMedium?.copyWith(
+                  color: context.sweep.textSecondary,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.auto_awesome_rounded,
-                    size: 16,
-                    color: context.colors.primary,
+              const SizedBox(height: Gap.sm),
+              for (final component in suggestion.breakdown.components(
+                context.l10n,
+              ))
+                _FeatureBar(
+                  label: component.name,
+                  value: component.value,
+                  detail:
+                      '${component.weightLabel} · ${(component.value * 100).round()}%',
+                ),
+              if (suggestion.explanation != null &&
+                  suggestion.explanation!.isNotEmpty) ...[
+                Container(
+                  padding: const EdgeInsets.all(Gap.sm),
+                  decoration: BoxDecoration(
+                    color: context.sweep.subtleFill,
+                    borderRadius: Radii.brMd,
                   ),
-                  const SizedBox(width: Gap.xs),
-                  Expanded(
-                    child: Text(
-                      suggestion.explanation!,
-                      style: context.text.bodySmall?.copyWith(
-                        color: context.sweep.textSecondary,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.auto_awesome_rounded,
+                        size: 16,
+                        color: context.colors.primary,
                       ),
-                    ),
+                      const SizedBox(width: Gap.xs),
+                      Expanded(
+                        child: Text(
+                          suggestion.explanation!,
+                          style: context.text.bodySmall?.copyWith(
+                            color: context.sweep.textSecondary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            Gap.gapSm,
-          ],
-          _AiFeatureList(suggestion: suggestion),
-        ],
+                ),
+                Gap.gapSm,
+              ],
+              _AiFeatureList(suggestion: suggestion),
+            ],
+          ),
+        ),
       ),
     );
   }

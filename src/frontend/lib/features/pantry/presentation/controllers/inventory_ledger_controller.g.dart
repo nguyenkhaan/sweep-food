@@ -65,7 +65,7 @@ final class InventoryLedgerControllerProvider
 }
 
 String _$inventoryLedgerControllerHash() =>
-    r'56c307b5bd49d1dcea6c50df2376a82f70db5943';
+    r'4a35020c08487843fd9f940cebf4c058bba62d12';
 
 /// K-04 — the inventory ledger (`GET /inventory/ledger`). Pass `batchId` to
 /// scope it to one batch, or `null` for the whole pantry. Supports

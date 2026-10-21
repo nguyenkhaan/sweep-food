@@ -6,10 +6,8 @@ part 'report_dto.g.dart';
 
 @freezed
 abstract class WasteBarDto with _$WasteBarDto {
-  const factory WasteBarDto({
-    required String label,
-    required int value,
-  }) = _WasteBarDto;
+  const factory WasteBarDto({required String label, required int value}) =
+      _WasteBarDto;
 
   factory WasteBarDto.fromJson(Map<String, dynamic> json) =>
       _$WasteBarDtoFromJson(json);
@@ -45,7 +43,10 @@ abstract class WasteReductionSummaryDto with _$WasteReductionSummaryDto {
     List<WasteCategoryDto> byCategory,
   }) = _WasteReductionSummaryDto;
 
-  factory WasteReductionSummaryDto.fromJson(Map<String, dynamic> json) {
+  factory WasteReductionSummaryDto.fromJson(Map<String, dynamic> json) =>
+      _$WasteReductionSummaryDtoFromJson(_normalizedJson(json));
+
+  static Map<String, dynamic> _normalizedJson(Map<String, dynamic> json) {
     if (json.containsKey('total_saved_kg')) {
       final periodStr = json['period']?.toString() ?? 'month';
       final periodLabel = periodStr == 'week'
@@ -73,15 +74,16 @@ abstract class WasteReductionSummaryDto with _$WasteReductionSummaryDto {
       final weeklyBars = <Map<String, dynamic>>[];
       for (var i = 0; i < weeklySeries.length; i++) {
         final val = double.tryParse(weeklySeries[i]?.toString() ?? '0') ?? 0.0;
-        final label =
-            i < weeklyLabels.length ? weeklyLabels[i].toString() : 'T${i + 1}';
+        final label = i < weeklyLabels.length
+            ? weeklyLabels[i].toString()
+            : 'T${i + 1}';
         weeklyBars.add({
           'label': label.length > 5 ? label.substring(label.length - 5) : label,
           'value': (val * 10).round(),
         });
       }
 
-      return _$WasteReductionSummaryDtoFromJson({
+      return {
         'period': periodStr,
         'period_label': periodLabel,
         'items_used_before_expiry': topSaved.length,
@@ -89,30 +91,30 @@ abstract class WasteReductionSummaryDto with _$WasteReductionSummaryDto {
         'dishes_cooked': topSaved.length,
         'weekly_bars': weeklyBars,
         'by_category': byCategory,
-      });
+      };
     }
-    return _$WasteReductionSummaryDtoFromJson(json);
+    return json;
   }
 
   WasteReductionSummary toEntity() => WasteReductionSummary(
-        period: ReportPeriod.fromWire(period),
-        periodLabel: periodLabel,
-        itemsUsedBeforeExpiry: itemsUsedBeforeExpiry,
-        wasteAvoidedKg: wasteAvoidedKg,
-        dishesCooked: dishesCooked,
-        weeklyBars: [
-          for (final b in weeklyBars)
-            WasteReductionBar(label: b.label, value: b.value),
-        ],
-        byCategory: [
-          for (final c in byCategory)
-            WasteReductionCategory(
-              category: c.category,
-              count: c.count,
-              colorValue: _colorFor(c.category),
-            ),
-        ],
-      );
+    period: ReportPeriod.fromWire(period),
+    periodLabel: periodLabel,
+    itemsUsedBeforeExpiry: itemsUsedBeforeExpiry,
+    wasteAvoidedKg: wasteAvoidedKg,
+    dishesCooked: dishesCooked,
+    weeklyBars: [
+      for (final b in weeklyBars)
+        WasteReductionBar(label: b.label, value: b.value),
+    ],
+    byCategory: [
+      for (final c in byCategory)
+        WasteReductionCategory(
+          category: c.category,
+          count: c.count,
+          colorValue: _colorFor(c.category),
+        ),
+    ],
+  );
 
   static int _colorFor(String category) {
     final c = category.toLowerCase();

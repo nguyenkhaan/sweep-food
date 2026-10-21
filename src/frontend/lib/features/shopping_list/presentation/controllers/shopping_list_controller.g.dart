@@ -108,7 +108,7 @@ final class ShoppingListControllerProvider
 }
 
 String _$shoppingListControllerHash() =>
-    r'78b0292bcc55cba16183208f454b90aa0418000d';
+    r'24fa3350297c578a108f5b3026a6ec5fca8b2618';
 
 /// B-01. The backend has no "current list" endpoint — [build] reads whichever
 /// list id was locally remembered from the last successful [generateFromWeek]

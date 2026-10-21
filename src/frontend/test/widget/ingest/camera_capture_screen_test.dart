@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +41,18 @@ Future<void> _tick(WidgetTester tester) async {
   await tester.pump();
   await tester.pump(const Duration(milliseconds: 50));
   await tester.pump(const Duration(milliseconds: 50));
+}
+
+/// The camera-startup fallback deliberately contains an indeterminate spinner
+/// while the platform camera API is unavailable in widget tests. Route changes
+/// therefore need a bounded wait rather than `pumpAndSettle`.
+Future<void> _settleRoute(WidgetTester tester) async {
+  await tester.pump();
+  await tester.runAsync(
+    () => Future<void>.delayed(const Duration(milliseconds: 1)),
+  );
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 350));
 }
 
 void main() {
@@ -151,7 +163,8 @@ void main() {
     );
     final frozenImage = find.byWidgetPredicate(
       (w) =>
-          w is Image && w.image is FileImage &&
+          w is Image &&
+          w.image is FileImage &&
           (w.image as FileImage).file.path == picked,
     );
 
@@ -181,7 +194,7 @@ void main() {
       expect(manualEnabled(tester), isFalse);
 
       response.complete(Right(labelScanJob()));
-      await tester.pumpAndSettle();
+      await _settleRoute(tester);
     });
 
     testWidgets('shows the frozen photo + reading overlay, no live preview', (
@@ -201,7 +214,7 @@ void main() {
       verify(() => repo.scanLabel(picked)).called(1);
 
       response.complete(Right(labelScanJob()));
-      await tester.pumpAndSettle();
+      await _settleRoute(tester);
     });
 
     testWidgets('resets busy state once the scan finishes', (tester) async {
@@ -211,11 +224,11 @@ void main() {
       expect(find.text('Đang đọc thông tin…'), findsOneWidget);
 
       response.complete(Right(labelScanJob()));
-      await tester.pumpAndSettle();
+      await _settleRoute(tester);
       expect(find.text('label-review'), findsOneWidget);
 
       router.pop();
-      await tester.pumpAndSettle();
+      await _settleRoute(tester);
 
       expect(tester.takeException(), isNull);
       expect(find.text('Đang đọc thông tin…'), findsNothing);

@@ -63,7 +63,7 @@ final class AddIngredientControllerProvider
 }
 
 String _$addIngredientControllerHash() =>
-    r'7b1f5c77c087549d57ebe847aeac43f2c0692f3a';
+    r'a551025f38754e0fc86f1ef94e932f1149c190a9';
 
 /// Form state for K-03 (add) and K-03 in edit mode (`editItemId != null`).
 

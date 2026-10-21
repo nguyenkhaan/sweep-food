@@ -38,7 +38,7 @@ final class FavoriteRecipesControllerProvider
 }
 
 String _$favoriteRecipesControllerHash() =>
-    r'd1d5b7e758a74dfc6653019acb8769659ab2c429';
+    r'e7debf5aa54ade5c5c730f39fec6519e3b9f1de1';
 
 abstract class _$FavoriteRecipesController
     extends $AsyncNotifier<List<FavoriteRecipe>> {
