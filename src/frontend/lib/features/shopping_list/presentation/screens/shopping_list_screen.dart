@@ -130,11 +130,7 @@ class ShoppingListScreen extends ConsumerWidget {
                       ShoppingItemRow(
                         item: item,
                         onToggle: () => _toggleItem(context, ref, item),
-                        onDismissed: item.isManual
-                            ? () => ref
-                                  .read(shoppingListControllerProvider.notifier)
-                                  .removeItem(item.id)
-                            : null,
+                        onDismissed: () => _removeItem(context, ref, item),
                       ),
                   ],
                   const Divider(height: 1),
@@ -186,6 +182,23 @@ class ShoppingListScreen extends ConsumerWidget {
     final success = await notifier.toggleChecked(item.id, purchase: purchase);
     if (success && context.mounted) {
       AppSnack.show(context, 'Đã mua "${item.name}" và chuyển vào kho!');
+    }
+  }
+
+  /// Swiping horizontally removes the ingredient from the shopping list.
+  Future<void> _removeItem(
+    BuildContext context,
+    WidgetRef ref,
+    ShoppingListItem item,
+  ) async {
+    final notifier = ref.read(shoppingListControllerProvider.notifier);
+    final success = await notifier.removeItem(item.id);
+    if (context.mounted) {
+      if (success) {
+        AppSnack.show(context, 'Đã xóa "${item.name}" khỏi danh sách');
+      } else {
+        AppSnack.show(context, 'Không thể xóa "${item.name}"');
+      }
     }
   }
 }
