@@ -37,7 +37,8 @@ abstract final class Routes {
   static const cookResult = '/cook-result';
   static const cookHistory = '/cook-history';
   static const cookHistoryDetail = '/cook-history/:id';
-  static const inventoryLedger = '/inventory-ledger'; // ?batchId= , extra = name
+  static const inventoryLedger =
+      '/inventory-ledger'; // ?batchId= , extra = name
   static const notifications = '/notifications';
   static const paywall = '/paywall';
   static const reports = '/reports';
@@ -46,7 +47,6 @@ abstract final class Routes {
   static const favoriteMenuDetail = '/favorites/menu/:id';
   static const settingsPreferences = '/settings/preferences';
   static const settingsNotifications = '/settings/notifications';
-  static const settingsPantrySharing = '/settings/pantry-sharing';
   static const settingsAbout = '/settings/about';
   static const settingsSubscription = '/settings/subscription';
   static const settingsProfile = '/settings/profile';

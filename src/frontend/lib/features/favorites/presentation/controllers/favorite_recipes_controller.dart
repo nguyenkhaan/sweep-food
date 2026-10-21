@@ -10,28 +10,19 @@ class FavoriteRecipesController extends _$FavoriteRecipesController {
   Future<List<FavoriteRecipe>> build() async {
     final repo = ref.watch(favoriteRepositoryProvider);
     final res = await repo.fetchFavoriteRecipes();
-    return res.fold(
-      (f) => throw f,
-      (recipes) => recipes,
-    );
+    return res.fold((f) => throw f, (recipes) => recipes);
   }
 
   Future<void> addFavorite(String recipeId) async {
     final repo = ref.read(favoriteRepositoryProvider);
     final res = await repo.addFavoriteRecipe(recipeId);
-    res.fold(
-      (f) => throw f,
-      (_) => ref.invalidateSelf(),
-    );
+    res.fold((f) => throw f, (_) => ref.invalidateSelf());
   }
 
   Future<void> removeFavorite(String recipeId) async {
     final repo = ref.read(favoriteRepositoryProvider);
     final res = await repo.removeFavoriteRecipe(recipeId);
-    res.fold(
-      (f) => throw f,
-      (_) => ref.invalidateSelf(),
-    );
+    res.fold((f) => throw f, (_) => ref.invalidateSelf());
   }
 
   Future<bool> toggleFavorite(String recipeId) async {
@@ -46,7 +37,10 @@ class FavoriteRecipesController extends _$FavoriteRecipesController {
     }
   }
 
-  Future<void> refresh() => ref.refresh(favoriteRecipesControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 }
 
 @riverpod

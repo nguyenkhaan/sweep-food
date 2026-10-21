@@ -14,9 +14,7 @@ import 'package:sweepfood/shared/domain/measurement_unit.dart';
 part 'suggestion_list_controller.g.dart';
 
 final aiServiceHealthProvider = FutureProvider.autoDispose(
-  (ref) => SuggestionRemoteDataSource(
-    ref.watch(apiClientProvider),
-  ).health(),
+  (ref) => SuggestionRemoteDataSource(ref.watch(apiClientProvider)).health(),
 );
 
 /// UI filter state for S-01. Maps to a [SuggestionRequest] for the API.
@@ -50,14 +48,13 @@ class SuggestionFilter {
 
   SuggestionRequest toRequest({
     List<RecommendationPantryItemDraft> pantryDrafts = const [],
-  }) =>
-      SuggestionRequest(
-        pantryItems: pantryDrafts,
-        mealType: mealType,
-        dietaryPreference: dietaryPreference,
-        prompt: prompt.isNotEmpty ? prompt : null,
-        limit: AppConstants.maxSuggestions,
-      );
+  }) => SuggestionRequest(
+    pantryItems: pantryDrafts,
+    mealType: mealType,
+    dietaryPreference: dietaryPreference,
+    prompt: prompt.isNotEmpty ? prompt : null,
+    limit: AppConstants.maxSuggestions,
+  );
 }
 
 @riverpod
@@ -75,8 +72,8 @@ class SuggestionFilterController extends _$SuggestionFilterController {
 
   void togglePreference(DietaryPreference pref) =>
       state = state.dietaryPreference == pref
-          ? state.copyWith(clearDietaryPreference: true)
-          : state.copyWith(dietaryPreference: pref);
+      ? state.copyWith(clearDietaryPreference: true)
+      : state.copyWith(dietaryPreference: pref);
 }
 
 /// S-01 list. Re-fetches whenever the filter changes; the server does the
@@ -93,20 +90,24 @@ class SuggestionListController extends _$SuggestionListController {
       drafts = pantryItems
           .where((p) => p.status == PantryItemStatus.active)
           .map((p) {
-        double? hours;
-        if (p.expiryDate != null) {
-          hours = p.expiryDate!.difference(DateTime.now()).inHours.toDouble();
-        }
-        final double qtyG = p.unit == MeasurementUnit.kilogram
-            ? p.quantity * 1000.0
-            : p.quantity;
-        return RecommendationPantryItemDraft(
-          name: p.name,
-          code: p.ingredientId,
-          quantityG: qtyG > 0 ? qtyG : 200.0,
-          hoursToExpire: hours,
-        );
-      }).toList();
+            double? hours;
+            if (p.expiryDate != null) {
+              hours = p.expiryDate!
+                  .difference(DateTime.now())
+                  .inHours
+                  .toDouble();
+            }
+            final double qtyG = p.unit == MeasurementUnit.kilogram
+                ? p.quantity * 1000.0
+                : p.quantity;
+            return RecommendationPantryItemDraft(
+              name: p.name,
+              code: p.ingredientId,
+              quantityG: qtyG > 0 ? qtyG : 200.0,
+              hoursToExpire: hours,
+            );
+          })
+          .toList();
     } catch (_) {
       // In tests or isolated scopes where PantryListController is not wired
     }
@@ -114,23 +115,25 @@ class SuggestionListController extends _$SuggestionListController {
     final res = await ref
         .watch(suggestionRepositoryProvider)
         .fetch(filter.toRequest(pantryDrafts: drafts));
-    return res.fold(
-      (f) => throw f,
-      (list) {
-        final q = filter.prompt.trim().toLowerCase();
-        if (q.isEmpty) return list;
-        final keywords =
-            q.split(RegExp(r'\s+')).where((k) => k.isNotEmpty).toList();
-        return list.where((item) {
-          final text =
-              '${item.dish.name} ${item.dish.cuisine} ${item.nearExpiryIngredients.join(" ")}'
-                  .toLowerCase();
-          return text.contains(q) || keywords.every((k) => text.contains(k));
-        }).toList();
-      },
-    );
+    return res.fold((f) => throw f, (list) {
+      final realResults = list.where((item) => !item.isMock).toList();
+      final q = filter.prompt.trim().toLowerCase();
+      if (q.isEmpty) return realResults;
+      final keywords = q
+          .split(RegExp(r'\s+'))
+          .where((k) => k.isNotEmpty)
+          .toList();
+      return realResults.where((item) {
+        final text =
+            '${item.dish.name} ${item.dish.cuisine} ${item.nearExpiryIngredients.join(" ")}'
+                .toLowerCase();
+        return text.contains(q) || keywords.every((k) => text.contains(k));
+      }).toList();
+    });
   }
 
-  Future<void> refresh() =>
-      ref.refresh(suggestionListControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 }

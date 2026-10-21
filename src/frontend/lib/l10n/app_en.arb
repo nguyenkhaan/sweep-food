@@ -22,7 +22,6 @@
   "commonEdit": "Edit",
   "commonContinue": "Continue",
   "commonSkip": "Skip",
-  "commonComingSoon": "Coming soon",
 
   "tierEatSoon": "Eat soon / cook today",
   "tierEatSoonShort": "Eat soon",
@@ -541,7 +540,6 @@
   "settingsProfilePassword": "Profile & password",
   "settingsPlan": "Plan",
   "settingsPremiumSoon": "Premium coming soon",
-  "settingsPantrySharing": "Share pantry",
   "settingsGroupMealPlanning": "Meal planning",
   "settingsWasteReport": "Waste-reduction report",
   "settingsGroupApp": "App",
@@ -576,13 +574,6 @@
   "notifDnd": "Do not disturb",
   "notifDndStart": "Do-not-disturb start",
   "notifDndEnd": "Do-not-disturb end",
-
-  "pantrySharingIntro": "Invite up to 4 people to view and update the pantry. Every change syncs to all members.",
-  "pantrySharingFootnote": "Members can add, edit and delete ingredients and see dish suggestions. Only the pantry owner can remove members.",
-  "pantrySharingInvite": "Invite member",
-  "pantryMemberInvited": "Invited · awaiting confirmation",
-  "pantryRoleOwner": "Pantry owner",
-  "pantryRoleEditor": "Can edit",
 
   "profileGroupInfo": "Info",
   "profileEditSoon": "Editing your profile is coming in a later version.",

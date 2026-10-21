@@ -34,7 +34,10 @@ class ShoppingListController extends _$ShoppingListController {
 
   ShoppingList? get _list => state.asData?.value;
 
-  Future<void> refresh() => ref.refresh(shoppingListControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   /// M-01's "Tạo danh sách mua sắm" button.
   Future<Result<ShoppingList>> generateFromWeek(String mealPlanId) async {
@@ -48,7 +51,10 @@ class ShoppingListController extends _$ShoppingListController {
   /// Checking an item requires [purchase] (the backend uses it to create the
   /// resulting inventory batch); un-checking must omit it. The caller decides
   /// which applies by checking `item.checked` before calling this.
-  Future<void> toggleChecked(String itemId, {ShoppingPurchaseDraft? purchase}) async {
+  Future<void> toggleChecked(
+    String itemId, {
+    ShoppingPurchaseDraft? purchase,
+  }) async {
     final list = _list;
     if (list == null) return;
     final item = list.items.firstWhere((i) => i.id == itemId);
@@ -116,7 +122,11 @@ class ShoppingListController extends _$ShoppingListController {
           .read(shoppingListRepositoryProvider)
           .addItem(
             listId: list.id,
-            draft: ShoppingListItemDraft(name: ing.name, quantity: qty, unit: ing.unit),
+            draft: ShoppingListItemDraft(
+              name: ing.name,
+              quantity: qty,
+              unit: ing.unit,
+            ),
           );
       res.fold((_) {}, (item) {
         final cur = _list ?? list;

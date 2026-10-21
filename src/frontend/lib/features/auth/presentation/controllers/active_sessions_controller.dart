@@ -14,22 +14,21 @@ class ActiveSessionsController extends _$ActiveSessionsController {
     return res.fold((f) => throw f, (list) => list);
   }
 
-  Future<void> refresh() =>
-      ref.refresh(activeSessionsControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   /// Revoke one session and drop it from the list. Rethrows the `Failure` so the
   /// screen can show a snackbar.
   Future<void> revoke(String id) async {
     final res = await ref.read(authRepositoryProvider).revokeSession(id);
-    res.fold(
-      (f) => throw f,
-      (_) {
-        final current = state.asData?.value ?? const [];
-        state = AsyncData([
-          for (final s in current)
-            if (s.id != id) s,
-        ]);
-      },
-    );
+    res.fold((f) => throw f, (_) {
+      final current = state.asData?.value ?? const [];
+      state = AsyncData([
+        for (final s in current)
+          if (s.id != id) s,
+      ]);
+    });
   }
 }

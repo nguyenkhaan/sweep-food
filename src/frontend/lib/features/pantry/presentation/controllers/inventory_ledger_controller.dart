@@ -12,13 +12,16 @@ part 'inventory_ledger_controller.g.dart';
 class InventoryLedgerController extends _$InventoryLedgerController {
   @override
   Future<Paginated<InventoryLedgerEntry>> build(String? batchId) async {
-    final res =
-        await ref.watch(pantryRepositoryProvider).ledger(batchId: batchId);
+    final res = await ref
+        .watch(pantryRepositoryProvider)
+        .ledger(batchId: batchId);
     return res.fold((f) => throw f, (p) => p);
   }
 
-  Future<void> refresh() =>
-      ref.refresh(inventoryLedgerControllerProvider(batchId).future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   Future<void> loadMore() async {
     final current = state.asData?.value;

@@ -54,62 +54,51 @@ class PantryListController extends _$PantryListController {
 
   Future<PantryItem> add(PantryItemDraft draft) async {
     final res = await _repo.add(draft);
-    return res.fold(
-      (f) => throw f,
-      (item) {
-        state = AsyncData([..._current, item]);
-        ref.invalidate(pantrySummaryProvider);
-        return item;
-      },
-    );
+    return res.fold((f) => throw f, (item) {
+      state = AsyncData([..._current, item]);
+      ref.invalidate(pantrySummaryProvider);
+      return item;
+    });
   }
 
   Future<PantryItem> updateItem(String id, PantryItemDraft draft) async {
     final res = await _repo.update(id, draft);
-    return res.fold(
-      (f) => throw f,
-      (updated) {
-        state = AsyncData([
-          for (final i in _current) i.id == id ? updated : i,
-        ]);
-        ref.invalidate(pantrySummaryProvider);
-        return updated;
-      },
-    );
+    return res.fold((f) => throw f, (updated) {
+      state = AsyncData([for (final i in _current) i.id == id ? updated : i]);
+      ref.invalidate(pantrySummaryProvider);
+      return updated;
+    });
   }
 
   Future<void> delete(String id) async {
     final prev = _current;
     state = AsyncData(prev.where((i) => i.id != id).toList()); // optimistic
     final res = await _repo.delete(id);
-    res.fold(
-      (f) {
-        state = AsyncData(prev); // rollback
-        throw f;
-      },
-      (_) => ref.invalidate(pantrySummaryProvider),
-    );
+    res.fold((f) {
+      state = AsyncData(prev); // rollback
+      throw f;
+    }, (_) => ref.invalidate(pantrySummaryProvider));
   }
 
   Future<PantryItem> consume(String id, {required double quantityUsed}) async {
     final res = await _repo.consume(id, quantityUsed: quantityUsed);
-    return res.fold(
-      (f) => throw f,
-      (updated) {
-        state = AsyncData([
-          if (updated.status == PantryItemStatus.active)
-            for (final i in _current) i.id == id ? updated : i
-          else
-            for (final i in _current)
-              if (i.id != id) i,
-        ]);
-        ref.invalidate(pantrySummaryProvider);
-        return updated;
-      },
-    );
+    return res.fold((f) => throw f, (updated) {
+      state = AsyncData([
+        if (updated.status == PantryItemStatus.active)
+          for (final i in _current) i.id == id ? updated : i
+        else
+          for (final i in _current)
+            if (i.id != id) i,
+      ]);
+      ref.invalidate(pantrySummaryProvider);
+      return updated;
+    });
   }
 
-  Future<void> refresh() => ref.refresh(pantryListControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   /// Insert an already-built item (leftover saved after cooking, D-06).
   void addExisting(PantryItem item) {
@@ -135,7 +124,8 @@ class PantryListController extends _$PantryListController {
 /// The filtered + sorted list the K-01 screen renders.
 @riverpod
 List<PantryItem> pantryListView(Ref ref) {
-  final items = ref.watch(pantryListControllerProvider).asData?.value ?? const [];
+  final items =
+      ref.watch(pantryListControllerProvider).asData?.value ?? const [];
   final f = ref.watch(pantryFilterControllerProvider);
 
   var out = items.where((i) {
@@ -147,22 +137,21 @@ List<PantryItem> pantryListView(Ref ref) {
     return true;
   }).toList();
 
-  out.sort(
-    switch (f.sort) {
-      PantrySort.priority => (a, b) =>
-          a.priorityScore.compareTo(b.priorityScore),
-      PantrySort.name => (a, b) =>
-          a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-      PantrySort.recent => (a, b) => b.addedAt.compareTo(a.addedAt),
-    },
-  );
+  out.sort(switch (f.sort) {
+    PantrySort.priority => (a, b) => a.priorityScore.compareTo(b.priorityScore),
+    PantrySort.name => (a, b) => a.name.toLowerCase().compareTo(
+      b.name.toLowerCase(),
+    ),
+    PantrySort.recent => (a, b) => b.addedAt.compareTo(a.addedAt),
+  });
   return out;
 }
 
 /// Per-tier counts for the segmented control chips.
 @riverpod
 Map<StorageTier?, int> pantryTierCounts(Ref ref) {
-  final items = ref.watch(pantryListControllerProvider).asData?.value ?? const [];
+  final items =
+      ref.watch(pantryListControllerProvider).asData?.value ?? const [];
   final counts = <StorageTier?, int>{null: items.length};
   for (final tier in StorageTier.values) {
     counts[tier] = items.where((i) => i.storageTier == tier).length;
