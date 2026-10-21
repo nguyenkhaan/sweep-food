@@ -145,6 +145,7 @@ class ExpiryFreshnessRow extends ConsumerWidget {
       itemName: itemName,
       storageTier: storageTier,
       initialAnswers: freshness?.answers,
+      initialOtherAnswers: freshness?.otherAnswers,
     );
     if (estimate != null) onChanged(null, estimate);
   }

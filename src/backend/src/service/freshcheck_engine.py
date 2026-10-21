@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from math import floor
 
 from src.model.enum_model import StorageMode
 
-RULE_VERSION = "freshcheck-infer-v1.0"
+RULE_VERSION = "freshcheck-infer-v1.1"
 _LOWER_BOUND_FACTOR = 0.6
 _TIER_MAX_HOURS = {
     "tier_2_acceptable": 48.0,
@@ -60,6 +60,15 @@ class FreshCheckKnowledgeBase:
 
 
 @dataclass(frozen=True)
+class FreshCheckAxisScore:
+    """A validated free-text axis score; only server-side inference supplies it."""
+
+    score: float
+    hard_stop: bool
+    reason_vi: str
+
+
+@dataclass(frozen=True)
 class FreshCheckAssessmentRequest:
     """All inputs required for one deterministic FreshCheck assessment."""
 
@@ -69,6 +78,7 @@ class FreshCheckAssessmentRequest:
     answers: Mapping[str, str]
     now: datetime
     manufacturer_expires_at: datetime | None = None
+    other_scores: Mapping[str, FreshCheckAxisScore] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -113,19 +123,21 @@ class FreshCheckEngine:
         """Return a conservative expiry window for one validated KB snapshot."""
         if not _has_timezone(request.now) or not _has_timezone(request.manufacturer_expires_at):
             return _blocked_result(knowledge_base, request, "timezone")
-        if request.manufacturer_expires_at is not None:
-            return _manufacturer_result(knowledge_base, request)
-        if not _has_timezone(request.purchased_at):
-            return _blocked_result(knowledge_base, request, "timezone")
-        if request.purchased_at is None:
-            return _blocked_result(knowledge_base, request, "timing")
-
         ingredient = knowledge_base.ingredients.get(request.freshcheck_ingredient_id)
         if ingredient is None:
             return _blocked_result(knowledge_base, request, "ingredient")
         archetype = knowledge_base.archetypes.get(ingredient.archetype_id)
         if archetype is None:
             return _blocked_result(knowledge_base, request, "ingredient")
+        hard_stop = _sensory_hard_stop(knowledge_base, request, archetype)
+        if hard_stop is not None:
+            return hard_stop
+        if request.manufacturer_expires_at is not None:
+            return _manufacturer_result(knowledge_base, request)
+        if not _has_timezone(request.purchased_at):
+            return _blocked_result(knowledge_base, request, "timezone")
+        if request.purchased_at is None:
+            return _blocked_result(knowledge_base, request, "timing")
         storage_key = _STORAGE_KEYS.get(request.storage_mode)
         if storage_key is None:
             return _blocked_result(knowledge_base, request, "storage", archetype.archetype_id)
@@ -162,26 +174,19 @@ class FreshCheckEngine:
         reasons: list[str] = []
         claims = [shelf_life_claim] if shelf_life_claim is not None else []
         for axis in archetype.inspection_rubric:
+            axis_name = _string_value(axis.get("axis"))
+            inferred = request.other_scores.get(axis_name) if axis_name else None
+            if inferred is not None:
+                score *= inferred.score / 10.0
+                if inferred.score < 10.0:
+                    reasons.append(inferred.reason_vi)
+                continue
             option = _selected_option(axis, request.answers)
             if option is None:
                 continue
             claim = _string_value(option.get("claim"))
             if claim is not None:
                 claims.append(claim)
-            if _is_hard_stop(axis, option):
-                reason = _option_reason(option)
-                return _blocked_result(
-                    knowledge_base,
-                    request,
-                    "hard_stop",
-                    archetype.archetype_id,
-                    storage_key,
-                    "tier_4_spoiled",
-                    0.0,
-                    (reason,),
-                    _protocol_tips(archetype, "bad"),
-                    claims,
-                )
             penalty = _number_value(option.get("penalty")) or 0.0
             score *= 1.0 - penalty
             if penalty > 0:
@@ -363,6 +368,37 @@ def _selected_option(
     for option in options:
         if isinstance(option, Mapping) and option.get("value") == selected_value:
             return option
+    return None
+
+
+def _sensory_hard_stop(
+    knowledge_base: FreshCheckKnowledgeBase,
+    request: FreshCheckAssessmentRequest,
+    archetype: FreshCheckArchetype,
+) -> FreshCheckAssessmentResult | None:
+    """Spoilage wins even when the batch has a printed manufacturer expiry."""
+    for axis in archetype.inspection_rubric:
+        axis_name = _string_value(axis.get("axis"))
+        inferred = request.other_scores.get(axis_name) if axis_name else None
+        option = _selected_option(axis, request.answers)
+        if inferred is not None and inferred.hard_stop:
+            reason, claim = inferred.reason_vi, None
+        elif option is not None and _is_hard_stop(axis, option):
+            reason, claim = _option_reason(option), _string_value(option.get("claim"))
+        else:
+            continue
+        return _blocked_result(
+            knowledge_base,
+            request,
+            "hard_stop",
+            archetype.archetype_id,
+            _STORAGE_KEYS.get(request.storage_mode),
+            "tier_4_spoiled",
+            0.0,
+            (reason,),
+            _protocol_tips(archetype, "bad"),
+            [claim] if claim is not None else [],
+        )
     return None
 
 

@@ -47,6 +47,7 @@ class PantryRepositoryImpl implements PantryRepository {
       final assessed = await _freshness.assessBatch(
         saved.id,
         answers: estimate.answers,
+        otherAnswers: estimate.otherAnswers,
         purchasedAt: DateTime.now(),
       );
       final expiresAt = assessed.expiresAt;

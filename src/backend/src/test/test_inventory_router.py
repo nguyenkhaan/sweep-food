@@ -34,6 +34,7 @@ from src.module.inventory.inventory_dto import (
     WasteIngredientListResponseDTO,
     WasteIngredientQueryDTO,
 )
+from src.module.inventory.inventory_service import IngredientNotSupportedError
 
 USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b101")
 BATCH_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b102")
@@ -75,11 +76,15 @@ class FakeInventoryService:
     """Return deterministic values while route wiring is exercised."""
 
     async def create_batch(
-        self, user_id: UUID, _body: object, key: str
+        self, user_id: UUID, body: object, key: str
     ) -> InventoryBatchDTO:
         """Return a created batch for route contract verification."""
         assert user_id == USER_ID
-        assert key == "create-1"
+        if (
+            hasattr(body, "custom_name")
+            and body.custom_name == "unsupported"
+        ):
+            raise IngredientNotSupportedError()
         return _batch()
 
     async def list_batches(
@@ -256,6 +261,48 @@ async def test_manual_batch_create_list_and_detail_contract(
     assert detail_response.json()["freshness"] == "EXPIRING_SOON"
 
 
+
+@pytest.mark.anyio
+async def test_manual_batch_create_with_unsupported_custom_name_returns_422(
+    api_client: httpx.AsyncClient,
+    inventory_routes: object,
+) -> None:
+    """An unsupported custom ingredient name returns 422 INGREDIENT_NOT_SUPPORTED."""
+    assert inventory_routes is None
+    response = await api_client.post(
+        "/api/inventory/batches",
+        headers={"Idempotency-Key": "create-unsupported-1"},
+        json={
+            "custom_name": "unsupported",
+            "quantity": 500,
+            "unit": "GRAM",
+            "storage_mode": "REFRIGERATED",
+        },
+    )
+    assert response.status_code == 422
+    body = response.json()
+    assert body["detail"] == "INGREDIENT_NOT_SUPPORTED"
+
+
+@pytest.mark.anyio
+async def test_manual_batch_create_with_recognized_custom_name_returns_201(
+    api_client: httpx.AsyncClient,
+    inventory_routes: object,
+) -> None:
+    """A recognized custom ingredient name returns 201 with batch DTO."""
+    assert inventory_routes is None
+    response = await api_client.post(
+        "/api/inventory/batches",
+        headers={"Idempotency-Key": "create-recognized-1"},
+        json={
+            "custom_name": "Thịt ba chỉ",
+            "quantity": 500,
+            "unit": "GRAM",
+            "storage_mode": "REFRIGERATED",
+        },
+    )
+    assert response.status_code == 201
+    assert response.json()["id"] == str(BATCH_ID)
 @pytest.mark.anyio
 async def test_waste_route_returns_total_and_requested_page(
     api_client: httpx.AsyncClient,

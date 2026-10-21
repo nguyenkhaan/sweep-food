@@ -20,6 +20,7 @@ class RegisterScreen extends ConsumerStatefulWidget {
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _name = TextEditingController();
   final _phone = TextEditingController();
+  final _email = TextEditingController();
   final _password = TextEditingController();
   bool _agree = false;
 
@@ -27,6 +28,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   void dispose() {
     _name.dispose();
     _phone.dispose();
+    _email.dispose();
     _password.dispose();
     super.dispose();
   }
@@ -38,6 +40,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         .submit(
           name: _name.text,
           phone: _phone.text,
+          email: _email.text,
           password: _password.text,
           agreedToTerms: _agree,
           l10n: context.l10n,
@@ -96,6 +99,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.telephoneNumber],
               errorText: state.fieldErrors['phone'],
+            ),
+            Gap.gapMd,
+            AuthTextField(
+              label: l10n.authEmailOptional,
+              controller: _email,
+              hintText: 'ten@example.com',
+              prefixIcon: Icons.mail_outline_rounded,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              autofillHints: const [AutofillHints.email],
+              errorText: state.fieldErrors['email'],
             ),
             Gap.gapMd,
             AuthTextField(

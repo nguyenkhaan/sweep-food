@@ -595,6 +595,12 @@ abstract class AppL10n {
   /// **'Đã xảy ra lỗi không mong muốn.'**
   String get failUnknown;
 
+  /// No description provided for @failUnsupportedIngredient.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thực phẩm này app chưa hỗ trợ'**
+  String get failUnsupportedIngredient;
+
   /// No description provided for @permCameraTitle.
   ///
   /// In vi, this message translates to:
@@ -1080,6 +1086,12 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'VD: Rau củ'**
   String get pantryFieldCategoryHint;
+
+  /// No description provided for @pantryFieldCategoryAuto.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tự động nhận diện khi thực phẩm được hỗ trợ'**
+  String get pantryFieldCategoryAuto;
 
   /// No description provided for @pantryFieldStorage.
   ///
@@ -2250,6 +2262,12 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Email'**
   String get authEmail;
+
+  /// No description provided for @authEmailOptional.
+  ///
+  /// In vi, this message translates to:
+  /// **'Email (không bắt buộc)'**
+  String get authEmailOptional;
 
   /// No description provided for @authPassword.
   ///

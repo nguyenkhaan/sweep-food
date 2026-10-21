@@ -22,6 +22,7 @@ sealed class Failure {
     QuotaExceededFailure() => l10n.failQuota,
     ParseFailure() => l10n.failParse,
     UnknownFailure() => l10n.failUnknown,
+    UnsupportedIngredientFailure() => l10n.failUnsupportedIngredient,
     ConflictFailure() ||
     NotFoundFailure() ||
     ValidationFailure() ||
@@ -86,6 +87,16 @@ class ValidationFailure extends Failure {
   }) : super(message ?? 'Dữ liệu chưa hợp lệ.');
 
   final Map<String, String> fieldErrors;
+}
+
+/// 422 `INGREDIENT_NOT_SUPPORTED` — the smart parser could not recognize the
+/// food, so the backend refuses to store it in the inventory.
+class UnsupportedIngredientFailure extends Failure {
+  const UnsupportedIngredientFailure({super.cause, super.stackTrace})
+    : super('Thực phẩm này app chưa hỗ trợ');
+
+  /// The `detail` code the backend sends.
+  static const code = 'INGREDIENT_NOT_SUPPORTED';
 }
 
 /// 5xx or an unexpected server payload.

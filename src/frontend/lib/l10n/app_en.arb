@@ -108,6 +108,7 @@
   "failQuota": "You've used up this feature's quota for the month.",
   "failParse": "The response was not in the expected format.",
   "failUnknown": "Something unexpected went wrong.",
+  "failUnsupportedIngredient": "This food isn't supported by the app yet",
 
   "permCameraTitle": "Allow camera access",
   "permMicTitle": "Allow microphone access",
@@ -209,6 +210,7 @@
   "pantryFieldNameHint": "e.g. Cherry tomatoes",
   "pantryFieldCategory": "Food group",
   "pantryFieldCategoryHint": "e.g. Vegetables",
+  "pantryFieldCategoryAuto": "Filled in automatically once the food is recognized",
   "pantryFieldStorage": "Where it's stored",
   "pantryFieldExpiry": "Use-by date",
   "pantryFieldPrice": "Price (optional)",
@@ -455,6 +457,7 @@
   "authSignUp": "Sign up",
   "authCreateAccount": "Create account",
   "authEmail": "Email",
+  "authEmailOptional": "Email (optional)",
   "authPassword": "Password",
   "authFullName": "Full name",
   "authFullNameHint": "Jane Doe",

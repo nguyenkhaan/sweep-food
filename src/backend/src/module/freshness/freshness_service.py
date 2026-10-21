@@ -1,5 +1,6 @@
 """Read and persist mapped FreshCheck decisions from the active PostgreSQL KB."""
 
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from uuid import UUID
 
@@ -16,6 +17,7 @@ from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 from src.module.freshness.freshness_dto import (
     FreshnessAssessmentRequestDTO,
     FreshnessAssessmentResponseDTO,
+    FreshnessAxisScoreDTO,
     FreshnessPreviewRequestDTO,
     FreshnessPreviewResponseDTO,
     FreshnessQuestionDTO,
@@ -26,9 +28,11 @@ from src.module.inventory.inventory_service import InventoryBatchNotFoundError
 from src.service.freshcheck_engine import (
     FreshCheckAssessmentRequest,
     FreshCheckAssessmentResult,
+    FreshCheckAxisScore,
     FreshCheckEngine,
     FreshCheckKnowledgeBase,
 )
+from src.service.freshcheck_other_answer_service import FreshCheckOtherAnswerService
 from src.service.freshcheck_repository import (
     FreshCheckKBUnavailableError,
     FreshCheckKnowledgeBaseCache,
@@ -74,6 +78,7 @@ class FreshnessQuestionService:
         session: AsyncSession,
         cache: FreshCheckKnowledgeBaseCache | None = None,
         engine: FreshCheckEngine | None = None,
+        other_answer_service: FreshCheckOtherAnswerService | None = None,
     ) -> None:
         self._session = session
         self._repository = FreshCheckKnowledgeBaseRepository(
@@ -81,6 +86,7 @@ class FreshnessQuestionService:
             cache or FreshCheckKnowledgeBaseCache(),
         )
         self._engine = engine or FreshCheckEngine()
+        self._other_answer_service = other_answer_service or FreshCheckOtherAnswerService()
 
     async def questions(
         self, master_ingredient_id: UUID
@@ -120,7 +126,12 @@ class FreshnessQuestionService:
             self._repository,
             body.master_ingredient_id,
         )
-        _validate_answers(knowledge_base, freshcheck_ingredient_id, body.answers)
+        _validate_answers(
+            knowledge_base, freshcheck_ingredient_id, body.answers, body.other_answers
+        )
+        other_scores = await self._other_answer_service.predict(
+            knowledge_base, freshcheck_ingredient_id, body.other_answers
+        )
         result = self._engine.assess(
             knowledge_base,
             FreshCheckAssessmentRequest(
@@ -129,6 +140,7 @@ class FreshnessQuestionService:
                 purchased_at=body.purchased_at or assessed_at,
                 answers=body.answers,
                 now=assessed_at,
+                other_scores=other_scores,
             ),
         )
         return FreshnessPreviewResponseDTO(
@@ -148,6 +160,7 @@ class FreshnessQuestionService:
             claims=result.claims,
             rule_version=result.rule_version,
             expires_at=_estimated_expiry(result, assessed_at),
+            other_answer_scores=_other_score_dtos(other_scores),
         )
 
 
@@ -159,6 +172,7 @@ class FreshnessAssessmentService:
         session: AsyncSession,
         cache: FreshCheckKnowledgeBaseCache | None = None,
         engine: FreshCheckEngine | None = None,
+        other_answer_service: FreshCheckOtherAnswerService | None = None,
     ) -> None:
         self._session = session
         self._repository = FreshCheckKnowledgeBaseRepository(
@@ -166,6 +180,7 @@ class FreshnessAssessmentService:
             cache or FreshCheckKnowledgeBaseCache(),
         )
         self._engine = engine or FreshCheckEngine()
+        self._other_answer_service = other_answer_service or FreshCheckOtherAnswerService()
 
     async def assess_batch(
         self,
@@ -199,7 +214,13 @@ class FreshnessAssessmentService:
                 body,
                 assessed_at,
             )
-            _validate_answers(knowledge_base, freshcheck_ingredient_id, body.answers)
+            _validate_answers(
+                knowledge_base, freshcheck_ingredient_id, body.answers, body.other_answers
+            )
+            other_scores = await self._other_answer_service.predict(
+                knowledge_base, freshcheck_ingredient_id, body.other_answers
+            )
+            request = replace(request, other_scores=other_scores)
             result = self._engine.assess(knowledge_base, request)
             applied_expires_at = _apply_safe_expiry(batch, result, assessed_at)
             assessment = FreshCheckAssessmentModel(
@@ -211,7 +232,17 @@ class FreshnessAssessmentService:
                 freshcheck_ingredient_id=freshcheck_ingredient_id,
                 rule_version=result.rule_version,
                 answers=dict(body.answers),
-                outcome=_assessment_outcome(result, batch.expires_at),
+                outcome={
+                    **_assessment_outcome(result, batch.expires_at),
+                    "other_answers": dict(body.other_answers),
+                    "other_answer_scores": {
+                        axis: score.model_dump()
+                        for axis, score in _other_score_dtos(other_scores).items()
+                    },
+                    "other_answer_model": (
+                        self._other_answer_service.model if other_scores else None
+                    ),
+                },
                 claims=list(result.claims),
                 applied_expires_at=applied_expires_at,
             )
@@ -363,6 +394,7 @@ def _validate_answers(
     knowledge_base: FreshCheckKnowledgeBase,
     freshcheck_ingredient_id: str,
     answers: dict[str, str],
+    other_answers: dict[str, str],
 ) -> None:
     """Reject submitted sensory values that are not in the reviewed active rubric."""
     ingredient = knowledge_base.ingredients.get(freshcheck_ingredient_id)
@@ -386,6 +418,22 @@ def _validate_answers(
     }
     if any(answer not in allowed.get(axis, set()) for axis, answer in answers.items()):
         raise FreshCheckAssessmentInputError()
+    if any(axis not in allowed for axis in other_answers):
+        raise FreshCheckAssessmentInputError()
+
+
+def _other_score_dtos(
+    scores: dict[str, FreshCheckAxisScore],
+) -> dict[str, FreshnessAxisScoreDTO]:
+    """Expose axis-level predictions without confusing them with the total score."""
+    return {
+        axis: FreshnessAxisScoreDTO(
+            score=prediction.score,
+            hard_stop=prediction.hard_stop,
+            reason_vi=prediction.reason_vi,
+        )
+        for axis, prediction in scores.items()
+    }
 
 
 def _assessment_outcome(
@@ -435,6 +483,10 @@ def _assessment_response(
         claims=tuple(assessment.claims),
         rule_version=assessment.rule_version,
         expires_at=_outcome_expires_at(outcome, expires_at),
+        other_answer_scores={
+            axis: FreshnessAxisScoreDTO.model_validate(value)
+            for axis, value in outcome.get("other_answer_scores", {}).items()
+        },
     )
 
 

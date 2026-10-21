@@ -74,7 +74,12 @@ class VoiceCaptureController extends _$VoiceCaptureController {
     if (name == item.name) return;
     updateItem(
       index,
-      item.copyWith(name: name, ingredientId: null, freshness: null),
+      item.copyWith(
+        name: name,
+        ingredientId: null,
+        freshness: null,
+        category: '',
+      ),
     );
   }
 
@@ -110,7 +115,7 @@ class VoiceCaptureController extends _$VoiceCaptureController {
 /// A blank draft row for the "Thêm dòng" action on I-07.
 const ParsedItemDraft kBlankVoiceDraft = ParsedItemDraft(
   name: 'Nguyên liệu mới',
-  category: 'Khác',
+  category: '',
   quantity: 1,
   unit: MeasurementUnit.piece,
   storageTier: StorageTier.fridge,

@@ -6,6 +6,15 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 
 ### Added
 
+- Extraction response `fields` (`POST /api/extractions/ocr/label`, `ocr/invoice`, `asr`, `text`) and invoice `line_items[]` now include `category: string | null` containing the Vietnamese category name from `ingredient_categories.name` when matched to a catalog master ingredient, and `null` otherwise (partially reversing the earlier removal of category from extraction responses to enable app auto-fill).
+- FreshCheck previews and assessments accept `other_answers` for free-text sensory
+  observations. A single bounded call through the shared OpenAI client checks
+  relevance and estimates each requested axis against that axis's server-owned
+  scored anchors; standard selectable answers do not call the LLM.
+- FreshCheck results expose `other_answer_scores`. Unrelated or unclear text returns
+  HTTP 422 with a stable code and actionable per-axis feedback; invalid provider
+  output fails closed. Assessments retain descriptions, inferred scores and the
+  configured model in their immutable outcome, and idempotent replay skips inference.
 - Recipe media and cooking steps backfill for the catalog importer, populating 100% validated media URLs and structured instruction steps via relaxed JSON-LD scraping, thumbnail-filtering heuristics, curated step overrides, and sweep-food-AI dataset commits.
 - Catalog and recipe schema hardening migration with lossless Numeric conversions,
   case-insensitive catalog uniqueness, lookup indexes, and shelf-life validation.
@@ -26,6 +35,9 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 
 ### Fixed
 
+- FreshCheck hard-stop spoilage signals now block estimates even when a printed
+  manufacturer expiry exists; the printed date and batch quantity remain unchanged.
+  The inference rule version is now `freshcheck-infer-v1.1`.
 - Alembic revision template now includes dialect-specific imports emitted during autogeneration, allowing PostgreSQL `JSONB` migrations to run.
 - Pantry matcher no longer maps labels onto the wrong ingredient: aliases and the query are scored together (IDF-weighted token F1 over ordered tokens, graded tone / d-đ agreement, head-noun position, recipe popularity as the tie-break) instead of sequential tiers, brand and preparation noise (`C.P`, `làm sạch`, `nguyên con`) is stripped, regional synonyms no longer override real catalog names, and ambiguous or unknown labels return no match with a `match_confidence`.
 - OpenAI OCR/guard HTTP client is no longer closed after every call, which broke concurrent extraction requests on the shared service.
@@ -33,6 +45,7 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 - `DELETE /api/shopping-lists/{id}/items/{item_id}` no longer always returns 409: an empty receipt body is stored as SQL `NULL` (`JSONB(none_as_null=True)`) so it satisfies the 204-with-no-body check constraint.
 
 ### Changed
+- `POST /api/inventory/batches` called with `custom_name` now resolves the name through the deterministic smart parser. If recognized, the batch is stored under the resolved master ingredient (`master_ingredient_id` set, `custom_name = null`); if unrecognized, the request is rejected with HTTP 422 and detail `INGREDIENT_NOT_SUPPORTED`. Requests with `master_ingredient_id` and internal batch staging via `stage_batch` remain unaffected.
 
 - **Breaking authentication change:** registration now requires phone OTP verification followed by password creation; sign-in now uses phone number and password. OTP is reserved for registration, password recovery/change, identity changes, and step-up authentication.
 - **Breaking extraction contract change:** `POST /api/extractions/ocr/label|ocr/invoice|asr` now return only `ingredient_name`, `raw_name`, `master_ingredient_id`, `quantity`, `unit`, `packaged_at` and `expires_at` (invoice lines: `name`, `raw_name`, `master_ingredient_id`, `quantity`, `unit`, `unit_price`, `total_price`). `nutrition`, `freshness_guide`, `is_staple`, `category`, `master_ingredient_code`, `quantity_source`, `price`, `currency` and `barcode` were removed. `master_ingredient_id` is resolved from the AI catalog code through `master_ingredients.source_code` and is `null` when no master ingredient matches.
