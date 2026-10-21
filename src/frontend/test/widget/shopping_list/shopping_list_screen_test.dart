@@ -18,6 +18,19 @@ class _FakeShoppingListController extends ShoppingListController {
 
   @override
   Future<ShoppingList?> build() async => _initialList;
+
+  @override
+  Future<bool> removeItem(String itemId) async {
+    final list = state.asData?.value;
+    if (list != null) {
+      state = AsyncData(
+        list.copyWith(
+          items: list.items.where((i) => i.id != itemId).toList(),
+        ),
+      );
+    }
+    return true;
+  }
 }
 
 void main() {
@@ -110,5 +123,52 @@ void main() {
     expect(find.text('Cà chua'), findsNothing);
     expect(find.byType(EmptyState), findsOneWidget);
     expect(find.text('Đã mua hết nguyên liệu'), findsOneWidget);
+  });
+
+  testWidgets('swiping horizontally deletes ingredient from shopping list', (tester) async {
+    const initialList = ShoppingList(
+      id: 'sl1',
+      items: [
+        ShoppingListItem(
+          id: 'item-1',
+          name: 'Thịt bò',
+          quantity: 500,
+          unit: MeasurementUnit.gram,
+          category: 'Từ công thức',
+          checked: false,
+          alreadyInPantry: false,
+          isGenerated: true,
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          shoppingListControllerProvider.overrideWith(
+            () => _FakeShoppingListController(initialList),
+          ),
+        ],
+        child: MaterialApp(
+          locale: const Locale('vi'),
+          supportedLocales: AppL10n.supportedLocales,
+          localizationsDelegates: AppL10n.localizationsDelegates,
+          theme: AppTheme.light,
+          home: const ShoppingListScreen(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+    expect(find.text('Thịt bò'), findsOneWidget);
+
+    // Swipe horizontally to dismiss
+    await tester.drag(find.text('Thịt bò'), const Offset(-500, 0));
+    await tester.pumpAndSettle();
+
+    // Item should be gone
+    expect(find.text('Thịt bò'), findsNothing);
+    // Snackbar should confirm deletion
+    expect(find.text('Đã xóa "Thịt bò" khỏi danh sách'), findsOneWidget);
   });
 }

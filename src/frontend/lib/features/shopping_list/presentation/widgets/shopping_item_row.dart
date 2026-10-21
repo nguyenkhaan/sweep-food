@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_colors.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
@@ -57,9 +57,15 @@ class ShoppingItemRow extends StatelessWidget {
     if (onDismissed == null) return row;
     return Dismissible(
       key: ValueKey('shop-${item.id}'),
-      direction: DismissDirection.endToStart,
+      direction: DismissDirection.horizontal,
       onDismissed: (_) => onDismissed!(),
       background: Container(
+        alignment: Alignment.centerLeft,
+        color: context.colors.errorContainer,
+        padding: const EdgeInsets.only(left: Gap.lg),
+        child: Icon(Icons.delete_outline_rounded, color: context.colors.error),
+      ),
+      secondaryBackground: Container(
         alignment: Alignment.centerRight,
         color: context.colors.errorContainer,
         padding: const EdgeInsets.only(right: Gap.lg),

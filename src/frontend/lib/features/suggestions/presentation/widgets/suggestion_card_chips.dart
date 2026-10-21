@@ -1,4 +1,4 @@
-﻿import 'package:sweepfood/core/widgets/suggestion_card.dart';
+import 'package:sweepfood/core/widgets/suggestion_card.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
 
@@ -20,10 +20,6 @@ extension SuggestionCardChips on DishSuggestion {
         label: l10n.chipUseNearExpiry(nearExpiryCount),
         tone: SuggestionChipTone.nearExpiry,
       ),
-    (
-      label: l10n.chipAvailable(availabilityPercent),
-      tone: SuggestionChipTone.available,
-    ),
     if (toBuyCount > 0)
       (label: l10n.chipToBuy(toBuyCount), tone: SuggestionChipTone.toBuy)
     else

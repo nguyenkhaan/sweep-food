@@ -10,12 +10,11 @@ import 'package:sweepfood/core/widgets/suggestion_card.dart';
 import 'package:sweepfood/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
 import 'package:sweepfood/features/suggestions/data/datasources/suggestion_remote_data_source.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
-import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
 import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/score_breakdown_sheet.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
 
-/// S-01 — AI-ranked dishes for the current pantry + quick filters.
+/// S-01 — AI-ranked dishes for the current pantry.
 class SuggestionListScreen extends ConsumerWidget {
   const SuggestionListScreen({super.key});
 
@@ -29,8 +28,6 @@ class SuggestionListScreen extends ConsumerWidget {
       body: Column(
         children: [
           _AiStatusBanner(health: aiHealth),
-          const _FilterBar(),
-          Gap.gapXs,
           Expanded(
             child: RefreshIndicator(
               onRefresh: () =>
@@ -43,65 +40,6 @@ class SuggestionListScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _FilterBar extends ConsumerWidget {
-  const _FilterBar();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
-    final filter = ref.watch(suggestionFilterControllerProvider);
-    final notifier = ref.read(suggestionFilterControllerProvider.notifier);
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: Gap.lg),
-      child: Row(
-        children: [
-          for (final meal in MealType.values) ...[
-            _Chip(
-              label: meal.label(l10n),
-              selected: filter.mealType == meal,
-              onTap: () => notifier.toggleMeal(meal),
-            ),
-            const SizedBox(width: Gap.xs),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _Chip extends StatelessWidget {
-  const _Chip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onTap(),
-      showCheckmark: false,
-      selectedColor: context.colors.primary,
-      labelStyle: context.text.labelMedium?.copyWith(
-        color: selected
-            ? context.colors.onPrimary
-            : context.sweep.textSecondary,
-      ),
-      side: BorderSide(
-        color: selected ? context.colors.primary : context.sweep.hairline,
       ),
     );
   }

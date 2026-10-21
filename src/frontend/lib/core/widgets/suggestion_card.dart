@@ -1,9 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/recipe_image.dart';
 
-/// A coloured chip under a suggestion ("Dùng 3 đồ cận hạn", "Có sẵn 80%"…).
+/// A coloured chip under a suggestion ("Dùng 3 đồ cận hạn", "Đủ nấu ngay"…).
 enum SuggestionChipTone { nearExpiry, available, toBuy }
 
 typedef SuggestionChip = ({String label, SuggestionChipTone tone});
@@ -28,8 +28,8 @@ class SuggestionCard extends StatelessWidget {
   /// 0–100 match score.
   final int score;
 
-  /// AI-defined order. When present, it is more meaningful than the raw
-  /// LightGBM score and is shown instead of pretending that score is 0–100.
+  /// Rank-defined order (#1, #2, ...). When present, it is shown on the badge
+  /// to indicate the dish's priority rank.
   final int? rank;
 
   /// e.g. "15 phút · Dễ · 320 kcal / khẩu phần".
@@ -113,28 +113,38 @@ class _ScoreBadge extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: Shadows.e2,
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            rank == null ? '$score' : '#$rank',
-            style: context.text.titleSmall?.copyWith(
-              color: context.colors.onPrimary,
-              fontSize: 15,
-              height: 1,
+      child: rank != null
+          ? Text(
+              '#$rank',
+              style: context.text.titleMedium?.copyWith(
+                color: context.colors.onPrimary,
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                height: 1,
+              ),
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '$score',
+                  style: context.text.titleSmall?.copyWith(
+                    color: context.colors.onPrimary,
+                    fontSize: 15,
+                    height: 1,
+                  ),
+                ),
+                Text(
+                  context.l10n.scoreBadgeLabel,
+                  style: TextStyle(
+                    color: context.colors.onPrimary.withValues(alpha: 0.85),
+                    fontSize: 7,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.4,
+                  ),
+                ),
+              ],
             ),
-          ),
-          Text(
-            rank == null ? context.l10n.scoreBadgeLabel : 'AI',
-            style: TextStyle(
-              color: context.colors.onPrimary.withValues(alpha: 0.85),
-              fontSize: 7,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.4,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
