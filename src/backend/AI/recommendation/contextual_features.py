@@ -74,9 +74,16 @@ def pantry_index(
         for alias in extract_pantry_name_aliases(name) | {name}:
             if alias:
                 by_name[alias] = by_name.get(alias, 0.0) + grams
-                if not item.get("is_staple") and (_num(item.get("hours_to_expire"), 999.0) or 999.0) <= URGENT_HOURS:
+                if (
+                    not item.get("is_staple")
+                    and (_num(item.get("hours_to_expire"), 999.0) or 999.0)
+                    <= URGENT_HOURS
+                ):
                     urgent[alias] = urgent.get(alias, 0.0) + grams
     return by_name, by_code, urgent
+
+
+_pantry_index = pantry_index
 
 
 def _available(

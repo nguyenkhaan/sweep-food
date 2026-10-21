@@ -1,7 +1,8 @@
 """Deterministic candidate generation and validation for FreshCheck mappings."""
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
+from typing import Any
 from uuid import UUID
 
 from sqlalchemy import select
@@ -10,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.model.freshcheck_mapping_model import MasterIngredientFreshCheckMappingModel
 from src.model.freshcheck_model import FreshCheckIngredientModel
 from src.model.master_ingredient_model import MasterIngredientModel
+
 _KB_VERSION_PATTERN = re.compile(r"[0-9]+\.[0-9]+\.[0-9]+")
 _MATCH_METHODS = frozenset({"EXACT_CODE", "EXACT_NAME", "MANUAL_REVIEW"})
 
@@ -20,7 +22,6 @@ class MappingManifestValidationError(ValueError):
 
 class MappingSeedError(ValueError):
     """Raised when a reviewed mapping cannot be persisted safely."""
-
 
 
 @dataclass(frozen=True)
@@ -78,6 +79,7 @@ class ReviewedMapping:
     catalog_code: str | None = None
     optional: bool = False
 
+
 @dataclass(frozen=True)
 class MappingManifest:
     """A validated mapping manifest scoped to one FreshCheck KB release."""
@@ -99,6 +101,8 @@ class FreshCheckMappingSeedService:
             resolved_master_id = await self._resolve_master_ingredient_id(
                 manifest.kb_version, mapping
             )
+            if resolved_master_id is None:
+                continue
             existing_mapping = await self._session.scalar(
                 select(MasterIngredientFreshCheckMappingModel).where(
                     MasterIngredientFreshCheckMappingModel.master_ingredient_id
@@ -128,22 +132,23 @@ class FreshCheckMappingSeedService:
         self,
         kb_version: str,
         mapping: ReviewedMapping,
-    ) -> UUID:
+    ) -> UUID | None:
+        master_ingredient = await self._session.get(
+            MasterIngredientModel,
+            mapping.master_ingredient_id,
+        )
         freshcheck_ingredient = await self._session.get(
             FreshCheckIngredientModel,
             (kb_version, mapping.freshcheck_ingredient_id),
         )
         if freshcheck_ingredient is None:
-            raise MappingSeedError("Mapping references a missing FreshCheck ingredient.")
+            raise MappingSeedError(
+                "Mapping references a missing FreshCheck ingredient."
+            )
 
         # 1. Exact UUID lookup (matches legacy host identity directly)
-        master_ingredient = await self._session.get(
-            MasterIngredientModel,
-            mapping.master_ingredient_id,
-        )
         if master_ingredient is not None:
-            return master_ingredient.id
-
+            return getattr(master_ingredient, "id", mapping.master_ingredient_id)
         # 2. Source catalog code lookup (matches fresh install AI bundle importer)
         source_code = mapping.catalog_code or (
             getattr(freshcheck_ingredient, "code", None)
@@ -165,9 +170,13 @@ class FreshCheckMappingSeedService:
                     f"Mapping catalog_code '{source_code}' matches multiple master ingredients."
                 )
 
+        if getattr(mapping, "optional", False):
+            return None
+
         raise MappingSeedError(
             f"Mapping references a missing master ingredient: {mapping.master_ingredient_id}"
         )
+
     @staticmethod
     def _assert_idempotent(
         existing_mapping: MasterIngredientFreshCheckMappingModel,
@@ -195,7 +204,9 @@ def build_mapping_candidates(
     ambiguous: list[AmbiguousCandidate] = []
     unmapped: list[CatalogIngredient] = []
     for catalog_ingredient in catalog_ingredients:
-        matching_ids = freshcheck_ids_by_name.get(_comparison_name(catalog_ingredient.name), ())
+        matching_ids = freshcheck_ids_by_name.get(
+            _comparison_name(catalog_ingredient.name), ()
+        )
         if len(matching_ids) == 1:
             exact_name.append(
                 ExactNameCandidate(
@@ -241,19 +252,21 @@ async def resolve_manifest_mappings_to_catalog(
         master_id: UUID | None = master.id if master is not None else None
 
         # Verify source_code matches catalog_code if both present
-        if master is not None and mapping.catalog_code is not None and master.source_code is not None:
-            if str(master.source_code) != mapping.catalog_code:
-                raise MappingSeedError(
-                    f"Reviewed mapping catalog_code '{mapping.catalog_code}' does not match "
-                    f"master ingredient source_code '{master.source_code}' for {mapping.master_ingredient_id}."
-                )
+        if (
+            master is not None
+            and mapping.catalog_code is not None
+            and master.source_code is not None
+            and str(master.source_code) != mapping.catalog_code
+        ):
+            raise MappingSeedError(
+                f"Reviewed mapping catalog_code '{mapping.catalog_code}' does not match "
+                f"master ingredient source_code '{master.source_code}' for {mapping.master_ingredient_id}."
+            )
 
         # 2. Source catalog code lookup (AI code-based identity)
         if master_id is None:
             source_code = mapping.catalog_code or (
-                target_fc.get("code")
-                if mapping.match_method == "EXACT_CODE"
-                else None
+                target_fc.get("code") if mapping.match_method == "EXACT_CODE" else None
             )
             if source_code:
                 matching = (
@@ -311,13 +324,17 @@ def parse_mapping_manifest(payload: object) -> MappingManifest:
     if not isinstance(payload, dict):
         raise MappingManifestValidationError("Mapping manifest must be an object.")
     if _contains_null(payload):
-        raise MappingManifestValidationError("Mapping manifest cannot contain null values.")
+        raise MappingManifestValidationError(
+            "Mapping manifest cannot contain null values."
+        )
     kb_version = _manifest_string(payload, "kb_version")
     if not _KB_VERSION_PATTERN.fullmatch(kb_version):
         raise MappingManifestValidationError("Mapping manifest kb_version is invalid.")
     mappings_value = payload.get("mappings")
     if not isinstance(mappings_value, list):
-        raise MappingManifestValidationError("Mapping manifest mappings must be a list.")
+        raise MappingManifestValidationError(
+            "Mapping manifest mappings must be a list."
+        )
     mappings = tuple(_parse_reviewed_mapping(item) for item in mappings_value)
     master_ingredient_ids = [mapping.master_ingredient_id for mapping in mappings]
     if len(set(master_ingredient_ids)) != len(master_ingredient_ids):
