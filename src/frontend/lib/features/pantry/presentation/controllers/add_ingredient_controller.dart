@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Provider;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/core/network/network_providers.dart';
+import 'package:sweepfood/features/catalog/data/repositories/ingredient_repository_impl.dart';
 import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
 import 'package:sweepfood/features/pantry/data/datasources/ingredient_match_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
@@ -96,7 +97,32 @@ class AddIngredientController extends _$AddIngredientController {
   }
 
   /// Persists via [PantryListController]. Throws a `Failure` on error.
-  Future<PantryItem> submit() {
+  Future<PantryItem> submit() async {
+    if (state.ingredientId == null &&
+        state.name.trim().isNotEmpty &&
+        editItemId == null) {
+      await matchTypedName();
+      if (state.ingredientId == null) {
+        try {
+          final searchRes = await ref
+              .read(ingredientRepositoryProvider)
+              .search(state.name.trim());
+          final items = searchRes.fold((_) => <Ingredient>[], (list) => list);
+          if (items.isNotEmpty) {
+            final exact = items.firstWhere(
+              (i) =>
+                  i.name.toLowerCase().trim() ==
+                  state.name.toLowerCase().trim(),
+              orElse: () => items.first,
+            );
+            state = state.copyWith(
+              ingredientId: exact.id,
+              category: exact.category,
+            );
+          }
+        } catch (_) {}
+      }
+    }
     final list = ref.read(pantryListControllerProvider.notifier);
     final id = editItemId;
     return id != null ? list.updateItem(id, state) : list.add(state);

@@ -17,6 +17,48 @@ final aiServiceHealthProvider = FutureProvider.autoDispose(
   (ref) => SuggestionRemoteDataSource(ref.watch(apiClientProvider)).health(),
 );
 
+typedef CookableSuggestionQuery = ({List<PantryItem> items, String prompt});
+
+/// Recommendations for the exact pantry selection made on the Pantry screen.
+/// This is separate from [suggestionListControllerProvider], which represents
+/// the user's entire active pantry.
+final cookableSuggestionProvider = FutureProvider.autoDispose
+    .family<List<DishSuggestion>, CookableSuggestionQuery>((ref, query) async {
+      final request = SuggestionRequest(
+        pantryItems: query.items
+            .where((item) => item.status == PantryItemStatus.active)
+            .map(_pantryItemToRecommendationDraft)
+            .toList(),
+        prompt: query.prompt.trim().isEmpty ? null : query.prompt.trim(),
+        limit: AppConstants.maxSuggestions,
+      );
+      final result = await ref
+          .watch(suggestionRepositoryProvider)
+          .fetch(request);
+      return result.fold(
+        (failure) => throw failure,
+        (items) => items.where((item) => !item.isMock).toList(),
+      );
+    });
+
+RecommendationPantryItemDraft _pantryItemToRecommendationDraft(
+  PantryItem item,
+) {
+  final quantityG = switch (item.unit) {
+    MeasurementUnit.kilogram => item.quantity * 1000.0,
+    MeasurementUnit.gram || MeasurementUnit.milliliter => item.quantity,
+    MeasurementUnit.liter => item.quantity * 1000.0,
+    _ => 200.0,
+  };
+  final expiryDate = item.expiryDate;
+  return RecommendationPantryItemDraft(
+    name: item.name,
+    code: item.ingredientId,
+    quantityG: quantityG > 0 ? quantityG : 200.0,
+    hoursToExpire: expiryDate?.difference(DateTime.now()).inHours.toDouble(),
+  );
+}
+
 /// UI filter state for S-01. Maps to a [SuggestionRequest] for the API.
 class SuggestionFilter {
   const SuggestionFilter({
@@ -88,25 +130,8 @@ class SuggestionListController extends _$SuggestionListController {
       final pantryAsync = ref.watch(pantryListControllerProvider);
       final pantryItems = pantryAsync.asData?.value ?? const <PantryItem>[];
       drafts = pantryItems
-          .where((p) => p.status == PantryItemStatus.active)
-          .map((p) {
-            double? hours;
-            if (p.expiryDate != null) {
-              hours = p.expiryDate!
-                  .difference(DateTime.now())
-                  .inHours
-                  .toDouble();
-            }
-            final double qtyG = p.unit == MeasurementUnit.kilogram
-                ? p.quantity * 1000.0
-                : p.quantity;
-            return RecommendationPantryItemDraft(
-              name: p.name,
-              code: p.ingredientId,
-              quantityG: qtyG > 0 ? qtyG : 200.0,
-              hoursToExpire: hours,
-            );
-          })
+          .where((item) => item.status == PantryItemStatus.active)
+          .map(_pantryItemToRecommendationDraft)
           .toList();
     } catch (_) {
       // In tests or isolated scopes where PantryListController is not wired

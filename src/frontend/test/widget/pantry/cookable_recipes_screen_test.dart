@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -5,6 +7,8 @@ import 'package:sweepfood/app/theme/app_theme.dart';
 import 'package:sweepfood/core/widgets/loading_skeleton.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/cookable_recipes_screen.dart';
+import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
@@ -45,6 +49,11 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
+          overrides: [
+            cookableSuggestionProvider.overrideWith(
+              (ref, query) => Completer<List<DishSuggestion>>().future,
+            ),
+          ],
           child: MaterialApp(
             locale: const Locale('vi'),
             supportedLocales: AppL10n.supportedLocales,
@@ -75,6 +84,11 @@ void main() {
 
       await tester.pumpWidget(
         ProviderScope(
+          overrides: [
+            cookableSuggestionProvider.overrideWith(
+              (ref, query) => Completer<List<DishSuggestion>>().future,
+            ),
+          ],
           child: MaterialApp(
             locale: const Locale('vi'),
             supportedLocales: AppL10n.supportedLocales,

@@ -8,6 +8,7 @@ import 'package:sweepfood/core/widgets/recipe_image.dart';
 import 'package:sweepfood/core/widgets/section_header.dart';
 import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
 import 'package:sweepfood/features/cooking/presentation/widgets/post_cook_confirm_sheet.dart';
+import 'package:sweepfood/features/cooking/presentation/widgets/post_cook_missing_sheet.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 import 'package:sweepfood/features/dishes/presentation/controllers/dish_detail_controller.dart';
 import 'package:sweepfood/features/dishes/presentation/widgets/cooking_steps_view.dart';
@@ -378,10 +379,20 @@ class _CookBarState extends ConsumerState<_CookBar> {
       );
       if (preview.hasMissingIngredients) {
         if (mounted) {
-          final names = preview.missingIngredients
-              .map((m) => m.ingredientName)
-              .join(', ');
-          AppSnack.show(context, 'Thiếu nguyên liệu: $names');
+          await PostCookMissingSheet.show(
+            context,
+            dishName: widget.dish.name,
+            servings: servings,
+            missingIngredients: preview.missingIngredients,
+            onReduceServings: servings > 1
+                ? () {
+                    final newServings = servings == 4 ? 2 : 1;
+                    ref
+                        .read(dishServingsProvider(widget.dish.id).notifier)
+                        .set(newServings);
+                  }
+                : null,
+          );
         }
         return;
       }

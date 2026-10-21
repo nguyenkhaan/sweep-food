@@ -283,7 +283,6 @@ async def test_selected_hard_stop_cannot_be_overridden_by_inferred_color(
     _reply(score="9"), _reply(score=True), _reply(score=None),
     _reply(score=9.0, hard_stop=True), {"axes": {}},
     {"axes": {"smell": _reply()["axes"]["color"]}},
-    {"axes": {"color": {"status": "relevant", "score": 9.0, "hard_stop": False}}},
 ])
 async def test_invalid_model_scores_never_update_expiry(
     sensory_cache: FreshCheckKnowledgeBaseCache, payload: object
@@ -305,6 +304,25 @@ async def test_invalid_model_scores_never_update_expiry(
     assert batch.expires_at is None
     assert session.added == []
 
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("reason", [None, "", "   "])
+async def test_a_missing_reason_does_not_fail_a_valid_score(
+    sensory_cache: FreshCheckKnowledgeBaseCache, reason: object
+) -> None:
+    """Models may leave the reason empty; the score is still valid and usable."""
+    payload = _reply(score=9.0)
+    payload["axes"]["color"]["reason_vi"] = reason
+    inference, http_client, _ = _inference(payload)
+    async with http_client:
+        preview = await FreshnessQuestionService(
+            cast(AsyncSession, _session(preview=True)), sensory_cache,
+            other_answer_service=inference,
+        ).preview(_preview(answers={"smell": "fresh"}), now=NOW)
+    color = preview.other_answer_scores["color"]
+    assert color.score == 9.0
+    assert color.reason_vi.strip()  # a generic Vietnamese note replaces the gap
+    assert preview.score == pytest.approx(9.0)
 
 @pytest.mark.anyio
 async def test_provider_unavailable_does_not_guess_a_fresh_score(
