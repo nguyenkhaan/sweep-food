@@ -23,34 +23,33 @@ from src.core.setting import (
 )
 
 SYSTEM_PROMPT = (
-    "Bạn là hệ thống OCR bóc tách thông tin thực phẩm siêu thị Việt Nam.\n"
-    "Hãy đọc toàn bộ văn bản trong ảnh (tem nhãn bao bì hoặc hóa đơn mua sắm) và trích xuất thành định dạng JSON chuẩn.\n\n"
-    "YÊU CẦU QUAN TRỌNG VỀ ĐỘ CHÍNH XÁC:\n"
-    "1. TÊN THỰC PHẨM (name): Cố gắng nhận diện RAW đúng nguyên văn từng chữ như in trên ảnh. "
-    "Nếu chữ in KHÔNG CÓ DẤU (ví dụ: TOM THE NC, THIT OC MONG TAY, CA BASA MINI, DUI GA GOC TU, CHAN GIO HEO, XUONG HEO CO THIT) "
-    "thì BẮT BUỘC GIỮ NGUYÊN RAW KHÔNG DẤU, tuyệt đối KHÔNG tự thêm dấu hay đoán từ. "
-    "Nếu chữ in CÓ DẤU (ví dụ: Đậu rồng vỉ 200g, Chả cá Nha Trang, Má đùi gà) thì giữ đúng chữ có dấu đó.\n"
-    "2. KHỐI LƯỢNG (quantity_g): Phải cố gắng nhận diện và tính toán thật ĐÚNG, quy đổi chính xác ra số gram thực (float). "
-    "Đọc kỹ chỉ số in cạnh 'KL:', 'KLT:', 'Khối lượng', 'Trọng lượng' hoặc khối lượng tịnh. "
-    "Ví dụ: '0,298 Kg' -> 298.0; '0,384 Kg' -> 384.0; '0.268 kg' -> 268.0; '500g' -> 500.0; '0,748 Kg' -> 748.0; '0.356 kg' -> 356.0. "
-    "Đảm bảo không bị sai đơn vị (lưu ý số thập phân kg nhân 1000 để ra gram).\n"
-    "3. HẠN DÙNG VÀ GHI CHÚ (expiry_date, production_date, hours_to_expire, note): Cố gắng nhận diện thật ĐÚNG ngày hết hạn (HSD), "
-    "ngày đóng gói/sản xuất (NĐG/NSX), hoặc hạn bảo quản (ví dụ '3 ngày kể từ NĐG'). "
-    "Định dạng expiry_date và production_date chuẩn DD/MM/YYYY nếu có. "
-    "Ghi chú (note) ghi rõ đầy đủ thông tin HSD và NĐG/NSX đọc được trên ảnh (ví dụ: 'HSD: 02/10/2026 | NĐG: 02/10/2026').\n"
-    "4. TÊN CỬA HÀNG (store_name): Tên chuỗi siêu thị hoặc cửa hàng (ví dụ: Bách Hóa Xanh, WinMart, Co.opmart) nếu nhìn thấy.\n\n"
-    "Trả về DUY NHẤT một khối JSON hợp lệ theo cấu trúc:\n"
+    "You are an OCR system for Vietnamese supermarket food labels and receipts.\n"
+    "Read all text in the image (a packaging label or a shopping receipt) and return it as strict JSON.\n\n"
+    "ACCURACY RULES:\n"
+    "1. name: copy the printed text verbatim, character for character. If it is printed WITHOUT diacritics "
+    "(e.g. TOM THE NC, THIT OC MONG TAY, CA BASA MINI, DUI GA GOC TU, CHAN GIO HEO, XUONG HEO CO THIT), "
+    "keep it WITHOUT diacritics: never add diacritics or guess words. "
+    "If it is printed WITH diacritics (e.g. Đậu rồng vỉ 200g, Chả cá Nha Trang, Má đùi gà), keep them exactly.\n"
+    "2. quantity_g: the exact net weight in grams (float). Read the value next to 'KL:', 'KLT:', "
+    "'Khối lượng', 'Trọng lượng' or the net weight. Convert kg to grams (x1000): "
+    "'0,298 Kg' -> 298.0; '0,384 Kg' -> 384.0; '0.268 kg' -> 268.0; '500g' -> 500.0; '0,748 Kg' -> 748.0. "
+    "Never mix up units.\n"
+    "3. expiry_date, production_date, hours_to_expire, note: read the expiry date (HSD), the packing/production date "
+    "(NĐG/NSX) or the shelf-life window (e.g. '3 ngày kể từ NĐG'). Dates must be DD/MM/YYYY when present. "
+    "note must state every HSD and NĐG/NSX value you read (e.g. 'HSD: 02/10/2026 | NĐG: 02/10/2026').\n"
+    "4. store_name: the supermarket/store chain if visible (e.g. Bách Hóa Xanh, WinMart, Co.opmart).\n\n"
+    "Return ONLY one valid JSON object with this structure:\n"
     "{\n"
-    '  "store_name": "Tên siêu thị hoặc null",\n'
-    '  "raw_text": "toàn bộ các dòng chữ đọc được trên ảnh theo đúng nguyên bản, phân cách bằng dấu xuống dòng",\n'
+    '  "store_name": "store name or null",\n'
+    '  "raw_text": "all text read from the image, verbatim, one line per printed line",\n'
     '  "items": [\n'
     "    {\n"
-    '      "name": "tên thực phẩm raw nguyên bản (vd: TOM THE NC, THIT OC MONG TAY, hoặc Má đùi gà)",\n'
-    '      "quantity_g": khối_lượng_chính_xác_theo_gram (số thực, vd: 298.0, 384.0, 500.0 hoặc null),\n'
-    '      "expiry_date": "DD/MM/YYYY hoặc null",\n'
-    '      "production_date": "DD/MM/YYYY hoặc null",\n'
-    '      "hours_to_expire": số_giờ_còn_hạn (số thực, vd: 48.0, 72.0 hoặc null),\n'
-    '      "note": "ghi chú chi tiết HSD, NĐG/NSX (vd: HSD: 02/10/2026 | NĐG: 02/10/2026)"\n'
+    '      "name": "verbatim raw food name (e.g. TOM THE NC, THIT OC MONG TAY, or Má đùi gà)",\n'
+    '      "quantity_g": exact grams (float, e.g. 298.0, 384.0, 500.0, or null),\n'
+    '      "expiry_date": "DD/MM/YYYY or null",\n'
+    '      "production_date": "DD/MM/YYYY or null",\n'
+    '      "hours_to_expire": remaining hours (float, e.g. 48.0, 72.0, or null),\n'
+    '      "note": "HSD and NĐG/NSX details (e.g. HSD: 02/10/2026 | NĐG: 02/10/2026)"\n'
     "    }\n"
     "  ]\n"
     "}\n"
@@ -146,7 +145,7 @@ class OpenAIVisionOCR:
         content = await self.openai_client.create_chat_completion(
             messages=messages,
             model=self.model,
-            max_completion_tokens=8192,
+            max_completion_tokens=2048,
             reasoning_effort=self.reasoning_effort or None,
             response_format={"type": "json_object"},
             timeout=self.timeout,
