@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    :root{--green-800:#1B4332;--green-700:#2D6A4F;--green-600:#40916C;--green-100:#D8F3DC;--amber-500:#F59E0B;--ink:#1A1C19;--ink-2:#5C5F5A;--ink-3:#8A8D87;--line:#E1E3DE;--fill:#EFF1EC;--bg:#F8F9FA;--surface:#FFFFFF;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--ink);background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;height:100vh}
+    .dialog{width:340px;background:var(--surface);border-radius:24px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;box-shadow:0 12px 32px rgba(0,0,0,0.15)}
+    .icon-wrap{width:56px;height:56px;border-radius:18px;background:var(--green-100);color:var(--green-700);display:flex;align-items:center;justify-content:center;font-size:28px}
+    h2{margin:0;font-size:18px;font-weight:700}
+    p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.45}
+    .stars{display:flex;gap:8px;margin:4px 0}
+    .star{font-size:32px;color:var(--amber-500);cursor:pointer;transition:transform .1s}
+    .star:hover{transform:scale(1.15)}
+    .star.dim{color:var(--line)}
+    .rating-label{font-size:13px;font-weight:700;color:var(--amber-500)}
+    textarea{width:100%;height:80px;border-radius:12px;border:1px solid var(--line);background:var(--bg);padding:10px 12px;font-family:inherit;font-size:13px;color:var(--ink);outline:none;resize:none}
+    textarea:focus{border-color:var(--green-700);background:var(--surface)}
+    .actions{display:flex;gap:10px;width:100%;margin-top:4px}
+    .btn-sec{flex:1;height:42px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink-2);font-weight:600;font-size:13px;cursor:pointer}
+    .btn-pri{flex:1;height:42px;border-radius:10px;border:none;background:var(--green-700);color:#fff;font-weight:600;font-size:13px;cursor:pointer}
+  </style>
+</helmet>
+<div class="dialog">
+  <div class="icon-wrap">⭐</div>
+  <div>
+    <h2>Bạn thấy SweepFood thế nào?</h2>
+    <p style="margin-top: 4px;">Đánh giá của bạn giúp chúng tôi cải thiện trải nghiệm tốt hơn mỗi ngày.</p>
+  </div>
+
+  <div class="stars">
+    <span class="star">★</span>
+    <span class="star">★</span>
+    <span class="star">★</span>
+    <span class="star">★</span>
+    <span class="star">★</span>
+  </div>
+  <div class="rating-label">Tuyệt vời (5 sao)</div>
+
+  <textarea placeholder="Chia sẻ thêm cảm nhận hoặc tính năng bạn mong muốn có..."></textarea>
+
+  <div class="actions">
+    <button class="btn-sec">Để sau</button>
+    <button class="btn-pri">Gửi đánh giá</button>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

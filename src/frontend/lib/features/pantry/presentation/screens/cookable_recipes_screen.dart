@@ -6,6 +6,7 @@ import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/empty_state.dart';
+import 'package:sweepfood/features/dishes/domain/entities/local_dishes.dart';
 import 'package:sweepfood/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
@@ -435,6 +436,10 @@ class _CookableRecipesScreenState extends ConsumerState<CookableRecipesScreen> {
                     onTapDish: () {
                       context.push(
                         '${Routes.suggestions}/dish/${match.dishId}',
+                        extra: getLocalDishSuggestion(
+                          match.dishId,
+                          customName: match.dishName,
+                        ),
                       );
                     },
                   ),
