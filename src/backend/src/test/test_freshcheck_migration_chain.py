@@ -8,6 +8,7 @@ from alembic.script import ScriptDirectory
 BACKEND_ROOT = Path(__file__).resolve().parents[2]
 FRESHCHECK_ASSESSMENT_REVISION = "98d6d2fdff50"
 AI_CATALOG_REVISION = "e2b4f68a10cd"
+RECIPE_UNIT_REPAIR_REVISION = "a7c1d94e5b20"
 
 
 def test_freshcheck_assessment_revision_is_the_only_alembic_head() -> None:
@@ -18,7 +19,10 @@ def test_freshcheck_assessment_revision_is_the_only_alembic_head() -> None:
     script = ScriptDirectory.from_config(config)
     heads = script.get_heads()
 
-    assert heads == [AI_CATALOG_REVISION]
+    assert heads == [RECIPE_UNIT_REPAIR_REVISION]
+    repair_rev = script.get_revision(RECIPE_UNIT_REPAIR_REVISION)
+    assert repair_rev is not None
+    assert repair_rev.down_revision == AI_CATALOG_REVISION
     ai_rev = script.get_revision(AI_CATALOG_REVISION)
     assert ai_rev is not None
     assert ai_rev.down_revision == FRESHCHECK_ASSESSMENT_REVISION

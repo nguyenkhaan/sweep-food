@@ -73,13 +73,7 @@ abstract class Dish with _$Dish {
     final factor = target / servings;
     return copyWith(
       servings: target,
-      ingredients: [
-        for (final i in ingredients)
-          i.copyWith(
-            quantity: i.quantity * factor,
-            missingQty: i.missingQty * factor,
-          ),
-      ],
+      ingredients: [for (final i in ingredients) i.scaledBy(factor)],
     );
   }
 }

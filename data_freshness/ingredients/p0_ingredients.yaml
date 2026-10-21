@@ -8,7 +8,7 @@
   - thịt ba rọi
   - ba chỉ
   - thịt lợn ba chỉ
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -32,7 +32,7 @@
   - nạc heo
   - thịt heo nạc
   - thịt lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -54,7 +54,7 @@
   - sườn non
   - dẻ sườn heo
   - sườn cây
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -78,7 +78,7 @@
   - thăn bò
   - bò bắp
   - bò nạc
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -101,7 +101,7 @@
   - thịt gà tươi
   - ức gà
   - đùi gà
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -121,8 +121,27 @@
   - cá lóc
   - cá quả
   - cá chuối
+  archetype: WHOLE_FISH
+  base_shelf_life_hours:
+    room_temp_25_30c:
+      value: 3.0
+      claim: C-LOCAL-FISH-ROOM
+    fridge_2_4c:
+      value: 24.0
+      claim: C-FK-FISH-LEAN
+    soft_freeze_-3c:
+      value: 120.0
+      claim: C-LOCAL-SOFTFREEZE
+    freezer_-18c:
+      value: 4320.0
+      claim: C-FK-FISH-FREEZE
+- id: phi_le_ca_loc
+  code: '8022'
+  names_vi:
   - phi lê cá lóc
-  archetype: FISH_SEAFOOD
+  - cá lóc phi lê
+  - phi lê cá quả
+  archetype: FISH_FILLET
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -143,7 +162,7 @@
   - cá rô phi
   - rô phi đỏ
   - cá diêu hồng
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -165,7 +184,7 @@
   - tôm sú
   - tôm tươi
   - tôm đất
-  archetype: FISH_SEAFOOD
+  archetype: SHRIMP
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -186,7 +205,7 @@
   - mực ống
   - mực lá
   - mực nang
-  archetype: FISH_SEAFOOD
+  archetype: SQUID
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -205,7 +224,7 @@
   names_vi:
   - bạch tuộc tươi
   - bạch tuộc
-  archetype: FISH_SEAFOOD
+  archetype: SQUID
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0

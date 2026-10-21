@@ -1,0 +1,131 @@
+archetype: PORK
+name_vi: "Thịt heo (thịt lợn) tươi"
+applies_to_groups: ["thịt heo", "thịt lợn", "ba chỉ heo", "sườn heo", "nạc heo"]
+
+sensory_tiers:
+  tier_1_fresh:
+    score_range: [8.5, 10.0]
+    appearance: "Nạc hồng tươi đến hồng xám/đỏ nhạt tự nhiên, mỡ trắng sáng bóng ngà, lớp bì trắng sạch"
+    touch: "Màng ngoài khô se ráo, không dính tay, ấn lõm phẳng lại ngay"
+    smell: "Thơm thịt heo tươi đặc trưng, không mùi lạ"
+  tier_2_acceptable:
+    score_range: [6.0, 8.5]
+    appearance: "Hơi nhạt màu hoặc hơi sẫm, mỡ hơi đục"
+    touch: "Bề mặt hơi ướt rỉ dịch nhẹ, đàn hồi giảm nhẹ"
+    smell: "Nhạt mùi, chưa có mùi chua"
+  tier_3_warning:
+    score_range: [3.0, 6.0]
+    appearance: "Xỉn màu nâu xám, mỡ ngả vàng tối hoặc thâm"
+    touch: "Bề mặt dính nhớt nhờn rõ rệt, ấn còn vết lõm"
+    smell: "Hơi chua hoặc ôi khét mỡ nhẹ"
+  tier_4_spoiled:
+    score_range: [0.0, 3.0]
+    appearance: "Xám xanh, xanh lục, có đốm nấm mốc"
+    touch: "Rất nhớt dính kéo sợi, thịt mềm nhão phân rã"
+    smell: "Chua ôi thối nồng nặc, khai amoniac"
+
+inspection_rubric:
+  - axis: color
+    question_vi: "Màu sắc phần nạc và mỡ heo?"
+    stop_if: [xam_xanh]
+    options:
+      - value: hong_tuoi
+        label_vi: "Hồng tươi đến hồng xám/đỏ nhạt tự nhiên, mỡ trắng sáng bóng ngà"
+        penalty: 0.0
+        claim: C-TCVN7046-COLOR
+      - value: hoi_nhat_tham
+        label_vi: "Hơi nhạt màu hoặc hơi sẫm, mỡ hơi đục"
+        penalty: 0.15
+        reason_vi: "Thịt mất dịch hoặc bắt đầu oxy hóa bề mặt nhẹ"
+        claim: C-TCVN7046-COLOR
+      - value: xin_xam
+        label_vi: "Xỉn màu nâu xám, mỡ ngả vàng tối hoặc thâm"
+        penalty: 0.45
+        reason_vi: "Thịt lợn mất độ tươi, mỡ ngả vàng tối hoặc thịt xỉn màu"
+        claim: C-TCVN7046-COLOR
+      - value: xam_xanh
+        label_vi: "Xám xanh/xanh lục, mỡ xỉn thâm, có mốc"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Thịt lợn biến màu xám xanh hoặc phát triển nấm mốc ươn hỏng"
+        claim: C-TCVN7046-COLOR
+
+  - axis: stickiness
+    question_vi: "Sờ bề mặt miếng thịt heo?"
+    stop_if: [rat_nhot]
+    options:
+      - value: kho_rao
+        label_vi: "Màng ngoài khô se ráo, sạch, không dính tay"
+        penalty: 0.0
+        claim: C-TCVN7046-TOUCH
+      - value: hoi_uot
+        label_vi: "Hơi ướt rỉ dịch nhẹ, chưa dính tay"
+        penalty: 0.15
+        reason_vi: "Rỉ dịch tế bào do bảo quản mát hoặc rã đông"
+        claim: C-TCVN7046-TOUCH
+      - value: dinh_nhot
+        label_vi: "Bề mặt dính nhớt nhờn rõ"
+        penalty: 0.45
+        reason_vi: "Vi khuẩn bề mặt tăng sinh tạo màng nhầy sinh học"
+        claim: C-TCVN7046-TOUCH
+      - value: rat_nhot
+        label_vi: "Rất nhớt dính, trơn tuột hoặc kéo sợi"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Màng nhầy vi sinh dày đặc — thịt đã hư hỏng mức độ nặng"
+        claim: C-TCVN7046-TOUCH
+
+  - axis: elasticity
+    question_vi: "Ấn ngón tay vào thớ thịt heo rồi buông ra?"
+    options:
+      - value: hoi_ngay
+        label_vi: "Vết lõm phẳng lại ngay, đàn hồi tốt"
+        penalty: 0.0
+        claim: C-TCVN7046-TOUCH
+      - value: hoi_cham
+        label_vi: "Vết lõm phẳng lại chậm"
+        penalty: 0.15
+        reason_vi: "Mô liên kết mất nước, cấu trúc protein cơ giảm độ căng"
+        claim: C-TCVN7046-TOUCH
+      - value: con_vet_lom
+        label_vi: "Còn vết lõm ngón tay rõ, không hồi lại"
+        penalty: 0.45
+        reason_vi: "Enzyme nội tại và vi sinh vật phân giải mô cơ thịt heo"
+        claim: C-TCVN7046-TOUCH
+      - value: nhun_nat
+        label_vi: "Thịt mềm nhão, mô mỡ chảy xệ phân rã"
+        penalty: 0.75
+        reason_vi: "Protein cơ thịt heo bị phân hủy nặng"
+        claim: C-TCVN7046-TOUCH
+
+  - axis: smell
+    question_vi: "Ngửi gần miếng thịt heo?"
+    stop_if: [chua_khai_ro]
+    options:
+      - value: thom_tuoi
+        label_vi: "Thơm thịt heo tươi đặc trưng, không mùi lạ"
+        penalty: 0.0
+        claim: C-TCVN7046-ODOR
+      - value: nhat
+        label_vi: "Mùi nhạt, không thơm rõ"
+        penalty: 0.15
+        reason_vi: "Hợp chất este và mùi thơm tươi bay hơi giảm dần"
+        claim: C-TCVN7046-ODOR
+      - value: hoi_chua
+        label_vi: "Hơi chua hoặc ôi khét mỡ nhẹ"
+        penalty: 0.45
+        reason_vi: "Thịt lợn bắt đầu giảm chất lượng, có mùi hơi chua hoặc ôi mỡ"
+        claim: C-TCVN7046-ODOR
+      - value: chua_khai_ro
+        label_vi: "Chua ôi thối rõ rệt, nồng mùi khai amoniac"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Thịt lợn phân hủy ươn hỏng nặng, bốc mùi hôi thối hoặc mùi khai"
+        claim: C-TCVN7046-ODOR
+
+preservation_protocols:
+  recommended: [fridge_2_4c]
+  prep: ["Thấm khô bề mặt trước khi cất", "Bọc màng thực phẩm hoặc hộp kín", "Chia phần theo bữa trước khi cấp đông"]
+  bad: ["Để lẫn thịt heo sống với đồ ăn chín (nguy cơ lây nhiễm chéo vi sinh)", "Rửa thịt bằng nước rồi để tủ lạnh không thấm khô"]
+
+business_rules: [tier3_must_cook, tier4_discard]

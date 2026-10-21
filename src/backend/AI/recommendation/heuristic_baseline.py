@@ -50,7 +50,8 @@ def compute_domain_heuristic_score(
         role = classify_ingredient_role(n, c if c else None)
 
         p_item = pantry_by_code.get(c) or pantry_by_name.get(n)
-        avail_g = float(p_item.get("quantity_g") or 0.0) if p_item else 0.0
+        raw_avail = p_item.get("quantity_g") if p_item else 0.0
+        avail_g = req_g if raw_avail is None else float(raw_avail or 0.0)
 
         el = compute_quantity_elasticity(avail_g, req_g, n, role)
 

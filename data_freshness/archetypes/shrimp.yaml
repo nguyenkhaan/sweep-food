@@ -1,0 +1,123 @@
+archetype: SHRIMP
+name_vi: "Tôm tươi (tôm biển, tôm nước ngọt)"
+applies_to_groups: ["tôm biển", "tôm sú", "tôm thẻ", "tôm đất", "tôm càng xanh", "tép đồng", "tôm bóc nõn", "tôm hùm"]
+
+sensory_tiers:
+  tier_1_fresh:
+    score_range: [8.5, 10.0]
+    appearance: "Vỏ sáng bóng, đầu và chân dính chặt vào thân; thịt trong ánh ngọc trai; khớp đốt thân linh hoạt, khép kín (hoặc tôm nõn bề mặt sáng trong)"
+    touch: "Thân tôm căng chắc, đàn hồi tốt khi nắn nhẹ"
+    smell: "Mùi biển hoặc mùi nước tự nhiên thoang thoảng hoặc hầu như không mùi"
+  tier_2_acceptable:
+    score_range: [6.0, 8.5]
+    appearance: "Vỏ hơi mờ nhẹ, có thể có vài đốm đen nhỏ trên vỏ ngoài (melanosis tự nhiên); đầu vẫn gắn liền thân"
+    touch: "Thân hơi mềm nhẹ nhưng không nhão"
+    smell: "Tanh vừa"
+  tier_3_warning:
+    score_range: [3.0, 6.0]
+    appearance: "Đầu lỏng lẻo rõ rệt, rụng một số chân; vỏ sẫm màu, các đốt thân hơi giãn rộng; thịt đục mờ"
+    touch: "Thịt mềm, các đốt thân lỏng bỏng"
+    smell: "Tanh nồng gắt, thoang thoảng mùi ươn"
+  tier_4_spoiled:
+    score_range: [0.0, 3.0]
+    appearance: "Đầu đứt rời rỉ dịch thối; thịt đổi sang màu hồng đỏ như luộc hoặc vàng đục; vỏ chảy nhớt nhờn rít"
+    touch: "Thịt mềm nhũn nát, bở rạc hoàn toàn"
+    smell: "Mùi khai amoniac nồng nặc, mùi trứng thối hoặc thối rữa"
+
+inspection_rubric:
+  - axis: shell_head
+    question_vi: "Kiểm tra vỏ, đầu và chân tôm (hoặc dạng sơ chế)?"
+    stop_if: [dau_roi_chay_dich]
+    options:
+      - value: dinh_chat_bong
+        label_vi: "Đầu và chân dính chặt vào thân, vỏ sáng bóng khép kín (tôm nguyên con)"
+        penalty: 0.0
+        claim: C-LOCAL-SHRIMP-INTEGRITY
+      - value: da_so_che_khong_dau
+        label_vi: "Đã sơ chế / bỏ đầu / bóc nõn (tôm không đầu, tôm nõn)"
+        penalty: 0.0
+        reason_vi: "Sản phẩm đã sơ chế loại bỏ đầu và vỏ theo quy cách thương phẩm"
+        claim: C-LOCAL-PROCESSED-FORM
+      - value: hoi_long_dom_den_nhe
+        label_vi: "Đầu hơi lỏng nhẹ, hoặc có vài đốm đen nhỏ trên vỏ ngoài (melanosis tự nhiên)"
+        penalty: 0.15
+        reason_vi: "Hiện tượng sẫm màu tự nhiên ngoài vỏ (melanosis), phân biệt với biến chất làm đổi màu thịt hay chảy nhớt"
+        claim: C-LOCAL-SHRIMP-MELANOSIS
+      - value: dau_long_gian_dot
+        label_vi: "Đầu lỏng lẻo rõ rệt, rụng chân, các khớp đốt thân giãn rộng"
+        penalty: 0.4
+        reason_vi: "Liên kết giữa đầu và thân bị lỏng lẻo do bảo quản kéo dài"
+        claim: C-LOCAL-SHRIMP-INTEGRITY
+      - value: dau_roi_chay_dich
+        label_vi: "Đầu tôm nguyên con bị đứt rời do ươn, rỉ dịch đen hoặc thân chảy nhớt đục"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Nội tạng đầu tôm bị phân hủy ươn hỏng nặng, rỉ dịch thối và chảy nhớt"
+        claim: C-LOCAL-SHRIMP-INTEGRITY
+
+  - axis: flesh_color
+    question_vi: "Quan sát màu sắc và độ trong của thịt tôm?"
+    stop_if: [hong_do_duc_nhot]
+    options:
+      - value: trong_ngoc_trai
+        label_vi: "Thịt trong tự nhiên, ánh ngọc trai đặc trưng (pearl-like color)"
+        penalty: 0.0
+        claim: C-FDA-SEAFOOD-SHRIMP-APPEARANCE
+      - value: hoi_duc_mo
+        label_vi: "Thịt hơi mờ đục, màu vỏ hoặc bề mặt hơi sẫm"
+        penalty: 0.15
+        reason_vi: "Thịt tôm bắt đầu giảm độ trong tự nhiên"
+        claim: C-FDA-SEAFOOD-SHRIMP-APPEARANCE
+      - value: hong_do_duc_nhot
+        label_vi: "Thịt chuyển màu hồng đỏ bất thường như đã luộc, hoặc vàng đục dính nhớt"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Thịt đổi màu ươn hỏng bất thường, nhớt dính do vi sinh vật phân hủy mô"
+        claim: C-FDA-SEAFOOD-SHRIMP-APPEARANCE
+
+  - axis: firmness
+    question_vi: "Nắn nhẹ vào thân tôm / thịt tôm?"
+    stop_if: [nhun_nat_bo]
+    options:
+      - value: san_chac_cang
+        label_vi: "Thân căng tròn, thịt săn chắc đàn hồi"
+        penalty: 0.0
+        claim: C-LOCAL-SHRIMP-TEXTURE
+      - value: hoi_mem
+        label_vi: "Thịt hơi mềm, đàn hồi giảm nhẹ"
+        penalty: 0.2
+        reason_vi: "Cơ thịt tôm bắt đầu giảm độ đàn hồi"
+        claim: C-LOCAL-SHRIMP-TEXTURE
+      - value: nhun_nat_bo
+        label_vi: "Thịt mềm nhũn nát, bở rạc hoặc chảy nhớt"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Cơ thịt bị phân hủy hoàn toàn khiến cấu trúc mềm nhũn, bở rạc"
+        claim: C-LOCAL-SHRIMP-TEXTURE
+
+  - axis: smell
+    question_vi: "Ngửi gần đầu và thân tôm?"
+    stop_if: [amoniac_thoi_h2s]
+    options:
+      - value: nhe_tu_nhien
+        label_vi: "Mùi biển hoặc mùi nước tự nhiên thoang thoảng hoặc hầu như không mùi (little or no odor)"
+        penalty: 0.0
+        claim: C-FDA-SEAFOOD-SHRIMP-ODOR
+      - value: tanh_gat
+        label_vi: "Tanh nồng gắt"
+        penalty: 0.2
+        reason_vi: "Mùi tanh tăng rõ rệt so với độ tươi ban đầu"
+        claim: C-FDA-SEAFOOD-SHRIMP-ODOR
+      - value: amoniac_thoi_h2s
+        label_vi: "Mùi khai amoniac nồng nặc, mùi chua hoặc mùi thối rữa"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Phân hủy ươn hỏng sinh mùi khai nồng, mùi chua hoặc mùi thối rữa"
+        claim: C-FDA-SEAFOOD-SHRIMP-ODOR
+
+preservation_protocols:
+  recommended: [fridge_2_4c, ice_0c, freezer_-18c]
+  prep: ["Rửa sạch với nước muối loãng lạnh, để ráo trước khi bảo quản", "Đối với tôm tươi có thể ngắt bỏ râu/đầu nếu không chế biến ngay; đối với tôm hùm cần bảo quản lạnh sâu chuyên biệt"]
+  bad: ["Để tôm ngâm trong nước ngọt đọng ở nhiệt độ phòng (khiến thịt nhanh nhũn vữa và nhiễm khuẩn)"]
+
+business_rules: [tier3_must_cook, tier4_discard]

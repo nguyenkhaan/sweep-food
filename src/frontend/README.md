@@ -2,18 +2,15 @@
 
 Ứng dụng Flutter (mobile + web) cho **SweepFood** — trợ lý quản lý nguyên liệu và gợi ý bữa ăn thông minh (team Phantoms, AISC 2026).
 
-> **Trạng thái:** đang triển khai theo `IMPLEMENTATION_PLAN.md`.
-> **M0 (Nền tảng + khung 5 tab) đã xong** — app chạy được, có theme sáng/tối từ design tokens, bottom nav 5 tab, hạ tầng network/error/storage/entitlements + thư viện component. Các tab hiện là placeholder; feature thật làm từ M1.
-> App đang chạy **mock-first**: dữ liệu lấy từ `assets/mock/*.json`, chưa cần backend.
+> **Trạng thái:** Ứng dụng đã hoàn thiện các tính năng cốt lõi và kết nối với Backend API theo [`../../docs/api-contract.md`](../../docs/api-contract.md). Hỗ trợ cả chế độ `live` và `mock` qua cấu hình environment.
 
 ## Tài liệu
 
 | File                                                      | Nội dung                                                                                       |
 | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| [`IMPLEMENTATION_PLAN.md`](IMPLEMENTATION_PLAN.md)       | Lộ trình code (M0–M6), quy ước, "nhận task thế nào" — **đọc trước khi code** |
-| [`plan.md`](plan.md)                                     | Danh sách screen, IA, hợp đồng API, domain model (giai đoạn design)                       |
-| Design canvas (Claude Design)                             | 80 artboard sáng + tối, mỗi artboard ứng 1 screen                                           |
-| [`../../docs/requirement.md`](../../docs/requirement.md) | Đặc tả sản phẩm gốc                                                                       |
+| [`../../docs/api-contract.md`](../../docs/api-contract.md)| Hợp đồng API chuẩn giữa Frontend và Backend                                                     |
+| [`../../docs/requirement.md`](../../docs/requirement.md) | Đặc tả sản phẩm gốc                                                                            |
+| Design canvas (Claude Design)                             | 80 artboard sáng + tối, mỗi artboard ứng 1 screen                                              |
 
 ## Công nghệ
 
@@ -45,7 +42,7 @@ flutter run -d chrome --dart-define-from-file=config/dev.json
 # hoặc:  flutter run -d <emulator-id> --dart-define-from-file=config/dev.json
 ```
 
-**huowngs daaaLuôn truyền `--dart-define-from-file=config/dev.json`** — nếu không, `AppConfig` dùng giá trị mặc định (mock, `10.0.2.2:8000`).
+**Luôn truyền `--dart-define-from-file=config/dev.json`** — nếu không, `AppConfig` dùng giá trị mặc định (`mock`, `10.0.2.2:8000`).
 Khi code, chạy song song codegen ở chế độ watch:
 
 ```powershell
@@ -92,7 +89,7 @@ lib/
 ├── shared/domain/                # StorageTier · MeasurementUnit · NutritionInfo · Expiry · DietaryPreference · Paginated
 └── features/                     # auth · onboarding · home · pantry · catalog · ingest · suggestions · dishes ·
                                   # cooking · nutrition · meal_plan · shopping_list · notifications · reports ·
-                                  # subscription · settings   (đa số còn là stub, làm dần theo milestone)
+                                  # subscription · settings
 assets/mock/                      # fixture JSON cho MockApiClient
 config/                           # dev.json · prod.json
 ```
@@ -102,7 +99,7 @@ Quy tắc:
 - Screen/widget nói chuyện với **controller Riverpod** (`@riverpod`), không gọi Dio / prefs trực tiếp.
 - Feature chỉ chạm API qua **repository**; repository trả `Either<Failure, T>` (dùng helper `guard()`), controller đổi thành `AsyncValue` cho UI.
 - DTO (`*_dto.dart`, freezed + json) không đi thẳng vào UI — map về entity.
-- Chuỗi text: qua **`context.l10n.<key>`** — key ở `lib/l10n/app_vi.arb` (nguồn) + `app_en.arb` (dịch), chạy `flutter gen-l10n`. Default `vi`; đổi English trong Cài đặt → Tùy chọn → Ngôn ngữ. Vài chuỗi data/nền còn tiếng Việt — xem M6.1 trong `IMPLEMENTATION_PLAN.md`.
+- Chuỗi text: qua **`context.l10n.<key>`** — key ở `lib/l10n/app_vi.arb` (nguồn) + `app_en.arb` (dịch), chạy `flutter gen-l10n`. Default `vi`; đổi English trong Cài đặt → Tùy chọn → Ngôn ngữ.
 - Màu ngữ nghĩa (hạn dùng, tầng bảo quản) đọc qua `Theme.of(context).extension<SweepColors>()` (hoặc `context.sweep`).
 
 ## Kiểm tra trước khi tạo PR
@@ -114,7 +111,7 @@ flutter analyze          # phải "No issues found!"
 flutter test
 ```
 
-Test đang ở mức tối thiểu (stub + mẫu); sẽ bổ sung unit/integration test theo milestone (xem `IMPLEMENTATION_PLAN.md` M6). `flutter analyze` hiện **sạch** — đừng làm hỏng.
+Chạy bộ kiểm thử tự động với `flutter test`. Giữ `flutter analyze` luôn **sạch** trước khi commit.
 
 ## Build phát hành
 

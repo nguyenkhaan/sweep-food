@@ -237,6 +237,24 @@ def test_rescued_items_are_unique_and_carry_required_grams() -> None:
 
     assert formatted["rescued_items"] == ["Đùi gà"]
     assert formatted["rescued_requirements"] == [{"name": "Đùi gà", "required_g": 600.0}]
+def test_badge_checks_pantry_quantity_not_just_presence() -> None:
+    """100 g of pork cannot make a 500 g dish ready; unknown stock stays presence-only."""
+    cand = {"id": "q-1", "name": "Món test"}
+    full_rec = {"id": "q-1", "name": "Món test", "default_servings": 4}
+    r_ings = [
+        {"master_ingredient_name": "Thịt heo", "estimated_weight_g": 500, "ingredient_role": "core"},
+        {"master_ingredient_name": "Muối", "estimated_weight_g": 5, "ingredient_role": "seasoning"},
+    ]
+
+    def badge(item: dict[str, object]) -> str:
+        return format_candidate_recommendation(
+            cand, full_rec, score=1.0, feats={"core_coverage": 1.0},
+            r_ings=r_ings, pantry_dict={"items": [item]}, household_size=4,
+        )["status_badge"]
+
+    assert badge({"name": "Thịt heo", "quantity_g": 100}) != "ready"
+    assert badge({"name": "Thịt heo", "quantity_g": 500}) == "ready"
+    assert badge({"name": "Thịt heo", "quantity_g": None}) == "ready"
 
 
 def test_tiering_rank_key() -> None:

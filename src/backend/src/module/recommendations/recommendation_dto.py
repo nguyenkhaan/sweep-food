@@ -16,7 +16,7 @@ class RecommendationPantryItemDTO(BaseModel):
 
     name: str = Field(min_length=1)
     code: str | None = None
-    quantity_g: float = Field(default=200, gt=0)
+    quantity_g: float | None = Field(default=None, gt=0)
     hours_to_expire: float | None = None
     is_staple: bool = False
 

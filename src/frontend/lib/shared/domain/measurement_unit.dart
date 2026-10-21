@@ -13,7 +13,8 @@ enum MeasurementUnit {
   bottle('chai', 'chai'),
   can('lon', 'lon'),
   slice('lat', 'lát'),
-  spoon('thia', 'thìa');
+  spoon('thia', 'thìa'),
+  other('other', 'phần');
 
   const MeasurementUnit(this.wire, this.label);
   final String wire;
@@ -29,7 +30,7 @@ enum MeasurementUnit {
     'LITER': MeasurementUnit.liter,
     'PIECE': MeasurementUnit.piece,
     'PACK': MeasurementUnit.pack,
-    // `OTHER` has no frontend equivalent; fall back to gram.
+    'OTHER': MeasurementUnit.other,
   };
 
   /// Accepts both the frontend `wire` tokens (`g`, `kg`, `cai`, …) and the
@@ -46,6 +47,10 @@ enum MeasurementUnit {
   /// Weight units combine numerically; count units don't.
   bool get isWeight =>
       this == MeasurementUnit.gram || this == MeasurementUnit.kilogram;
+
+  /// Volume units combine numerically; count units don't.
+  bool get isVolume =>
+      this == MeasurementUnit.milliliter || this == MeasurementUnit.liter;
 
   /// The backend `MeasurementUnit` enum token to send on writes. Units the
   /// backend has no equivalent for (`qua`, `bo`, `hop`, …) collapse to `OTHER`

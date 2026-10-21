@@ -1,5 +1,6 @@
 ﻿import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/core/utils/formatters/quantity_format.dart';
+import 'package:sweepfood/core/utils/recipe_scaling.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 part 'dish_ingredient.freezed.dart';
@@ -37,4 +38,19 @@ abstract class DishIngredient with _$DishIngredient {
 
   /// "cần mua 150 g" for the checklist row.
   String get missingLabel => formatQuantity(missingQty, unit);
+
+  /// This line for [factor] times the base servings: seasonings scale
+  /// sub-linearly and quantities round to cookable steps.
+  DishIngredient scaledBy(double factor) {
+    final scaled = scaleRecipeQuantity(
+      quantity,
+      unit,
+      factor,
+      seasoning: isSeasoning,
+    );
+    return copyWith(
+      quantity: scaled,
+      missingQty: quantity > 0 ? scaled * (missingQty / quantity) : 0,
+    );
+  }
 }

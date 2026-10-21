@@ -7,6 +7,11 @@ from typing import Any
 
 from AI.catalog.master_index import get_effective_codes
 from AI.recommendation.candidate_generator import extract_pantry_name_aliases
+from AI.recommendation.contextual_features import pantry_index
+
+# Pantry stock within 5% of the scaled requirement counts as enough (cook-preview
+# rounds quantities to cookable steps).
+_ENOUGH_RATIO = 0.95
 
 
 def _clean_code(code_val: object) -> str:
@@ -60,6 +65,8 @@ def format_candidate_recommendation(
         pantry_names.update(extract_pantry_name_aliases(it_name))
         pantry_names.add(it_name)
 
+    by_name_grams, by_code_grams, _urgent = pantry_index(pantry_dict.get("items", []))
+
     grouped_ings: dict[str, dict[str, Any]] = {}
     for ing in r_ings:
         clean_n = (ing.get("master_ingredient_name") or ing.get("cleaned_name") or "").strip()
@@ -103,7 +110,7 @@ def format_candidate_recommendation(
         for cleaned in sorted(g["cleaned_names"]):
             n_aliases |= extract_pantry_name_aliases(cleaned)
 
-        is_present = bool(
+        name_match = bool(
             (c and c in pantry_codes)
             or (n and n.strip().lower() in pantry_names)
             or bool(n_aliases & pantry_names)
@@ -111,6 +118,15 @@ def format_candidate_recommendation(
 
         roles = g.get("roles", [])
         is_staple = any(r == "seasoning" for r in roles)
+        available_g = max(
+            [by_code_grams.get(c, 0.0) if c else 0.0]
+            + [by_name_grams.get(a, 0.0) for a in n_aliases]
+        )
+        # Staples only need to exist; every other line needs enough quantity
+        # (the cook preview rejects shortfalls). Unknown stock counts as enough.
+        is_present = name_match and (
+            is_staple or available_g >= tot_g * _ENOUGH_RATIO
+        )
         is_accompaniment = bool(roles) and all(r == "accompaniment" for r in roles)
         first_raw = g["raw_texts"][0] if g["raw_texts"] else ""
 
