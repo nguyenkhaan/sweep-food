@@ -51,7 +51,6 @@ void main() {
       notifier.setQuantity(300);
       notifier.setUnit(MeasurementUnit.gram);
       notifier.setPrice(15000);
-      notifier.setCategory('Rau củ quả');
       notifier.setStorageTier(StorageTier.fridge);
 
       final newExpiry = DateTime(2026, 9, 8);
@@ -61,9 +60,24 @@ void main() {
       expect(state.name, 'Dưa leo');
       expect(state.quantity, 300);
       expect(state.priceVnd, 15000);
-      expect(state.category, 'Rau củ quả');
+      expect(state.category, isEmpty); // renamed, so no longer parser-matched
       expect(state.expiryDate, newExpiry);
       expect(state.isExpiryWarn, isFalse); // setExpiry clears the flag
+    });
+
+    test('renaming drops the smart-parser food group along with its match', () {
+      final container = createContainer();
+      final notifier =
+          container.read(labelReviewControllerProvider(job).notifier);
+      expect(container.read(labelReviewControllerProvider(job)).category, 'Rau củ');
+
+      notifier.setName('Cà chua bi'); // unchanged name keeps the group
+      expect(container.read(labelReviewControllerProvider(job)).category, 'Rau củ');
+
+      notifier.setName('Thứ gì đó lạ');
+      final state = container.read(labelReviewControllerProvider(job));
+      expect(state.category, isEmpty);
+      expect(state.ingredientId, isNull);
     });
 
     test('a FreshCheck estimate replaces the date and is dropped on rename or tier change', () {

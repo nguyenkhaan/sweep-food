@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from src.model.enum_model import StorageMode
 
@@ -41,6 +41,7 @@ class FreshnessAssessmentRequestDTO(BaseModel):
     purchased_at: datetime | None = None
     storage_mode: StorageMode | None = None
     answers: dict[str, str] = Field(default_factory=dict)
+    other_answers: dict[str, str] = Field(default_factory=dict, max_length=20)
 
     @field_validator("purchased_at")
     @classmethod
@@ -65,12 +66,46 @@ class FreshnessAssessmentRequestDTO(BaseModel):
             )
         return value
 
+    @field_validator("other_answers")
+    @classmethod
+    def validate_other_answers(cls, value: dict[str, str]) -> dict[str, str]:
+        """Reject unusable descriptions before spending any LLM tokens."""
+        if any(
+            not axis.strip()
+            or len(axis) > 64
+            or not description.strip()
+            or len(description) > 500
+            for axis, description in value.items()
+        ):
+            raise ValueError(
+                "Other answers require a non-blank axis (at most 64 characters) "
+                "and description (at most 500 characters)"
+            )
+        return {axis: description.strip() for axis, description in value.items()}
+
+    @model_validator(mode="after")
+    def validate_distinct_answer_axes(self) -> "FreshnessAssessmentRequestDTO":
+        """Each axis has one answer source and requests stay bounded overall."""
+        if self.answers.keys() & self.other_answers.keys():
+            raise ValueError("An axis cannot appear in both answers and other_answers")
+        if len(self.answers) + len(self.other_answers) > 20:
+            raise ValueError("At most 20 sensory answers are allowed")
+        return self
+
 
 class FreshnessPreviewRequestDTO(FreshnessAssessmentRequestDTO):
     """Sensory answers for an ingredient that is not stored in inventory yet."""
 
     master_ingredient_id: UUID
     storage_mode: StorageMode
+
+
+class FreshnessAxisScoreDTO(BaseModel):
+    """An inferred score for one free-text axis, before combining other axes."""
+
+    score: float = Field(ge=0, le=10, allow_inf_nan=False)
+    hard_stop: bool
+    reason_vi: str
 
 
 class FreshnessResultDTO(BaseModel):
@@ -92,6 +127,7 @@ class FreshnessResultDTO(BaseModel):
     claims: tuple[str, ...]
     rule_version: str
     expires_at: datetime | None
+    other_answer_scores: dict[str, FreshnessAxisScoreDTO] = Field(default_factory=dict)
 
 
 class FreshnessAssessmentResponseDTO(FreshnessResultDTO):

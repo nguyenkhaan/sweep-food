@@ -5,8 +5,10 @@ import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_answer_set.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/freshness_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/freshness_questions_form.dart';
 
 /// Modal bottom sheet cho tính năng FreshCheck (Đánh giá cảm quan thực phẩm).
 class FreshCheckSheet extends ConsumerStatefulWidget {
@@ -18,8 +20,12 @@ class FreshCheckSheet extends ConsumerStatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => FreshCheckSheet(item: item),
+      useSafeArea: true,
+      builder: (ctx) => Padding(
+        // Lift the sheet above the keyboard while typing a "Khác" answer.
+        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(ctx).bottom),
+        child: FreshCheckSheet(item: item),
+      ),
     );
   }
 
@@ -28,7 +34,8 @@ class FreshCheckSheet extends ConsumerStatefulWidget {
 }
 
 class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
-  final Map<String, String> _answers = {};
+  FreshnessAnswerSet _answers = const FreshnessAnswerSet();
+  Map<String, String> _axisErrors = const {};
   bool _initialized = false;
 
   @override
@@ -208,9 +215,9 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
             ),
             data: (kb) {
               if (!_initialized) {
-                for (final q in kb.questions) {
-                  _answers[q.axis] = q.defaultValue;
-                }
+                _answers = FreshnessAnswerSet(
+                  selected: {for (final q in kb.questions) q.axis: q.defaultValue},
+                );
                 _initialized = true;
               }
 
@@ -221,65 +228,74 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                 );
               }
 
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final q in kb.questions) ...[
-                      Text(
-                        q.questionVi,
-                        style: context.text.titleSmall
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Gap.gapXs,
-                      Wrap(
-                        spacing: Gap.xs,
-                        runSpacing: 4,
-                        children: [
-                          for (final opt in q.options)
-                            ChoiceChip(
-                              label: Text(opt.labelVi),
-                              selected: _answers[q.axis] == opt.value,
-                              onSelected: (selected) {
-                                if (selected) {
-                                  setState(() {
-                                    _answers[q.axis] = opt.value;
-                                  });
-                                }
-                              },
-                            ),
-                        ],
+              return Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FreshnessQuestionsForm(
+                        questions: kb.questions,
+                        answers: _answers,
+                        axisErrors: _axisErrors,
+                        enabled: !assessmentState.isLoading,
+                        onChanged: (next) {
+                          final stale = next.changedAxesFrom(_answers);
+                          setState(() {
+                            _axisErrors = {
+                              for (final e in _axisErrors.entries)
+                                if (!stale.contains(e.key)) e.key: e.value,
+                            };
+                            _answers = next;
+                          });
+                        },
                       ),
                       Gap.gapMd,
-                    ],
-                    if (assessmentState.errorMessage != null) ...[
-                      Text(
-                        assessmentState.errorMessage!,
-                        style: context.text.bodySmall
-                            ?.copyWith(color: context.colors.error),
-                      ),
-                      Gap.gapSm,
-                    ],
-                    PrimaryButton(
-                      label: 'Gửi đánh giá',
-                      loading: assessmentState.isLoading,
-                      onPressed: () async {
-                        final res = await controller.submit(
-                          batchId: item.id,
-                          answers: _answers,
-                          storageMode: item.storageTier.backendWire,
-                          purchasedAt: item.addedAt,
-                        );
-                        if (res != null) {
+                      if (assessmentState.errorMessage != null) ...[
+                        Text(
+                          assessmentState.errorMessage!,
+                          style: context.text.bodySmall
+                              ?.copyWith(color: context.colors.error),
+                        ),
+                        Gap.gapSm,
+                      ],
+                      PrimaryButton(
+                        label: 'Gửi đánh giá',
+                        loading: assessmentState.isLoading,
+                        onPressed: () async {
+                          final empty = _answers.emptyOtherAxes;
+                          if (empty.isNotEmpty) {
+                            setState(() {
+                              _axisErrors = {
+                                for (final a in empty)
+                                  a: 'Vui lòng nhập mô tả cho mục Khác.',
+                              };
+                            });
+                            return;
+                          }
+                          final res = await controller.submit(
+                            batchId: item.id,
+                            answers: _answers.selected,
+                            otherAnswers: _answers.otherToSend,
+                            storageMode: item.storageTier.backendWire,
+                            purchasedAt: item.addedAt,
+                          );
                           if (!context.mounted) return;
+                          if (res == null) {
+                            // Per-axis feedback from the backend, if any, goes
+                            // under the matching "Khác" box.
+                            setState(() {
+                              _axisErrors = Map.of(controller.value.axisErrors);
+                            });
+                            return;
+                          }
                           AppSnack.show(
                             context,
                             'Đã cập nhật hạn dùng cho lô thực phẩm.',
                           );
-                        }
-                      },
-                    ),
-                  ],
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

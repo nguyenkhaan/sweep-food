@@ -7,8 +7,8 @@ import pytest
 from src.model.enum_model import StorageMode
 from src.service.freshcheck_engine import (
     RULE_VERSION,
-    FreshCheckAssessmentRequest,
     FreshCheckArchetype,
+    FreshCheckAssessmentRequest,
     FreshCheckEngine,
     FreshCheckIngredient,
     FreshCheckKnowledgeBase,
@@ -124,7 +124,7 @@ def test_assessment_preserves_manufacturer_expiry() -> None:
     result = FreshCheckEngine().assess(
         _knowledge_base(),
         _request(
-            answers={"appearance": "mold"},
+            answers={"appearance": "fresh"},
             manufacturer_expires_at=manufacturer_expiry,
         ),
     )

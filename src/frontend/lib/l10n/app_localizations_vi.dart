@@ -262,7 +262,7 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get failUnauthorized =>
-      'Phiên đăng nhập đã hết hạn. Đăng nhập lại nhé.';
+      'Thông tin đăng nhập không hợp lệ. Đăng nhập lại nhé.';
 
   @override
   String get failForbidden => 'Bạn không có quyền thực hiện thao tác này.';
@@ -275,6 +275,9 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get failUnknown => 'Đã xảy ra lỗi không mong muốn.';
+
+  @override
+  String get failUnsupportedIngredient => 'Thực phẩm này app chưa hỗ trợ';
 
   @override
   String get permCameraTitle => 'Cho phép dùng máy ảnh';
@@ -557,6 +560,10 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get pantryFieldCategoryHint => 'VD: Rau củ';
+
+  @override
+  String get pantryFieldCategoryAuto =>
+      'Tự động nhận diện khi thực phẩm được hỗ trợ';
 
   @override
   String get pantryFieldStorage => 'Nơi bảo quản';
@@ -1032,6 +1039,9 @@ class AppL10nVi extends AppL10n {
   String get camReading => 'Đang đọc thông tin…';
 
   @override
+  String get camCaptured => 'Đã chụp ảnh';
+
+  @override
   String get camOpening => 'Đang mở máy ảnh…';
 
   @override
@@ -1217,6 +1227,9 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get authEmail => 'Email';
+
+  @override
+  String get authEmailOptional => 'Email (không bắt buộc)';
 
   @override
   String get authPassword => 'Mật khẩu';

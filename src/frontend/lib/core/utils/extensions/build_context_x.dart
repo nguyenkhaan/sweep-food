@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/core/error/failure.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
 
 extension BuildContextX on BuildContext {
@@ -15,6 +16,12 @@ extension BuildContextX on BuildContext {
 
   MediaQueryData get mq => MediaQuery.of(this);
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
+
+  /// Snack text for a failed save: "food not supported" when the backend
+  /// rejected the food, otherwise the generic error carrying [error].
+  String saveErrorMessage(Object error) => error is UnsupportedIngredientFailure
+      ? l10n.failUnsupportedIngredient
+      : l10n.scanSaveError('$error');
 
   void showSnack(String message, {SnackBarAction? action}) {
     ScaffoldMessenger.of(this)

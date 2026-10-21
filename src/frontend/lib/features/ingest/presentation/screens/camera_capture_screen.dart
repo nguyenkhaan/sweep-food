@@ -2,8 +2,13 @@
 // I-01 Quét tem nhãn & I-04 Quét hóa đơn
 // Design: CameraCapture.dc.html
 
+import 'dart:async';
+import 'dart:io';
+
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
@@ -54,11 +59,25 @@ class CameraCaptureScreen extends ConsumerStatefulWidget {
 }
 
 class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   late CameraScanMode _mode = widget.initialMode;
   CameraController? _controller;
   bool _torch = false;
   bool _busy = false;
+
+  /// True only while waiting for `takePicture()` (shutter shows a spinner).
+  bool _shooting = false;
+
+  /// The photo being processed; shown full-bleed instead of the live preview
+  /// so the user sees exactly what was captured. `null` = preview is live.
+  String? _capturedPath;
+  bool _capturedFromCamera = false;
+
+  /// Short white shutter flash: jumps to 1 on tap, fades back to 0.
+  late final AnimationController _flash = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 150),
+  );
 
   /// `null` while starting / when the preview is live;
   /// `'permission'` when the OS permission was refused;
@@ -79,6 +98,7 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _flash.dispose();
     _controller?.dispose();
     super.dispose();
   }
@@ -141,6 +161,9 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
         _controller = controller;
         _torch = false;
         _hint = null;
+        // A fresh controller is live; never keep a stale frozen frame over it
+        // (an in-flight scan clears its own frame when it finishes).
+        if (!_busy) _capturedPath = null;
       });
     } on Object catch (e) {
       if (mounted) setState(() => _hint = context.l10n.camOpenError('$e'));
@@ -173,16 +196,31 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
       return;
     }
     final l10n = context.l10n;
-    setState(() => _busy = true);
+    // Instant feedback before the (slow) capture returns.
+    unawaited(HapticFeedback.mediumImpact());
+    _flash.value = 1;
+    unawaited(_flash.reverse());
+    setState(() {
+      _busy = true;
+      _shooting = true;
+    });
+    final XFile shot;
     try {
-      final shot = await c.takePicture();
-      await _process(shot.path);
+      shot = await c.takePicture();
     } on Object catch (e) {
       if (mounted) {
-        setState(() => _busy = false);
+        setState(() {
+          _busy = false;
+          _shooting = false;
+          _capturedPath = null;
+        });
         _snack(l10n.camShootError('$e'));
       }
+      await _resumePreview();
+      return;
     }
+    if (!mounted) return;
+    await _process(shot.path, fromCamera: true);
   }
 
   Future<void> _pickFromGallery() async {
@@ -197,19 +235,60 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
       _snack(l10n.camGalleryError('$e'));
       return;
     }
-    if (!mounted || path == null) return;
-    setState(() => _busy = true);
+    if (!mounted || path == null || _busy) return;
     await _process(path);
   }
 
-  /// Shared: send [path] to OCR / Barcode lookup, then route to the review / failed screen.
-  Future<void> _process(String path) async {
+  /// Freezes the screen on [path]: torch off, live preview paused.
+  Future<void> _freeze(String path, {required bool fromCamera}) async {
+    setState(() {
+      _busy = true;
+      _shooting = false;
+      _capturedPath = path;
+      _capturedFromCamera = fromCamera;
+    });
+    final c = _controller;
+    if (c == null || !c.value.isInitialized) return;
+    if (_torch) {
+      try {
+        await c.setFlashMode(FlashMode.off);
+      } on Object catch (e) {
+        log.w('Could not turn the torch off', error: e);
+      }
+      if (mounted) setState(() => _torch = false);
+    }
     try {
+      await c.pausePreview();
+    } on Object catch (e) {
+      // Not supported everywhere; the frozen image covers the preview anyway.
+      log.w('pausePreview failed', error: e);
+    }
+  }
+
+  Future<void> _resumePreview() async {
+    final c = _controller;
+    if (c == null || !c.value.isInitialized || !c.value.isPreviewPaused) {
+      return;
+    }
+    try {
+      await c.resumePreview();
+    } on Object catch (e) {
+      log.w('resumePreview failed', error: e);
+    }
+  }
+
+  /// Shared: send [path] to OCR / Barcode lookup, then route to the review / failed screen.
+  Future<void> _process(String path, {bool fromCamera = false}) async {
+    // Pin the mode for the whole flow; the switcher is locked while busy, but
+    // never let a late change route a label photo down the receipt branch.
+    final mode = _mode;
+    try {
+      await _freeze(path, fromCamera: fromCamera);
       final notifier = ref.read(scanControllerProvider.notifier);
       final ScanJob job;
-      if (_mode == CameraScanMode.barcode) {
+      if (mode == CameraScanMode.barcode) {
         job = await notifier.lookupBarcode('8934567890123');
-      } else if (_mode == CameraScanMode.label) {
+      } else if (mode == CameraScanMode.label) {
         job = await notifier.scanLabel(path);
       } else {
         job = await notifier.scanReceipt(path);
@@ -223,15 +302,15 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
       // could not turn it into line items. Route that outcome to the review
       // screen so the user can inspect it, retake, or enter items manually.
       final hasUsableResult = job.hasItems ||
-          (_mode == CameraScanMode.receipt && !job.isFailed);
+          (mode == CameraScanMode.receipt && !job.isFailed);
       if (job.isFailed || !hasUsableResult) {
         context.push(
           '${Routes.pantry}/${Routes.scanFailed}',
-          extra: _mode.scanType,
+          extra: mode.scanType,
         );
         return;
       }
-      final route = _mode == CameraScanMode.receipt
+      final route = mode == CameraScanMode.receipt
           ? Routes.scanReceiptReview
           : Routes.scanLabelReview;
       context.push('${Routes.pantry}/$route', extra: job);
@@ -240,11 +319,20 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
       if (mounted) {
         context.push(
           '${Routes.pantry}/${Routes.scanFailed}',
-          extra: _mode.scanType,
+          extra: mode.scanType,
         );
       }
     } finally {
-      if (mounted) setState(() => _busy = false);
+      // `context.push` is not awaited: reset now so the camera is live again
+      // when the user pops back from review / scanFailed.
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _shooting = false;
+          _capturedPath = null;
+        });
+        await _resumePreview();
+      }
     }
   }
 
@@ -255,7 +343,9 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          if (_previewReady)
+          if (_capturedPath != null)
+            _CapturedImage(path: _capturedPath!)
+          else if (_previewReady)
             _CoverPreview(controller: _controller!)
           else
             const ColoredBox(color: Color(0xFF0B0D0B)),
@@ -267,7 +357,7 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
                 _Topbar(
                   mode: _mode,
                   torchOn: _torch,
-                  torchEnabled: _previewReady,
+                  torchEnabled: _previewReady && !_busy,
                   onClose: () => context.pop(),
                   onToggleTorch: _toggleTorch,
                 ),
@@ -284,11 +374,14 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
                 ),
                 _ModeSwitcher(
                   mode: _mode,
+                  enabled: !_busy,
                   onChanged: (m) => setState(() => _mode = m),
                 ),
                 Gap.gapMd,
                 _ActionBar(
+                  enabled: !_busy,
                   canShoot: _previewReady && !_busy,
+                  shooting: _shooting,
                   onGallery: _pickFromGallery,
                   onShutter: _shoot,
                   onManual: () {
@@ -299,26 +392,95 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
               ],
             ),
           ),
-          if (_busy)
+          if (_capturedPath != null)
             Positioned.fill(
-              child: ColoredBox(
-                color: Colors.black54,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CircularProgressIndicator(color: Colors.white),
-                      const SizedBox(height: Gap.md),
-                      Text(
-                        context.l10n.camReading,
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
+              child: _ProcessingOverlay(captured: _capturedFromCamera),
+            ),
+          Positioned.fill(
+            child: IgnorePointer(
+              child: FadeTransition(
+                opacity: _flash,
+                child: const ColoredBox(color: Colors.white),
               ),
             ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+/// The captured / picked photo, full-bleed like [_CoverPreview].
+class _CapturedImage extends StatelessWidget {
+  const _CapturedImage({required this.path});
+
+  final String path;
+
+  @override
+  Widget build(BuildContext context) {
+    const fallback = ColoredBox(color: Color(0xFF0B0D0B));
+    // On web, camera / image_picker hand back blob URLs rather than files.
+    return kIsWeb
+        ? Image.network(
+            path,
+            fit: BoxFit.cover,
+            gaplessPlayback: true,
+            errorBuilder: (_, __, ___) => fallback,
+          )
+        : Image.file(
+            File(path),
+            fit: BoxFit.cover,
+            gaplessPlayback: true,
+            errorBuilder: (_, __, ___) => fallback,
+          );
+  }
+}
+
+/// Scrim + spinner over the frozen photo while it is uploaded / read.
+class _ProcessingOverlay extends StatelessWidget {
+  const _ProcessingOverlay({required this.captured});
+
+  /// Shows the "photo captured" confirmation line (camera shots only).
+  final bool captured;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return ColoredBox(
+      color: Colors.black45,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (captured) ...[
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    color: BrandPalette.green300,
+                    size: 20,
+                  ),
+                  const SizedBox(width: Gap.xs),
+                  Text(
+                    l10n.camCaptured,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: Gap.md),
+            ],
+            const CircularProgressIndicator(color: Colors.white),
+            const SizedBox(height: Gap.md),
+            Text(
+              l10n.camReading,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -535,9 +697,14 @@ class _Topbar extends StatelessWidget {
 }
 
 class _ModeSwitcher extends StatelessWidget {
-  const _ModeSwitcher({required this.mode, required this.onChanged});
+  const _ModeSwitcher({
+    required this.mode,
+    required this.enabled,
+    required this.onChanged,
+  });
 
   final CameraScanMode mode;
+  final bool enabled;
   final ValueChanged<CameraScanMode> onChanged;
 
   @override
@@ -554,6 +721,9 @@ class _ModeSwitcher extends StatelessWidget {
             showCheckmark: false,
             selectedColor: Colors.white,
             backgroundColor: Colors.black.withValues(alpha: 0.35),
+            disabledColor: selected
+                ? Colors.white54
+                : Colors.black.withValues(alpha: 0.2),
             labelStyle: TextStyle(
               color: selected ? const Color(0xFF0B0D0B) : Colors.white70,
               fontWeight: FontWeight.w600,
@@ -561,7 +731,7 @@ class _ModeSwitcher extends StatelessWidget {
             ),
             side: BorderSide.none,
             shape: const StadiumBorder(),
-            onSelected: (_) => onChanged(m),
+            onSelected: enabled ? (_) => onChanged(m) : null,
           ),
         );
       }).toList(),
@@ -571,13 +741,20 @@ class _ModeSwitcher extends StatelessWidget {
 
 class _ActionBar extends StatelessWidget {
   const _ActionBar({
+    required this.enabled,
     required this.canShoot,
+    required this.shooting,
     required this.onGallery,
     required this.onShutter,
     required this.onManual,
   });
 
+  /// Gallery + manual entry; off while a scan is in flight.
+  final bool enabled;
   final bool canShoot;
+
+  /// Waiting for the camera to return the photo.
+  final bool shooting;
   final VoidCallback onGallery;
   final VoidCallback onShutter;
   final VoidCallback onManual;
@@ -590,12 +767,14 @@ class _ActionBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            onPressed: onGallery,
+            onPressed: enabled ? onGallery : null,
             iconSize: 22,
             style: IconButton.styleFrom(
               fixedSize: const Size(44, 44),
               backgroundColor: Colors.white.withValues(alpha: 0.15),
               foregroundColor: Colors.white.withValues(alpha: 0.8),
+              disabledBackgroundColor: Colors.white.withValues(alpha: 0.08),
+              disabledForegroundColor: Colors.white24,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -606,10 +785,11 @@ class _ActionBar extends StatelessWidget {
             behavior: HitTestBehavior.opaque,
             onTap: canShoot ? onShutter : null,
             child: Opacity(
-              opacity: canShoot ? 1 : 0.4,
+              opacity: canShoot || shooting ? 1 : 0.4,
               child: Container(
                 width: 70,
                 height: 70,
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
@@ -618,19 +798,28 @@ class _ActionBar extends StatelessWidget {
                     width: 5,
                   ),
                 ),
+                child: shooting
+                    ? const CircularProgressIndicator(
+                        color: Color(0xFF0B0D0B),
+                        strokeWidth: 2.5,
+                      )
+                    : null,
               ),
             ),
           ),
           GestureDetector(
-            onTap: onManual,
-            child: SizedBox(
-              width: 60,
-              child: Text(
-                context.l10n.chooserManual,
-                textAlign: TextAlign.center,
-                style: context.text.labelLarge?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
+            onTap: enabled ? onManual : null,
+            child: Opacity(
+              opacity: enabled ? 1 : 0.4,
+              child: SizedBox(
+                width: 60,
+                child: Text(
+                  context.l10n.chooserManual,
+                  textAlign: TextAlign.center,
+                  style: context.text.labelLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),

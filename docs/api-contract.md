@@ -280,13 +280,14 @@ GET    /inventory/ledger                           (auth, ?batch_id=&event_type=
 **Tạo batch:**
 ```json
 {
-  "master_ingredient_id": "uuid",           // hoặc "custom_name": "string" — bắt buộc đúng 1 trong 2
+  "master_ingredient_id": "uuid",           // hoặc "custom_name": "string" — bắt buộc đúng 1 trong 2 (custom_name phải qua smart parser; không nhận diện được trả 422 INGREDIENT_NOT_SUPPORTED)
   "quantity": 300.0, "unit": "GRAM",
   "storage_mode": "REFRIGERATED",           // ROOM_TEMPERATURE|REFRIGERATED|FROZEN|DRY_SHELF — KHÔNG phải storage_tier (fridge/freezer/pantry/immediate) của FE cũ
   "purchased_at": "2026-09-05T10:00:00Z", "packaged_at": null, "stored_at": null,
   "expires_at": "2026-09-10T00:00:00Z", "unit_cost": 15000, "note": null, "media_url": null
 }
 ```
+Khi gửi `custom_name`: backend đối soát qua smart parser nội bộ. Nếu khớp nguyên liệu trong catalog, batch được gán `master_ingredient_id` và lưu `custom_name = null`. Nếu không nhận diện được, API từ chối với HTTP 422 và `detail: "INGREDIENT_NOT_SUPPORTED"`. Gửi `master_ingredient_id` trực tiếp giữ nguyên.
 Mọi datetime **bắt buộc có timezone**. Response batch:
 ```json
 {
@@ -332,21 +333,117 @@ POST /extractions/barcode?barcode=<string>  (auth, không upload) -> BarcodeExtr
 ```json
 {
   "request_id": "uuid", "status": "SUCCEEDED|FAILED|PARTIAL", "provider": "string", "raw_text": "string",
-  "fields": { "ingredient_name": "tên đã khớp smart parser", "raw_name": "tên gốc OCR/ASR", "master_ingredient_id": "uuid|null", "quantity": null, "unit": null, "packaged_at": null, "expires_at": null },
+  "fields": { "ingredient_name": "tên đã khớp smart parser", "raw_name": "tên gốc OCR/ASR", "master_ingredient_id": "uuid|null", "category": "nhóm thực phẩm|null", "quantity": null, "unit": null, "packaged_at": null, "expires_at": null },
   "confidence": { "ingredient_name": 0.9 }, "warnings": [], "persisted": false
 }
 ```
-`ingredient_name` là kết quả khớp của smart parser; `raw_name` là chuỗi gốc đọc được. `master_ingredient_id` là UUID nguyên liệu chuẩn trong `master_ingredients` (khớp qua `source_code`), `null` khi không khớp — FE gửi lại giá trị này ở `POST /inventory/batches` và dùng cho `/freshness/questions`. `quantity`/`unit` chỉ có khi số lượng thực sự được đọc từ ảnh/giọng nói (không điền số ước lượng). `packaged_at`/`expires_at` (ISO `YYYY-MM-DD`) chỉ có khi nhãn in ngày. Không trả `nutrition`, `freshness_guide`, `category`, `master_ingredient_code`, `is_staple`, `price`, `currency`, `barcode` — các thông tin đó do bước lưu kho/enrichment xử lý riêng.
-**`InvoiceExtractionResponse.fields`:** `{ "line_items": [{ "name", "raw_name", "master_ingredient_id", "quantity", "unit", "unit_price", "total_price" }], "total_amount", "currency", "invoice_date", "vendor_name" }`.
+`ingredient_name` là kết quả khớp của smart parser; `raw_name` là chuỗi gốc đọc được. `master_ingredient_id` là UUID nguyên liệu chuẩn trong `master_ingredients` (khớp qua `source_code`), `null` khi không khớp — FE gửi lại giá trị này ở `POST /inventory/batches` và dùng cho `/freshness/questions`. `category` là tên nhóm thực phẩm tiếng Việt (`ingredient_categories.name`) khi khớp catalog master ingredient, `null` khi không khớp, dùng để app auto-fill (không cho người dùng sửa tay). `quantity`/`unit` chỉ có khi số lượng thực sự được đọc từ ảnh/giọng nói (không điền số ước lượng). `packaged_at`/`expires_at` (ISO `YYYY-MM-DD`) chỉ có khi nhãn in ngày. Không trả `nutrition`, `freshness_guide`, `master_ingredient_code`, `is_staple`, `price`, `currency`, `barcode` — các thông tin đó do bước lưu kho/enrichment xử lý riêng.
+**`InvoiceExtractionResponse.fields`:** `{ "line_items": [{ "name", "raw_name", "master_ingredient_id", "category", "quantity", "unit", "unit_price", "total_price" }], "total_amount", "currency", "invoice_date", "vendor_name" }`.
 **`BarcodeExtractionResponse.fields`:** `{ "barcode", "product_name", "brand", "category", "ingredient_name", "quantity", "unit", "expires_at", "price", "currency" }` — không tìm thấy vẫn trả `200` với field rỗng, **không phải `404`**.
 
 **Thiếu hạn sử dụng → FreshCheck (luồng quét/nhập):** món có `master_ingredient_id` nhưng `expires_at == null` được hỏi dấu hiệu cảm quan ngay ở màn review, trước khi lưu kho.
 ```text
 GET  /freshness/questions?master_ingredient_id=<uuid>  (auth) -> { kb_version, freshcheck_ingredient_id, archetype_id, questions: [{ axis, question_vi, options: [{ value, label_vi }], default }] }
-POST /freshness/previews                               (auth) { master_ingredient_id, storage_mode, purchased_at?, answers: { <axis>: <value> } } -> FreshnessPreviewResponse
-POST /freshness/batches/{batch_id}/assessment          (auth, Idempotency-Key) { purchased_at?, storage_mode?, answers } -> FreshnessAssessmentResponse
+POST /freshness/previews                               (auth) { master_ingredient_id, storage_mode, purchased_at?, answers?: { <axis>: <value> }, other_answers?: { <axis>: <description> } } -> FreshnessPreviewResponse
+POST /freshness/batches/{batch_id}/assessment          (auth, Idempotency-Key) { purchased_at?, storage_mode?, answers?, other_answers? } -> FreshnessAssessmentResponse
 ```
 `/freshness/previews` **không ghi dữ liệu**; trả cùng các trường kết quả như assessment (`blocked`, `tier`, `score`, `remaining_hours_min/max`, `remaining_days_min/max`, `reasons_vi`, `storage_tips_vi`, `claims`, `rule_version`, `kb_version`, `freshcheck_ingredient_id`, `archetype_id`, `reason_code`) và `expires_at` = hạn ước tính sẽ được áp dụng (`null` khi không đủ cơ sở). Nguyên liệu không có mapping FreshCheck trả `MAPPING_UNAVAILABLE` — FE bỏ qua bước hỏi dấu hiệu, không báo lỗi. Sau khi người dùng bấm lưu, FE tạo batch (`POST /inventory/batches`) rồi gọi assessment với **cùng `answers`** để ghi hạn `ESTIMATED` và audit; hạn in trên nhãn (`MANUFACTURER`) không bao giờ bị ghi đè.
+
+### Đáp án cảm quan “Khác” trong FreshCheck
+
+`other_answers` bổ sung mô tả tự nhập **cho một trục của nguyên liệu đã có mapping**;
+không phải tên nguyên liệu tự nhập. Luồng chọn sẵn trong `answers` không thay đổi.
+Các axis/value hợp lệ lấy từ `GET /freshness/questions`.
+
+Mỗi mô tả chỉ đi cùng câu hỏi và các mốc điểm **của đúng trục đó**: hỏi màu thì
+gửi thang điểm màu, hỏi đàn hồi thì gửi thang điểm đàn hồi. Không gửi toàn bộ rubric
+hay các trục người dùng không nhập “Khác”; nhiều trục trong một request vẫn được
+chấm riêng, không trộn thang điểm giữa các trục.
+
+Ví dụ request preview cho rubric thịt tươi (thay UUID bằng ID catalog thực):
+
+```json
+{
+  "master_ingredient_id": "00000000-0000-0000-0000-000000000001",
+  "storage_mode": "REFRIGERATED",
+  "answers": {"smell": "thom_tuoi"},
+  "other_answers": {"color": "Hồng hơi nhạt, chưa nhạt đến mức của lựa chọn thứ hai"}
+}
+```
+
+- Mỗi trục chỉ xuất hiện trong **một** trong hai map; tổng tối đa 20 đáp án.
+- Tên trục không rỗng, tối đa 64 ký tự. Mô tả không rỗng, tối đa 500 ký tự;
+  khoảng trắng đầu/cuối được loại bỏ. Trục lạ, giá trị chọn sẵn sai, mô tả rỗng,
+  quá dài hoặc trùng trục bị từ chối `422` **trước khi gọi LLM**.
+- Chỉ gọi LLM khi có `other_answers`. Một lượt gọi xử lý tất cả các trục tự nhập:
+  kiểm tra liên quan, đủ thông tin và suy ra điểm theo câu hỏi/rubric do backend lấy
+  từ KB đang active. Client không được gửi điểm hoặc thay rubric.
+- Điểm mốc của một option là `10 × (1 − penalty)`. Điểm suy luận thuộc thang 0–10
+  và, nếu không có hard-stop, phải nằm trong khoảng các mốc không hard-stop của trục.
+  Không mặc định mọi mô tả “Khác” là điểm giữa.
+- Điểm tổng dùng các hệ số nhân như luồng cũ: `10 × ∏(điểm_trục / 10)`.
+  Dấu hiệu hard-stop vẫn chặn sử dụng, không được bù bằng điểm tốt ở trục khác.
+  Hạn `MANUFACTURER` không bị sửa, nhưng không ngăn kết quả `blocked: true` khi
+  có dấu hiệu hỏng. Rule hiện tại: `freshcheck-infer-v1.1`.
+
+Preview và assessment bổ sung `other_answer_scores`; map rỗng nếu chỉ chọn đáp án
+có sẵn. Ví dụ dưới đây minh họa cấu trúc, không phải điểm cố định cho từ “hồng”:
+
+```json
+{
+  "other_answer_scores": {
+    "color": {
+      "score": 9.2,
+      "hard_stop": false,
+      "reason_vi": "Màu hơi nhạt hơn mốc hồng tươi."
+    }
+  }
+}
+```
+
+`score` ở cấp kết quả vẫn là **điểm tổng**; `other_answer_scores[axis].score` là
+điểm riêng của trục. Các điểm này là ước lượng cảm quan, không chứng nhận an toàn
+thực phẩm và không thay thế hạn in trên nhãn.
+
+**Lạc đề hoặc chưa đủ thông tin:** trả `422` với envelope lỗi chung (`detail` vẫn
+là chuỗi), bổ sung `code` và danh sách `axes`. Không ghi assessment hay thay hạn:
+
+```json
+{
+  "status_code": 422,
+  "detail": "vui lòng trả lời liên quan tới câu hỏi",
+  "path": "/api/freshness/previews",
+  "code": "FRESHCHECK_OTHER_ANSWER_NEEDS_CLARIFICATION",
+  "axes": [{
+    "axis": "color",
+    "reason": "irrelevant",
+    "question_vi": "Màu sắc phần nạc và mỡ?",
+    "message_vi": "vui lòng trả lời liên quan tới câu hỏi"
+  }]
+}
+```
+
+`reason` là `irrelevant` (lạc đề/sai trục) hoặc `unclear` (thiếu căn cứ).
+FE hiển thị nguyên văn `message_vi` **bên dưới box nhập của trục tương ứng**.
+Kiểm tra ngữ nghĩa này vẫn sử dụng token; chỉ các lỗi cấu trúc ở trên được chặn
+không cần LLM. Không gọi một LLM riêng để kiểm tra liên quan.
+
+**Lỗi provider:** `503 FRESHCHECK_LLM_UNAVAILABLE` khi thiếu cấu hình, không kết nối
+được hoặc timeout; `502 FRESHCHECK_LLM_RESPONSE_INVALID` khi JSON/axis/điểm không hợp lệ.
+Không tự retry trong service này và không dùng điểm mặc định khi LLM lỗi.
+Tái sử dụng `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_LLM_MODEL`,
+`OPENAI_TIMEOUT_SECONDS`; không cần thêm provider/config mới.
+
+**Lưu và gửi lại:** khi tạo assessment, backend lưu `other_answers`,
+`other_answer_scores` và model đã cấu hình trong `freshcheck_assessments.outcome`,
+cùng KB/rule version hiện có; không cần migration. Gửi lại cùng batch và
+`Idempotency-Key` trả kết quả bất biến, không gọi lại LLM. Khi sửa đáp án phải dùng
+key mới. Preview không lưu nên preview và assessment là hai lượt suy luận độc lập;
+điểm có thể khác nhau, không có cơ chế tái sử dụng preview trong contract này.
+Khi tích hợp UI, gửi lại cả `answers` và `other_answers` cho assessment, không gửi
+điểm preview làm dữ liệu đầu vào. Thay đổi này chỉ bổ sung API, chưa thêm ô nhập
+“Khác” trong app.
+
 
 ---
 

@@ -21,6 +21,7 @@ from src.core.setting import (
     EXTRACTION_MAX_AUDIO_SIZE,
     EXTRACTION_MAX_IMAGE_SIZE,
 )
+from src.model.ingredient_category_model import IngredientCategoryModel
 from src.model.master_ingredient_model import MasterIngredientModel
 from src.module.extractions.extraction_dto import (
     BarcodeExtractionResponse,
@@ -97,13 +98,15 @@ def _normalize_date(raw_date: str | None) -> str | None:
         return None
 
 
-def _normalize_catalog_code(raw_code: object) -> str | None:
+def normalize_catalog_code(raw_code: object) -> str | None:
     """Normalize AI catalog codes such as ``7018.0`` to the stored source code."""
     if raw_code is None:
         return None
     code = str(raw_code).strip().removesuffix(".0")
     return code or None
 
+
+_normalize_catalog_code = normalize_catalog_code
 
 class ExtractionService:
     """Validate uploads, call in-process AI extraction, and map response DTOs."""
@@ -116,23 +119,45 @@ class ExtractionService:
         self._session = session
         self._ai_service = ai_service or get_ai_extraction_service()
 
+    async def _master_info_by_code(
+        self, items: Iterable[dict[str, Any]]
+    ) -> dict[str, tuple[UUID, str | None]]:
+        """Resolve AI catalog codes to (master_id, category_name) in one query."""
+        codes = {
+            code
+            for item in items
+            if (code := normalize_catalog_code(item.get("code"))) is not None
+        }
+        if not codes:
+            return {}
+        stmt = (
+            select(
+                MasterIngredientModel.source_code,
+                MasterIngredientModel.id,
+                IngredientCategoryModel.name,
+            )
+            .outerjoin(
+                IngredientCategoryModel,
+                MasterIngredientModel.category_id == IngredientCategoryModel.id,
+            )
+            .where(MasterIngredientModel.source_code.in_(codes))
+        )
+        rows = await self._session.execute(stmt)
+        result: dict[str, tuple[UUID, str | None]] = {}
+        for row in rows.all():
+            if len(row) >= 3:
+                code, master_id, category = row[0], row[1], row[2]
+            else:
+                code, master_id, category = row[0], row[1], None
+            result[str(code)] = (master_id, category)
+        return result
+
     async def _master_ids_by_code(
         self, items: Iterable[dict[str, Any]]
     ) -> dict[str, UUID]:
         """Resolve AI catalog codes to master ingredient ids in one query."""
-        codes = {
-            code
-            for item in items
-            if (code := _normalize_catalog_code(item.get("code"))) is not None
-        }
-        if not codes:
-            return {}
-        rows = await self._session.execute(
-            select(MasterIngredientModel.source_code, MasterIngredientModel.id).where(
-                MasterIngredientModel.source_code.in_(codes)
-            )
-        )
-        return {code: master_id for code, master_id in rows.all()}
+        info = await self._master_info_by_code(items)
+        return {code: master_id for code, (master_id, _) in info.items()}
 
     async def _process_image(
         self, content: bytes, filename: str
@@ -166,8 +191,13 @@ class ExtractionService:
                 warnings=["NO_ITEMS_EXTRACTED"],
             )
 
-        master_ids = await self._master_ids_by_code(items[:1])
+        master_info = await self._master_info_by_code(items[:1])
         item = items[0]
+        matched_info = master_info.get(
+            normalize_catalog_code(item.get("code")) or ""
+        )
+        master_id = matched_info[0] if matched_info else None
+        category = matched_info[1] if matched_info else None
         warnings: list[str] = []
         quantity = (
             item.get("quantity_g")
@@ -201,9 +231,8 @@ class ExtractionService:
             fields=ExtractionFields(
                 ingredient_name=item.get("name"),
                 raw_name=item.get("raw_name"),
-                master_ingredient_id=master_ids.get(
-                    _normalize_catalog_code(item.get("code")) or ""
-                ),
+                master_ingredient_id=master_id,
+                category=category,
                 quantity=quantity,
                 unit="GRAM" if quantity is not None else None,
                 packaged_at=packaged_at,
@@ -221,30 +250,33 @@ class ExtractionService:
         _validate_image(file, content)
         result = await self._process_image(content, file.filename or "invoice")
         items = result.get("items", [])
-        master_ids = await self._master_ids_by_code(items)
+        master_info = await self._master_info_by_code(items)
         raw_text = str(result.get("raw_text") or "")
         vendor_name = result.get("store_name")
-        line_items = [
-            InvoiceLineItem(
-                name=item["name"],
-                raw_name=item.get("raw_name"),
-                master_ingredient_id=master_ids.get(
-                    _normalize_catalog_code(item.get("code")) or ""
-                ),
-                quantity=(
-                    item.get("quantity_g")
-                    if item.get("quantity_source") == "extracted"
-                    else None
-                ),
-                unit=(
-                    "GRAM"
-                    if item.get("quantity_g") is not None
-                    and item.get("quantity_source") == "extracted"
-                    else None
-                ),
+        line_items: list[InvoiceLineItem] = []
+        for item in items:
+            matched = master_info.get(
+                normalize_catalog_code(item.get("code")) or ""
             )
-            for item in items
-        ]
+            line_items.append(
+                InvoiceLineItem(
+                    name=item["name"],
+                    raw_name=item.get("raw_name"),
+                    master_ingredient_id=matched[0] if matched else None,
+                    category=matched[1] if matched else None,
+                    quantity=(
+                        item.get("quantity_g")
+                        if item.get("quantity_source") == "extracted"
+                        else None
+                    ),
+                    unit=(
+                        "GRAM"
+                        if item.get("quantity_g") is not None
+                        and item.get("quantity_source") == "extracted"
+                        else None
+                    ),
+                )
+            )
         warnings = ["INVOICE_FINANCIAL_FIELDS_NOT_AVAILABLE"]
         if not line_items:
             warnings.append("NO_ITEMS_EXTRACTED")
@@ -300,8 +332,13 @@ class ExtractionService:
                 warnings=["NO_ITEMS_EXTRACTED"],
             )
 
-        master_ids = await self._master_ids_by_code(items[:1])
+        master_info = await self._master_info_by_code(items[:1])
         item = items[0]
+        matched_info = master_info.get(
+            normalize_catalog_code(item.get("code")) or ""
+        )
+        master_id = matched_info[0] if matched_info else None
+        category = matched_info[1] if matched_info else None
         warnings: list[str] = []
         if len(items) > 1:
             warnings.append("ADDITIONAL_ITEMS_OMITTED")
@@ -329,9 +366,8 @@ class ExtractionService:
             fields=ExtractionFields(
                 ingredient_name=item.get("name"),
                 raw_name=item.get("raw_name"),
-                master_ingredient_id=master_ids.get(
-                    _normalize_catalog_code(item.get("code")) or ""
-                ),
+                master_ingredient_id=master_id,
+                category=category,
                 quantity=quantity,
                 unit="GRAM" if quantity is not None else None,
             ),

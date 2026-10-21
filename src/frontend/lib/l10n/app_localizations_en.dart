@@ -279,6 +279,10 @@ class AppL10nEn extends AppL10n {
   String get failUnknown => 'Something unexpected went wrong.';
 
   @override
+  String get failUnsupportedIngredient =>
+      'This food isn\'t supported by the app yet';
+
+  @override
   String get permCameraTitle => 'Allow camera access';
 
   @override
@@ -561,6 +565,10 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get pantryFieldCategoryHint => 'e.g. Vegetables';
+
+  @override
+  String get pantryFieldCategoryAuto =>
+      'Filled in automatically once the food is recognized';
 
   @override
   String get pantryFieldStorage => 'Where it\'s stored';
@@ -1038,6 +1046,9 @@ class AppL10nEn extends AppL10n {
   String get camReading => 'Reading the details…';
 
   @override
+  String get camCaptured => 'Photo captured';
+
+  @override
   String get camOpening => 'Opening the camera…';
 
   @override
@@ -1227,6 +1238,9 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get authEmail => 'Email';
+
+  @override
+  String get authEmailOptional => 'Email (optional)';
 
   @override
   String get authPassword => 'Password';

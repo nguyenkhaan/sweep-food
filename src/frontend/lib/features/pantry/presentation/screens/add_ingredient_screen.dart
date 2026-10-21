@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/error/failure.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
@@ -29,11 +30,11 @@ class AddIngredientScreen extends ConsumerStatefulWidget {
 
 class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
   final _nameCtrl = TextEditingController();
-  final _categoryCtrl = TextEditingController();
   final _qtyCtrl = TextEditingController();
   final _nameFocus = FocusNode();
 
   bool _busy = false;
+  bool _unsupported = false;
   String _query = '';
 
   String? get _key => widget.editItemId;
@@ -46,7 +47,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
     super.initState();
     final draft = ref.read(addIngredientControllerProvider(_key));
     _nameCtrl.text = draft.name;
-    _categoryCtrl.text = draft.category;
     if (draft.quantity > 0) _qtyCtrl.text = _fmtQty(draft.quantity);
     _nameFocus.addListener(() {
       if (_nameFocus.hasFocus || !mounted) return;
@@ -58,7 +58,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
   @override
   void dispose() {
     _nameCtrl.dispose();
-    _categoryCtrl.dispose();
     _qtyCtrl.dispose();
     _nameFocus.dispose();
     super.dispose();
@@ -85,7 +84,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
   void _pickIngredient(Ingredient ing) {
     _ctrl.applyIngredient(ing);
     _nameCtrl.text = ing.name;
-    _categoryCtrl.text = ing.category;
     _query = '';
     _nameFocus.unfocus();
     setState(() {});
@@ -130,10 +128,14 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             ? context.l10n.pantryItemUpdated(item.name)
             : context.l10n.pantryItemAdded(item.name),
       );
-    } catch (_) {
+    } catch (e) {
       if (!mounted) return;
-      setState(() => _busy = false);
-      AppSnack.show(context, context.l10n.pantrySaveFailed);
+      setState(() {
+        _busy = false;
+        // The smart parser could not recognize this food: say so under the name.
+        _unsupported = e is UnsupportedIngredientFailure;
+      });
+      if (!_unsupported) AppSnack.show(context, context.l10n.pantrySaveFailed);
     }
   }
 
@@ -158,21 +160,25 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             controller: _nameCtrl,
             focusNode: _nameFocus,
             textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(hintText: l10n.pantryFieldNameHint),
+            decoration: InputDecoration(
+              hintText: l10n.pantryFieldNameHint,
+              errorText: _unsupported ? l10n.failUnsupportedIngredient : null,
+            ),
             onChanged: (v) {
               _ctrl.setName(v);
-              setState(() => _query = v);
+              setState(() {
+                _query = v;
+                _unsupported = false;
+              });
             },
           ),
           if (showSuggestions)
             _SuggestionList(query: _query, onPick: _pickIngredient),
           Gap.gapMd,
           _Label(l10n.pantryFieldCategory),
-          TextField(
-            controller: _categoryCtrl,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(hintText: l10n.pantryFieldCategoryHint),
-            onChanged: _ctrl.setCategory,
+          _ReadOnlyField(
+            value: draft.category,
+            placeholder: l10n.pantryFieldCategoryAuto,
           ),
           Gap.gapMd,
           _Label(l10n.pantryStatQuantity),
@@ -255,6 +261,35 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             onPressed: draft.isValid && !_busy ? _submit : null,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// A read-only value (e.g. the food group) that the user cannot type into.
+class _ReadOnlyField extends StatelessWidget {
+  const _ReadOnlyField({required this.value, required this.placeholder});
+
+  final String value;
+  final String placeholder;
+
+  @override
+  Widget build(BuildContext context) {
+    final empty = value.trim().isEmpty;
+    return InputDecorator(
+      decoration: InputDecoration(
+        enabled: false,
+        suffixIcon: Icon(
+          Icons.lock_outline_rounded,
+          size: 18,
+          color: context.sweep.textTertiary,
+        ),
+      ),
+      child: Text(
+        empty ? placeholder : value,
+        style: context.text.bodyLarge?.copyWith(
+          color: empty ? context.sweep.textTertiary : context.sweep.textSecondary,
+        ),
       ),
     );
   }

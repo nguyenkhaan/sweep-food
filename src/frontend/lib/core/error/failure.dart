@@ -22,6 +22,7 @@ sealed class Failure {
     QuotaExceededFailure() => l10n.failQuota,
     ParseFailure() => l10n.failParse,
     UnknownFailure() => l10n.failUnknown,
+    UnsupportedIngredientFailure() => l10n.failUnsupportedIngredient,
     ConflictFailure() ||
     NotFoundFailure() ||
     ValidationFailure() ||
@@ -47,7 +48,7 @@ class TimeoutFailure extends Failure {
 /// 401 — token missing / expired and refresh failed. Triggers logout.
 class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure({super.cause, super.stackTrace})
-    : super('Phiên đăng nhập đã hết hạn. Đăng nhập lại nhé.');
+    : super('Thông tin đăng nhập không hợp lệ. Đăng nhập lại nhé.');
 }
 
 /// 403 — authenticated but not allowed.
@@ -86,6 +87,16 @@ class ValidationFailure extends Failure {
   }) : super(message ?? 'Dữ liệu chưa hợp lệ.');
 
   final Map<String, String> fieldErrors;
+}
+
+/// 422 `INGREDIENT_NOT_SUPPORTED` — the smart parser could not recognize the
+/// food, so the backend refuses to store it in the inventory.
+class UnsupportedIngredientFailure extends Failure {
+  const UnsupportedIngredientFailure({super.cause, super.stackTrace})
+    : super('Thực phẩm này app chưa hỗ trợ');
+
+  /// The `detail` code the backend sends.
+  static const code = 'INGREDIENT_NOT_SUPPORTED';
 }
 
 /// 5xx or an unexpected server payload.

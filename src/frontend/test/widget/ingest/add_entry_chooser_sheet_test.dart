@@ -57,6 +57,33 @@ void main() {
     expect(find.text('Nhập tay'), findsOneWidget);
   });
 
+  testWidgets('barcode option stays visible and disabled while coming soon', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          locale: const Locale('vi'),
+          supportedLocales: AppL10n.supportedLocales,
+          localizationsDelegates: AppL10n.localizationsDelegates,
+          theme: AppTheme.light,
+          home: const Scaffold(body: AddEntryChooserSheet()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Quét mã vạch'), findsOneWidget);
+    expect(find.text('Coming soon'), findsOneWidget);
+
+    final barcodeCard = find.ancestor(
+      of: find.text('Quét mã vạch'),
+      matching: find.byType(InkWell),
+    );
+    expect(barcodeCard, findsOneWidget);
+    expect(tester.widget<InkWell>(barcodeCard).onTap, isNull);
+  });
+
   testWidgets('showAddEntryChooser opens bottom sheet', (tester) async {
     await tester.pumpWidget(
       ProviderScope(

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FreshnessEstimate {
 
- Map<String, String> get answers; DateTime get expiresAt; int? get remainingDaysMin; int? get remainingDaysMax; bool get blocked;
+ Map<String, String> get answers; Map<String, String> get otherAnswers; DateTime get expiresAt; int? get remainingDaysMin; int? get remainingDaysMax; bool get blocked;
 /// Create a copy of FreshnessEstimate
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $FreshnessEstimateCopyWith<FreshnessEstimate> get copyWith => _$FreshnessEstimat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FreshnessEstimate&&const DeepCollectionEquality().equals(other.answers, answers)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.remainingDaysMin, remainingDaysMin) || other.remainingDaysMin == remainingDaysMin)&&(identical(other.remainingDaysMax, remainingDaysMax) || other.remainingDaysMax == remainingDaysMax)&&(identical(other.blocked, blocked) || other.blocked == blocked));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FreshnessEstimate&&const DeepCollectionEquality().equals(other.answers, answers)&&const DeepCollectionEquality().equals(other.otherAnswers, otherAnswers)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.remainingDaysMin, remainingDaysMin) || other.remainingDaysMin == remainingDaysMin)&&(identical(other.remainingDaysMax, remainingDaysMax) || other.remainingDaysMax == remainingDaysMax)&&(identical(other.blocked, blocked) || other.blocked == blocked));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(answers),expiresAt,remainingDaysMin,remainingDaysMax,blocked);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(answers),const DeepCollectionEquality().hash(otherAnswers),expiresAt,remainingDaysMin,remainingDaysMax,blocked);
 
 @override
 String toString() {
-  return 'FreshnessEstimate(answers: $answers, expiresAt: $expiresAt, remainingDaysMin: $remainingDaysMin, remainingDaysMax: $remainingDaysMax, blocked: $blocked)';
+  return 'FreshnessEstimate(answers: $answers, otherAnswers: $otherAnswers, expiresAt: $expiresAt, remainingDaysMin: $remainingDaysMin, remainingDaysMax: $remainingDaysMax, blocked: $blocked)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $FreshnessEstimateCopyWith<$Res>  {
   factory $FreshnessEstimateCopyWith(FreshnessEstimate value, $Res Function(FreshnessEstimate) _then) = _$FreshnessEstimateCopyWithImpl;
 @useResult
 $Res call({
- Map<String, String> answers, DateTime expiresAt, int? remainingDaysMin, int? remainingDaysMax, bool blocked
+ Map<String, String> answers, Map<String, String> otherAnswers, DateTime expiresAt, int? remainingDaysMin, int? remainingDaysMax, bool blocked
 });
 
 
@@ -62,9 +62,10 @@ class _$FreshnessEstimateCopyWithImpl<$Res>
 
 /// Create a copy of FreshnessEstimate
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? answers = null,Object? expiresAt = null,Object? remainingDaysMin = freezed,Object? remainingDaysMax = freezed,Object? blocked = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? answers = null,Object? otherAnswers = null,Object? expiresAt = null,Object? remainingDaysMin = freezed,Object? remainingDaysMax = freezed,Object? blocked = null,}) {
   return _then(_self.copyWith(
 answers: null == answers ? _self.answers : answers // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,otherAnswers: null == otherAnswers ? _self.otherAnswers : otherAnswers // ignore: cast_nullable_to_non_nullable
 as Map<String, String>,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime,remainingDaysMin: freezed == remainingDaysMin ? _self.remainingDaysMin : remainingDaysMin // ignore: cast_nullable_to_non_nullable
 as int?,remainingDaysMax: freezed == remainingDaysMax ? _self.remainingDaysMax : remainingDaysMax // ignore: cast_nullable_to_non_nullable
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<String, String> answers,  DateTime expiresAt,  int? remainingDaysMin,  int? remainingDaysMax,  bool blocked)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<String, String> answers,  Map<String, String> otherAnswers,  DateTime expiresAt,  int? remainingDaysMin,  int? remainingDaysMax,  bool blocked)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FreshnessEstimate() when $default != null:
-return $default(_that.answers,_that.expiresAt,_that.remainingDaysMin,_that.remainingDaysMax,_that.blocked);case _:
+return $default(_that.answers,_that.otherAnswers,_that.expiresAt,_that.remainingDaysMin,_that.remainingDaysMax,_that.blocked);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.answers,_that.expiresAt,_that.remainingDaysMin,_that.remai
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<String, String> answers,  DateTime expiresAt,  int? remainingDaysMin,  int? remainingDaysMax,  bool blocked)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<String, String> answers,  Map<String, String> otherAnswers,  DateTime expiresAt,  int? remainingDaysMin,  int? remainingDaysMax,  bool blocked)  $default,) {final _that = this;
 switch (_that) {
 case _FreshnessEstimate():
-return $default(_that.answers,_that.expiresAt,_that.remainingDaysMin,_that.remainingDaysMax,_that.blocked);case _:
+return $default(_that.answers,_that.otherAnswers,_that.expiresAt,_that.remainingDaysMin,_that.remainingDaysMax,_that.blocked);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.answers,_that.expiresAt,_that.remainingDaysMin,_that.remai
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<String, String> answers,  DateTime expiresAt,  int? remainingDaysMin,  int? remainingDaysMax,  bool blocked)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<String, String> answers,  Map<String, String> otherAnswers,  DateTime expiresAt,  int? remainingDaysMin,  int? remainingDaysMax,  bool blocked)?  $default,) {final _that = this;
 switch (_that) {
 case _FreshnessEstimate() when $default != null:
-return $default(_that.answers,_that.expiresAt,_that.remainingDaysMin,_that.remainingDaysMax,_that.blocked);case _:
+return $default(_that.answers,_that.otherAnswers,_that.expiresAt,_that.remainingDaysMin,_that.remainingDaysMax,_that.blocked);case _:
   return null;
 
 }
@@ -210,7 +211,7 @@ return $default(_that.answers,_that.expiresAt,_that.remainingDaysMin,_that.remai
 
 
 class _FreshnessEstimate implements FreshnessEstimate {
-  const _FreshnessEstimate({required final  Map<String, String> answers, required this.expiresAt, this.remainingDaysMin, this.remainingDaysMax, this.blocked = false}): _answers = answers;
+  const _FreshnessEstimate({required final  Map<String, String> answers, final  Map<String, String> otherAnswers = const <String, String>{}, required this.expiresAt, this.remainingDaysMin, this.remainingDaysMax, this.blocked = false}): _answers = answers,_otherAnswers = otherAnswers;
   
 
  final  Map<String, String> _answers;
@@ -218,6 +219,13 @@ class _FreshnessEstimate implements FreshnessEstimate {
   if (_answers is EqualUnmodifiableMapView) return _answers;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_answers);
+}
+
+ final  Map<String, String> _otherAnswers;
+@override@JsonKey() Map<String, String> get otherAnswers {
+  if (_otherAnswers is EqualUnmodifiableMapView) return _otherAnswers;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_otherAnswers);
 }
 
 @override final  DateTime expiresAt;
@@ -235,16 +243,16 @@ _$FreshnessEstimateCopyWith<_FreshnessEstimate> get copyWith => __$FreshnessEsti
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FreshnessEstimate&&const DeepCollectionEquality().equals(other._answers, _answers)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.remainingDaysMin, remainingDaysMin) || other.remainingDaysMin == remainingDaysMin)&&(identical(other.remainingDaysMax, remainingDaysMax) || other.remainingDaysMax == remainingDaysMax)&&(identical(other.blocked, blocked) || other.blocked == blocked));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FreshnessEstimate&&const DeepCollectionEquality().equals(other._answers, _answers)&&const DeepCollectionEquality().equals(other._otherAnswers, _otherAnswers)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.remainingDaysMin, remainingDaysMin) || other.remainingDaysMin == remainingDaysMin)&&(identical(other.remainingDaysMax, remainingDaysMax) || other.remainingDaysMax == remainingDaysMax)&&(identical(other.blocked, blocked) || other.blocked == blocked));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_answers),expiresAt,remainingDaysMin,remainingDaysMax,blocked);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_answers),const DeepCollectionEquality().hash(_otherAnswers),expiresAt,remainingDaysMin,remainingDaysMax,blocked);
 
 @override
 String toString() {
-  return 'FreshnessEstimate(answers: $answers, expiresAt: $expiresAt, remainingDaysMin: $remainingDaysMin, remainingDaysMax: $remainingDaysMax, blocked: $blocked)';
+  return 'FreshnessEstimate(answers: $answers, otherAnswers: $otherAnswers, expiresAt: $expiresAt, remainingDaysMin: $remainingDaysMin, remainingDaysMax: $remainingDaysMax, blocked: $blocked)';
 }
 
 
@@ -255,7 +263,7 @@ abstract mixin class _$FreshnessEstimateCopyWith<$Res> implements $FreshnessEsti
   factory _$FreshnessEstimateCopyWith(_FreshnessEstimate value, $Res Function(_FreshnessEstimate) _then) = __$FreshnessEstimateCopyWithImpl;
 @override @useResult
 $Res call({
- Map<String, String> answers, DateTime expiresAt, int? remainingDaysMin, int? remainingDaysMax, bool blocked
+ Map<String, String> answers, Map<String, String> otherAnswers, DateTime expiresAt, int? remainingDaysMin, int? remainingDaysMax, bool blocked
 });
 
 
@@ -272,9 +280,10 @@ class __$FreshnessEstimateCopyWithImpl<$Res>
 
 /// Create a copy of FreshnessEstimate
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? answers = null,Object? expiresAt = null,Object? remainingDaysMin = freezed,Object? remainingDaysMax = freezed,Object? blocked = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? answers = null,Object? otherAnswers = null,Object? expiresAt = null,Object? remainingDaysMin = freezed,Object? remainingDaysMax = freezed,Object? blocked = null,}) {
   return _then(_FreshnessEstimate(
 answers: null == answers ? _self._answers : answers // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,otherAnswers: null == otherAnswers ? _self._otherAnswers : otherAnswers // ignore: cast_nullable_to_non_nullable
 as Map<String, String>,expiresAt: null == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as DateTime,remainingDaysMin: freezed == remainingDaysMin ? _self.remainingDaysMin : remainingDaysMin // ignore: cast_nullable_to_non_nullable
 as int?,remainingDaysMax: freezed == remainingDaysMax ? _self.remainingDaysMax : remainingDaysMax // ignore: cast_nullable_to_non_nullable

@@ -17,10 +17,16 @@ class LabelReviewController extends _$LabelReviewController {
   ParsedItemDraft build(ScanJob job) =>
       job.single.copyWith(imagePath: job.sourcePath);
 
-  /// Renaming detaches the item from its catalog match and FreshCheck estimate.
+  /// Renaming detaches the item from its catalog match, its FreshCheck estimate
+  /// and the food group the smart parser derived from that match.
   void setName(String name) => state = name == state.name
       ? state
-      : state.copyWith(name: name, ingredientId: null, freshness: null);
+      : state.copyWith(
+          name: name,
+          ingredientId: null,
+          freshness: null,
+          category: '',
+        );
 
   void setQuantity(double quantity) =>
       state = state.copyWith(quantity: quantity);
@@ -41,9 +47,6 @@ class LabelReviewController extends _$LabelReviewController {
     storageTier: tier,
     freshness: tier == state.storageTier ? state.freshness : null,
   );
-
-  void setCategory(String category) =>
-      state = state.copyWith(category: category);
 
   /// Confirms the reviewed draft into the pantry.
   Future<PantryItem> saveToPantry() {

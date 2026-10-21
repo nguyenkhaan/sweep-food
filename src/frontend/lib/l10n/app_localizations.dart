@@ -568,7 +568,7 @@ abstract class AppL10n {
   /// No description provided for @failUnauthorized.
   ///
   /// In vi, this message translates to:
-  /// **'Phiên đăng nhập đã hết hạn. Đăng nhập lại nhé.'**
+  /// **'Thông tin đăng nhập không hợp lệ. Đăng nhập lại nhé.'**
   String get failUnauthorized;
 
   /// No description provided for @failForbidden.
@@ -594,6 +594,12 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Đã xảy ra lỗi không mong muốn.'**
   String get failUnknown;
+
+  /// No description provided for @failUnsupportedIngredient.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thực phẩm này app chưa hỗ trợ'**
+  String get failUnsupportedIngredient;
 
   /// No description provided for @permCameraTitle.
   ///
@@ -1080,6 +1086,12 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'VD: Rau củ'**
   String get pantryFieldCategoryHint;
+
+  /// No description provided for @pantryFieldCategoryAuto.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tự động nhận diện khi thực phẩm được hỗ trợ'**
+  String get pantryFieldCategoryAuto;
 
   /// No description provided for @pantryFieldStorage.
   ///
@@ -1909,6 +1921,12 @@ abstract class AppL10n {
   /// **'Đang đọc thông tin…'**
   String get camReading;
 
+  /// No description provided for @camCaptured.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã chụp ảnh'**
+  String get camCaptured;
+
   /// No description provided for @camOpening.
   ///
   /// In vi, this message translates to:
@@ -2250,6 +2268,12 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Email'**
   String get authEmail;
+
+  /// No description provided for @authEmailOptional.
+  ///
+  /// In vi, this message translates to:
+  /// **'Email (không bắt buộc)'**
+  String get authEmailOptional;
 
   /// No description provided for @authPassword.
   ///
