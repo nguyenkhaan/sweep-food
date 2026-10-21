@@ -1,4 +1,4 @@
-﻿import 'package:sweepfood/core/widgets/suggestion_card.dart';
+import 'package:sweepfood/core/widgets/suggestion_card.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
 
@@ -8,22 +8,17 @@ import 'package:sweepfood/l10n/app_localizations.dart';
 /// (`home_screen`) so the two never show different chips for the same dish.
 extension SuggestionCardChips on DishSuggestion {
   List<SuggestionChip> cardChips(AppL10n l10n) => [
-    if (!isMock)
-      (
-        label: statusLabel,
-        tone: statusBadge == 'shopping'
-            ? SuggestionChipTone.toBuy
-            : SuggestionChipTone.available,
-      ),
+    (
+      label: statusLabel,
+      tone: statusBadge == 'shopping'
+          ? SuggestionChipTone.toBuy
+          : SuggestionChipTone.available,
+    ),
     if (nearExpiryCount > 0)
       (
         label: l10n.chipUseNearExpiry(nearExpiryCount),
         tone: SuggestionChipTone.nearExpiry,
       ),
-    (
-      label: l10n.chipAvailable(availabilityPercent),
-      tone: SuggestionChipTone.available,
-    ),
     if (toBuyCount > 0)
       (label: l10n.chipToBuy(toBuyCount), tone: SuggestionChipTone.toBuy)
     else

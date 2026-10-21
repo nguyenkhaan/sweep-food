@@ -25,15 +25,17 @@ class NotificationsController extends _$NotificationsController {
     state = AsyncData([
       for (final n in current) n.id == id ? n.copyWith(read: true) : n,
     ]);
-    final res =
-        await ref.read(notificationRepositoryProvider).markRead(id);
+    final res = await ref.read(notificationRepositoryProvider).markRead(id);
     res.fold((_) => ref.invalidateSelf(), (_) {});
   }
 
   Future<void> markAllRead() async {
     final current = state.asData?.value;
     if (current == null || current.every((n) => n.read)) return;
-    final unreadIds = [for (final n in current) if (!n.read) n.id];
+    final unreadIds = [
+      for (final n in current)
+        if (!n.read) n.id,
+    ];
     state = AsyncData([for (final n in current) n.copyWith(read: true)]);
     final res = await ref
         .read(notificationRepositoryProvider)

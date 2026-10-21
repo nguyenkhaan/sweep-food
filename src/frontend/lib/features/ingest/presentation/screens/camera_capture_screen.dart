@@ -29,8 +29,7 @@ import 'package:sweepfood/l10n/app_localizations.dart';
 
 enum CameraScanMode {
   label(ScanType.label),
-  receipt(ScanType.receipt),
-  barcode(ScanType.label);
+  receipt(ScanType.receipt);
 
   const CameraScanMode(this.scanType);
 
@@ -39,7 +38,6 @@ enum CameraScanMode {
   String title(AppL10n l10n) => switch (this) {
     CameraScanMode.label => l10n.camModeLabel,
     CameraScanMode.receipt => l10n.camModeReceipt,
-    CameraScanMode.barcode => l10n.camModeBarcode,
   };
 }
 
@@ -277,7 +275,7 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
     }
   }
 
-  /// Shared: send [path] to OCR / Barcode lookup, then route to the review / failed screen.
+  /// Sends [path] to OCR, then routes to the review or failed screen.
   Future<void> _process(String path, {bool fromCamera = false}) async {
     // Pin the mode for the whole flow; the switcher is locked while busy, but
     // never let a late change route a label photo down the receipt branch.
@@ -286,9 +284,7 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
       await _freeze(path, fromCamera: fromCamera);
       final notifier = ref.read(scanControllerProvider.notifier);
       final ScanJob job;
-      if (mode == CameraScanMode.barcode) {
-        job = await notifier.lookupBarcode('8934567890123');
-      } else if (mode == CameraScanMode.label) {
+      if (mode == CameraScanMode.label) {
         job = await notifier.scanLabel(path);
       } else {
         job = await notifier.scanReceipt(path);
@@ -301,8 +297,8 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
       // A receipt can be a valid PARTIAL result even when OCR read text but
       // could not turn it into line items. Route that outcome to the review
       // screen so the user can inspect it, retake, or enter items manually.
-      final hasUsableResult = job.hasItems ||
-          (mode == CameraScanMode.receipt && !job.isFailed);
+      final hasUsableResult =
+          job.hasItems || (mode == CameraScanMode.receipt && !job.isFailed);
       if (job.isFailed || !hasUsableResult) {
         context.push(
           '${Routes.pantry}/${Routes.scanFailed}',
@@ -315,7 +311,11 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
           : Routes.scanLabelReview;
       context.push('${Routes.pantry}/$route', extra: job);
     } on Object catch (error, stackTrace) {
-      log.w('Scan flow failed before review', error: error, stackTrace: stackTrace);
+      log.w(
+        'Scan flow failed before review',
+        error: error,
+        stackTrace: stackTrace,
+      );
       if (mounted) {
         context.push(
           '${Routes.pantry}/${Routes.scanFailed}',
@@ -475,10 +475,7 @@ class _ProcessingOverlay extends StatelessWidget {
             ],
             const CircularProgressIndicator(color: Colors.white),
             const SizedBox(height: Gap.md),
-            Text(
-              l10n.camReading,
-              style: const TextStyle(color: Colors.white),
-            ),
+            Text(l10n.camReading, style: const TextStyle(color: Colors.white)),
           ],
         ),
       ),
@@ -538,10 +535,7 @@ class _Stage extends StatelessWidget {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ViewfinderOverlay(
-            portrait: mode == CameraScanMode.receipt,
-            barcode: mode == CameraScanMode.barcode,
-          ),
+          ViewfinderOverlay(portrait: mode == CameraScanMode.receipt),
           Gap.gapLg,
           const SizedBox(
             width: 22,
@@ -560,9 +554,6 @@ class _Stage extends StatelessWidget {
     if (hint == null) {
       final String guide;
       switch (mode) {
-        case CameraScanMode.barcode:
-          guide = l10n.camGuideBarcode;
-          break;
         case CameraScanMode.label:
           guide = l10n.camGuideLabel;
           break;
@@ -573,10 +564,7 @@ class _Stage extends StatelessWidget {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ViewfinderOverlay(
-            portrait: mode == CameraScanMode.receipt,
-            barcode: mode == CameraScanMode.barcode,
-          ),
+          ViewfinderOverlay(portrait: mode == CameraScanMode.receipt),
           Gap.gapLg,
           caption(guide),
         ],

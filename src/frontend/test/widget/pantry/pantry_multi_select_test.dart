@@ -4,120 +4,141 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_theme.dart';
+import 'package:sweepfood/core/widgets/loading_skeleton.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/cookable_recipes_screen.dart';
 import 'package:sweepfood/features/pantry/presentation/screens/pantry_screen.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
 
 void main() {
-  testWidgets('PantryScreen supports multi-selection and navigates to CookableRecipesScreen', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(1200, 2000));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
+  testWidgets(
+    'PantryScreen supports multi-selection and navigates to CookableRecipesScreen',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1200, 2000));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
 
-    final router = GoRouter(
-      initialLocation: Routes.pantry,
-      routes: [
-        GoRoute(
-          path: Routes.pantry,
-          builder: (context, state) => const PantryScreen(),
-          routes: [
-            GoRoute(
-              path: Routes.cookableRecipes,
-              builder: (context, state) {
-                if (state.extra is ({List<PantryItem> items, String prompt})) {
-                  final record =
-                      state.extra as ({List<PantryItem> items, String prompt});
-                  return CookableRecipesScreen(
-                    selectedItems: record.items,
-                    initialPrompt: record.prompt,
-                  );
-                } else if (state.extra is List<PantryItem>) {
-                  return CookableRecipesScreen(
-                    selectedItems: state.extra as List<PantryItem>,
-                  );
-                }
-                return const CookableRecipesScreen(selectedItems: []);
-              },
-            ),
-          ],
-        ),
-      ],
-    );
+      final router = GoRouter(
+        initialLocation: Routes.pantry,
+        routes: [
+          GoRoute(
+            path: Routes.pantry,
+            builder: (context, state) => const PantryScreen(),
+            routes: [
+              GoRoute(
+                path: Routes.cookableRecipes,
+                builder: (context, state) {
+                  if (state.extra
+                      is ({List<PantryItem> items, String prompt})) {
+                    final record =
+                        state.extra
+                            as ({List<PantryItem> items, String prompt});
+                    return CookableRecipesScreen(
+                      selectedItems: record.items,
+                      initialPrompt: record.prompt,
+                    );
+                  } else if (state.extra is List<PantryItem>) {
+                    return CookableRecipesScreen(
+                      selectedItems: state.extra as List<PantryItem>,
+                    );
+                  }
+                  return const CookableRecipesScreen(selectedItems: []);
+                },
+              ),
+            ],
+          ),
+        ],
+      );
 
-    await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp.router(
-          locale: const Locale('vi'),
-          supportedLocales: AppL10n.supportedLocales,
-          localizationsDelegates: AppL10n.localizationsDelegates,
-          theme: AppTheme.light,
-          routerConfig: router,
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp.router(
+            locale: const Locale('vi'),
+            supportedLocales: AppL10n.supportedLocales,
+            localizationsDelegates: AppL10n.localizationsDelegates,
+            theme: AppTheme.light,
+            routerConfig: router,
+          ),
         ),
-      ),
-    );
-    // Wait for mock data
-    for (var i = 0; i < 5; i++) {
+      );
+      // Wait for mock data
+      for (var i = 0; i < 5; i++) {
+        await tester.pump(const Duration(milliseconds: 300));
+      }
+
+      expect(find.text('Cải bó xôi'), findsOneWidget);
+      expect(find.text('Cà chua bi'), findsOneWidget);
+
+      // Initial state: no bottom bar
+      expect(find.textContaining('Đã chọn'), findsNothing);
+
+      // Select first item by tapping checkbox
+      expect(find.byType(Checkbox), findsWidgets);
+      await tester.tap(find.byType(Checkbox).first);
+      await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
-    }
 
-    expect(find.text('Cải bó xôi'), findsOneWidget);
-    expect(find.text('Cà chua bi'), findsOneWidget);
+      // Bottom action bar appears with AI button
+      expect(find.text('Đã chọn 1'), findsOneWidget);
+      expect(find.text('AI Yêu cầu'), findsOneWidget);
+      expect(find.text('Xem công thức'), findsOneWidget);
 
-    // Initial state: no bottom bar
-    expect(find.textContaining('Đã chọn'), findsNothing);
+      // Prompt input is hidden initially
+      expect(
+        find.byWidgetPredicate(
+          (w) =>
+              w is TextField &&
+              w.decoration?.hintText?.contains('Yêu cầu món') == true,
+        ),
+        findsNothing,
+      );
 
-    // Select first item by tapping checkbox
-    expect(find.byType(Checkbox), findsWidgets);
-    await tester.tap(find.byType(Checkbox).first);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
+      // Tap AI Yêu cầu to expand prompt input
+      await tester.tap(find.text('AI Yêu cầu'));
+      await tester.pumpAndSettle();
 
-    // Bottom action bar appears with AI button
-    expect(find.text('Đã chọn 1'), findsOneWidget);
-    expect(find.text('AI Yêu cầu'), findsOneWidget);
-    expect(find.text('Xem công thức'), findsOneWidget);
+      final promptField = find.byWidgetPredicate(
+        (w) =>
+            w is TextField &&
+            w.decoration?.hintText?.contains('Yêu cầu món') == true,
+      );
+      expect(promptField, findsOneWidget);
 
-    // Prompt input is hidden initially
-    expect(find.byWidgetPredicate((w) => w is TextField && w.decoration?.hintText?.contains('Yêu cầu món') == true), findsNothing);
+      // Enter prompt "Thanh đạm"
+      await tester.enterText(promptField, 'Thanh đạm');
+      await tester.pumpAndSettle();
 
-    // Tap AI Yêu cầu to expand prompt input
-    await tester.tap(find.text('AI Yêu cầu'));
-    await tester.pumpAndSettle();
+      // Select second item
+      await tester.tap(find.byType(Checkbox).at(1));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Đã chọn 2'), findsOneWidget);
 
-    final promptField = find.byWidgetPredicate(
-      (w) => w is TextField && w.decoration?.hintText?.contains('Yêu cầu món') == true,
-    );
-    expect(promptField, findsOneWidget);
+      // Tap Xem công thức
+      await tester.tap(find.text('Xem công thức'));
+      // Skeleton shimmer is intentionally continuous, so pump only long
+      // enough for the route transition instead of waiting for all animations.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
 
-    // Enter prompt "Thanh đạm"
-    await tester.enterText(promptField, 'Thanh đạm');
-    await tester.pumpAndSettle();
+      // Recipe results remain in a loading state until the real recommendation
+      // source is connected.
+      expect(find.byType(CookableRecipesScreen), findsOneWidget);
+      expect(find.text('Công thức có thể nấu'), findsOneWidget);
+      expect(
+        find.byKey(const Key('cookable-recipes-skeleton')),
+        findsOneWidget,
+      );
+      expect(find.byType(SkeletonBox), findsWidgets);
 
-    // Select second item
-    await tester.tap(find.byType(Checkbox).at(1));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Đã chọn 2'), findsOneWidget);
+      // Back to PantryScreen
+      router.pop();
+      await tester.pumpAndSettle();
 
-    // Tap Xem công thức
-    await tester.tap(find.text('Xem công thức'));
-    await tester.pumpAndSettle();
+      // Tap Bỏ chọn
+      await tester.tap(find.text('Bỏ chọn'));
+      await tester.pump();
 
-    // CookableRecipesScreen opened with active prompt chip
-    expect(find.byType(CookableRecipesScreen), findsOneWidget);
-    expect(find.text('Công thức có thể nấu'), findsOneWidget);
-    expect(find.text('Yêu cầu: Thanh đạm'), findsOneWidget);
-
-    // Back to PantryScreen
-    router.pop();
-    await tester.pumpAndSettle();
-
-    // Tap Bỏ chọn
-    await tester.tap(find.text('Bỏ chọn'));
-    await tester.pump();
-
-    expect(find.textContaining('Đã chọn'), findsNothing);
-  });
+      expect(find.textContaining('Đã chọn'), findsNothing);
+    },
+  );
 }

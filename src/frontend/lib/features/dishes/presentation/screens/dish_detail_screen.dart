@@ -16,7 +16,6 @@ import 'package:sweepfood/features/dishes/presentation/widgets/ingredient_checkl
 import 'package:sweepfood/features/favorites/presentation/controllers/favorite_recipes_controller.dart';
 import 'package:sweepfood/features/favorites/presentation/widgets/add_to_menu_sheet.dart';
 import 'package:sweepfood/features/nutrition/presentation/widgets/macro_breakdown.dart';
-import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 
 /// D-01 — Chi tiết món. Reached from S-01 (`/suggestions/dish/:id`), optionally
@@ -146,25 +145,6 @@ class _Body extends ConsumerWidget {
                         visualDensity: VisualDensity.compact,
                       ),
                   ],
-                ),
-              ],
-              if (dish.missingCount > 0) ...[
-                Gap.gapMd,
-                OutlinedButton.icon(
-                  onPressed: () async {
-                    final added = await ref
-                        .read(shoppingListControllerProvider.notifier)
-                        .addMissingFromDish(dish, l10n);
-                    if (!context.mounted) return;
-                    AppSnack.show(
-                      context,
-                      added > 0
-                          ? context.l10n.dishAddedToShopping(added)
-                          : context.l10n.dishShoppingNotReady,
-                    );
-                  },
-                  icon: const Icon(Icons.add_shopping_cart_rounded, size: 18),
-                  label: Text(l10n.dishAddMissing(dish.missingCount)),
                 ),
               ],
               if (dish.steps.isNotEmpty) ...[

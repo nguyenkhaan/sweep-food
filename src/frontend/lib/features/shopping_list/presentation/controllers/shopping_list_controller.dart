@@ -52,7 +52,10 @@ class ShoppingListController extends _$ShoppingListController {
   /// Checking an item requires [purchase] (the backend uses it to create the
   /// resulting inventory batch); un-checking must omit it. The caller decides
   /// which applies by checking `item.checked` before calling this.
-  Future<bool> toggleChecked(String itemId, {ShoppingPurchaseDraft? purchase}) async {
+  Future<bool> toggleChecked(
+    String itemId, {
+    ShoppingPurchaseDraft? purchase,
+  }) async {
     final list = _list;
     if (list == null) return false;
     final item = list.items.firstWhere((i) => i.id == itemId);
@@ -99,9 +102,9 @@ class ShoppingListController extends _$ShoppingListController {
     );
   }
 
-  Future<void> removeItem(String itemId) async {
+  Future<bool> removeItem(String itemId) async {
     final list = _list;
-    if (list == null) return;
+    if (list == null) return false;
     state = AsyncData(
       list.copyWith(
         items: [
@@ -113,7 +116,13 @@ class ShoppingListController extends _$ShoppingListController {
     final res = await ref
         .read(shoppingListRepositoryProvider)
         .removeItem(listId: list.id, itemId: itemId);
-    res.fold((_) => ref.invalidateSelf(), (_) {});
+    return res.fold(
+      (_) {
+        ref.invalidateSelf();
+        return false;
+      },
+      (_) => true,
+    );
   }
 
   /// D-01 "Thêm phần thiếu vào danh sách mua". Returns how many lines were
@@ -131,7 +140,11 @@ class ShoppingListController extends _$ShoppingListController {
           .read(shoppingListRepositoryProvider)
           .addItem(
             listId: list.id,
-            draft: ShoppingListItemDraft(name: ing.name, quantity: qty, unit: ing.unit),
+            draft: ShoppingListItemDraft(
+              name: ing.name,
+              quantity: qty,
+              unit: ing.unit,
+            ),
           );
       res.fold((_) {}, (item) {
         final cur = _list ?? list;

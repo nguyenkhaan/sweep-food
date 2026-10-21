@@ -20,7 +20,7 @@ Future<void> showAddEntryChooser(BuildContext context) {
   );
 }
 
-/// G-03 — Bottom sheet hiển thị 4 cách nhập nguyên liệu.
+/// G-03 — Bottom sheet hiển thị các cách nhập nguyên liệu đã hoạt động.
 ///
 /// Layout: 2×2 grid. Ô "Quét tem nhãn" dùng màu primary (green-700),
 /// các ô còn lại dùng nền surface với border hairline.
@@ -70,38 +70,17 @@ class AddEntryChooserSheet extends StatelessWidget {
                 ),
                 Gap.gapMd,
 
-                // ── 2×2 lưới (row + IntrinsicHeight — co giãn theo cỡ chữ,
-                //    không overflow như childAspectRatio cố định) ────────
-                IntrinsicHeight(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: _OptionCard(
-                          icon: const _CameraIcon(),
-                          title: l10n.chooserScanOcr,
-                          subtitle: l10n.chooserScanOcrSub,
-                          isPrimary: true,
-                          onTap: () {
-                            context.pop(); // đóng sheet
-                            context.push(
-                              '${Routes.pantry}/${Routes.scanCamera}?mode=label',
-                            );
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: Gap.sm),
-                      Expanded(
-                        child: _OptionCard(
-                          icon: const _BarcodeIcon(),
-                          title: l10n.chooserScanBarcode,
-                          subtitle: l10n.chooserScanBarcodeSub,
-                          status: 'Coming soon',
-                          onTap: null,
-                        ),
-                      ),
-                    ],
-                  ),
+                _OptionCard(
+                  icon: const _CameraIcon(),
+                  title: l10n.chooserScanOcr,
+                  subtitle: l10n.chooserScanOcrSub,
+                  isPrimary: true,
+                  onTap: () {
+                    context.pop(); // đóng sheet
+                    context.push(
+                      '${Routes.pantry}/${Routes.scanCamera}?mode=label',
+                    );
+                  },
                 ),
                 const SizedBox(height: Gap.sm),
                 IntrinsicHeight(
@@ -158,7 +137,6 @@ class _OptionCard extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
     this.isPrimary = false,
-    this.status,
   });
 
   final Widget icon;
@@ -166,7 +144,6 @@ class _OptionCard extends StatelessWidget {
   final String subtitle;
   final VoidCallback? onTap;
   final bool isPrimary;
-  final String? status;
 
   @override
   Widget build(BuildContext context) {
@@ -239,16 +216,6 @@ class _OptionCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  if (status != null) ...[
-                    const SizedBox(height: 3),
-                    Text(
-                      status!,
-                      style: context.text.labelSmall?.copyWith(
-                        color: subtitleColor,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ],
@@ -268,14 +235,6 @@ class _CameraIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Icon(Icons.camera_alt_outlined);
-  }
-}
-
-class _BarcodeIcon extends StatelessWidget {
-  const _BarcodeIcon();
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(Icons.qr_code_scanner_rounded);
   }
 }
 

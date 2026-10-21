@@ -66,9 +66,6 @@ class AppL10nEn extends AppL10n {
   String get commonSkip => 'Skip';
 
   @override
-  String get commonComingSoon => 'Coming soon';
-
-  @override
   String get tierEatSoon => 'Eat soon / cook today';
 
   @override
@@ -1483,9 +1480,6 @@ class AppL10nEn extends AppL10n {
   String get settingsPremiumSoon => 'Premium coming soon';
 
   @override
-  String get settingsPantrySharing => 'Share pantry';
-
-  @override
   String get settingsGroupMealPlanning => 'Meal planning';
 
   @override
@@ -1583,26 +1577,6 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get notifDndEnd => 'Do-not-disturb end';
-
-  @override
-  String get pantrySharingIntro =>
-      'Invite up to 4 people to view and update the pantry. Every change syncs to all members.';
-
-  @override
-  String get pantrySharingFootnote =>
-      'Members can add, edit and delete ingredients and see dish suggestions. Only the pantry owner can remove members.';
-
-  @override
-  String get pantrySharingInvite => 'Invite member';
-
-  @override
-  String get pantryMemberInvited => 'Invited · awaiting confirmation';
-
-  @override
-  String get pantryRoleOwner => 'Pantry owner';
-
-  @override
-  String get pantryRoleEditor => 'Can edit';
 
   @override
   String get profileGroupInfo => 'Info';

@@ -22,7 +22,6 @@
   "commonEdit": "Sửa",
   "commonContinue": "Tiếp tục",
   "commonSkip": "Bỏ qua",
-  "commonComingSoon": "Sắp có",
 
   "tierEatSoon": "Ăn liền / Nấu trong ngày",
   "tierEatSoonShort": "Ăn liền",
@@ -543,7 +542,6 @@
   "settingsProfilePassword": "Hồ sơ & mật khẩu",
   "settingsPlan": "Gói dịch vụ",
   "settingsPremiumSoon": "Premium sắp có",
-  "settingsPantrySharing": "Chia sẻ tủ bếp",
   "settingsGroupMealPlanning": "Kế hoạch bữa ăn",
   "settingsWasteReport": "Báo cáo chống lãng phí",
   "settingsGroupApp": "Ứng dụng",
@@ -578,13 +576,6 @@
   "notifDnd": "Không làm phiền",
   "notifDndStart": "Bắt đầu không làm phiền",
   "notifDndEnd": "Kết thúc không làm phiền",
-
-  "pantrySharingIntro": "Mời tối đa 4 người cùng xem và cập nhật tủ bếp. Mọi thay đổi được đồng bộ cho tất cả thành viên.",
-  "pantrySharingFootnote": "Thành viên có thể thêm, sửa, xóa nguyên liệu và xem gợi ý món. Chỉ chủ tủ bếp mới xóa được thành viên.",
-  "pantrySharingInvite": "Mời thành viên",
-  "pantryMemberInvited": "Đã mời · chờ xác nhận",
-  "pantryRoleOwner": "Chủ tủ bếp",
-  "pantryRoleEditor": "Có thể chỉnh sửa",
 
   "profileGroupInfo": "Thông tin",
   "profileEditSoon": "Sửa hồ sơ sẽ có ở bản sau.",

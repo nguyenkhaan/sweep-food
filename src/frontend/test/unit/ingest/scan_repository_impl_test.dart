@@ -164,7 +164,7 @@ void main() {
     expect(job.items, hasLength(1));
     expect(job.items.single.name, 'Sữa tươi nguyên kem');
     expect(job.items.single.category, 'Sữa và chế phẩm từ sữa');
-    expect(job.rawText, '__MOCK_BARCODE__');
+    expect(job.rawText, 'Product found for barcode 8934567890123');
     expect(job.items.single.quantity, 1.0);
     expect(job.items.single.unit, MeasurementUnit.liter);
     expect(job.items.single.priceVnd, 35000);

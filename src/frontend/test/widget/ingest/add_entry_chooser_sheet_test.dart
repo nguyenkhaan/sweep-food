@@ -6,7 +6,7 @@ import 'package:sweepfood/features/ingest/presentation/screens/add_entry_chooser
 import 'package:sweepfood/l10n/app_localizations.dart';
 
 void main() {
-  testWidgets('AddEntryChooserSheet renders 4 input methods in 2x2 grid', (
+  testWidgets('AddEntryChooserSheet renders only available input methods', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -24,7 +24,7 @@ void main() {
 
     expect(find.text('Thêm nguyên liệu'), findsOneWidget);
     expect(find.text('Quét tem / Hóa đơn'), findsOneWidget);
-    expect(find.text('Quét mã vạch'), findsOneWidget);
+    expect(find.text('Quét mã vạch'), findsNothing);
     expect(find.text('Nói'), findsOneWidget);
     expect(find.text('Nhập tay'), findsOneWidget);
   });
@@ -57,9 +57,7 @@ void main() {
     expect(find.text('Nhập tay'), findsOneWidget);
   });
 
-  testWidgets('barcode option stays visible and disabled while coming soon', (
-    tester,
-  ) async {
+  testWidgets('does not expose unfinished barcode mockup', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
@@ -73,15 +71,8 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Quét mã vạch'), findsOneWidget);
-    expect(find.text('Coming soon'), findsOneWidget);
-
-    final barcodeCard = find.ancestor(
-      of: find.text('Quét mã vạch'),
-      matching: find.byType(InkWell),
-    );
-    expect(barcodeCard, findsOneWidget);
-    expect(tester.widget<InkWell>(barcodeCard).onTap, isNull);
+    expect(find.text('Quét mã vạch'), findsNothing);
+    expect(find.text('Coming soon'), findsNothing);
   });
 
   testWidgets('showAddEntryChooser opens bottom sheet', (tester) async {

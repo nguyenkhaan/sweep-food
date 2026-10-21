@@ -211,12 +211,6 @@ abstract class AppL10n {
   /// **'Bỏ qua'**
   String get commonSkip;
 
-  /// No description provided for @commonComingSoon.
-  ///
-  /// In vi, this message translates to:
-  /// **'Sắp có'**
-  String get commonComingSoon;
-
   /// No description provided for @tierEatSoon.
   ///
   /// In vi, this message translates to:
@@ -2713,12 +2707,6 @@ abstract class AppL10n {
   /// **'Premium sắp có'**
   String get settingsPremiumSoon;
 
-  /// No description provided for @settingsPantrySharing.
-  ///
-  /// In vi, this message translates to:
-  /// **'Chia sẻ tủ bếp'**
-  String get settingsPantrySharing;
-
   /// No description provided for @settingsGroupMealPlanning.
   ///
   /// In vi, this message translates to:
@@ -2910,42 +2898,6 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Kết thúc không làm phiền'**
   String get notifDndEnd;
-
-  /// No description provided for @pantrySharingIntro.
-  ///
-  /// In vi, this message translates to:
-  /// **'Mời tối đa 4 người cùng xem và cập nhật tủ bếp. Mọi thay đổi được đồng bộ cho tất cả thành viên.'**
-  String get pantrySharingIntro;
-
-  /// No description provided for @pantrySharingFootnote.
-  ///
-  /// In vi, this message translates to:
-  /// **'Thành viên có thể thêm, sửa, xóa nguyên liệu và xem gợi ý món. Chỉ chủ tủ bếp mới xóa được thành viên.'**
-  String get pantrySharingFootnote;
-
-  /// No description provided for @pantrySharingInvite.
-  ///
-  /// In vi, this message translates to:
-  /// **'Mời thành viên'**
-  String get pantrySharingInvite;
-
-  /// No description provided for @pantryMemberInvited.
-  ///
-  /// In vi, this message translates to:
-  /// **'Đã mời · chờ xác nhận'**
-  String get pantryMemberInvited;
-
-  /// No description provided for @pantryRoleOwner.
-  ///
-  /// In vi, this message translates to:
-  /// **'Chủ tủ bếp'**
-  String get pantryRoleOwner;
-
-  /// No description provided for @pantryRoleEditor.
-  ///
-  /// In vi, this message translates to:
-  /// **'Có thể chỉnh sửa'**
-  String get pantryRoleEditor;
 
   /// No description provided for @profileGroupInfo.
   ///

@@ -21,7 +21,12 @@ class CookingHistoryController extends _$CookingHistoryController {
 
 /// One completed session in full (`GET /cooking/history/{id}`).
 @riverpod
-Future<CookingHistoryDetail> cookingHistoryDetail(Ref ref, String sessionId) async {
-  final res = await ref.watch(cookingRepositoryProvider).historyDetail(sessionId);
+Future<CookingHistoryDetail> cookingHistoryDetail(
+  Ref ref,
+  String sessionId,
+) async {
+  final res = await ref
+      .watch(cookingRepositoryProvider)
+      .historyDetail(sessionId);
   return res.fold((f) => throw f, (detail) => detail);
 }
