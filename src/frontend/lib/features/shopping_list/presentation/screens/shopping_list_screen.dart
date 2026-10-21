@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
 import 'package:sweepfood/core/widgets/empty_state.dart';
 import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
@@ -100,52 +101,65 @@ class ShoppingListScreen extends ConsumerWidget {
                     horizontal: Gap.lg,
                   ),
                 ),
-                for (final entry in groups.entries) ...[
+                if (groups.isEmpty) ...[
+                  const SizedBox(height: 48),
+                  EmptyState(
+                    title: list.items.any((i) => i.checked)
+                        ? 'Đã mua hết nguyên liệu'
+                        : 'Danh sách đã sẵn sàng',
+                    message: list.items.any((i) => i.checked)
+                        ? 'Tất cả nguyên liệu cần mua đã được mua xong và chuyển vào kho bếp. Dùng nút “Thêm món” nếu bạn muốn mua thêm.'
+                        : 'Thực đơn hiện không có nguyên liệu nào cần mua thêm. Dùng nút “Thêm món” để bổ sung thủ công.',
+                    icon: Icons.check_circle_outline_rounded,
+                  ),
+                ] else ...[
+                  for (final entry in groups.entries) ...[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        Gap.lg,
+                        Gap.md,
+                        Gap.lg,
+                        Gap.xs,
+                      ),
+                      child: Text(
+                        entry.key.toUpperCase(),
+                        style: context.text.labelSmall,
+                      ),
+                    ),
+                    for (final item in entry.value)
+                      ShoppingItemRow(
+                        item: item,
+                        onToggle: () => _toggleItem(context, ref, item),
+                        onDismissed: item.isManual
+                            ? () => ref
+                                  .read(shoppingListControllerProvider.notifier)
+                                  .removeItem(item.id)
+                            : null,
+                      ),
+                  ],
+                  const Divider(height: 1),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      Gap.lg,
-                      Gap.md,
-                      Gap.lg,
-                      Gap.xs,
-                    ),
-                    child: Text(
-                      entry.key.toUpperCase(),
-                      style: context.text.labelSmall,
+                    padding: const EdgeInsets.all(Gap.lg),
+                    child: Row(
+                      children: [
+                        Text(
+                          l10n.shoppingEstimate,
+                          style: context.text.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Gap.gapXs,
+                        Text(
+                          l10n.shoppingToBuyCount(list.toBuyCount),
+                          style: context.text.bodySmall?.copyWith(
+                            color: context.sweep.textTertiary,
+                          ),
+                        ),
+                        const Spacer(),
+                      ],
                     ),
                   ),
-                  for (final item in entry.value)
-                    ShoppingItemRow(
-                      item: item,
-                      onToggle: () => _toggleItem(context, ref, item),
-                      onDismissed: item.isManual
-                          ? () => ref
-                                .read(shoppingListControllerProvider.notifier)
-                                .removeItem(item.id)
-                          : null,
-                    ),
                 ],
-                const Divider(height: 1),
-                Padding(
-                  padding: const EdgeInsets.all(Gap.lg),
-                  child: Row(
-                    children: [
-                      Text(
-                        l10n.shoppingEstimate,
-                        style: context.text.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      Gap.gapXs,
-                      Text(
-                        l10n.shoppingToBuyCount(list.toBuyCount),
-                        style: context.text.bodySmall?.copyWith(
-                          color: context.sweep.textTertiary,
-                        ),
-                      ),
-                      const Spacer(),
-                    ],
-                  ),
-                ),
               ],
             );
           },
@@ -169,6 +183,9 @@ class ShoppingListScreen extends ConsumerWidget {
     }
     final purchase = await PurchaseDetailSheet.show(context);
     if (purchase == null) return; // cancelled — stays unchecked
-    await notifier.toggleChecked(item.id, purchase: purchase);
+    final success = await notifier.toggleChecked(item.id, purchase: purchase);
+    if (success && context.mounted) {
+      AppSnack.show(context, 'Đã mua "${item.name}" và chuyển vào kho!');
+    }
   }
 }
