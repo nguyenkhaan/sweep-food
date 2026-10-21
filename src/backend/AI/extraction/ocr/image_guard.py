@@ -11,6 +11,7 @@ import httpx
 from AI.errors import ExtractionBadResponseError, ExtractionUnavailableError
 from AI.extraction.ocr.image_preprocessor import encode_image_to_base64
 from AI.llm.openai_client import OpenAIClient
+
 from src.core.setting import (
     OPENAI_API_KEY,
     OPENAI_BASE_URL,
@@ -18,7 +19,7 @@ from src.core.setting import (
     OPENAI_TIMEOUT_SECONDS,
 )
 
-GUARD_MAX_DIM = 540
+GUARD_MAX_DIM = 720
 
 GUARD_PROMPT = (
     "You are an input filter for the OCR pipeline of a food-management app.\n"
@@ -107,7 +108,7 @@ class OpenAIImageGuard:
         payload = await self.openai_client.create_chat_completion_json(
             messages,
             model=self.model,
-            max_completion_tokens=128,
+            max_completion_tokens=256,
             timeout=self.timeout,
         )
         return _parse_verdict(payload)

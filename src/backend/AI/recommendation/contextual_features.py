@@ -55,7 +55,7 @@ def _clip(value: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, value))
 
 
-def _pantry_index(
+def pantry_index(
     items: list[dict[str, Any]],
 ) -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
     """Index pantry items by name/alias -> grams, code -> grams, and urgent subset.
@@ -67,7 +67,8 @@ def _pantry_index(
     urgent: dict[str, float] = {}
     for item in items:
         name = (item.get("name") or "").strip().lower()
-        grams = _num(item.get("quantity_g"), 0.0) or 0.0
+        raw_grams = item.get("quantity_g")
+        grams = math.inf if raw_grams is None else (_num(raw_grams, 0.0) or 0.0)
         for code in get_effective_codes(item):
             by_code[code] = by_code.get(code, 0.0) + grams
         for alias in extract_pantry_name_aliases(name) | {name}:
@@ -109,7 +110,7 @@ def extract_contextual_features(
         servings = 4.0
     scale = household / servings
 
-    by_name, by_code, urgent = _pantry_index(pantry.get("items", []))
+    by_name, by_code, urgent = pantry_index(pantry.get("items", []))
 
     core_req = core_have = 0.0
     sec_req = sec_have = 0.0

@@ -23,21 +23,24 @@ class RecommendationPantryItemDraft {
   const RecommendationPantryItemDraft({
     required this.name,
     this.code,
-    this.quantityG = 200.0,
+    this.quantityG,
     this.hoursToExpire,
     this.isStaple = false,
   });
 
   final String name;
   final String? code;
-  final double quantityG;
+
+  /// Grams (or ml) in stock, or null when the pantry unit is a count the
+  /// backend can't convert — then the recommendation only checks presence.
+  final double? quantityG;
   final double? hoursToExpire;
   final bool isStaple;
 
   Map<String, dynamic> toJson() => {
         'name': name,
         if (code != null) 'code': code,
-        'quantity_g': quantityG > 0 ? quantityG : 200.0,
+        if (quantityG != null && quantityG! > 0) 'quantity_g': quantityG,
         if (hoursToExpire != null) 'hours_to_expire': hoursToExpire,
         'is_staple': isStaple,
       };

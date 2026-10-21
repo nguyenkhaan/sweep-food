@@ -44,17 +44,17 @@ final cookableSuggestionProvider = FutureProvider.autoDispose
 RecommendationPantryItemDraft _pantryItemToRecommendationDraft(
   PantryItem item,
 ) {
-  final quantityG = switch (item.unit) {
+  final double? quantityG = switch (item.unit) {
     MeasurementUnit.kilogram => item.quantity * 1000.0,
     MeasurementUnit.gram || MeasurementUnit.milliliter => item.quantity,
     MeasurementUnit.liter => item.quantity * 1000.0,
-    _ => 200.0,
+    _ => null,
   };
   final expiryDate = item.expiryDate;
   return RecommendationPantryItemDraft(
     name: item.name,
     code: item.ingredientId,
-    quantityG: quantityG > 0 ? quantityG : 200.0,
+    quantityG: quantityG != null && quantityG > 0 ? quantityG : null,
     hoursToExpire: expiryDate?.difference(DateTime.now()).inHours.toDouble(),
   );
 }

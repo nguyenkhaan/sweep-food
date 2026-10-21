@@ -21,7 +21,7 @@ ARCHETYPES_DIR = REPO_ROOT / "archetypes"
 INGREDIENTS_DIR = REPO_ROOT / "ingredients"
 CLAIMS_DIR = REPO_ROOT / "claims"
 
-KB_VERSION = "0.3.0"
+KB_VERSION = "0.4.0"
 CHECKSUM_EXCLUDED_KEYS = frozenset({"checksum", "generated_at"})
 COMMIT_SHA_PATTERN = re.compile(r"[0-9a-f]{40}")
 
@@ -112,7 +112,9 @@ def validate_kb(knowledge_base: KnowledgeBase) -> None:
         assert c.get("status") == "reviewed", f"Claim {cid} chưa có status: reviewed"
 
     # 3. Kiểm tra Archetypes
-    assert len(archetypes) == 8, f"Yêu cầu đủ 8 archetypes, hiện có {len(archetypes)}"
+    assert len(archetypes) >= 8, (
+        f"Yêu cầu tối thiểu 8 archetypes, hiện có {len(archetypes)}"
+    )
     for arch_name, arch in archetypes.items():
         tiers = arch.get("sensory_tiers", {})
         assert len(tiers) == 4, f"{arch_name} thiếu tier (yêu cầu 4 tier)"

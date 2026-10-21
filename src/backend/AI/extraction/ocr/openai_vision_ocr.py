@@ -14,6 +14,7 @@ from AI.errors import ExtractionUnavailableError
 from AI.extraction.ocr.image_preprocessor import encode_image_to_base64
 from AI.extraction.ocr.label_parser import parse_vietnamese_date
 from AI.llm.openai_client import OpenAIClient
+
 from src.core.setting import (
     OPENAI_API_KEY,
     OPENAI_BASE_URL,
@@ -24,7 +25,7 @@ from src.core.setting import (
 
 # Longest side (px) of the image sent to the OCR model; smaller means fewer image
 # tokens and a faster upload, at the cost of legibility for tiny print.
-OCR_MAX_DIM = 540
+OCR_MAX_DIM = 720
 
 SYSTEM_PROMPT = (
     "You are an OCR system for Vietnamese supermarket food labels and receipts.\n"
@@ -149,7 +150,7 @@ class OpenAIVisionOCR:
         content = await self.openai_client.create_chat_completion(
             messages=messages,
             model=self.model,
-            max_completion_tokens=2048,
+            max_completion_tokens=4096,
             reasoning_effort=self.reasoning_effort or None,
             response_format={"type": "json_object"},
             timeout=self.timeout,

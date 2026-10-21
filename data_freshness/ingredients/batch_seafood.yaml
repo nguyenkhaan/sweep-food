@@ -365,7 +365,7 @@
   - cá thu tươi
   - cá thu phấn
   - cá thu cắt khúc
-  archetype: FISH_SEAFOOD
+  archetype: FISH_FILLET
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -386,7 +386,7 @@
   - phi lê cá hồi
   - cá hồi tươi
   - cá hồi nauy
-  archetype: FISH_SEAFOOD
+  archetype: FISH_FILLET
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -407,7 +407,7 @@
   - phi lê cá basa
   - cá ba sa phi lê
   - cá basa
-  archetype: FISH_SEAFOOD
+  archetype: FISH_FILLET
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -428,7 +428,7 @@
   - cá chép ta
   - cá chép tươi
   - cá chép sông
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -449,7 +449,7 @@
   - cá trê đồng
   - cá trê lai
   - cá trê vàng
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -470,7 +470,7 @@
   - cá ngừ
   - thịt cá ngừ tươi
   - cá ngừ vây vàng
-  archetype: FISH_SEAFOOD
+  archetype: FISH_FILLET
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -491,7 +491,7 @@
   - cá nục gai
   - cá nục chuối
   - cá nục tươi
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -511,8 +511,7 @@
   - cá trích
   - cá trích biển
   - cá trích tươi
-  - cá trích phi lê
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -533,7 +532,7 @@
   - cá trắm
   - cá trắm trắng
   - cá trắm tươi
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -554,7 +553,7 @@
   - cá rô
   - cá rô ta
   - cá rô đồng tươi
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -575,7 +574,7 @@
   - cá bống kèo
   - cá kèo sống
   - cá kèo tươi
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -596,7 +595,7 @@
   - cá bống
   - cá bống sông
   - cá bống tượng
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -617,7 +616,7 @@
   - cá chim
   - cá chim biển
   - cá chim tươi
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -638,7 +637,7 @@
   - cá chép giòn tươi
   - thịt cá chép giòn
   - cá chép giòn nguyên con
-  archetype: FISH_SEAFOOD
+  archetype: WHOLE_FISH
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -659,7 +658,7 @@
   - thịt cá thát lát nạo
   - cá thát lát rút xương
   - chả cá thát lát
-  archetype: FISH_SEAFOOD
+  archetype: FISH_FILLET
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 3.0
@@ -680,7 +679,7 @@
   - tôm càng
   - tôm càng nước ngọt
   - tôm càng xanh tươi
-  archetype: FISH_SEAFOOD
+  archetype: SHRIMP
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -701,7 +700,7 @@
   - tép gạo
   - tép rong
   - tép đồng
-  archetype: FISH_SEAFOOD
+  archetype: SHRIMP
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -722,7 +721,7 @@
   - tôm hùm bông
   - tôm hùm xanh
   - tôm hùm alaska
-  archetype: FISH_SEAFOOD
+  archetype: SHRIMP
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -743,7 +742,7 @@
   - mực cơm
   - mực nang trứng
   - mực ống ôm trứng
-  archetype: FISH_SEAFOOD
+  archetype: SQUID
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -756,7 +755,7 @@
       claim: C-LOCAL-SOFTFREEZE
     freezer_-18c:
       value: 2160.0
-      claim: C-FK-FISH-FREEZE
+      claim: C-FK-SQUID-FREEZE
 - id: muc_sim
   code: '8040'
   names_vi:
@@ -764,7 +763,7 @@
   - mực sim tươi
   - mực sim sữa
   - mực chớp
-  archetype: FISH_SEAFOOD
+  archetype: SQUID
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -777,7 +776,7 @@
       claim: C-LOCAL-SOFTFREEZE
     freezer_-18c:
       value: 2160.0
-      claim: C-FK-FISH-FREEZE
+      claim: C-FK-SQUID-FREEZE
 - id: cua_huynh_de
   code: '8033'
   names_vi:

@@ -608,21 +608,29 @@ def transform_recipe_ingredients(
         raw_weight = row.get("estimated_weight_g", "").strip()
         raw_unit = row.get("unit", "").strip()
 
+        weight_parsed = decimal_value(raw_weight)
+        has_weight = weight_parsed is not None and weight_parsed > 0
+        unit_is_measurable = (
+            raw_unit in VALID_MEASUREMENT_UNITS and raw_unit != MeasurementUnit.OTHER.value
+        )
         req_qty_parsed = decimal_value(raw_qty)
-        if req_qty_parsed is not None and req_qty_parsed > 0:
+        has_qty = req_qty_parsed is not None and req_qty_parsed > 0
+        if has_qty and (unit_is_measurable or not has_weight):
             req_qty = req_qty_parsed
             unit = MeasurementUnit(raw_unit) if raw_unit in VALID_MEASUREMENT_UNITS else MeasurementUnit.OTHER
             display_qty = req_qty
             display_unit = row.get("unit_vi") or raw_unit or None
         else:
-            weight_parsed = decimal_value(raw_weight)
-            if weight_parsed is not None and weight_parsed > 0:
+            # A count in a unit the DB cannot measure ("1 trái") is stored by its
+            # estimated weight so scaling and pantry matching work in grams; the
+            # original count stays in display_quantity/display_unit.
+            if has_weight:
                 req_qty = weight_parsed
                 unit = MeasurementUnit.GRAM
             else:
                 req_qty = Decimal("1.000")
                 unit = MeasurementUnit(raw_unit) if raw_unit in VALID_MEASUREMENT_UNITS else MeasurementUnit.OTHER
-            display_qty = None
+            display_qty = req_qty_parsed if has_qty else None
             display_unit = row.get("unit_vi") or None
 
         preparation_note = row.get("preparation_note", "").strip() or None
@@ -638,7 +646,7 @@ def transform_recipe_ingredients(
             "unit": unit,
             "display_quantity": display_qty,
             "display_unit": display_unit,
-            "is_optional": False,
+            "is_optional": row.get("ingredient_role", "").strip().lower() == "seasoning",
             "preparation_note": preparation_note,
             "ai_attributes": ai_attributes,
         })

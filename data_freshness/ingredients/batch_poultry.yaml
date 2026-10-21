@@ -5,7 +5,7 @@
   - gà ta thả vườn
   - gà thả vườn
   - thịt gà ta làm sẵn
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -26,7 +26,7 @@
   - gà công nghiệp
   - gà thịt công nghiệp
   - thịt gà trắng
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -47,7 +47,7 @@
   - má đùi góc tư
   - đùi gà nguyên má
   - đùi gà liền má
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -68,7 +68,7 @@
   - đùi tỏi gà
   - đùi gà tỏi
   - bắp đùi gà
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -90,7 +90,7 @@
   - phi lê ức gà
   - ức gà không da
   - thịt ức gà
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -111,7 +111,7 @@
   - cánh gà tươi
   - cánh gà khúc giữa
   - đầu cánh gà
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -132,7 +132,7 @@
   - chân gà tươi
   - chân gà rút xương
   - chân gà làm sạch
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -153,7 +153,7 @@
   - mề gà tươi
   - dạ dày gà
   - mề gà làm sạch
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -173,7 +173,7 @@
   - gan gà
   - gan gà tươi
   - lá gan gà
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -193,7 +193,7 @@
   - tim gà
   - tim gà tươi
   - trái tim gà
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -214,7 +214,7 @@
   - lòng gà tươi
   - bộ lòng gà
   - lòng mề gà
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -235,7 +235,7 @@
   - sụn ức gà
   - sụn khớp gà
   - sụn gà tươi
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -256,7 +256,7 @@
   - cổ gà tươi
   - cổ gà làm sạch
   - cổ họng gà
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -276,7 +276,7 @@
   - phao câu gà
   - phao câu
   - phao câu gà tươi
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -297,7 +297,7 @@
   - gà ác tiềm
   - gà ác nguyên con
   - gà ri đen
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -318,7 +318,7 @@
   - gà đen H'mông
   - gà Mông
   - gà H'mông đen
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -339,7 +339,7 @@
   - kê gà tươi
   - hạt kê gà
   - ngọc kê
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -360,7 +360,7 @@
   - trứng non lòng gà
   - trứng non
   - buồng trứng gà non
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -381,7 +381,7 @@
   - gà tây
   - gà tây nguyên con
   - thịt gà tây tươi
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -402,7 +402,7 @@
   - gà rừng
   - thịt gà rừng lai
   - gà rừng tươi
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -423,7 +423,7 @@
   - vịt cỏ
   - vịt cỏ Vân Đình
   - thịt vịt cỏ thả đồng
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -444,7 +444,7 @@
   - đùi vịt tươi
   - má đùi vịt
   - đùi vịt góc tư
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -464,7 +464,7 @@
   - cánh vịt
   - cánh vịt tươi
   - cánh vịt làm sạch
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -485,7 +485,7 @@
   - lườn vịt
   - phi lê ức vịt
   - thịt ức vịt
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -506,7 +506,7 @@
   - chân vịt tươi
   - chân vịt rút xương
   - chân vịt làm sạch
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -527,7 +527,7 @@
   - lòng vịt tươi
   - bộ lòng vịt
   - lòng mề vịt
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -548,7 +548,7 @@
   - mề vịt tươi
   - mề vịt làm sạch
   - dạ dày vịt
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -568,7 +568,7 @@
   - gan vịt
   - gan vịt tươi
   - lá gan vịt
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -589,7 +589,7 @@
   - lưỡi vịt tươi
   - lưỡi vịt làm sạch
   - lưỡi vịt phá lấu
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -610,7 +610,7 @@
   - thịt vịt xiêm
   - vịt xiêm tươi
   - ngan đen
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -630,7 +630,7 @@
   - cổ vịt
   - cổ vịt tươi
   - cổ vịt làm sạch
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -650,7 +650,7 @@
   - phao câu vịt
   - phao câu vịt tươi
   - phao câu vịt béo
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -672,7 +672,7 @@
   - ngan dé
   - thịt ngan dé
   - thịt ngan ré tươi
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -692,7 +692,7 @@
   - đùi ngan
   - đùi ngan tươi
   - má đùi ngan
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -713,7 +713,7 @@
   - lườn ngan
   - phi lê ức ngan
   - ức ngan tươi
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -733,7 +733,7 @@
   - cánh ngan
   - cánh ngan tươi
   - cánh ngan làm sạch
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -755,7 +755,7 @@
   - ngỗng nguyên con
   - thịt ngỗng cỏ
   - thịt ngỗng làm sẵn
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -775,7 +775,7 @@
   - đùi ngỗng
   - đùi ngỗng tươi
   - thịt đùi ngỗng
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -796,7 +796,7 @@
   - gan ngỗng tươi
   - foie gras tươi
   - lá gan ngỗng
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -817,7 +817,7 @@
   - ức ngỗng xông khói
   - lườn ngỗng hun khói Nga
   - ức ngỗng hun khói
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -839,7 +839,7 @@
   - thịt chim cút
   - chim cút làm sẵn
   - chim cút nguyên con
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -861,7 +861,7 @@
   - thịt bồ câu
   - bồ câu non
   - thịt bồ câu tươi
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -883,7 +883,7 @@
   - chim mía
   - chim sẻ đồng
   - thịt chim mía
-  archetype: FRESH_MEAT
+  archetype: POULTRY
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0

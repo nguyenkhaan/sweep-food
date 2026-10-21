@@ -51,6 +51,8 @@ from src.service.fefo_service import (
     FEFOService,
     are_units_compatible,
 )
+from src.service.ingredient_match import batch_matches_line
+from src.service.recipe_quantity import is_seasoning, scale_quantity
 
 _QUANTITY_EPSILON = 1e-9
 
@@ -265,8 +267,14 @@ class CookingHelper:
         missing_ingredients: list[MissingIngredientDTO] = []
         warnings: list[CookingPreviewWarningDTO] = []
         for recipe_ingredient, ingredient in recipe_ingredients:
+            seasoning = recipe_ingredient.is_optional or is_seasoning(ingredient)
             required_quantity = float(
-                _as_decimal(recipe_ingredient.required_quantity) * scale,
+                scale_quantity(
+                    _as_decimal(recipe_ingredient.required_quantity),
+                    recipe_ingredient.unit,
+                    scale,
+                    seasoning=seasoning,
+                ),
             )
             scaled_ingredients.append(
                 ScaledRecipeIngredientDTO(
@@ -280,7 +288,7 @@ class CookingHelper:
             allocation_result = self.fefo_service.allocate(
                 required_quantity,
                 recipe_ingredient.unit,
-                self._to_fefo_candidates(batches, ingredient.id),
+                self._to_fefo_candidates(batches, recipe_ingredient, ingredient),
                 now,
             )
             deductions.extend(
@@ -290,7 +298,10 @@ class CookingHelper:
                     allocation_result.allocations,
                 )
             )
-            if allocation_result.missing_quantity > 0:
+            if allocation_result.missing_quantity > 0 and not _is_shortfall_ignorable(
+                allocation_result,
+                seasoning,
+            ):
                 missing_ingredients.append(
                     MissingIngredientDTO(
                         recipe_ingredient_id=recipe_ingredient.id,
@@ -420,13 +431,24 @@ class CookingHelper:
         now = datetime.now(UTC)
         resolved: list[ResolvedConsumption] = []
         for recipe_ingredient, ingredient in recipe_ingredients:
+            seasoning = recipe_ingredient.is_optional or is_seasoning(ingredient)
             allocation_result = self.fefo_service.allocate(
-                float(_as_decimal(recipe_ingredient.required_quantity) * scale),
+                float(
+                    scale_quantity(
+                        _as_decimal(recipe_ingredient.required_quantity),
+                        recipe_ingredient.unit,
+                        scale,
+                        seasoning=seasoning,
+                    )
+                ),
                 recipe_ingredient.unit,
-                self._to_fefo_candidates(locked_batches, ingredient.id),
+                self._to_fefo_candidates(locked_batches, recipe_ingredient, ingredient),
                 now,
             )
-            if allocation_result.missing_quantity > _QUANTITY_EPSILON:
+            if (
+                allocation_result.missing_quantity > _QUANTITY_EPSILON
+                and not _is_shortfall_ignorable(allocation_result, seasoning)
+            ):
                 raise InsufficientInventoryError()
             resolved.extend(
                 ResolvedConsumption(
@@ -445,20 +467,21 @@ class CookingHelper:
         requested_consumptions: list[CookingConsumptionInputDTO],
         consumption_mode: CookingConsumptionMode,
     ) -> list[ResolvedConsumption]:
-        ingredient_by_recipe_ingredient_id = {
-            recipe_ingredient.id: recipe_ingredient
-            for recipe_ingredient, _ in recipe_ingredients
+        line_by_recipe_ingredient_id = {
+            recipe_ingredient.id: (recipe_ingredient, ingredient)
+            for recipe_ingredient, ingredient in recipe_ingredients
         }
         batch_by_id = {batch.id: batch for batch in locked_batches}
         now = datetime.now(UTC)
         resolved: list[ResolvedConsumption] = []
         for requested_consumption in requested_consumptions:
-            recipe_ingredient = ingredient_by_recipe_ingredient_id.get(
+            line = line_by_recipe_ingredient_id.get(
                 requested_consumption.recipe_ingredient_id,
             )
             batch = batch_by_id.get(requested_consumption.inventory_batch_id)
-            if recipe_ingredient is None or batch is None:
+            if line is None or batch is None:
                 raise InvalidCookingConsumptionError()
+            recipe_ingredient, ingredient = line
             quantity = self._resolve_explicit_quantity(
                 requested_consumption,
                 batch,
@@ -466,6 +489,7 @@ class CookingHelper:
             )
             self._validate_explicit_consumption(
                 recipe_ingredient,
+                ingredient,
                 batch,
                 quantity,
                 now,
@@ -495,11 +519,12 @@ class CookingHelper:
     @staticmethod
     def _validate_explicit_consumption(
         recipe_ingredient: RecipeIngredientModel,
+        ingredient: MasterIngredientModel,
         batch: InventoryBatchModel,
         quantity: float,
         now: datetime,
     ) -> None:
-        if batch.master_ingredient_id != recipe_ingredient.master_ingredient_id:
+        if not batch_matches_line(batch, recipe_ingredient, ingredient):
             raise InvalidCookingConsumptionError(
                 "Batch does not match recipe ingredient"
             )
@@ -515,7 +540,8 @@ class CookingHelper:
     @staticmethod
     def _to_fefo_candidates(
         batches: list[InventoryBatchModel],
-        ingredient_id: UUID,
+        recipe_ingredient: RecipeIngredientModel,
+        ingredient: MasterIngredientModel,
     ) -> list[FEFOCandidate]:
         return [
             FEFOCandidate(
@@ -526,7 +552,7 @@ class CookingHelper:
                 created_at=batch.created_at,
             )
             for batch in batches
-            if batch.master_ingredient_id == ingredient_id
+            if batch_matches_line(batch, recipe_ingredient, ingredient)
         ]
 
     @staticmethod
@@ -592,6 +618,23 @@ class CookingHelper:
 def _as_decimal(value: Decimal | float) -> Decimal:
     """Normalize legacy floats and database Numeric values for calculation."""
     return Decimal(str(value))
+
+
+def _is_shortfall_ignorable(
+    allocation_result: FEFOAllocationResult,
+    seasoning: bool,
+) -> bool:
+    """Return whether an unallocated remainder must not block cooking.
+
+    Seasonings are pantry staples and never block. A line whose only stock is in
+    an unconvertible unit (e.g. recipe grams vs. pantry pieces) cannot be
+    compared, so existing stock counts as available rather than missing.
+    """
+    if seasoning:
+        return True
+    return not allocation_result.allocations and bool(
+        allocation_result.incompatible_candidates
+    )
 
 
 def _serving_scale(

@@ -1,0 +1,131 @@
+archetype: BEEF
+name_vi: "Thịt bò tươi"
+applies_to_groups: ["thịt bò", "thịt thăn bò", "bắp bò", "bò nạc"]
+
+sensory_tiers:
+  tier_1_fresh:
+    score_range: [8.5, 10.0]
+    appearance: "Đỏ tươi hoặc đỏ tím/đỏ thẫm tự nhiên (hút chân không), mỡ vàng nhạt hoặc trắng ngà, thớ cơ nhỏ mịn"
+    touch: "Bề mặt khô se, sạch, không dính tay, ấn lõm phẳng lại ngay"
+    smell: "Mùi thơm gây nhẹ đặc trưng của thịt bò tươi"
+  tier_2_acceptable:
+    score_range: [6.0, 8.5]
+    appearance: "Hơi nhạt màu hoặc ngả nâu xám nhạt do tiếp xúc không khí, mỡ hơi sẫm"
+    touch: "Bề mặt hơi ẩm nhẹ, độ đàn hồi giảm nhẹ"
+    smell: "Nhạt mùi, không có mùi chua"
+  tier_3_warning:
+    score_range: [3.0, 6.0]
+    appearance: "Nâu sẫm, xỉn xám, có mảng thâm tối rõ rệt"
+    touch: "Bề mặt dính nhớt nhẹ, ấn còn vết lõm"
+    smell: "Hơi chua, mùi ôi nồng nhẹ"
+  tier_4_spoiled:
+    score_range: [0.0, 3.0]
+    appearance: "Xám xanh, xanh lục, có đốm nấm mốc"
+    touch: "Rất nhớt dính, nhũn nát cấu trúc thớ cơ"
+    smell: "Mùi chua gắt, khai amoniac hoặc hôi thối nồng nặc"
+
+inspection_rubric:
+  - axis: color
+    question_vi: "Màu sắc thớ nạc và mỡ bò?"
+    stop_if: [xam_xanh]
+    options:
+      - value: do_tuoi_tham
+        label_vi: "Đỏ tươi hoặc đỏ tím/đỏ thẫm tự nhiên (hút chân không), mỡ vàng nhạt hoặc trắng ngà"
+        penalty: 0.0
+        claim: C-TCVN7046-COLOR
+      - value: hoi_nhat_nau
+        label_vi: "Hơi nhạt màu hoặc ngả nâu xám nhạt (oxy hóa bề mặt do tiếp xúc không khí)"
+        penalty: 0.15
+        reason_vi: "Bề mặt thịt bò hơi nhạt màu hoặc ngả nâu xám nhạt do tiếp xúc không khí"
+        claim: C-TCVN7046-COLOR
+      - value: xin_xam
+        label_vi: "Nâu sẫm, xỉn xám, có mảng thâm tối rõ"
+        penalty: 0.45
+        reason_vi: "Thịt bò mất độ tươi, bề mặt thớ thịt nâu sẫm hoặc xỉn xám rõ rệt"
+        claim: C-TCVN7046-COLOR
+      - value: xam_xanh
+        label_vi: "Xám xanh/xanh lục, nhớt đục hoặc có đốm mốc"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Thịt bò biến màu xám xanh, nhớt đục hoặc xuất hiện đốm mốc ươn hỏng"
+        claim: C-TCVN7046-COLOR
+
+  - axis: stickiness
+    question_vi: "Sờ bề mặt miếng thịt bò?"
+    stop_if: [rat_nhot]
+    options:
+      - value: kho_rao
+        label_vi: "Khô se, sạch, không dính tay"
+        penalty: 0.0
+        claim: C-TCVN7046-TOUCH
+      - value: hoi_am
+        label_vi: "Hơi ẩm nhẹ, chưa dính nhờn"
+        penalty: 0.15
+        reason_vi: "Mô cơ tiết dịch tế bào tự nhiên"
+        claim: C-TCVN7046-TOUCH
+      - value: dinh_nhot
+        label_vi: "Bề mặt dính nhớt nhẹ"
+        penalty: 0.45
+        reason_vi: "Mật độ vi khuẩn bề mặt tăng, hình thành màng nhớt"
+        claim: C-TCVN7046-TOUCH
+      - value: rat_nhot
+        label_vi: "Rất nhớt dính, trơn tuột kéo sợi"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Màng nhầy vi sinh dày đặc, thịt đã ươn hỏng"
+        claim: C-TCVN7046-TOUCH
+
+  - axis: elasticity
+    question_vi: "Ấn ngón tay vào thớ thịt bò rồi buông ra?"
+    options:
+      - value: hoi_ngay
+        label_vi: "Vết lõm phẳng lại ngay, đàn hồi cao"
+        penalty: 0.0
+        claim: C-TCVN7046-TOUCH
+      - value: hoi_cham
+        label_vi: "Vết lõm hồi lại chậm"
+        penalty: 0.15
+        reason_vi: "Cấu trúc thớ cơ giảm độ đàn hồi"
+        claim: C-TCVN7046-TOUCH
+      - value: con_vet_lom
+        label_vi: "Còn vết lõm rõ, không phẳng lại"
+        penalty: 0.45
+        reason_vi: "Enzyme phân giải protein cơ làm mất đàn hồi"
+        claim: C-TCVN7046-TOUCH
+      - value: nhun_nat
+        label_vi: "Nhũn nát, cấu trúc thớ cơ đứt gãy"
+        penalty: 0.75
+        reason_vi: "Phân hủy mô cơ bò nghiêm trọng"
+        claim: C-TCVN7046-TOUCH
+
+  - axis: smell
+    question_vi: "Ngửi gần miếng thịt bò?"
+    stop_if: [chua_khai_ro]
+    options:
+      - value: thom_tuoi
+        label_vi: "Mùi gây nhẹ đặc trưng thịt bò tươi, không chua"
+        penalty: 0.0
+        claim: C-TCVN7046-ODOR
+      - value: nhat
+        label_vi: "Mùi nhạt, giảm mùi bò đặc trưng"
+        penalty: 0.15
+        reason_vi: "Hương vị tươi bay hơi theo thời gian lưu trữ"
+        claim: C-TCVN7046-ODOR
+      - value: hoi_chua
+        label_vi: "Hơi chua, mùi ôi nồng nhẹ"
+        penalty: 0.45
+        reason_vi: "Vi khuẩn bắt đầu lên men và chuyển hóa chất đạm"
+        claim: C-TCVN7046-ODOR
+      - value: chua_khai_ro
+        label_vi: "Mùi chua gắt, khai amoniac hoặc hôi thối nồng"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Phân hủy protein thịt bò sinh amin bay hơi và amoniac"
+        claim: C-TCVN7046-ODOR
+
+preservation_protocols:
+  recommended: [fridge_2_4c]
+  prep: ["Thấm khô bề mặt trước khi bảo quản", "Gói kín màng bọc hoặc hộp kín", "Chia khẩu phần trước khi trữ đông"]
+  bad: ["Rửa thịt ngâm nước làm mất dịch và tăng độ ẩm bề mặt", "Để lẫn thịt sống với thức ăn ăn liền"]
+
+business_rules: [tier3_must_cook, tier4_discard]

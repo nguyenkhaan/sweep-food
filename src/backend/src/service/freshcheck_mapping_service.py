@@ -75,7 +75,8 @@ class ReviewedMapping:
     match_method: str
     reviewed_by: str
     note: str | None
-
+    catalog_code: str | None = None
+    optional: bool = False
 
 @dataclass(frozen=True)
 class MappingManifest:
@@ -95,11 +96,13 @@ class FreshCheckMappingSeedService:
         """Insert missing mappings and reject invalid or conflicting references."""
         inserted_count = 0
         for mapping in manifest.mappings:
-            await self._validate_references(manifest.kb_version, mapping)
+            resolved_master_id = await self._resolve_master_ingredient_id(
+                manifest.kb_version, mapping
+            )
             existing_mapping = await self._session.scalar(
                 select(MasterIngredientFreshCheckMappingModel).where(
                     MasterIngredientFreshCheckMappingModel.master_ingredient_id
-                    == mapping.master_ingredient_id,
+                    == resolved_master_id,
                     MasterIngredientFreshCheckMappingModel.kb_version
                     == manifest.kb_version,
                 )
@@ -109,7 +112,7 @@ class FreshCheckMappingSeedService:
                 continue
             self._session.add(
                 MasterIngredientFreshCheckMappingModel(
-                    master_ingredient_id=mapping.master_ingredient_id,
+                    master_ingredient_id=resolved_master_id,
                     kb_version=manifest.kb_version,
                     freshcheck_ingredient_id=mapping.freshcheck_ingredient_id,
                     match_method=mapping.match_method,
@@ -121,17 +124,11 @@ class FreshCheckMappingSeedService:
         await self._session.flush()
         return inserted_count
 
-    async def _validate_references(
+    async def _resolve_master_ingredient_id(
         self,
         kb_version: str,
         mapping: ReviewedMapping,
-    ) -> None:
-        master_ingredient = await self._session.get(
-            MasterIngredientModel,
-            mapping.master_ingredient_id,
-        )
-        if master_ingredient is None:
-            raise MappingSeedError("Mapping references a missing master ingredient.")
+    ) -> UUID:
         freshcheck_ingredient = await self._session.get(
             FreshCheckIngredientModel,
             (kb_version, mapping.freshcheck_ingredient_id),
@@ -139,6 +136,38 @@ class FreshCheckMappingSeedService:
         if freshcheck_ingredient is None:
             raise MappingSeedError("Mapping references a missing FreshCheck ingredient.")
 
+        # 1. Exact UUID lookup (matches legacy host identity directly)
+        master_ingredient = await self._session.get(
+            MasterIngredientModel,
+            mapping.master_ingredient_id,
+        )
+        if master_ingredient is not None:
+            return master_ingredient.id
+
+        # 2. Source catalog code lookup (matches fresh install AI bundle importer)
+        source_code = mapping.catalog_code or (
+            getattr(freshcheck_ingredient, "code", None)
+            if mapping.match_method == "EXACT_CODE"
+            else None
+        )
+        if source_code:
+            matching_masters = (
+                await self._session.scalars(
+                    select(MasterIngredientModel).where(
+                        MasterIngredientModel.source_code == str(source_code)
+                    )
+                )
+            ).all()
+            if len(matching_masters) == 1:
+                return matching_masters[0].id
+            if len(matching_masters) > 1:
+                raise MappingSeedError(
+                    f"Mapping catalog_code '{source_code}' matches multiple master ingredients."
+                )
+
+        raise MappingSeedError(
+            f"Mapping references a missing master ingredient: {mapping.master_ingredient_id}"
+        )
     @staticmethod
     def _assert_idempotent(
         existing_mapping: MasterIngredientFreshCheckMappingModel,
@@ -189,6 +218,92 @@ def build_mapping_candidates(
         tuple(ambiguous),
         tuple(unmapped),
     )
+
+
+async def resolve_manifest_mappings_to_catalog(
+    session: AsyncSession,
+    manifest: MappingManifest,
+    artifact_ingredients_by_id: dict[str, Any],
+) -> MappingManifest:
+    """Resolve reviewed manifest master IDs to current catalog identities before planning."""
+    resolved_mappings: list[ReviewedMapping] = []
+    resolved_by_master_id: dict[UUID, ReviewedMapping] = {}
+
+    for mapping in manifest.mappings:
+        target_fc = artifact_ingredients_by_id.get(mapping.freshcheck_ingredient_id)
+        if target_fc is None:
+            raise MappingSeedError(
+                f"Mapping references unknown FreshCheck ingredient: {mapping.freshcheck_ingredient_id}"
+            )
+
+        # 1. Direct UUID lookup (host identity)
+        master = await session.get(MasterIngredientModel, mapping.master_ingredient_id)
+        master_id: UUID | None = master.id if master is not None else None
+
+        # Verify source_code matches catalog_code if both present
+        if master is not None and mapping.catalog_code is not None and master.source_code is not None:
+            if str(master.source_code) != mapping.catalog_code:
+                raise MappingSeedError(
+                    f"Reviewed mapping catalog_code '{mapping.catalog_code}' does not match "
+                    f"master ingredient source_code '{master.source_code}' for {mapping.master_ingredient_id}."
+                )
+
+        # 2. Source catalog code lookup (AI code-based identity)
+        if master_id is None:
+            source_code = mapping.catalog_code or (
+                target_fc.get("code")
+                if mapping.match_method == "EXACT_CODE"
+                else None
+            )
+            if source_code:
+                matching = (
+                    await session.scalars(
+                        select(MasterIngredientModel).where(
+                            MasterIngredientModel.source_code == str(source_code)
+                        )
+                    )
+                ).all()
+                if len(matching) == 1:
+                    master_id = matching[0].id
+                elif len(matching) > 1:
+                    raise MappingSeedError(
+                        f"Mapping catalog_code '{source_code}' matches multiple master ingredients."
+                    )
+
+        if master_id is None:
+            if mapping.optional:
+                continue
+            raise MappingSeedError(
+                f"Reviewed mapping '{mapping.freshcheck_ingredient_id}' could not be resolved "
+                f"against current catalog (UUID: {mapping.master_ingredient_id}, code: {mapping.catalog_code})"
+            )
+
+        if master_id in resolved_by_master_id:
+            existing = resolved_by_master_id[master_id]
+            if (
+                existing.freshcheck_ingredient_id != mapping.freshcheck_ingredient_id
+                or existing.match_method != mapping.match_method
+                or existing.reviewed_by != mapping.reviewed_by
+                or existing.note != mapping.note
+            ):
+                raise MappingSeedError(
+                    f"Conflicting reviewed mappings resolved to the same master ingredient '{master_id}'."
+                )
+            continue
+
+        resolved_item = ReviewedMapping(
+            master_ingredient_id=master_id,
+            freshcheck_ingredient_id=mapping.freshcheck_ingredient_id,
+            match_method=mapping.match_method,
+            reviewed_by=mapping.reviewed_by,
+            note=mapping.note,
+            catalog_code=mapping.catalog_code,
+            optional=mapping.optional,
+        )
+        resolved_by_master_id[master_id] = resolved_item
+        resolved_mappings.append(resolved_item)
+
+    return MappingManifest(manifest.kb_version, tuple(resolved_mappings))
 
 
 def parse_mapping_manifest(payload: object) -> MappingManifest:
@@ -244,12 +359,24 @@ def _parse_reviewed_mapping(value: object) -> ReviewedMapping:
     note = value.get("note")
     if note is not None and (not isinstance(note, str) or not note.strip()):
         raise MappingManifestValidationError("Mapping note must be a non-empty string.")
+    catalog_code = value.get("catalog_code")
+    if catalog_code is not None and (
+        not isinstance(catalog_code, str) or not catalog_code.strip()
+    ):
+        raise MappingManifestValidationError(
+            "Mapping catalog_code must be a non-empty string."
+        )
+    optional = value.get("optional", False)
+    if not isinstance(optional, bool):
+        raise MappingManifestValidationError("Mapping optional must be a boolean.")
     return ReviewedMapping(
         master_ingredient_id,
         freshcheck_ingredient_id,
         match_method,
         _manifest_string(value, "reviewed_by"),
         note,
+        catalog_code.strip() if catalog_code else None,
+        optional=optional,
     )
 
 

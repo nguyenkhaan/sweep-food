@@ -48,28 +48,37 @@ the approved release record.
 From `src/backend`, with `DATABASE_URL` already provided by the deployment
 secret store:
 
+### Primary recommended release path (atomic stage, preserve mappings, and activate)
+
+1. Apply database migrations (ensures all schema tables exist before catalog queries):
+
+```bash
+uv run alembic upgrade head
+```
+
+2. Build the immutable release artifact and dry-run to verify record counts, mapping preservation, and coverage:
+
+```bash
+uv run python src/seed_freshness.py --dry-run
+```
+
+3. Atomically stage the release artifact, carry forward active mappings with reviewed manifest overrides, seed exact candidates, and activate the new release:
+
+```bash
+uv run python src/seed_freshness.py --apply --actor "release:<deployment-id>"
+```
+
+### Release inspection
+
+To inspect the artifact without database connection, run:
+
 ```bash
 uv run python -m scripts.sync_freshcheck_kb \
   --artifact ../../data_freshness/build/freshcheck_kb.json \
   --dry-run
-
-uv run alembic upgrade head
-
-uv run python -m scripts.sync_freshcheck_kb \
-  --artifact ../../data_freshness/build/freshcheck_kb.json \
-  --stage \
-  --actor "release:<deployment-id>"
-
-uv run python -m scripts.sync_freshcheck_kb \
-  --artifact ../../data_freshness/build/freshcheck_kb.json \
-  --activate \
-  --actor "release:<deployment-id>"
 ```
 
-Activation is separate from staging so the release can be inspected before it
-becomes runtime-active. Repeating stage or activate with the same artifact is
-idempotent; a checksum collision fails closed.
-
+All production database writes must use `src/seed_freshness.py` to ensure that existing active mappings are carried forward and coverage is preserved.
 ## 4. Smoke verification
 
 Use a non-sensitive owner account and verify:

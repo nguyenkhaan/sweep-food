@@ -32,7 +32,7 @@
   statement_vi: "Đánh giá cảm quan thủy sản dựa trên các chỉ tiêu ngoại quan, trạng thái, mùi và vị theo phương pháp chuẩn."
   source: S-TCVN5277
   locator: "Phương pháp thử cảm quan – Các chỉ tiêu đánh giá"
-  conditions: ["thủy sản và sản phẩm thủy sản", "làm căn cứ cho rubric FISH_SEAFOOD"]
+  conditions: ["thủy sản và sản phẩm thủy sản", "làm căn cứ cho các rubric thủy sản"]
   evidence_level: A
   status: reviewed
   extracted_by: "vi"
@@ -626,3 +626,133 @@
   status: reviewed
   extracted_by: "huy"
   reviewed_by: "vi"
+
+- id: C-FDA-SEAFOOD-FILLET-APPEARANCE
+  statement_vi: "Phi lê và cá cắt khúc tươi phải có thịt sáng bóng và đường máu đỏ tươi (hoặc thịt đỏ đối với cá ngừ tươi); mép miếng phi lê không bị sẫm màu, đổi màu hoặc khô (edges of fillets should not be brown, dry, or darkened)."
+  source: S-FDA-SEAFOOD
+  locator: "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely (Selecting Fresh Fish - Fillets and Steaks)"
+  conditions: ["cá phi lê", "cá cắt khúc", "đánh giá ngoại quan"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-FDA-SEAFOOD-FILLET-TEXTURE
+  statement_vi: "Thịt phi lê cá tươi phải săn chắc và đàn hồi trở lại khi ấn ngón tay vào (flesh should spring back when pressed); thịt không nhũn nát hoặc mủn rời."
+  source: S-FDA-SEAFOOD
+  locator: "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely (Selecting Fresh Fish)"
+  conditions: ["cá phi lê", "cá cắt khúc", "đánh giá độ săn chắc"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-FDA-SEAFOOD-SHRIMP-APPEARANCE
+  statement_vi: "Thịt tôm tươi phải sáng trong với ánh màu ngọc trai (clear with a pearl-like color); không có màu sắc biến đổi ươn hỏng."
+  source: S-FDA-SEAFOOD
+  locator: "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely (Selecting Shellfish - Shrimp, Scallop, and Lobster)"
+  conditions: ["tôm tươi", "tôm nguyên con", "tôm bóc nõn", "đánh giá ngoại quan"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-LOCAL-SHRIMP-TEXTURE
+  statement_vi: "Thịt tôm tươi phải có độ đàn hồi tự nhiên, thân căng chắc; thịt mềm nhũn nát, chảy nhớt hoặc bở rạc là dấu hiệu cơ thịt bị phân hủy biến chất."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc nội bộ – Đánh giá độ săn chắc và đàn hồi cơ thịt tôm tươi"
+  conditions: ["tôm tươi", "tôm nguyên con", "tôm bóc nõn", "đánh giá độ săn chắc thịt"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-FDA-SEAFOOD-SHRIMP-ODOR
+  statement_vi: "Tôm tươi chỉ có mùi nhẹ thoang thoảng hoặc hầu như không có mùi (little or no odor); không có mùi tanh ươn, mùi chua hoặc khai amoniac."
+  source: S-FDA-SEAFOOD
+  locator: "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely (Selecting Shellfish - Shrimp)"
+  conditions: ["tôm tươi", "đánh giá mùi"]
+  evidence_level: A
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-TAS7005-SQUID-COLOR
+  statement_vi: "Mực tươi có màu sắc tự nhiên đặc trưng của loài, thịt trắng tự nhiên hoặc hồng nhạt; chất lượng giảm khi thịt mềm, sắc tố da thấm vào thịt làm thịt chuyển màu hồng vàng hoặc cam, nhớt dính."
+  source: S-TAS7005
+  locator: "https://faolex.fao.org/docs/pdf/tha166326.pdf (TAS 7005-2005 Section 4.1 & Annex A.1 Sensory Evaluation of Squid)"
+  conditions: ["mực tươi", "mực nguyên con", "mực làm sạch", "đánh giá màu sắc và ngoại quan"]
+  evidence_level: B
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-TAS7005-SQUID-TEXTURE
+  statement_vi: "Mực tươi phải có thịt săn chắc với độ đàn hồi vừa phải (firm with a moderate elasticity); thịt bị mềm nhão, ấn lún sâu không đàn hồi là dấu hiệu suy giảm chất lượng và ươn hỏng."
+  source: S-TAS7005
+  locator: "https://faolex.fao.org/docs/pdf/tha166326.pdf (TAS 7005-2005 Annex A.1 Sensory Evaluation of Squid)"
+  conditions: ["mực tươi", "đánh giá độ săn chắc thịt"]
+  evidence_level: B
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-TAS7005-OCTOPUS-SENSORY
+  statement_vi: "Bạch tuộc tươi có màu sắc tự nhiên sáng bóng đặc trưng của loài, thịt săn chắc đàn hồi; không bị mềm nhão, chảy nhớt hoặc có mùi ươn hỏng lạ."
+  source: S-TAS7005
+  locator: "https://faolex.fao.org/docs/pdf/tha166326.pdf (TAS 7005-2005 Annex A.2 Sensory Evaluation of Octopus)"
+  conditions: ["bạch tuộc tươi", "đánh giá cảm quan"]
+  evidence_level: B
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-TAS7005-CEPHALOPOD-ODOR
+  statement_vi: "Thân mềm chân đầu (mực, bạch tuộc) tươi có mùi biển tự nhiên thoang thoảng hoặc không mùi; mùi tanh ươn nồng nặc, mùi thối rữa hoặc mùi lạ bất thường là biểu hiện biến chất hư hỏng."
+  source: S-TAS7005
+  locator: "https://faolex.fao.org/docs/pdf/tha166326.pdf (TAS 7005-2005 Section 4.1 & Annex A.1/A.2)"
+  conditions: ["mực tươi", "bạch tuộc tươi", "đánh giá mùi"]
+  evidence_level: B
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-LOCAL-CEPHALOPOD-INTEGRITY
+  statement_vi: "Đối với mực và bạch tuộc nguyên con, đầu và râu/tua gắn chắc vào thân là dấu hiệu liên kết tự nhiên tốt; đầu đứt rời do ươn hoặc nội tạng vỡ rỉ dịch thối là dấu hiệu hư hỏng. Đối với dạng sơ chế (ống làm sạch, cắt khoanh, cắt miếng theo TAS 7005 Mục 3), việc không còn đầu là do quy cách thương phẩm, không tính lỗi hư hỏng."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc nội bộ – Đánh giá liên kết đầu thân và xử lý dạng sơ chế thân mềm chân đầu"
+  conditions: ["mực", "bạch tuộc", "đánh giá liên kết cấu trúc và dạng sơ chế"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-LOCAL-SHRIMP-INTEGRITY
+  statement_vi: "Đối với tôm tươi nguyên con, đầu và chân gắn chắc vào thân là dấu hiệu liên kết tốt; đầu lỏng lẻo hoặc rụng rời do ươn hỏng rỉ dịch đen là biểu hiện biến chất. Đối với tôm sơ chế bóc nõn hoặc bỏ đầu, việc thiếu đầu/vỏ là do quy cách đóng gói thương phẩm, không tính lỗi hư hỏng."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc nội bộ – Đánh giá liên kết đầu vỏ tôm nguyên con và xử lý dạng sơ chế bóc nõn"
+  conditions: ["tôm nguyên con", "tôm bóc nõn", "tôm không đầu"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-LOCAL-SHRIMP-MELANOSIS
+  statement_vi: "Các đốm đen nhỏ xuất hiện trên vỏ tôm (melanosis) là hiện tượng sẫm màu bề mặt tự nhiên do enzyme, không đồng nhất với ươn hỏng; cần phân biệt với các dấu hiệu ươn hỏng như thịt biến màu đỏ, chảy nhớt đục hoặc có mùi ươn."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc nội bộ - Phân biệt đốm đen vỏ tôm (melanosis) và ươn hỏng"
+  conditions: ["tôm nguyên con còn vỏ", "đánh giá đốm đen ngoài vỏ"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"
+
+- id: C-LOCAL-PROCESSED-FORM
+  statement_vi: "Khi thủy sản đã qua sơ chế hợp lệ (tôm bóc nõn/bỏ đầu, mực làm sạch/lột da/cắt khoanh), các bộ phận bị loại bỏ do sơ chế được ghi nhận bằng lựa chọn sơ chế tương ứng với penalty 0.0, không suy đoán là hư hỏng do ươn; đánh giá độ tươi tập trung vào màu sắc thịt, độ săn chắc và mùi."
+  source: S-LOCAL-RULES
+  locator: "Quy tắc nội bộ - Xử lý dạng sơ chế (tôm bóc nõn, mực làm sạch)"
+  conditions: ["tôm bóc nõn", "tôm không đầu", "mực làm sạch", "mực cắt khoanh"]
+  evidence_level: D
+  status: reviewed
+  extracted_by: "system"
+  reviewed_by: "gemini-3.8-flash:high"

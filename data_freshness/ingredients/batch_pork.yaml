@@ -6,7 +6,7 @@
   - nạc vai lợn
   - thịt vai heo
   - nạc vai
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -28,7 +28,7 @@
   - nạc mông heo
   - thịt mông heo
   - nạc mông
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -50,7 +50,7 @@
   - nạc thăn lợn
   - thăn chuột heo
   - thăn heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -72,7 +72,7 @@
   - nạc dăm
   - thịt nạc dăm
   - nạc giòn heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -94,7 +94,7 @@
   - ba rọi rút sườn
   - thịt ba chỉ heo rút sườn
   - ba rọi rút xương
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -116,7 +116,7 @@
   - sườn non lợn
   - sườn non
   - dẻ sườn non heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -138,7 +138,7 @@
   - sườn già lợn
   - sườn dẻ heo
   - sườn que heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -160,7 +160,7 @@
   - sườn sụn lợn
   - sụn non heo
   - sườn sụn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -182,7 +182,7 @@
   - nạc dải heo
   - thịt dải
   - diềm thăn heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -204,7 +204,7 @@
   - mỡ lưng heo
   - mỡ khổ heo
   - mỡ gáy lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -226,7 +226,7 @@
   - mỡ lá
   - mỡ sa heo
   - mỡ màng heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -248,7 +248,7 @@
   - bì lợn
   - da heo tươi
   - da lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -270,7 +270,7 @@
   - giò trước
   - chân giò trước lợn
   - thịt chân giò trước
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -292,7 +292,7 @@
   - giò sau
   - chân giò sau lợn
   - thịt chân giò sau
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -314,7 +314,7 @@
   - móng heo
   - móng lợn
   - khoanh móng giò
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -336,7 +336,7 @@
   - thịt đầu heo
   - thủ heo
   - thịt đầu lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -358,7 +358,7 @@
   - lỗ tai heo
   - tai heo tươi
   - tai lợn làm sạch
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -380,7 +380,7 @@
   - mõm heo
   - mũi lợn
   - lỗ mũi heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -402,7 +402,7 @@
   - thịt lưỡi heo
   - lưỡi heo tươi
   - cuống lưỡi heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -424,7 +424,7 @@
   - đuôi heo tươi
   - đuôi heo làm sạch
   - đuôi heo chặt khúc
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -446,7 +446,7 @@
   - má heo
   - nọng lợn
   - thịt má heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -468,7 +468,7 @@
   - sườn cốt lết
   - cốt lết lợn
   - sườn cốt lết heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -490,7 +490,7 @@
   - thịt đùi heo
   - nạc đùi lợn
   - thịt nạc đùi
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -512,7 +512,7 @@
   - xương heo hầm
   - xương lợn nấu canh
   - xương ống lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -534,7 +534,7 @@
   - mỡ màng heo
   - mỡ chài lợn
   - màng mỡ heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -556,7 +556,7 @@
   - thịt lợn rừng
   - thịt heo rừng tươi
   - heo rừng lai
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -578,7 +578,7 @@
   - thịt lợn băm
   - thịt heo xay nạc
   - thịt băm nạc
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -600,7 +600,7 @@
   - thịt băm heo
   - thịt lợn xay
   - thịt heo băm có mỡ
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -622,7 +622,7 @@
   - mọc sống
   - chả sống
   - thịt mọc sống
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -644,7 +644,7 @@
   - quả tim heo
   - tim lợn tươi
   - trái tim heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -666,7 +666,7 @@
   - lá gan heo
   - gan lợn tươi
   - lá gan lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -688,7 +688,7 @@
   - bầu dục heo
   - cật lợn
   - thận heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -710,7 +710,7 @@
   - dạ dày lợn
   - bao tử lợn
   - dạ dày heo tươi
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -732,7 +732,7 @@
   - ruột non heo
   - lòng heo ruột non
   - lòng non
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -754,7 +754,7 @@
   - ruột già heo
   - khấu đuôi heo
   - thú linh heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -776,7 +776,7 @@
   - tràng heo
   - tràng lợn
   - dồi trường lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -798,7 +798,7 @@
   - lòng phèo heo
   - phèo heo tươi
   - lòng phèo lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -820,7 +820,7 @@
   - sụn cuống họng heo
   - cuống họng lợn
   - họng lợn tươi
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -842,7 +842,7 @@
   - não heo
   - óc heo tươi
   - bộ óc heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -864,7 +864,7 @@
   - tủy xương heo
   - tủy lợn
   - tủy xương ống heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -886,7 +886,7 @@
   - lách lợn
   - lá mía lợn
   - tụy heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -908,7 +908,7 @@
   - lá phổi heo
   - phổi lợn tươi
   - lá phổi lợn
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0
@@ -930,7 +930,7 @@
   - huyết heo tươi
   - tiết heo tươi
   - máu heo
-  archetype: FRESH_MEAT
+  archetype: PORK
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 2.0

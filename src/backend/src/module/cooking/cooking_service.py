@@ -7,6 +7,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from src.model.cooking_consumption_model import CookingConsumptionModel
 from src.model.cooking_session_model import CookingSessionModel
@@ -82,13 +83,7 @@ class CookingService:
             )
             recipe = await self._find_recipe(meal_plan_item.recipe_id)
             recipe_ingredients = await self._find_recipe_ingredients(recipe.id)
-            batches = await self._find_active_batches(
-                user_id,
-                [
-                    ingredient.master_ingredient_id
-                    for ingredient, _ in recipe_ingredients
-                ],
-            )
+            batches = await self._find_active_batches(user_id, recipe_ingredients)
         except SQLAlchemyError:
             await self.db_session.rollback()
             raise
@@ -113,13 +108,7 @@ class CookingService:
             self._ensure_meal_plan_item_is_planned(meal_plan_item)
             recipe = await self._find_recipe(meal_plan_item.recipe_id)
             recipe_ingredients = await self._find_recipe_ingredients(recipe.id)
-            batches = await self._find_active_batches(
-                user_id,
-                [
-                    ingredient.master_ingredient_id
-                    for ingredient, _ in recipe_ingredients
-                ],
-            )
+            batches = await self._find_active_batches(user_id, recipe_ingredients)
             preview = self.helper.build_preview(
                 recipe,
                 recipe_ingredients,
@@ -191,10 +180,7 @@ class CookingService:
             recipe_ingredients = await self._find_recipe_ingredients(recipe.id)
             locked_batches = await self._find_locked_batches(
                 user_id,
-                [
-                    ingredient.master_ingredient_id
-                    for ingredient, _ in recipe_ingredients
-                ],
+                recipe_ingredients,
             )
             resolved_consumptions = self.helper.resolve_consumptions(
                 cooking_session,
@@ -513,6 +499,7 @@ class CookingService:
                 MasterIngredientModel,
                 MasterIngredientModel.id == RecipeIngredientModel.master_ingredient_id,
             )
+            .options(joinedload(MasterIngredientModel.category))
             .where(RecipeIngredientModel.recipe_id == recipe_id)
             .order_by(RecipeIngredientModel.created_at),
         )
@@ -521,17 +508,18 @@ class CookingService:
     async def _find_active_batches(
         self,
         user_id: UUID,
-        ingredient_ids: list[UUID],
+        recipe_ingredients: list[tuple[RecipeIngredientModel, MasterIngredientModel]],
     ) -> list[InventoryBatchModel]:
-        if not ingredient_ids:
+        """Load the user's active stock; lines match batches by id or name alias."""
+        if not recipe_ingredients:
             return []
         result = await self.db_session.execute(
             select(InventoryBatchModel)
+            .options(joinedload(InventoryBatchModel.master_ingredient))
             .where(
                 InventoryBatchModel.user_id == user_id,
                 InventoryBatchModel.status == InventoryBatchStatus.ACTIVE,
                 InventoryBatchModel.current_quantity > 0,
-                InventoryBatchModel.master_ingredient_id.in_(ingredient_ids),
             )
             .order_by(InventoryBatchModel.created_at),
         )
@@ -540,19 +528,19 @@ class CookingService:
     async def _find_locked_batches(
         self,
         user_id: UUID,
-        ingredient_ids: list[UUID],
+        recipe_ingredients: list[tuple[RecipeIngredientModel, MasterIngredientModel]],
     ) -> list[InventoryBatchModel]:
-        if not ingredient_ids:
+        if not recipe_ingredients:
             return []
         result = await self.db_session.execute(
             select(InventoryBatchModel)
+            .options(joinedload(InventoryBatchModel.master_ingredient))
             .where(
                 InventoryBatchModel.user_id == user_id,
                 InventoryBatchModel.status == InventoryBatchStatus.ACTIVE,
                 InventoryBatchModel.current_quantity > 0,
-                InventoryBatchModel.master_ingredient_id.in_(ingredient_ids),
             )
-            .with_for_update(),
+            .with_for_update(of=InventoryBatchModel),
         )
         return list(result.scalars().all())
 

@@ -141,7 +141,8 @@ def test_pure_transformation_ingredient_contract_and_quantities() -> None:
             isinstance(ing["display_quantity"], Decimal) and ing["display_quantity"] > 0
         )
         assert isinstance(ing["unit"], MeasurementUnit)
-        assert ing["is_optional"] is False
+        role = str(ing["ai_attributes"].get("ingredient_role", "")).strip().lower()
+        assert ing["is_optional"] is (role == "seasoning")
 
         # ai_attributes contract: every column of recipe_ingredients.csv except id, recipe_id
         ai_attrs = ing["ai_attributes"]
@@ -159,6 +160,9 @@ def test_pure_transformation_ingredient_contract_and_quantities() -> None:
             else:
                 assert ing["unit"] in (MeasurementUnit.OTHER, MeasurementUnit.GRAM)
                 assert ing["required_quantity"] == Decimal("1.000")
+        # A count in an unmeasurable unit ("1 trái") must be stored by weight in grams.
+        elif ing["unit"] == MeasurementUnit.OTHER:
+            assert not (orig_weight and float(orig_weight) > 0)
 
         # For placeholder-linked rows, master_ingredient_code is empty and master is unverified
         if not ai_attrs.get("master_ingredient_code"):

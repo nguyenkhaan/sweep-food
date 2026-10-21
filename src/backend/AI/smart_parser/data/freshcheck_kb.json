@@ -1,12 +1,12 @@
 {
-  "kb_version": "0.3.0",
-  "source_commit": "c58316b3260faed1d4cf34305426da1f8587e106",
-  "generated_at": "2026-10-19T04:58:18.114274+00:00",
+  "kb_version": "0.4.0",
+  "source_commit": "a8dc9128dd2741a1f8c3c48da4cd441cf1d52e82",
+  "generated_at": "2026-10-21T23:21:45.077048+00:00",
   "stats": {
-    "total_archetypes": 8,
-    "total_ingredients": 279,
-    "total_claims": 63,
-    "total_sources": 12
+    "total_archetypes": 14,
+    "total_ingredients": 280,
+    "total_claims": 76,
+    "total_sources": 13
   },
   "sources": [
     {
@@ -92,6 +92,13 @@
       "tier": "B",
       "license": "Open Access Educational",
       "accessed": "2026-09-29"
+    },
+    {
+      "id": "S-TAS7005",
+      "title": "TAS 7005-2005: Thai Agricultural Standard - Cephalopods (National Bureau of Agricultural Commodity and Food Standards; unofficial English translation via FAOLEX)",
+      "tier": "B",
+      "license": "Public Standard",
+      "accessed": "2026-10-22"
     }
   ],
   "claims": [
@@ -144,7 +151,7 @@
       "locator": "Phương pháp thử cảm quan – Các chỉ tiêu đánh giá",
       "conditions": [
         "thủy sản và sản phẩm thủy sản",
-        "làm căn cứ cho rubric FISH_SEAFOOD"
+        "làm căn cứ cho các rubric thủy sản"
       ],
       "evidence_level": "A",
       "status": "reviewed",
@@ -982,9 +989,416 @@
       "status": "reviewed",
       "extracted_by": "huy",
       "reviewed_by": "vi"
+    },
+    {
+      "id": "C-FDA-SEAFOOD-FILLET-APPEARANCE",
+      "statement_vi": "Phi lê và cá cắt khúc tươi phải có thịt sáng bóng và đường máu đỏ tươi (hoặc thịt đỏ đối với cá ngừ tươi); mép miếng phi lê không bị sẫm màu, đổi màu hoặc khô (edges of fillets should not be brown, dry, or darkened).",
+      "source": "S-FDA-SEAFOOD",
+      "locator": "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely (Selecting Fresh Fish - Fillets and Steaks)",
+      "conditions": [
+        "cá phi lê",
+        "cá cắt khúc",
+        "đánh giá ngoại quan"
+      ],
+      "evidence_level": "A",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-FDA-SEAFOOD-FILLET-TEXTURE",
+      "statement_vi": "Thịt phi lê cá tươi phải săn chắc và đàn hồi trở lại khi ấn ngón tay vào (flesh should spring back when pressed); thịt không nhũn nát hoặc mủn rời.",
+      "source": "S-FDA-SEAFOOD",
+      "locator": "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely (Selecting Fresh Fish)",
+      "conditions": [
+        "cá phi lê",
+        "cá cắt khúc",
+        "đánh giá độ săn chắc"
+      ],
+      "evidence_level": "A",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-FDA-SEAFOOD-SHRIMP-APPEARANCE",
+      "statement_vi": "Thịt tôm tươi phải sáng trong với ánh màu ngọc trai (clear with a pearl-like color); không có màu sắc biến đổi ươn hỏng.",
+      "source": "S-FDA-SEAFOOD",
+      "locator": "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely (Selecting Shellfish - Shrimp, Scallop, and Lobster)",
+      "conditions": [
+        "tôm tươi",
+        "tôm nguyên con",
+        "tôm bóc nõn",
+        "đánh giá ngoại quan"
+      ],
+      "evidence_level": "A",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-LOCAL-SHRIMP-TEXTURE",
+      "statement_vi": "Thịt tôm tươi phải có độ đàn hồi tự nhiên, thân căng chắc; thịt mềm nhũn nát, chảy nhớt hoặc bở rạc là dấu hiệu cơ thịt bị phân hủy biến chất.",
+      "source": "S-LOCAL-RULES",
+      "locator": "Quy tắc nội bộ – Đánh giá độ săn chắc và đàn hồi cơ thịt tôm tươi",
+      "conditions": [
+        "tôm tươi",
+        "tôm nguyên con",
+        "tôm bóc nõn",
+        "đánh giá độ săn chắc thịt"
+      ],
+      "evidence_level": "D",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-FDA-SEAFOOD-SHRIMP-ODOR",
+      "statement_vi": "Tôm tươi chỉ có mùi nhẹ thoang thoảng hoặc hầu như không có mùi (little or no odor); không có mùi tanh ươn, mùi chua hoặc khai amoniac.",
+      "source": "S-FDA-SEAFOOD",
+      "locator": "https://www.fda.gov/food/buy-store-serve-safe-food/selecting-and-serving-fresh-and-frozen-seafood-safely (Selecting Shellfish - Shrimp)",
+      "conditions": [
+        "tôm tươi",
+        "đánh giá mùi"
+      ],
+      "evidence_level": "A",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-TAS7005-SQUID-COLOR",
+      "statement_vi": "Mực tươi có màu sắc tự nhiên đặc trưng của loài, thịt trắng tự nhiên hoặc hồng nhạt; chất lượng giảm khi thịt mềm, sắc tố da thấm vào thịt làm thịt chuyển màu hồng vàng hoặc cam, nhớt dính.",
+      "source": "S-TAS7005",
+      "locator": "https://faolex.fao.org/docs/pdf/tha166326.pdf (TAS 7005-2005 Section 4.1 & Annex A.1 Sensory Evaluation of Squid)",
+      "conditions": [
+        "mực tươi",
+        "mực nguyên con",
+        "mực làm sạch",
+        "đánh giá màu sắc và ngoại quan"
+      ],
+      "evidence_level": "B",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-TAS7005-SQUID-TEXTURE",
+      "statement_vi": "Mực tươi phải có thịt săn chắc với độ đàn hồi vừa phải (firm with a moderate elasticity); thịt bị mềm nhão, ấn lún sâu không đàn hồi là dấu hiệu suy giảm chất lượng và ươn hỏng.",
+      "source": "S-TAS7005",
+      "locator": "https://faolex.fao.org/docs/pdf/tha166326.pdf (TAS 7005-2005 Annex A.1 Sensory Evaluation of Squid)",
+      "conditions": [
+        "mực tươi",
+        "đánh giá độ săn chắc thịt"
+      ],
+      "evidence_level": "B",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-TAS7005-OCTOPUS-SENSORY",
+      "statement_vi": "Bạch tuộc tươi có màu sắc tự nhiên sáng bóng đặc trưng của loài, thịt săn chắc đàn hồi; không bị mềm nhão, chảy nhớt hoặc có mùi ươn hỏng lạ.",
+      "source": "S-TAS7005",
+      "locator": "https://faolex.fao.org/docs/pdf/tha166326.pdf (TAS 7005-2005 Annex A.2 Sensory Evaluation of Octopus)",
+      "conditions": [
+        "bạch tuộc tươi",
+        "đánh giá cảm quan"
+      ],
+      "evidence_level": "B",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-TAS7005-CEPHALOPOD-ODOR",
+      "statement_vi": "Thân mềm chân đầu (mực, bạch tuộc) tươi có mùi biển tự nhiên thoang thoảng hoặc không mùi; mùi tanh ươn nồng nặc, mùi thối rữa hoặc mùi lạ bất thường là biểu hiện biến chất hư hỏng.",
+      "source": "S-TAS7005",
+      "locator": "https://faolex.fao.org/docs/pdf/tha166326.pdf (TAS 7005-2005 Section 4.1 & Annex A.1/A.2)",
+      "conditions": [
+        "mực tươi",
+        "bạch tuộc tươi",
+        "đánh giá mùi"
+      ],
+      "evidence_level": "B",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-LOCAL-CEPHALOPOD-INTEGRITY",
+      "statement_vi": "Đối với mực và bạch tuộc nguyên con, đầu và râu/tua gắn chắc vào thân là dấu hiệu liên kết tự nhiên tốt; đầu đứt rời do ươn hoặc nội tạng vỡ rỉ dịch thối là dấu hiệu hư hỏng. Đối với dạng sơ chế (ống làm sạch, cắt khoanh, cắt miếng theo TAS 7005 Mục 3), việc không còn đầu là do quy cách thương phẩm, không tính lỗi hư hỏng.",
+      "source": "S-LOCAL-RULES",
+      "locator": "Quy tắc nội bộ – Đánh giá liên kết đầu thân và xử lý dạng sơ chế thân mềm chân đầu",
+      "conditions": [
+        "mực",
+        "bạch tuộc",
+        "đánh giá liên kết cấu trúc và dạng sơ chế"
+      ],
+      "evidence_level": "D",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-LOCAL-SHRIMP-INTEGRITY",
+      "statement_vi": "Đối với tôm tươi nguyên con, đầu và chân gắn chắc vào thân là dấu hiệu liên kết tốt; đầu lỏng lẻo hoặc rụng rời do ươn hỏng rỉ dịch đen là biểu hiện biến chất. Đối với tôm sơ chế bóc nõn hoặc bỏ đầu, việc thiếu đầu/vỏ là do quy cách đóng gói thương phẩm, không tính lỗi hư hỏng.",
+      "source": "S-LOCAL-RULES",
+      "locator": "Quy tắc nội bộ – Đánh giá liên kết đầu vỏ tôm nguyên con và xử lý dạng sơ chế bóc nõn",
+      "conditions": [
+        "tôm nguyên con",
+        "tôm bóc nõn",
+        "tôm không đầu"
+      ],
+      "evidence_level": "D",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-LOCAL-SHRIMP-MELANOSIS",
+      "statement_vi": "Các đốm đen nhỏ xuất hiện trên vỏ tôm (melanosis) là hiện tượng sẫm màu bề mặt tự nhiên do enzyme, không đồng nhất với ươn hỏng; cần phân biệt với các dấu hiệu ươn hỏng như thịt biến màu đỏ, chảy nhớt đục hoặc có mùi ươn.",
+      "source": "S-LOCAL-RULES",
+      "locator": "Quy tắc nội bộ - Phân biệt đốm đen vỏ tôm (melanosis) và ươn hỏng",
+      "conditions": [
+        "tôm nguyên con còn vỏ",
+        "đánh giá đốm đen ngoài vỏ"
+      ],
+      "evidence_level": "D",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
+    },
+    {
+      "id": "C-LOCAL-PROCESSED-FORM",
+      "statement_vi": "Khi thủy sản đã qua sơ chế hợp lệ (tôm bóc nõn/bỏ đầu, mực làm sạch/lột da/cắt khoanh), các bộ phận bị loại bỏ do sơ chế được ghi nhận bằng lựa chọn sơ chế tương ứng với penalty 0.0, không suy đoán là hư hỏng do ươn; đánh giá độ tươi tập trung vào màu sắc thịt, độ săn chắc và mùi.",
+      "source": "S-LOCAL-RULES",
+      "locator": "Quy tắc nội bộ - Xử lý dạng sơ chế (tôm bóc nõn, mực làm sạch)",
+      "conditions": [
+        "tôm bóc nõn",
+        "tôm không đầu",
+        "mực làm sạch",
+        "mực cắt khoanh"
+      ],
+      "evidence_level": "D",
+      "status": "reviewed",
+      "extracted_by": "system",
+      "reviewed_by": "gemini-3.8-flash:high"
     }
   ],
   "archetypes": {
+    "BEEF": {
+      "archetype": "BEEF",
+      "name_vi": "Thịt bò tươi",
+      "applies_to_groups": [
+        "thịt bò",
+        "thịt thăn bò",
+        "bắp bò",
+        "bò nạc"
+      ],
+      "sensory_tiers": {
+        "tier_1_fresh": {
+          "score_range": [
+            8.5,
+            10.0
+          ],
+          "appearance": "Đỏ tươi hoặc đỏ tím/đỏ thẫm tự nhiên (hút chân không), mỡ vàng nhạt hoặc trắng ngà, thớ cơ nhỏ mịn",
+          "touch": "Bề mặt khô se, sạch, không dính tay, ấn lõm phẳng lại ngay",
+          "smell": "Mùi thơm gây nhẹ đặc trưng của thịt bò tươi"
+        },
+        "tier_2_acceptable": {
+          "score_range": [
+            6.0,
+            8.5
+          ],
+          "appearance": "Hơi nhạt màu hoặc ngả nâu xám nhạt do tiếp xúc không khí, mỡ hơi sẫm",
+          "touch": "Bề mặt hơi ẩm nhẹ, độ đàn hồi giảm nhẹ",
+          "smell": "Nhạt mùi, không có mùi chua"
+        },
+        "tier_3_warning": {
+          "score_range": [
+            3.0,
+            6.0
+          ],
+          "appearance": "Nâu sẫm, xỉn xám, có mảng thâm tối rõ rệt",
+          "touch": "Bề mặt dính nhớt nhẹ, ấn còn vết lõm",
+          "smell": "Hơi chua, mùi ôi nồng nhẹ"
+        },
+        "tier_4_spoiled": {
+          "score_range": [
+            0.0,
+            3.0
+          ],
+          "appearance": "Xám xanh, xanh lục, có đốm nấm mốc",
+          "touch": "Rất nhớt dính, nhũn nát cấu trúc thớ cơ",
+          "smell": "Mùi chua gắt, khai amoniac hoặc hôi thối nồng nặc"
+        }
+      },
+      "inspection_rubric": [
+        {
+          "axis": "color",
+          "question_vi": "Màu sắc thớ nạc và mỡ bò?",
+          "stop_if": [
+            "xam_xanh"
+          ],
+          "options": [
+            {
+              "value": "do_tuoi_tham",
+              "label_vi": "Đỏ tươi hoặc đỏ tím/đỏ thẫm tự nhiên (hút chân không), mỡ vàng nhạt hoặc trắng ngà",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "hoi_nhat_nau",
+              "label_vi": "Hơi nhạt màu hoặc ngả nâu xám nhạt (oxy hóa bề mặt do tiếp xúc không khí)",
+              "penalty": 0.15,
+              "reason_vi": "Bề mặt thịt bò hơi nhạt màu hoặc ngả nâu xám nhạt do tiếp xúc không khí",
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "xin_xam",
+              "label_vi": "Nâu sẫm, xỉn xám, có mảng thâm tối rõ",
+              "penalty": 0.45,
+              "reason_vi": "Thịt bò mất độ tươi, bề mặt thớ thịt nâu sẫm hoặc xỉn xám rõ rệt",
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "xam_xanh",
+              "label_vi": "Xám xanh/xanh lục, nhớt đục hoặc có đốm mốc",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Thịt bò biến màu xám xanh, nhớt đục hoặc xuất hiện đốm mốc ươn hỏng",
+              "claim": "C-TCVN7046-COLOR"
+            }
+          ]
+        },
+        {
+          "axis": "stickiness",
+          "question_vi": "Sờ bề mặt miếng thịt bò?",
+          "stop_if": [
+            "rat_nhot"
+          ],
+          "options": [
+            {
+              "value": "kho_rao",
+              "label_vi": "Khô se, sạch, không dính tay",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "hoi_am",
+              "label_vi": "Hơi ẩm nhẹ, chưa dính nhờn",
+              "penalty": 0.15,
+              "reason_vi": "Mô cơ tiết dịch tế bào tự nhiên",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "dinh_nhot",
+              "label_vi": "Bề mặt dính nhớt nhẹ",
+              "penalty": 0.45,
+              "reason_vi": "Mật độ vi khuẩn bề mặt tăng, hình thành màng nhớt",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "rat_nhot",
+              "label_vi": "Rất nhớt dính, trơn tuột kéo sợi",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Màng nhầy vi sinh dày đặc, thịt đã ươn hỏng",
+              "claim": "C-TCVN7046-TOUCH"
+            }
+          ]
+        },
+        {
+          "axis": "elasticity",
+          "question_vi": "Ấn ngón tay vào thớ thịt bò rồi buông ra?",
+          "options": [
+            {
+              "value": "hoi_ngay",
+              "label_vi": "Vết lõm phẳng lại ngay, đàn hồi cao",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "hoi_cham",
+              "label_vi": "Vết lõm hồi lại chậm",
+              "penalty": 0.15,
+              "reason_vi": "Cấu trúc thớ cơ giảm độ đàn hồi",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "con_vet_lom",
+              "label_vi": "Còn vết lõm rõ, không phẳng lại",
+              "penalty": 0.45,
+              "reason_vi": "Enzyme phân giải protein cơ làm mất đàn hồi",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "nhun_nat",
+              "label_vi": "Nhũn nát, cấu trúc thớ cơ đứt gãy",
+              "penalty": 0.75,
+              "reason_vi": "Phân hủy mô cơ bò nghiêm trọng",
+              "claim": "C-TCVN7046-TOUCH"
+            }
+          ]
+        },
+        {
+          "axis": "smell",
+          "question_vi": "Ngửi gần miếng thịt bò?",
+          "stop_if": [
+            "chua_khai_ro"
+          ],
+          "options": [
+            {
+              "value": "thom_tuoi",
+              "label_vi": "Mùi gây nhẹ đặc trưng thịt bò tươi, không chua",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "nhat",
+              "label_vi": "Mùi nhạt, giảm mùi bò đặc trưng",
+              "penalty": 0.15,
+              "reason_vi": "Hương vị tươi bay hơi theo thời gian lưu trữ",
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "hoi_chua",
+              "label_vi": "Hơi chua, mùi ôi nồng nhẹ",
+              "penalty": 0.45,
+              "reason_vi": "Vi khuẩn bắt đầu lên men và chuyển hóa chất đạm",
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "chua_khai_ro",
+              "label_vi": "Mùi chua gắt, khai amoniac hoặc hôi thối nồng",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Phân hủy protein thịt bò sinh amin bay hơi và amoniac",
+              "claim": "C-TCVN7046-ODOR"
+            }
+          ]
+        }
+      ],
+      "preservation_protocols": {
+        "recommended": [
+          "fridge_2_4c"
+        ],
+        "prep": [
+          "Thấm khô bề mặt trước khi bảo quản",
+          "Gói kín màng bọc hoặc hộp kín",
+          "Chia khẩu phần trước khi trữ đông"
+        ],
+        "bad": [
+          "Rửa thịt ngâm nước làm mất dịch và tăng độ ẩm bề mặt",
+          "Để lẫn thịt sống với thức ăn ăn liền"
+        ]
+      },
+      "business_rules": [
+        "tier3_must_cook",
+        "tier4_discard"
+      ]
+    },
     "COOKED_LEFTOVERS": {
       "archetype": "COOKED_LEFTOVERS",
       "name_vi": "Đồ ăn đã nấu chín và thức ăn thừa",
@@ -1324,15 +1738,16 @@
         "tier4_discard"
       ]
     },
-    "FISH_SEAFOOD": {
-      "archetype": "FISH_SEAFOOD",
-      "name_vi": "Cá và hải sản có vây / mực / tôm",
+    "FISH_FILLET": {
+      "archetype": "FISH_FILLET",
+      "name_vi": "Cá phi lê và cá cắt khúc",
       "applies_to_groups": [
-        "cá lóc",
-        "cá điêu hồng",
-        "tôm",
-        "mực",
-        "bạch tuộc"
+        "phi lê cá lóc",
+        "cá hồi phi lê",
+        "cá basa phi lê",
+        "cá ngừ",
+        "cá thu cắt khúc",
+        "chả cá tươi"
       ],
       "sensory_tiers": {
         "tier_1_fresh": {
@@ -1340,17 +1755,17 @@
             8.5,
             10.0
           ],
-          "appearance": "Mắt trong, lồi; mang đỏ tươi, khép chặt",
-          "touch": "Thịt săn chắc, bụng nguyên vẹn",
-          "smell": "Mùi biển/tanh nhẹ tự nhiên"
+          "appearance": "Mặt cắt sáng bóng, thớ thịt tươi trong, mép cắt phẳng không khô thâm; đường máu đỏ tươi (nếu có)",
+          "touch": "Thịt săn chắc, đàn hồi tốt khi ấn nhẹ, thớ thịt liên kết chặt",
+          "smell": "Mùi tanh nhẹ tự nhiên của cá tươi hoặc thoang thoảng mùi biển"
         },
         "tier_2_acceptable": {
           "score_range": [
             6.0,
             8.5
           ],
-          "appearance": "Mắt phẳng, hơi đục; mang hồng nhạt hoặc hơi thẫm",
-          "touch": "Thịt hơi mềm",
+          "appearance": "Mặt cắt hơi kém bóng, đường máu đỏ sẫm, mép hơi se lại nhưng chưa đổi màu thâm",
+          "touch": "Thịt hơi mềm, đàn hồi chậm hơn",
           "smell": "Tanh vừa"
         },
         "tier_3_warning": {
@@ -1358,139 +1773,114 @@
             3.0,
             6.0
           ],
-          "appearance": "Mắt hơi lõm, đục; mang nâu nhạt, có nhớt trong",
-          "touch": "Thịt mềm, ấn còn vết lõm",
-          "smell": "Tanh nồng, gắt"
+          "appearance": "Mặt cắt mờ đục, mép hơi thâm nâu hoặc vàng ố, bề mặt hơi dính nhớt",
+          "touch": "Thịt mềm, ấn để lại vết lõm, thớ thịt bắt đầu tách rời",
+          "smell": "Tanh nồng, hơi chua"
         },
         "tier_4_spoiled": {
           "score_range": [
             0.0,
             3.0
           ],
-          "appearance": "Mắt lõm sâu, đục hoàn toàn; mang xám nâu, nhớt đục/hôi",
-          "touch": "Vỡ bụng, thịt nhũn nát",
-          "smell": "Hôi thối, khai amoniac"
+          "appearance": "Bề mặt xỉn màu, nhớt dính chảy dịch, mép thâm đen hoặc ố vàng rõ rệt",
+          "touch": "Thịt nhũn nát, mủn nát khi chạm vào",
+          "smell": "Mùi chua ôi, khai amoniac hoặc hôi thối thối rữa"
         }
       },
       "inspection_rubric": [
         {
-          "axis": "gills",
-          "question_vi": "Lật nắp mang, quan sát màu mang?",
+          "axis": "appearance",
+          "question_vi": "Quan sát bề mặt và mép cắt của miếng cá?",
           "stop_if": [
-            "xam_nau_nhot"
+            "nhot_dinh_doi_mau"
           ],
           "options": [
             {
-              "value": "do_tuoi",
-              "label_vi": "Đỏ tươi, sạch, khép chặt",
+              "value": "sang_bong",
+              "label_vi": "Sáng bóng, thớ thịt tươi trong, mép cắt không khô thâm",
               "penalty": 0.0,
-              "claim": "C-TCVN5277-GILLS"
+              "claim": "C-FDA-SEAFOOD-FILLET-APPEARANCE"
             },
             {
-              "value": "hong_nhat",
-              "label_vi": "Hồng nhạt hoặc hơi thẫm, nhớt nhẹ",
+              "value": "hoi_se_kem_bong",
+              "label_vi": "Hơi kém bóng, mép se nhẹ nhưng không thâm",
               "penalty": 0.15,
-              "reason_vi": "Hemoglobin trong mang oxy hóa, dịch nhầy bắt đầu tiết ra",
-              "claim": "C-TCVN5277-GILLS"
+              "reason_vi": "Bề mặt miếng cá tiếp xúc không khí giảm độ bóng tự nhiên",
+              "claim": "C-FDA-SEAFOOD-FILLET-APPEARANCE"
             },
             {
-              "value": "xam_nau_nhot",
-              "label_vi": "Xám nâu, nhớt đục",
+              "value": "mep_tham_vang_o",
+              "label_vi": "Mép khô quăn, thâm nâu hoặc hơi ngả vàng ố",
+              "penalty": 0.4,
+              "reason_vi": "Mép cắt bị khô, thâm nâu hoặc ố vàng",
+              "claim": "C-FDA-SEAFOOD-FILLET-APPEARANCE"
+            },
+            {
+              "value": "nhot_dinh_doi_mau",
+              "label_vi": "Nhớt dính chảy dịch, xỉn màu thâm đen hoàn toàn",
               "penalty": 1.0,
               "hard_stop": true,
-              "reason_vi": "Vi khuẩn phân hủy máu và mô mang, tạo màng nhầy dày",
-              "claim": "C-TCVN5277-GILLS"
-            },
-            {
-              "value": "khong_ap_dung",
-              "label_vi": "Không áp dụng — mang nằm trong xoang áo/dưới giáp đầu ngực, không có nắp mang để lật (mực, bạch tuộc, tôm)",
-              "penalty": 0.0,
-              "claim": "C-LOCAL-AXIS-NA"
+              "reason_vi": "Bề mặt nhớt dính chảy dịch, biến màu ươn hỏng",
+              "claim": "C-FDA-SEAFOOD-FILLET-APPEARANCE"
             }
           ]
         },
         {
-          "axis": "eyes",
-          "question_vi": "Quan sát mắt cá?",
-          "options": [
-            {
-              "value": "trong_loi",
-              "label_vi": "Trong, lồi",
-              "penalty": 0.0,
-              "claim": "C-TCVN5277-EYES"
-            },
-            {
-              "value": "phang_hoi_duc",
-              "label_vi": "Phẳng, hơi đục",
-              "penalty": 0.15,
-              "reason_vi": "Giác mạc mất nước, protein bắt đầu biến tính",
-              "claim": "C-TCVN5277-EYES"
-            },
-            {
-              "value": "lom_duc_hoan_toan",
-              "label_vi": "Lõm sâu, đục hoàn toàn",
-              "penalty": 0.5,
-              "reason_vi": "Mất áp lực dịch trong nhãn cầu, protein biến tính nặng",
-              "claim": "C-TCVN5277-EYES"
-            }
-          ]
-        },
-        {
-          "axis": "flesh_belly",
-          "question_vi": "Ấn nhẹ vào thân và bụng?",
+          "axis": "texture",
+          "question_vi": "Ấn nhẹ ngón tay vào thớ thịt miếng cá?",
           "stop_if": [
-            "vo_bung_nhun"
+            "nhun_nat_mun"
           ],
           "options": [
             {
-              "value": "chac_nguyen",
-              "label_vi": "Thịt săn chắc, bụng nguyên vẹn",
+              "value": "dan_hoi_tot",
+              "label_vi": "Thịt săn chắc, đàn hồi tốt, thớ thịt liên kết chặt",
               "penalty": 0.0,
-              "claim": "C-TCVN5277-TOUCH"
+              "claim": "C-FDA-SEAFOOD-FILLET-TEXTURE"
             },
             {
               "value": "hoi_mem",
-              "label_vi": "Thịt hơi mềm",
+              "label_vi": "Thịt hơi mềm, vết lõm đàn hồi chậm",
               "penalty": 0.2,
-              "reason_vi": "Enzyme nội sinh (tự phân) bắt đầu làm mềm mô cơ",
-              "claim": "C-TCVN5277-TOUCH"
+              "reason_vi": "Thịt hơi mềm, vết lõm đàn hồi chậm",
+              "claim": "C-FDA-SEAFOOD-FILLET-TEXTURE"
             },
             {
-              "value": "vo_bung_nhun",
-              "label_vi": "Vỡ bụng, thịt nhũn nát",
+              "value": "nhun_nat_mun",
+              "label_vi": "Thịt nhũn nát, thớ thịt mủn rời rạc khi ấn",
               "penalty": 1.0,
               "hard_stop": true,
-              "reason_vi": "Enzyme tiêu hóa và vi khuẩn đường ruột phân giải thành bụng và mô cơ",
-              "claim": "C-TCVN5277-TOUCH"
+              "reason_vi": "Thịt nhũn nát, thớ thịt mủn rời khi ấn",
+              "claim": "C-FDA-SEAFOOD-FILLET-TEXTURE"
             }
           ]
         },
         {
           "axis": "smell",
-          "question_vi": "Ngửi gần mang và bụng?",
+          "question_vi": "Ngửi bề mặt miếng cá phi lê?",
           "stop_if": [
-            "amoniac_thoi"
+            "amoniac_chua_thoi"
           ],
           "options": [
             {
               "value": "nhe_tu_nhien",
-              "label_vi": "Mùi biển/tanh nhẹ tự nhiên",
+              "label_vi": "Mùi tanh nhẹ cá tươi tự nhiên / mùi biển nhẹ",
               "penalty": 0.0,
               "claim": "C-TCVN5277-ODOR"
             },
             {
-              "value": "tanh_manh",
+              "value": "tanh_nong",
               "label_vi": "Tanh nồng",
               "penalty": 0.2,
-              "reason_vi": "Vi khuẩn khử TMAO thành trimethylamine (TMA)",
+              "reason_vi": "Mùi tanh tăng rõ rệt so với ban đầu",
               "claim": "C-TCVN5277-ODOR"
             },
             {
-              "value": "amoniac_thoi",
-              "label_vi": "Khai amoniac/hôi thối",
+              "value": "amoniac_chua_thoi",
+              "label_vi": "Chua ôi, khai amoniac hoặc hôi thối",
               "penalty": 1.0,
               "hard_stop": true,
-              "reason_vi": "Vi khuẩn khử TMAO thành TMA, khử amin sinh amoniac và phân giải axit amin chứa lưu huỳnh sinh H2S",
+              "reason_vi": "Chua ôi, khai amoniac hoặc mùi hôi thối rữa",
               "claim": "C-TCVN5277-ODOR"
             }
           ]
@@ -1499,14 +1889,15 @@
       "preservation_protocols": {
         "recommended": [
           "fridge_2_4c",
-          "ice_0c"
+          "soft_freeze_-3c",
+          "freezer_-18c"
         ],
         "prep": [
-          "Mổ bỏ mang và nội tạng càng sớm càng tốt",
-          "Rửa sạch nhớt và máu đông, để ráo trước khi cho vào hộp kín"
+          "Thấm khô bề mặt miếng phi lê bằng khăn giấy sạch trước khi bọc màng bọc kín hoặc hộp kín",
+          "Đặt miếng cá trên vỉ ráo nước hoặc túi hút chân không để tránh đọng dịch"
         ],
         "bad": [
-          "Ngâm trong nước ở nhiệt độ phòng để rã đông (vi khuẩn gây ươn phát triển nhanh ở nhiệt độ ấm, sinh TMA và H2S)"
+          "Ngâm phi lê trực tiếp trong nước để rã đông (làm trôi protein hòa tan, thịt bở nhạt và nhiễm khuẩn)"
         ]
       },
       "business_rules": [
@@ -1516,11 +1907,11 @@
     },
     "FRESH_MEAT": {
       "archetype": "FRESH_MEAT",
-      "name_vi": "Thịt tươi",
+      "name_vi": "Thịt tươi khác (dê, cừu)",
       "applies_to_groups": [
-        "thịt heo",
-        "thịt bò",
-        "gia cầm"
+        "thịt dê",
+        "thịt cừu",
+        "thịt đỏ khác"
       ],
       "sensory_tiers": {
         "tier_1_fresh": {
@@ -2230,6 +2621,850 @@
         "tier4_discard"
       ]
     },
+    "PORK": {
+      "archetype": "PORK",
+      "name_vi": "Thịt heo (thịt lợn) tươi",
+      "applies_to_groups": [
+        "thịt heo",
+        "thịt lợn",
+        "ba chỉ heo",
+        "sườn heo",
+        "nạc heo"
+      ],
+      "sensory_tiers": {
+        "tier_1_fresh": {
+          "score_range": [
+            8.5,
+            10.0
+          ],
+          "appearance": "Nạc hồng tươi đến hồng xám/đỏ nhạt tự nhiên, mỡ trắng sáng bóng ngà, lớp bì trắng sạch",
+          "touch": "Màng ngoài khô se ráo, không dính tay, ấn lõm phẳng lại ngay",
+          "smell": "Thơm thịt heo tươi đặc trưng, không mùi lạ"
+        },
+        "tier_2_acceptable": {
+          "score_range": [
+            6.0,
+            8.5
+          ],
+          "appearance": "Hơi nhạt màu hoặc hơi sẫm, mỡ hơi đục",
+          "touch": "Bề mặt hơi ướt rỉ dịch nhẹ, đàn hồi giảm nhẹ",
+          "smell": "Nhạt mùi, chưa có mùi chua"
+        },
+        "tier_3_warning": {
+          "score_range": [
+            3.0,
+            6.0
+          ],
+          "appearance": "Xỉn màu nâu xám, mỡ ngả vàng tối hoặc thâm",
+          "touch": "Bề mặt dính nhớt nhờn rõ rệt, ấn còn vết lõm",
+          "smell": "Hơi chua hoặc ôi khét mỡ nhẹ"
+        },
+        "tier_4_spoiled": {
+          "score_range": [
+            0.0,
+            3.0
+          ],
+          "appearance": "Xám xanh, xanh lục, có đốm nấm mốc",
+          "touch": "Rất nhớt dính kéo sợi, thịt mềm nhão phân rã",
+          "smell": "Chua ôi thối nồng nặc, khai amoniac"
+        }
+      },
+      "inspection_rubric": [
+        {
+          "axis": "color",
+          "question_vi": "Màu sắc phần nạc và mỡ heo?",
+          "stop_if": [
+            "xam_xanh"
+          ],
+          "options": [
+            {
+              "value": "hong_tuoi",
+              "label_vi": "Hồng tươi đến hồng xám/đỏ nhạt tự nhiên, mỡ trắng sáng bóng ngà",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "hoi_nhat_tham",
+              "label_vi": "Hơi nhạt màu hoặc hơi sẫm, mỡ hơi đục",
+              "penalty": 0.15,
+              "reason_vi": "Thịt mất dịch hoặc bắt đầu oxy hóa bề mặt nhẹ",
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "xin_xam",
+              "label_vi": "Xỉn màu nâu xám, mỡ ngả vàng tối hoặc thâm",
+              "penalty": 0.45,
+              "reason_vi": "Thịt lợn mất độ tươi, mỡ ngả vàng tối hoặc thịt xỉn màu",
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "xam_xanh",
+              "label_vi": "Xám xanh/xanh lục, mỡ xỉn thâm, có mốc",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Thịt lợn biến màu xám xanh hoặc phát triển nấm mốc ươn hỏng",
+              "claim": "C-TCVN7046-COLOR"
+            }
+          ]
+        },
+        {
+          "axis": "stickiness",
+          "question_vi": "Sờ bề mặt miếng thịt heo?",
+          "stop_if": [
+            "rat_nhot"
+          ],
+          "options": [
+            {
+              "value": "kho_rao",
+              "label_vi": "Màng ngoài khô se ráo, sạch, không dính tay",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "hoi_uot",
+              "label_vi": "Hơi ướt rỉ dịch nhẹ, chưa dính tay",
+              "penalty": 0.15,
+              "reason_vi": "Rỉ dịch tế bào do bảo quản mát hoặc rã đông",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "dinh_nhot",
+              "label_vi": "Bề mặt dính nhớt nhờn rõ",
+              "penalty": 0.45,
+              "reason_vi": "Vi khuẩn bề mặt tăng sinh tạo màng nhầy sinh học",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "rat_nhot",
+              "label_vi": "Rất nhớt dính, trơn tuột hoặc kéo sợi",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Màng nhầy vi sinh dày đặc — thịt đã hư hỏng mức độ nặng",
+              "claim": "C-TCVN7046-TOUCH"
+            }
+          ]
+        },
+        {
+          "axis": "elasticity",
+          "question_vi": "Ấn ngón tay vào thớ thịt heo rồi buông ra?",
+          "options": [
+            {
+              "value": "hoi_ngay",
+              "label_vi": "Vết lõm phẳng lại ngay, đàn hồi tốt",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "hoi_cham",
+              "label_vi": "Vết lõm phẳng lại chậm",
+              "penalty": 0.15,
+              "reason_vi": "Mô liên kết mất nước, cấu trúc protein cơ giảm độ căng",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "con_vet_lom",
+              "label_vi": "Còn vết lõm ngón tay rõ, không hồi lại",
+              "penalty": 0.45,
+              "reason_vi": "Enzyme nội tại và vi sinh vật phân giải mô cơ thịt heo",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "nhun_nat",
+              "label_vi": "Thịt mềm nhão, mô mỡ chảy xệ phân rã",
+              "penalty": 0.75,
+              "reason_vi": "Protein cơ thịt heo bị phân hủy nặng",
+              "claim": "C-TCVN7046-TOUCH"
+            }
+          ]
+        },
+        {
+          "axis": "smell",
+          "question_vi": "Ngửi gần miếng thịt heo?",
+          "stop_if": [
+            "chua_khai_ro"
+          ],
+          "options": [
+            {
+              "value": "thom_tuoi",
+              "label_vi": "Thơm thịt heo tươi đặc trưng, không mùi lạ",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "nhat",
+              "label_vi": "Mùi nhạt, không thơm rõ",
+              "penalty": 0.15,
+              "reason_vi": "Hợp chất este và mùi thơm tươi bay hơi giảm dần",
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "hoi_chua",
+              "label_vi": "Hơi chua hoặc ôi khét mỡ nhẹ",
+              "penalty": 0.45,
+              "reason_vi": "Thịt lợn bắt đầu giảm chất lượng, có mùi hơi chua hoặc ôi mỡ",
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "chua_khai_ro",
+              "label_vi": "Chua ôi thối rõ rệt, nồng mùi khai amoniac",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Thịt lợn phân hủy ươn hỏng nặng, bốc mùi hôi thối hoặc mùi khai",
+              "claim": "C-TCVN7046-ODOR"
+            }
+          ]
+        }
+      ],
+      "preservation_protocols": {
+        "recommended": [
+          "fridge_2_4c"
+        ],
+        "prep": [
+          "Thấm khô bề mặt trước khi cất",
+          "Bọc màng thực phẩm hoặc hộp kín",
+          "Chia phần theo bữa trước khi cấp đông"
+        ],
+        "bad": [
+          "Để lẫn thịt heo sống với đồ ăn chín (nguy cơ lây nhiễm chéo vi sinh)",
+          "Rửa thịt bằng nước rồi để tủ lạnh không thấm khô"
+        ]
+      },
+      "business_rules": [
+        "tier3_must_cook",
+        "tier4_discard"
+      ]
+    },
+    "POULTRY": {
+      "archetype": "POULTRY",
+      "name_vi": "Thịt gia cầm tươi",
+      "applies_to_groups": [
+        "thịt gà",
+        "thịt vịt",
+        "thịt gia cầm"
+      ],
+      "sensory_tiers": {
+        "tier_1_fresh": {
+          "score_range": [
+            8.5,
+            10.0
+          ],
+          "appearance": "Da vàng nhạt/trắng ngà tự nhiên, bóng nhẹ, nạc hồng sáng hoặc trắng hồng tự nhiên",
+          "touch": "Bề mặt da và thịt khô ráo, trơn láng, ấn lõm phẳng lại ngay",
+          "smell": "Mùi thơm thịt gia cầm tươi đặc trưng, không có mùi hôi ươn"
+        },
+        "tier_2_acceptable": {
+          "score_range": [
+            6.0,
+            8.5
+          ],
+          "appearance": "Da hoặc nạc hơi nhạt màu, hơi sẫm hoặc khô se mặt",
+          "touch": "Bề mặt hơi ướt rỉ dịch nhẹ, đàn hồi giảm nhẹ",
+          "smell": "Mùi nhạt tự nhiên, chưa có mùi lạ"
+        },
+        "tier_3_warning": {
+          "score_range": [
+            3.0,
+            6.0
+          ],
+          "appearance": "Da ngả xám tối/thâm, nạc sẫm màu nâu xám, có mảng tím bầm",
+          "touch": "Bề mặt nếp gấp dưới cánh/đùi dính nhờn, nhớt nhẹ",
+          "smell": "Mùi nồng chua, có mùi ôi nhẹ"
+        },
+        "tier_4_spoiled": {
+          "score_range": [
+            0.0,
+            3.0
+          ],
+          "appearance": "Da và thịt xám xanh/xanh lục, thâm đen hoặc có đốm mốc",
+          "touch": "Rất nhớt dính toàn bộ bề mặt, thịt mềm nhão bở rạc",
+          "smell": "Mùi chua nồng, hôi thối, khai amoniac nồng nặc"
+        }
+      },
+      "inspection_rubric": [
+        {
+          "axis": "color",
+          "question_vi": "Màu sắc da và thịt gia cầm?",
+          "stop_if": [
+            "xam_xanh"
+          ],
+          "options": [
+            {
+              "value": "hong_sang",
+              "label_vi": "Da vàng nhạt/trắng ngà bóng, thịt hồng sáng hoặc trắng hồng tự nhiên",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "hoi_nhat_sam",
+              "label_vi": "Da hoặc thịt hơi nhạt màu, hơi sẫm hoặc khô se mặt",
+              "penalty": 0.15,
+              "reason_vi": "Bề mặt thịt gia cầm mất nước hoặc oxy hóa nhẹ",
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "xin_xam_bam",
+              "label_vi": "Da ngả xám thâm, thịt sẫm màu, có vết bầm tím",
+              "penalty": 0.45,
+              "reason_vi": "Ứ huyết dưới da hoặc vi khuẩn oxy hóa sắc tố cơ gia cầm",
+              "claim": "C-TCVN7046-COLOR"
+            },
+            {
+              "value": "xam_xanh",
+              "label_vi": "Da thịt xám xanh/xanh lục, thâm đen hoặc có mốc",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Vi khuẩn sinh sắc tố xanh và phân hủy mô thịt gia cầm",
+              "claim": "C-TCVN7046-COLOR"
+            }
+          ]
+        },
+        {
+          "axis": "stickiness",
+          "question_vi": "Sờ bề mặt da và thịt gia cầm (đặc biệt nếp gấp cánh, đùi)?",
+          "stop_if": [
+            "rat_nhot"
+          ],
+          "options": [
+            {
+              "value": "kho_rao",
+              "label_vi": "Khô ráo, trơn láng tự nhiên, không dính tay",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "hoi_uot",
+              "label_vi": "Bề mặt hơi ướt hoặc rỉ nước thịt nhẹ, chưa nhớt dính",
+              "penalty": 0.15,
+              "reason_vi": "Độ ẩm ngưng tụ hoặc rỉ dịch bảo quản",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "dinh_nhot",
+              "label_vi": "Bề mặt dưới cánh/đùi dính nhờn, nhớt nhẹ",
+              "penalty": 0.45,
+              "reason_vi": "Vi khuẩn phát triển tạo lớp màng nhớt tại nếp gấp",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "rat_nhot",
+              "label_vi": "Rất nhớt dính toàn bộ bề mặt, nhớt trơn trượt kéo sợi",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Màng vi sinh dày đặc trên bề mặt gia cầm — đã biến chất hư hỏng",
+              "claim": "C-TCVN7046-TOUCH"
+            }
+          ]
+        },
+        {
+          "axis": "elasticity",
+          "question_vi": "Ấn ngón tay vào ức hoặc đùi gia cầm rồi thả ra?",
+          "options": [
+            {
+              "value": "hoi_ngay",
+              "label_vi": "Vết lõm phẳng lại ngay, thịt săn chắc đàn hồi",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "hoi_cham",
+              "label_vi": "Thịt hơi mềm, vết lõm phẳng lại chậm",
+              "penalty": 0.15,
+              "reason_vi": "Độ căng mô cơ gia cầm giảm theo thời gian lưu trữ",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "con_vet_lom",
+              "label_vi": "Thịt mềm nhão, lỏng lẻo, còn vết lõm sâu",
+              "penalty": 0.45,
+              "reason_vi": "Enzyme vi sinh vật phân giải liên kết sợi cơ gia cầm",
+              "claim": "C-TCVN7046-TOUCH"
+            },
+            {
+              "value": "nhun_nat",
+              "label_vi": "Nhũn nát, thịt bở rời rạc khỏi xương",
+              "penalty": 0.75,
+              "reason_vi": "Cấu trúc cơ gia cầm phân hủy nặng",
+              "claim": "C-TCVN7046-TOUCH"
+            }
+          ]
+        },
+        {
+          "axis": "smell",
+          "question_vi": "Ngửi gần vùng ức và khoang bụng gia cầm?",
+          "stop_if": [
+            "chua_khai_ro"
+          ],
+          "options": [
+            {
+              "value": "thom_tuoi",
+              "label_vi": "Mùi thịt gia cầm tươi đặc trưng, không có mùi hôi ươn",
+              "penalty": 0.0,
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "nhat",
+              "label_vi": "Mùi nhạt tự nhiên, không thơm rõ",
+              "penalty": 0.15,
+              "reason_vi": "Mùi tươi giảm nhẹ theo thời gian bảo quản",
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "hoi_chua",
+              "label_vi": "Mùi hơi nồng chua, có mùi ôi nhẹ",
+              "penalty": 0.45,
+              "reason_vi": "Vi khuẩn kỵ khí và hiếu khí phân giải lipid/protein",
+              "claim": "C-TCVN7046-ODOR"
+            },
+            {
+              "value": "chua_khai_ro",
+              "label_vi": "Mùi chua nồng, hôi thối, mùi amoniac/ươn rõ rệt",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Phân hủy protein gia cầm sinh amin độc và khí thối",
+              "claim": "C-TCVN7046-ODOR"
+            }
+          ]
+        }
+      ],
+      "preservation_protocols": {
+        "recommended": [
+          "fridge_2_4c"
+        ],
+        "prep": [
+          "Thấm thật khô bề mặt và khoang bụng trước khi cất",
+          "Bọc kín trong túi zip hoặc hộp thực phẩm",
+          "Chia nhỏ từng phần khi cấp đông"
+        ],
+        "bad": [
+          "Để thịt gia cầm chảy nước sang các thực phẩm khác (nguy cơ Salmonella/Campylobacter)",
+          "Để ở nhiệt độ phòng quá 2 giờ"
+        ]
+      },
+      "business_rules": [
+        "tier3_must_cook",
+        "tier4_discard"
+      ]
+    },
+    "SHRIMP": {
+      "archetype": "SHRIMP",
+      "name_vi": "Tôm tươi (tôm biển, tôm nước ngọt)",
+      "applies_to_groups": [
+        "tôm biển",
+        "tôm sú",
+        "tôm thẻ",
+        "tôm đất",
+        "tôm càng xanh",
+        "tép đồng",
+        "tôm bóc nõn",
+        "tôm hùm"
+      ],
+      "sensory_tiers": {
+        "tier_1_fresh": {
+          "score_range": [
+            8.5,
+            10.0
+          ],
+          "appearance": "Vỏ sáng bóng, đầu và chân dính chặt vào thân; thịt trong ánh ngọc trai; khớp đốt thân linh hoạt, khép kín (hoặc tôm nõn bề mặt sáng trong)",
+          "touch": "Thân tôm căng chắc, đàn hồi tốt khi nắn nhẹ",
+          "smell": "Mùi biển hoặc mùi nước tự nhiên thoang thoảng hoặc hầu như không mùi"
+        },
+        "tier_2_acceptable": {
+          "score_range": [
+            6.0,
+            8.5
+          ],
+          "appearance": "Vỏ hơi mờ nhẹ, có thể có vài đốm đen nhỏ trên vỏ ngoài (melanosis tự nhiên); đầu vẫn gắn liền thân",
+          "touch": "Thân hơi mềm nhẹ nhưng không nhão",
+          "smell": "Tanh vừa"
+        },
+        "tier_3_warning": {
+          "score_range": [
+            3.0,
+            6.0
+          ],
+          "appearance": "Đầu lỏng lẻo rõ rệt, rụng một số chân; vỏ sẫm màu, các đốt thân hơi giãn rộng; thịt đục mờ",
+          "touch": "Thịt mềm, các đốt thân lỏng bỏng",
+          "smell": "Tanh nồng gắt, thoang thoảng mùi ươn"
+        },
+        "tier_4_spoiled": {
+          "score_range": [
+            0.0,
+            3.0
+          ],
+          "appearance": "Đầu đứt rời rỉ dịch thối; thịt đổi sang màu hồng đỏ như luộc hoặc vàng đục; vỏ chảy nhớt nhờn rít",
+          "touch": "Thịt mềm nhũn nát, bở rạc hoàn toàn",
+          "smell": "Mùi khai amoniac nồng nặc, mùi trứng thối hoặc thối rữa"
+        }
+      },
+      "inspection_rubric": [
+        {
+          "axis": "shell_head",
+          "question_vi": "Kiểm tra vỏ, đầu và chân tôm (hoặc dạng sơ chế)?",
+          "stop_if": [
+            "dau_roi_chay_dich"
+          ],
+          "options": [
+            {
+              "value": "dinh_chat_bong",
+              "label_vi": "Đầu và chân dính chặt vào thân, vỏ sáng bóng khép kín (tôm nguyên con)",
+              "penalty": 0.0,
+              "claim": "C-LOCAL-SHRIMP-INTEGRITY"
+            },
+            {
+              "value": "da_so_che_khong_dau",
+              "label_vi": "Đã sơ chế / bỏ đầu / bóc nõn (tôm không đầu, tôm nõn)",
+              "penalty": 0.0,
+              "reason_vi": "Sản phẩm đã sơ chế loại bỏ đầu và vỏ theo quy cách thương phẩm",
+              "claim": "C-LOCAL-PROCESSED-FORM"
+            },
+            {
+              "value": "hoi_long_dom_den_nhe",
+              "label_vi": "Đầu hơi lỏng nhẹ, hoặc có vài đốm đen nhỏ trên vỏ ngoài (melanosis tự nhiên)",
+              "penalty": 0.15,
+              "reason_vi": "Hiện tượng sẫm màu tự nhiên ngoài vỏ (melanosis), phân biệt với biến chất làm đổi màu thịt hay chảy nhớt",
+              "claim": "C-LOCAL-SHRIMP-MELANOSIS"
+            },
+            {
+              "value": "dau_long_gian_dot",
+              "label_vi": "Đầu lỏng lẻo rõ rệt, rụng chân, các khớp đốt thân giãn rộng",
+              "penalty": 0.4,
+              "reason_vi": "Liên kết giữa đầu và thân bị lỏng lẻo do bảo quản kéo dài",
+              "claim": "C-LOCAL-SHRIMP-INTEGRITY"
+            },
+            {
+              "value": "dau_roi_chay_dich",
+              "label_vi": "Đầu tôm nguyên con bị đứt rời do ươn, rỉ dịch đen hoặc thân chảy nhớt đục",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Nội tạng đầu tôm bị phân hủy ươn hỏng nặng, rỉ dịch thối và chảy nhớt",
+              "claim": "C-LOCAL-SHRIMP-INTEGRITY"
+            }
+          ]
+        },
+        {
+          "axis": "flesh_color",
+          "question_vi": "Quan sát màu sắc và độ trong của thịt tôm?",
+          "stop_if": [
+            "hong_do_duc_nhot"
+          ],
+          "options": [
+            {
+              "value": "trong_ngoc_trai",
+              "label_vi": "Thịt trong tự nhiên, ánh ngọc trai đặc trưng (pearl-like color)",
+              "penalty": 0.0,
+              "claim": "C-FDA-SEAFOOD-SHRIMP-APPEARANCE"
+            },
+            {
+              "value": "hoi_duc_mo",
+              "label_vi": "Thịt hơi mờ đục, màu vỏ hoặc bề mặt hơi sẫm",
+              "penalty": 0.15,
+              "reason_vi": "Thịt tôm bắt đầu giảm độ trong tự nhiên",
+              "claim": "C-FDA-SEAFOOD-SHRIMP-APPEARANCE"
+            },
+            {
+              "value": "hong_do_duc_nhot",
+              "label_vi": "Thịt chuyển màu hồng đỏ bất thường như đã luộc, hoặc vàng đục dính nhớt",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Thịt đổi màu ươn hỏng bất thường, nhớt dính do vi sinh vật phân hủy mô",
+              "claim": "C-FDA-SEAFOOD-SHRIMP-APPEARANCE"
+            }
+          ]
+        },
+        {
+          "axis": "firmness",
+          "question_vi": "Nắn nhẹ vào thân tôm / thịt tôm?",
+          "stop_if": [
+            "nhun_nat_bo"
+          ],
+          "options": [
+            {
+              "value": "san_chac_cang",
+              "label_vi": "Thân căng tròn, thịt săn chắc đàn hồi",
+              "penalty": 0.0,
+              "claim": "C-LOCAL-SHRIMP-TEXTURE"
+            },
+            {
+              "value": "hoi_mem",
+              "label_vi": "Thịt hơi mềm, đàn hồi giảm nhẹ",
+              "penalty": 0.2,
+              "reason_vi": "Cơ thịt tôm bắt đầu giảm độ đàn hồi",
+              "claim": "C-LOCAL-SHRIMP-TEXTURE"
+            },
+            {
+              "value": "nhun_nat_bo",
+              "label_vi": "Thịt mềm nhũn nát, bở rạc hoặc chảy nhớt",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Cơ thịt bị phân hủy hoàn toàn khiến cấu trúc mềm nhũn, bở rạc",
+              "claim": "C-LOCAL-SHRIMP-TEXTURE"
+            }
+          ]
+        },
+        {
+          "axis": "smell",
+          "question_vi": "Ngửi gần đầu và thân tôm?",
+          "stop_if": [
+            "amoniac_thoi_h2s"
+          ],
+          "options": [
+            {
+              "value": "nhe_tu_nhien",
+              "label_vi": "Mùi biển hoặc mùi nước tự nhiên thoang thoảng hoặc hầu như không mùi (little or no odor)",
+              "penalty": 0.0,
+              "claim": "C-FDA-SEAFOOD-SHRIMP-ODOR"
+            },
+            {
+              "value": "tanh_gat",
+              "label_vi": "Tanh nồng gắt",
+              "penalty": 0.2,
+              "reason_vi": "Mùi tanh tăng rõ rệt so với độ tươi ban đầu",
+              "claim": "C-FDA-SEAFOOD-SHRIMP-ODOR"
+            },
+            {
+              "value": "amoniac_thoi_h2s",
+              "label_vi": "Mùi khai amoniac nồng nặc, mùi chua hoặc mùi thối rữa",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Phân hủy ươn hỏng sinh mùi khai nồng, mùi chua hoặc mùi thối rữa",
+              "claim": "C-FDA-SEAFOOD-SHRIMP-ODOR"
+            }
+          ]
+        }
+      ],
+      "preservation_protocols": {
+        "recommended": [
+          "fridge_2_4c",
+          "ice_0c",
+          "freezer_-18c"
+        ],
+        "prep": [
+          "Rửa sạch với nước muối loãng lạnh, để ráo trước khi bảo quản",
+          "Đối với tôm tươi có thể ngắt bỏ râu/đầu nếu không chế biến ngay; đối với tôm hùm cần bảo quản lạnh sâu chuyên biệt"
+        ],
+        "bad": [
+          "Để tôm ngâm trong nước ngọt đọng ở nhiệt độ phòng (khiến thịt nhanh nhũn vữa và nhiễm khuẩn)"
+        ]
+      },
+      "business_rules": [
+        "tier3_must_cook",
+        "tier4_discard"
+      ]
+    },
+    "SQUID": {
+      "archetype": "SQUID",
+      "name_vi": "Mực và bạch tuộc tươi",
+      "applies_to_groups": [
+        "mực tươi",
+        "mực ống",
+        "mực nang",
+        "mực lá",
+        "mực trứng",
+        "mực sim",
+        "mực làm sạch",
+        "bạch tuộc tươi",
+        "bạch tuộc"
+      ],
+      "sensory_tiers": {
+        "tier_1_fresh": {
+          "score_range": [
+            8.5,
+            10.0
+          ],
+          "appearance": "Thân áo sáng bóng, sắc tố da óng ánh tươi sáng; đầu và râu/tua dính chặt vào thân, túi mực nguyên vẹn (hoặc mực làm sạch bề mặt trắng sáng không nhớt)",
+          "touch": "Thịt thân áo dày, săn chắc, đàn hồi cao khi ấn tay",
+          "smell": "Mùi biển tươi tự nhiên đặc trưng, tanh nhẹ thanh"
+        },
+        "tier_2_acceptable": {
+          "score_range": [
+            6.0,
+            8.5
+          ],
+          "appearance": "Da hơi kém bóng, các đốm sắc tố nhạt màu dần, đầu vẫn dính liền thân",
+          "touch": "Thịt hơi mềm nhẹ nhưng vẫn có độ đàn hồi",
+          "smell": "Tanh vừa"
+        },
+        "tier_3_warning": {
+          "score_range": [
+            3.0,
+            6.0
+          ],
+          "appearance": "Da chuyển màu hồng đỏ hoặc trầy xước tróc mảng; đầu hơi lỏng lẻo; bề mặt hơi nhớt",
+          "touch": "Thịt mềm, đàn hồi kém",
+          "smell": "Tanh nồng gắt, thoang thoảng mùi ươn"
+        },
+        "tier_4_spoiled": {
+          "score_range": [
+            0.0,
+            3.0
+          ],
+          "appearance": "Da thâm đỏ thẫm hoặc vàng đục, bong tróc trơ thịt nhầy nhớt; đầu đứt lìa khỏi thân, nội tạng vỡ nát",
+          "touch": "Thịt mềm nhũn nát, ấn lún sâu không đàn hồi, nhầy nhớt",
+          "smell": "Mùi khai amoniac nồng nặc, mùi lưu huỳnh hoặc hôi thối thối rữa"
+        }
+      },
+      "inspection_rubric": [
+        {
+          "axis": "skin_mantle",
+          "question_vi": "Quan sát da và bề mặt thân áo mực / bạch tuộc (hoặc dạng sơ chế)?",
+          "stop_if": [
+            "do_tham_troc_nhot"
+          ],
+          "options": [
+            {
+              "value": "sang_ong_sac_to_ro",
+              "label_vi": "Sáng bóng, đốm sắc tố da rõ nét óng ánh tự nhiên (con nguyên vẹn)",
+              "penalty": 0.0,
+              "claim": "C-TAS7005-SQUID-COLOR"
+            },
+            {
+              "value": "da_so_che_lot_da",
+              "label_vi": "Đã sơ chế làm sạch / lột da (thịt trắng ngà, bề mặt sạch không nhớt)",
+              "penalty": 0.0,
+              "reason_vi": "Sản phẩm đã qua sơ chế làm sạch hoặc lột bỏ da theo quy cách thương phẩm",
+              "claim": "C-LOCAL-PROCESSED-FORM"
+            },
+            {
+              "value": "kem_bong_nhat_mau",
+              "label_vi": "Hơi kém bóng, sắc tố da nhạt màu dần",
+              "penalty": 0.15,
+              "reason_vi": "Sắc tố bề mặt da nhạt màu dần sau thu hoạch",
+              "claim": "C-TAS7005-SQUID-COLOR"
+            },
+            {
+              "value": "chuyen_hong_do_nhe",
+              "label_vi": "Da hoặc bề mặt thịt chuyển màu ửng hồng đỏ, trầy tróc",
+              "penalty": 0.35,
+              "reason_vi": "Bề mặt bắt đầu biến màu ửng đỏ, trầy tróc do bảo quản kéo dài",
+              "claim": "C-TAS7005-SQUID-COLOR"
+            },
+            {
+              "value": "do_tham_troc_nhot",
+              "label_vi": "Đỏ thẫm hoặc vàng đục, da bong tróc, bề mặt chảy nhớt nhớp nháp",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Biến chất ươn hỏng nặng, bề mặt chảy dịch nhớt thối",
+              "claim": "C-TAS7005-SQUID-COLOR"
+            }
+          ]
+        },
+        {
+          "axis": "head_tentacles",
+          "question_vi": "Kiểm tra độ gắn kết giữa đầu, râu/tua và thân áo (hoặc dạng sơ chế)?",
+          "stop_if": [
+            "dut_lia_vo_noi_tang"
+          ],
+          "options": [
+            {
+              "value": "dinh_chat_nguyen_ven",
+              "label_vi": "Đầu và râu/tua gắn chặt vào thân áo, túi mực nguyên vẹn (con nguyên vẹn)",
+              "penalty": 0.0,
+              "claim": "C-LOCAL-CEPHALOPOD-INTEGRITY"
+            },
+            {
+              "value": "da_so_che_cat_khuc",
+              "label_vi": "Đã sơ chế / bỏ đầu / cắt khoanh / philê (thân ống làm sạch)",
+              "penalty": 0.0,
+              "reason_vi": "Sản phẩm đã qua sơ chế loại bỏ đầu và nội tạng theo quy cách thương phẩm",
+              "claim": "C-LOCAL-PROCESSED-FORM"
+            },
+            {
+              "value": "hoi_long_tua_nguyen",
+              "label_vi": "Đầu hơi lỏng nhẹ nhưng vẫn dính liền thân áo, râu/tua nguyên vẹn",
+              "penalty": 0.2,
+              "reason_vi": "Độ liên kết giữa đầu và thân giảm nhẹ",
+              "claim": "C-LOCAL-CEPHALOPOD-INTEGRITY"
+            },
+            {
+              "value": "dut_lia_vo_noi_tang",
+              "label_vi": "Đầu đứt lìa khỏi thân áo do ươn, rụng tua hoặc nội tạng vỡ nát chảy dịch đen thối",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Đầu đứt rời do ươn hoặc nội tạng dập vỡ chảy dịch đen thối",
+              "claim": "C-LOCAL-CEPHALOPOD-INTEGRITY"
+            }
+          ]
+        },
+        {
+          "axis": "firmness",
+          "question_vi": "Ấn nhẹ ngón tay vào thịt thân mực / bạch tuộc?",
+          "stop_if": [
+            "nhun_nat_chay_nhot"
+          ],
+          "options": [
+            {
+              "value": "san_chac_day_dan",
+              "label_vi": "Thịt dày, săn chắc, đàn hồi trở lại ngay khi ấn",
+              "penalty": 0.0,
+              "claim": "C-TAS7005-SQUID-TEXTURE"
+            },
+            {
+              "value": "hoi_mem",
+              "label_vi": "Thịt hơi mềm, vết lõm đàn hồi chậm",
+              "penalty": 0.2,
+              "reason_vi": "Thịt hơi mềm, độ đàn hồi giảm nhẹ",
+              "claim": "C-TAS7005-SQUID-TEXTURE"
+            },
+            {
+              "value": "nhun_nat_chay_nhot",
+              "label_vi": "Thịt mềm nhũn nát, ấn lõm sâu không đàn hồi, chảy dịch nhầy",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Thịt nhũn nát mất đàn hồi hoàn toàn, chảy dịch nhầy",
+              "claim": "C-TAS7005-SQUID-TEXTURE"
+            }
+          ]
+        },
+        {
+          "axis": "smell",
+          "question_vi": "Ngửi gần thân áo và đầu mực / bạch tuộc?",
+          "stop_if": [
+            "amoniac_thoi"
+          ],
+          "options": [
+            {
+              "value": "nhe_tu_nhien",
+              "label_vi": "Mùi biển tự nhiên đặc trưng, tanh nhẹ dễ chịu",
+              "penalty": 0.0,
+              "claim": "C-TAS7005-CEPHALOPOD-ODOR"
+            },
+            {
+              "value": "tanh_gat",
+              "label_vi": "Tanh nồng gắt",
+              "penalty": 0.2,
+              "reason_vi": "Mùi tanh tăng rõ rệt so với độ tươi ban đầu",
+              "claim": "C-TAS7005-CEPHALOPOD-ODOR"
+            },
+            {
+              "value": "amoniac_thoi",
+              "label_vi": "Khai amoniac nồng nặc hoặc mùi hôi thối thối rữa",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Mùi khai nồng nặc hoặc mùi thối rữa",
+              "claim": "C-TAS7005-CEPHALOPOD-ODOR"
+            }
+          ]
+        }
+      ],
+      "preservation_protocols": {
+        "recommended": [
+          "fridge_2_4c",
+          "ice_0c",
+          "freezer_-18c"
+        ],
+        "prep": [
+          "Làm sạch nội tạng và túi mực (đối với mực có thể rút bỏ nang/mai; đối với bạch tuộc làm sạch phần đầu) dưới vòi nước lạnh",
+          "Để ráo nước thật kỹ trước khi cho vào hộp kín hoặc túi hút chân không bảo quản"
+        ],
+        "bad": [
+          "Ngâm mực/bạch tuộc lâu trong nước ngọt ở nhiệt độ phòng (khiến thịt ngấm nước, bở nhão và nhanh hỏng)"
+        ]
+      },
+      "business_rules": [
+        "tier3_must_cook",
+        "tier4_discard"
+      ]
+    },
     "TUBER_ROOT": {
       "archetype": "TUBER_ROOT",
       "name_vi": "Củ tinh bột và thân rễ",
@@ -2409,6 +3644,195 @@
         "solanine_risk_hard_stop",
         "tier4_discard"
       ]
+    },
+    "WHOLE_FISH": {
+      "archetype": "WHOLE_FISH",
+      "name_vi": "Cá tươi nguyên con (có vây)",
+      "applies_to_groups": [
+        "cá lóc",
+        "cá điêu hồng",
+        "cá chép",
+        "cá trắm",
+        "cá rô đồng",
+        "cá nục",
+        "cá chim",
+        "cá kèo",
+        "cá bống",
+        "cá trê"
+      ],
+      "sensory_tiers": {
+        "tier_1_fresh": {
+          "score_range": [
+            8.5,
+            10.0
+          ],
+          "appearance": "Mắt trong, lồi; mang đỏ tươi, sạch, khép chặt",
+          "touch": "Thịt săn chắc, đàn hồi tốt, bụng nguyên vẹn",
+          "smell": "Mùi biển hoặc mùi nước ngọt tự nhiên thoang thoảng"
+        },
+        "tier_2_acceptable": {
+          "score_range": [
+            6.0,
+            8.5
+          ],
+          "appearance": "Mắt phẳng, hơi đục nhẹ; mang hồng nhạt hoặc hơi thẫm, nhớt nhẹ",
+          "touch": "Thịt hơi mềm, đàn hồi chậm",
+          "smell": "Tanh vừa"
+        },
+        "tier_3_warning": {
+          "score_range": [
+            3.0,
+            6.0
+          ],
+          "appearance": "Mắt hơi lõm, đục mờ; mang nâu nhạt, có nhớt đục",
+          "touch": "Thịt mềm, ấn còn vết lõm rõ",
+          "smell": "Tanh nồng, hơi gắt"
+        },
+        "tier_4_spoiled": {
+          "score_range": [
+            0.0,
+            3.0
+          ],
+          "appearance": "Mắt lõm sâu, đục hoàn toàn; mang xám nâu, nhớt đục/hôi",
+          "touch": "Vỡ bụng, nội tạng lòi ra, thịt nhũn nát",
+          "smell": "Khai amoniac, mùi thối rữa"
+        }
+      },
+      "inspection_rubric": [
+        {
+          "axis": "gills",
+          "question_vi": "Lật nắp mang, quan sát màu mang cá?",
+          "stop_if": [
+            "xam_nau_nhot"
+          ],
+          "options": [
+            {
+              "value": "do_tuoi",
+              "label_vi": "Đỏ tươi, sạch, khép chặt",
+              "penalty": 0.0,
+              "claim": "C-TCVN5277-GILLS"
+            },
+            {
+              "value": "hong_nhat",
+              "label_vi": "Hồng nhạt hoặc hơi thẫm, nhớt nhẹ",
+              "penalty": 0.15,
+              "reason_vi": "Mang cá chuyển màu hồng nhạt hoặc hơi thẫm, nhớt nhẹ",
+              "claim": "C-TCVN5277-GILLS"
+            },
+            {
+              "value": "xam_nau_nhot",
+              "label_vi": "Xám nâu, nhớt đục",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Mang cá chuyển xám nâu, có nhớt đục là biểu hiện ươn hỏng nặng",
+              "claim": "C-TCVN5277-GILLS"
+            }
+          ]
+        },
+        {
+          "axis": "eyes",
+          "question_vi": "Quan sát mắt cá?",
+          "options": [
+            {
+              "value": "trong_loi",
+              "label_vi": "Trong, giác mạc sáng, nhãn cầu hơi lồi",
+              "penalty": 0.0,
+              "claim": "C-TCVN5277-EYES"
+            },
+            {
+              "value": "phang_hoi_duc",
+              "label_vi": "Phẳng, hơi đục nhẹ",
+              "penalty": 0.15,
+              "reason_vi": "Mắt phẳng, hơi đục nhẹ",
+              "claim": "C-TCVN5277-EYES"
+            },
+            {
+              "value": "lom_duc_hoan_toan",
+              "label_vi": "Lõm sâu, giác mạc đục hoàn toàn",
+              "penalty": 0.5,
+              "reason_vi": "Mắt lõm sâu, giác mạc đục hoàn toàn",
+              "claim": "C-TCVN5277-EYES"
+            }
+          ]
+        },
+        {
+          "axis": "flesh_belly",
+          "question_vi": "Ấn nhẹ vào thân và bụng cá?",
+          "stop_if": [
+            "vo_bung_nhun"
+          ],
+          "options": [
+            {
+              "value": "chac_nguyen",
+              "label_vi": "Thịt săn chắc, đàn hồi tốt, bụng nguyên vẹn",
+              "penalty": 0.0,
+              "claim": "C-TCVN5277-TOUCH"
+            },
+            {
+              "value": "hoi_mem",
+              "label_vi": "Thịt hơi mềm, đàn hồi chậm",
+              "penalty": 0.2,
+              "reason_vi": "Thịt hơi mềm, đàn hồi chậm",
+              "claim": "C-TCVN5277-TOUCH"
+            },
+            {
+              "value": "vo_bung_nhun",
+              "label_vi": "Vỡ bụng, nội tạng lòi ra hoặc thịt nhũn nát",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Bụng cá vỡ, nội tạng lòi ra hoặc thịt nhũn nát",
+              "claim": "C-TCVN5277-TOUCH"
+            }
+          ]
+        },
+        {
+          "axis": "smell",
+          "question_vi": "Ngửi gần mang và bụng cá?",
+          "stop_if": [
+            "amoniac_thoi"
+          ],
+          "options": [
+            {
+              "value": "nhe_tu_nhien",
+              "label_vi": "Mùi tanh nhẹ tự nhiên của nước/biển",
+              "penalty": 0.0,
+              "claim": "C-TCVN5277-ODOR"
+            },
+            {
+              "value": "tanh_manh",
+              "label_vi": "Tanh nồng gắt",
+              "penalty": 0.2,
+              "reason_vi": "Mùi tanh nồng gắt",
+              "claim": "C-TCVN5277-ODOR"
+            },
+            {
+              "value": "amoniac_thoi",
+              "label_vi": "Khai amoniac / hôi thối thối rữa",
+              "penalty": 1.0,
+              "hard_stop": true,
+              "reason_vi": "Mùi khai amoniac hoặc hôi thối thối rữa",
+              "claim": "C-TCVN5277-ODOR"
+            }
+          ]
+        }
+      ],
+      "preservation_protocols": {
+        "recommended": [
+          "fridge_2_4c",
+          "ice_0c"
+        ],
+        "prep": [
+          "Mổ bỏ mang và nội tạng càng sớm càng tốt",
+          "Rửa sạch nhớt và máu đọng, để ráo trước khi cho vào hộp kín"
+        ],
+        "bad": [
+          "Ngâm trong nước ở nhiệt độ phòng để rã đông (vi khuẩn gây ươn phát triển nhanh, sinh mùi hôi)"
+        ]
+      },
+      "business_rules": [
+        "tier3_must_cook",
+        "tier4_discard"
+      ]
     }
   },
   "ingredients": {
@@ -2421,7 +3845,7 @@
         "bắp bò hoa",
         "bò bắp"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2450,7 +3874,7 @@
         "thăn lưng bò",
         "thăn phi lê bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2479,7 +3903,7 @@
         "nạm bò tươi",
         "nạm bò gân"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2508,7 +3932,7 @@
         "gầu giòn bò",
         "gầu bò tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2537,7 +3961,7 @@
         "thịt diềm thăn",
         "dải bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2566,7 +3990,7 @@
         "thịt lõi rùa",
         "lõi bắp rùa bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2595,7 +4019,7 @@
         "thịt bắp hoa",
         "bắp bò hoa"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2624,7 +4048,7 @@
         "dẻ sườn",
         "sườn rút xương bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2653,7 +4077,7 @@
         "sườn que bò",
         "thịt sườn bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2682,7 +4106,7 @@
         "đuôi bò tươi",
         "đuôi bò làm sạch"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2711,7 +4135,7 @@
         "thịt bò băm",
         "thịt bò xay tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2740,7 +4164,7 @@
         "thăn lưng bò ngoại",
         "striploin bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2769,7 +4193,7 @@
         "thăn chuột bò",
         "tenderloin bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2798,7 +4222,7 @@
         "steak bò",
         "thịt bò steak"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2827,7 +4251,7 @@
         "ba chỉ bò cuộn",
         "bò cuộn nấm"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2856,7 +4280,7 @@
         "gân bò tươi",
         "gân bò trong"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2885,7 +4309,7 @@
         "bộ lòng bò",
         "ruột bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2914,7 +4338,7 @@
         "ruột bò tươi",
         "dồi trường bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2943,7 +4367,7 @@
         "lá sách",
         "khăn lông sách bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -2972,7 +4396,7 @@
         "dạ tổ ong",
         "tổ ong tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3001,7 +4425,7 @@
         "lách bò",
         "lá lách bò tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3030,7 +4454,7 @@
         "lá gan bò",
         "gan bò nếp"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3059,7 +4483,7 @@
         "quả tim bò",
         "thịt tim bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3088,7 +4512,7 @@
         "thận bò",
         "cật bò tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3117,7 +4541,7 @@
         "tủy bò tươi",
         "tủy sống bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3146,7 +4570,7 @@
         "bộ óc bò",
         "óc con bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3175,7 +4599,7 @@
         "ngọc hành bò",
         "ngầu pín"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3204,7 +4628,7 @@
         "lưỡi bò làm sạch",
         "thịt lưỡi bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3233,7 +4657,7 @@
         "bẹ sữa bò",
         "nầm sữa bò tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3262,7 +4686,7 @@
         "ba rọi bò",
         "thịt ba rọi bò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3291,7 +4715,7 @@
         "bê tơ",
         "thịt bê tơ"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3320,7 +4744,7 @@
         "bắp đùi bê",
         "đùi bê tơ"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3349,7 +4773,7 @@
         "thăn bê tơ",
         "thăn phi lê bê"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3403,7 +4827,7 @@
         "da bê non",
         "da bê tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3432,7 +4856,7 @@
         "thịt trâu nạc",
         "thịt trâu tươi sống"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3461,7 +4885,7 @@
         "thịt bắp trâu",
         "bắp hoa trâu"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3490,7 +4914,7 @@
         "thăn trâu tươi",
         "thăn phi lê trâu"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3519,7 +4943,7 @@
         "nạm trâu tươi",
         "thịt trâu nạm"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3548,7 +4972,7 @@
         "gân trâu tươi",
         "thịt gân trâu"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3577,7 +5001,7 @@
         "dẻ sườn trâu",
         "thịt sườn trâu"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3868,7 +5292,7 @@
         "thịt vai heo",
         "nạc vai"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3898,7 +5322,7 @@
         "thịt mông heo",
         "nạc mông"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3928,7 +5352,7 @@
         "thăn chuột heo",
         "thăn heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3958,7 +5382,7 @@
         "thịt nạc dăm",
         "nạc giòn heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -3988,7 +5412,7 @@
         "thịt ba chỉ heo rút sườn",
         "ba rọi rút xương"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4018,7 +5442,7 @@
         "sườn non",
         "dẻ sườn non heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4048,7 +5472,7 @@
         "sườn dẻ heo",
         "sườn que heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4078,7 +5502,7 @@
         "sụn non heo",
         "sườn sụn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4108,7 +5532,7 @@
         "thịt dải",
         "diềm thăn heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4138,7 +5562,7 @@
         "mỡ khổ heo",
         "mỡ gáy lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4168,7 +5592,7 @@
         "mỡ sa heo",
         "mỡ màng heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4198,7 +5622,7 @@
         "da heo tươi",
         "da lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4228,7 +5652,7 @@
         "chân giò trước lợn",
         "thịt chân giò trước"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4258,7 +5682,7 @@
         "chân giò sau lợn",
         "thịt chân giò sau"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4288,7 +5712,7 @@
         "móng lợn",
         "khoanh móng giò"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4318,7 +5742,7 @@
         "thủ heo",
         "thịt đầu lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4348,7 +5772,7 @@
         "tai heo tươi",
         "tai lợn làm sạch"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4378,7 +5802,7 @@
         "mũi lợn",
         "lỗ mũi heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4408,7 +5832,7 @@
         "lưỡi heo tươi",
         "cuống lưỡi heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4438,7 +5862,7 @@
         "đuôi heo làm sạch",
         "đuôi heo chặt khúc"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4468,7 +5892,7 @@
         "nọng lợn",
         "thịt má heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4498,7 +5922,7 @@
         "cốt lết lợn",
         "sườn cốt lết heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4528,7 +5952,7 @@
         "nạc đùi lợn",
         "thịt nạc đùi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4558,7 +5982,7 @@
         "xương lợn nấu canh",
         "xương ống lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4588,7 +6012,7 @@
         "mỡ chài lợn",
         "màng mỡ heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4618,7 +6042,7 @@
         "thịt heo rừng tươi",
         "heo rừng lai"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -4648,7 +6072,7 @@
         "thịt heo xay nạc",
         "thịt băm nạc"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4678,7 +6102,7 @@
         "thịt lợn xay",
         "thịt heo băm có mỡ"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4708,7 +6132,7 @@
         "chả sống",
         "thịt mọc sống"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4738,7 +6162,7 @@
         "tim lợn tươi",
         "trái tim heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4768,7 +6192,7 @@
         "gan lợn tươi",
         "lá gan lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4798,7 +6222,7 @@
         "cật lợn",
         "thận heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4828,7 +6252,7 @@
         "bao tử lợn",
         "dạ dày heo tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4858,7 +6282,7 @@
         "lòng heo ruột non",
         "lòng non"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4888,7 +6312,7 @@
         "khấu đuôi heo",
         "thú linh heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4918,7 +6342,7 @@
         "tràng lợn",
         "dồi trường lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4948,7 +6372,7 @@
         "phèo heo tươi",
         "lòng phèo lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -4978,7 +6402,7 @@
         "cuống họng lợn",
         "họng lợn tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5008,7 +6432,7 @@
         "óc heo tươi",
         "bộ óc heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5038,7 +6462,7 @@
         "tủy lợn",
         "tủy xương ống heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5068,7 +6492,7 @@
         "lá mía lợn",
         "tụy heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5098,7 +6522,7 @@
         "phổi lợn tươi",
         "lá phổi lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5128,7 +6552,7 @@
         "tiết heo tươi",
         "máu heo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5348,7 +6772,7 @@
         "gà thả vườn",
         "thịt gà ta làm sẵn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5377,7 +6801,7 @@
         "gà thịt công nghiệp",
         "thịt gà trắng"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5406,7 +6830,7 @@
         "đùi gà nguyên má",
         "đùi gà liền má"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5435,7 +6859,7 @@
         "đùi gà tỏi",
         "bắp đùi gà"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5465,7 +6889,7 @@
         "ức gà không da",
         "thịt ức gà"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5494,7 +6918,7 @@
         "cánh gà khúc giữa",
         "đầu cánh gà"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5523,7 +6947,7 @@
         "chân gà rút xương",
         "chân gà làm sạch"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5552,7 +6976,7 @@
         "dạ dày gà",
         "mề gà làm sạch"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5580,7 +7004,7 @@
         "gan gà tươi",
         "lá gan gà"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5608,7 +7032,7 @@
         "tim gà tươi",
         "trái tim gà"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5637,7 +7061,7 @@
         "bộ lòng gà",
         "lòng mề gà"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5666,7 +7090,7 @@
         "sụn khớp gà",
         "sụn gà tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5695,7 +7119,7 @@
         "cổ gà làm sạch",
         "cổ họng gà"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5723,7 +7147,7 @@
         "phao câu",
         "phao câu gà tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5752,7 +7176,7 @@
         "gà ác nguyên con",
         "gà ri đen"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5781,7 +7205,7 @@
         "gà Mông",
         "gà H'mông đen"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5810,7 +7234,7 @@
         "hạt kê gà",
         "ngọc kê"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5839,7 +7263,7 @@
         "trứng non",
         "buồng trứng gà non"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -5868,7 +7292,7 @@
         "gà tây nguyên con",
         "thịt gà tây tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5897,7 +7321,7 @@
         "thịt gà rừng lai",
         "gà rừng tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5926,7 +7350,7 @@
         "vịt cỏ Vân Đình",
         "thịt vịt cỏ thả đồng"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5955,7 +7379,7 @@
         "má đùi vịt",
         "đùi vịt góc tư"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -5983,7 +7407,7 @@
         "cánh vịt tươi",
         "cánh vịt làm sạch"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6012,7 +7436,7 @@
         "phi lê ức vịt",
         "thịt ức vịt"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6041,7 +7465,7 @@
         "chân vịt rút xương",
         "chân vịt làm sạch"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6070,7 +7494,7 @@
         "bộ lòng vịt",
         "lòng mề vịt"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -6099,7 +7523,7 @@
         "mề vịt làm sạch",
         "dạ dày vịt"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -6127,7 +7551,7 @@
         "gan vịt tươi",
         "lá gan vịt"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -6156,7 +7580,7 @@
         "lưỡi vịt làm sạch",
         "lưỡi vịt phá lấu"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6185,7 +7609,7 @@
         "vịt xiêm tươi",
         "ngan đen"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6213,7 +7637,7 @@
         "cổ vịt tươi",
         "cổ vịt làm sạch"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6241,7 +7665,7 @@
         "phao câu vịt tươi",
         "phao câu vịt béo"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6271,7 +7695,7 @@
         "thịt ngan dé",
         "thịt ngan ré tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6299,7 +7723,7 @@
         "đùi ngan tươi",
         "má đùi ngan"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6328,7 +7752,7 @@
         "phi lê ức ngan",
         "ức ngan tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6356,7 +7780,7 @@
         "cánh ngan tươi",
         "cánh ngan làm sạch"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6386,7 +7810,7 @@
         "thịt ngỗng cỏ",
         "thịt ngỗng làm sẵn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6414,7 +7838,7 @@
         "đùi ngỗng tươi",
         "thịt đùi ngỗng"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6443,7 +7867,7 @@
         "foie gras tươi",
         "lá gan ngỗng"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -6472,7 +7896,7 @@
         "lườn ngỗng hun khói Nga",
         "ức ngỗng hun khói"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6502,7 +7926,7 @@
         "chim cút làm sẵn",
         "chim cút nguyên con"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6532,7 +7956,7 @@
         "bồ câu non",
         "thịt bồ câu tươi"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -6562,7 +7986,7 @@
         "chim sẻ đồng",
         "thịt chim mía"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -8347,7 +9771,7 @@
         "cá thu phấn",
         "cá thu cắt khúc"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "FISH_FILLET",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8376,7 +9800,7 @@
         "cá hồi tươi",
         "cá hồi nauy"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "FISH_FILLET",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8405,7 +9829,7 @@
         "cá ba sa phi lê",
         "cá basa"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "FISH_FILLET",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8434,7 +9858,7 @@
         "cá chép tươi",
         "cá chép sông"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8463,7 +9887,7 @@
         "cá trê lai",
         "cá trê vàng"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8492,7 +9916,7 @@
         "thịt cá ngừ tươi",
         "cá ngừ vây vàng"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "FISH_FILLET",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8521,7 +9945,7 @@
         "cá nục chuối",
         "cá nục tươi"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8547,10 +9971,9 @@
       "names_vi": [
         "cá trích",
         "cá trích biển",
-        "cá trích tươi",
-        "cá trích phi lê"
+        "cá trích tươi"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8579,7 +10002,7 @@
         "cá trắm trắng",
         "cá trắm tươi"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8608,7 +10031,7 @@
         "cá rô ta",
         "cá rô đồng tươi"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8637,7 +10060,7 @@
         "cá kèo sống",
         "cá kèo tươi"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8666,7 +10089,7 @@
         "cá bống sông",
         "cá bống tượng"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8695,7 +10118,7 @@
         "cá chim biển",
         "cá chim tươi"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8724,7 +10147,7 @@
         "thịt cá chép giòn",
         "cá chép giòn nguyên con"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8753,7 +10176,7 @@
         "cá thát lát rút xương",
         "chả cá thát lát"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "FISH_FILLET",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -8782,7 +10205,7 @@
         "tôm càng nước ngọt",
         "tôm càng xanh tươi"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "SHRIMP",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -8811,7 +10234,7 @@
         "tép rong",
         "tép đồng"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "SHRIMP",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -8840,7 +10263,7 @@
         "tôm hùm xanh",
         "tôm hùm alaska"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "SHRIMP",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -8869,7 +10292,7 @@
         "mực nang trứng",
         "mực ống ôm trứng"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "SQUID",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -8885,7 +10308,7 @@
         },
         "freezer_-18c": {
           "value": 2160.0,
-          "claim": "C-FK-FISH-FREEZE"
+          "claim": "C-FK-SQUID-FREEZE"
         }
       }
     },
@@ -8898,7 +10321,7 @@
         "mực sim sữa",
         "mực chớp"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "SQUID",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -8914,7 +10337,7 @@
         },
         "freezer_-18c": {
           "value": 2160.0,
-          "claim": "C-FK-FISH-FREEZE"
+          "claim": "C-FK-SQUID-FREEZE"
         }
       }
     },
@@ -9075,7 +10498,7 @@
         "ba chỉ",
         "thịt lợn ba chỉ"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -9107,7 +10530,7 @@
         "thịt heo nạc",
         "thịt lợn"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -9137,7 +10560,7 @@
         "dẻ sườn heo",
         "sườn cây"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "PORK",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -9169,7 +10592,7 @@
         "bò bắp",
         "bò nạc"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "BEEF",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -9200,7 +10623,7 @@
         "ức gà",
         "đùi gà"
       ],
-      "archetype": "FRESH_MEAT",
+      "archetype": "POULTRY",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 4.0,
@@ -9226,10 +10649,37 @@
       "names_vi": [
         "cá lóc",
         "cá quả",
-        "cá chuối",
-        "phi lê cá lóc"
+        "cá chuối"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
+      "base_shelf_life_hours": {
+        "room_temp_25_30c": {
+          "value": 3.0,
+          "claim": "C-LOCAL-FISH-ROOM"
+        },
+        "fridge_2_4c": {
+          "value": 24.0,
+          "claim": "C-FK-FISH-LEAN"
+        },
+        "soft_freeze_-3c": {
+          "value": 120.0,
+          "claim": "C-LOCAL-SOFTFREEZE"
+        },
+        "freezer_-18c": {
+          "value": 4320.0,
+          "claim": "C-FK-FISH-FREEZE"
+        }
+      }
+    },
+    "phi_le_ca_loc": {
+      "id": "phi_le_ca_loc",
+      "code": "8022",
+      "names_vi": [
+        "phi lê cá lóc",
+        "cá lóc phi lê",
+        "phi lê cá quả"
+      ],
+      "archetype": "FISH_FILLET",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -9258,7 +10708,7 @@
         "rô phi đỏ",
         "cá diêu hồng"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "WHOLE_FISH",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 3.0,
@@ -9288,7 +10738,7 @@
         "tôm tươi",
         "tôm đất"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "SHRIMP",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -9317,7 +10767,7 @@
         "mực lá",
         "mực nang"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "SQUID",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -9344,7 +10794,7 @@
         "bạch tuộc tươi",
         "bạch tuộc"
       ],
-      "archetype": "FISH_SEAFOOD",
+      "archetype": "SQUID",
       "base_shelf_life_hours": {
         "room_temp_25_30c": {
           "value": 2.0,
@@ -9885,5 +11335,5 @@
       }
     }
   },
-  "checksum": "sha256:e676fcabb1411cc2308ef8716cfcb602cb9561321f2ceafba0ee76fa10999b3f"
+  "checksum": "sha256:9d62774ae7a8eaf17d713e709c59c6f680d8b1e4fc362953fdfe1b862de16092"
 }

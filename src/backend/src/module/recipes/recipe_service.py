@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy.sql.functions import count
 
@@ -22,6 +23,7 @@ from src.module.recipes.recipe_dto import (
     RecipeNutritionDTO,
     UpdateRecipeRequestDTO,
 )
+from src.service.recipe_quantity import is_seasoning, scale_quantity
 
 
 class RecipeNotFoundError(HTTPException):
@@ -136,9 +138,16 @@ class RecipeService:
                     recipe_ingredient_id=recipe_ingredient.id,
                     master_ingredient_id=ingredient.id,
                     name=ingredient.name,
-                    required_quantity=recipe_ingredient.required_quantity * scale,
+                    required_quantity=scale_quantity(
+                        recipe_ingredient.required_quantity,
+                        recipe_ingredient.unit,
+                        scale,
+                        seasoning=is_seasoning(ingredient),
+                    ),
                     unit=recipe_ingredient.unit,
-                    is_optional=recipe_ingredient.is_optional,
+                    is_optional=(
+                        recipe_ingredient.is_optional or is_seasoning(ingredient)
+                    ),
                     preparation_note=recipe_ingredient.preparation_note,
                 )
                 for recipe_ingredient, ingredient in ingredients
@@ -171,6 +180,7 @@ class RecipeService:
                 MasterIngredientModel,
                 MasterIngredientModel.id == RecipeIngredientModel.master_ingredient_id,
             )
+            .options(joinedload(MasterIngredientModel.category))
             .where(RecipeIngredientModel.recipe_id == recipe_id)
             .order_by(RecipeIngredientModel.created_at, RecipeIngredientModel.id),
         )

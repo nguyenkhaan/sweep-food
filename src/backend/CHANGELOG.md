@@ -6,6 +6,10 @@ All notable backend changes are recorded in this file. The format follows [Keep 
 
 ### Added
 
+- FreshCheck KB 0.4.0 integration adding food-specific sensory rubrics for `POULTRY`, `BEEF`, `PORK`, alongside `WHOLE_FISH`, `FISH_FILLET`, `SHRIMP`, and `SQUID`.
+- Resolved missing pork belly canonical master mapping (`1c1c1c32-dc38-5561-a27c-3a61419aa2b2` -> `thit_ba_chi_heo`) and authored reviewed catalog mappings in `data_freshness/mappings/master_ingredient_freshcheck_mappings.yaml` distinguishing raw pork belly from beef, cured, and vegetarian products.
+- Preserved mapping coverage across KB release cycles: `seed_freshness` now merges reviewed manifest mappings with exact-name candidates in the same transaction before activating the staged release, carrying forward active mappings while detecting dangling references.
+- Vision OCR and pre-OCR guard parameters update: raised `OCR_MAX_DIM` to 720px and increased vision OCR `max_completion_tokens` to 4096 tokens in `AI/extraction/ocr/openai_vision_ocr.py`, and updated image guard to 720px with 256 max tokens in `AI/extraction/ocr/image_guard.py`, providing larger image input and output token allowances.
 - Extraction response `fields` (`POST /api/extractions/ocr/label`, `ocr/invoice`, `asr`, `text`) and invoice `line_items[]` now include `category: string | null` containing the Vietnamese category name from `ingredient_categories.name` when matched to a catalog master ingredient, and `null` otherwise (partially reversing the earlier removal of category from extraction responses to enable app auto-fill).
 - FreshCheck previews and assessments accept `other_answers` for free-text sensory
   observations. A single bounded call through the shared OpenAI client checks

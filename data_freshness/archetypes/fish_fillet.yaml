@@ -1,0 +1,98 @@
+archetype: FISH_FILLET
+name_vi: "Cá phi lê và cá cắt khúc"
+applies_to_groups: ["phi lê cá lóc", "cá hồi phi lê", "cá basa phi lê", "cá ngừ", "cá thu cắt khúc", "chả cá tươi"]
+
+sensory_tiers:
+  tier_1_fresh:
+    score_range: [8.5, 10.0]
+    appearance: "Mặt cắt sáng bóng, thớ thịt tươi trong, mép cắt phẳng không khô thâm; đường máu đỏ tươi (nếu có)"
+    touch: "Thịt săn chắc, đàn hồi tốt khi ấn nhẹ, thớ thịt liên kết chặt"
+    smell: "Mùi tanh nhẹ tự nhiên của cá tươi hoặc thoang thoảng mùi biển"
+  tier_2_acceptable:
+    score_range: [6.0, 8.5]
+    appearance: "Mặt cắt hơi kém bóng, đường máu đỏ sẫm, mép hơi se lại nhưng chưa đổi màu thâm"
+    touch: "Thịt hơi mềm, đàn hồi chậm hơn"
+    smell: "Tanh vừa"
+  tier_3_warning:
+    score_range: [3.0, 6.0]
+    appearance: "Mặt cắt mờ đục, mép hơi thâm nâu hoặc vàng ố, bề mặt hơi dính nhớt"
+    touch: "Thịt mềm, ấn để lại vết lõm, thớ thịt bắt đầu tách rời"
+    smell: "Tanh nồng, hơi chua"
+  tier_4_spoiled:
+    score_range: [0.0, 3.0]
+    appearance: "Bề mặt xỉn màu, nhớt dính chảy dịch, mép thâm đen hoặc ố vàng rõ rệt"
+    touch: "Thịt nhũn nát, mủn nát khi chạm vào"
+    smell: "Mùi chua ôi, khai amoniac hoặc hôi thối thối rữa"
+
+inspection_rubric:
+  - axis: appearance
+    question_vi: "Quan sát bề mặt và mép cắt của miếng cá?"
+    stop_if: [nhot_dinh_doi_mau]
+    options:
+      - value: sang_bong
+        label_vi: "Sáng bóng, thớ thịt tươi trong, mép cắt không khô thâm"
+        penalty: 0.0
+        claim: C-FDA-SEAFOOD-FILLET-APPEARANCE
+      - value: hoi_se_kem_bong
+        label_vi: "Hơi kém bóng, mép se nhẹ nhưng không thâm"
+        penalty: 0.15
+        reason_vi: "Bề mặt miếng cá tiếp xúc không khí giảm độ bóng tự nhiên"
+        claim: C-FDA-SEAFOOD-FILLET-APPEARANCE
+      - value: mep_tham_vang_o
+        label_vi: "Mép khô quăn, thâm nâu hoặc hơi ngả vàng ố"
+        penalty: 0.4
+        reason_vi: "Mép cắt bị khô, thâm nâu hoặc ố vàng"
+        claim: C-FDA-SEAFOOD-FILLET-APPEARANCE
+      - value: nhot_dinh_doi_mau
+        label_vi: "Nhớt dính chảy dịch, xỉn màu thâm đen hoàn toàn"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Bề mặt nhớt dính chảy dịch, biến màu ươn hỏng"
+        claim: C-FDA-SEAFOOD-FILLET-APPEARANCE
+
+  - axis: texture
+    question_vi: "Ấn nhẹ ngón tay vào thớ thịt miếng cá?"
+    stop_if: [nhun_nat_mun]
+    options:
+      - value: dan_hoi_tot
+        label_vi: "Thịt săn chắc, đàn hồi tốt, thớ thịt liên kết chặt"
+        penalty: 0.0
+        claim: C-FDA-SEAFOOD-FILLET-TEXTURE
+      - value: hoi_mem
+        label_vi: "Thịt hơi mềm, vết lõm đàn hồi chậm"
+        penalty: 0.2
+        reason_vi: "Thịt hơi mềm, vết lõm đàn hồi chậm"
+        claim: C-FDA-SEAFOOD-FILLET-TEXTURE
+      - value: nhun_nat_mun
+        label_vi: "Thịt nhũn nát, thớ thịt mủn rời rạc khi ấn"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Thịt nhũn nát, thớ thịt mủn rời khi ấn"
+        claim: C-FDA-SEAFOOD-FILLET-TEXTURE
+
+  - axis: smell
+    question_vi: "Ngửi bề mặt miếng cá phi lê?"
+    stop_if: [amoniac_chua_thoi]
+    options:
+      - value: nhe_tu_nhien
+        label_vi: "Mùi tanh nhẹ cá tươi tự nhiên / mùi biển nhẹ"
+        penalty: 0.0
+        claim: C-TCVN5277-ODOR
+      - value: tanh_nong
+        label_vi: "Tanh nồng"
+        penalty: 0.2
+        reason_vi: "Mùi tanh tăng rõ rệt so với ban đầu"
+        claim: C-TCVN5277-ODOR
+      - value: amoniac_chua_thoi
+        label_vi: "Chua ôi, khai amoniac hoặc hôi thối"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Chua ôi, khai amoniac hoặc mùi hôi thối rữa"
+        claim: C-TCVN5277-ODOR
+
+preservation_protocols:
+  recommended: [fridge_2_4c, soft_freeze_-3c, freezer_-18c]
+  prep: ["Thấm khô bề mặt miếng phi lê bằng khăn giấy sạch trước khi bọc màng bọc kín hoặc hộp kín", "Đặt miếng cá trên vỉ ráo nước hoặc túi hút chân không để tránh đọng dịch"]
+  bad: ["Ngâm phi lê trực tiếp trong nước để rã đông (làm trôi protein hòa tan, thịt bở nhạt và nhiễm khuẩn)"]
+
+business_rules: [tier3_must_cook, tier4_discard]

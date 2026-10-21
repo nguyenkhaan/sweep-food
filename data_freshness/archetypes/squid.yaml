@@ -1,0 +1,128 @@
+archetype: SQUID
+name_vi: "Mực và bạch tuộc tươi"
+applies_to_groups: ["mực tươi", "mực ống", "mực nang", "mực lá", "mực trứng", "mực sim", "mực làm sạch", "bạch tuộc tươi", "bạch tuộc"]
+
+sensory_tiers:
+  tier_1_fresh:
+    score_range: [8.5, 10.0]
+    appearance: "Thân áo sáng bóng, sắc tố da óng ánh tươi sáng; đầu và râu/tua dính chặt vào thân, túi mực nguyên vẹn (hoặc mực làm sạch bề mặt trắng sáng không nhớt)"
+    touch: "Thịt thân áo dày, săn chắc, đàn hồi cao khi ấn tay"
+    smell: "Mùi biển tươi tự nhiên đặc trưng, tanh nhẹ thanh"
+  tier_2_acceptable:
+    score_range: [6.0, 8.5]
+    appearance: "Da hơi kém bóng, các đốm sắc tố nhạt màu dần, đầu vẫn dính liền thân"
+    touch: "Thịt hơi mềm nhẹ nhưng vẫn có độ đàn hồi"
+    smell: "Tanh vừa"
+  tier_3_warning:
+    score_range: [3.0, 6.0]
+    appearance: "Da chuyển màu hồng đỏ hoặc trầy xước tróc mảng; đầu hơi lỏng lẻo; bề mặt hơi nhớt"
+    touch: "Thịt mềm, đàn hồi kém"
+    smell: "Tanh nồng gắt, thoang thoảng mùi ươn"
+  tier_4_spoiled:
+    score_range: [0.0, 3.0]
+    appearance: "Da thâm đỏ thẫm hoặc vàng đục, bong tróc trơ thịt nhầy nhớt; đầu đứt lìa khỏi thân, nội tạng vỡ nát"
+    touch: "Thịt mềm nhũn nát, ấn lún sâu không đàn hồi, nhầy nhớt"
+    smell: "Mùi khai amoniac nồng nặc, mùi lưu huỳnh hoặc hôi thối thối rữa"
+
+inspection_rubric:
+  - axis: skin_mantle
+    question_vi: "Quan sát da và bề mặt thân áo mực / bạch tuộc (hoặc dạng sơ chế)?"
+    stop_if: [do_tham_troc_nhot]
+    options:
+      - value: sang_ong_sac_to_ro
+        label_vi: "Sáng bóng, đốm sắc tố da rõ nét óng ánh tự nhiên (con nguyên vẹn)"
+        penalty: 0.0
+        claim: C-TAS7005-SQUID-COLOR
+      - value: da_so_che_lot_da
+        label_vi: "Đã sơ chế làm sạch / lột da (thịt trắng ngà, bề mặt sạch không nhớt)"
+        penalty: 0.0
+        reason_vi: "Sản phẩm đã qua sơ chế làm sạch hoặc lột bỏ da theo quy cách thương phẩm"
+        claim: C-LOCAL-PROCESSED-FORM
+      - value: kem_bong_nhat_mau
+        label_vi: "Hơi kém bóng, sắc tố da nhạt màu dần"
+        penalty: 0.15
+        reason_vi: "Sắc tố bề mặt da nhạt màu dần sau thu hoạch"
+        claim: C-TAS7005-SQUID-COLOR
+      - value: chuyen_hong_do_nhe
+        label_vi: "Da hoặc bề mặt thịt chuyển màu ửng hồng đỏ, trầy tróc"
+        penalty: 0.35
+        reason_vi: "Bề mặt bắt đầu biến màu ửng đỏ, trầy tróc do bảo quản kéo dài"
+        claim: C-TAS7005-SQUID-COLOR
+      - value: do_tham_troc_nhot
+        label_vi: "Đỏ thẫm hoặc vàng đục, da bong tróc, bề mặt chảy nhớt nhớp nháp"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Biến chất ươn hỏng nặng, bề mặt chảy dịch nhớt thối"
+        claim: C-TAS7005-SQUID-COLOR
+
+  - axis: head_tentacles
+    question_vi: "Kiểm tra độ gắn kết giữa đầu, râu/tua và thân áo (hoặc dạng sơ chế)?"
+    stop_if: [dut_lia_vo_noi_tang]
+    options:
+      - value: dinh_chat_nguyen_ven
+        label_vi: "Đầu và râu/tua gắn chặt vào thân áo, túi mực nguyên vẹn (con nguyên vẹn)"
+        penalty: 0.0
+        claim: C-LOCAL-CEPHALOPOD-INTEGRITY
+      - value: da_so_che_cat_khuc
+        label_vi: "Đã sơ chế / bỏ đầu / cắt khoanh / philê (thân ống làm sạch)"
+        penalty: 0.0
+        reason_vi: "Sản phẩm đã qua sơ chế loại bỏ đầu và nội tạng theo quy cách thương phẩm"
+        claim: C-LOCAL-PROCESSED-FORM
+      - value: hoi_long_tua_nguyen
+        label_vi: "Đầu hơi lỏng nhẹ nhưng vẫn dính liền thân áo, râu/tua nguyên vẹn"
+        penalty: 0.2
+        reason_vi: "Độ liên kết giữa đầu và thân giảm nhẹ"
+        claim: C-LOCAL-CEPHALOPOD-INTEGRITY
+      - value: dut_lia_vo_noi_tang
+        label_vi: "Đầu đứt lìa khỏi thân áo do ươn, rụng tua hoặc nội tạng vỡ nát chảy dịch đen thối"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Đầu đứt rời do ươn hoặc nội tạng dập vỡ chảy dịch đen thối"
+        claim: C-LOCAL-CEPHALOPOD-INTEGRITY
+
+  - axis: firmness
+    question_vi: "Ấn nhẹ ngón tay vào thịt thân mực / bạch tuộc?"
+    stop_if: [nhun_nat_chay_nhot]
+    options:
+      - value: san_chac_day_dan
+        label_vi: "Thịt dày, săn chắc, đàn hồi trở lại ngay khi ấn"
+        penalty: 0.0
+        claim: C-TAS7005-SQUID-TEXTURE
+      - value: hoi_mem
+        label_vi: "Thịt hơi mềm, vết lõm đàn hồi chậm"
+        penalty: 0.2
+        reason_vi: "Thịt hơi mềm, độ đàn hồi giảm nhẹ"
+        claim: C-TAS7005-SQUID-TEXTURE
+      - value: nhun_nat_chay_nhot
+        label_vi: "Thịt mềm nhũn nát, ấn lõm sâu không đàn hồi, chảy dịch nhầy"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Thịt nhũn nát mất đàn hồi hoàn toàn, chảy dịch nhầy"
+        claim: C-TAS7005-SQUID-TEXTURE
+
+  - axis: smell
+    question_vi: "Ngửi gần thân áo và đầu mực / bạch tuộc?"
+    stop_if: [amoniac_thoi]
+    options:
+      - value: nhe_tu_nhien
+        label_vi: "Mùi biển tự nhiên đặc trưng, tanh nhẹ dễ chịu"
+        penalty: 0.0
+        claim: C-TAS7005-CEPHALOPOD-ODOR
+      - value: tanh_gat
+        label_vi: "Tanh nồng gắt"
+        penalty: 0.2
+        reason_vi: "Mùi tanh tăng rõ rệt so với độ tươi ban đầu"
+        claim: C-TAS7005-CEPHALOPOD-ODOR
+      - value: amoniac_thoi
+        label_vi: "Khai amoniac nồng nặc hoặc mùi hôi thối thối rữa"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Mùi khai nồng nặc hoặc mùi thối rữa"
+        claim: C-TAS7005-CEPHALOPOD-ODOR
+
+preservation_protocols:
+  recommended: [fridge_2_4c, ice_0c, freezer_-18c]
+  prep: ["Làm sạch nội tạng và túi mực (đối với mực có thể rút bỏ nang/mai; đối với bạch tuộc làm sạch phần đầu) dưới vòi nước lạnh", "Để ráo nước thật kỹ trước khi cho vào hộp kín hoặc túi hút chân không bảo quản"]
+  bad: ["Ngâm mực/bạch tuộc lâu trong nước ngọt ở nhiệt độ phòng (khiến thịt ngấm nước, bở nhão và nhanh hỏng)"]
+
+business_rules: [tier3_must_cook, tier4_discard]

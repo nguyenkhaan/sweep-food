@@ -37,7 +37,7 @@ def test_kb_version_and_metadata(kb):
     )
     assert "generated_at" in kb, "Thiếu trường generated_at"
     stats = kb.get("stats", {})
-    assert stats.get("total_archetypes") == 8
+    assert stats.get("total_archetypes") >= 8
     assert stats.get("total_ingredients") >= 30
     assert stats.get("total_claims") >= 60
 
@@ -150,9 +150,9 @@ def test_every_archetype_has_at_least_one_hard_stop(kb):
 
 
 def test_every_ingredient_maps_to_known_archetype(kb):
-    """Mọi nguyên liệu phải map về đúng 1 trong 8 archetype và không còn cờ needs_review."""
+    """Mọi nguyên liệu phải map về đúng 1 trong các archetype và không còn cờ needs_review."""
     known_archetypes = set(kb.get("archetypes", {}).keys())
-    assert len(known_archetypes) == 8
+    assert len(known_archetypes) >= 8
 
     for ing_id, ing in kb.get("ingredients", {}).items():
         arch = ing.get("archetype")
@@ -193,3 +193,122 @@ def test_quality_metrics_thresholds(kb):
     assert ratio >= 0.75, (
         f"Tỷ lệ claim tầng A/B ({ratio:.1%}) thấp hơn ngưỡng cho phép (>=75%)"
     )
+
+
+def test_seafood_archetypes_distinctness(kb):
+    """Các rubric thủy sản (cá nguyên con, phi lê, tôm, mực) phải phân biệt giải phẫu rõ ràng."""
+    archetypes = kb.get("archetypes", {})
+    assert "WHOLE_FISH" in archetypes, "Thiếu archetype WHOLE_FISH"
+    assert "FISH_FILLET" in archetypes, "Thiếu archetype FISH_FILLET"
+    assert "SHRIMP" in archetypes, "Thiếu archetype SHRIMP"
+    assert "SQUID" in archetypes, "Thiếu archetype SQUID"
+
+    whole_fish_axes = {
+        axis["axis"] for axis in archetypes["WHOLE_FISH"].get("inspection_rubric", [])
+    }
+    fillet_axes = {
+        axis["axis"] for axis in archetypes["FISH_FILLET"].get("inspection_rubric", [])
+    }
+    shrimp_axes = {
+        axis["axis"] for axis in archetypes["SHRIMP"].get("inspection_rubric", [])
+    }
+    squid_axes = {
+        axis["axis"] for axis in archetypes["SQUID"].get("inspection_rubric", [])
+    }
+
+    # Cá nguyên con có nắp mang và mắt
+    assert "gills" in whole_fish_axes
+    assert "eyes" in whole_fish_axes
+
+    # Phi lê KHÔNG có mang và mắt cá
+    assert "gills" not in fillet_axes
+    assert "eyes" not in fillet_axes
+    assert "appearance" in fillet_axes
+    assert "texture" in fillet_axes
+
+    # Tôm KHÔNG có mang và mắt cá; có vỏ/đầu và độ trong ngọc trai
+    assert "gills" not in shrimp_axes
+    assert "eyes" not in shrimp_axes
+    assert "shell_head" in shrimp_axes
+    assert "flesh_color" in shrimp_axes
+
+    # Mực/bạch tuộc KHÔNG có mang và mắt cá; có thân áo và đầu/râu tua
+    assert "gills" not in squid_axes
+    assert "eyes" not in squid_axes
+    assert "skin_mantle" in squid_axes
+    assert "head_tentacles" in squid_axes
+
+    # Kiểm tra melanosis tôm không phải hard_stop
+    shrimp_shell = next(
+        axis
+        for axis in archetypes["SHRIMP"]["inspection_rubric"]
+        if axis["axis"] == "shell_head"
+    )
+    melanosis_opt = next(
+        opt for opt in shrimp_shell["options"] if opt["value"] == "hoi_long_dom_den_nhe"
+    )
+    assert melanosis_opt.get("hard_stop") is not True, (
+        "Đốm đen melanosis không được dùng làm hard stop"
+    )
+
+    # Kiểm tra lựa chọn cho dạng sơ chế (tôm không đầu, mực làm sạch/lột da) mang penalty 0.0
+    processed_shrimp = next(
+        opt for opt in shrimp_shell["options"] if opt["value"] == "da_so_che_khong_dau"
+    )
+    assert processed_shrimp.get("penalty") == 0.0
+    assert processed_shrimp.get("hard_stop") is not True
+
+    squid_skin = next(
+        axis
+        for axis in archetypes["SQUID"]["inspection_rubric"]
+        if axis["axis"] == "skin_mantle"
+    )
+    processed_squid_skin = next(
+        opt for opt in squid_skin["options"] if opt["value"] == "da_so_che_lot_da"
+    )
+    assert processed_squid_skin.get("penalty") == 0.0
+    assert processed_squid_skin.get("hard_stop") is not True
+
+    squid_head = next(
+        axis
+        for axis in archetypes["SQUID"]["inspection_rubric"]
+        if axis["axis"] == "head_tentacles"
+    )
+    processed_squid_head = next(
+        opt for opt in squid_head["options"] if opt["value"] == "da_so_che_cat_khuc"
+    )
+    assert processed_squid_head.get("penalty") == 0.0
+    assert processed_squid_head.get("hard_stop") is not True
+
+
+def test_seafood_ingredient_applicability(kb):
+    """Nguyên liệu thủy sản phải map đúng archetype giải phẫu, không còn FISH_SEAFOOD."""
+    ingredients = kb.get("ingredients", {})
+    assert "FISH_SEAFOOD" not in kb.get("archetypes", {})
+
+    # Bạch tuộc và mực phải map về SQUID (thân mềm chân đầu, không mang/mắt cá)
+    if "bach_tuoc_tuoi" in ingredients:
+        assert ingredients["bach_tuoc_tuoi"]["archetype"] == "SQUID"
+    if "muc_tuoi" in ingredients:
+        assert ingredients["muc_tuoi"]["archetype"] == "SQUID"
+
+    # Tôm map về SHRIMP
+    if "tom_bien" in ingredients:
+        assert ingredients["tom_bien"]["archetype"] == "SHRIMP"
+
+    # Cá nguyên con map về WHOLE_FISH
+    if "ca_loc" in ingredients:
+        assert ingredients["ca_loc"]["archetype"] == "WHOLE_FISH"
+
+    # Phi lê cá map về FISH_FILLET
+    if "phi_le_ca_loc" in ingredients:
+        assert ingredients["phi_le_ca_loc"]["archetype"] == "FISH_FILLET"
+
+    # Bất biến: Không nguyên liệu WHOLE_FISH nào được chứa alias phi lê/fillet
+    for ing_id, ing in ingredients.items():
+        if ing.get("archetype") == "WHOLE_FISH":
+            for name in ing.get("names_vi", []):
+                lower_name = name.lower()
+                assert "phi lê" not in lower_name and "fillet" not in lower_name, (
+                    f"Nguyên liệu WHOLE_FISH {ing_id} chứa alias phi lê: '{name}'"
+                )

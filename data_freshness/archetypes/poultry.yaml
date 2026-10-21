@@ -1,0 +1,131 @@
+archetype: POULTRY
+name_vi: "Thịt gia cầm tươi"
+applies_to_groups: ["thịt gà", "thịt vịt", "thịt gia cầm"]
+
+sensory_tiers:
+  tier_1_fresh:
+    score_range: [8.5, 10.0]
+    appearance: "Da vàng nhạt/trắng ngà tự nhiên, bóng nhẹ, nạc hồng sáng hoặc trắng hồng tự nhiên"
+    touch: "Bề mặt da và thịt khô ráo, trơn láng, ấn lõm phẳng lại ngay"
+    smell: "Mùi thơm thịt gia cầm tươi đặc trưng, không có mùi hôi ươn"
+  tier_2_acceptable:
+    score_range: [6.0, 8.5]
+    appearance: "Da hoặc nạc hơi nhạt màu, hơi sẫm hoặc khô se mặt"
+    touch: "Bề mặt hơi ướt rỉ dịch nhẹ, đàn hồi giảm nhẹ"
+    smell: "Mùi nhạt tự nhiên, chưa có mùi lạ"
+  tier_3_warning:
+    score_range: [3.0, 6.0]
+    appearance: "Da ngả xám tối/thâm, nạc sẫm màu nâu xám, có mảng tím bầm"
+    touch: "Bề mặt nếp gấp dưới cánh/đùi dính nhờn, nhớt nhẹ"
+    smell: "Mùi nồng chua, có mùi ôi nhẹ"
+  tier_4_spoiled:
+    score_range: [0.0, 3.0]
+    appearance: "Da và thịt xám xanh/xanh lục, thâm đen hoặc có đốm mốc"
+    touch: "Rất nhớt dính toàn bộ bề mặt, thịt mềm nhão bở rạc"
+    smell: "Mùi chua nồng, hôi thối, khai amoniac nồng nặc"
+
+inspection_rubric:
+  - axis: color
+    question_vi: "Màu sắc da và thịt gia cầm?"
+    stop_if: [xam_xanh]
+    options:
+      - value: hong_sang
+        label_vi: "Da vàng nhạt/trắng ngà bóng, thịt hồng sáng hoặc trắng hồng tự nhiên"
+        penalty: 0.0
+        claim: C-TCVN7046-COLOR
+      - value: hoi_nhat_sam
+        label_vi: "Da hoặc thịt hơi nhạt màu, hơi sẫm hoặc khô se mặt"
+        penalty: 0.15
+        reason_vi: "Bề mặt thịt gia cầm mất nước hoặc oxy hóa nhẹ"
+        claim: C-TCVN7046-COLOR
+      - value: xin_xam_bam
+        label_vi: "Da ngả xám thâm, thịt sẫm màu, có vết bầm tím"
+        penalty: 0.45
+        reason_vi: "Ứ huyết dưới da hoặc vi khuẩn oxy hóa sắc tố cơ gia cầm"
+        claim: C-TCVN7046-COLOR
+      - value: xam_xanh
+        label_vi: "Da thịt xám xanh/xanh lục, thâm đen hoặc có mốc"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Vi khuẩn sinh sắc tố xanh và phân hủy mô thịt gia cầm"
+        claim: C-TCVN7046-COLOR
+
+  - axis: stickiness
+    question_vi: "Sờ bề mặt da và thịt gia cầm (đặc biệt nếp gấp cánh, đùi)?"
+    stop_if: [rat_nhot]
+    options:
+      - value: kho_rao
+        label_vi: "Khô ráo, trơn láng tự nhiên, không dính tay"
+        penalty: 0.0
+        claim: C-TCVN7046-TOUCH
+      - value: hoi_uot
+        label_vi: "Bề mặt hơi ướt hoặc rỉ nước thịt nhẹ, chưa nhớt dính"
+        penalty: 0.15
+        reason_vi: "Độ ẩm ngưng tụ hoặc rỉ dịch bảo quản"
+        claim: C-TCVN7046-TOUCH
+      - value: dinh_nhot
+        label_vi: "Bề mặt dưới cánh/đùi dính nhờn, nhớt nhẹ"
+        penalty: 0.45
+        reason_vi: "Vi khuẩn phát triển tạo lớp màng nhớt tại nếp gấp"
+        claim: C-TCVN7046-TOUCH
+      - value: rat_nhot
+        label_vi: "Rất nhớt dính toàn bộ bề mặt, nhớt trơn trượt kéo sợi"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Màng vi sinh dày đặc trên bề mặt gia cầm — đã biến chất hư hỏng"
+        claim: C-TCVN7046-TOUCH
+
+  - axis: elasticity
+    question_vi: "Ấn ngón tay vào ức hoặc đùi gia cầm rồi thả ra?"
+    options:
+      - value: hoi_ngay
+        label_vi: "Vết lõm phẳng lại ngay, thịt săn chắc đàn hồi"
+        penalty: 0.0
+        claim: C-TCVN7046-TOUCH
+      - value: hoi_cham
+        label_vi: "Thịt hơi mềm, vết lõm phẳng lại chậm"
+        penalty: 0.15
+        reason_vi: "Độ căng mô cơ gia cầm giảm theo thời gian lưu trữ"
+        claim: C-TCVN7046-TOUCH
+      - value: con_vet_lom
+        label_vi: "Thịt mềm nhão, lỏng lẻo, còn vết lõm sâu"
+        penalty: 0.45
+        reason_vi: "Enzyme vi sinh vật phân giải liên kết sợi cơ gia cầm"
+        claim: C-TCVN7046-TOUCH
+      - value: nhun_nat
+        label_vi: "Nhũn nát, thịt bở rời rạc khỏi xương"
+        penalty: 0.75
+        reason_vi: "Cấu trúc cơ gia cầm phân hủy nặng"
+        claim: C-TCVN7046-TOUCH
+
+  - axis: smell
+    question_vi: "Ngửi gần vùng ức và khoang bụng gia cầm?"
+    stop_if: [chua_khai_ro]
+    options:
+      - value: thom_tuoi
+        label_vi: "Mùi thịt gia cầm tươi đặc trưng, không có mùi hôi ươn"
+        penalty: 0.0
+        claim: C-TCVN7046-ODOR
+      - value: nhat
+        label_vi: "Mùi nhạt tự nhiên, không thơm rõ"
+        penalty: 0.15
+        reason_vi: "Mùi tươi giảm nhẹ theo thời gian bảo quản"
+        claim: C-TCVN7046-ODOR
+      - value: hoi_chua
+        label_vi: "Mùi hơi nồng chua, có mùi ôi nhẹ"
+        penalty: 0.45
+        reason_vi: "Vi khuẩn kỵ khí và hiếu khí phân giải lipid/protein"
+        claim: C-TCVN7046-ODOR
+      - value: chua_khai_ro
+        label_vi: "Mùi chua nồng, hôi thối, mùi amoniac/ươn rõ rệt"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Phân hủy protein gia cầm sinh amin độc và khí thối"
+        claim: C-TCVN7046-ODOR
+
+preservation_protocols:
+  recommended: [fridge_2_4c]
+  prep: ["Thấm thật khô bề mặt và khoang bụng trước khi cất", "Bọc kín trong túi zip hoặc hộp thực phẩm", "Chia nhỏ từng phần khi cấp đông"]
+  bad: ["Để thịt gia cầm chảy nước sang các thực phẩm khác (nguy cơ Salmonella/Campylobacter)", "Để ở nhiệt độ phòng quá 2 giờ"]
+
+business_rules: [tier3_must_cook, tier4_discard]

@@ -1,6 +1,6 @@
 archetype: FRESH_MEAT
-name_vi: "Thịt tươi"
-applies_to_groups: ["thịt heo", "thịt bò", "gia cầm"]
+name_vi: "Thịt tươi khác (dê, cừu)"
+applies_to_groups: ["thịt dê", "thịt cừu", "thịt đỏ khác"]
 
 sensory_tiers:
   tier_1_fresh:

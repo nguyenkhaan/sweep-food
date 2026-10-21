@@ -1,0 +1,111 @@
+archetype: WHOLE_FISH
+name_vi: "Cá tươi nguyên con (có vây)"
+applies_to_groups: ["cá lóc", "cá điêu hồng", "cá chép", "cá trắm", "cá rô đồng", "cá nục", "cá chim", "cá kèo", "cá bống", "cá trê"]
+
+sensory_tiers:
+  tier_1_fresh:
+    score_range: [8.5, 10.0]
+    appearance: "Mắt trong, lồi; mang đỏ tươi, sạch, khép chặt"
+    touch: "Thịt săn chắc, đàn hồi tốt, bụng nguyên vẹn"
+    smell: "Mùi biển hoặc mùi nước ngọt tự nhiên thoang thoảng"
+  tier_2_acceptable:
+    score_range: [6.0, 8.5]
+    appearance: "Mắt phẳng, hơi đục nhẹ; mang hồng nhạt hoặc hơi thẫm, nhớt nhẹ"
+    touch: "Thịt hơi mềm, đàn hồi chậm"
+    smell: "Tanh vừa"
+  tier_3_warning:
+    score_range: [3.0, 6.0]
+    appearance: "Mắt hơi lõm, đục mờ; mang nâu nhạt, có nhớt đục"
+    touch: "Thịt mềm, ấn còn vết lõm rõ"
+    smell: "Tanh nồng, hơi gắt"
+  tier_4_spoiled:
+    score_range: [0.0, 3.0]
+    appearance: "Mắt lõm sâu, đục hoàn toàn; mang xám nâu, nhớt đục/hôi"
+    touch: "Vỡ bụng, nội tạng lòi ra, thịt nhũn nát"
+    smell: "Khai amoniac, mùi thối rữa"
+
+inspection_rubric:
+  - axis: gills
+    question_vi: "Lật nắp mang, quan sát màu mang cá?"
+    stop_if: [xam_nau_nhot]
+    options:
+      - value: do_tuoi
+        label_vi: "Đỏ tươi, sạch, khép chặt"
+        penalty: 0.0
+        claim: C-TCVN5277-GILLS
+      - value: hong_nhat
+        label_vi: "Hồng nhạt hoặc hơi thẫm, nhớt nhẹ"
+        penalty: 0.15
+        reason_vi: "Mang cá chuyển màu hồng nhạt hoặc hơi thẫm, nhớt nhẹ"
+        claim: C-TCVN5277-GILLS
+      - value: xam_nau_nhot
+        label_vi: "Xám nâu, nhớt đục"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Mang cá chuyển xám nâu, có nhớt đục là biểu hiện ươn hỏng nặng"
+        claim: C-TCVN5277-GILLS
+
+  - axis: eyes
+    question_vi: "Quan sát mắt cá?"
+    options:
+      - value: trong_loi
+        label_vi: "Trong, giác mạc sáng, nhãn cầu hơi lồi"
+        penalty: 0.0
+        claim: C-TCVN5277-EYES
+      - value: phang_hoi_duc
+        label_vi: "Phẳng, hơi đục nhẹ"
+        penalty: 0.15
+        reason_vi: "Mắt phẳng, hơi đục nhẹ"
+        claim: C-TCVN5277-EYES
+      - value: lom_duc_hoan_toan
+        label_vi: "Lõm sâu, giác mạc đục hoàn toàn"
+        penalty: 0.5
+        reason_vi: "Mắt lõm sâu, giác mạc đục hoàn toàn"
+        claim: C-TCVN5277-EYES
+
+  - axis: flesh_belly
+    question_vi: "Ấn nhẹ vào thân và bụng cá?"
+    stop_if: [vo_bung_nhun]
+    options:
+      - value: chac_nguyen
+        label_vi: "Thịt săn chắc, đàn hồi tốt, bụng nguyên vẹn"
+        penalty: 0.0
+        claim: C-TCVN5277-TOUCH
+      - value: hoi_mem
+        label_vi: "Thịt hơi mềm, đàn hồi chậm"
+        penalty: 0.2
+        reason_vi: "Thịt hơi mềm, đàn hồi chậm"
+        claim: C-TCVN5277-TOUCH
+      - value: vo_bung_nhun
+        label_vi: "Vỡ bụng, nội tạng lòi ra hoặc thịt nhũn nát"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Bụng cá vỡ, nội tạng lòi ra hoặc thịt nhũn nát"
+        claim: C-TCVN5277-TOUCH
+
+  - axis: smell
+    question_vi: "Ngửi gần mang và bụng cá?"
+    stop_if: [amoniac_thoi]
+    options:
+      - value: nhe_tu_nhien
+        label_vi: "Mùi tanh nhẹ tự nhiên của nước/biển"
+        penalty: 0.0
+        claim: C-TCVN5277-ODOR
+      - value: tanh_manh
+        label_vi: "Tanh nồng gắt"
+        penalty: 0.2
+        reason_vi: "Mùi tanh nồng gắt"
+        claim: C-TCVN5277-ODOR
+      - value: amoniac_thoi
+        label_vi: "Khai amoniac / hôi thối thối rữa"
+        penalty: 1.0
+        hard_stop: true
+        reason_vi: "Mùi khai amoniac hoặc hôi thối thối rữa"
+        claim: C-TCVN5277-ODOR
+
+preservation_protocols:
+  recommended: [fridge_2_4c, ice_0c]
+  prep: ["Mổ bỏ mang và nội tạng càng sớm càng tốt", "Rửa sạch nhớt và máu đọng, để ráo trước khi cho vào hộp kín"]
+  bad: ["Ngâm trong nước ở nhiệt độ phòng để rã đông (vi khuẩn gây ươn phát triển nhanh, sinh mùi hôi)"]
+
+business_rules: [tier3_must_cook, tier4_discard]

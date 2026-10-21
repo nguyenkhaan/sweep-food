@@ -45,17 +45,59 @@ class CookingController extends _$CookingController {
     final weekStart = MealPlan.weekStartOf(DateTime.now());
     final planRes = await mealPlanRepo.forWeek(weekStart);
     final plan = planRes.fold((f) => throw f, (p) => p);
+    final today = DateTime.now();
 
-    final entryRes = await mealPlanRepo.addEntry(
-      weekStart: plan.weekStart,
-      date: DateTime.now(),
-      slot: _slotForNow(),
-      dishId: dishId,
-      servings: servings,
-    );
-    final entry = entryRes.fold((f) => throw f, (e) => e);
+    // Reuse this dish's still-planned item from today instead of stacking a
+    // new hidden one on every tap; otherwise take a free slot (never overwrite
+    // a meal the user planned themselves).
+    MealPlanEntry? entry;
+    var created = false;
+    for (final slot in _slotsFromNow()) {
+      final existing = plan.entryAt(today, slot);
+      if (existing != null &&
+          existing.dishId == dishId &&
+          existing.status == MealPlanItemStatus.planned) {
+        entry = existing;
+        break;
+      }
+    }
+    if (entry != null) {
+      if (entry.servings != servings) {
+        final updated = await mealPlanRepo.updateEntry(
+          weekStart: plan.weekStart,
+          itemId: entry.id,
+          dishId: dishId,
+          servings: servings,
+        );
+        entry = updated.fold((f) => throw f, (e) => e);
+      }
+    } else {
+      final freeSlot = _slotsFromNow()
+          .where((s) => plan.entryAt(today, s) == null)
+          .firstOrNull;
+      if (freeSlot == null) {
+        throw StateError('Hôm nay đã kín các bữa trong thực đơn.');
+      }
+      final entryRes = await mealPlanRepo.addEntry(
+        weekStart: plan.weekStart,
+        date: today,
+        slot: freeSlot,
+        dishId: dishId,
+        servings: servings,
+      );
+      entry = entryRes.fold((f) => throw f, (e) => e);
+      created = true;
+    }
 
-    return previewForItem(entry.id);
+    final preview = await previewForItem(entry.id);
+    if (created && preview.hasMissingIngredients) {
+      // Not cookable: don't leave a phantom planned meal behind.
+      await mealPlanRepo.removeEntry(
+        weekStart: plan.weekStart,
+        itemId: entry.id,
+      );
+    }
+    return preview;
   }
 
   /// Same as [previewForDish] but for an existing meal-plan item (M-01 →
@@ -118,6 +160,12 @@ class CookingController extends _$CookingController {
       proposedDeductions: deductions,
       missingIngredients: missing,
     );
+  }
+
+  /// Today's slots, the one matching the current hour first.
+  static List<MealSlot> _slotsFromNow() {
+    final first = _slotForNow();
+    return [first, ...MealSlot.values.where((s) => s != first)];
   }
 
   static MealSlot _slotForNow() {

@@ -1,12 +1,13 @@
 """Inventory batch database model."""
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import CheckConstraint, DateTime, Float, ForeignKey, Index, String
 from sqlalchemy import Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID as PostgreSQLUUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.model.base import TimestampedUUIDModel
 from src.model.enum_model import (
@@ -17,6 +18,9 @@ from src.model.enum_model import (
     MeasurementUnit,
     StorageMode,
 )
+
+if TYPE_CHECKING:
+    from src.model.master_ingredient_model import MasterIngredientModel
 
 
 class InventoryBatchModel(TimestampedUUIDModel):
@@ -128,4 +132,7 @@ class InventoryBatchModel(TimestampedUUIDModel):
     )
     archived_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
+    )
+    master_ingredient: Mapped["MasterIngredientModel | None"] = relationship(
+        viewonly=True,
     )

@@ -8,10 +8,9 @@ Chạy tách bạch, idempotent, tự kiểm định bất biến.
 
 from __future__ import annotations
 
-import csv
 import json
 from pathlib import Path
-import sys
+
 import yaml
 
 # Khám phá đường dẫn thư mục gốc repo
@@ -34,8 +33,11 @@ def find_foodkeeper_json() -> Path:
 def find_master_ingredients_csv() -> Path | None:
     candidates = [
         REPO_ROOT / "data/processed/viendinhduong/master_ingredients_nutrition.csv",
-        REPO_ROOT.parent / "sweep-food-AI/data/processed/viendinhduong/master_ingredients_nutrition.csv",
-        Path("G:/github/sweep-food-AI/data/processed/viendinhduong/master_ingredients_nutrition.csv"),
+        REPO_ROOT.parent
+        / "sweep-food-AI/data/processed/viendinhduong/master_ingredients_nutrition.csv",
+        Path(
+            "G:/github/sweep-food-AI/data/processed/viendinhduong/master_ingredients_nutrition.csv"
+        ),
     ]
     for p in candidates:
         if p.exists():
@@ -53,7 +55,7 @@ def normalize_row(row: list[dict] | dict) -> dict:
     return row
 
 
-def to_hours(val: float | int | None, metric: str | None) -> float | None:
+def to_hours(val: float | None, metric: str | None) -> float | None:
     if val is None or metric is None:
         return None
     val = float(val)
@@ -155,12 +157,12 @@ P0_SPECS = [
             "freezer_-18c": {"fk_key": "freeze", "claim": "C-FK-POULTRY-FREEZE"},
         },
     },
-    # 2. FISH_SEAFOOD (5 món)
+    # 2. SEAFOOD (5 món)
     {
         "id": "ca_loc",
         "code": "8022",
         "names_vi": ["cá lóc", "cá quả", "cá chuối"],
-        "archetype": "FISH_SEAFOOD",
+        "archetype": "WHOLE_FISH",
         "fk_id": 144,
         "envs": {
             "room_temp_25_30c": {"value": 3.0, "claim": "C-LOCAL-FISH-ROOM"},
@@ -173,7 +175,7 @@ P0_SPECS = [
         "id": "ca_dieu_hong",
         "code": "8024",
         "names_vi": ["cá điêu hồng", "cá rô phi", "rô phi đỏ"],
-        "archetype": "FISH_SEAFOOD",
+        "archetype": "WHOLE_FISH",
         "fk_id": 144,
         "envs": {
             "room_temp_25_30c": {"value": 3.0, "claim": "C-LOCAL-FISH-ROOM"},
@@ -186,7 +188,7 @@ P0_SPECS = [
         "id": "tom_bien",
         "code": "8051",
         "names_vi": ["tôm biển", "tôm thẻ", "tôm sú", "tôm tươi"],
-        "archetype": "FISH_SEAFOOD",
+        "archetype": "SHRIMP",
         "fk_id": 151,
         "envs": {
             "room_temp_25_30c": {"value": 2.0, "claim": "C-LOCAL-FISH-ROOM"},
@@ -199,7 +201,7 @@ P0_SPECS = [
         "id": "muc_tuoi",
         "code": "8040",
         "names_vi": ["mực tươi", "mực ống", "mực lá"],
-        "archetype": "FISH_SEAFOOD",
+        "archetype": "SQUID",
         "fk_id": 152,
         "envs": {
             "room_temp_25_30c": {"value": 2.0, "claim": "C-LOCAL-FISH-ROOM"},
@@ -212,7 +214,7 @@ P0_SPECS = [
         "id": "bach_tuoc_tuoi",
         "code": "20053",
         "names_vi": ["bạch tuộc tươi", "bạch tuộc"],
-        "archetype": "FISH_SEAFOOD",
+        "archetype": "SQUID",
         "fk_id": 152,
         "envs": {
             "room_temp_25_30c": {"value": 2.0, "claim": "C-LOCAL-FISH-ROOM"},
@@ -323,7 +325,10 @@ P0_SPECS = [
         "archetype": "TUBER_ROOT",
         "fk_id": 422,
         "envs": {
-            "room_temp_25_30c": {"fk_key": "pantry", "claim": "C-FK-SWEETPOTATO-PANTRY"},
+            "room_temp_25_30c": {
+                "fk_key": "pantry",
+                "claim": "C-FK-SWEETPOTATO-PANTRY",
+            },
         },
     },
     {
@@ -563,7 +568,9 @@ def main():
     if master_csv:
         print(f"Đã liên kết catalog Viện Dinh Dưỡng: {master_csv}")
     else:
-        print("Cảnh báo: Không tìm thấy master_ingredients_nutrition.csv, sử dụng code tĩnh.")
+        print(
+            "Cảnh báo: Không tìm thấy master_ingredients_nutrition.csv, sử dụng code tĩnh."
+        )
 
     records = []
     for spec in P0_SPECS:
@@ -584,13 +591,15 @@ def main():
 
             envs_out[env_name] = {"value": val, "claim": claim_id}
 
-        records.append({
-            "id": spec["id"],
-            "code": spec["code"],
-            "names_vi": spec["names_vi"],
-            "archetype": spec["archetype"],
-            "base_shelf_life_hours": envs_out,
-        })
+        records.append(
+            {
+                "id": spec["id"],
+                "code": spec["code"],
+                "names_vi": spec["names_vi"],
+                "archetype": spec["archetype"],
+                "base_shelf_life_hours": envs_out,
+            }
+        )
 
     # Kiểm định bất biến
     validate_kb_invariants(records)

@@ -5,7 +5,7 @@
   - thịt bắp bò
   - bắp bò hoa
   - bò bắp
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -26,7 +26,7 @@
   - thịt thăn bò
   - thăn lưng bò
   - thăn phi lê bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -47,7 +47,7 @@
   - thịt nạm bò
   - nạm bò tươi
   - nạm bò gân
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -68,7 +68,7 @@
   - thịt gầu bò
   - gầu giòn bò
   - gầu bò tươi
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -89,7 +89,7 @@
   - diềm thăn bò
   - thịt diềm thăn
   - dải bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -110,7 +110,7 @@
   - lõi rùa bò
   - thịt lõi rùa
   - lõi bắp rùa bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -131,7 +131,7 @@
   - bắp hoa bò
   - thịt bắp hoa
   - bắp bò hoa
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -152,7 +152,7 @@
   - thịt dẻ sườn bò
   - dẻ sườn
   - sườn rút xương bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -173,7 +173,7 @@
   - sườn bò tươi
   - sườn que bò
   - thịt sườn bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -194,7 +194,7 @@
   - thịt đuôi bò
   - đuôi bò tươi
   - đuôi bò làm sạch
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -215,7 +215,7 @@
   - bò băm
   - thịt bò băm
   - thịt bò xay tươi
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -236,7 +236,7 @@
   - thịt thăn ngoại
   - thăn lưng bò ngoại
   - striploin bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -257,7 +257,7 @@
   - thịt thăn nội
   - thăn chuột bò
   - tenderloin bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -278,7 +278,7 @@
   - thịt bò bít tết
   - steak bò
   - thịt bò steak
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -299,7 +299,7 @@
   - thịt bò cuộn
   - ba chỉ bò cuộn
   - bò cuộn nấm
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -320,7 +320,7 @@
   - gân chân bò
   - gân bò tươi
   - gân bò trong
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -341,7 +341,7 @@
   - lòng bò tươi
   - bộ lòng bò
   - ruột bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -362,7 +362,7 @@
   - tràng bò
   - ruột bò tươi
   - dồi trường bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -383,7 +383,7 @@
   - lá sách bò
   - lá sách
   - khăn lông sách bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -404,7 +404,7 @@
   - dạ dày tổ ong bò
   - dạ tổ ong
   - tổ ong tươi
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -425,7 +425,7 @@
   - tỳ bò
   - lách bò
   - lá lách bò tươi
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -446,7 +446,7 @@
   - gan bò tươi
   - lá gan bò
   - gan bò nếp
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -467,7 +467,7 @@
   - tim bò tươi
   - quả tim bò
   - thịt tim bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -488,7 +488,7 @@
   - bầu dục bò
   - thận bò
   - cật bò tươi
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -509,7 +509,7 @@
   - tủy xương bò
   - tủy bò tươi
   - tủy sống bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -530,7 +530,7 @@
   - óc bò tươi
   - bộ óc bò
   - óc con bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -551,7 +551,7 @@
   - ngầu pín bò
   - ngọc hành bò
   - ngầu pín
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -572,7 +572,7 @@
   - lưỡi bò tươi
   - lưỡi bò làm sạch
   - thịt lưỡi bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -593,7 +593,7 @@
   - nầm bò sữa
   - bẹ sữa bò
   - nầm sữa bò tươi
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -614,7 +614,7 @@
   - thịt ba chỉ bò
   - ba rọi bò
   - thịt ba rọi bò
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -635,7 +635,7 @@
   - thịt bê tươi
   - bê tơ
   - thịt bê tơ
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -656,7 +656,7 @@
   - thịt đùi bê
   - bắp đùi bê
   - đùi bê tơ
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -677,7 +677,7 @@
   - thịt thăn bê
   - thăn bê tơ
   - thăn phi lê bê
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -716,7 +716,7 @@
   - bì bê
   - da bê non
   - da bê tươi
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -737,7 +737,7 @@
   - thịt trâu
   - thịt trâu nạc
   - thịt trâu tươi sống
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -758,7 +758,7 @@
   - thịt trâu bắp
   - thịt bắp trâu
   - bắp hoa trâu
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -779,7 +779,7 @@
   - thịt thăn trâu
   - thăn trâu tươi
   - thăn phi lê trâu
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -800,7 +800,7 @@
   - thịt nạm trâu
   - nạm trâu tươi
   - thịt trâu nạm
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -821,7 +821,7 @@
   - gân chân trâu
   - gân trâu tươi
   - thịt gân trâu
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
@@ -842,7 +842,7 @@
   - sườn que trâu
   - dẻ sườn trâu
   - thịt sườn trâu
-  archetype: FRESH_MEAT
+  archetype: BEEF
   base_shelf_life_hours:
     room_temp_25_30c:
       value: 4.0
