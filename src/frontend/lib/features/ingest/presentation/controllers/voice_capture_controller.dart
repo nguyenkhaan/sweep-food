@@ -1,6 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/error/failure.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/ingest/presentation/controllers/ingredient_recognition.dart';
 import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
@@ -45,6 +47,10 @@ class VoiceReviewState {
 
   bool get needsReview => suspectedMissingCount > 0 || hasSuspiciousQuantity;
 
+  /// A food the smart parser could not recognize: adding must be blocked until
+  /// the user removes it (or renames it to something recognized).
+  bool get hasUnsupported => items.any((item) => !item.isSupported);
+
   VoiceReviewState copyWith({
     String? transcript,
     List<ParsedItemDraft>? items,
@@ -83,6 +89,27 @@ class VoiceCaptureController extends _$VoiceCaptureController {
     );
   }
 
+  /// After a rename the smart parser looks at the new text; a catalog match
+  /// makes the food supported again and fills its food group.
+  Future<void> rematchItem(int index) async {
+    if (index < 0 || index >= state.items.length) return;
+    final typed = state.items[index].name.trim();
+    if (state.items[index].isSupported) return;
+    final match = await recognizeIngredient(ref, typed);
+    if (match == null ||
+        index >= state.items.length ||
+        state.items[index].name.trim() != typed) {
+      return;
+    }
+    updateItem(
+      index,
+      state.items[index].copyWith(
+        ingredientId: match.masterIngredientId,
+        category: match.category ?? '',
+      ),
+    );
+  }
+
   /// A manual date and a FreshCheck estimate are mutually exclusive.
   void setItemExpiry(
     int index,
@@ -102,6 +129,8 @@ class VoiceCaptureController extends _$VoiceCaptureController {
   }
 
   Future<List<PantryItem>> saveAllToPantry() async {
+    // Never add a partial list: every food must be supported.
+    if (state.hasUnsupported) throw const UnsupportedIngredientFailure();
     final pantryNotifier = ref.read(pantryListControllerProvider.notifier);
     final saved = <PantryItem>[];
     for (final item in state.items) {

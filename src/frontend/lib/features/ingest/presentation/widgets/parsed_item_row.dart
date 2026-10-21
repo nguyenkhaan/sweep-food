@@ -12,6 +12,8 @@ import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart
 /// * [onToggle] non-null → a leading checkbox (receipt multi-select).
 /// * [selected] dims the row when `false`.
 /// * [onEdit] / [onDelete] add trailing actions.
+/// * [unsupported] marks a food the smart parser did not recognize: red border
+///   and a small "not supported" message under the row.
 class ParsedItemRow extends StatelessWidget {
   const ParsedItemRow({
     required this.item,
@@ -19,6 +21,7 @@ class ParsedItemRow extends StatelessWidget {
     this.onToggle,
     this.onEdit,
     this.onDelete,
+    this.unsupported = false,
     super.key,
   });
 
@@ -27,6 +30,7 @@ class ParsedItemRow extends StatelessWidget {
   final VoidCallback? onToggle;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final bool unsupported;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,7 @@ class ParsedItemRow extends StatelessWidget {
       item.storageTier.shortLabel(context.l10n),
     ].join(' · ');
 
-    return Material(
+    final card = Material(
       color: context.colors.surface,
       borderRadius: Radii.brMd,
       child: InkWell(
@@ -51,8 +55,12 @@ class ParsedItemRow extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: Radii.brMd,
             border: Border.all(
-              color: selected ? BrandPalette.green700 : sweep.hairline,
-              width: selected ? 1.5 : 1,
+              color: unsupported
+                  ? context.colors.error
+                  : selected
+                  ? BrandPalette.green700
+                  : sweep.hairline,
+              width: unsupported || selected ? 1.5 : 1,
             ),
           ),
           child: Row(
@@ -134,6 +142,22 @@ class ParsedItemRow extends StatelessWidget {
           ),
         ),
       ),
+    );
+    if (!unsupported) return card;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        card,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(Gap.sm, 4, Gap.sm, 0),
+          child: Text(
+            context.l10n.ingredientUnsupportedRetry,
+            style: context.text.bodySmall?.copyWith(
+              color: context.colors.error,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

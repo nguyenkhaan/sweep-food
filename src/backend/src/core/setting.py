@@ -169,6 +169,9 @@ OPENAI_OCR_REASONING_EFFORT: Final[str] = get_reasoning_effort_env(
     "OPENAI_OCR_REASONING_EFFORT", "medium"
 )
 OPENAI_LLM_MODEL: Final[str] = get_env_var("OPENAI_LLM_MODEL", "gpt-4o-mini")
+# Model for FreshCheck "Khác" free-text sensory scoring (separate from the smart
+# parser's OPENAI_LLM_MODEL so each can be tuned on its own).
+OPENAI_FRESHCHECK_MODEL: Final[str] = get_env_var("OPENAI_FRESHCHECK_MODEL", "gpt-4o")
 OPENAI_TIMEOUT_SECONDS: Final[int] = get_positive_int_env("OPENAI_TIMEOUT_SECONDS", 30)
 GROQ_API_KEY: Final[str] = get_env_var("GROQ_API_KEY", "")
 GROQ_ASR_MODEL: Final[str] = get_env_var("GROQ_ASR_MODEL", "whisper-large-v3-turbo")

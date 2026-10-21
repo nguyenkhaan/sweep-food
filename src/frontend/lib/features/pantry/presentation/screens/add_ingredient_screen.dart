@@ -162,7 +162,7 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               hintText: l10n.pantryFieldNameHint,
-              errorText: _unsupported ? l10n.failUnsupportedIngredient : null,
+              errorText: _unsupported ? l10n.ingredientUnsupportedRetry : null,
             ),
             onChanged: (v) {
               _ctrl.setName(v);

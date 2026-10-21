@@ -109,6 +109,8 @@
   "failParse": "The response was not in the expected format.",
   "failUnknown": "Something unexpected went wrong.",
   "failUnsupportedIngredient": "This food isn't supported by the app yet",
+  "ingredientUnsupportedRetry": "This food isn't supported yet, try again later",
+  "scanRemoveUnsupportedHint": "Remove the unsupported foods to continue",
 
   "permCameraTitle": "Allow camera access",
   "permMicTitle": "Allow microphone access",

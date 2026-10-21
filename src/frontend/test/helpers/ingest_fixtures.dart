@@ -22,6 +22,7 @@ ScanJob labelScanJob() => ScanJob(
           expiryDate: DateTime(2026, 9, 10),
           priceVnd: 18000,
           isExpiryWarn: true,
+          ingredientId: 'ing-ca-chua-bi',
         ),
       ],
     );
@@ -37,6 +38,7 @@ ScanJob receiptScanJob() => ScanJob(
           category: 'Rau củ',
           quantity: 500,
           priceVnd: 18000,
+          ingredientId: 'ing-ca-chua-bi',
         ),
         ParsedItemDraft(
           name: 'Trứng gà',
@@ -44,6 +46,7 @@ ScanJob receiptScanJob() => ScanJob(
           quantity: 10,
           unit: MeasurementUnit.fruit,
           priceVnd: 32000,
+          ingredientId: 'ing-trung-ga',
         ),
         ParsedItemDraft(
           name: 'Thịt ba chỉ',
@@ -51,6 +54,7 @@ ScanJob receiptScanJob() => ScanJob(
           quantity: 300,
           priceVnd: 45000,
           isExpiryWarn: true,
+          ingredientId: 'ing-thit-ba-chi',
         ),
         ParsedItemDraft(
           name: 'Sữa tươi',
@@ -58,6 +62,7 @@ ScanJob receiptScanJob() => ScanJob(
           quantity: 1,
           unit: MeasurementUnit.liter,
           priceVnd: 36000,
+          ingredientId: 'ing-sua-tuoi',
         ),
         ParsedItemDraft(
           name: 'Hành lá',
@@ -66,6 +71,7 @@ ScanJob receiptScanJob() => ScanJob(
           unit: MeasurementUnit.bunch,
           priceVnd: 5000,
           isExpiryWarn: true,
+          ingredientId: 'ing-hanh-la',
         ),
         ParsedItemDraft(
           name: 'Dầu ăn',
@@ -74,6 +80,7 @@ ScanJob receiptScanJob() => ScanJob(
           unit: MeasurementUnit.bottle,
           storageTier: StorageTier.pantryShelf,
           priceVnd: 42000,
+          ingredientId: 'ing-dau-an',
         ),
       ],
     );
@@ -87,18 +94,21 @@ ScanJob voiceScanJob() => const ScanJob(
           name: 'Thịt bò',
           category: 'Thịt & Hải sản',
           quantity: 200,
+          ingredientId: 'ing-thit-bo',
         ),
         ParsedItemDraft(
           name: 'Cải bó xôi',
           category: 'Rau củ',
           quantity: 1,
           unit: MeasurementUnit.bunch,
+          ingredientId: 'ing-cai-bo-xoi',
         ),
         ParsedItemDraft(
           name: 'Trứng gà',
           category: 'Trứng & Sữa',
           quantity: 3,
           unit: MeasurementUnit.fruit,
+          ingredientId: 'ing-trung-ga',
         ),
       ],
     );

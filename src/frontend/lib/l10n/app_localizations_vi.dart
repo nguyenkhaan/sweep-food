@@ -280,6 +280,14 @@ class AppL10nVi extends AppL10n {
   String get failUnsupportedIngredient => 'Thực phẩm này app chưa hỗ trợ';
 
   @override
+  String get ingredientUnsupportedRetry =>
+      'Thực phẩm này app chưa hỗ trợ, thử lại sau';
+
+  @override
+  String get scanRemoveUnsupportedHint =>
+      'Bỏ các thực phẩm chưa hỗ trợ để tiếp tục';
+
+  @override
   String get permCameraTitle => 'Cho phép dùng máy ảnh';
 
   @override

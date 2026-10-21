@@ -38,6 +38,11 @@ abstract class ParsedItemDraft with _$ParsedItemDraft {
 
   bool get isValid => name.trim().isNotEmpty && quantity > 0;
 
+  /// Whether the smart parser recognized this food (it is linked to a catalog
+  /// ingredient). Foods it cannot recognize are not supported and cannot be
+  /// added to the pantry.
+  bool get isSupported => ingredientId != null;
+
   PantryItemDraft toPantryItemDraft({
     PantrySource source = PantrySource.labelScan,
   }) {

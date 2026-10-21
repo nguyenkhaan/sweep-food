@@ -16,6 +16,7 @@ class ConfidenceField extends StatelessWidget {
     this.onTap,
     this.needsReview = false,
     this.reviewLabel,
+    this.errorText,
     this.trailingIcon = Icons.edit_outlined,
     super.key,
   });
@@ -27,6 +28,9 @@ class ConfidenceField extends StatelessWidget {
 
   /// Defaults to the localized "check this" chip when null.
   final String? reviewLabel;
+
+  /// When set, the field gets a red border and this small message beneath it.
+  final String? errorText;
   final IconData trailingIcon;
 
   @override
@@ -78,8 +82,12 @@ class ConfidenceField extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: Radii.brMd,
                 border: Border.all(
-                  color: needsReview ? BrandPalette.warnSoon : sweep.hairline,
-                  width: needsReview ? 2 : 1,
+                  color: errorText != null
+                      ? context.colors.error
+                      : needsReview
+                      ? BrandPalette.warnSoon
+                      : sweep.hairline,
+                  width: errorText != null || needsReview ? 2 : 1,
                 ),
               ),
               child: Row(
@@ -101,6 +109,15 @@ class ConfidenceField extends StatelessWidget {
             ),
           ),
         ),
+        if (errorText != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            errorText!,
+            style: context.text.bodySmall?.copyWith(
+              color: context.colors.error,
+            ),
+          ),
+        ],
       ],
     );
   }

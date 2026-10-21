@@ -32,8 +32,13 @@ class ReceiptReviewScreen extends ConsumerWidget {
     final controller = ref.read(receiptReviewControllerProvider(job).notifier);
     final sweep = context.sweep;
     final isEmpty = state.items.isEmpty;
+    // "All ticked" means every supported food; unsupported ones stay unticked.
+    final supportedIdx = [
+      for (var i = 0; i < state.items.length; i++)
+        if (state.items[i].isSupported) i,
+    ];
     final allSelected =
-        state.selectedCount == state.items.length && state.items.isNotEmpty;
+        supportedIdx.isNotEmpty && supportedIdx.every(state.isSelected);
 
     return Scaffold(
       appBar: AppBar(
@@ -130,6 +135,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
               ParsedItemRow(
                 item: state.items[i],
                 selected: state.isSelected(i),
+                unsupported: !state.items[i].isSupported,
                 onToggle: () => controller.toggleItem(i),
                 onEdit: () => _editItem(context, i, state.items[i], controller),
               ),
@@ -183,8 +189,22 @@ class ReceiptReviewScreen extends ConsumerWidget {
                     ),
                   ],
                 )
-              : ElevatedButton(
-                  onPressed: state.selectedCount == 0
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (state.hasSelectedUnsupported) ...[
+                      Text(
+                        l10n.scanRemoveUnsupportedHint,
+                        textAlign: TextAlign.center,
+                        style: context.text.bodySmall?.copyWith(
+                          color: context.colors.error,
+                        ),
+                      ),
+                      const SizedBox(height: Gap.xs),
+                    ],
+                    ElevatedButton(
+                  onPressed: state.selectedCount == 0 || state.hasSelectedUnsupported
                       ? null
                       : () async {
                     try {
@@ -218,6 +238,8 @@ class ReceiptReviewScreen extends ConsumerWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                ),
+                  ],
                 ),
         ),
       ),
@@ -364,6 +386,8 @@ class ReceiptReviewScreen extends ConsumerWidget {
                                 : item.freshness,
                           ),
                         );
+                        // Renamed: let the smart parser look at the new name.
+                        if (renamed) controller.rematchItem(index);
                         ctx.pop();
                       },
                       style: ElevatedButton.styleFrom(

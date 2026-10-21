@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Provider;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/error/failure.dart';
 import 'package:sweepfood/core/network/network_providers.dart';
 import 'package:sweepfood/features/catalog/data/repositories/ingredient_repository_impl.dart';
 import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
@@ -122,6 +123,8 @@ class AddIngredientController extends _$AddIngredientController {
           }
         } catch (_) {}
       }
+      // Still unrecognized after the parser and the catalog lookup: unsupported.
+      if (state.ingredientId == null) throw const UnsupportedIngredientFailure();
     }
     final list = ref.read(pantryListControllerProvider.notifier);
     final id = editItemId;

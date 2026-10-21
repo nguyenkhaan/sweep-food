@@ -61,6 +61,9 @@ class LabelReviewScreen extends ConsumerWidget {
           ConfidenceField(
             label: l10n.pantryFieldName,
             value: draft.name.isEmpty ? '—' : draft.name,
+            errorText: draft.isSupported
+                ? null
+                : l10n.ingredientUnsupportedRetry,
             onTap: () => _editName(context, draft.name, controller),
           ),
           Gap.gapSm,
@@ -146,7 +149,7 @@ class LabelReviewScreen extends ConsumerWidget {
             boxShadow: Shadows.e2,
           ),
           child: ElevatedButton(
-            onPressed: !draft.isValid
+            onPressed: !draft.isValid || !draft.isSupported
                 ? null
                 : () async {
                     try {
@@ -191,7 +194,11 @@ class LabelReviewScreen extends ConsumerWidget {
       initial: initial,
       hint: context.l10n.reviewNameHint,
     );
-    if (result != null && result.isNotEmpty) controller.setName(result);
+    if (result != null && result.isNotEmpty) {
+      controller.setName(result);
+      // Give the smart parser another go at the new name.
+      await controller.rematchName();
+    }
   }
 
   Future<void> _editQuantity(

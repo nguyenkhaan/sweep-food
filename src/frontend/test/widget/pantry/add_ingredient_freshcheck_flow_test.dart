@@ -320,8 +320,16 @@ void main() {
       await tester.tap(find.text('Thêm vào kho'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Thực phẩm này app chưa hỗ trợ'), findsOneWidget);
+      expect(find.text('Thực phẩm này app chưa hỗ trợ, thử lại sau'), findsOneWidget);
       expect(find.text('pantry'), findsNothing); // still on the form
+      // Blocked on the device: nothing unrecognized is ever sent to the backend.
+      verifyNever(
+        () => api.post(
+          ApiPaths.inventoryBatches,
+          body: any(named: 'body'),
+          headers: any(named: 'headers'),
+        ),
+      );
     },
   );
 }

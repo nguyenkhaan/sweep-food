@@ -431,8 +431,9 @@ không cần LLM. Không gọi một LLM riêng để kiểm tra liên quan.
 **Lỗi provider:** `503 FRESHCHECK_LLM_UNAVAILABLE` khi thiếu cấu hình, không kết nối
 được hoặc timeout; `502 FRESHCHECK_LLM_RESPONSE_INVALID` khi JSON/axis/điểm không hợp lệ.
 Không tự retry trong service này và không dùng điểm mặc định khi LLM lỗi.
-Tái sử dụng `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_LLM_MODEL`,
-`OPENAI_TIMEOUT_SECONDS`; không cần thêm provider/config mới.
+Tái sử dụng `OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_TIMEOUT_SECONDS`; model do
+`OPENAI_FRESHCHECK_MODEL` quyết định (mặc định `gpt-4o`, tách khỏi `OPENAI_LLM_MODEL`
+của smart parser); không cần thêm provider mới.
 
 **Lưu và gửi lại:** khi tạo assessment, backend lưu `other_answers`,
 `other_answer_scores` và model đã cấu hình trong `freshcheck_assessments.outcome`,

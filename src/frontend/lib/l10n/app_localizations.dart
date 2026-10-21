@@ -601,6 +601,18 @@ abstract class AppL10n {
   /// **'Thực phẩm này app chưa hỗ trợ'**
   String get failUnsupportedIngredient;
 
+  /// No description provided for @ingredientUnsupportedRetry.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thực phẩm này app chưa hỗ trợ, thử lại sau'**
+  String get ingredientUnsupportedRetry;
+
+  /// No description provided for @scanRemoveUnsupportedHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bỏ các thực phẩm chưa hỗ trợ để tiếp tục'**
+  String get scanRemoveUnsupportedHint;
+
   /// No description provided for @permCameraTitle.
   ///
   /// In vi, this message translates to:

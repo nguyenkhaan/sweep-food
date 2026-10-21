@@ -1,6 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/error/failure.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/ingest/presentation/controllers/ingredient_recognition.dart';
 import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
@@ -28,6 +30,19 @@ class LabelReviewController extends _$LabelReviewController {
           category: '',
         );
 
+  /// After a rename the smart parser looks at the new text; a catalog match
+  /// makes the food supported again and fills its food group.
+  Future<void> rematchName() async {
+    final typed = state.name.trim();
+    if (state.isSupported) return;
+    final match = await recognizeIngredient(ref, typed);
+    if (match == null || state.name.trim() != typed) return;
+    state = state.copyWith(
+      ingredientId: match.masterIngredientId,
+      category: match.category ?? '',
+    );
+  }
+
   void setQuantity(double quantity) =>
       state = state.copyWith(quantity: quantity);
 
@@ -50,6 +65,7 @@ class LabelReviewController extends _$LabelReviewController {
 
   /// Confirms the reviewed draft into the pantry.
   Future<PantryItem> saveToPantry() {
+    if (!state.isSupported) throw const UnsupportedIngredientFailure();
     final draft = state.toPantryItemDraft(source: PantrySource.labelScan);
     return ref.read(pantryListControllerProvider.notifier).add(draft);
   }

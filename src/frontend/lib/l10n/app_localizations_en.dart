@@ -283,6 +283,14 @@ class AppL10nEn extends AppL10n {
       'This food isn\'t supported by the app yet';
 
   @override
+  String get ingredientUnsupportedRetry =>
+      'This food isn\'t supported yet, try again later';
+
+  @override
+  String get scanRemoveUnsupportedHint =>
+      'Remove the unsupported foods to continue';
+
+  @override
   String get permCameraTitle => 'Allow camera access';
 
   @override

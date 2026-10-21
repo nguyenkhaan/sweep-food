@@ -109,6 +109,8 @@
   "failParse": "Dữ liệu trả về không đúng định dạng.",
   "failUnknown": "Đã xảy ra lỗi không mong muốn.",
   "failUnsupportedIngredient": "Thực phẩm này app chưa hỗ trợ",
+  "ingredientUnsupportedRetry": "Thực phẩm này app chưa hỗ trợ, thử lại sau",
+  "scanRemoveUnsupportedHint": "Bỏ các thực phẩm chưa hỗ trợ để tiếp tục",
 
   "permCameraTitle": "Cho phép dùng máy ảnh",
   "permMicTitle": "Cho phép dùng micro",

@@ -29,6 +29,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      // Recognized foods look up FreshCheck questions (a delayed mock call).
+      await tester.pump(const Duration(seconds: 1));
 
       expect(find.text('Kiểm tra thông tin'), findsOneWidget);
       expect(find.text('Cà chua bi'), findsOneWidget);

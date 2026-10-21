@@ -142,13 +142,18 @@ class VoiceReviewScreen extends ConsumerWidget {
           for (var i = 0; i < state.items.length; i++) ...[
             _VoiceItemRow(
               item: state.items[i],
+              unsupported: !state.items[i].isSupported,
               onQuantityChanged: (qty) => controller.updateItem(
                 i,
                 state.items[i].copyWith(quantity: qty),
               ),
               onUnitChanged: (unit) =>
                   controller.updateItem(i, state.items[i].copyWith(unit: unit)),
-              onNameChanged: (name) => controller.renameItem(i, name),
+              onNameChanged: (name) {
+                controller.renameItem(i, name);
+                // Renamed: let the smart parser look at the new name.
+                controller.rematchItem(i);
+              },
               onDelete: () => controller.removeItem(i),
             ),
             Padding(
@@ -196,8 +201,22 @@ class VoiceReviewScreen extends ConsumerWidget {
             border: Border(top: BorderSide(color: sweep.hairline)),
             boxShadow: Shadows.e2,
           ),
-          child: ElevatedButton(
-            onPressed: state.items.isEmpty
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (state.hasUnsupported) ...[
+                Text(
+                  l10n.scanRemoveUnsupportedHint,
+                  textAlign: TextAlign.center,
+                  style: context.text.bodySmall?.copyWith(
+                    color: context.colors.error,
+                  ),
+                ),
+                const SizedBox(height: Gap.xs),
+              ],
+              ElevatedButton(
+            onPressed: state.items.isEmpty || state.hasUnsupported
                 ? null
                 : () async {
                     try {
@@ -227,6 +246,8 @@ class VoiceReviewScreen extends ConsumerWidget {
               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
             ),
           ),
+            ],
+          ),
         ),
       ),
     );
@@ -240,6 +261,7 @@ class _VoiceItemRow extends StatelessWidget {
     required this.onUnitChanged,
     required this.onNameChanged,
     required this.onDelete,
+    required this.unsupported,
   });
 
   final ParsedItemDraft item;
@@ -247,6 +269,7 @@ class _VoiceItemRow extends StatelessWidget {
   final ValueChanged<MeasurementUnit> onUnitChanged;
   final ValueChanged<String> onNameChanged;
   final VoidCallback onDelete;
+  final bool unsupported;
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +278,7 @@ class _VoiceItemRow extends StatelessWidget {
         ? item.quantity.round().toString()
         : item.quantity.toStringAsFixed(1);
 
-    return Container(
+    final row = Container(
       padding: const EdgeInsets.symmetric(
         horizontal: Gap.sm,
         vertical: Gap.xs + 2,
@@ -263,7 +286,10 @@ class _VoiceItemRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.colors.surface,
         borderRadius: Radii.brMd,
-        border: Border.all(color: sweep.hairline),
+        border: Border.all(
+          color: unsupported ? context.colors.error : sweep.hairline,
+          width: unsupported ? 1.5 : 1,
+        ),
       ),
       child: Row(
         children: [
@@ -361,6 +387,22 @@ class _VoiceItemRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+    if (!unsupported) return row;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        row,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(Gap.sm, 4, Gap.sm, 0),
+          child: Text(
+            context.l10n.ingredientUnsupportedRetry,
+            style: context.text.bodySmall?.copyWith(
+              color: context.colors.error,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

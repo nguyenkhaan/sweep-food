@@ -14,7 +14,7 @@ from AI.errors import (
     ExtractionUnavailableError,
 )
 from AI.llm.openai_client import OpenAIClient
-from src.core.setting import OPENAI_LLM_MODEL
+from src.core.setting import OPENAI_FRESHCHECK_MODEL
 from src.service.freshcheck_engine import FreshCheckAxisScore, FreshCheckKnowledgeBase
 
 _SYSTEM_PROMPT = """You interpret sensory observations for a food freshness rubric.
@@ -81,7 +81,7 @@ class FreshCheckOtherAnswerService:
 
     def __init__(self, client: OpenAIClient | None = None) -> None:
         self._client = client
-        self.model = client.model if client is not None else OPENAI_LLM_MODEL
+        self.model = client.model if client is not None else OPENAI_FRESHCHECK_MODEL
 
     async def predict(
         self,
