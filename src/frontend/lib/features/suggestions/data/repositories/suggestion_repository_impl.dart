@@ -125,6 +125,17 @@ class SuggestionRepositoryImpl implements SuggestionRepository {
             rankerModel: response.rankerModel,
             totalLatencyMs: response.timings.totalMs,
             nearExpiryIngredients: item.nearExpiryIngredients,
+            rescuedIngredients: item.rescuedDetails
+                .map(
+                  (value) => RescuedIngredient(
+                    name: value.name,
+                    requiredG: value.requiredG,
+                    rescuedG: value.rescuedG,
+                    expiringG: value.expiringG,
+                    expiresAt: value.expiresAt?.toLocal(),
+                  ),
+                )
+                .toList(),
             availabilityRatio: response.contractVersion == '2'
                 ? item.rankingFeatures.coreCoverage
                 : item.scoreComponents.availability,

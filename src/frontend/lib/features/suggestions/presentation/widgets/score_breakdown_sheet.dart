@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 
@@ -71,7 +72,9 @@ class _AiResultHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rescued = suggestion.nearExpiryIngredients;
+    final rescued = suggestion.rescuedIngredients.isNotEmpty
+        ? suggestion.rescuedIngredients.map(_rescuedLabel).toList()
+        : suggestion.nearExpiryIngredients;
     return Container(
       padding: const EdgeInsets.all(Gap.sm),
       decoration: BoxDecoration(
@@ -124,6 +127,14 @@ class _AiResultHeader extends StatelessWidget {
       ),
     );
   }
+}
+
+/// "400g đùi gà (hạn 22/10)" — grams this dish uses from soon-to-expire batches.
+String _rescuedLabel(RescuedIngredient item) {
+  final grams = item.rescuedG.round();
+  final expiry = item.expiresAt;
+  final label = '${grams}g ${item.name.toLowerCase()}';
+  return expiry == null ? label : '$label (hạn ${expiry.ddMM})';
 }
 
 class _AiFeatureList extends StatelessWidget {

@@ -58,7 +58,10 @@ def _clip(value: float, lo: float, hi: float) -> float:
 def _pantry_index(
     items: list[dict[str, Any]],
 ) -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
-    """Index pantry items by name/alias -> grams, code -> grams, and urgent subset."""
+    """Index pantry items by name/alias -> grams, code -> grams, and urgent subset.
+
+    Grams add up across items, so stock split over several batches counts in full.
+    """
     by_name: dict[str, float] = {}
     by_code: dict[str, float] = {}
     urgent: dict[str, float] = {}
@@ -66,12 +69,12 @@ def _pantry_index(
         name = (item.get("name") or "").strip().lower()
         grams = _num(item.get("quantity_g"), 0.0) or 0.0
         for code in get_effective_codes(item):
-            by_code[code] = max(by_code.get(code, 0.0), grams)
+            by_code[code] = by_code.get(code, 0.0) + grams
         for alias in extract_pantry_name_aliases(name) | {name}:
             if alias:
-                by_name[alias] = max(by_name.get(alias, 0.0), grams)
+                by_name[alias] = by_name.get(alias, 0.0) + grams
                 if not item.get("is_staple") and (_num(item.get("hours_to_expire"), 999.0) or 999.0) <= URGENT_HOURS:
-                    urgent[alias] = max(urgent.get(alias, 0.0), grams)
+                    urgent[alias] = urgent.get(alias, 0.0) + grams
     return by_name, by_code, urgent
 
 

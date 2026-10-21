@@ -1,9 +1,10 @@
 """Unit tests for AI-backed recommendation orchestration."""
 
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import cast
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,10 +13,12 @@ from AI.recommendation.engine import (
     EngineIngredient,
     EngineRankingFeatures,
     EngineRecommendation,
+    EngineRescuedItem,
     EngineResult,
     EngineTimings,
     RecommendationEngine,
 )
+from src.model.enum_model import MeasurementUnit
 from src.module.recommendations.recommendation_ai_service import (
     RecommendationAIService,
 )
@@ -25,6 +28,40 @@ USER_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b101")
 RECIPE_ONE_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b102")
 RECIPE_TWO_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b103")
 UNKNOWN_RECIPE_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b199")
+NOW = datetime(2026, 10, 16, 10, tzinfo=UTC)
+
+
+def _batch_row(
+    quantity: float,
+    expires_in: timedelta | None,
+    *,
+    name: str = "Đùi gà",
+    unit: MeasurementUnit = MeasurementUnit.GRAM,
+    source_code: str | None = None,
+) -> tuple[object, ...]:
+    """Build one active-batch query row as `_load_stock` selects it."""
+    return (
+        uuid4(),
+        None,
+        name,
+        source_code,
+        quantity,
+        unit,
+        None if expires_in is None else NOW + expires_in,
+        NOW - timedelta(days=1),
+    )
+
+
+def _empty_result() -> EngineResult:
+    return EngineResult(
+        status="empty",
+        contract_version="2",
+        model_version="lgbm-contextual-v3.1.0",
+        catalog_revision="catalog-test",
+        ranker_model="LightGBM LambdaMART",
+        timings=EngineTimings(total_ms=1.0, candidate_ms=1.0, ranker_ms=0.0),
+        recommendations=[],
+    )
 
 
 class _Recipe:
@@ -240,9 +277,9 @@ async def test_empty_pantry_and_empty_ai_result_are_explicit() -> None:
 @pytest.mark.anyio
 async def test_recommendation_uses_the_earliest_saved_batch_expiry() -> None:
     """The engine receives server-derived urgency instead of a stale client value."""
-    now = datetime(2026, 10, 16, 10, tzinfo=UTC)
+    now = NOW
     session = _SequenceSession(
-        [[(None, "Spinach", now + timedelta(hours=12, minutes=30))]]
+        [[_batch_row(600, timedelta(hours=12, minutes=30), name="Spinach")]]
     )
     fake_engine = _FakeEngine(
         EngineResult(
@@ -280,3 +317,115 @@ async def test_recommendation_uses_the_earliest_saved_batch_expiry() -> None:
 
     assert fake_engine.requests[0].items[0].hours_to_expire == 12.5
     assert response.request.items[0].hours_to_expire == 12.5
+
+
+@pytest.mark.anyio
+async def test_batches_of_one_ingredient_reach_the_engine_as_one_item() -> None:
+    """Per-batch entries merge into one item carrying the saved total and expiry."""
+    session = _SequenceSession(
+        [
+            [
+                _batch_row(200, timedelta(hours=10), source_code="7001"),
+                _batch_row(0.2, timedelta(hours=20), unit=MeasurementUnit.KG),
+                _batch_row(200, timedelta(hours=72)),
+                _batch_row(300, timedelta(hours=-2)),
+            ]
+        ]
+    )
+    fake_engine = _FakeEngine(_empty_result())
+    service = RecommendationAIService(
+        cast(AsyncSession, session),
+        cast(RecommendationEngine, fake_engine),
+        clock=lambda: NOW,
+    )
+
+    await service.recommend(
+        USER_ID,
+        RecommendationRequestDTO(
+            items=[
+                {"name": "Đùi gà", "code": "batch-uuid", "quantity_g": 200},
+                {"name": "đùi gà", "quantity_g": 200},
+                {"name": "Đùi gà", "quantity_g": 200},
+            ]
+        ),
+    )
+
+    items = fake_engine.requests[0].items
+    assert len(items) == 1
+    assert items[0].quantity_g == 600
+    assert items[0].hours_to_expire == 10
+    assert items[0].code == "7001"
+
+
+@pytest.mark.anyio
+async def test_rescued_details_split_the_recipe_need_first_expired_first() -> None:
+    """Rescued grams are the part of the need drawn from batches expiring soon."""
+    session = _Session(
+        recipes=[_Recipe(RECIPE_ONE_ID, "Gà chiên")],
+        inventory_expiries=[
+            _batch_row(200, timedelta(hours=72)),
+            _batch_row(200, timedelta(hours=10)),
+            _batch_row(200, timedelta(hours=20)),
+        ],
+    )
+    recommendation = replace(
+        _engine_item(RECIPE_ONE_ID, 1.0),
+        rescued_items=["Đùi gà", "Đùi gà", "Đùi gà"],
+        rescued_requirements=[EngineRescuedItem(name="Đùi gà", required_g=500.0)],
+    )
+    fake_engine = _FakeEngine(
+        replace(_empty_result(), status="success", recommendations=[recommendation])
+    )
+    service = RecommendationAIService(
+        cast(AsyncSession, session),
+        cast(RecommendationEngine, fake_engine),
+        clock=lambda: NOW,
+    )
+
+    response = await service.recommend(
+        USER_ID,
+        RecommendationRequestDTO(
+            items=[{"name": "Đùi gà", "quantity_g": 200}] * 3,
+            household_size=4,
+        ),
+    )
+
+    item = response.items[0]
+    assert item.rescued_items == ["Đùi gà"]
+    assert len(item.rescued_details) == 1
+    detail = item.rescued_details[0]
+    assert detail.name == "Đùi gà"
+    assert detail.required_g == 500
+    assert detail.rescued_g == 400
+    assert detail.expiring_g == 400
+    assert detail.expires_at == NOW + timedelta(hours=10)
+
+
+@pytest.mark.anyio
+async def test_items_without_saved_stock_keep_client_urgency_for_rescue() -> None:
+    """A rescued item absent from inventory uses the request quantity and expiry."""
+    session = _Session(recipes=[_Recipe(RECIPE_ONE_ID, "Canh rau")])
+    recommendation = replace(
+        _engine_item(RECIPE_ONE_ID, 1.0),
+        rescued_requirements=[EngineRescuedItem(name="Spinach", required_g=300.0)],
+    )
+    fake_engine = _FakeEngine(
+        replace(_empty_result(), status="success", recommendations=[recommendation])
+    )
+    service = RecommendationAIService(
+        cast(AsyncSession, session),
+        cast(RecommendationEngine, fake_engine),
+        clock=lambda: NOW,
+    )
+
+    response = await service.recommend(
+        USER_ID,
+        RecommendationRequestDTO(
+            items=[{"name": "Spinach", "quantity_g": 200, "hours_to_expire": 6}]
+        ),
+    )
+
+    detail = response.items[0].rescued_details[0]
+    assert detail.rescued_g == 200
+    assert detail.expiring_g == 200
+    assert detail.expires_at == NOW + timedelta(hours=6)

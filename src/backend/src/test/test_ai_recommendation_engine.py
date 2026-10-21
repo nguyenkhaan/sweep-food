@@ -9,13 +9,14 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from AI.catalog.errors import CatalogNotLoadedError
+from AI.catalog.master_index import merge_pantry_items
 from AI.catalog.snapshot import (
     CatalogSnapshot,
     get_catalog_snapshot,
     invalidate_catalog_snapshot,
     load_snapshot_from_bundle,
 )
-from AI.recommendation.contextual_features import FEATURE_COLS
+from AI.recommendation.contextual_features import FEATURE_COLS, _pantry_index
 from AI.recommendation.engine import RecommendationEngine
 from AI.recommendation.formatting import format_candidate_recommendation
 from AI.recommendation.ranking import (
@@ -181,6 +182,61 @@ def test_badge_logic_ready_elastic_shopping() -> None:
         r_ings=r_ings_elastic, pantry_dict=pantry_elastic, household_size=4,
     )
     assert formatted_elastic["status_badge"] == "elastic"
+
+
+def test_merge_pantry_items_combines_batches_of_one_ingredient() -> None:
+    """Batches of the same ingredient become one item with summed grams."""
+    merged = merge_pantry_items(
+        [
+            {"name": "Đùi gà", "quantity_g": 200, "hours_to_expire": 72, "is_staple": False},
+            {"name": "đùi  gà", "code": "7001", "quantity_g": 200, "hours_to_expire": 10},
+            {"name": "Trứng", "quantity_g": 100, "hours_to_expire": None},
+            {"name": "Đùi gà", "quantity_g": 200, "hours_to_expire": None},
+        ]
+    )
+
+    assert [item["name"] for item in merged] == ["Đùi gà", "Trứng"]
+    assert merged[0]["quantity_g"] == 600
+    assert merged[0]["hours_to_expire"] == 10
+    assert merged[0]["code"] == "7001"
+    assert merged[0]["is_staple"] is False
+
+
+def test_pantry_index_counts_split_stock_in_full() -> None:
+    """Two entries of one ingredient add up instead of keeping the larger one."""
+    by_name, _, urgent = _pantry_index(
+        [
+            {"name": "Đùi gà", "quantity_g": 200, "hours_to_expire": 10},
+            {"name": "Đùi gà", "quantity_g": 300, "hours_to_expire": 12},
+        ]
+    )
+
+    assert by_name["đùi gà"] == 500
+    assert urgent["đùi gà"] == 500
+
+
+def test_rescued_items_are_unique_and_carry_required_grams() -> None:
+    """Repeated urgent pantry entries are listed once with the scaled recipe need."""
+    cand = {"id": "test-1", "name": "Gà chiên"}
+    full_rec = {"id": "test-1", "name": "Gà chiên", "default_servings": 2}
+    r_ings = [
+        {"master_ingredient_name": "Đùi gà", "estimated_weight_g": 300, "ingredient_role": "core"},
+    ]
+    pantry = {
+        "items": [
+            {"name": "Đùi gà", "quantity_g": 200, "hours_to_expire": 5},
+            {"name": "Đùi gà", "quantity_g": 200, "hours_to_expire": 20},
+            {"name": "Đùi gà", "quantity_g": 200, "hours_to_expire": 70},
+        ]
+    }
+
+    formatted = format_candidate_recommendation(
+        cand, full_rec, score=1.0, feats={"core_coverage": 1.0},
+        r_ings=r_ings, pantry_dict=pantry, household_size=4,
+    )
+
+    assert formatted["rescued_items"] == ["Đùi gà"]
+    assert formatted["rescued_requirements"] == [{"name": "Đùi gà", "required_g": 600.0}]
 
 
 def test_tiering_rank_key() -> None:

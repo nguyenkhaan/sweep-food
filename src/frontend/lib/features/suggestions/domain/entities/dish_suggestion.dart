@@ -40,6 +40,10 @@ abstract class DishSuggestion with _$DishSuggestion {
     /// Names of near-expiry pantry ingredients this dish would use.
     @Default(<String>[]) List<String> nearExpiryIngredients,
 
+    /// Grams of each near-expiry ingredient this dish uses up, split FEFO
+    /// over the user's batches by the backend.
+    @Default(<RescuedIngredient>[]) List<RescuedIngredient> rescuedIngredients,
+
     /// Share of the dish's ingredients already in the pantry (`0..1`).
     @Default(0) double availabilityRatio,
 
@@ -109,4 +113,29 @@ class RecommendationIngredient {
   final String name;
   final String? code;
   final double requiredG;
+}
+
+/// How much of one near-expiry pantry ingredient a dish uses up.
+class RescuedIngredient {
+  const RescuedIngredient({
+    required this.name,
+    this.requiredG = 0,
+    this.rescuedG = 0,
+    this.expiringG = 0,
+    this.expiresAt,
+  });
+
+  final String name;
+
+  /// Grams the dish needs at the requested household size.
+  final double requiredG;
+
+  /// Part of [requiredG] drawn from batches expiring within 24 hours.
+  final double rescuedG;
+
+  /// All grams of this ingredient expiring within 24 hours.
+  final double expiringG;
+
+  /// Earliest expiry among the rescued batches.
+  final DateTime? expiresAt;
 }

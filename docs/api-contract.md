@@ -149,6 +149,9 @@ BE xếp hạng trực tiếp bằng LightGBM trên catalog trong Postgres, bổ
       "missing_ingredients": [{ "name": "Hành tây", "code": "4039", "required_g": 50 }],
       "optional_ingredients": [],
       "rescued_items": ["Thịt bò"],
+      "rescued_details": [
+        { "name": "Thịt bò", "code": "7003", "required_g": 250, "rescued_g": 200, "expiring_g": 200, "expires_at": "2026-10-22T08:00:00Z" }
+      ],
       "status_badge": "elastic",
       "explanation": "AI-ranked from pantry availability, expiry, and shopping gaps.",
       "provider": "SWEEP_FOOD_AI",
@@ -164,6 +167,8 @@ BE xếp hạng trực tiếp bằng LightGBM trên catalog trong Postgres, bổ
 ```
 
 `rank_score` là điểm raw, không bị chặn trong `0..1` và **không được hiển thị như phần trăm**. Thứ tự chính thức là `rank`, vì AI còn áp dụng feasibility tier/diversity sau điểm LightGBM. `status_badge` ∈ `ready|elastic|shopping`. Card dùng `recipe_summary`; màn chi tiết vẫn gọi `GET /recipes/{recipe_id}`.
+
+Kho lưu mỗi lần nhập là một lô riêng. Backend gộp các `items` trùng tên thành một nguyên liệu, rồi lấy tổng gam và hạn sớm nhất từ các lô còn dùng được của user. `rescued_items` không lặp tên. `rescued_details` chia lượng món cần (`required_g`, đã nhân theo `household_size`) cho các lô theo FEFO: `rescued_g` là phần lấy từ lô hết hạn trong 24h, `expiring_g` là tổng gam sắp hết hạn trong 24h, `expires_at` là hạn sớm nhất trong phần được giải cứu. Lô tính theo cái/gói không quy ra gam nên không có trong `rescued_g`.
 ---
 
 ## 4. Cooking — `/cooking`

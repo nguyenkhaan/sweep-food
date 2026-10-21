@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import logging
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 from uuid import UUID
 
-from AI.catalog.master_index import resolve_pantry_items
+from AI.catalog.master_index import merge_pantry_items, resolve_pantry_items
 from AI.catalog.snapshot import CatalogSnapshot
 from AI.recommendation.candidate_generator import CandidateGenerator
 from AI.recommendation.formatting import format_candidate_recommendation
@@ -78,6 +78,14 @@ class EngineRankingFeatures:
 
 
 @dataclass(frozen=True)
+class EngineRescuedItem:
+    """An urgent pantry item a recipe uses, with the grams the recipe needs of it."""
+
+    name: str
+    required_g: float
+
+
+@dataclass(frozen=True)
 class EngineRecommendation:
     id: UUID
     name: str
@@ -88,6 +96,7 @@ class EngineRecommendation:
     optional_ingredients: list[EngineIngredient]
     rescued_items: list[str]
     status_badge: str
+    rescued_requirements: list[EngineRescuedItem] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -137,7 +146,7 @@ class RecommendationEngine:
         scenario_type = str(req_dict.get("scenario_type") or "custom")
 
         resolved_items = resolve_pantry_items(
-            raw_items,
+            merge_pantry_items(raw_items),
             self.snapshot.master_alias_index,
         )
         pantry_dict: dict[str, Any] = {
@@ -280,6 +289,13 @@ class RecommendationEngine:
                     ],
                     rescued_items=[str(x) for x in cand.get("rescued_items", [])],
                     status_badge=str(cand.get("status_badge", "shopping")),
+                    rescued_requirements=[
+                        EngineRescuedItem(
+                            name=str(item["name"]),
+                            required_g=float(item.get("required_g", 0.0)),
+                        )
+                        for item in cand.get("rescued_requirements", [])
+                    ],
                 )
             )
 

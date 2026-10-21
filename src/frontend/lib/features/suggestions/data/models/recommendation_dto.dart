@@ -179,6 +179,33 @@ abstract class RecommendationMissingIngredientDto
   );
 }
 
+/// One `rescued_details` entry: grams of a near-expiry ingredient a recipe
+/// uses up, split FEFO over the user's batches.
+class RecommendationRescuedItemDto {
+  const RecommendationRescuedItemDto({
+    required this.name,
+    this.requiredG = 0,
+    this.rescuedG = 0,
+    this.expiringG = 0,
+    this.expiresAt,
+  });
+
+  factory RecommendationRescuedItemDto.fromJson(Map<String, dynamic> json) =>
+      RecommendationRescuedItemDto(
+        name: (json['name'] ?? '').toString(),
+        requiredG: _asDoubleDefault(json['required_g']),
+        rescuedG: _asDoubleDefault(json['rescued_g']),
+        expiringG: _asDoubleDefault(json['expiring_g']),
+        expiresAt: DateTime.tryParse((json['expires_at'] ?? '').toString()),
+      );
+
+  final String name;
+  final double requiredG;
+  final double rescuedG;
+  final double expiringG;
+  final DateTime? expiresAt;
+}
+
 @freezed
 abstract class RecommendationItemDto with _$RecommendationItemDto {
   const RecommendationItemDto._();
@@ -209,6 +236,9 @@ abstract class RecommendationItemDto with _$RecommendationItemDto {
     @JsonKey(name: 'near_expiry_ingredients')
     @Default(<String>[])
     List<String> nearExpiryIngredients,
+    @JsonKey(name: 'rescued_details')
+    @Default(<RecommendationRescuedItemDto>[])
+    List<RecommendationRescuedItemDto> rescuedDetails,
     @Default('') String explanation,
     @Default('') String provider,
     @JsonKey(name: 'status_badge') @Default('') String statusBadge,
@@ -279,6 +309,17 @@ abstract class RecommendationItemDto with _$RecommendationItemDto {
             .toList() ??
         const <String>[];
 
+    final rescuedDetails =
+        (json['rescued_details'] as List<dynamic>?)
+            ?.whereType<Map>()
+            .map(
+              (e) => RecommendationRescuedItemDto.fromJson(
+                Map<String, dynamic>.from(e),
+              ),
+            )
+            .toList() ??
+        const <RecommendationRescuedItemDto>[];
+
     final explanation = (json['explanation'] ?? '').toString();
     final provider = (json['provider'] ?? '').toString();
     final modelVersion = (json['model_version'] ?? '').toString();
@@ -295,6 +336,7 @@ abstract class RecommendationItemDto with _$RecommendationItemDto {
       matchedIngredients: ingredients('matched_ingredients'),
       optionalIngredients: ingredients('optional_ingredients'),
       nearExpiryIngredients: nearExpiry,
+      rescuedDetails: rescuedDetails,
       explanation: explanation,
       provider: provider,
       statusBadge: (json['status_badge'] ?? '').toString(),

@@ -1,5 +1,6 @@
 """Request and response DTOs for the recommendation boundary."""
 
+from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
@@ -64,6 +65,17 @@ class RecommendationIngredientDTO(BaseModel):
     required_g: float = Field(ge=0)
 
 
+class RecommendationRescuedItemDTO(BaseModel):
+    """How much of one near-expiry pantry ingredient a recipe uses up."""
+
+    name: str = Field(min_length=1)
+    code: str | None = None
+    required_g: float = Field(ge=0)
+    rescued_g: float = Field(ge=0)
+    expiring_g: float = Field(ge=0)
+    expires_at: datetime | None = None
+
+
 class RecommendationTimingsDTO(BaseModel):
     """AI inference latency split in milliseconds."""
 
@@ -95,6 +107,7 @@ class RecommendationItemDTO(BaseModel):
     missing_ingredients: list[RecommendationIngredientDTO]
     optional_ingredients: list[RecommendationIngredientDTO]
     rescued_items: list[str]
+    rescued_details: list[RecommendationRescuedItemDTO] = Field(default_factory=list)
     status_badge: str
     explanation: str
     provider: str

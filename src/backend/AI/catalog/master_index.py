@@ -94,6 +94,51 @@ def build_master_alias_index(
     return {k: tuple(sorted(codes)) for k, codes in sorted(index.items())}
 
 
+def _quantity(value: object) -> float:
+    try:
+        return float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _soonest_hours(first: object, second: object) -> object:
+    """Return the smaller known expiry horizon; None means unknown."""
+    if first is None:
+        return second
+    if second is None:
+        return first
+    return min(float(first), float(second))  # type: ignore[arg-type]
+
+
+def merge_pantry_items(items: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Merge pantry entries that name the same ingredient into one item.
+
+    Each inventory batch may arrive as its own entry. Entries are keyed by
+    `normalize(item['name'])`; a merged item sums `quantity_g`, keeps the soonest
+    known `hours_to_expire`, keeps the first non-empty `code`, and stays a staple
+    only when every entry is one. First-seen order is kept. Returns new dicts.
+    """
+    merged: dict[str, dict[str, Any]] = {}
+    for it in items:
+        key = normalize(it.get("name"))
+        current = merged.get(key)
+        if current is None:
+            merged[key] = dict(it)
+            continue
+        current["quantity_g"] = _quantity(current.get("quantity_g")) + _quantity(
+            it.get("quantity_g")
+        )
+        current["hours_to_expire"] = _soonest_hours(
+            current.get("hours_to_expire"), it.get("hours_to_expire")
+        )
+        if not _clean_code(current.get("code")) and _clean_code(it.get("code")):
+            current["code"] = it.get("code")
+        current["is_staple"] = bool(current.get("is_staple")) and bool(
+            it.get("is_staple")
+        )
+    return list(merged.values())
+
+
 def resolve_pantry_items(
     items: Iterable[dict[str, Any]],
     index: Mapping[str, tuple[str, ...] | list[str]],

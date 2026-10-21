@@ -92,6 +92,7 @@ def format_candidate_recommendation(
     missing_ings: list[dict[str, Any]] = []
     optional_ings: list[dict[str, Any]] = []
     matched_groups: list[tuple[str, set[str]]] = []
+    matched_weights_g: list[float] = []
 
     for g in grouped_ings.values():
         n = str(g["name"])
@@ -151,6 +152,7 @@ def format_candidate_recommendation(
         if is_present:
             matched_ings.append(item_info)
             matched_groups.append((c, n_aliases))
+            matched_weights_g.append(tot_g)
         elif is_accompaniment:
             opt_info = dict(item_info)
             opt_info["is_optional"] = True
@@ -192,10 +194,21 @@ def format_candidate_recommendation(
         if pantry_item_matches(it, matched_groups)
     ]
     pantry_used = len(used_items)
-    rescued_items = [
-        str(it["name"]) for it in used_items
-        if not it.get("is_staple") and float(it.get("hours_to_expire") or 999.0) <= 24.0
-    ]
+    rescued_requirements: dict[str, dict[str, Any]] = {}
+    for it in used_items:
+        if it.get("is_staple") or float(it.get("hours_to_expire") or 999.0) > 24.0:
+            continue
+        name = str(it["name"])
+        key = name.strip().lower()
+        if key in rescued_requirements:
+            continue
+        required_g = sum(
+            weight_g
+            for group, weight_g in zip(matched_groups, matched_weights_g)
+            if pantry_item_matches(it, [group])
+        )
+        rescued_requirements[key] = {"name": name, "required_g": round(required_g, 1)}
+    rescued_items = [str(item["name"]) for item in rescued_requirements.values()]
     is_zero_waste_hero = len(rescued_items) > 0
 
     return {
@@ -219,6 +232,7 @@ def format_candidate_recommendation(
         "carbs_g": scaled_c,
         "is_zero_waste_hero": is_zero_waste_hero,
         "rescued_items": rescued_items,
+        "rescued_requirements": list(rescued_requirements.values()),
         "status_text": status_text,
         "status_badge": status_badge,
         "matched_ingredients": matched_ings,

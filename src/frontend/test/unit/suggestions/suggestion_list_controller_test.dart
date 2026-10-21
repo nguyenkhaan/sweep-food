@@ -224,6 +224,16 @@ void main() {
                 ],
                 'optional_ingredients': [],
                 'rescued_items': ['Thịt bò'],
+                'rescued_details': [
+                  {
+                    'name': 'Thịt bò',
+                    'code': '7003',
+                    'required_g': 250.0,
+                    'rescued_g': 200.0,
+                    'expiring_g': 200.0,
+                    'expires_at': '2026-10-22T08:00:00Z',
+                  },
+                ],
                 'status_badge': 'elastic',
                 'explanation': 'AI-ranked from pantry availability.',
                 'provider': 'SWEEP_FOOD_AI',
@@ -259,6 +269,12 @@ void main() {
         expect(suggestion.rankingFeatures.rescueWeightG, 300);
         expect(suggestion.matchedIngredients.single.name, 'Thịt bò');
         expect(suggestion.missingIngredients.single.name, 'Hành tây');
+        final rescued = suggestion.rescuedIngredients.single;
+        expect(rescued.name, 'Thịt bò');
+        expect(rescued.requiredG, 250);
+        expect(rescued.rescuedG, 200);
+        expect(rescued.expiringG, 200);
+        expect(rescued.expiresAt, DateTime.utc(2026, 10, 22, 8).toLocal());
         expect(suggestion.statusLabel, 'Thiếu nhẹ, có thể linh hoạt');
         expect(suggestion.modelVersion, 'lgbm-contextual-v1');
         expect(suggestion.rankerModel, 'LightGBM LambdaMART');
