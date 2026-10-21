@@ -211,7 +211,7 @@ class VoiceReviewScreen extends ConsumerWidget {
                       context.go(Routes.pantry);
                     } on Object catch (e) {
                       if (!context.mounted) return;
-                      AppSnack.show(context, context.l10n.scanSaveError('$e'));
+                      AppSnack.show(context, context.saveErrorMessage(e));
                     }
                   },
             style: ElevatedButton.styleFrom(

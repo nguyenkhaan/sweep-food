@@ -33,11 +33,16 @@ class AddIngredientController extends _$AddIngredientController {
   bool get isEditing => editItemId != null;
 
   /// Editing the name detaches the item from the catalog match (and from any
-  /// FreshCheck estimate computed for it) until the smart parser runs again.
+  /// FreshCheck estimate and food group derived from it) until the smart
+  /// parser runs again. When editing a saved item the stored group is kept.
   void setName(String v) => state = v == state.name
       ? state
-      : state.copyWith(name: v, ingredientId: null, freshness: null);
-  void setCategory(String v) => state = state.copyWith(category: v);
+      : state.copyWith(
+          name: v,
+          ingredientId: null,
+          freshness: null,
+          category: isEditing ? state.category : '',
+        );
   void setQuantity(double v) => state = state.copyWith(quantity: v);
   void setUnit(MeasurementUnit v) => state = state.copyWith(unit: v);
   /// FreshCheck depends on where the item is stored, so changing the tier
@@ -83,6 +88,7 @@ class AddIngredientController extends _$AddIngredientController {
     state = state.copyWith(
       name: match.name,
       ingredientId: match.masterIngredientId,
+      category: match.category ?? '',
       quantity: fillQuantity ? match.quantity! : state.quantity,
       unit: fillQuantity && match.unit != null ? match.unit! : state.unit,
     );

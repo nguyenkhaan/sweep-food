@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -136,5 +137,116 @@ void main() {
     expect(find.textContaining('Dùng hạn này'), findsNothing);
     expect(find.text('Tính lại'), findsOneWidget);
     expect(accepted.value, isNull);
+  });
+
+  group('"Khác" free-text answer', () {
+    setUp(() {});
+
+    testWidgets('is sent as other_answers and carried into the accepted estimate', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      when(
+        () => api.post(ApiPaths.freshnessPreview, body: any(named: 'body')),
+      ).thenAnswer((_) async => _preview(blocked: false));
+
+      final accepted = await _open(tester, api);
+      await tester.tap(find.text('Khác'));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Lá hơi vàng ở mép');
+      await tester.pump();
+      await tester.tap(find.text('Xem hạn ước tính'));
+      await tester.pumpAndSettle();
+
+      final sent =
+          verify(
+                () => api.post(
+                  ApiPaths.freshnessPreview,
+                  body: captureAny(named: 'body'),
+                ),
+              ).captured.single
+              as Map<String, dynamic>;
+      expect(sent['answers'], isEmpty);
+      expect(sent['other_answers'], {'appearance': 'Lá hơi vàng ở mép'});
+
+      await tester.tap(find.text('Dùng hạn này (04/09/2026)'));
+      await tester.pumpAndSettle();
+      expect(accepted.value?.answers, isEmpty);
+      expect(accepted.value?.otherAnswers, {'appearance': 'Lá hơi vàng ở mép'});
+    });
+
+    testWidgets('an off-topic answer shows the backend message under the box', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final request = RequestOptions(path: ApiPaths.freshnessPreview);
+      when(
+        () => api.post(ApiPaths.freshnessPreview, body: any(named: 'body')),
+      ).thenThrow(
+        DioException(
+          requestOptions: request,
+          response: Response<dynamic>(
+            requestOptions: request,
+            statusCode: 422,
+            data: {
+              'status_code': 422,
+              'detail': 'vui lòng trả lời liên quan tới câu hỏi',
+              'path': '/api/freshness/previews',
+              'code': 'FRESHCHECK_OTHER_ANSWER_NEEDS_CLARIFICATION',
+              'axes': [
+                {
+                  'axis': 'appearance',
+                  'reason': 'irrelevant',
+                  'question_vi': 'Lá có còn tươi không?',
+                  'message_vi': 'vui lòng trả lời liên quan tới câu hỏi',
+                },
+              ],
+            },
+          ),
+        ),
+      );
+
+      await _open(tester, api);
+      await tester.tap(find.text('Khác'));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Hôm nay trời đẹp');
+      await tester.pump();
+      await tester.tap(find.text('Xem hạn ước tính'));
+      await tester.pumpAndSettle();
+
+      const message = 'vui lòng trả lời liên quan tới câu hỏi';
+      expect(find.text(message), findsOneWidget);
+      expect(find.textContaining('Hạn ước tính:'), findsNothing);
+      expect(find.text('Xem hạn ước tính'), findsOneWidget); // can retry
+      expect(
+        tester.getTopLeft(find.text(message)).dy,
+        greaterThan(tester.getBottomLeft(find.byType(EditableText)).dy),
+      );
+
+      // Editing the answer clears the stale message.
+      await tester.enterText(find.byType(TextField), 'Lá còn xanh');
+      await tester.pump();
+      expect(find.text(message), findsNothing);
+    });
+
+    testWidgets('an empty description is stopped before any request', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(800, 1400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await _open(tester, api);
+      await tester.tap(find.text('Khác'));
+      await tester.pump();
+      await tester.tap(find.text('Xem hạn ước tính'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Vui lòng nhập mô tả cho mục Khác.'), findsOneWidget);
+      verifyNever(
+        () => api.post(ApiPaths.freshnessPreview, body: any(named: 'body')),
+      );
+    });
   });
 }

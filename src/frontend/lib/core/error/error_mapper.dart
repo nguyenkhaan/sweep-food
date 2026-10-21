@@ -40,6 +40,12 @@ Failure mapError(Object error, [StackTrace? stackTrace]) {
   return UnknownFailure(cause: error, stackTrace: stackTrace);
 }
 
+/// The decoded JSON body of a failed HTTP response, or `null` when [error] has
+/// none. Lets a data source read structured error details (e.g. per-field
+/// feedback) without importing the HTTP client.
+Object? responseBodyOf(Object error) =>
+    error is DioException ? error.response?.data : null;
+
 Failure _fromDio(DioException e, StackTrace? st) {
   switch (e.type) {
     case DioExceptionType.connectionTimeout:
@@ -94,6 +100,8 @@ Failure _fromStatus(
     403 => ForbiddenFailure(cause: cause, stackTrace: st),
     404 => NotFoundFailure(message: serverMsg, cause: cause, stackTrace: st),
     409 => ConflictFailure(message: serverMsg, cause: cause, stackTrace: st),
+    422 when serverMsg == UnsupportedIngredientFailure.code =>
+      UnsupportedIngredientFailure(cause: cause, stackTrace: st),
     422 => ValidationFailure(
         message: serverMsg,
         fieldErrors: fields,

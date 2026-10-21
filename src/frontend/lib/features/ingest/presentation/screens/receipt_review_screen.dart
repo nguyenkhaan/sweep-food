@@ -198,7 +198,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
                       context.go(Routes.pantry);
                     } on Object catch (e) {
                       if (!context.mounted) return;
-                      AppSnack.show(context, context.l10n.scanSaveError('$e'));
+                      AppSnack.show(context, context.saveErrorMessage(e));
                     }
                         },
                   style: ElevatedButton.styleFrom(
@@ -237,18 +237,6 @@ class ReceiptReviewScreen extends ConsumerWidget {
     );
     var selectedUnit = item.unit;
     var selectedTier = item.storageTier;
-    var selectedCategory = item.category.isEmpty
-        ? l10n.catOther
-        : item.category;
-
-    final categories = [
-      l10n.catVegetables,
-      l10n.catMeatSeafood,
-      l10n.catSpices,
-      l10n.catDairyEgg,
-      l10n.catDryGoods,
-      l10n.catOther,
-    ];
 
     await showModalBottomSheet<void>(
       context: context,
@@ -319,20 +307,6 @@ class ReceiptReviewScreen extends ConsumerWidget {
                 ],
               ),
               Gap.gapSm,
-              DropdownButtonFormField<String>(
-                initialValue: selectedCategory,
-                decoration: InputDecoration(
-                  labelText: l10n.reviewCategory,
-                  border: const OutlineInputBorder(),
-                ),
-                items: categories
-                    .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                    .toList(),
-                onChanged: (c) {
-                  if (c != null) setState(() => selectedCategory = c);
-                },
-              ),
-              Gap.gapSm,
               DropdownButtonFormField<StorageTier>(
                 initialValue: selectedTier,
                 decoration: InputDecoration(
@@ -380,7 +354,8 @@ class ReceiptReviewScreen extends ConsumerWidget {
                             name: newName,
                             quantity: qty,
                             unit: selectedUnit,
-                            category: selectedCategory,
+                            // The food group follows the smart-parser match.
+                            category: renamed ? '' : item.category,
                             storageTier: selectedTier,
                             isExpiryWarn: false,
                             ingredientId: renamed ? null : item.ingredientId,

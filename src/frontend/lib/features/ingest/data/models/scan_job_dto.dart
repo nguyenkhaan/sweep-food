@@ -98,6 +98,7 @@ abstract class ScanJobDto with _$ScanJobDto {
                 unit: unitStr,
                 priceVnd: unitPrice ?? totalPrice,
                 masterIngredientId: li['master_ingredient_id']?.toString(),
+                category: li['category']?.toString() ?? '',
               ),
             );
           }
@@ -183,6 +184,7 @@ abstract class ScanJobDto with _$ScanJobDto {
         expiryDate: expiresAt,
         isExpiryWarn: isExpiryWarn,
         masterIngredientId: fields['master_ingredient_id']?.toString(),
+        category: fields['category']?.toString() ?? '',
       );
 
       final determinedType =

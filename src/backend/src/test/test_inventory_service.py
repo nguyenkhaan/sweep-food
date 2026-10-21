@@ -17,13 +17,11 @@ from src.model.enum_model import (
     InventoryLedgerEventType,
     InventorySource,
     MeasurementUnit,
-    ShelfLifeRuleScope,
     StorageMode,
 )
 from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 from src.model.master_ingredient_model import MasterIngredientModel
-from src.model.shelf_life_rule_model import ShelfLifeRuleModel
 from src.module.inventory.inventory_dto import (
     ConsumeInventoryBatchRequestDTO,
     CreateInventoryBatchRequestDTO,
@@ -33,6 +31,7 @@ from src.module.inventory.inventory_dto import (
     WasteIngredientQueryDTO,
 )
 from src.module.inventory.inventory_service import (
+    IngredientNotSupportedError,
     InventoryBatchNotFoundError,
     InventoryConflictError,
     InventoryService,
@@ -95,6 +94,16 @@ class FakeResult:
         return self.value
 
 
+
+class FakeResolver:
+    """Fake ingredient resolver mapping test ingredient names to IDs."""
+
+    def __init__(self, mapping: dict[str, UUID] | None = None) -> None:
+        self._mapping = mapping or {}
+
+    async def resolve(self, name: str, _session: AsyncSession) -> UUID | None:
+        return self._mapping.get(name)
+
 class FakeDatabaseSession:
     """Provide deterministic query results and capture committed model state."""
 
@@ -141,14 +150,30 @@ class FakeDatabaseSession:
 
 @pytest.mark.anyio
 async def test_create_custom_batch_persists_initial_stock_atomically() -> None:
-    """A manual custom batch and matching ledger share one commit."""
-    database = FakeDatabaseSession([FakeResult(None)])
-    service = InventoryService(cast(AsyncSession, database))
+    """A recognized custom food name resolves to a master ingredient and persists initial stock atomically."""
+    ingredient_id = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b208")
+    category_id = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b209")
+    ingredient = MasterIngredientModel(
+        id=ingredient_id,
+        name="Thịt ba chỉ",
+        description="Thịt lợn ba chỉ",
+        category_id=category_id,
+        canonical_unit=MeasurementUnit.GRAM,
+        default_storage_mode=StorageMode.REFRIGERATED,
+        other_nutrients={},
+    )
+    database = FakeDatabaseSession(
+        [FakeResult(None), FakeResult(ingredient), FakeResult(ingredient)]
+    )
+    resolver = FakeResolver({"Thịt ba chỉ": ingredient_id})
+    service = InventoryService(
+        cast(AsyncSession, database), ingredient_resolver=resolver
+    )
 
     response = await service.create_batch(
         USER_ID,
         CreateInventoryBatchRequestDTO(
-            custom_name="Home-made sauce",
+            custom_name="Thịt ba chỉ",
             quantity=2.0,
             unit=MeasurementUnit.LITER,
             storage_mode=StorageMode.REFRIGERATED,
@@ -163,15 +188,18 @@ async def test_create_custom_batch_persists_initial_stock_atomically() -> None:
         item for item in database.added if isinstance(item, InventoryLedgerEntryModel)
     )
     assert response.id == BATCH_ID
-    assert response.ingredient_name == "Home-made sauce"
+    assert response.master_ingredient_id == ingredient_id
+    assert response.custom_name is None
+    assert response.ingredient_name == "Thịt ba chỉ"
     assert response.expiration_source is ExpirationSource.UNKNOWN
+    assert batch.master_ingredient_id == ingredient_id
+    assert batch.custom_name is None
     assert batch.current_quantity == 2.0
     assert ledger.event_type is InventoryLedgerEventType.INITIAL_STOCK
     assert ledger.quantity_before == 0.0
     assert ledger.quantity_after == 2.0
     assert database.commit_count == 1
     assert database.rollback_count == 0
-
 
 @pytest.mark.anyio
 async def test_create_catalog_batch_without_printed_expiry_is_not_estimated() -> None:
@@ -211,14 +239,30 @@ async def test_create_catalog_batch_without_printed_expiry_is_not_estimated() ->
 @pytest.mark.anyio
 async def test_create_batch_preserves_a_provided_manufacturer_expiry() -> None:
     """An explicitly supplied package date remains the authoritative expiry."""
+    ingredient_id = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b208")
+    category_id = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b209")
+    ingredient = MasterIngredientModel(
+        id=ingredient_id,
+        name="Thịt ba chỉ",
+        description="Thịt lợn ba chỉ",
+        category_id=category_id,
+        canonical_unit=MeasurementUnit.GRAM,
+        default_storage_mode=StorageMode.REFRIGERATED,
+        other_nutrients={},
+    )
     manufacturer_expiry = NOW + timedelta(days=7)
-    database = FakeDatabaseSession([FakeResult(None)])
-    service = InventoryService(cast(AsyncSession, database))
+    database = FakeDatabaseSession(
+        [FakeResult(None), FakeResult(ingredient), FakeResult(ingredient)]
+    )
+    resolver = FakeResolver({"Thịt ba chỉ": ingredient_id})
+    service = InventoryService(
+        cast(AsyncSession, database), ingredient_resolver=resolver
+    )
 
     response = await service.create_batch(
         USER_ID,
         CreateInventoryBatchRequestDTO(
-            custom_name="Home-made sauce",
+            custom_name="Thịt ba chỉ",
             quantity=2.0,
             unit=MeasurementUnit.LITER,
             storage_mode=StorageMode.REFRIGERATED,
@@ -229,6 +273,108 @@ async def test_create_batch_preserves_a_provided_manufacturer_expiry() -> None:
 
     assert response.expires_at == manufacturer_expiry
     assert response.expiration_source is ExpirationSource.MANUFACTURER
+    assert response.master_ingredient_id == ingredient_id
+    assert response.custom_name is None
+
+
+@pytest.mark.anyio
+async def test_create_batch_unrecognized_custom_name_rejects_with_422() -> None:
+    """An unrecognized custom food name is rejected with 422 and detail INGREDIENT_NOT_SUPPORTED."""
+    database = FakeDatabaseSession([FakeResult(None)])
+    service = InventoryService(
+        cast(AsyncSession, database),
+        ingredient_resolver=FakeResolver(),
+    )
+
+    with pytest.raises(IngredientNotSupportedError) as exc_info:
+        await service.create_batch(
+            USER_ID,
+            CreateInventoryBatchRequestDTO(
+                custom_name="Unrecognized alien food",
+                quantity=2.0,
+                unit=MeasurementUnit.PIECE,
+                storage_mode=StorageMode.ROOM_TEMPERATURE,
+            ),
+            "create-custom-unrecognized",
+        )
+
+    assert exc_info.value.status_code == 422
+    assert exc_info.value.detail == "INGREDIENT_NOT_SUPPORTED"
+    assert database.added == []
+    assert database.commit_count == 0
+
+
+@pytest.mark.anyio
+async def test_stage_batch_with_custom_name_unaffected_for_shopping_or_leftovers() -> None:
+    """stage_batch retains custom_name without parser gating for shopping purchases and leftovers."""
+    database = FakeDatabaseSession([FakeResult(None)])
+    service = InventoryService(cast(AsyncSession, database))
+
+    batch = await service.stage_batch(
+        USER_ID,
+        CreateInventoryBatchRequestDTO(
+            custom_name="Home-made broth",
+            quantity=1.5,
+            unit=MeasurementUnit.LITER,
+            storage_mode=StorageMode.REFRIGERATED,
+        ),
+        "stage-custom-1",
+        reason="Leftover from cooking session",
+    )
+
+    assert batch.custom_name == "Home-made broth"
+    assert batch.master_ingredient_id is None
+    assert len(database.added) == 2
+    assert database.commit_count == 0
+
+
+@pytest.mark.anyio
+async def test_create_batch_idempotency_retry_with_custom_name_returns_existing() -> None:
+    """A retried create_batch with an existing Idempotency-Key returns the existing batch."""
+    ingredient_id = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b208")
+    existing_batch = InventoryBatchModel(
+        id=BATCH_ID,
+        user_id=USER_ID,
+        master_ingredient_id=ingredient_id,
+        custom_name=None,
+        batch_type=InventoryBatchType.RAW_INGREDIENT,
+        initial_quantity=2.0,
+        current_quantity=2.0,
+        unit=MeasurementUnit.LITER,
+        storage_mode=StorageMode.REFRIGERATED,
+        status=InventoryBatchStatus.ACTIVE,
+        expiration_source=ExpirationSource.UNKNOWN,
+        source=InventorySource.MANUAL,
+        created_at=NOW,
+        updated_at=NOW,
+    )
+    ingredient = MasterIngredientModel(
+        id=ingredient_id,
+        name="Thịt ba chỉ",
+        category_id=UUID("018f0f90-26e6-7ce7-8f61-8769f9e5b209"),
+        canonical_unit=MeasurementUnit.GRAM,
+        default_storage_mode=StorageMode.REFRIGERATED,
+        other_nutrients={},
+    )
+    database = FakeDatabaseSession(
+        [FakeResult(existing_batch), FakeResult(ingredient)]
+    )
+    service = InventoryService(cast(AsyncSession, database))
+
+    response = await service.create_batch(
+        USER_ID,
+        CreateInventoryBatchRequestDTO(
+            custom_name="Thịt ba chỉ",
+            quantity=2.0,
+            unit=MeasurementUnit.LITER,
+            storage_mode=StorageMode.REFRIGERATED,
+        ),
+        "existing-key-1",
+    )
+
+    assert response.id == BATCH_ID
+    assert response.ingredient_name == "Thịt ba chỉ"
+    assert database.commit_count == 0
 
 
 @pytest.mark.anyio

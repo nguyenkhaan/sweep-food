@@ -108,6 +108,7 @@
   "failQuota": "Bạn đã dùng hết lượt cho tính năng này trong tháng.",
   "failParse": "Dữ liệu trả về không đúng định dạng.",
   "failUnknown": "Đã xảy ra lỗi không mong muốn.",
+  "failUnsupportedIngredient": "Thực phẩm này app chưa hỗ trợ",
 
   "permCameraTitle": "Cho phép dùng máy ảnh",
   "permMicTitle": "Cho phép dùng micro",
@@ -209,6 +210,7 @@
   "pantryFieldNameHint": "VD: Cà chua bi",
   "pantryFieldCategory": "Nhóm thực phẩm",
   "pantryFieldCategoryHint": "VD: Rau củ",
+  "pantryFieldCategoryAuto": "Tự động nhận diện khi thực phẩm được hỗ trợ",
   "pantryFieldStorage": "Nơi bảo quản",
   "pantryFieldExpiry": "Hạn sử dụng",
   "pantryFieldPrice": "Giá (tùy chọn)",
@@ -456,6 +458,7 @@
   "authSignUp": "Đăng ký",
   "authCreateAccount": "Tạo tài khoản",
   "authEmail": "Email",
+  "authEmailOptional": "Email (không bắt buộc)",
   "authPassword": "Mật khẩu",
   "authFullName": "Họ và tên",
   "authFullNameHint": "Nguyễn Văn A",

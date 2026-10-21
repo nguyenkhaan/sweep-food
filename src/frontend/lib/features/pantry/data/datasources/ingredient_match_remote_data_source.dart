@@ -7,6 +7,7 @@ class IngredientMatch {
   const IngredientMatch({
     required this.name,
     this.masterIngredientId,
+    this.category,
     this.quantity,
     this.unit,
   });
@@ -16,6 +17,9 @@ class IngredientMatch {
 
   /// Catalog id; `null` when the text did not match a catalog ingredient.
   final String? masterIngredientId;
+
+  /// Food group of the matched catalog ingredient; `null` when unmatched.
+  final String? category;
 
   /// Only present when the text itself stated a quantity.
   final double? quantity;
@@ -39,6 +43,7 @@ class IngredientMatchRemoteDataSource {
     return IngredientMatch(
       name: name,
       masterIngredientId: fields['master_ingredient_id']?.toString(),
+      category: fields['category']?.toString(),
       quantity: (fields['quantity'] as num?)?.toDouble(),
       unit: unit == null ? null : MeasurementUnit.fromWire(unit),
     );

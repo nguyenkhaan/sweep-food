@@ -34,10 +34,10 @@ MILK_ID = UUID("018f0f90-26e6-7ce7-8f61-8769f9e5a0a1")
 class _MasterRows:
     """Rows returned by the fake master-ingredient lookup."""
 
-    def __init__(self, rows: list[tuple[str, UUID]]) -> None:
+    def __init__(self, rows: list[tuple[Any, ...]]) -> None:
         self._rows = rows
 
-    def all(self) -> list[tuple[str, UUID]]:
+    def all(self) -> list[tuple[Any, ...]]:
         return self._rows
 
 
@@ -45,7 +45,7 @@ class FakeMasterSession:
     """Resolve only the Milk catalog code, as the master_ingredients table would."""
 
     async def execute(self, _statement: object) -> _MasterRows:
-        return _MasterRows([("10001", MILK_ID)])
+        return _MasterRows([("10001", MILK_ID, "Sữa & sản phẩm từ sữa")])
 
 
 def make_extraction_service(ai_service: Any) -> ExtractionService:
@@ -233,10 +233,12 @@ async def test_ocr_label_route_returns_200_with_mock_data(
     assert body["fields"]["ingredient_name"] == "Whole Milk"
     assert body["fields"]["raw_name"] == "MILK"
     assert body["fields"]["master_ingredient_id"] == str(MILK_ID)
+    assert body["fields"]["category"] == "Sữa & sản phẩm từ sữa"
     assert set(body["fields"]) == {
         "ingredient_name",
         "raw_name",
         "master_ingredient_id",
+        "category",
         "quantity",
         "unit",
         "packaged_at",
@@ -318,11 +320,14 @@ async def test_ocr_invoice_route_returns_200_with_mock_data(
     assert isinstance(body["fields"]["line_items"], list)
     assert len(body["fields"]["line_items"]) == 2
     assert body["fields"]["line_items"][0]["master_ingredient_id"] == str(MILK_ID)
+    assert body["fields"]["line_items"][0]["category"] == "Sữa & sản phẩm từ sữa"
     assert body["fields"]["line_items"][1]["master_ingredient_id"] is None
+    assert body["fields"]["line_items"][1]["category"] is None
     assert set(body["fields"]["line_items"][0]) == {
         "name",
         "raw_name",
         "master_ingredient_id",
+        "category",
         "quantity",
         "unit",
         "unit_price",
@@ -373,10 +378,12 @@ async def test_asr_route_returns_200_with_mock_data(
     assert body["fields"]["ingredient_name"] == "Milk"
     assert body["fields"]["raw_name"] == "sữa"
     assert body["fields"]["master_ingredient_id"] == str(MILK_ID)
+    assert body["fields"]["category"] == "Sữa & sản phẩm từ sữa"
     assert set(body["fields"]) == {
         "ingredient_name",
         "raw_name",
         "master_ingredient_id",
+        "category",
         "quantity",
         "unit",
         "packaged_at",
@@ -403,6 +410,7 @@ async def test_text_route_returns_matched_ingredient_without_estimated_quantity(
     assert body["raw_text"] == "sua tuoi"
     assert body["fields"]["ingredient_name"] == "Milk"
     assert body["fields"]["master_ingredient_id"] == str(MILK_ID)
+    assert body["fields"]["category"] == "Sữa & sản phẩm từ sữa"
     assert body["fields"]["quantity"] is None
     assert body["fields"]["unit"] is None
     assert body["warnings"] == ["ADDITIONAL_ITEMS_OMITTED", "QUANTITY_NOT_EXTRACTED"]
@@ -458,6 +466,43 @@ async def test_text_route_runs_the_real_smart_parser(
     assert fields["quantity"] == 500.0
     assert fields["unit"] == "GRAM"
 
+
+@pytest.mark.anyio
+async def test_text_route_returns_null_category_when_unmatched(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """When typed text does not match any catalog item, category is null."""
+    from AI.catalog.snapshot import load_snapshot_from_bundle
+    from AI.extraction.pantry_parser import CatalogPantryParser
+
+    snapshot = load_snapshot_from_bundle()
+    ai_service = AIExtractionService(
+        pantry_parser=CatalogPantryParser(
+            master_alias_index=snapshot.master_alias_index,
+            master_by_code=snapshot.master_by_code,
+        )
+    )
+
+    async def get_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    app.dependency_overrides[require_authentication] = get_user
+    app.dependency_overrides[get_extraction_service] = lambda: (
+        make_extraction_service(ai_service)
+    )
+    try:
+        response = await api_client.post(
+            "/api/extractions/text",
+            json={"text": "mon an la khong co trong catalog 123"},
+        )
+    finally:
+        app.dependency_overrides.pop(require_authentication, None)
+        app.dependency_overrides.pop(get_extraction_service, None)
+
+    assert response.status_code == 200
+    fields = response.json()["fields"]
+    assert fields["master_ingredient_id"] is None
+    assert fields["category"] is None
 
 @pytest.mark.anyio
 async def test_asr_rejects_invalid_audio_type(
