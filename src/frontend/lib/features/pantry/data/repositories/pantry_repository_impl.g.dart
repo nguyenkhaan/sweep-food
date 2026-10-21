@@ -53,4 +53,4 @@ final class PantryRepositoryProvider
   }
 }
 
-String _$pantryRepositoryHash() => r'bd005abf507037c5388826b2a07509404dc85874';
+String _$pantryRepositoryHash() => r'8bcac4c26a1a4bb505bf8ecdfb36fc23094bb14a';

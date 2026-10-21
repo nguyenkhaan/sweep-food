@@ -5,7 +5,7 @@ from __future__ import annotations
 from enum import Enum
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ExtractionStatus(str, Enum):
@@ -17,25 +17,25 @@ class ExtractionStatus(str, Enum):
 
 
 class ExtractionFields(BaseModel):
-    """Structured fields extracted from OCR or ASR input."""
+    """Fields extracted from one OCR label or ASR utterance."""
 
     model_config = ConfigDict(extra="forbid")
 
     ingredient_name: str | None = None
     raw_name: str | None = None
-    master_ingredient_code: str | None = None
-    category: str | None = None
+    master_ingredient_id: UUID | None = None
     quantity: float | None = None
-    quantity_source: str | None = None
     unit: str | None = None
     packaged_at: str | None = None
     expires_at: str | None = None
-    price: float | None = None
-    currency: str | None = None
-    barcode: str | None = None
-    nutrition: dict[str, object] | None = None
-    freshness_guide: dict[str, object] | None = None
-    is_staple: bool | None = None
+
+
+class ExtractionTextRequest(BaseModel):
+    """Typed ingredient text to resolve against the catalog."""
+
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+
+    text: str = Field(min_length=1, max_length=500)
 
 
 class ExtractionResponse(BaseModel):
@@ -60,15 +60,11 @@ class InvoiceLineItem(BaseModel):
 
     name: str | None = None
     raw_name: str | None = None
-    master_ingredient_code: str | None = None
-    category: str | None = None
+    master_ingredient_id: UUID | None = None
     quantity: float | None = None
-    quantity_source: str | None = None
     unit: str | None = None
     unit_price: float | None = None
     total_price: float | None = None
-    nutrition: dict[str, object] | None = None
-    freshness_guide: dict[str, object] | None = None
 
 
 class InvoiceExtractionFields(BaseModel):

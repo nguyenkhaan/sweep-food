@@ -1,16 +1,27 @@
 """Extraction service: validate media input and map typed AI responses."""
 
+import logging
+from collections.abc import Iterable
 from datetime import date
-from uuid import uuid4
+from typing import Any
+from uuid import UUID, uuid4
 
 from fastapi import UploadFile
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from AI.errors import ImageNotSupportedError
+from AI.extraction.service import (
+    AIExtractionService,
+    get_ai_extraction_service,
+)
 from src.core.setting import (
     EXTRACTION_ALLOWED_AUDIO_TYPES,
     EXTRACTION_ALLOWED_IMAGE_TYPES,
     EXTRACTION_MAX_AUDIO_SIZE,
     EXTRACTION_MAX_IMAGE_SIZE,
 )
+from src.model.master_ingredient_model import MasterIngredientModel
 from src.module.extractions.extraction_dto import (
     BarcodeExtractionResponse,
     ExtractionFields,
@@ -21,7 +32,8 @@ from src.module.extractions.extraction_dto import (
     InvoiceLineItem,
 )
 from src.module.extractions.extraction_provider import mock_barcode_lookup
-from src.service.sweep_food_ai_client import SweepFoodAIClient
+
+LOGGER = logging.getLogger(__name__)
 
 
 class ExtractionValidationError(Exception):
@@ -85,116 +97,172 @@ def _normalize_date(raw_date: str | None) -> str | None:
         return None
 
 
-class ExtractionService:
-    """Validate uploads, call the AI service, and map its typed responses."""
+def _normalize_catalog_code(raw_code: object) -> str | None:
+    """Normalize AI catalog codes such as ``7018.0`` to the stored source code."""
+    if raw_code is None:
+        return None
+    code = str(raw_code).strip().removesuffix(".0")
+    return code or None
 
-    def __init__(self, ai_client: SweepFoodAIClient) -> None:
-        self._ai_client = ai_client
+
+class ExtractionService:
+    """Validate uploads, call in-process AI extraction, and map response DTOs."""
+
+    def __init__(
+        self,
+        session: AsyncSession,
+        ai_service: AIExtractionService | None = None,
+    ) -> None:
+        self._session = session
+        self._ai_service = ai_service or get_ai_extraction_service()
+
+    async def _master_ids_by_code(
+        self, items: Iterable[dict[str, Any]]
+    ) -> dict[str, UUID]:
+        """Resolve AI catalog codes to master ingredient ids in one query."""
+        codes = {
+            code
+            for item in items
+            if (code := _normalize_catalog_code(item.get("code"))) is not None
+        }
+        if not codes:
+            return {}
+        rows = await self._session.execute(
+            select(MasterIngredientModel.source_code, MasterIngredientModel.id).where(
+                MasterIngredientModel.source_code.in_(codes)
+            )
+        )
+        return {code: master_id for code, master_id in rows.all()}
+
+    async def _process_image(
+        self, content: bytes, filename: str
+    ) -> dict[str, Any]:
+        """Run guarded OCR; an off-topic image becomes a client-facing 422."""
+        try:
+            return await self._ai_service.process_receipt_input(
+                image_bytes=content, filename=filename
+            )
+        except ImageNotSupportedError as error:
+            raise ExtractionValidationError(
+                "Image is not a food label, food packaging or an invoice: "
+                f"{error.message}"
+            ) from error
 
     async def extract_ocr_label(self, file: UploadFile) -> ExtractionResponse:
         """Extract one product label without inventing missing fields."""
         content = await file.read()
         _validate_image(file, content)
-        result = await self._ai_client.extract_ocr(
-            filename=file.filename or "label",
-            content=content,
-            content_type=file.content_type,
-        )
-        if not result.items:
+        result = await self._process_image(content, file.filename or "label")
+        items = result.get("items", [])
+        raw_text = str(result.get("raw_text") or "")
+        if not items:
             return ExtractionResponse(
                 request_id=uuid4(),
                 status=ExtractionStatus.FAILED,
                 provider="SWEEP_FOOD_AI",
-                raw_text=result.raw_text,
+                raw_text=raw_text,
                 fields=ExtractionFields(),
                 confidence={},
                 warnings=["NO_ITEMS_EXTRACTED"],
             )
 
-        item = result.items[0]
+        master_ids = await self._master_ids_by_code(items[:1])
+        item = items[0]
         warnings: list[str] = []
-        quantity = item.quantity_g if item.quantity_source == "extracted" else None
+        quantity = (
+            item.get("quantity_g")
+            if item.get("quantity_source") == "extracted"
+            else None
+        )
         if quantity is None:
             warnings.append("QUANTITY_NOT_EXTRACTED")
-        packaged_at = _normalize_date(item.production_date)
+        packaged_at = _normalize_date(item.get("production_date"))
         if packaged_at is None:
             warnings.append("PRODUCTION_DATE_NOT_EXTRACTED")
-        expires_at = _normalize_date(item.expiry_date)
+        expires_at = _normalize_date(item.get("expiry_date"))
         if expires_at is None:
             warnings.append("EXPIRY_DATE_NOT_EXTRACTED")
-        elif item.expiry_check == "suspicious":
+        elif item.get("expiry_check") == "suspicious":
             warnings.append("EXPIRY_DATE_SUSPICIOUS")
+        item_conf = item.get("confidence")
         confidence = (
-            {"ingredient_name": item.confidence} if item.confidence is not None else {}
+            {"ingredient_name": item_conf} if item_conf is not None else {}
         )
-        if item.confidence is None:
+        if item_conf is None:
             warnings.append("CONFIDENCE_NOT_AVAILABLE")
 
         return ExtractionResponse(
             request_id=uuid4(),
-            status=ExtractionStatus.PARTIAL if warnings else ExtractionStatus.SUCCEEDED,
+            status=(
+                ExtractionStatus.PARTIAL if warnings else ExtractionStatus.SUCCEEDED
+            ),
             provider="SWEEP_FOOD_AI",
-            raw_text=result.raw_text,
+            raw_text=raw_text,
             fields=ExtractionFields(
-                ingredient_name=item.name,
-                raw_name=item.raw_name,
-                master_ingredient_code=item.code,
-                category=item.category,
+                ingredient_name=item.get("name"),
+                raw_name=item.get("raw_name"),
+                master_ingredient_id=master_ids.get(
+                    _normalize_catalog_code(item.get("code")) or ""
+                ),
                 quantity=quantity,
-                quantity_source=item.quantity_source,
                 unit="GRAM" if quantity is not None else None,
                 packaged_at=packaged_at,
                 expires_at=expires_at,
-                nutrition=item.nutrition,
-                freshness_guide=item.freshness_guide,
-                is_staple=item.is_staple,
             ),
             confidence=confidence,
             warnings=warnings,
         )
 
-    async def extract_ocr_invoice(self, file: UploadFile) -> InvoiceExtractionResponse:
+    async def extract_ocr_invoice(
+        self, file: UploadFile
+    ) -> InvoiceExtractionResponse:
         """Return the provable subset of the current generic OCR response."""
         content = await file.read()
         _validate_image(file, content)
-        result = await self._ai_client.extract_ocr(
-            filename=file.filename or "invoice",
-            content=content,
-            content_type=file.content_type,
-        )
+        result = await self._process_image(content, file.filename or "invoice")
+        items = result.get("items", [])
+        master_ids = await self._master_ids_by_code(items)
+        raw_text = str(result.get("raw_text") or "")
+        vendor_name = result.get("store_name")
         line_items = [
             InvoiceLineItem(
-                name=item.name,
-                raw_name=item.raw_name,
-                master_ingredient_code=item.code,
-                category=item.category,
-                quantity=(
-                    item.quantity_g if item.quantity_source == "extracted" else None
+                name=item["name"],
+                raw_name=item.get("raw_name"),
+                master_ingredient_id=master_ids.get(
+                    _normalize_catalog_code(item.get("code")) or ""
                 ),
-                quantity_source=item.quantity_source,
-                unit=(
-                    "GRAM"
-                    if item.quantity_g is not None
-                    and item.quantity_source == "extracted"
+                quantity=(
+                    item.get("quantity_g")
+                    if item.get("quantity_source") == "extracted"
                     else None
                 ),
-                nutrition=item.nutrition,
-                freshness_guide=item.freshness_guide,
+                unit=(
+                    "GRAM"
+                    if item.get("quantity_g") is not None
+                    and item.get("quantity_source") == "extracted"
+                    else None
+                ),
             )
-            for item in result.items
+            for item in items
         ]
         warnings = ["INVOICE_FINANCIAL_FIELDS_NOT_AVAILABLE"]
         if not line_items:
             warnings.append("NO_ITEMS_EXTRACTED")
+        LOGGER.info(
+            "AI invoice OCR mapped item_count=%s has_raw_text=%s warnings=%s",
+            len(line_items),
+            bool(raw_text.strip()),
+            warnings,
+        )
 
         return InvoiceExtractionResponse(
             request_id=uuid4(),
             status=ExtractionStatus.PARTIAL,
             provider="SWEEP_FOOD_AI",
-            raw_text=result.raw_text,
+            raw_text=raw_text,
             fields=InvoiceExtractionFields(
                 line_items=line_items,
-                vendor_name=result.store_name,
+                vendor_name=vendor_name,
             ),
             confidence={},
             warnings=warnings,
@@ -204,49 +272,68 @@ class ExtractionService:
         """Map the first spoken ingredient and report any omitted items."""
         content = await file.read()
         _validate_audio(file, content)
-        result = await self._ai_client.extract_asr(
-            filename=file.filename or "audio",
-            content=content,
-            content_type=file.content_type,
+        result = await self._ai_service.process_voice_input(
+            audio_bytes=content,
+            filename=file.filename or "audio.wav",
         )
-        if not result.items:
+        return await self._map_first_item(
+            result.get("items", []), str(result.get("transcript") or "")
+        )
+
+    async def extract_text(self, text: str) -> ExtractionResponse:
+        """Match typed text to the catalog and map the first ingredient."""
+        result = await self._ai_service.process_text_input(text)
+        return await self._map_first_item(result.get("items", []), text)
+
+    async def _map_first_item(
+        self, items: list[dict[str, Any]], raw_text: str
+    ) -> ExtractionResponse:
+        """Map the first parsed ingredient and report any omitted items."""
+        if not items:
             return ExtractionResponse(
                 request_id=uuid4(),
                 status=ExtractionStatus.FAILED,
                 provider="SWEEP_FOOD_AI",
-                raw_text=result.transcript,
+                raw_text=raw_text,
                 fields=ExtractionFields(),
                 confidence={},
                 warnings=["NO_ITEMS_EXTRACTED"],
             )
 
-        item = result.items[0]
+        master_ids = await self._master_ids_by_code(items[:1])
+        item = items[0]
         warnings: list[str] = []
-        if len(result.items) > 1:
+        if len(items) > 1:
             warnings.append("ADDITIONAL_ITEMS_OMITTED")
-        quantity = item.quantity_g if item.quantity_source == "extracted" else None
+        quantity = (
+            item.get("quantity_g")
+            if item.get("quantity_source") == "extracted"
+            else None
+        )
         if quantity is None:
             warnings.append("QUANTITY_NOT_EXTRACTED")
+        item_conf = item.get("confidence")
         confidence = (
-            {"ingredient_name": item.confidence} if item.confidence is not None else {}
+            {"ingredient_name": item_conf} if item_conf is not None else {}
         )
+        if item_conf is None:
+            warnings.append("CONFIDENCE_NOT_AVAILABLE")
 
         return ExtractionResponse(
             request_id=uuid4(),
-            status=ExtractionStatus.PARTIAL if warnings else ExtractionStatus.SUCCEEDED,
+            status=(
+                ExtractionStatus.PARTIAL if warnings else ExtractionStatus.SUCCEEDED
+            ),
             provider="SWEEP_FOOD_AI",
-            raw_text=result.transcript,
+            raw_text=raw_text,
             fields=ExtractionFields(
-                ingredient_name=item.name,
-                raw_name=item.raw_name,
-                master_ingredient_code=item.code,
-                category=item.category,
+                ingredient_name=item.get("name"),
+                raw_name=item.get("raw_name"),
+                master_ingredient_id=master_ids.get(
+                    _normalize_catalog_code(item.get("code")) or ""
+                ),
                 quantity=quantity,
-                quantity_source=item.quantity_source,
                 unit="GRAM" if quantity is not None else None,
-                nutrition=item.nutrition,
-                freshness_guide=item.freshness_guide,
-                is_staple=item.is_staple,
             ),
             confidence=confidence,
             warnings=warnings,

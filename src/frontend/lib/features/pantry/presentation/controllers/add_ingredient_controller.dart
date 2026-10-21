@@ -1,5 +1,9 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart' show Provider;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
 import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
+import 'package:sweepfood/features/pantry/data/datasources/ingredient_match_remote_data_source.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_item_controller.dart';
@@ -8,6 +12,11 @@ import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 part 'add_ingredient_controller.g.dart';
+
+final ingredientMatchRemoteDataSourceProvider =
+    Provider<IngredientMatchRemoteDataSource>(
+      (ref) => IngredientMatchRemoteDataSource(ref.watch(apiClientProvider)),
+    );
 
 /// Form state for K-03 (add) and K-03 in edit mode (`editItemId != null`).
 @riverpod
@@ -23,13 +32,24 @@ class AddIngredientController extends _$AddIngredientController {
 
   bool get isEditing => editItemId != null;
 
-  void setName(String v) => state = state.copyWith(name: v);
+  /// Editing the name detaches the item from the catalog match (and from any
+  /// FreshCheck estimate computed for it) until the smart parser runs again.
+  void setName(String v) => state = v == state.name
+      ? state
+      : state.copyWith(name: v, ingredientId: null, freshness: null);
   void setCategory(String v) => state = state.copyWith(category: v);
   void setQuantity(double v) => state = state.copyWith(quantity: v);
   void setUnit(MeasurementUnit v) => state = state.copyWith(unit: v);
-  void setTier(StorageTier v) => state = state.copyWith(storageTier: v);
+  /// FreshCheck depends on where the item is stored, so changing the tier
+  /// discards an estimate computed for the previous one.
+  void setTier(StorageTier v) => state = state.copyWith(
+    storageTier: v,
+    freshness: v == state.storageTier ? state.freshness : null,
+  );
   void setPackedDate(DateTime? v) => state = state.copyWith(packedDate: v);
-  void setExpiryDate(DateTime? v) => state = state.copyWith(expiryDate: v);
+  /// A manual date and a FreshCheck estimate are mutually exclusive.
+  void setExpiry(DateTime? expiry, FreshnessEstimate? freshness) =>
+      state = state.copyWith(expiryDate: expiry, freshness: freshness);
   void setPrice(int? v) => state = state.copyWith(priceVnd: v);
 
   /// Fill name / category / unit from a picked catalog [ingredient].
@@ -40,6 +60,34 @@ class AddIngredientController extends _$AddIngredientController {
         ingredientId: ingredient.id,
         referenceShelfLifeDays: ingredient.referenceShelfLifeDays,
       );
+
+  /// Runs the typed name through the smart parser. A catalog match links the
+  /// item to its master ingredient (enabling FreshCheck) and fills the
+  /// normalized name; a stated quantity only fills an empty quantity. Returns
+  /// `true` when the draft changed.
+  Future<bool> matchTypedName() async {
+    final typed = state.name.trim();
+    if (typed.isEmpty || state.ingredientId != null || isEditing) return false;
+    final IngredientMatch? match;
+    try {
+      match = await ref.read(ingredientMatchRemoteDataSourceProvider).match(typed);
+    } on Object {
+      return false;
+    }
+    if (match == null ||
+        match.masterIngredientId == null ||
+        state.name.trim() != typed) {
+      return false;
+    }
+    final fillQuantity = state.quantity <= 0 && match.quantity != null;
+    state = state.copyWith(
+      name: match.name,
+      ingredientId: match.masterIngredientId,
+      quantity: fillQuantity ? match.quantity! : state.quantity,
+      unit: fillQuantity && match.unit != null ? match.unit! : state.unit,
+    );
+    return true;
+  }
 
   /// Persists via [PantryListController]. Throws a `Failure` on error.
   Future<PantryItem> submit() {

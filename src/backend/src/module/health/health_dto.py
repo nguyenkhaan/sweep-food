@@ -12,10 +12,14 @@ class LivenessResponseDTO(BaseModel):
     message: str
 
 
-class AIServiceHealthResponseDTO(BaseModel):
-    """Readiness response for the configured Sweep Food AI service."""
+class AIReadinessResponseDTO(BaseModel):
+    """Readiness of the AI workloads hosted inside the backend process."""
 
-    service: Literal["sweep-food-ai"] = "sweep-food-ai"
     status: Literal["ready"] = "ready"
-    provider: Literal["SWEEP_FOOD_AI"] = "SWEEP_FOOD_AI"
+    catalog_revision: str
+    recipe_count: int
+    ranker_model: str
+    model_version: str
+    ocr_configured: bool
+    asr_configured: bool
     latency_ms: float

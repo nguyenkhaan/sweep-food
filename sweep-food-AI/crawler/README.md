@@ -31,7 +31,7 @@ python crawler/crawl_viendinhduong.py
 ```
 
 ### Outputs
-* **Raw JSON**: `data/raw/viendinhduong/food_nutrition_raw.json` (Full verbatim payload for auditability).
+* **Raw JSON**: `data/raw/viendinhduong/food_nutrition_raw.json` (Full verbatim payload for source provenance and data lineage).
 * **Master Ingredients Nutrition CSV**: `data/processed/viendinhduong/master_ingredients_nutrition.csv` (Flattened table formatted for direct seeding into the `master_ingredients` database table).
 * **Ingredient Categories CSV**: `data/processed/viendinhduong/ingredient_categories.csv` (Extracted categories for `ingredient_categories`).
 
@@ -52,3 +52,9 @@ python crawler/pdf_extractor.py path/to/document.pdf -o output_nutrients.csv
 # Export to JSON
 python crawler/pdf_extractor.py path/to/document.pdf -o output_nutrients.json
 ```
+
+## 3. Recipe Crawling
+
+`pipeline.py` exports recipe metadata and raw ingredient lines from the source spiders. It does not resolve ingredient lines to master codes or infer quantities or nutrition; unknown values remain missing.
+
+Use separate output directories when collecting new recipes. The default processed output points at `data/processed/recipes/` and must not overwrite the maintained corpus unintentionally. Catalog and recommendation inputs are documented in the root `README.md`.

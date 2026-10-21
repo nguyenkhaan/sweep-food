@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sweepfood/core/network/api_client.dart';
 import 'package:sweepfood/core/network/api_paths.dart';
+import 'package:sweepfood/features/pantry/data/datasources/freshness_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/data/datasources/pantry_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
 import 'package:sweepfood/features/pantry/domain/entities/inventory_ledger.dart';
@@ -36,7 +37,10 @@ void main() {
 
   setUp(() {
     api = _MockApiClient();
-    repo = PantryRepositoryImpl(PantryRemoteDataSource(api));
+    repo = PantryRepositoryImpl(
+      PantryRemoteDataSource(api),
+      FreshnessRemoteDataSource(api),
+    );
   });
 
   group('ledger()', () {

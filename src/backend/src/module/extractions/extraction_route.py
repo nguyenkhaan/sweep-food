@@ -10,6 +10,7 @@ from src.module.extractions.extraction_dependency import get_extraction_service
 from src.module.extractions.extraction_dto import (
     BarcodeExtractionResponse,
     ExtractionResponse,
+    ExtractionTextRequest,
     InvoiceExtractionResponse,
 )
 from src.module.extractions.extraction_service import (
@@ -100,6 +101,24 @@ async def post_asr(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=exc.detail,
         ) from exc
+
+
+@extraction_router.post(
+    "/text",
+    response_model=ExtractionResponse,
+    summary="Match typed ingredient text to the catalog",
+    description=(
+        "Run typed ingredient text through the smart parser and return the "
+        "normalized name and catalog match. No inventory records are created."
+    ),
+)
+async def post_text(
+    body: ExtractionTextRequest,
+    _user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[ExtractionService, Depends(get_extraction_service)],
+) -> ExtractionResponse:
+    """Resolve manually typed ingredient text through the smart parser."""
+    return await service.extract_text(body.text)
 
 
 @extraction_router.post(

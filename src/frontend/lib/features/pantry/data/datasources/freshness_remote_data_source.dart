@@ -24,17 +24,37 @@ class FreshnessRemoteDataSource {
     String batchId, {
     required Map<String, String> answers,
     String? storageMode,
+    DateTime? purchasedAt,
   }) async {
     final json = await _api.post(
       ApiPaths.freshnessAssessment(batchId),
       body: {
         'answers': answers,
         if (storageMode != null) 'storage_mode': storageMode,
+        if (purchasedAt != null)
+          'purchased_at': purchasedAt.toUtc().toIso8601String(),
       },
       headers: {'Idempotency-Key': Idempotency.newKey()},
     );
     return FreshnessAssessmentResponseDto.fromJson(
       json as Map<String, dynamic>,
     );
+  }
+
+  /// Estimates an expiry for an item that is not saved yet; writes nothing.
+  Future<FreshnessPreviewDto> preview({
+    required String masterIngredientId,
+    required String storageMode,
+    required Map<String, String> answers,
+  }) async {
+    final json = await _api.post(
+      ApiPaths.freshnessPreview,
+      body: {
+        'master_ingredient_id': masterIngredientId,
+        'storage_mode': storageMode,
+        'answers': answers,
+      },
+    );
+    return FreshnessPreviewDto.fromJson(json as Map<String, dynamic>);
   }
 }

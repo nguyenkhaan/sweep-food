@@ -1,6 +1,6 @@
 # Sweep Food Backend Cookbook
 
-This is the practical operating guide for engineers and agents working on the Sweep Food backend. Product behavior and acceptance criteria are defined in [`docs/prd.md`](docs/prd.md); implementation order is defined in [`../../tasks/plan.md`](../../tasks/plan.md) and [`../../tasks/todo.md`](../../tasks/todo.md).
+This is the practical operating guide for engineers and agents working on the Sweep Food backend. [`docs/prd.md`](docs/prd.md) records product planning; current API contracts are defined by the routers and DTOs in `src/module/` and exposed through `/docs`.
 
 ## 1. Current Architecture Baseline
 
@@ -9,11 +9,10 @@ This is the practical operating guide for engineers and agents working on the Sw
 | API | FastAPI under `/api` |
 | Primary database | Neon PostgreSQL, configured through `DATABASE_URL` |
 | Ephemeral state | Redis for OTP TTL, rate limits, locks, cache, and worker coordination |
-| Local/CI provider simulation | WireMock in Docker |
+| Local SMS simulation | WireMock in Docker |
 | Authentication | Phone/password sign-in; backend-owned OTP verifies registration, recovery, and sensitive identity changes |
-| Seed data | One idempotent Python entry point at `scripts/seed.py` (to be created in Phase 3) |
-| Recommendation MVP | Explainable rule-based provider backed by seeded recipes and inventory |
-| Future recommendation model | XGBoost or LightGBM adapter behind `RecommendationProvider` |
+| Seed data | Idempotent admin/catalog seeding at `scripts/seed.py` |
+| AI | Hosted in-process under `AI/`: LightGBM recommender over the Postgres catalog, OpenAI OCR and LLM parsing, Groq Whisper ASR |
 
 Neon is PostgreSQL, not a separate database model. Use standard PostgreSQL migrations, transactions, constraints, and `jsonb`; do not introduce database-specific behavior that makes a Neon branch unsafe to migrate or reset.
 
@@ -21,16 +20,13 @@ Neon is PostgreSQL, not a separate database model. Use standard PostgreSQL migra
 
 Use these files as the project context, in this order:
 
-1. [`docs/prd.md`](docs/prd.md) — product scope, API contracts, data model, security, and acceptance criteria.
-2. [`docs/DATABASE.txt`](docs/DATABASE.txt) — enum/table syntax for quick schema review. Phase 0 must update and approve it before migrations are written.
+1. [`docs/prd.md`](docs/prd.md) — MVP product-planning baseline; current routers and DTOs define the API contract.
+2. [`docs/DATABASE.txt`](docs/DATABASE.txt) — planned enum/table syntax; check current models and Alembic revisions before schema changes.
 3. [`docs/DATABASE_NOTES.md`](docs/DATABASE_NOTES.md) — constraints, indexes, Redis state, relationship notes, and data rules.
 4. [`docs/decisions/ADR-001-neon-postgresql.md`](docs/decisions/ADR-001-neon-postgresql.md) — rationale and operational consequences of Neon.
-5. [`../../tasks/plan.md`](../../tasks/plan.md) and [`../../tasks/todo.md`](../../tasks/todo.md) — dependency order and task-level verification.
-6. [`AGENT.md`](AGENT.md) — mandatory Python quality rules: full type hints, no broad exceptions, Ruff, mypy strict, and pylint.
-7. This cookbook — operational commands, environment boundaries, and common workflows.
-8. [`CHANGELOG.md`](CHANGELOG.md) — record externally meaningful changes in the same change set.
-
-Do not implement a task simply because a stub folder exists. Confirm that its task dependencies and phase checkpoint are complete first.
+5. [`AGENT.md`](AGENT.md) — mandatory Python quality rules: full type hints, no broad exceptions, Ruff, mypy strict, and pylint.
+6. This cookbook — operational commands, environment boundaries, and common workflows.
+7. [`CHANGELOG.md`](CHANGELOG.md) — record externally meaningful changes in the same change set.
 
 ### Retry limit and escalation
 
@@ -46,21 +42,7 @@ Do not implement a task simply because a stub folder exists. Confirm that its ta
 
 Use a separate, disposable Neon development/test branch (or isolated test database) for local migrations and automated tests. Never run destructive tests, schema resets, seed experiments, or unreviewed migrations against a shared staging or production branch.
 
-When migrations are introduced, the team may add a separate direct Neon connection setting if the configured `DATABASE_URL` uses a pooled connection. Keep both values in `.env` only and document their purpose in `.env.example` without real credentials.
-
-Expected configuration after the relevant phases are implemented:
-
-| Variable | Required in | Purpose |
-|---|---|---|
-| `DATABASE_URL` | All database-enabled environments | Neon PostgreSQL application connection |
-| `DATABASE_URL_DIRECT` | Migration environments when required | Direct Neon connection for Alembic migration operations |
-| `REDIS_URL` | Local/CI/staging/production | OTP, rate-limit, lock, cache, and worker state |
-| `ENV` | All | `dev`, `test`, `staging`, or `production` behavior switch |
-| `JWT_SECRET` | Non-local environments | Access/refresh token signing secret |
-| `SMS_PROVIDER` | Staging/production | Selects eSMS adapter; local/CI uses mock adapter |
-| `ESMS_*` | Staging/production | eSMS credentials, Brandname, and template configuration |
-| `FCM_*` | Notification-enabled environments | FCM service configuration |
-| `ASR_*`, `OCR_*`, `BARCODE_*` | Integration-enabled environments | External extraction provider configuration |
+Use [`.env.example`](.env.example) and `src/core/setting.py` for supported settings. Access and refresh tokens use separate `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` values. AI providers are configured with `OPENAI_API_KEY` (OCR and LLM text parsing) and `GROQ_API_KEY` (ASR); a missing key returns HTTP 503 for that capability only. `AI_DATA_DIR` and `AI_MODEL_PATH` locate the bundled ranker.
 
 Rules:
 
@@ -91,8 +73,6 @@ Rules:
 
 ### Migration command targets
 
-These commands are introduced in Phase 1.3; do not assume they work until Alembic has been added:
-
 ```bash
 cd src/backend
 uv run alembic current
@@ -100,11 +80,9 @@ uv run alembic upgrade head
 uv run alembic downgrade -1
 ```
 
-Before the migration tool exists, the only safe database action is inspection through approved tooling. Do not hand-edit Neon production tables to substitute for a migration.
-
 ## 5. Local Development Workflow
 
-### Run the current scaffold
+### Run the application
 
 ```bash
 cd src/backend
@@ -112,15 +90,17 @@ uv sync
 uv run python main.py
 ```
 
-The application listens on port `4000`. Inspect `/docs` for the generated OpenAPI contract. The initial health module exposes `/api/health/liveness`, `/api/health/error`, and `/api/health/text`.
+The application listens on port `4000`. Inspect `/docs` for the generated OpenAPI contract. The health module exposes `/api/health/liveness`, `/api/health/error`, and `/api/health/text`.
 
 ### Start local supporting services
 
-`Dockerfile` and `docker-compose.yaml` belong in `src/backend`. The Compose stack runs the API, Redis, and WireMock locally. Neon remains managed remotely and is not recreated in Docker.
+The Compose stack runs the API, notification worker, Redis, WireMock, and Mailpit locally. Neon remains managed remotely and is not recreated in Docker.
 
 - `api` is built from this backend directory and receives `REDIS_URL` and `WIREMOCK_URL` through Compose.
 - `redis` persists only local development data in the named `sweep_food_backend_redis_data` volume.
 - `wiremock` loads local mappings and files from `wiremock/`; no provider credentials are needed.
+- `mailpit` receives local SMTP messages; its web UI is exposed on port `8025`.
+- `notification_worker` runs the ARQ notification worker and uses the configured Firebase service-account secret.
 - All services use the isolated `sweep_food_backend_network` bridge network.
 
 ```bash
@@ -133,7 +113,7 @@ Do not run a command that recreates volumes or resets services unless you have c
 
 ### Required quality gate
 
-Run these from `src/backend` after Python modules and test configuration have been added:
+Run these from `src/backend`:
 
 ```bash
 uv run ruff check .
@@ -147,7 +127,7 @@ uv run pytest
 
 ## 6. Seed Data Workflow
 
-The Phase 3 seed script will be the only supported way to create the initial admin/catalog dataset:
+Use the idempotent seed command for the initial admin/catalog dataset:
 
 ```bash
 cd src/backend
@@ -164,13 +144,9 @@ The seed script must be idempotent and transactional. It seeds the admin account
 
 ## 7. Provider Modes
 
-| Environment | OTP | Notifications | OCR / ASR / Barcode | Persistence behavior |
-|---|---|---|---|---|
-| Local/CI | WireMock; fixed OTP `123456` | Mock FCM | WireMock fixtures | Extraction returns `persisted: false` |
-| Staging | eSMS Sandbox | Staging FCM project | Approved sandbox/test providers | Extraction returns `persisted: false` |
-| Production | eSMS Brandname | Production FCM | Approved production providers | Extraction returns `persisted: false` in MVP |
+Local SMS delivery uses WireMock; local email delivery uses SMTP through Mailpit. In `dev` and `test`, OTP verification uses the configured `DEFAULT_OTP`. Recommendation, OCR, ASR, and text parsing run inside the backend process (`AI/`); only the OpenAI and Groq provider calls leave it.
 
-The backend generates, hashes, expires, and verifies OTPs. OTPs issue purpose-bound verification grants; they never replace phone/password sign-in. eSMS and email providers only deliver the message. Do not send real SMS from a personal SIM or attempt to bypass provider/telecom controls.
+The backend generates, hashes, expires, and verifies OTPs. OTPs never replace phone/password sign-in. Delivery providers only deliver the message. Do not send real SMS from a personal SIM or attempt to bypass provider/telecom controls.
 
 ## 8. Core Domain Recipes
 
@@ -197,18 +173,17 @@ Never update quantity through a raw SQL shortcut that bypasses the inventory led
 
 ### Run recommendations
 
-1. Load active seeded recipe candidates.
-2. Build an inventory snapshot from active, non-expired batches.
-3. Calculate normalized `E`, `A`, `P`, and `U` components.
-4. Return at most five recipes with score explanations.
-5. Persist recommendation run/items/events for future model training.
+1. Validate the structured pantry and preference request (no cooking-time constraint).
+2. Resolve saved expiry information from the authenticated user's active inventory.
+3. Rank candidates with `AI.recommendation.engine.RecommendationEngine` in a worker thread, using the catalog snapshot loaded from Postgres.
+4. Map ranked recipe IDs to the backend catalog and report unknown IDs as warnings.
 
-Keep the endpoint contract independent of the provider. The rule-based MVP provider is replaced by XGBoost/LightGBM only through `RecommendationProvider`.
+The catalog is rebuilt from the bundled data with `python -m AI.catalog.importer [--dry-run]`; until it has run, AI endpoints return HTTP 503 (`AI catalog is not loaded.`). The request path does not persist recommendation runs or training events.
 
 ### Process extracted input
 
 1. Validate the media/barcode request and provider timeout limit.
-2. Call the configured OCR, ASR, or barcode adapter.
+2. Call OpenAI vision (OCR) or Groq Whisper (ASR) through `AI.extraction`; text is normalized by `AI.smart_parser`.
 3. Normalize the response into the shared extraction envelope.
 4. Return raw/structured result, warnings, confidence, and `persisted: false`.
 5. Remove transient media and redact output from logs.
@@ -235,7 +210,7 @@ Do not create an inventory batch from extraction until a later product phase add
 
 ### Extraction contract test
 
-1. Configure WireMock success, timeout, malformed response, low-confidence, and not-found fixtures.
+1. Mock the OpenAI/Groq HTTP transport (`httpx.MockTransport`) for success, timeout, malformed response, low-confidence, and not-found cases.
 2. Call OCR, ASR, and barcode endpoints.
 3. Assert a stable error/result envelope and `persisted: false`.
 4. Assert inventory/ledger table counts are unchanged.
@@ -250,11 +225,10 @@ Do not create an inventory batch from extraction until a later product phase add
 | OTP cannot be verified | Challenge TTL/purpose, rate-limit state, mock/provider response | Inspect redacted correlation IDs; never log the OTP |
 | Recommendation looks wrong | Inventory snapshot, units, expiry state, seeded recipe requirements | Add a deterministic unit test before changing weights |
 | Cooking would over-consume stock | Batch row lock, idempotency key, FEFO allocation | Return conflict; do not apply partial deductions |
-| Extraction provider times out | Provider timeout, WireMock fixture, input validation | Return mapped retryable error; do not persist input/output |
+| Extraction provider times out | Provider timeout, API key presence, input validation | Return mapped retryable error; do not persist input/output |
 
 ## 11. Change Management
 
-- Follow the ordered task list; database documentation and migration work are sequential.
 - Keep a change small and vertically testable. Do not mix a provider integration with unrelated schema refactoring.
 - Update `CHANGELOG.md` when a change affects product behavior, API contract, schema, security, operations, or dependencies.
 - Update `docs/prd.md`, `docs/DATABASE.txt`, or an ADR when a decision changes rather than silently coding around it.
@@ -266,11 +240,9 @@ Do not create an inventory batch from extraction until a later product phase add
 |---|---|---|
 | Backend protocol | `src/backend/AGENT.md` | Mandatory Python quality and implementation constraints |
 | Product requirements | `src/backend/docs/prd.md` | Scope, acceptance criteria, API/data rules |
-| Database table syntax | `src/backend/docs/DATABASE.txt` | Enum and table shape before migrations |
+| Database table syntax | `src/backend/docs/DATABASE.txt` | Planned schema; compare with current models and migrations |
 | Database notes | `src/backend/docs/DATABASE_NOTES.md` | Constraints, indexes, Redis state, and data rules |
 | Architecture decision | `src/backend/docs/decisions/ADR-001-neon-postgresql.md` | Why Neon is used and how to migrate/test safely |
-| Delivery plan | `tasks/plan.md` | Phase order, dependencies, risks |
-| Task checklist | `tasks/todo.md` | Small executable tasks and verification |
 | Change history | `src/backend/CHANGELOG.md` | Record meaningful project changes |
 | Cookbook | `src/backend/COOKBOOK.md` | Daily operations and safe workflows |
 | Agent skills | `agent/skills/` | Select the task-specific workflow before acting |
@@ -278,8 +250,7 @@ Do not create an inventory batch from extraction until a later product phase add
 
 ## 13. Definition of Ready for Any Implementation Task
 
-- The matching PRD section and task entry have been read.
-- Dependencies and the previous phase checkpoint are complete.
+- The matching product requirements and affected implementation have been read.
 - The affected schema/API contract is approved.
 - Test database/branch and provider mode are known and safe.
 - Verification commands and acceptance criteria are identified before editing.
@@ -291,4 +262,4 @@ Do not create an inventory batch from extraction until a later product phase add
 - Migrations, if any, apply safely on a disposable Neon branch.
 - No secret or sensitive personal data appears in source, fixtures, documentation, or logs.
 - Documentation and changelog are updated when the change is externally meaningful.
-- The next task's dependency assumptions remain true.
+- Affected callers and operational documentation match the change.

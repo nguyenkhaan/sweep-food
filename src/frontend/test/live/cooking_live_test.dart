@@ -26,6 +26,7 @@ import 'package:sweepfood/features/meal_plan/data/datasources/meal_plan_remote_d
 import 'package:sweepfood/features/meal_plan/data/repositories/meal_plan_repository_impl.dart';
 import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
 import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan_entry.dart';
+import 'package:sweepfood/features/pantry/data/datasources/freshness_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/data/datasources/pantry_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/data/repositories/pantry_repository_impl.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
@@ -89,7 +90,10 @@ void main() {
     session.fold((f) => fail('sign-in failed: $f'), (_) {});
 
     mealPlans = MealPlanRepositoryImpl(MealPlanRemoteDataSource(api));
-    pantry = PantryRepositoryImpl(PantryRemoteDataSource(api));
+    pantry = PantryRepositoryImpl(
+      PantryRemoteDataSource(api),
+      FreshnessRemoteDataSource(api),
+    );
     cooking = CookingRepositoryImpl(CookingRemoteDataSource(api));
   });
 

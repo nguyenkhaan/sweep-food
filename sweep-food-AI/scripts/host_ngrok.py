@@ -1,9 +1,12 @@
-"""Host SweepFood Web Mockup & Smart Input OCR API via ngrok tunnel.
+"""Expose the experimental SweepFood AI agent test mock through an ngrok tunnel.
+
+Warning: this exposes an incomplete interface beyond localhost. Use only for
+controlled temporary tests with non-sensitive inputs, never for deployment.
 
 Usage:
 ------
-1. Ensure the web server is running on port 8000:
-   C:/Users/HUYPNG/miniconda3/envs/ocr_env/python.exe -m uvicorn web.app:app --port 8000
+1. Start the local test mock (incomplete; not a production service):
+   python -m uvicorn mock_web.app:app --host 127.0.0.1 --port 8000
 
 2. Run this script:
    C:/Users/HUYPNG/miniconda3/envs/ocr_env/python.exe scripts/host_ngrok.py
@@ -31,6 +34,7 @@ load_dotenv(ROOT / ".env")
 
 PORT = int(os.environ.get("PORT", 8000))
 NGROK_TOKEN = os.environ.get("NGROK_AUTHTOKEN")
+NGROK_DOMAIN = os.environ.get("NGROK_DOMAIN", "biogeographic-maranda-unmockingly.ngrok-free.dev")
 
 
 def check_local_server(port: int) -> bool:
@@ -51,7 +55,7 @@ def main():
     if not check_local_server(PORT):
         print(f"  [!] WARNING: Local server on http://127.0.0.1:{PORT} is not responding!")
         print(f"      Please start it in another terminal first:")
-        print(f"      C:/Users/HUYPNG/miniconda3/envs/ocr_env/python.exe -m uvicorn web.app:app --host 127.0.0.1 --port {PORT}")
+        print(f"      python -m uvicorn mock_web.app:app --host 127.0.0.1 --port {PORT}")
         print("      Continuing anyway (tunnel will connect once server starts)...")
     else:
         print(f"  [OK] Local server is healthy and responding on http://127.0.0.1:{PORT}")
@@ -93,10 +97,9 @@ def main():
                 print("  [OK] Đã lưu NGROK_AUTHTOKEN vào file .env!")
 
     # 3. Establish public tunnel
-    print(f"\n[3/3] Opening public HTTPS tunnel to http://127.0.0.1:{PORT}...")
     try:
-        tunnel = ngrok.connect(PORT, "http")
-        public_url = tunnel.public_url.replace("http://", "https://")
+        tunnel = ngrok.connect(PORT, "http", domain=NGROK_DOMAIN)
+        public_url = f"https://{NGROK_DOMAIN}"
 
         print("\n" + "=" * 70)
         print("   🎉 NGROK TUNNEL ONLINE! CÁC ENDPOINT CÔNG KHAI:")

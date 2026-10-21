@@ -204,20 +204,13 @@ class InventoryService:
         if existing is not None:
             return existing
 
-        ingredient = await self._find_ingredient(body.master_ingredient_id)
-        rules = await self._find_shelf_life_rules(ingredient, body.storage_mode)
-        rule = (
-            choose_shelf_life_rule(rules, master_ingredient_id=ingredient.id)
-            if ingredient is not None
-            else None
-        )
-        now = datetime.now(_PRODUCT_TIMEZONE)
+        await self._find_ingredient(body.master_ingredient_id)
         expires_at, expiration_source = resolve_expiration(
             manufacturer_expires_at=body.expires_at,
             stored_at=body.stored_at,
             purchased_at=body.purchased_at,
-            shelf_life_days=rule.default_days if rule is not None else None,
-            now=now,
+            shelf_life_days=None,
+            now=datetime.now(_PRODUCT_TIMEZONE),
         )
         batch = InventoryBatchModel(
             user_id=user_id,

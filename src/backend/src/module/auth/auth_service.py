@@ -43,7 +43,9 @@ class AuthDomainError(HTTPException):
 
     def __init__(self, detail: str | None = None) -> None:
         """Build an HTTP-safe domain failure without exposing sensitive data."""
-        super().__init__(status_code=self.status_code, detail=detail or self.default_detail)
+        super().__init__(
+            status_code=self.status_code, detail=detail or self.default_detail
+        )
 
 
 class DuplicateRegistrationError(AuthDomainError):
@@ -82,11 +84,13 @@ class AuthService:
         db_session: AsyncSession,
         otp_service: OTPService,
         otp_delivery_service: OTPDeliveryService,
+        email_delivery_service: OTPDeliveryService,
     ) -> None:
         """Store request-scoped database and shared OTP dependencies."""
         self.db_session = db_session
         self.otp_service = otp_service
         self.otp_delivery_service = otp_delivery_service
+        self.email_delivery_service = email_delivery_service
 
     async def register(
         self,
@@ -113,15 +117,14 @@ class AuthService:
         except IntegrityError as error:
             await self.db_session.rollback()
             print(f"Database integrity error: {error}")
-            raise DuplicateRegistrationError("Phone or email is already registered") from error
+            raise DuplicateRegistrationError(
+                "Phone or email is already registered"
+            ) from error
         except SQLAlchemyError as error:
             await self.db_session.rollback()
             print(f"Database error: {error}")
             raise
-        return await self.issue_and_send_otp(
-            destination=request.phone,
-            purpose=OTPPurpose.REGISTER,
-        )
+        return await self._issue_and_send_registration_otp(request.phone, request.email)
 
     async def resend_register_otp(self, phone: str) -> OTPIssueResponseDTO:
         """Issue a replacement OTP only for an unverified registration account."""
@@ -133,10 +136,7 @@ class AuthService:
             await self.db_session.rollback()
             print(f"Database error: {error}")
             raise
-        return await self.issue_and_send_otp(
-            destination=phone,
-            purpose=OTPPurpose.REGISTER,
-        )
+        return await self._issue_and_send_registration_otp(phone, user.email)
 
     async def verify_register(
         self,
@@ -347,6 +347,25 @@ class AuthService:
             expires_in_seconds=issued_otp.expires_in_seconds,
         )
 
+    async def _issue_and_send_registration_otp(
+        self,
+        phone: str,
+        email: str | None,
+    ) -> OTPIssueResponseDTO:
+        """Send the registration OTP by SMS and, when present, by email."""
+        issued_otp = await self.issue_and_send_otp(phone, OTPPurpose.REGISTER)
+        if email is not None:
+            await self.email_delivery_service.send_otp(
+                OTPDeliveryRequest(
+                    destination=email,
+                    template_id=OTPPurpose.REGISTER.value,
+                    otp=issued_otp.otp,
+                    expires_in_seconds=issued_otp.expires_in_seconds,
+                    correlation_id=token_urlsafe(16),
+                )
+            )
+        return issued_otp
+
     async def find_user_by_phone(self, phone: str) -> UserModel | None:
         """Return the user matching one normalized phone number."""
         result = await self.db_session.execute(
@@ -494,9 +513,7 @@ class AuthService:
             raise SessionNotFoundError("Refresh token is invalid")
         try:
             user_id = UUID(raw_subject)
-            roles = tuple(
-                UserRole(role) for role in raw_roles if isinstance(role, str)
-            )
+            roles = tuple(UserRole(role) for role in raw_roles if isinstance(role, str))
         except ValueError as error:
             raise SessionNotFoundError("Refresh token is invalid") from error
         if not roles or len(roles) != len(raw_roles):

@@ -52,6 +52,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
+            tooltip: 'Thông báo',
             icon: Stack(
               clipBehavior: Clip.none,
               children: [
@@ -319,8 +320,10 @@ class _HomeSuggestionCard extends StatelessWidget {
     return SuggestionCard(
       title: suggestion.dish.name,
       score: suggestion.score,
+      rank: suggestion.rank,
       meta: suggestion.dish.shortMeta(l10n),
       chips: suggestion.cardChips(l10n),
+      imageUrl: suggestion.dish.imageUrl,
       onTap: () => context.push(
         '${Routes.suggestions}/dish/${suggestion.id}',
         extra: suggestion,

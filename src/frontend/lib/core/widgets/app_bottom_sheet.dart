@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
@@ -11,6 +11,7 @@ Future<T?> showAppBottomSheet<T>(
 }) {
   return showModalBottomSheet<T>(
     context: context,
+    barrierLabel: 'Đóng bảng thao tác',
     isScrollControlled: isScrollControlled,
     useSafeArea: true,
     builder: (ctx) => Padding(
@@ -22,12 +23,7 @@ Future<T?> showAppBottomSheet<T>(
 
 /// Standard sheet body: optional title + subtitle above [child].
 class SheetBody extends StatelessWidget {
-  const SheetBody({
-    required this.child,
-    this.title,
-    this.subtitle,
-    super.key,
-  });
+  const SheetBody({required this.child, this.title, this.subtitle, super.key});
 
   final Widget child;
   final String? title;
@@ -41,8 +37,7 @@ class SheetBody extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (title != null)
-            Text(title!, style: context.text.titleMedium),
+          if (title != null) Text(title!, style: context.text.titleMedium),
           if (subtitle != null) ...[
             const SizedBox(height: 2),
             Text(subtitle!, style: context.text.bodyMedium),

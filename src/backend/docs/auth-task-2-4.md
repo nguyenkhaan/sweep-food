@@ -19,10 +19,10 @@ Deliver phone/password authentication with temporary `UNVERIFIED` registrations,
 ## Commands
 
 ```bash
-.venv/bin/pytest -q src/test/test_auth_service.py src/test/test_auth_router.py
-.venv/bin/ruff check src/module/auth src/service src/middleware
-.venv/bin/mypy src/module/auth src/service src/middleware
-XDG_CACHE_HOME=/tmp/pylint-cache .venv/bin/pylint src/module/auth src/service src/middleware
+uv run pytest -q src/test/test_auth_service.py src/test/test_auth_router.py
+uv run ruff check src/module/auth src/service src/middleware
+uv run mypy --strict src/module/auth src/service src/middleware
+uv run pylint src/module/auth src/service src/middleware
 ```
 
 ## Project Structure
@@ -33,17 +33,6 @@ XDG_CACHE_HOME=/tmp/pylint-cache .venv/bin/pylint src/module/auth src/service sr
 - `src/test/`: focused service and API contract tests.
 
 ## Code Style
-
-```python
-async def verify_register(self, request: VerifyRegisterRequestDTO) -> None:
-    try:
-        # validate Redis OTP, update the user, and commit one transaction
-        ...
-    except SQLAlchemyError as error:
-        await self.db_session.rollback()
-        print(f"Database error: {error}")
-        raise
-```
 
 Every function is typed. Database failures are rolled back through `SQLAlchemyError`; broad `Exception` handling is prohibited.
 

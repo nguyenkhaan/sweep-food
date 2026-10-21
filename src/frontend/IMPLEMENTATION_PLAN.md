@@ -105,7 +105,7 @@ Thứ tự đề xuất: **Inventory trước** (nền tảng — unblock "in pa
 > ✅ **Đã nối API (2026-09-05).** Đã chuyển hoàn toàn sang `POST /recommendations {request: string}` theo đúng API contract của BE, kèm N+1 parallel fetch qua `GET /recipes/{id}` và có test live riêng.
 
 - [x] `suggestion_remote_data_source` đổi `POST /suggestions/dishes` → `POST /recommendations {request: string}`.
-- [x] Bỏ filter cấu trúc (`meal_type`, `max_time_min`...) khỏi request — BE chỉ nhận 1 chuỗi tự do (`{request: string}`, 1..1000 ký tự); `SuggestionRequest` tự ghép câu từ prompt và filter UI (`MealType`, `maxCookTimeMin`, `dietaryPreference`) thành chuỗi tự nhiên (mặc định `'Gợi ý món ăn hôm nay'`).
+- [x] Bỏ filter cấu trúc (`meal_type`, `max_time_min`...) khỏi request — BE chỉ nhận 1 chuỗi tự do (`{request: string}`, 1..1000 ký tự); `SuggestionRequest` tự ghép câu từ prompt và filter UI (`MealType`, `dietaryPreference`) thành chuỗi tự nhiên (mặc định `'Gợi ý món ăn hôm nay'`).
 - [x] Response chỉ có `recipe_id`+`recipe_name`+score — **không nhúng recipe đầy đủ**; `SuggestionRepositoryImpl` gọi song song `GET /recipes/{recipe_id}` (`Future.wait`) cho từng item qua `DishRemoteDataSource` để nạp đầy đủ thực thể `Dish` (ảnh, thời gian, dinh dưỡng, nguyên liệu), có fallback an toàn nếu chưa tìm thấy recipe.
 - [x] `score_components` map trực tiếp `e/a/p/u` — DTO `recommendation_dto.dart` map chuẩn xác `expiration_utilization→e`, `availability→a`, `preference_fit→p`, `purchase_minimization→u`.
 - [x] Đánh dấu rõ trên UI đây là **kết quả từ mock provider** (`analysis.is_mock`): `SuggestionListScreen` hiện thanh thông báo trạng thái thử nghiệm và `ScoreBreakdownSheet` hiển thị banner cảnh báo mock AI cùng giải thích chi tiết `suggestion.explanation`.

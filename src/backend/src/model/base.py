@@ -4,6 +4,7 @@ from datetime import datetime
 from secrets import randbits
 from threading import Lock
 from time import time_ns
+from typing import ClassVar
 from uuid import UUID
 
 from sqlalchemy import DateTime, text
@@ -81,6 +82,8 @@ class TimestampedUUIDModel(CreatedAtUUIDModel):
     """Abstract base for records with UTC creation and update timestamps."""
 
     __abstract__ = True
+
+    __mapper_args__: ClassVar[dict[str, bool]] = {"eager_defaults": True}
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

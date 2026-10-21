@@ -57,7 +57,7 @@ def compute_domain_heuristic_score(
                 missing_core_count += 1
 
         if p_item and not p_item.get("is_staple", False):
-            hours = float(p_item.get("hours_to_expire") or 999.0)
+            hours = float(p_item.get("hours_to_expire", 999.0))
             if hours <= 48.0:
                 urgency_score += max(0.0, (72.0 - hours) / 72.0)
 

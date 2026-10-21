@@ -1,0 +1,6 @@
+# Preserve published bundle bytes, including ZIP members and LightGBM model offsets.
+data/main/** -text
+data/training/lgbm_contextual.txt -text
+# Corpus file bytes are referenced by the published catalog manifest.
+data/processed/recipes/*.csv -text
+data/processed/recipes/*.json -text

@@ -2,7 +2,6 @@
 
 from collections.abc import AsyncGenerator, Generator
 from datetime import UTC, datetime
-from decimal import Decimal
 from typing import cast
 from uuid import UUID
 
@@ -26,8 +25,6 @@ from src.module.extractions.extraction_dto import ExtractionStatus
 from src.module.extractions.extraction_provider import mock_barcode_lookup
 from src.module.inventory.inventory_dto import CreateInventoryBatchRequestDTO
 from src.module.inventory.inventory_service import InventoryService
-from src.module.recommendations.recommendation_dto import RecommendationRequestDTO
-from src.module.recommendations.recommendation_service import RecommendationService
 from src.module.shopping_lists.shopping_dependency import get_shopping_service
 from src.module.shopping_lists.shopping_dto import (
     ShoppingListCollectionResponseDTO,
@@ -189,62 +186,6 @@ async def test_purchase_uses_catalog_default_and_rejects_missing_default() -> No
 
     assert error.value.status_code == 422
     assert len(inventory.requests) == 1
-
-
-class FakeRecipe:
-    """Contain exactly the recipe card data read by recommendation mapping."""
-
-    def __init__(self) -> None:
-        self.id = INGREDIENT_ID
-        self.name = "Spinach soup"
-        self.media_url = None
-        self.estimated_cooking_minutes = 15
-        self.default_servings = Decimal("2.00")
-        self.total_calories = Decimal("198.000")
-        self.total_protein_g = Decimal("22.000")
-        self.total_fat_g = Decimal("10.400")
-        self.total_carbs_g = Decimal("11.000")
-        self.total_sugar_g = Decimal("2.000")
-        self.other_nutrients = {"fiber_g": 5.0}
-
-
-class FakeRecommendationResult:
-    """Expose the scalar result used by the mock recommendation query."""
-
-    def scalars(self) -> "FakeRecommendationResult":
-        """Return this result as its scalar collection."""
-        return self
-
-    def all(self) -> list[FakeRecipe]:
-        """Return one already-loaded recipe card."""
-        return [FakeRecipe()]
-
-
-class FakeRecommendationSession:
-    """Count recipe queries while returning an already-loaded recipe."""
-
-    calls: int = 0
-
-    async def execute(self, _statement: object) -> FakeRecommendationResult:
-        """Record the single catalog query used by recommendation mapping."""
-        self.calls += 1
-        return FakeRecommendationResult()
-
-
-@pytest.mark.anyio
-async def test_mock_recommendation_populates_recipe_summary_without_extra_query() -> None:
-    """Each mock item reuses its selected RecipeModel as the display card."""
-    session = FakeRecommendationSession()
-    service = RecommendationService(cast(AsyncSession, session))
-
-    response = await service.recommend(USER_ID, RecommendationRequestDTO(items=[]))
-
-    summary = response.items[0].recipe_summary
-    assert summary is not None
-    assert summary.id == INGREDIENT_ID
-    assert summary.default_servings == Decimal("2.00")
-    assert summary.nutrition.calories == Decimal("198.000")
-    assert session.calls == 1
 
 
 @pytest.fixture(name="phase2_extraction_routes")

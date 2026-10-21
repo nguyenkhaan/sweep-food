@@ -6,6 +6,7 @@ import httpx
 import pytest
 
 from src.app import app
+from src.module.health import health_service
 from src.module.health.health_dependency import get_health_service
 from src.module.health.health_service import HealthService
 from src.service.email_service import EmailService, SMTPTransport
@@ -26,8 +27,10 @@ class CapturingSMTPTransport(SMTPTransport):
 @pytest.mark.anyio
 async def test_test_email_endpoint_submits_base_template(
     api_client: httpx.AsyncClient,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """The endpoint submits a base-email template through its service dependency."""
+    monkeypatch.setattr(health_service, "ENV", "dev")
     transport = CapturingSMTPTransport()
     service = HealthService(email_service=EmailService(transport=transport))
 
@@ -48,3 +51,25 @@ async def test_test_email_endpoint_submits_base_template(
     html_part = transport.messages[0].get_body(preferencelist=("html",))
     assert html_part is not None
     assert "If you did not request this action" in html_part.get_content()
+
+
+@pytest.mark.anyio
+async def test_test_email_endpoint_is_unavailable_in_production(
+    api_client: httpx.AsyncClient,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(health_service, "ENV", "production")
+    transport = CapturingSMTPTransport()
+    service = HealthService(email_service=EmailService(transport=transport))
+
+    async def get_test_health_service() -> HealthService:
+        return service
+
+    app.dependency_overrides[get_health_service] = get_test_health_service
+    try:
+        response = await api_client.post("/api/health/test-email")
+    finally:
+        app.dependency_overrides.pop(get_health_service, None)
+
+    assert response.status_code == 404
+    assert transport.messages == []

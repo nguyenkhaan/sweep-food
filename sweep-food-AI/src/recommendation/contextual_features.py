@@ -1,20 +1,16 @@
-"""Nine contextual features for the pantry ranker.
+"""Nine pantry/recipe features for the ranker.
 
-Replaces the 30-feature extractor, which fed the ranker near-verbatim copies of
-the synthetic label's own terms (`time_feasibility_diff` == the label's time
-penalty, `dish_type_code` == its role harmony, `protein_energy_ratio` == its
-nutrition score). That is why the ablation showed 30 features scoring *worse*
-than 16: the extras were noise on top of leakage.
-
-Design rules applied here
--------------------------
-* Role-aware, never token-aware. Token overlap and Jaccard are dominated by
-  seasoning, which 55% of recipes are half made of.
-* Every feature must survive a real pantry. Nothing derived from
-  `estimated_cooking_minutes` as a platform constant, from heuristic
-  `dish_type`/`cooking_method` codes, or from unreliable `default_servings`.
+Design rules
+------------
+* Role-aware, never token-aware: token overlap is dominated by seasoning.
+  Seasoning and garnish never decide a dish.
 * Data quality is itself a feature (`nutrition_confidence`), so a dish with
   guessed weights loses rank instead of pretending to be precise.
+* No cooking-time feature: `estimated_cooking_minutes` is not reliable.
+* No scenario-context feature: the five tried on 19/10/2026 (hard violation,
+  method/dish preference, kcal band gap, tight budget) were removed. Scenario
+  rules stay in the training label (`scenario_rules.teacher_grade`) and in the
+  serving hard-filter layer.
 * Signs are monotone by construction, so the trainer can be constrained.
 
 FEATURE_COLS is the authoritative ordering for training and serving.
@@ -41,7 +37,7 @@ FEATURE_COLS: list[str] = [
     "prep_complexity",          # - core count + log(1 + steps)
 ]
 
-# Monotone direction per feature for LightGBM `monotone_constraints`.
+# Monotone direction per feature for LightGBM/XGBoost `monotone_constraints`.
 MONOTONE_CONSTRAINTS: list[int] = [1, -1, 1, -1, 1, 1, 0, 0, -1]
 
 CORE_ROLES = ("core",)

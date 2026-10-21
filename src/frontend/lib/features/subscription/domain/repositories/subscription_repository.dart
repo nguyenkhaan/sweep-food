@@ -7,5 +7,5 @@ abstract interface class SubscriptionRepository {
 
   /// `POST /subscription/premium-interest` — capture "báo tôi khi ra mắt"
   /// (G-05). MVP: nothing is charged.
-  Future<Result<void>> registerPremiumInterest({String? planId, String? email});
+  Future<Result<void>> registerPremiumInterest();
 }

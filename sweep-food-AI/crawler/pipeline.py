@@ -1,10 +1,9 @@
-"""SweepFood Recipe Crawling & Real-time Sanitization Pipeline.
+"""SweepFood Recipe Crawling & Ingestion Pipeline.
 
-Giai đoạn 1 (Scale-out): Thu thập công thức quy mô lớn từ các website ẩm thực
+Thu thập công thức quy mô lớn từ các website ẩm thực
 (Cookpad, Món Ngon Mỗi Ngày, Điện Máy Xanh) với khoảng 2.000 món mỗi trang.
-Tự động làm sạch và chuẩn hóa danh mục nguyên liệu theo thời gian thực,
-tự động lưu checkpoint định kỳ và đồng bộ trực tiếp ra data/processed/recipes/
-(bỏ qua bước so sánh với Master Ingredients / BERT theo yêu cầu).
+Cấu trúc hóa dữ liệu nguyên liệu thô theo định dạng chuẩn,
+tự động lưu checkpoint định kỳ và đồng bộ trực tiếp ra data/processed/recipes/.
 """
 
 from __future__ import annotations
@@ -33,7 +32,6 @@ if hasattr(sys.stderr, "reconfigure"):
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from crawler.spiders import CookpadSpider, DienMayXanhSpider, MonNgonMoiNgaySpider, RawRecipe
-from nlp.llm_cleaner import VietnameseLLMIngredientCleaner
 
 logging.basicConfig(
     level=logging.INFO,
@@ -51,8 +49,6 @@ class RecipeCrawlerPipeline:
         output_dir: str | Path = "data/interim",
         processed_dir: str | Path = "data/processed/recipes",
         raw_dir: str | Path = "data/raw",
-        model_name: str | None = None,
-        device: str | None = None,
         max_workers: int = 16,
         checkpoint_interval: int = 50,
     ) -> None:
@@ -68,35 +64,31 @@ class RecipeCrawlerPipeline:
         self._save_lock = threading.Lock()
 
         logger.info(f"Initializing Crawler Pipeline (Workers: {max_workers}, Checkpoint: {checkpoint_interval})")
-        self.cleaner = VietnameseLLMIngredientCleaner(
-            model_name=model_name,
-            device=device,
-            lazy_load=True,
-        )
-
         self.spiders = {
             "cookpad": CookpadSpider(request_delay=0.15),
             "monngonmoingay": MonNgonMoiNgaySpider(request_delay=0.15),
             "dienmayxanh": DienMayXanhSpider(request_delay=0.15),
         }
 
-    def _clean_and_structure_recipe(self, raw: RawRecipe) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-        """Convert RawRecipe into structured recipe record and ingredient records."""
+    def _structure_recipe(self, raw: RawRecipe) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        """Convert RawRecipe into structured recipe record and ingredient records deterministically."""
         recipe_id = str(uuid.uuid4())
-        cleaned_ings = self.cleaner.clean_recipe_ingredients(raw.raw_ingredients)
 
         recipe_ing_records = []
-        for item in cleaned_ings:
+        for raw_item in raw.raw_ingredients:
+            raw_text = raw_item.strip() if isinstance(raw_item, str) else str(raw_item).strip()
+            if not raw_text:
+                continue
             ing_record = {
                 "id": str(uuid.uuid4()),
                 "recipe_id": recipe_id,
                 "recipe_name": raw.title,
-                "name": item.get("name"),
-                "quantity": item.get("quantity"),
-                "unit": item.get("unit") or "OTHER",
-                "unit_vi": item.get("unit_vi") or "phần ăn",
-                "preparation_note": item.get("preparation_note"),
-                "raw_text": item.get("raw_text"),
+                "name": raw_text,
+                "quantity": None,
+                "unit": "OTHER",
+                "unit_vi": "phần ăn",
+                "preparation_note": None,
+                "raw_text": raw_text,
             }
             recipe_ing_records.append(ing_record)
 
@@ -192,7 +184,7 @@ class RecipeCrawlerPipeline:
                         "unit": ing.get("unit") or "OTHER",
                         "preparation_note": ing.get("preparation_note"),
                         "match_confidence": ing.get("match_confidence"),
-                        "match_method": ing.get("match_method") or "SKIPPED_PER_USER_REQUEST",
+                        "match_method": ing.get("match_method"),
                         "portion_nutrition": ing.get("portion_nutrition"),
                     }
                     processed_ing_rows.append(proc_ing)
@@ -307,19 +299,19 @@ class RecipeCrawlerPipeline:
                 dynamic_ncols=True,
             )
 
-            def _crawl_and_clean_worker(url: str) -> tuple[RawRecipe | None, dict[str, Any] | None]:
+            def _crawl_worker(url: str) -> tuple[RawRecipe | None, dict[str, Any] | None]:
                 try:
                     raw = spider.crawl_recipe(url)
                     if not raw:
                         return None, None
-                    rec_dict, _ = self._clean_and_structure_recipe(raw)
+                    rec_dict, _ = self._structure_recipe(raw)
                     return raw, rec_dict
                 except Exception as ex:
                     logger.debug(f"Worker error on {url}: {ex}")
                     return None, None
 
             with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-                future_to_url = {executor.submit(_crawl_and_clean_worker, u): u for u in urls}
+                future_to_url = {executor.submit(_crawl_worker, u): u for u in urls}
                 for future in as_completed(future_to_url):
                     try:
                         raw, rec_dict = future.result()

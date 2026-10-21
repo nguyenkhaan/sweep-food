@@ -65,6 +65,6 @@ class ShoppingMutationReceiptModel(CreatedAtUUIDModel):
     request_fingerprint: Mapped[str] = mapped_column(String(64), nullable=False)
     response_status: Mapped[int] = mapped_column(SmallInteger, nullable=False)
     response_body: Mapped[dict[str, object] | None] = mapped_column(
-        JSONB,
+        JSONB(none_as_null=True),
         nullable=True,
     )

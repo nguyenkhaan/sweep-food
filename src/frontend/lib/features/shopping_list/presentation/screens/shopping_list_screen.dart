@@ -44,7 +44,7 @@ class ShoppingListScreen extends ConsumerWidget {
           value: async,
           onRetry: () => ref.invalidate(shoppingListControllerProvider),
           data: (list) {
-            if (list == null || list.items.isEmpty) {
+            if (list == null) {
               return ListView(
                 children: [
                   const SizedBox(height: 72),
@@ -54,6 +54,19 @@ class ShoppingListScreen extends ConsumerWidget {
                     icon: Icons.shopping_cart_outlined,
                     actionLabel: l10n.shoppingPlanWeek,
                     onAction: () => context.push(Routes.mealPlan),
+                  ),
+                ],
+              );
+            }
+            if (list.items.isEmpty) {
+              return ListView(
+                children: const [
+                  SizedBox(height: 72),
+                  EmptyState(
+                    title: 'Danh sách đã sẵn sàng',
+                    message:
+                        'Thực đơn hiện không có nguyên liệu nào cần mua thêm. Dùng nút “Thêm món” để bổ sung thủ công.',
+                    icon: Icons.check_circle_outline_rounded,
                   ),
                 ],
               );

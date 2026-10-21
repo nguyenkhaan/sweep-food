@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 
@@ -68,6 +69,20 @@ class ReceiptReviewController extends _$ReceiptReviewController {
     newItems[index] = updated;
     state = state.copyWith(items: newItems);
   }
+
+  /// A manual date and a FreshCheck estimate are mutually exclusive.
+  void setItemExpiry(
+    int index,
+    DateTime? expiry,
+    FreshnessEstimate? freshness,
+  ) => updateItem(
+    index,
+    state.items[index].copyWith(
+      expiryDate: expiry,
+      freshness: freshness,
+      isExpiryWarn: false,
+    ),
+  );
 
   void removeItem(int index) {
     final newItems = List<ParsedItemDraft>.from(state.items)..removeAt(index);

@@ -38,6 +38,14 @@ def get_positive_int_env(key: str, default: int) -> int:
     return value
 
 
+def get_bool_env(key: str, default: bool) -> bool:
+    """Return an explicitly configured boolean environment value."""
+    value = get_env_var(key, str(default)).strip().lower()
+    if value not in {"true", "false"}:
+        raise ValueError(f"Environment variable {key} must be true or false")
+    return value == "true"
+
+
 def get_http_base_url_env(key: str, default: str) -> str:
     """Return a normalized absolute HTTP(S) base URL from the environment."""
     value = get_env_var(key, default).strip().rstrip("/")
@@ -101,6 +109,9 @@ SMS_DELIVERY_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
 )
 EMAIL_SMTP_HOST: Final[str] = get_env_var("EMAIL_SMTP_HOST")
 EMAIL_SMTP_PORT: Final[int] = get_positive_int_env("EMAIL_SMTP_PORT", 1025)
+EMAIL_SMTP_USERNAME: Final[str] = get_env_var("EMAIL_SMTP_USERNAME", "")
+EMAIL_SMTP_PASSWORD: Final[str] = get_env_var("EMAIL_SMTP_PASSWORD", "")
+EMAIL_SMTP_USE_STARTTLS: Final[bool] = get_bool_env("EMAIL_SMTP_USE_STARTTLS", False)
 EMAIL_FROM: Final[str] = get_env_var("EMAIL_FROM")
 JWT_ACCESS_TOKEN_TTL_MINUTES: Final[int] = get_positive_int_env(
     "JWT_ACCESS_TOKEN_TTL_MINUTES",
@@ -136,23 +147,34 @@ EXTRACTION_PROVIDER_TIMEOUT: Final[int] = get_positive_int_env(
 )
 
 
-AI_BASE_URL: Final[str] = get_http_base_url_env(
-    "AI_BASE_URL",
-    "http://127.0.0.1:8001",
+def get_reasoning_effort_env(key: str, default: str) -> str:
+    """Return a validated OpenAI reasoning effort, or an empty string to omit it."""
+    value = get_env_var(key, default).strip().lower()
+    if value not in {"", "minimal", "low", "medium", "high"}:
+        raise ValueError(
+            f"Environment variable {key} must be empty, minimal, low, medium, or high"
+        )
+    return value
+
+
+OPENAI_API_KEY: Final[str] = get_env_var("OPENAI_API_KEY", "")
+OPENAI_BASE_URL: Final[str] = get_http_base_url_env(
+    "OPENAI_BASE_URL", "https://api.openai.com/v1"
 )
-AI_CONNECT_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
-    "AI_CONNECT_TIMEOUT_SECONDS",
-    3,
+OPENAI_OCR_MODEL: Final[str] = get_env_var("OPENAI_OCR_MODEL", "gpt-5.6-terra")
+OPENAI_OCR_GUARD_MODEL: Final[str] = get_env_var(
+    "OPENAI_OCR_GUARD_MODEL", "gpt-4o-mini"
 )
-AI_RECOMMEND_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
-    "AI_RECOMMEND_TIMEOUT_SECONDS",
-    10,
+OPENAI_OCR_REASONING_EFFORT: Final[str] = get_reasoning_effort_env(
+    "OPENAI_OCR_REASONING_EFFORT", "medium"
 )
-AI_OCR_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
-    "AI_OCR_TIMEOUT_SECONDS",
-    30,
-)
-AI_ASR_TIMEOUT_SECONDS: Final[int] = get_positive_int_env(
-    "AI_ASR_TIMEOUT_SECONDS",
-    60,
+OPENAI_LLM_MODEL: Final[str] = get_env_var("OPENAI_LLM_MODEL", "gpt-4o-mini")
+OPENAI_TIMEOUT_SECONDS: Final[int] = get_positive_int_env("OPENAI_TIMEOUT_SECONDS", 30)
+GROQ_API_KEY: Final[str] = get_env_var("GROQ_API_KEY", "")
+GROQ_ASR_MODEL: Final[str] = get_env_var("GROQ_ASR_MODEL", "whisper-large-v3-turbo")
+GROQ_TIMEOUT_SECONDS: Final[int] = get_positive_int_env("GROQ_TIMEOUT_SECONDS", 60)
+AI_DATA_DIR: Final[str] = get_env_var("AI_DATA_DIR", "AI/data")
+AI_MODEL_PATH: Final[str] = get_env_var(
+    "AI_MODEL_PATH",
+    "AI/data/training/lgbm_contextual.txt",
 )

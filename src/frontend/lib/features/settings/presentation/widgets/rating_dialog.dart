@@ -63,23 +63,31 @@ class _RatingDialogState extends ConsumerState<RatingDialog> {
                   textAlign: TextAlign.center,
                 ),
                 Gap.gapMd,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (int i = 1; i <= 5; i++)
-                      IconButton(
-                        icon: Icon(
-                          i <= _rating
-                              ? Icons.star_rounded
-                              : Icons.star_outline_rounded,
-                          color: Colors.amber,
-                          size: 36,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (int i = 1; i <= 5; i++)
+                        IconButton(
+                          constraints: const BoxConstraints(
+                            minWidth: 44,
+                            minHeight: 44,
+                          ),
+                          padding: const EdgeInsets.all(4),
+                          icon: Icon(
+                            i <= _rating
+                                ? Icons.star_rounded
+                                : Icons.star_outline_rounded,
+                            color: Colors.amber,
+                            size: 34,
+                          ),
+                          onPressed: state.isLoading
+                              ? null
+                              : () => setState(() => _rating = i.toDouble()),
                         ),
-                        onPressed: state.isLoading
-                            ? null
-                            : () => setState(() => _rating = i.toDouble()),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
                 Gap.gapSm,
                 TextField(
@@ -87,7 +95,8 @@ class _RatingDialogState extends ConsumerState<RatingDialog> {
                   maxLines: 3,
                   enabled: !state.isLoading,
                   decoration: const InputDecoration(
-                    hintText: 'Nhập ý kiến đóng góp hoặc phản hồi của bạn (tùy chọn)...',
+                    hintText:
+                        'Nhập ý kiến đóng góp hoặc phản hồi của bạn (tùy chọn)...',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -95,8 +104,9 @@ class _RatingDialogState extends ConsumerState<RatingDialog> {
                   Gap.gapSm,
                   Text(
                     state.errorMessage!,
-                    style: context.text.bodySmall
-                        ?.copyWith(color: context.colors.error),
+                    style: context.text.bodySmall?.copyWith(
+                      color: context.colors.error,
+                    ),
                   ),
                 ],
               ],

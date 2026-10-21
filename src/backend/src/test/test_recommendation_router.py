@@ -124,7 +124,6 @@ async def test_recommendation_route_accepts_an_authenticated_user_request(
                 }
             ],
             "household_size": 2,
-            "max_cooking_time_min": 25,
             "scenario_type": "quick_meal",
             "dietary_restrictions": ["vegetarian"],
             "allergies": ["peanut"],
@@ -153,6 +152,7 @@ async def test_recommendation_route_accepts_an_authenticated_user_request(
         {"items": [{"name": "", "quantity_g": 200}]},
         {"items": [{"name": "Spinach", "quantity_g": 0}]},
         {"items": [], "request": "legacy free text"},
+        {"items": [], "max_cooking_time_min": 30},
     ],
 )
 async def test_recommendation_route_rejects_invalid_request_bodies(
@@ -202,7 +202,6 @@ def test_recommendation_openapi_documents_the_authenticated_request_contract() -
     assert set(schemas["RecommendationRequestDTO"]["properties"]) == {
         "items",
         "household_size",
-        "max_cooking_time_min",
         "scenario_type",
         "dietary_restrictions",
         "allergies",

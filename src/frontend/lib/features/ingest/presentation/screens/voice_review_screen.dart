@@ -13,6 +13,7 @@ import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/voice_capture_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/expiry_freshness_row.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 /// I-07 — Kiểm tra & chỉnh sửa danh sách bóc tách từ giọng nói.
@@ -59,7 +60,9 @@ class VoiceReviewScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: Gap.sm),
                   GestureDetector(
-                    onTap: () => context.pop(),
+                    onTap: () => context.pushReplacement(
+                      '${Routes.pantry}/${Routes.scanVoiceCapture}',
+                    ),
                     child: Text(
                       l10n.voiceRerecord,
                       style: context.text.bodySmall?.copyWith(
@@ -80,6 +83,61 @@ class VoiceReviewScreen extends ConsumerWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+          if (state.needsReview) ...[
+            Gap.gapSm,
+            Semantics(
+              liveRegion: true,
+              child: Container(
+                padding: const EdgeInsets.all(Gap.sm),
+                decoration: BoxDecoration(
+                  color: BrandPalette.warnSoon.withValues(alpha: 0.12),
+                  borderRadius: Radii.brMd,
+                  border: Border.all(
+                    color: BrandPalette.warnSoon.withValues(alpha: 0.45),
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.warning_amber_rounded,
+                      size: 20,
+                      color: BrandPalette.warnSoon,
+                    ),
+                    const SizedBox(width: Gap.xs),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Cần kiểm tra lại kết quả',
+                            style: context.text.labelMedium?.copyWith(
+                              color: BrandPalette.warnSoon,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          if (state.suspectedMissingCount > 0)
+                            Text(
+                              'Có thể thiếu ${state.suspectedMissingCount} nguyên liệu so với câu đã nghe. Hãy thêm dòng hoặc ghi lại.',
+                              style: context.text.bodySmall?.copyWith(
+                                color: sweep.textSecondary,
+                              ),
+                            ),
+                          if (state.hasSuspiciousQuantity)
+                            Text(
+                              'Có số lượng bất thường. Hãy chạm vào số lượng để kiểm tra trước khi thêm.',
+                              style: context.text.bodySmall?.copyWith(
+                                color: sweep.textSecondary,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
           Gap.gapSm,
           for (var i = 0; i < state.items.length; i++) ...[
             _VoiceItemRow(
@@ -90,11 +148,22 @@ class VoiceReviewScreen extends ConsumerWidget {
               ),
               onUnitChanged: (unit) =>
                   controller.updateItem(i, state.items[i].copyWith(unit: unit)),
-              onNameChanged: (name) =>
-                  controller.updateItem(i, state.items[i].copyWith(name: name)),
+              onNameChanged: (name) => controller.renameItem(i, name),
               onDelete: () => controller.removeItem(i),
             ),
-            const SizedBox(height: Gap.xs + 2),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(Gap.sm, Gap.xs, Gap.sm, 0),
+              child: ExpiryFreshnessRow(
+                itemName: state.items[i].name,
+                storageTier: state.items[i].storageTier,
+                expiryDate: state.items[i].expiryDate,
+                freshness: state.items[i].freshness,
+                masterIngredientId: state.items[i].ingredientId,
+                onChanged: (expiry, freshness) =>
+                    controller.setItemExpiry(i, expiry, freshness),
+              ),
+            ),
+            const SizedBox(height: Gap.sm),
           ],
           const SizedBox(height: Gap.xs),
           GestureDetector(

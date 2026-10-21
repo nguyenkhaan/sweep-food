@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParsedItemDraftDto {
 
- String get name; String get category; double get quantity; String get unit;@JsonKey(name: 'storage_tier') String get storageTier;@JsonKey(name: 'packed_date') DateTime? get packedDate;@JsonKey(name: 'expiry_date') DateTime? get expiryDate;@JsonKey(name: 'price_vnd') int? get priceVnd;@JsonKey(name: 'is_expiry_warn') bool get isExpiryWarn;
+ String get name; String get category; double get quantity; String get unit;@JsonKey(name: 'storage_tier') String get storageTier;@JsonKey(name: 'packed_date') DateTime? get packedDate;@JsonKey(name: 'expiry_date') DateTime? get expiryDate;@JsonKey(name: 'price_vnd') int? get priceVnd;@JsonKey(name: 'is_expiry_warn') bool get isExpiryWarn;@JsonKey(name: 'master_ingredient_id') String? get masterIngredientId;
 /// Create a copy of ParsedItemDraftDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ParsedItemDraftDtoCopyWith<ParsedItemDraftDto> get copyWith => _$ParsedItemDraf
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParsedItemDraftDto&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&(identical(other.isExpiryWarn, isExpiryWarn) || other.isExpiryWarn == isExpiryWarn));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParsedItemDraftDto&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&(identical(other.isExpiryWarn, isExpiryWarn) || other.isExpiryWarn == isExpiryWarn)&&(identical(other.masterIngredientId, masterIngredientId) || other.masterIngredientId == masterIngredientId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,packedDate,expiryDate,priceVnd,isExpiryWarn);
+int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,packedDate,expiryDate,priceVnd,isExpiryWarn,masterIngredientId);
 
 @override
 String toString() {
-  return 'ParsedItemDraftDto(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, packedDate: $packedDate, expiryDate: $expiryDate, priceVnd: $priceVnd, isExpiryWarn: $isExpiryWarn)';
+  return 'ParsedItemDraftDto(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, packedDate: $packedDate, expiryDate: $expiryDate, priceVnd: $priceVnd, isExpiryWarn: $isExpiryWarn, masterIngredientId: $masterIngredientId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ParsedItemDraftDtoCopyWith<$Res>  {
   factory $ParsedItemDraftDtoCopyWith(ParsedItemDraftDto value, $Res Function(ParsedItemDraftDto) _then) = _$ParsedItemDraftDtoCopyWithImpl;
 @useResult
 $Res call({
- String name, String category, double quantity, String unit,@JsonKey(name: 'storage_tier') String storageTier,@JsonKey(name: 'packed_date') DateTime? packedDate,@JsonKey(name: 'expiry_date') DateTime? expiryDate,@JsonKey(name: 'price_vnd') int? priceVnd,@JsonKey(name: 'is_expiry_warn') bool isExpiryWarn
+ String name, String category, double quantity, String unit,@JsonKey(name: 'storage_tier') String storageTier,@JsonKey(name: 'packed_date') DateTime? packedDate,@JsonKey(name: 'expiry_date') DateTime? expiryDate,@JsonKey(name: 'price_vnd') int? priceVnd,@JsonKey(name: 'is_expiry_warn') bool isExpiryWarn,@JsonKey(name: 'master_ingredient_id') String? masterIngredientId
 });
 
 
@@ -65,7 +65,7 @@ class _$ParsedItemDraftDtoCopyWithImpl<$Res>
 
 /// Create a copy of ParsedItemDraftDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? packedDate = freezed,Object? expiryDate = freezed,Object? priceVnd = freezed,Object? isExpiryWarn = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? packedDate = freezed,Object? expiryDate = freezed,Object? priceVnd = freezed,Object? isExpiryWarn = null,Object? masterIngredientId = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,8 @@ as String,packedDate: freezed == packedDate ? _self.packedDate : packedDate // i
 as DateTime?,expiryDate: freezed == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,priceVnd: freezed == priceVnd ? _self.priceVnd : priceVnd // ignore: cast_nullable_to_non_nullable
 as int?,isExpiryWarn: null == isExpiryWarn ? _self.isExpiryWarn : isExpiryWarn // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,masterIngredientId: freezed == masterIngredientId ? _self.masterIngredientId : masterIngredientId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -161,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  String unit, @JsonKey(name: 'storage_tier')  String storageTier, @JsonKey(name: 'packed_date')  DateTime? packedDate, @JsonKey(name: 'expiry_date')  DateTime? expiryDate, @JsonKey(name: 'price_vnd')  int? priceVnd, @JsonKey(name: 'is_expiry_warn')  bool isExpiryWarn)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  String unit, @JsonKey(name: 'storage_tier')  String storageTier, @JsonKey(name: 'packed_date')  DateTime? packedDate, @JsonKey(name: 'expiry_date')  DateTime? expiryDate, @JsonKey(name: 'price_vnd')  int? priceVnd, @JsonKey(name: 'is_expiry_warn')  bool isExpiryWarn, @JsonKey(name: 'master_ingredient_id')  String? masterIngredientId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParsedItemDraftDto() when $default != null:
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn);case _:
+return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn,_that.masterIngredientId);case _:
   return orElse();
 
 }
@@ -182,10 +183,10 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  String unit, @JsonKey(name: 'storage_tier')  String storageTier, @JsonKey(name: 'packed_date')  DateTime? packedDate, @JsonKey(name: 'expiry_date')  DateTime? expiryDate, @JsonKey(name: 'price_vnd')  int? priceVnd, @JsonKey(name: 'is_expiry_warn')  bool isExpiryWarn)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  String category,  double quantity,  String unit, @JsonKey(name: 'storage_tier')  String storageTier, @JsonKey(name: 'packed_date')  DateTime? packedDate, @JsonKey(name: 'expiry_date')  DateTime? expiryDate, @JsonKey(name: 'price_vnd')  int? priceVnd, @JsonKey(name: 'is_expiry_warn')  bool isExpiryWarn, @JsonKey(name: 'master_ingredient_id')  String? masterIngredientId)  $default,) {final _that = this;
 switch (_that) {
 case _ParsedItemDraftDto():
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn);case _:
+return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn,_that.masterIngredientId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +203,10 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String category,  double quantity,  String unit, @JsonKey(name: 'storage_tier')  String storageTier, @JsonKey(name: 'packed_date')  DateTime? packedDate, @JsonKey(name: 'expiry_date')  DateTime? expiryDate, @JsonKey(name: 'price_vnd')  int? priceVnd, @JsonKey(name: 'is_expiry_warn')  bool isExpiryWarn)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  String category,  double quantity,  String unit, @JsonKey(name: 'storage_tier')  String storageTier, @JsonKey(name: 'packed_date')  DateTime? packedDate, @JsonKey(name: 'expiry_date')  DateTime? expiryDate, @JsonKey(name: 'price_vnd')  int? priceVnd, @JsonKey(name: 'is_expiry_warn')  bool isExpiryWarn, @JsonKey(name: 'master_ingredient_id')  String? masterIngredientId)?  $default,) {final _that = this;
 switch (_that) {
 case _ParsedItemDraftDto() when $default != null:
-return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn);case _:
+return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storageTier,_that.packedDate,_that.expiryDate,_that.priceVnd,_that.isExpiryWarn,_that.masterIngredientId);case _:
   return null;
 
 }
@@ -217,7 +218,7 @@ return $default(_that.name,_that.category,_that.quantity,_that.unit,_that.storag
 @JsonSerializable()
 
 class _ParsedItemDraftDto extends ParsedItemDraftDto {
-  const _ParsedItemDraftDto({this.name = '', this.category = '', this.quantity = 0, this.unit = 'g', @JsonKey(name: 'storage_tier') this.storageTier = 'fridge', @JsonKey(name: 'packed_date') this.packedDate, @JsonKey(name: 'expiry_date') this.expiryDate, @JsonKey(name: 'price_vnd') this.priceVnd, @JsonKey(name: 'is_expiry_warn') this.isExpiryWarn = false}): super._();
+  const _ParsedItemDraftDto({this.name = '', this.category = '', this.quantity = 0, this.unit = 'g', @JsonKey(name: 'storage_tier') this.storageTier = 'fridge', @JsonKey(name: 'packed_date') this.packedDate, @JsonKey(name: 'expiry_date') this.expiryDate, @JsonKey(name: 'price_vnd') this.priceVnd, @JsonKey(name: 'is_expiry_warn') this.isExpiryWarn = false, @JsonKey(name: 'master_ingredient_id') this.masterIngredientId}): super._();
   factory _ParsedItemDraftDto.fromJson(Map<String, dynamic> json) => _$ParsedItemDraftDtoFromJson(json);
 
 @override@JsonKey() final  String name;
@@ -229,6 +230,7 @@ class _ParsedItemDraftDto extends ParsedItemDraftDto {
 @override@JsonKey(name: 'expiry_date') final  DateTime? expiryDate;
 @override@JsonKey(name: 'price_vnd') final  int? priceVnd;
 @override@JsonKey(name: 'is_expiry_warn') final  bool isExpiryWarn;
+@override@JsonKey(name: 'master_ingredient_id') final  String? masterIngredientId;
 
 /// Create a copy of ParsedItemDraftDto
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParsedItemDraftDto&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&(identical(other.isExpiryWarn, isExpiryWarn) || other.isExpiryWarn == isExpiryWarn));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParsedItemDraftDto&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.storageTier, storageTier) || other.storageTier == storageTier)&&(identical(other.packedDate, packedDate) || other.packedDate == packedDate)&&(identical(other.expiryDate, expiryDate) || other.expiryDate == expiryDate)&&(identical(other.priceVnd, priceVnd) || other.priceVnd == priceVnd)&&(identical(other.isExpiryWarn, isExpiryWarn) || other.isExpiryWarn == isExpiryWarn)&&(identical(other.masterIngredientId, masterIngredientId) || other.masterIngredientId == masterIngredientId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,packedDate,expiryDate,priceVnd,isExpiryWarn);
+int get hashCode => Object.hash(runtimeType,name,category,quantity,unit,storageTier,packedDate,expiryDate,priceVnd,isExpiryWarn,masterIngredientId);
 
 @override
 String toString() {
-  return 'ParsedItemDraftDto(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, packedDate: $packedDate, expiryDate: $expiryDate, priceVnd: $priceVnd, isExpiryWarn: $isExpiryWarn)';
+  return 'ParsedItemDraftDto(name: $name, category: $category, quantity: $quantity, unit: $unit, storageTier: $storageTier, packedDate: $packedDate, expiryDate: $expiryDate, priceVnd: $priceVnd, isExpiryWarn: $isExpiryWarn, masterIngredientId: $masterIngredientId)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$ParsedItemDraftDtoCopyWith<$Res> implements $ParsedItemDr
   factory _$ParsedItemDraftDtoCopyWith(_ParsedItemDraftDto value, $Res Function(_ParsedItemDraftDto) _then) = __$ParsedItemDraftDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String category, double quantity, String unit,@JsonKey(name: 'storage_tier') String storageTier,@JsonKey(name: 'packed_date') DateTime? packedDate,@JsonKey(name: 'expiry_date') DateTime? expiryDate,@JsonKey(name: 'price_vnd') int? priceVnd,@JsonKey(name: 'is_expiry_warn') bool isExpiryWarn
+ String name, String category, double quantity, String unit,@JsonKey(name: 'storage_tier') String storageTier,@JsonKey(name: 'packed_date') DateTime? packedDate,@JsonKey(name: 'expiry_date') DateTime? expiryDate,@JsonKey(name: 'price_vnd') int? priceVnd,@JsonKey(name: 'is_expiry_warn') bool isExpiryWarn,@JsonKey(name: 'master_ingredient_id') String? masterIngredientId
 });
 
 
@@ -280,7 +282,7 @@ class __$ParsedItemDraftDtoCopyWithImpl<$Res>
 
 /// Create a copy of ParsedItemDraftDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? packedDate = freezed,Object? expiryDate = freezed,Object? priceVnd = freezed,Object? isExpiryWarn = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? category = null,Object? quantity = null,Object? unit = null,Object? storageTier = null,Object? packedDate = freezed,Object? expiryDate = freezed,Object? priceVnd = freezed,Object? isExpiryWarn = null,Object? masterIngredientId = freezed,}) {
   return _then(_ParsedItemDraftDto(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -291,7 +293,8 @@ as String,packedDate: freezed == packedDate ? _self.packedDate : packedDate // i
 as DateTime?,expiryDate: freezed == expiryDate ? _self.expiryDate : expiryDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,priceVnd: freezed == priceVnd ? _self.priceVnd : priceVnd // ignore: cast_nullable_to_non_nullable
 as int?,isExpiryWarn: null == isExpiryWarn ? _self.isExpiryWarn : isExpiryWarn // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,masterIngredientId: freezed == masterIngredientId ? _self.masterIngredientId : masterIngredientId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

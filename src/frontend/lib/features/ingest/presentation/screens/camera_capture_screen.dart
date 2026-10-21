@@ -14,6 +14,7 @@ import 'package:sweepfood/core/media/media_providers.dart';
 import 'package:sweepfood/core/permissions/permission_prime_sheet.dart';
 import 'package:sweepfood/core/permissions/permission_service.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/utils/logger.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
@@ -214,7 +215,16 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
         job = await notifier.scanReceipt(path);
       }
       if (!mounted) return;
-      if (job.isFailed || !job.hasItems) {
+      log.d(
+        'Scan result type=${job.type.wire} status=${job.status.wire} '
+        'items=${job.items.length} hasRawText=${job.rawText?.trim().isNotEmpty == true}',
+      );
+      // A receipt can be a valid PARTIAL result even when OCR read text but
+      // could not turn it into line items. Route that outcome to the review
+      // screen so the user can inspect it, retake, or enter items manually.
+      final hasUsableResult = job.hasItems ||
+          (_mode == CameraScanMode.receipt && !job.isFailed);
+      if (job.isFailed || !hasUsableResult) {
         context.push(
           '${Routes.pantry}/${Routes.scanFailed}',
           extra: _mode.scanType,
@@ -225,7 +235,8 @@ class _CameraCaptureScreenState extends ConsumerState<CameraCaptureScreen>
           ? Routes.scanReceiptReview
           : Routes.scanLabelReview;
       context.push('${Routes.pantry}/$route', extra: job);
-    } on Object {
+    } on Object catch (error, stackTrace) {
+      log.w('Scan flow failed before review', error: error, stackTrace: stackTrace);
       if (mounted) {
         context.push(
           '${Routes.pantry}/${Routes.scanFailed}',

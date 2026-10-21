@@ -50,7 +50,6 @@ class SuggestionRequest {
     this.request,
     this.prompt,
     this.dietaryPreference,
-    this.maxCookTimeMin,
     this.mealType,
     this.householdSize = 4.0,
     this.scenarioType,
@@ -66,7 +65,6 @@ class SuggestionRequest {
   final String? prompt;
 
   final DietaryPreference? dietaryPreference;
-  final int? maxCookTimeMin;
   final MealType? mealType;
   final double householdSize;
   final String? scenarioType;
@@ -77,7 +75,6 @@ class SuggestionRequest {
     String? request,
     String? prompt,
     DietaryPreference? dietaryPreference,
-    int? maxCookTimeMin,
     MealType? mealType,
     double? householdSize,
     String? scenarioType,
@@ -85,7 +82,6 @@ class SuggestionRequest {
     bool clearRequest = false,
     bool clearPrompt = false,
     bool clearDietaryPreference = false,
-    bool clearMaxCookTime = false,
     bool clearMealType = false,
   }) {
     return SuggestionRequest(
@@ -95,9 +91,6 @@ class SuggestionRequest {
       dietaryPreference: clearDietaryPreference
           ? null
           : dietaryPreference ?? this.dietaryPreference,
-      maxCookTimeMin: clearMaxCookTime
-          ? null
-          : maxCookTimeMin ?? this.maxCookTimeMin,
       mealType: clearMealType ? null : mealType ?? this.mealType,
       householdSize: householdSize ?? this.householdSize,
       scenarioType: scenarioType ?? this.scenarioType,
@@ -119,18 +112,11 @@ class SuggestionRequest {
     }
 
     final effectiveScenario = scenarioType ??
-        (mealType != null
-            ? mealType!.wire
-            : (maxCookTimeMin != null && maxCookTimeMin! <= 30
-                ? 'quick_meal'
-                : 'custom'));
+        (mealType != null ? mealType!.wire : 'custom');
 
     return {
       'items': pantryItems.map((e) => e.toJson()).toList(),
       'household_size': householdSize > 0 ? householdSize : 4.0,
-      'max_cooking_time_min': (maxCookTimeMin != null && maxCookTimeMin! > 0)
-          ? maxCookTimeMin!.toDouble()
-          : 45.0,
       'scenario_type': effectiveScenario,
       'dietary_restrictions': restrictions,
       'allergies': <String>[],
@@ -154,9 +140,6 @@ class SuggestionRequest {
         MealType.lunch => 'Bữa trưa',
         MealType.dinner => 'Bữa tối',
       });
-    }
-    if (maxCookTimeMin != null) {
-      parts.add('Nấu nhanh ≤ $maxCookTimeMin phút');
     }
     if (dietaryPreference != null) {
       parts.add(switch (dietaryPreference!) {

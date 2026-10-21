@@ -21,6 +21,7 @@ _ParsedItemDraftDto _$ParsedItemDraftDtoFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['expiry_date'] as String),
       priceVnd: (json['price_vnd'] as num?)?.toInt(),
       isExpiryWarn: json['is_expiry_warn'] as bool? ?? false,
+      masterIngredientId: json['master_ingredient_id'] as String?,
     );
 
 Map<String, dynamic> _$ParsedItemDraftDtoToJson(_ParsedItemDraftDto instance) =>
@@ -34,4 +35,5 @@ Map<String, dynamic> _$ParsedItemDraftDtoToJson(_ParsedItemDraftDto instance) =>
       'expiry_date': instance.expiryDate?.toIso8601String(),
       'price_vnd': instance.priceVnd,
       'is_expiry_warn': instance.isExpiryWarn,
+      'master_ingredient_id': instance.masterIngredientId,
     };

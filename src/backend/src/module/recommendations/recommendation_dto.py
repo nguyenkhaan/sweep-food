@@ -27,7 +27,6 @@ class RecommendationRequestDTO(BaseModel):
 
     items: list[RecommendationPantryItemDTO]
     household_size: float = Field(default=4, gt=0)
-    max_cooking_time_min: float = Field(default=45, gt=0)
     scenario_type: str = "custom"
     dietary_restrictions: list[str] = Field(default_factory=list)
     allergies: list[str] = Field(default_factory=list)

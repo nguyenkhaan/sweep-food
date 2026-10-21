@@ -1,4 +1,5 @@
 ﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
@@ -23,6 +24,10 @@ abstract class PantryItemDraft with _$PantryItemDraft {
     DateTime? expiryDate,
     int? referenceShelfLifeDays,
     int? priceVnd,
+
+    /// FreshCheck estimate accepted in place of a printed expiry date; applied
+    /// through the batch assessment after the item is saved.
+    FreshnessEstimate? freshness,
   }) = _PantryItemDraft;
 
   factory PantryItemDraft.fromItem(PantryItem i) => PantryItemDraft(

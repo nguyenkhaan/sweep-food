@@ -1,9 +1,7 @@
 /// REST paths, relative to `AppConfig.apiBaseUrl` (which ends in `/api`).
 /// Keep the whole app pointed at these constants — see `docs/api-contract.md`.
 ///
-/// NOTE: only `/auth/*` and `/users/*` are reconciled with the real backend
-/// (see `docs/api-contract.md` §1). The rest is still the frontend's assumed
-/// contract and served by `MockApiClient`.
+/// Every path in this file is backed by the current FastAPI OpenAPI document.
 abstract final class ApiPaths {
   // Auth — phone (E.164) + password + OTP. See api-contract.md §1.
   static const register = '/auth/register';
@@ -17,6 +15,9 @@ abstract final class ApiPaths {
   static const passwordReset = '/auth/password/reset';
   static const passwordChange = '/auth/password/change';
   static const verifyChangePassword = '/auth/verify/change-password';
+
+  // Service readiness
+  static const aiHealth = '/health/ai';
 
   // Current user
   static const me = '/users/me';
@@ -38,8 +39,7 @@ abstract final class ApiPaths {
       '/inventory/batches/$id/adjustments';
   static String inventoryBatchConsume(String id) =>
       '/inventory/batches/$id/consume';
-  static String inventoryBatchMove(String id) =>
-      '/inventory/batches/$id/move';
+  static String inventoryBatchMove(String id) => '/inventory/batches/$id/move';
   // Immutable quantity-change history. Filter to one batch with `?batch_id=`.
   static const inventoryLedger = '/inventory/ledger';
 
@@ -58,15 +58,9 @@ abstract final class ApiPaths {
   static const extractionOcrLabel = '/extractions/ocr/label';
   static const extractionOcrInvoice = '/extractions/ocr/invoice';
   static const extractionAsr = '/extractions/asr';
+  static const extractionText = '/extractions/text';
   static String extractionBarcode(String barcode) =>
       '/extractions/barcode?barcode=$barcode';
-
-  // Scan / ingest (legacy paths, kept for compatibility)
-  static const scanLabel = '/scan/label';
-  static const scanReceipt = '/scan/receipt';
-  static const scanVoice = '/scan/voice';
-  static String scanJob(String id) => '/scan/jobs/$id';
-  static String scanJobConfirm(String id) => '/scan/jobs/$id/confirm';
 
   // Recipes (real backend) — search & detail
   static const recipes = '/recipes';
@@ -77,15 +71,13 @@ abstract final class ApiPaths {
   static const favoriteRecipes = '/favorite-recipes';
   static const favoriteMenus = '/favorite-menus';
   static String favoriteMenu(String id) => '/favorite-menus/$id';
-  static String favoriteMenuItems(String menuId) => '/favorite-menus/$menuId/items';
+  static String favoriteMenuItems(String menuId) =>
+      '/favorite-menus/$menuId/items';
   static String favoriteMenuItem(String menuId, String itemId) =>
       '/favorite-menus/$menuId/items/$itemId';
 
-  // Recommendations (real backend mock boundary: POST /recommendations {request: string})
+  // AI recommendations (structured SweepFood AI v2 request/response)
   static const recommendations = '/recommendations';
-
-  // Suggestions (legacy path, kept for backward compatibility)
-  static const suggestions = '/suggestions/dishes';
 
   // Meal plans (real backend) — no "current week" concept; FE creates/finds a
   // plan per viewed week and manages items individually. See api-contract.md §7.
@@ -109,6 +101,7 @@ abstract final class ApiPaths {
   static const freshnessQuestions = '/freshness/questions';
   static String freshnessAssessment(String batchId) =>
       '/freshness/batches/$batchId/assessment';
+  static const freshnessPreview = '/freshness/previews';
 
   // Rating & Feedback
   static const rating = '/rating';
@@ -125,11 +118,5 @@ abstract final class ApiPaths {
 
   // Reports
   static const reportsWasteReduction = '/reports/waste-reduction';
-  static const reportsUsageHistory = '/reports/usage-history';
-  static const reportsWasteStatistics = '/reports/waste-statistics';
-  static const reportsEfficiency = '/reports/efficiency';
   static const inventoryWaste = '/inventory/waste';
-
-  // Onboarding
-  static const onboardingComplete = '/users/onboarding/complete';
 }

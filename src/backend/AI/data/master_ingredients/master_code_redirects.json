@@ -1,0 +1,1919 @@
+[
+  {
+    "old_code":"20430",
+    "old_name_vi":"Nước ngọt có ga (Coca-Cola)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"14004",
+    "canonical_name_vi":"Coca cola",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20613",
+    "old_name_vi":"Bột cà ri (sốt cà ri)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20011",
+    "canonical_name_vi":"Bột cà ri",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20783",
+    "old_name_vi":"Củ kiệu ngâm chua (kiệu muối)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20077",
+    "canonical_name_vi":"Củ kiệu muối (Dưa kiệu chua ngọt)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20599",
+    "old_name_vi":"Mì sợi (mì trứng \/ mì vàng \/ mì rau củ khô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20087",
+    "canonical_name_vi":"Mì trứng (Mì sợi trứng)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20257",
+    "old_name_vi":"Củ năng (mã thầy)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20107",
+    "canonical_name_vi":"Củ năng",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20634",
+    "old_name_vi":"Củ năng (củ mã thầy)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20107",
+    "canonical_name_vi":"Củ năng",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20302",
+    "old_name_vi":"Tỏi bột",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20109",
+    "canonical_name_vi":"Bột tỏi",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20429",
+    "old_name_vi":"Tóp mỡ heo",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20110",
+    "canonical_name_vi":"Tóp mỡ",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20545",
+    "old_name_vi":"Tóp mỡ (mỡ heo rán giòn)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20110",
+    "canonical_name_vi":"Tóp mỡ",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20459",
+    "old_name_vi":"Thịt bò, sườn",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20113",
+    "canonical_name_vi":"Sườn bò",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20270",
+    "old_name_vi":"Thịt hàu",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20114",
+    "canonical_name_vi":"Hàu",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20822",
+    "old_name_vi":"Hàu tươi (thịt hàu sống)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20114",
+    "canonical_name_vi":"Hàu",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20815",
+    "old_name_vi":"Thịt ba chỉ bò (ba rọi bò)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20117",
+    "canonical_name_vi":"Thịt ba chỉ bò",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20183",
+    "old_name_vi":"Dầu điều màu",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20120",
+    "canonical_name_vi":"Dầu điều",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20792",
+    "old_name_vi":"Dầu màu điều (dầu điều màu)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20120",
+    "canonical_name_vi":"Dầu điều",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20145",
+    "old_name_vi":"Trứng muối",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20125",
+    "canonical_name_vi":"Trứng vịt muối",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20175",
+    "old_name_vi":"Chanh dây",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20128",
+    "canonical_name_vi":"Chanh leo (chanh dây)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20540",
+    "old_name_vi":"Nấm linh chi trắng (nấm hải sản)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20130",
+    "canonical_name_vi":"Nấm linh chi trắng",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20192",
+    "old_name_vi":"Sốt xí muội",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20131",
+    "canonical_name_vi":"Tương xí muội",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20706",
+    "old_name_vi":"Xốt xí muội (tương xí muội)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20131",
+    "canonical_name_vi":"Tương xí muội",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20336",
+    "old_name_vi":"Cồi sò điệp",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20138",
+    "canonical_name_vi":"Sò điệp",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20582",
+    "old_name_vi":"Sò điệp (cồi sò điệp)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20138",
+    "canonical_name_vi":"Sò điệp",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20295",
+    "old_name_vi":"Xốt mè rang",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20139",
+    "canonical_name_vi":"Sốt mè rang",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20471",
+    "old_name_vi":"Hạt bạch quả",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20140",
+    "canonical_name_vi":"Bạch quả",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20538",
+    "old_name_vi":"Bột nở (baking powder)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20143",
+    "canonical_name_vi":"Bột nở",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20201",
+    "old_name_vi":"Lạc hạt (đậu phộng)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20146",
+    "canonical_name_vi":"Lạc hạt",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20679",
+    "old_name_vi":"Hạt lạc",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20146",
+    "canonical_name_vi":"Lạc hạt",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20157",
+    "old_name_vi":"Tương ớt Hàn Quốc",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20148",
+    "canonical_name_vi":"Tương ớt Gochujang",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20188",
+    "old_name_vi":"Tương ớt Hàn Quốc (Gochujang)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20148",
+    "canonical_name_vi":"Tương ớt Gochujang",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20324",
+    "old_name_vi":"Tương ớt Gochujang (Hàn Quốc)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20148",
+    "canonical_name_vi":"Tương ớt Gochujang",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20487",
+    "old_name_vi":"Sốt gochujang Hàn Quốc",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20148",
+    "canonical_name_vi":"Tương ớt Gochujang",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20417",
+    "old_name_vi":"Lòng đỏ trứng vịt muối",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20156",
+    "canonical_name_vi":"Lòng đỏ trứng muối",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20698",
+    "old_name_vi":"Sốt ướp xá xíu",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20160",
+    "canonical_name_vi":"Sốt xá xíu",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20171",
+    "old_name_vi":"Tàu xì",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20161",
+    "canonical_name_vi":"Đậu đen lên men (tàu xì)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20592",
+    "old_name_vi":"Đậu đen muối",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20161",
+    "canonical_name_vi":"Đậu đen lên men (tàu xì)",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20670",
+    "old_name_vi":"Tàu xì (đậu đen lên men)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20161",
+    "canonical_name_vi":"Đậu đen lên men (tàu xì)",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20228",
+    "old_name_vi":"Ngưu bàng",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20166",
+    "canonical_name_vi":"Củ ngưu bàng",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20416",
+    "old_name_vi":"Ngưu bàng (củ)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20166",
+    "canonical_name_vi":"Củ ngưu bàng",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20586",
+    "old_name_vi":"Rễ ngưu bàng",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20166",
+    "canonical_name_vi":"Củ ngưu bàng",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20268",
+    "old_name_vi":"Gia vị bò kho (bột\/sốt gia vị bò kho)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20167",
+    "canonical_name_vi":"Gia vị bò kho",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20364",
+    "old_name_vi":"Bánh hủ tiếu",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20172",
+    "canonical_name_vi":"Hủ tiếu",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20733",
+    "old_name_vi":"Rượu hoa tiêu (rượu nấu ăn)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20173",
+    "canonical_name_vi":"Rượu nấu ăn",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20655",
+    "old_name_vi":"Trái vả",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20182",
+    "canonical_name_vi":"Quả vả",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20223",
+    "old_name_vi":"Lá oregano",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20187",
+    "canonical_name_vi":"Lá oregano khô",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20435",
+    "old_name_vi":"Lá thơm khô (herbs)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20187",
+    "canonical_name_vi":"Lá oregano khô",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20564",
+    "old_name_vi":"Lá thơm khô (Oregano \/ Thyme)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20187",
+    "canonical_name_vi":"Lá oregano khô",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20626",
+    "old_name_vi":"Lá thơm oregano (khô \/ bột)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20187",
+    "canonical_name_vi":"Lá oregano khô",
+    "evidence":"cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20791",
+    "old_name_vi":"Lá kinh giới tây khô (Oregano)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20187",
+    "canonical_name_vi":"Lá oregano khô",
+    "evidence":"cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20856",
+    "old_name_vi":"Lá kinh giới cay (oregano)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20187",
+    "canonical_name_vi":"Lá oregano khô",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20136",
+    "old_name_vi":"Rau chân vịt (cải bó xôi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20193",
+    "canonical_name_vi":"Cải bó xôi",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20197",
+    "old_name_vi":"Rau bina (cải bó xôi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20193",
+    "canonical_name_vi":"Cải bó xôi",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20262",
+    "old_name_vi":"Rau chân vịt (bó xôi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20193",
+    "canonical_name_vi":"Cải bó xôi",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20331",
+    "old_name_vi":"Cải bó xôi (rau chân vịt)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20193",
+    "canonical_name_vi":"Cải bó xôi",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20610",
+    "old_name_vi":"Rau cải chân vịt (bó xôi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20193",
+    "canonical_name_vi":"Cải bó xôi",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20658",
+    "old_name_vi":"Rau cải bó xôi",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20193",
+    "canonical_name_vi":"Cải bó xôi",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20508",
+    "old_name_vi":"Hoa kim châm khô",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20194",
+    "canonical_name_vi":"Hoa kim châm",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20303",
+    "old_name_vi":"Lá chùm ngây",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20195",
+    "canonical_name_vi":"Rau chùm ngây",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20860",
+    "old_name_vi":"Mì tươi",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20199",
+    "canonical_name_vi":"Mì sợi tươi",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20587",
+    "old_name_vi":"Cải xoăn (Kale)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20202",
+    "canonical_name_vi":"Cải xoăn",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20714",
+    "old_name_vi":"Cải xoăn (cải kale tươi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20202",
+    "canonical_name_vi":"Cải xoăn",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20389",
+    "old_name_vi":"Mứt dâu tây",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20209",
+    "canonical_name_vi":"Mứt dâu",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20656",
+    "old_name_vi":"Nước mắm pha (nước mắm chua ngọt)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20211",
+    "canonical_name_vi":"Nước mắm chua ngọt",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20898",
+    "old_name_vi":"Nước mắm chua ngọt (nước trộn gỏi)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20211",
+    "canonical_name_vi":"Nước mắm chua ngọt",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20611",
+    "old_name_vi":"Mỡ hành (dầu hành)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20214",
+    "canonical_name_vi":"Mỡ hành",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20227",
+    "old_name_vi":"Tương miso",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20226",
+    "canonical_name_vi":"Đậu tương miso",
+    "evidence":"cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20370",
+    "old_name_vi":"Quả sake",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20240",
+    "canonical_name_vi":"Sa kê",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20606",
+    "old_name_vi":"Quả sa kê (trái sa kê tươi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20240",
+    "canonical_name_vi":"Sa kê",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20795",
+    "old_name_vi":"Trái sa kê (quả sake)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20240",
+    "canonical_name_vi":"Sa kê",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20484",
+    "old_name_vi":"Nhân sâm tươi",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20242",
+    "canonical_name_vi":"Nhân sâm",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20873",
+    "old_name_vi":"Nhân sâm (Sâm tươi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20242",
+    "canonical_name_vi":"Nhân sâm",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20353",
+    "old_name_vi":"Dầu cà ri",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20261",
+    "canonical_name_vi":"Cà ri dầu",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20462",
+    "old_name_vi":"Lá vừng (lá tía tô Hàn Quốc)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20264",
+    "canonical_name_vi":"Lá mè (lá vừng Hàn Quốc)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20515",
+    "old_name_vi":"Lá mè (lá vừng)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20264",
+    "canonical_name_vi":"Lá mè (lá vừng Hàn Quốc)",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20723",
+    "old_name_vi":"Tinh chất vani",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20265",
+    "canonical_name_vi":"Vani (tinh chất vani)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20410",
+    "old_name_vi":"Bánh gạo Hàn Quốc (tteok)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20266",
+    "canonical_name_vi":"Bánh gạo (Tteokbokki)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20485",
+    "old_name_vi":"Bánh gạo Hàn Quốc (tteokbokki)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20266",
+    "canonical_name_vi":"Bánh gạo (Tteokbokki)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20704",
+    "old_name_vi":"Bánh gạo Tokbokki",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20266",
+    "canonical_name_vi":"Bánh gạo (Tteokbokki)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20722",
+    "old_name_vi":"Bánh gạo (dạng thỏi \/ lát)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20266",
+    "canonical_name_vi":"Bánh gạo (Tteokbokki)",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20510",
+    "old_name_vi":"Nấm đông trùng hạ thảo",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20267",
+    "canonical_name_vi":"Đông trùng hạ thảo",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20753",
+    "old_name_vi":"Nước ngọt có gas (hương sá xị \/ cola)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20282",
+    "canonical_name_vi":"Nước ngọt có ga (xá xị)",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20070",
+    "old_name_vi":"Whipping cream (Kem tươi whipping)",
+    "old_source_type":"viendinhduong_fct",
+    "canonical_code":"20284",
+    "canonical_name_vi":"Kem tươi (whipping cream)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20467",
+    "old_name_vi":"Thịt lợn nửa nạc nửa mỡ",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20285",
+    "canonical_name_vi":"Thịt heo nửa nạc nửa mỡ",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20838",
+    "old_name_vi":"Bột matcha",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20286",
+    "canonical_name_vi":"Bột trà xanh (matcha)",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20749",
+    "old_name_vi":"Vẹm (vẹm xanh \/ vẹm đen)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20287",
+    "canonical_name_vi":"Vẹm xanh",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20857",
+    "old_name_vi":"Bắp nếp",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20290",
+    "canonical_name_vi":"Ngô nếp tươi",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20875",
+    "old_name_vi":"Ngô nếp (Bắp nếp)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20290",
+    "canonical_name_vi":"Ngô nếp tươi",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20579",
+    "old_name_vi":"Trần bì (vỏ quýt khô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20297",
+    "canonical_name_vi":"Vỏ quýt khô (trần bì)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20884",
+    "old_name_vi":"Vỏ quýt khô",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20297",
+    "canonical_name_vi":"Vỏ quýt khô (trần bì)",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20605",
+    "old_name_vi":"Mũi heo (mõm heo tươi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20307",
+    "canonical_name_vi":"Mũi heo",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20650",
+    "old_name_vi":"Bánh mì burger",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20312",
+    "canonical_name_vi":"Bánh mì hamburger",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20198",
+    "old_name_vi":"Sốt BBQ",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20314",
+    "canonical_name_vi":"Nước xốt thịt nướng",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20554",
+    "old_name_vi":"Sốt ướp thịt nướng (xốt BBQ)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20314",
+    "canonical_name_vi":"Nước xốt thịt nướng",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20785",
+    "old_name_vi":"Xốt BBQ (sốt thịt nướng)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20314",
+    "canonical_name_vi":"Nước xốt thịt nướng",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20351",
+    "old_name_vi":"Gia vị xá xíu",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20329",
+    "canonical_name_vi":"Bột xá xíu",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20542",
+    "old_name_vi":"Bột sương sáo (thạch đen)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20334",
+    "canonical_name_vi":"Bột sương sáo",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20597",
+    "old_name_vi":"Bột sương sáo (bột thạch đen)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20334",
+    "canonical_name_vi":"Bột sương sáo",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20495",
+    "old_name_vi":"Há cảo (bánh xếp)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20341",
+    "canonical_name_vi":"Há cảo",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20604",
+    "old_name_vi":"Rong tóc tiên (tảo tóc tiên \/ tóc tiên khô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20342",
+    "canonical_name_vi":"Rong tóc tiên",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20821",
+    "old_name_vi":"Tóc tiên khô (tảo tóc tiên)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20342",
+    "canonical_name_vi":"Rong tóc tiên",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20505",
+    "old_name_vi":"Gelatin (bột\/lá)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20343",
+    "canonical_name_vi":"Bột gelatin",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20839",
+    "old_name_vi":"Bột gelatine",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20343",
+    "canonical_name_vi":"Bột gelatin",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20627",
+    "old_name_vi":"Bao tử cá (bao tử cá basa)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20348",
+    "canonical_name_vi":"Bao tử cá basa",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20009",
+    "old_name_vi":"Bột quế",
+    "old_source_type":"viendinhduong_fct",
+    "canonical_code":"20349",
+    "canonical_name_vi":"Vỏ quế (quế chi)",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20106",
+    "old_name_vi":"Quế",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20349",
+    "canonical_name_vi":"Vỏ quế (quế chi)",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20219",
+    "old_name_vi":"Quế cây",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20349",
+    "canonical_name_vi":"Vỏ quế (quế chi)",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20381",
+    "old_name_vi":"Vỏ quế",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20349",
+    "canonical_name_vi":"Vỏ quế (quế chi)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20395",
+    "old_name_vi":"Quế thanh",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20349",
+    "canonical_name_vi":"Vỏ quế (quế chi)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20567",
+    "old_name_vi":"Quế chi (cành\/vỏ quế khô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20349",
+    "canonical_name_vi":"Vỏ quế (quế chi)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20472",
+    "old_name_vi":"Dưa góp (đồ chua cà rốt củ cải)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20350",
+    "canonical_name_vi":"Đồ chua (dưa góp)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20536",
+    "old_name_vi":"Đồ chua (củ cải, cà rốt ngâm chua)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20350",
+    "canonical_name_vi":"Đồ chua (dưa góp)",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20174",
+    "old_name_vi":"Đậu phụ rán",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20352",
+    "canonical_name_vi":"Đậu hũ chiên",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20600",
+    "old_name_vi":"Vi cá (vây cá mập \/ vi cá khô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20366",
+    "canonical_name_vi":"Vi cá mập",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20442",
+    "old_name_vi":"Củ mài",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20372",
+    "canonical_name_vi":"Củ mài (hoài sơn)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20385",
+    "old_name_vi":"Tiêu Tứ Xuyên",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20382",
+    "canonical_name_vi":"Hoa tiêu",
+    "evidence":"số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20452",
+    "old_name_vi":"Mì nưa (konjac)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20387",
+    "canonical_name_vi":"Mì nưa",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20628",
+    "old_name_vi":"Sốt mận (xốt mận \/ plum sauce)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20399",
+    "canonical_name_vi":"Xốt mận",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20895",
+    "old_name_vi":"Sốt mận (plum sauce)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20399",
+    "canonical_name_vi":"Xốt mận",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20878",
+    "old_name_vi":"Xốt sô cô la",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20404",
+    "canonical_name_vi":"Sốt socola",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20616",
+    "old_name_vi":"Socola",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20406",
+    "canonical_name_vi":"Sô cô la",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20625",
+    "old_name_vi":"Nấm hầu thủ (nấm đầu khỉ)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20420",
+    "canonical_name_vi":"Nấm đầu khỉ tươi",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20602",
+    "old_name_vi":"Bánh xếp (sủi cảo \/ gyoza nhân thịt rau)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20421",
+    "canonical_name_vi":"Bánh xếp gyoza",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20619",
+    "old_name_vi":"Bánh gyoza",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20421",
+    "canonical_name_vi":"Bánh xếp gyoza",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20668",
+    "old_name_vi":"Bánh xếp (Gyoza nhân thịt và rau)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20421",
+    "canonical_name_vi":"Bánh xếp gyoza",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20736",
+    "old_name_vi":"Sủi cảo (bánh chẻo nhân thịt rau)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20431",
+    "canonical_name_vi":"Sủi cảo (bánh xếp)",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20507",
+    "old_name_vi":"Củ hồi",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20439",
+    "canonical_name_vi":"Củ thì là (fennel)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20803",
+    "old_name_vi":"Thịt heo nạc xay (thịt băm)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20441",
+    "canonical_name_vi":"Thịt heo xay (nửa nạc nửa mỡ)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20695",
+    "old_name_vi":"Sữa đặc không đường",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20443",
+    "canonical_name_vi":"Sữa đặc không đường (sữa cô đặc)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20473",
+    "old_name_vi":"Tàu hũ ky chiên",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20448",
+    "canonical_name_vi":"Tàu hủ ky chiên",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20816",
+    "old_name_vi":"Mì Soba khô (mì kiều mạch)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20469",
+    "canonical_name_vi":"Mì soba (kiều mạch) khô",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20517",
+    "old_name_vi":"Mứt quả",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20480",
+    "canonical_name_vi":"Mứt trái cây",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20867",
+    "old_name_vi":"Sữa công thức",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20492",
+    "canonical_name_vi":"Sữa bột pha",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20677",
+    "old_name_vi":"Tổ yến",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20493",
+    "canonical_name_vi":"Yến sào khô",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20889",
+    "old_name_vi":"Bột trà sữa matcha",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20500",
+    "canonical_name_vi":"Bột trà sữa matcha hòa tan",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20825",
+    "old_name_vi":"Bột báng khô (hạt bột báng)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20504",
+    "canonical_name_vi":"Trân châu khô (bột sắn)",
+    "evidence":"cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20544",
+    "old_name_vi":"Bột cà phê (cà phê hòa tan \/ phin)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20516",
+    "canonical_name_vi":"Cà phê hòa tan",
+    "evidence":"cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20549",
+    "old_name_vi":"Dưa bồn bồn (bồn bồn muối chua)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20522",
+    "canonical_name_vi":"Dưa bồn bồn",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20690",
+    "old_name_vi":"Bồn bồn muối chua",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20522",
+    "canonical_name_vi":"Dưa bồn bồn",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20189",
+    "old_name_vi":"Cà chua cô đặc (tomato paste)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20535",
+    "canonical_name_vi":"Cà chua đóng hộp (xốt \/ paste cà chua)",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20246",
+    "old_name_vi":"Cà chua cô đặc",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20535",
+    "canonical_name_vi":"Cà chua đóng hộp (xốt \/ paste cà chua)",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20603",
+    "old_name_vi":"Cà chua sệt (paste cà chua \/ xốt cà chua cô đặc)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20535",
+    "canonical_name_vi":"Cà chua đóng hộp (xốt \/ paste cà chua)",
+    "evidence":"cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20688",
+    "old_name_vi":"Cà chua hộp (paste)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20535",
+    "canonical_name_vi":"Cà chua đóng hộp (xốt \/ paste cà chua)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20205",
+    "old_name_vi":"Củ cải muối",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20541",
+    "canonical_name_vi":"Củ cải muối (xá bấu)",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20801",
+    "old_name_vi":"Cơm gạo lứt nấu chín",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20547",
+    "canonical_name_vi":"Cơm gạo lứt (gạo lứt nấu chín)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20591",
+    "old_name_vi":"Mì chũ",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20548",
+    "canonical_name_vi":"Mì Chũ (bánh đa Chũ khô)",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20630",
+    "old_name_vi":"Mì gạo (mì Chũ \/ bánh đa khô)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20548",
+    "canonical_name_vi":"Mì Chũ (bánh đa Chũ khô)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20741",
+    "old_name_vi":"Mì Chũ (mì gạo Chũ khô)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"20548",
+    "canonical_name_vi":"Mì Chũ (bánh đa Chũ khô)",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20746",
+    "old_name_vi":"Siro ngô (siro bắp)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20552",
+    "canonical_name_vi":"Đường ngô (siro ngô \/ corn syrup)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20565",
+    "old_name_vi":"Men nở (men làm bánh mì)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20553",
+    "canonical_name_vi":"Men nở (men khô \/ men bánh mì)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20901",
+    "old_name_vi":"Men bánh mì",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20553",
+    "canonical_name_vi":"Men nở (men khô \/ men bánh mì)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20885",
+    "old_name_vi":"Đậu nành non",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20561",
+    "canonical_name_vi":"Đậu nành Nhật (Đậu tương Nhật \/ Edamame)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20657",
+    "old_name_vi":"Bột trà sữa",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20569",
+    "canonical_name_vi":"Bột trà sữa (trà sữa hòa tan)",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20781",
+    "old_name_vi":"Bột nước cốt dừa",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20571",
+    "canonical_name_vi":"Bột nước cốt dừa (bột dừa khô)",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20248",
+    "old_name_vi":"Húng chanh",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20577",
+    "canonical_name_vi":"Húng chanh (rau tần dày lá)",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20842",
+    "old_name_vi":"Dừa nạo (vụn dừa)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20585",
+    "canonical_name_vi":"Cơm dừa sấy khô",
+    "evidence":"cùng bản ghi SR",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20659",
+    "old_name_vi":"Hạt nêm dashi",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20594",
+    "canonical_name_vi":"Bột cá dashi (hạt nêm dashi cá thu)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20794",
+    "old_name_vi":"Nước sốt chua ngọt (xốt xí muội)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20614",
+    "canonical_name_vi":"Sốt tương chua ngọt (nước sốt)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20380",
+    "old_name_vi":"Lá é",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20615",
+    "canonical_name_vi":"Lá é tươi (húng trắng)",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20411",
+    "old_name_vi":"Lá é (rau é)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20615",
+    "canonical_name_vi":"Lá é tươi (húng trắng)",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20869",
+    "old_name_vi":"Bột phô mai",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20224",
+    "canonical_name_vi":"Phô mai Parmesan",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20824",
+    "old_name_vi":"Dầu hạt cải (dầu canola)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20644",
+    "canonical_name_vi":"Dầu hạt cải",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20676",
+    "old_name_vi":"Gia vị cajun",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20703",
+    "canonical_name_vi":"Bột gia vị Cajun",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20858",
+    "old_name_vi":"Viên thả lẩu",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20720",
+    "canonical_name_vi":"Topping lẩu (viên thả lẩu thập cẩm)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20099",
+    "old_name_vi":"Lá nguyệt quế",
+    "old_source_type":"viendinhduong_fct",
+    "canonical_code":"20789",
+    "canonical_name_vi":"Lá nguyệt quế khô (Bay leaf)",
+    "evidence":"alias=tên, số liệu gần; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20245",
+    "old_name_vi":"Nước cốt quất",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20806",
+    "canonical_name_vi":"Nước cốt tắc (nước quất)",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20820",
+    "old_name_vi":"Tỏi và ớt tươi",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20819",
+    "canonical_name_vi":"Tỏi ớt băm",
+    "evidence":"số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20299",
+    "old_name_vi":"Atiso",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20833",
+    "canonical_name_vi":"Hoa atisô",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20332",
+    "old_name_vi":"Bông atiso",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20833",
+    "canonical_name_vi":"Hoa atisô",
+    "evidence":"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20757",
+    "old_name_vi":"Hoa atiso tươi (bông atisô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20833",
+    "canonical_name_vi":"Hoa atisô",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20530",
+    "old_name_vi":"Nước chè tươi",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20853",
+    "canonical_name_vi":"Nước chè xanh",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20162",
+    "old_name_vi":"Sốt cà chua",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20883",
+    "canonical_name_vi":"Xốt cà chua",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20498",
+    "old_name_vi":"Đậu đen (hạt khô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"3004",
+    "canonical_name_vi":"Đậu đen",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20231",
+    "old_name_vi":"Dọc mùng (bạc hà)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"4026",
+    "canonical_name_vi":"Dọc mùng",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20154",
+    "old_name_vi":"Hoa chuối (bắp chuối)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"4043",
+    "canonical_name_vi":"Hoa chuối",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20108",
+    "old_name_vi":"Khế",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4045",
+    "canonical_name_vi":"Quả khế",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20124",
+    "old_name_vi":"Khế chua",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4045",
+    "canonical_name_vi":"Quả khế",
+    "evidence":"cùng cụm trùng (duyệt thủ công)",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20365",
+    "old_name_vi":"Quả khế",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4045",
+    "canonical_name_vi":"Quả khế",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20037",
+    "old_name_vi":"Ngô bao tử (bắp non)",
+    "old_source_type":"viendinhduong_fct",
+    "canonical_code":"4058",
+    "canonical_name_vi":"Ngô bao tử",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20306",
+    "old_name_vi":"Rau húng",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4075",
+    "canonical_name_vi":"Rau húng",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20872",
+    "old_name_vi":"Súp lơ xanh (bông cải xanh)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4100",
+    "canonical_name_vi":"Súp lơ xanh",
+    "evidence":"alias=tên, số liệu gần; trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20363",
+    "old_name_vi":"Nấm hương (nấm đông cô tươi)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4127",
+    "canonical_name_vi":"Nấm hương",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20892",
+    "old_name_vi":"Nấm hương (nấm đông cô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4127",
+    "canonical_name_vi":"Nấm hương",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20782",
+    "old_name_vi":"Táo tây (táo đỏ)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"5051",
+    "canonical_name_vi":"Táo tây",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20497",
+    "old_name_vi":"Bơ động vật",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"6001",
+    "canonical_name_vi":"Bơ",
+    "evidence":"alias=tên, số liệu gần",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20763",
+    "old_name_vi":"Lòng lợn (lòng non heo \/ phèo)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"7047",
+    "canonical_name_vi":"Lòng lợn (ruột non)",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20486",
+    "old_name_vi":"Giò lụa (chả lụa)",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"7069",
+    "canonical_name_vi":"Giò lụa",
+    "evidence":"trùng tên",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20190",
+    "old_name_vi":"Mì ăn liền",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"1043",
+    "canonical_name_vi":"Mỳ ăn liền, lúa mì",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20718",
+    "old_name_vi":"Rau cải non (cải mầm)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20050",
+    "canonical_name_vi":"Rau mầm (mầm cải)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20702",
+    "old_name_vi":"Bột nổi (bột nở \/ baking powder)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20143",
+    "canonical_name_vi":"Bột nở",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20369",
+    "old_name_vi":"Bột thì là (bột thì là Ai Cập)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20176",
+    "canonical_name_vi":"Hạt thì là",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20621",
+    "old_name_vi":"Phô mai bột",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20224",
+    "canonical_name_vi":"Phô mai Parmesan",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20786",
+    "old_name_vi":"Xốt Teriyaki",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20235",
+    "canonical_name_vi":"Sốt teriyaki",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20388",
+    "old_name_vi":"Nước ngọt xá xị",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20282",
+    "canonical_name_vi":"Nước ngọt có ga (xá xị)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20281",
+    "old_name_vi":"Đậu phụ chiên",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20352",
+    "canonical_name_vi":"Đậu hũ chiên",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20755",
+    "old_name_vi":"Tương đậu nành Hàn Quốc (Doenjang)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20403",
+    "canonical_name_vi":"Tương đậu Hàn Quốc",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20344",
+    "old_name_vi":"Rau củ hỗn hợp",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20408",
+    "canonical_name_vi":"Rau củ hỗn hợp đông lạnh",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20836",
+    "old_name_vi":"Thạch konnyaku",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20409",
+    "canonical_name_vi":"Khoai nưa (konnyaku)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20436",
+    "old_name_vi":"Bánh xếp gyoza đông lạnh",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20421",
+    "canonical_name_vi":"Bánh xếp gyoza",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20460",
+    "old_name_vi":"Bánh gyoza nhân gà rau",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20421",
+    "canonical_name_vi":"Bánh xếp gyoza",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20680",
+    "old_name_vi":"Nước dảo dừa",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20511",
+    "canonical_name_vi":"Nước cốt dừa loãng (nước dừa dão)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20694",
+    "old_name_vi":"Cải mặn (cải muối\/xá bấu)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20541",
+    "canonical_name_vi":"Củ cải muối (xá bấu)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20318",
+    "old_name_vi":"Rau húng chanh",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20577",
+    "canonical_name_vi":"Húng chanh (rau tần dày lá)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20489",
+    "old_name_vi":"Lá thơm khô",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20622",
+    "canonical_name_vi":"Gia vị thảo mộc Ý",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20832",
+    "old_name_vi":"Lá thơm hỗn hợp kiểu Ý (gia vị Ý)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20622",
+    "canonical_name_vi":"Gia vị thảo mộc Ý",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20555",
+    "old_name_vi":"Hoa hẹ",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20648",
+    "canonical_name_vi":"Bông hẹ",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20450",
+    "old_name_vi":"Gừng muối chua",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20701",
+    "canonical_name_vi":"Gừng muối (dưa gừng non)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20902",
+    "old_name_vi":"Nụ bạch hoa ngâm chua",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20725",
+    "canonical_name_vi":"Nụ bạch hoa (ngâm giấm)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20834",
+    "old_name_vi":"Nước tỏi",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20730",
+    "canonical_name_vi":"Nước cốt tỏi",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20687",
+    "old_name_vi":"Nước quất (nước tắc)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20806",
+    "canonical_name_vi":"Nước cốt tắc (nước quất)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20546",
+    "old_name_vi":"Bột làm bánh pha sẵn",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"20813",
+    "canonical_name_vi":"Bột bánh pancake (bột làm bánh kếp)",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20635",
+    "old_name_vi":"Bí đỏ (bí ngô \/ bí hồ lô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4003",
+    "canonical_name_vi":"bí ngô",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20607",
+    "old_name_vi":"Rau cải cúc (tần ô)",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4013",
+    "canonical_name_vi":"Cải cúc",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20204",
+    "old_name_vi":"Rau thơm các loại",
+    "old_source_type":"usda_fdc_ext",
+    "canonical_code":"4094",
+    "canonical_name_vi":"Rau thơm",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  },
+  {
+    "old_code":"20216",
+    "old_name_vi":"Rau thơm",
+    "old_source_type":"viendinhduong_fct_ext",
+    "canonical_code":"4094",
+    "canonical_name_vi":"Rau thơm",
+    "evidence":"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",
+    "merged_on":"2026-10-17"
+  }
+]

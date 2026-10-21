@@ -36,7 +36,6 @@ class MockApiClient implements ApiClient {
     ApiPaths.ingredients: 'ingredients',
     ApiPaths.inventoryBatches: 'inventory_batches',
     ApiPaths.recommendations: 'recommendations',
-    ApiPaths.suggestions: 'recommendations',
     '/recipes/': 'recipe',
     ApiPaths.notifications: 'notifications',
     ApiPaths.subscription: 'subscription',
@@ -47,16 +46,12 @@ class MockApiClient implements ApiClient {
     ApiPaths.extractionOcrLabel: 'scan_label',
     ApiPaths.extractionOcrInvoice: 'scan_receipt',
     ApiPaths.extractionAsr: 'scan_voice',
-    ApiPaths.scanLabel: 'scan_label',
-    ApiPaths.scanReceipt: 'scan_receipt',
-    ApiPaths.scanVoice: 'scan_voice',
   };
 
   /// Read-shaped POST endpoints that return a canned fixture instead of echoing
   /// the request body (dish scoring). Matched exact-or-prefix.
   static final Map<String, String> _postFixtures = {
     ApiPaths.recommendations: 'recommendations',
-    ApiPaths.suggestions: 'recommendations',
   };
 
   String? _postFixtureKey(String path) {
@@ -102,6 +97,32 @@ class MockApiClient implements ApiClient {
       final d = DateTime(today.year, today.month, today.day + offset, hh, mm);
       return d.toIso8601String();
     });
+  }
+
+  /// FreshCheck result in the real backend shape; spoiled answers hard-stop.
+  Map<String, dynamic> _mockFreshnessResult(Map<String, dynamic> body) {
+    final answers = (body['answers'] as Map?)?.values.map((v) => '$v') ?? [];
+    final spoiled = answers.any((a) => a == 'rotten' || a == 'slimy');
+    final now = DateTime.now().toUtc();
+    return {
+      'kb_version': '0.3.0',
+      'freshcheck_ingredient_id': 'fc_mock',
+      'archetype_id': 'leafy_greens',
+      'blocked': spoiled,
+      'tier': spoiled ? 'tier_4_spoiled' : 'tier_1_fresh',
+      'score': spoiled ? 0.0 : 9.0,
+      'remaining_hours_min': spoiled ? null : 72.0,
+      'remaining_hours_max': spoiled ? null : 120.0,
+      'remaining_days_min': spoiled ? null : 3,
+      'remaining_days_max': spoiled ? null : 5,
+      'reason_code': spoiled ? 'HARD_STOP' : null,
+      'reasons_vi': spoiled ? ['Có dấu hiệu hỏng'] : <String>[],
+      'storage_tips_vi': ['Bảo quản trong hộp kín ở ngăn mát.'],
+      'claims': <String>[],
+      'rule_version': 'mock',
+      'expires_at': (spoiled ? now : now.add(const Duration(days: 3)))
+          .toIso8601String(),
+    };
   }
 
   dynamic _echo(Object? body) {
@@ -470,7 +491,9 @@ class MockApiClient implements ApiClient {
   Map<String, dynamic> _updateFavoriteMenu(String menuId, Map<String, dynamic> body) {
     final menu = _findFavoriteMenu(menuId);
     if (body.containsKey('name')) menu['name'] = body['name'];
-    if (body.containsKey('description')) menu['description'] = body['description'];
+    if (body.containsKey('description')) {
+      menu['description'] = body['description'];
+    }
     menu['updated_at'] = DateTime.now().toIso8601String();
     return menu;
   }
@@ -749,6 +772,18 @@ class MockApiClient implements ApiClient {
     log.d('MOCK GET $path ${query ?? ''}');
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null) return _inventoryBatchById(batchId);
+    if (path == ApiPaths.aiHealth) {
+      return {
+        'status': 'ready',
+        'catalog_revision': 'catalog-mock-r1',
+        'recipe_count': 120,
+        'ranker_model': 'LightGBM LambdaMART',
+        'model_version': 'lgbm-contextual-v3.1.0',
+        'ocr_configured': true,
+        'asr_configured': true,
+        'latency_ms': 8.0,
+      };
+    }
     if (path == ApiPaths.recipes) {
       final recipeData = await _load('recipe');
       final list = [recipeData];
@@ -871,7 +906,7 @@ class MockApiClient implements ApiClient {
       }
       return _clone(recipe);
     }
-    if (path == ApiPaths.reportsUsageHistory) {
+    if (path == '/reports/usage-history') {
       final period = query?['period'] ?? 'month';
       return {
         'period': period,
@@ -934,7 +969,7 @@ class MockApiClient implements ApiClient {
         'total': 5,
       };
     }
-    if (path == ApiPaths.reportsWasteStatistics) {
+    if (path == '/reports/waste-statistics') {
       final period = query?['period'] ?? 'month';
       return {
         'period': period,
@@ -980,7 +1015,7 @@ class MockApiClient implements ApiClient {
         ],
       };
     }
-    if (path == ApiPaths.reportsEfficiency) {
+    if (path == '/reports/efficiency') {
       final period = query?['period'] ?? 'month';
       return {
         'period': period,
@@ -1149,22 +1184,35 @@ class MockApiClient implements ApiClient {
         'persisted': false,
       };
     }
-    if (path.startsWith('/freshness/batches/') && path.endsWith('/assessment')) {
-      final batchId = path.split('/')[3];
+    if (path == ApiPaths.extractionText) {
+      final text = ((body as Map<String, dynamic>)['text'] ?? '').toString();
       return {
+        'request_id': 'req-text-mock',
+        'status': 'PARTIAL',
+        'provider': 'MOCK_SMART_PARSER',
+        'raw_text': text,
+        'fields': {
+          'ingredient_name': text,
+          'raw_name': text,
+          'master_ingredient_id': null,
+          'quantity': null,
+          'unit': null,
+          'packaged_at': null,
+          'expires_at': null,
+        },
+        'confidence': <String, dynamic>{},
+        'warnings': ['QUANTITY_NOT_EXTRACTED', 'CONFIDENCE_NOT_AVAILABLE'],
+        'persisted': false,
+      };
+    }
+    if (path == ApiPaths.freshnessPreview) {
+      return _mockFreshnessResult(body as Map<String, dynamic>);
+    }
+    if (path.startsWith('/freshness/batches/') && path.endsWith('/assessment')) {
+      return {
+        ..._mockFreshnessResult(body as Map<String, dynamic>),
         'assessment_id': 'mock-asm-${_autoId++}',
-        'batch_id': batchId,
-        'status': 'ASSESSED',
-        'quality_tier': 'SAFE',
-        'confidence_level': 'HIGH',
-        'estimated_days_remaining': 3,
-        'revised_expiry_date':
-            DateTime.now().add(const Duration(days: 3)).toIso8601String(),
-        'action_recommendation': 'USE_SOON',
-        'advisory_notes': 'Nguyên liệu vẫn tươi ngon. Nên chế biến trong vòng 3 ngày tới.',
-        'storage_advice':
-            'Bảo quản trong hộp kín ở ngăn mát tủ lạnh (0-4°C), tránh nơi ẩm ướt.',
-        'assessed_at': DateTime.now().toIso8601String(),
+        'batch_id': path.split('/')[3],
       };
     }
     if (path.startsWith(ApiPaths.rating)) {
@@ -1278,6 +1326,7 @@ class MockApiClient implements ApiClient {
     String path, {
     Map<String, dynamic> fields = const {},
     List<UploadFile> files = const [],
+    Duration? receiveTimeout,
   }) async {
     await Future<void>.delayed(_latency * 2);
     log.d('MOCK MULTIPART $path (${files.length} file)');

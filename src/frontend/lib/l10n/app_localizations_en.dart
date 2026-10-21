@@ -629,9 +629,6 @@ class AppL10nEn extends AppL10n {
   String get suggestionsTitle => 'Suggestions for you';
 
   @override
-  String get suggestionsQuickCook => '≤ 30 min';
-
-  @override
   String get suggestionsEmptyTitle => 'Not enough ingredients to suggest';
 
   @override
@@ -1103,12 +1100,25 @@ class AppL10nEn extends AppL10n {
   String get reviewLabelPhoto => 'Label photo';
 
   @override
+  String get reviewBarcodePhoto => 'Barcode photo';
+
+  @override
   String get reviewRetake => 'Retake';
 
   @override
   String reviewReceiptTitle(int count) {
     return 'Receipt — $count items';
   }
+
+  @override
+  String get reviewReceiptPartialTitle => 'No ingredients were extracted';
+
+  @override
+  String get reviewReceiptPartialBody =>
+      'AI processed the image but could not build an ingredient list. You can retake a clearer photo or enter the items manually.';
+
+  @override
+  String get reviewReceiptRawText => 'Text read by AI';
 
   @override
   String reviewSelectedOf(int count) {

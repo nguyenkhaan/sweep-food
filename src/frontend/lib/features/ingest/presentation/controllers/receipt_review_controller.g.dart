@@ -63,7 +63,7 @@ final class ReceiptReviewControllerProvider
 }
 
 String _$receiptReviewControllerHash() =>
-    r'342041d6f34bdb603c91596b2f742247f9a8f4ed';
+    r'e2399bddcee32c39cee953d4219798595581a318';
 
 /// Seeds from the receipt OCR [ScanJob]; every line is selected by default.
 

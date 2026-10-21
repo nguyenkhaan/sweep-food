@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/core/widgets/pantry_item_card.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
@@ -38,7 +38,10 @@ class PantryItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return PantryItemCard(
       name: item.name,
-      subtitle: '${item.quantityLabel} · ${item.category}',
+      subtitle: [
+        item.quantityLabel,
+        if (item.category.trim().isNotEmpty) item.category.trim(),
+      ].join(' · '),
       daysUntilExpiry: item.daysUntilExpiry,
       tier: item.storageTier,
       leadingIcon: _categoryIcon[item.category] ?? Icons.eco_outlined,
@@ -52,8 +55,8 @@ class PantryItemTile extends StatelessWidget {
 
 /// Icon for a tier (used by the detail screen chips).
 IconData tierIcon(StorageTier tier) => switch (tier) {
-      StorageTier.eatSoon => Icons.local_fire_department_rounded,
-      StorageTier.fridge => Icons.kitchen_rounded,
-      StorageTier.freezer => Icons.ac_unit_rounded,
-      StorageTier.pantryShelf => Icons.inventory_2_rounded,
-    };
+  StorageTier.eatSoon => Icons.local_fire_department_rounded,
+  StorageTier.fridge => Icons.kitchen_rounded,
+  StorageTier.freezer => Icons.ac_unit_rounded,
+  StorageTier.pantryShelf => Icons.inventory_2_rounded,
+};

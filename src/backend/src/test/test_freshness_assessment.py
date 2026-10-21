@@ -25,11 +25,13 @@ from src.module.freshness.freshness_dependency import get_freshness_assessment_s
 from src.module.freshness.freshness_dto import (
     FreshnessAssessmentRequestDTO,
     FreshnessAssessmentResponseDTO,
+    FreshnessPreviewRequestDTO,
 )
 from src.module.freshness.freshness_service import (
     FreshCheckAssessmentInputError,
     FreshCheckMappingUnavailableError,
     FreshnessAssessmentService,
+    FreshnessQuestionService,
 )
 from src.module.inventory.inventory_service import InventoryBatchNotFoundError
 
@@ -466,3 +468,74 @@ async def test_assessment_route_rejects_naive_purchased_at(
     )
 
     assert response.status_code == 422
+
+
+class FakePreviewSession(FakeAssessmentSession):
+    """Serve the read-only lookups a preview performs: active KB, then mapping."""
+
+    async def scalar(self, _statement: object) -> object | None:
+        """Return the active KB, then the reviewed mapping."""
+        values = (SimpleNamespace(kb_version="0.3.0"), self.mapping)
+        value = values[self._scalar_calls]
+        self._scalar_calls += 1
+        return value
+
+
+def _preview_request(answer: str) -> FreshnessPreviewRequestDTO:
+    """Build a preview request for the mapped fixture ingredient."""
+    return FreshnessPreviewRequestDTO(
+        master_ingredient_id=MASTER_INGREDIENT_ID,
+        storage_mode=StorageMode.REFRIGERATED,
+        answers={"appearance": answer},
+    )
+
+
+@pytest.mark.anyio
+async def test_preview_returns_an_estimated_expiry_without_persisting() -> None:
+    """A preview computes the same expiry an assessment would, but writes nothing."""
+    session = FakePreviewSession(batch=None)
+    service = FreshnessQuestionService(cast(AsyncSession, session))
+
+    response = await service.preview(_preview_request("fresh"), now=NOW)
+
+    assert response.blocked is False
+    assert response.expires_at is not None and response.expires_at > NOW
+    assert response.freshcheck_ingredient_id == "rau_muong"
+    assert session.added == []
+    assert session.executed == []
+    assert session.transaction_count == 0
+
+
+@pytest.mark.anyio
+async def test_preview_hard_stop_expires_immediately() -> None:
+    """A spoiled sensory answer previews an already-expired item."""
+    service = FreshnessQuestionService(
+        cast(AsyncSession, FakePreviewSession(batch=None))
+    )
+
+    response = await service.preview(_preview_request("spoiled"), now=NOW)
+
+    assert response.blocked is True
+    assert response.expires_at == NOW
+
+
+@pytest.mark.anyio
+async def test_preview_rejects_an_answer_outside_the_active_rubric() -> None:
+    """An unknown sensory value cannot silently preview as fresh."""
+    service = FreshnessQuestionService(
+        cast(AsyncSession, FakePreviewSession(batch=None))
+    )
+
+    with pytest.raises(FreshCheckAssessmentInputError):
+        await service.preview(_preview_request("moldy"), now=NOW)
+
+
+@pytest.mark.anyio
+async def test_preview_rejects_an_unmapped_ingredient() -> None:
+    """Only reviewed mappings may produce an estimate."""
+    session = FakePreviewSession(batch=None, mapping=None)
+    session.mapping = None
+    service = FreshnessQuestionService(cast(AsyncSession, session))
+
+    with pytest.raises(FreshCheckMappingUnavailableError):
+        await service.preview(_preview_request("fresh"), now=NOW)

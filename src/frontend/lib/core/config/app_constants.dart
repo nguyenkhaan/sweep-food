@@ -4,6 +4,9 @@ abstract final class AppConstants {
 
   static const connectTimeout = Duration(seconds: 20);
   static const receiveTimeout = Duration(seconds: 20);
+  // OCR/ASR calls include cloud-model inference and legitimately take longer
+  // than ordinary CRUD requests. Keep this above the backend's 60s ceiling.
+  static const aiUploadReceiveTimeout = Duration(seconds: 75);
 
   /// Artificial latency added by [MockApiClient] so loading states are visible.
   static const mockLatency = Duration(milliseconds: 320);
@@ -11,8 +14,8 @@ abstract final class AppConstants {
   /// Default page size for paginated list endpoints.
   static const pageSize = 20;
 
-  /// Max suggestions requested / shown at once (spec: 3–5 dishes).
-  static const maxSuggestions = 5;
+  /// SweepFood AI currently returns up to seven feasibility-ranked dishes.
+  static const maxSuggestions = 7;
 
   /// SharedPreferences keys.
   static const kThemeMode = 'pref.theme_mode';
@@ -23,8 +26,8 @@ abstract final class AppConstants {
   static const kNotificationPrefs = 'pref.notification_prefs';
   static const kMealPlanWeekStart = 'pref.meal_plan_week_start';
 
-  /// The backend has no "list-all"/"active list" endpoint — the id from the
-  /// last successful `generate` is remembered locally instead.
+  /// The id from the last successful `generate` is remembered locally so the
+  /// same list remains selected across app restarts.
   static const kActiveShoppingListId = 'pref.active_shopping_list_id';
 
   /// SecureStorage keys.

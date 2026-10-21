@@ -15,6 +15,7 @@ import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/receipt_review_controller.dart';
 import 'package:sweepfood/features/ingest/presentation/widgets/parsed_item_row.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/expiry_freshness_row.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
 
@@ -30,6 +31,7 @@ class ReceiptReviewScreen extends ConsumerWidget {
     final state = ref.watch(receiptReviewControllerProvider(job));
     final controller = ref.read(receiptReviewControllerProvider(job).notifier);
     final sweep = context.sweep;
+    final isEmpty = state.items.isEmpty;
     final allSelected =
         state.selectedCount == state.items.length && state.items.isNotEmpty;
 
@@ -88,47 +90,63 @@ class ReceiptReviewScreen extends ConsumerWidget {
             ],
           ),
           Gap.gapMd,
-          Row(
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '${state.selectedCount}',
-                      style: const TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    TextSpan(
-                      text: l10n.reviewSelectedOf(state.items.length),
-                      style: TextStyle(color: sweep.textTertiary),
-                    ),
-                  ],
+          if (isEmpty)
+            _EmptyReceiptResult(job: job)
+          else ...[
+            Row(
+              children: [
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${state.selectedCount}',
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(
+                        text: l10n.reviewSelectedOf(state.items.length),
+                        style: TextStyle(color: sweep.textTertiary),
+                      ),
+                    ],
+                  ),
+                  style: context.text.bodySmall,
                 ),
-                style: context.text.bodySmall,
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: allSelected
-                    ? controller.deselectAll
-                    : controller.selectAll,
-                child: Text(
-                  allSelected ? l10n.reviewDeselectAll : l10n.reviewSelectAll,
-                  style: context.text.bodySmall?.copyWith(
-                    color: BrandPalette.green700,
-                    fontWeight: FontWeight.w600,
+                const Spacer(),
+                GestureDetector(
+                  onTap: allSelected
+                      ? controller.deselectAll
+                      : controller.selectAll,
+                  child: Text(
+                    allSelected ? l10n.reviewDeselectAll : l10n.reviewSelectAll,
+                    style: context.text.bodySmall?.copyWith(
+                      color: BrandPalette.green700,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Gap.gapSm,
-          for (var i = 0; i < state.items.length; i++) ...[
-            ParsedItemRow(
-              item: state.items[i],
-              selected: state.isSelected(i),
-              onToggle: () => controller.toggleItem(i),
-              onEdit: () => _editItem(context, i, state.items[i], controller),
+              ],
             ),
-            const SizedBox(height: Gap.xs + 2),
+            Gap.gapSm,
+            for (var i = 0; i < state.items.length; i++) ...[
+              ParsedItemRow(
+                item: state.items[i],
+                selected: state.isSelected(i),
+                onToggle: () => controller.toggleItem(i),
+                onEdit: () => _editItem(context, i, state.items[i], controller),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(Gap.sm, Gap.xs, Gap.sm, 0),
+                child: ExpiryFreshnessRow(
+                  itemName: state.items[i].name,
+                  storageTier: state.items[i].storageTier,
+                  expiryDate: state.items[i].expiryDate,
+                  freshness: state.items[i].freshness,
+                  masterIngredientId: state.items[i].ingredientId,
+                  onChanged: (expiry, freshness) =>
+                      controller.setItemExpiry(i, expiry, freshness),
+                ),
+              ),
+              const SizedBox(height: Gap.sm),
+            ],
           ],
         ],
       ),
@@ -140,10 +158,35 @@ class ReceiptReviewScreen extends ConsumerWidget {
             border: Border(top: BorderSide(color: sweep.hairline)),
             boxShadow: Shadows.e2,
           ),
-          child: ElevatedButton(
-            onPressed: state.selectedCount == 0
-                ? null
-                : () async {
+          child: isEmpty
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => context.push(
+                        '${Routes.pantry}/${Routes.addIngredient}',
+                      ),
+                      icon: const Icon(Icons.add_rounded),
+                      label: Text(l10n.chooserManual),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: BrandPalette.green700,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size.fromHeight(50),
+                      ),
+                    ),
+                    const SizedBox(height: Gap.xs),
+                    TextButton.icon(
+                      onPressed: () => context.pop(),
+                      icon: const Icon(Icons.refresh_rounded),
+                      label: Text(l10n.reviewRetake),
+                    ),
+                  ],
+                )
+              : ElevatedButton(
+                  onPressed: state.selectedCount == 0
+                      ? null
+                      : () async {
                     try {
                       final count = state.selectedCount;
                       await controller.saveSelectedToPantry();
@@ -157,22 +200,25 @@ class ReceiptReviewScreen extends ConsumerWidget {
                       if (!context.mounted) return;
                       AppSnack.show(context, context.l10n.scanSaveError('$e'));
                     }
-                  },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: BrandPalette.green700,
-              foregroundColor: Colors.white,
-              disabledBackgroundColor: sweep.subtleFill,
-              disabledForegroundColor: sweep.textTertiary,
-              minimumSize: const Size.fromHeight(50),
-              shape: const RoundedRectangleBorder(borderRadius: Radii.brMd),
-            ),
-            child: Text(
-              state.selectedCount > 0
-                  ? l10n.reviewAddCount(state.selectedCount)
-                  : l10n.reviewPickAtLeastOne,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-            ),
-          ),
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: BrandPalette.green700,
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor: sweep.subtleFill,
+                    disabledForegroundColor: sweep.textTertiary,
+                    minimumSize: const Size.fromHeight(50),
+                    shape: const RoundedRectangleBorder(borderRadius: Radii.brMd),
+                  ),
+                  child: Text(
+                    state.selectedCount > 0
+                        ? l10n.reviewAddCount(state.selectedCount)
+                        : l10n.reviewPickAtLeastOne,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
         ),
       ),
     );
@@ -326,15 +372,21 @@ class ReceiptReviewScreen extends ConsumerWidget {
                         final qty =
                             double.tryParse(qtyController.text.trim()) ??
                             item.quantity;
+                        final newName = nameController.text.trim();
+                        final renamed = newName != item.name;
                         controller.updateItem(
                           index,
                           item.copyWith(
-                            name: nameController.text.trim(),
+                            name: newName,
                             quantity: qty,
                             unit: selectedUnit,
                             category: selectedCategory,
                             storageTier: selectedTier,
                             isExpiryWarn: false,
+                            ingredientId: renamed ? null : item.ingredientId,
+                            freshness: renamed || selectedTier != item.storageTier
+                                ? null
+                                : item.freshness,
                           ),
                         );
                         ctx.pop();
@@ -352,6 +404,70 @@ class ReceiptReviewScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _EmptyReceiptResult extends StatelessWidget {
+  const _EmptyReceiptResult({required this.job});
+
+  final ScanJob job;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final sweep = context.sweep;
+    final rawText = job.rawText?.trim();
+
+    return Container(
+      padding: const EdgeInsets.all(Gap.lg),
+      decoration: BoxDecoration(
+        color: sweep.subtleFill,
+        borderRadius: Radii.brLg,
+        border: Border.all(color: sweep.hairline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.manage_search_rounded,
+            color: BrandPalette.green700,
+            size: 32,
+          ),
+          Gap.gapSm,
+          Text(
+            l10n.reviewReceiptPartialTitle,
+            style: context.text.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: Gap.xs),
+          Text(
+            l10n.reviewReceiptPartialBody,
+            style: context.text.bodyMedium?.copyWith(
+              color: sweep.textSecondary,
+            ),
+          ),
+          if (rawText != null && rawText.isNotEmpty) ...[
+            Gap.gapMd,
+            Text(
+              l10n.reviewReceiptRawText,
+              style: context.text.labelLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: Gap.xs),
+            Text(
+              rawText,
+              maxLines: 8,
+              overflow: TextOverflow.ellipsis,
+              style: context.text.bodySmall?.copyWith(
+                color: sweep.textSecondary,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

@@ -163,12 +163,8 @@ class PantryEntityParser:
         qty_g = float(raw_item.get("quantity_g") or 200.0)
         storage_mode = raw_item.get("storage_mode") or "fridge_2_4c"
 
-        # Tra cứu hạn dùng và mẹo bảo quản theo nhiệt độ trong FreshCheck KB.
-        # Có hạn in sẵn (expiry_date) thì giữ số giờ tính từ hạn in, không ghi đè bằng KB;
-        # 0 giờ (đã hết hạn) là giá trị hợp lệ, không thay bằng mặc định.
-        raw_hours = raw_item.get("hours_to_expire")
-        shelf_hours = float(raw_hours) if raw_hours is not None else 48.0
-        has_printed_expiry = bool(raw_item.get("expiry_date")) and raw_hours is not None
+        # Tra cứu hạn dùng và mẹo bảo quản theo nhiệt độ trong FreshCheck KB
+        shelf_hours = float(raw_item.get("hours_to_expire") or 48.0)
         freshness_info = None
 
         if self.fresh_kb:
@@ -176,7 +172,7 @@ class PantryEntityParser:
                 f_code = str(f_data.get("code") or "").strip()
                 if (code and f_code == str(code).strip()) or any(raw_name.lower() in n.lower() for n in f_data.get("names_vi", [])):
                     shelf_spec = f_data.get("base_shelf_life_hours", {}).get(storage_mode)
-                    if shelf_spec and not has_printed_expiry:
+                    if shelf_spec:
                         shelf_hours = float(shelf_spec.get("value", 48.0))
                     arch_id = f_data.get("archetype")
                     arch = self.fresh_kb.get("archetypes", {}).get(arch_id, {})
@@ -196,13 +192,8 @@ class PantryEntityParser:
             "name": master_name,
             "raw_text": raw_name,
             "code": code,
-            "category": category,
             "quantity_g": round(qty_g, 1),
-            "quantity_source": raw_item.get("quantity_source", "estimated"),
             "hours_to_expire": round(shelf_hours, 1),
-            "expiry_date": raw_item.get("expiry_date"),
-            "production_date": raw_item.get("production_date"),
-            "note": raw_item.get("note"),
             "storage_mode": storage_mode,
             "is_staple": bool(is_staple),
             "nutrition_per_100g": matched.get("nutrition") if matched else None,

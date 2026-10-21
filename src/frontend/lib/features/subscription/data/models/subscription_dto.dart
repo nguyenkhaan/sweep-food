@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/subscription/domain/entities/subscription.dart';
 
 part 'subscription_dto.freezed.dart';
@@ -9,7 +9,7 @@ abstract class SubscriptionDto with _$SubscriptionDto {
   const SubscriptionDto._();
 
   const factory SubscriptionDto({
-    required String tier,
+    @JsonKey(name: 'plan') required String tier,
     @Default(<String>[]) List<String> perks,
     @JsonKey(name: 'premium_interest_registered')
     @Default(false)
@@ -20,8 +20,8 @@ abstract class SubscriptionDto with _$SubscriptionDto {
       _$SubscriptionDtoFromJson(json);
 
   Subscription toEntity() => Subscription(
-        tier: SubscriptionTier.fromWire(tier),
-        perks: perks,
-        premiumInterestRegistered: premiumInterestRegistered,
-      );
+    tier: SubscriptionTier.fromWire(tier),
+    perks: perks,
+    premiumInterestRegistered: premiumInterestRegistered,
+  );
 }

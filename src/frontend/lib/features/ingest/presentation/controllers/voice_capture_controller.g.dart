@@ -60,7 +60,7 @@ final class VoiceCaptureControllerProvider
 }
 
 String _$voiceCaptureControllerHash() =>
-    r'a2ccc9b9f2c56877c47b91ebeb388a28c1efda3c';
+    r'8d4129dcd0d8f1077336a9188cc361dd022de2a2';
 
 final class VoiceCaptureControllerFamily extends $Family
     with

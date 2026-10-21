@@ -7,6 +7,11 @@
 **Last updated:** 2026-08-29  
 **Primary audience:** Backend engineers, mobile/frontend engineers, QA, data/ML engineers, and product stakeholders
 
+> Historical MVP planning baseline. Delivery phases, provider proposals, and
+> schema sketches below are not a current implementation checklist or API
+> contract. Use the routers/DTOs under `src/module/`, models, Alembic revisions,
+> and generated `/docs` for the implemented behavior.
+
 ## 1. Executive Summary
 
 Sweep Food is a personal kitchen inventory and meal-planning application. Its backend helps one user maintain an accurate inventory, prioritize ingredients that will expire soon, choose suitable recipes, estimate nutrition and missing ingredients, and update inventory after cooking.

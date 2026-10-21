@@ -5,16 +5,23 @@ import 'package:sweepfood/features/pantry/data/datasources/freshness_remote_data
 import 'package:sweepfood/features/pantry/data/models/freshness_dto.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 
-final freshnessRemoteDataSourceProvider =
-    Provider<FreshnessRemoteDataSource>((ref) {
+final freshnessRemoteDataSourceProvider = Provider<FreshnessRemoteDataSource>((
+  ref,
+) {
   return FreshnessRemoteDataSource(ref.watch(apiClientProvider));
 });
 
-final freshnessQuestionsProvider = FutureProvider.autoDispose
-    .family<FreshnessQuestionsResponseDto, String>((ref, ingredientId) async {
-  final remote = ref.watch(freshnessRemoteDataSourceProvider);
-  return remote.getQuestions(ingredientId);
-});
+// Keep one result (including an unsupported/error result) per ingredient for
+// the app session. Review lists are lazy: auto-disposing rows would otherwise
+// request the same FreshCheck mapping again whenever they re-enter the viewport.
+final freshnessQuestionsProvider =
+    FutureProvider.family<FreshnessQuestionsResponseDto, String>((
+      ref,
+      ingredientId,
+    ) async {
+      final remote = ref.watch(freshnessRemoteDataSourceProvider);
+      return remote.getQuestions(ingredientId);
+    }, retry: (_, _) => null);
 
 class FreshnessAssessmentState {
   const FreshnessAssessmentState({
@@ -37,6 +44,7 @@ class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
     required String batchId,
     required Map<String, String> answers,
     String? storageMode,
+    DateTime? purchasedAt,
   }) async {
     value = const FreshnessAssessmentState(isLoading: true);
 
@@ -46,6 +54,7 @@ class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
         batchId,
         answers: answers,
         storageMode: storageMode,
+        purchasedAt: purchasedAt,
       );
       value = FreshnessAssessmentState(result: res);
 
@@ -66,8 +75,9 @@ class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
   }
 }
 
-final freshnessControllerProvider =
-    Provider.autoDispose<FreshnessController>((ref) {
+final freshnessControllerProvider = Provider.autoDispose<FreshnessController>((
+  ref,
+) {
   final controller = FreshnessController(ref);
   ref.onDispose(controller.dispose);
   return controller;

@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
@@ -16,6 +17,34 @@ class VoiceReviewState {
   final String transcript;
   final List<ParsedItemDraft> items;
 
+  int get spokenClauseCount => transcript
+      .split(
+        RegExp(
+          r'\s*(?:,|;|\bvà\b|\bvới\b|\brồi\b|\bkèm\b|\bthêm\b)\s*',
+          caseSensitive: false,
+        ),
+      )
+      .where((part) => part.trim().isNotEmpty)
+      .length;
+
+  int get suspectedMissingCount {
+    final missing = spokenClauseCount - items.length;
+    return missing > 0 ? missing : 0;
+  }
+
+  bool get hasSuspiciousQuantity {
+    final mentionsLargeUnit = RegExp(
+      r'\b(?:kg|kí|ký|kilo|kilô|cân)\b',
+      caseSensitive: false,
+    ).hasMatch(transcript);
+    return !mentionsLargeUnit &&
+        items.any(
+          (item) => item.unit == MeasurementUnit.gram && item.quantity >= 1000,
+        );
+  }
+
+  bool get needsReview => suspectedMissingCount > 0 || hasSuspiciousQuantity;
+
   VoiceReviewState copyWith({
     String? transcript,
     List<ParsedItemDraft>? items,
@@ -30,16 +59,34 @@ class VoiceReviewState {
 @riverpod
 class VoiceCaptureController extends _$VoiceCaptureController {
   @override
-  VoiceReviewState build(ScanJob job) => VoiceReviewState(
-        transcript: job.rawText ?? '',
-        items: job.items,
-      );
+  VoiceReviewState build(ScanJob job) =>
+      VoiceReviewState(transcript: job.rawText ?? '', items: job.items);
 
   void updateItem(int index, ParsedItemDraft item) {
     final list = List<ParsedItemDraft>.from(state.items);
     list[index] = item;
     state = state.copyWith(items: list);
   }
+
+  /// Renaming detaches the row from its catalog match and FreshCheck estimate.
+  void renameItem(int index, String name) {
+    final item = state.items[index];
+    if (name == item.name) return;
+    updateItem(
+      index,
+      item.copyWith(name: name, ingredientId: null, freshness: null),
+    );
+  }
+
+  /// A manual date and a FreshCheck estimate are mutually exclusive.
+  void setItemExpiry(
+    int index,
+    DateTime? expiry,
+    FreshnessEstimate? freshness,
+  ) => updateItem(
+    index,
+    state.items[index].copyWith(expiryDate: expiry, freshness: freshness),
+  );
 
   void addItem(ParsedItemDraft item) =>
       state = state.copyWith(items: [...state.items, item]);

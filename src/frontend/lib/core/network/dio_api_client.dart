@@ -1,4 +1,4 @@
-﻿import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:sweepfood/core/network/api_client.dart';
 
 /// [ApiClient] backed by Dio. Used when `AppConfig.backend == Backend.live`.
@@ -18,13 +18,12 @@ class DioApiClient implements ApiClient {
     Object? body,
     Map<String, dynamic>? query,
     Map<String, String>? headers,
-  }) async =>
-      (await _dio.post<dynamic>(
-        path,
-        data: body,
-        queryParameters: query,
-        options: headers == null ? null : Options(headers: headers),
-      )).data;
+  }) async => (await _dio.post<dynamic>(
+    path,
+    data: body,
+    queryParameters: query,
+    options: headers == null ? null : Options(headers: headers),
+  )).data;
 
   @override
   Future<dynamic> put(String path, {Object? body}) async =>
@@ -35,36 +34,47 @@ class DioApiClient implements ApiClient {
     String path, {
     Object? body,
     Map<String, String>? headers,
-  }) async =>
-      (await _dio.patch<dynamic>(
-        path,
-        data: body,
-        options: headers == null ? null : Options(headers: headers),
-      )).data;
+  }) async => (await _dio.patch<dynamic>(
+    path,
+    data: body,
+    options: headers == null ? null : Options(headers: headers),
+  )).data;
 
   @override
   Future<dynamic> delete(
     String path, {
     Object? body,
     Map<String, String>? headers,
-  }) async =>
-      (await _dio.delete<dynamic>(
-        path,
-        data: body,
-        options: headers == null ? null : Options(headers: headers),
-      )).data;
+  }) async => (await _dio.delete<dynamic>(
+    path,
+    data: body,
+    options: headers == null ? null : Options(headers: headers),
+  )).data;
 
   @override
   Future<dynamic> postMultipart(
     String path, {
     Map<String, dynamic> fields = const {},
     List<UploadFile> files = const [],
+    Duration? receiveTimeout,
   }) async {
     final form = FormData.fromMap({
       ...fields,
       for (final f in files)
-        f.field: await MultipartFile.fromFile(f.path, filename: f.filename),
+        f.field: await MultipartFile.fromFile(
+          f.path,
+          filename: f.filename,
+          contentType: f.contentType == null
+              ? null
+              : DioMediaType.parse(f.contentType!),
+        ),
     });
-    return (await _dio.post<dynamic>(path, data: form)).data;
+    return (await _dio.post<dynamic>(
+      path,
+      data: form,
+      options: receiveTimeout == null
+          ? null
+          : Options(receiveTimeout: receiveTimeout),
+    )).data;
   }
 }

@@ -34,8 +34,11 @@ class ParsedItemRow extends StatelessWidget {
     final qty = item.quantity == item.quantity.roundToDouble()
         ? item.quantity.round().toString()
         : item.quantity.toStringAsFixed(1);
-    final subtitle =
-        '$qty ${item.unit.label} · ${item.category} · ${item.storageTier.shortLabel(context.l10n)}';
+    final subtitle = [
+      '$qty ${item.unit.label}',
+      if (item.category.trim().isNotEmpty) item.category.trim(),
+      item.storageTier.shortLabel(context.l10n),
+    ].join(' · ');
 
     return Material(
       color: context.colors.surface,

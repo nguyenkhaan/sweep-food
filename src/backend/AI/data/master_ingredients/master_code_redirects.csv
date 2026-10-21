@@ -1,0 +1,214 @@
+old_code,old_name_vi,old_source_type,canonical_code,canonical_name_vi,evidence,merged_on
+20430,Nước ngọt có ga (Coca-Cola),usda_fdc_ext,14004,Coca cola,"alias=tên, số liệu gần",2026-10-17
+20613,Bột cà ri (sốt cà ri),usda_fdc_ext,20011,Bột cà ri,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20783,Củ kiệu ngâm chua (kiệu muối),viendinhduong_fct_ext,20077,Củ kiệu muối (Dưa kiệu chua ngọt),"alias=tên, số liệu gần",2026-10-17
+20599,Mì sợi (mì trứng / mì vàng / mì rau củ khô),usda_fdc_ext,20087,Mì trứng (Mì sợi trứng),"alias=tên, số liệu gần",2026-10-17
+20257,Củ năng (mã thầy),usda_fdc_ext,20107,Củ năng,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",2026-10-17
+20634,Củ năng (củ mã thầy),usda_fdc_ext,20107,Củ năng,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",2026-10-17
+20302,Tỏi bột,usda_fdc_ext,20109,Bột tỏi,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20429,Tóp mỡ heo,usda_fdc_ext,20110,Tóp mỡ,"alias=tên, số liệu gần; cùng bản ghi SR",2026-10-17
+20545,Tóp mỡ (mỡ heo rán giòn),usda_fdc_ext,20110,Tóp mỡ,trùng tên,2026-10-17
+20459,"Thịt bò, sườn",usda_fdc_ext,20113,Sườn bò,"alias=tên, số liệu gần",2026-10-17
+20270,Thịt hàu,usda_fdc_ext,20114,Hàu,"alias=tên, số liệu gần",2026-10-17
+20822,Hàu tươi (thịt hàu sống),usda_fdc_ext,20114,Hàu,"alias=tên, số liệu gần",2026-10-17
+20815,Thịt ba chỉ bò (ba rọi bò),usda_fdc_ext,20117,Thịt ba chỉ bò,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20183,Dầu điều màu,usda_fdc_ext,20120,Dầu điều,"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20792,Dầu màu điều (dầu điều màu),viendinhduong_fct_ext,20120,Dầu điều,"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20145,Trứng muối,viendinhduong_fct_ext,20125,Trứng vịt muối,"alias=tên, số liệu gần",2026-10-17
+20175,Chanh dây,usda_fdc_ext,20128,Chanh leo (chanh dây),"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20540,Nấm linh chi trắng (nấm hải sản),usda_fdc_ext,20130,Nấm linh chi trắng,trùng tên,2026-10-17
+20192,Sốt xí muội,usda_fdc_ext,20131,Tương xí muội,cùng cụm trùng (duyệt thủ công),2026-10-17
+20706,Xốt xí muội (tương xí muội),usda_fdc_ext,20131,Tương xí muội,"alias=tên, số liệu gần",2026-10-17
+20336,Cồi sò điệp,usda_fdc_ext,20138,Sò điệp,cùng cụm trùng (duyệt thủ công),2026-10-17
+20582,Sò điệp (cồi sò điệp),usda_fdc_ext,20138,Sò điệp,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",2026-10-17
+20295,Xốt mè rang,usda_fdc_ext,20139,Sốt mè rang,"alias=tên, số liệu gần",2026-10-17
+20471,Hạt bạch quả,usda_fdc_ext,20140,Bạch quả,"alias=tên, số liệu gần",2026-10-17
+20538,Bột nở (baking powder),usda_fdc_ext,20143,Bột nở,trùng tên,2026-10-17
+20201,Lạc hạt (đậu phộng),usda_fdc_ext,20146,Lạc hạt,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",2026-10-17
+20679,Hạt lạc,usda_fdc_ext,20146,Lạc hạt,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20157,Tương ớt Hàn Quốc,usda_fdc_ext,20148,Tương ớt Gochujang,"alias=tên, số liệu gần",2026-10-17
+20188,Tương ớt Hàn Quốc (Gochujang),usda_fdc_ext,20148,Tương ớt Gochujang,"alias=tên, số liệu gần",2026-10-17
+20324,Tương ớt Gochujang (Hàn Quốc),usda_fdc_ext,20148,Tương ớt Gochujang,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20487,Sốt gochujang Hàn Quốc,usda_fdc_ext,20148,Tương ớt Gochujang,cùng cụm trùng (duyệt thủ công),2026-10-17
+20417,Lòng đỏ trứng vịt muối,usda_fdc_ext,20156,Lòng đỏ trứng muối,"alias=tên, số liệu gần",2026-10-17
+20698,Sốt ướp xá xíu,usda_fdc_ext,20160,Sốt xá xíu,"alias=tên, số liệu gần",2026-10-17
+20171,Tàu xì,usda_fdc_ext,20161,Đậu đen lên men (tàu xì),"alias=tên, số liệu gần",2026-10-17
+20592,Đậu đen muối,usda_fdc_ext,20161,Đậu đen lên men (tàu xì),cùng cụm trùng (duyệt thủ công),2026-10-17
+20670,Tàu xì (đậu đen lên men),usda_fdc_ext,20161,Đậu đen lên men (tàu xì),cùng cụm trùng (duyệt thủ công),2026-10-17
+20228,Ngưu bàng,usda_fdc_ext,20166,Củ ngưu bàng,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20416,Ngưu bàng (củ),usda_fdc_ext,20166,Củ ngưu bàng,"alias=tên, số liệu gần; cùng bản ghi SR",2026-10-17
+20586,Rễ ngưu bàng,usda_fdc_ext,20166,Củ ngưu bàng,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20268,Gia vị bò kho (bột/sốt gia vị bò kho),usda_fdc_ext,20167,Gia vị bò kho,trùng tên,2026-10-17
+20364,Bánh hủ tiếu,viendinhduong_fct_ext,20172,Hủ tiếu,"alias=tên, số liệu gần",2026-10-17
+20733,Rượu hoa tiêu (rượu nấu ăn),usda_fdc_ext,20173,Rượu nấu ăn,"alias=tên, số liệu gần",2026-10-17
+20655,Trái vả,usda_fdc_ext,20182,Quả vả,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20223,Lá oregano,usda_fdc_ext,20187,Lá oregano khô,cùng cụm trùng (duyệt thủ công),2026-10-17
+20435,Lá thơm khô (herbs),usda_fdc_ext,20187,Lá oregano khô,cùng cụm trùng (duyệt thủ công),2026-10-17
+20564,Lá thơm khô (Oregano / Thyme),usda_fdc_ext,20187,Lá oregano khô,"alias=tên, số liệu gần; cùng bản ghi SR",2026-10-17
+20626,Lá thơm oregano (khô / bột),usda_fdc_ext,20187,Lá oregano khô,cùng bản ghi SR,2026-10-17
+20791,Lá kinh giới tây khô (Oregano),usda_fdc_ext,20187,Lá oregano khô,cùng bản ghi SR,2026-10-17
+20856,Lá kinh giới cay (oregano),usda_fdc_ext,20187,Lá oregano khô,"alias=tên, số liệu gần; cùng bản ghi SR",2026-10-17
+20136,Rau chân vịt (cải bó xôi),usda_fdc_ext,20193,Cải bó xôi,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20197,Rau bina (cải bó xôi),usda_fdc_ext,20193,Cải bó xôi,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20262,Rau chân vịt (bó xôi),usda_fdc_ext,20193,Cải bó xôi,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20331,Cải bó xôi (rau chân vịt),usda_fdc_ext,20193,Cải bó xôi,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",2026-10-17
+20610,Rau cải chân vịt (bó xôi),usda_fdc_ext,20193,Cải bó xôi,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20658,Rau cải bó xôi,usda_fdc_ext,20193,Cải bó xôi,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20508,Hoa kim châm khô,viendinhduong_fct_ext,20194,Hoa kim châm,"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20303,Lá chùm ngây,usda_fdc_ext,20195,Rau chùm ngây,"alias=tên, số liệu gần",2026-10-17
+20860,Mì tươi,usda_fdc_ext,20199,Mì sợi tươi,"alias=tên, số liệu gần",2026-10-17
+20587,Cải xoăn (Kale),usda_fdc_ext,20202,Cải xoăn,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20714,Cải xoăn (cải kale tươi),usda_fdc_ext,20202,Cải xoăn,trùng tên,2026-10-17
+20389,Mứt dâu tây,usda_fdc_ext,20209,Mứt dâu,"alias=tên, số liệu gần",2026-10-17
+20656,Nước mắm pha (nước mắm chua ngọt),viendinhduong_fct_ext,20211,Nước mắm chua ngọt,"alias=tên, số liệu gần",2026-10-17
+20898,Nước mắm chua ngọt (nước trộn gỏi),viendinhduong_fct_ext,20211,Nước mắm chua ngọt,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20611,Mỡ hành (dầu hành),viendinhduong_fct_ext,20214,Mỡ hành,"alias=tên, số liệu gần; số liệu y hệt; trùng tên",2026-10-17
+20227,Tương miso,usda_fdc_ext,20226,Đậu tương miso,cùng bản ghi SR; số liệu y hệt,2026-10-17
+20370,Quả sake,usda_fdc_ext,20240,Sa kê,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20606,Quả sa kê (trái sa kê tươi),usda_fdc_ext,20240,Sa kê,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20795,Trái sa kê (quả sake),usda_fdc_ext,20240,Sa kê,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20484,Nhân sâm tươi,usda_fdc_ext,20242,Nhân sâm,"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20873,Nhân sâm (Sâm tươi),usda_fdc_ext,20242,Nhân sâm,"alias=tên, số liệu gần; số liệu y hệt; trùng tên",2026-10-17
+20353,Dầu cà ri,usda_fdc_ext,20261,Cà ri dầu,"alias=tên, số liệu gần",2026-10-17
+20462,Lá vừng (lá tía tô Hàn Quốc),usda_fdc_ext,20264,Lá mè (lá vừng Hàn Quốc),"alias=tên, số liệu gần",2026-10-17
+20515,Lá mè (lá vừng),usda_fdc_ext,20264,Lá mè (lá vừng Hàn Quốc),trùng tên,2026-10-17
+20723,Tinh chất vani,usda_fdc_ext,20265,Vani (tinh chất vani),"alias=tên, số liệu gần",2026-10-17
+20410,Bánh gạo Hàn Quốc (tteok),usda_fdc_ext,20266,Bánh gạo (Tteokbokki),"alias=tên, số liệu gần",2026-10-17
+20485,Bánh gạo Hàn Quốc (tteokbokki),usda_fdc_ext,20266,Bánh gạo (Tteokbokki),"alias=tên, số liệu gần",2026-10-17
+20704,Bánh gạo Tokbokki,usda_fdc_ext,20266,Bánh gạo (Tteokbokki),"alias=tên, số liệu gần",2026-10-17
+20722,Bánh gạo (dạng thỏi / lát),usda_fdc_ext,20266,Bánh gạo (Tteokbokki),"alias=tên, số liệu gần; trùng tên",2026-10-17
+20510,Nấm đông trùng hạ thảo,viendinhduong_fct_ext,20267,Đông trùng hạ thảo,"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20753,Nước ngọt có gas (hương sá xị / cola),usda_fdc_ext,20282,Nước ngọt có ga (xá xị),"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20070,Whipping cream (Kem tươi whipping),viendinhduong_fct,20284,Kem tươi (whipping cream),"alias=tên, số liệu gần",2026-10-17
+20467,Thịt lợn nửa nạc nửa mỡ,usda_fdc_ext,20285,Thịt heo nửa nạc nửa mỡ,"alias=tên, số liệu gần",2026-10-17
+20838,Bột matcha,usda_fdc_ext,20286,Bột trà xanh (matcha),"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20749,Vẹm (vẹm xanh / vẹm đen),usda_fdc_ext,20287,Vẹm xanh,"alias=tên, số liệu gần",2026-10-17
+20857,Bắp nếp,viendinhduong_fct_ext,20290,Ngô nếp tươi,"alias=tên, số liệu gần",2026-10-17
+20875,Ngô nếp (Bắp nếp),viendinhduong_fct_ext,20290,Ngô nếp tươi,"alias=tên, số liệu gần",2026-10-17
+20579,Trần bì (vỏ quýt khô),usda_fdc_ext,20297,Vỏ quýt khô (trần bì),"alias=tên, số liệu gần",2026-10-17
+20884,Vỏ quýt khô,usda_fdc_ext,20297,Vỏ quýt khô (trần bì),"alias=tên, số liệu gần; trùng tên",2026-10-17
+20605,Mũi heo (mõm heo tươi),usda_fdc_ext,20307,Mũi heo,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20650,Bánh mì burger,usda_fdc_ext,20312,Bánh mì hamburger,"alias=tên, số liệu gần",2026-10-17
+20198,Sốt BBQ,usda_fdc_ext,20314,Nước xốt thịt nướng,"alias=tên, số liệu gần",2026-10-17
+20554,Sốt ướp thịt nướng (xốt BBQ),usda_fdc_ext,20314,Nước xốt thịt nướng,"alias=tên, số liệu gần",2026-10-17
+20785,Xốt BBQ (sốt thịt nướng),usda_fdc_ext,20314,Nước xốt thịt nướng,cùng cụm trùng (duyệt thủ công),2026-10-17
+20351,Gia vị xá xíu,usda_fdc_ext,20329,Bột xá xíu,"alias=tên, số liệu gần",2026-10-17
+20542,Bột sương sáo (thạch đen),viendinhduong_fct_ext,20334,Bột sương sáo,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20597,Bột sương sáo (bột thạch đen),usda_fdc_ext,20334,Bột sương sáo,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20495,Há cảo (bánh xếp),usda_fdc_ext,20341,Há cảo,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20604,Rong tóc tiên (tảo tóc tiên / tóc tiên khô),usda_fdc_ext,20342,Rong tóc tiên,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20821,Tóc tiên khô (tảo tóc tiên),viendinhduong_fct_ext,20342,Rong tóc tiên,"alias=tên, số liệu gần",2026-10-17
+20505,Gelatin (bột/lá),usda_fdc_ext,20343,Bột gelatin,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20839,Bột gelatine,usda_fdc_ext,20343,Bột gelatin,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20627,Bao tử cá (bao tử cá basa),viendinhduong_fct_ext,20348,Bao tử cá basa,"alias=tên, số liệu gần",2026-10-17
+20009,Bột quế,viendinhduong_fct,20349,Vỏ quế (quế chi),cùng cụm trùng (duyệt thủ công),2026-10-17
+20106,Quế,usda_fdc_ext,20349,Vỏ quế (quế chi),cùng cụm trùng (duyệt thủ công),2026-10-17
+20219,Quế cây,usda_fdc_ext,20349,Vỏ quế (quế chi),cùng cụm trùng (duyệt thủ công),2026-10-17
+20381,Vỏ quế,usda_fdc_ext,20349,Vỏ quế (quế chi),"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",2026-10-17
+20395,Quế thanh,usda_fdc_ext,20349,Vỏ quế (quế chi),"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20567,Quế chi (cành/vỏ quế khô),usda_fdc_ext,20349,Vỏ quế (quế chi),"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20472,Dưa góp (đồ chua cà rốt củ cải),usda_fdc_ext,20350,Đồ chua (dưa góp),"alias=tên, số liệu gần",2026-10-17
+20536,"Đồ chua (củ cải, cà rốt ngâm chua)",viendinhduong_fct_ext,20350,Đồ chua (dưa góp),"alias=tên, số liệu gần; trùng tên",2026-10-17
+20174,Đậu phụ rán,usda_fdc_ext,20352,Đậu hũ chiên,"alias=tên, số liệu gần",2026-10-17
+20600,Vi cá (vây cá mập / vi cá khô),usda_fdc_ext,20366,Vi cá mập,"alias=tên, số liệu gần",2026-10-17
+20442,Củ mài,usda_fdc_ext,20372,Củ mài (hoài sơn),"alias=tên, số liệu gần; cùng bản ghi SR; trùng tên",2026-10-17
+20385,Tiêu Tứ Xuyên,usda_fdc_ext,20382,Hoa tiêu,số liệu y hệt,2026-10-17
+20452,Mì nưa (konjac),usda_fdc_ext,20387,Mì nưa,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20628,Sốt mận (xốt mận / plum sauce),usda_fdc_ext,20399,Xốt mận,"alias=tên, số liệu gần",2026-10-17
+20895,Sốt mận (plum sauce),usda_fdc_ext,20399,Xốt mận,"alias=tên, số liệu gần",2026-10-17
+20878,Xốt sô cô la,usda_fdc_ext,20404,Sốt socola,"alias=tên, số liệu gần",2026-10-17
+20616,Socola,usda_fdc_ext,20406,Sô cô la,"alias=tên, số liệu gần",2026-10-17
+20625,Nấm hầu thủ (nấm đầu khỉ),usda_fdc_ext,20420,Nấm đầu khỉ tươi,"alias=tên, số liệu gần",2026-10-17
+20602,Bánh xếp (sủi cảo / gyoza nhân thịt rau),usda_fdc_ext,20421,Bánh xếp gyoza,"alias=tên, số liệu gần",2026-10-17
+20619,Bánh gyoza,usda_fdc_ext,20421,Bánh xếp gyoza,"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20668,Bánh xếp (Gyoza nhân thịt và rau),usda_fdc_ext,20421,Bánh xếp gyoza,"alias=tên, số liệu gần",2026-10-17
+20736,Sủi cảo (bánh chẻo nhân thịt rau),usda_fdc_ext,20431,Sủi cảo (bánh xếp),"alias=tên, số liệu gần; trùng tên",2026-10-17
+20507,Củ hồi,usda_fdc_ext,20439,Củ thì là (fennel),"alias=tên, số liệu gần",2026-10-17
+20803,Thịt heo nạc xay (thịt băm),usda_fdc_ext,20441,Thịt heo xay (nửa nạc nửa mỡ),"alias=tên, số liệu gần",2026-10-17
+20695,Sữa đặc không đường,usda_fdc_ext,20443,Sữa đặc không đường (sữa cô đặc),"alias=tên, số liệu gần; cùng bản ghi SR; trùng tên",2026-10-17
+20473,Tàu hũ ky chiên,usda_fdc_ext,20448,Tàu hủ ky chiên,"alias=tên, số liệu gần",2026-10-17
+20816,Mì Soba khô (mì kiều mạch),usda_fdc_ext,20469,Mì soba (kiều mạch) khô,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20517,Mứt quả,usda_fdc_ext,20480,Mứt trái cây,"alias=tên, số liệu gần",2026-10-17
+20867,Sữa công thức,usda_fdc_ext,20492,Sữa bột pha,"alias=tên, số liệu gần",2026-10-17
+20677,Tổ yến,viendinhduong_fct_ext,20493,Yến sào khô,"alias=tên, số liệu gần",2026-10-17
+20889,Bột trà sữa matcha,usda_fdc_ext,20500,Bột trà sữa matcha hòa tan,"alias=tên, số liệu gần",2026-10-17
+20825,Bột báng khô (hạt bột báng),usda_fdc_ext,20504,Trân châu khô (bột sắn),cùng bản ghi SR,2026-10-17
+20544,Bột cà phê (cà phê hòa tan / phin),usda_fdc_ext,20516,Cà phê hòa tan,cùng bản ghi SR; số liệu y hệt,2026-10-17
+20549,Dưa bồn bồn (bồn bồn muối chua),viendinhduong_fct_ext,20522,Dưa bồn bồn,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20690,Bồn bồn muối chua,viendinhduong_fct_ext,20522,Dưa bồn bồn,"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20189,Cà chua cô đặc (tomato paste),usda_fdc_ext,20535,Cà chua đóng hộp (xốt / paste cà chua),cùng cụm trùng (duyệt thủ công),2026-10-17
+20246,Cà chua cô đặc,usda_fdc_ext,20535,Cà chua đóng hộp (xốt / paste cà chua),cùng cụm trùng (duyệt thủ công),2026-10-17
+20603,Cà chua sệt (paste cà chua / xốt cà chua cô đặc),usda_fdc_ext,20535,Cà chua đóng hộp (xốt / paste cà chua),cùng bản ghi SR; số liệu y hệt,2026-10-17
+20688,Cà chua hộp (paste),usda_fdc_ext,20535,Cà chua đóng hộp (xốt / paste cà chua),"alias=tên, số liệu gần; cùng bản ghi SR",2026-10-17
+20205,Củ cải muối,usda_fdc_ext,20541,Củ cải muối (xá bấu),"alias=tên, số liệu gần; trùng tên",2026-10-17
+20801,Cơm gạo lứt nấu chín,usda_fdc_ext,20547,Cơm gạo lứt (gạo lứt nấu chín),"alias=tên, số liệu gần; cùng bản ghi SR",2026-10-17
+20591,Mì chũ,viendinhduong_fct_ext,20548,Mì Chũ (bánh đa Chũ khô),"alias=tên, số liệu gần; trùng tên",2026-10-17
+20630,Mì gạo (mì Chũ / bánh đa khô),viendinhduong_fct_ext,20548,Mì Chũ (bánh đa Chũ khô),"alias=tên, số liệu gần",2026-10-17
+20741,Mì Chũ (mì gạo Chũ khô),viendinhduong_fct_ext,20548,Mì Chũ (bánh đa Chũ khô),"alias=tên, số liệu gần; trùng tên",2026-10-17
+20746,Siro ngô (siro bắp),usda_fdc_ext,20552,Đường ngô (siro ngô / corn syrup),"alias=tên, số liệu gần",2026-10-17
+20565,Men nở (men làm bánh mì),usda_fdc_ext,20553,Men nở (men khô / men bánh mì),"alias=tên, số liệu gần; cùng bản ghi SR; trùng tên",2026-10-17
+20901,Men bánh mì,usda_fdc_ext,20553,Men nở (men khô / men bánh mì),"alias=tên, số liệu gần; cùng bản ghi SR",2026-10-17
+20885,Đậu nành non,usda_fdc_ext,20561,Đậu nành Nhật (Đậu tương Nhật / Edamame),"alias=tên, số liệu gần",2026-10-17
+20657,Bột trà sữa,usda_fdc_ext,20569,Bột trà sữa (trà sữa hòa tan),"alias=tên, số liệu gần; trùng tên",2026-10-17
+20781,Bột nước cốt dừa,usda_fdc_ext,20571,Bột nước cốt dừa (bột dừa khô),trùng tên,2026-10-17
+20248,Húng chanh,usda_fdc_ext,20577,Húng chanh (rau tần dày lá),trùng tên,2026-10-17
+20842,Dừa nạo (vụn dừa),usda_fdc_ext,20585,Cơm dừa sấy khô,cùng bản ghi SR,2026-10-17
+20659,Hạt nêm dashi,usda_fdc_ext,20594,Bột cá dashi (hạt nêm dashi cá thu),"alias=tên, số liệu gần",2026-10-17
+20794,Nước sốt chua ngọt (xốt xí muội),usda_fdc_ext,20614,Sốt tương chua ngọt (nước sốt),"alias=tên, số liệu gần",2026-10-17
+20380,Lá é,usda_fdc_ext,20615,Lá é tươi (húng trắng),cùng cụm trùng (duyệt thủ công),2026-10-17
+20411,Lá é (rau é),usda_fdc_ext,20615,Lá é tươi (húng trắng),"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20869,Bột phô mai,usda_fdc_ext,20224,Phô mai Parmesan,"alias=tên, số liệu gần",2026-10-17
+20824,Dầu hạt cải (dầu canola),usda_fdc_ext,20644,Dầu hạt cải,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt; trùng tên",2026-10-17
+20676,Gia vị cajun,usda_fdc_ext,20703,Bột gia vị Cajun,"alias=tên, số liệu gần",2026-10-17
+20858,Viên thả lẩu,usda_fdc_ext,20720,Topping lẩu (viên thả lẩu thập cẩm),"alias=tên, số liệu gần",2026-10-17
+20099,Lá nguyệt quế,viendinhduong_fct,20789,Lá nguyệt quế khô (Bay leaf),"alias=tên, số liệu gần; số liệu y hệt",2026-10-17
+20245,Nước cốt quất,usda_fdc_ext,20806,Nước cốt tắc (nước quất),"alias=tên, số liệu gần",2026-10-17
+20820,Tỏi và ớt tươi,usda_fdc_ext,20819,Tỏi ớt băm,số liệu y hệt,2026-10-17
+20299,Atiso,usda_fdc_ext,20833,Hoa atisô,"alias=tên, số liệu gần",2026-10-17
+20332,Bông atiso,usda_fdc_ext,20833,Hoa atisô,"alias=tên, số liệu gần; cùng bản ghi SR; số liệu y hệt",2026-10-17
+20757,Hoa atiso tươi (bông atisô),usda_fdc_ext,20833,Hoa atisô,"alias=tên, số liệu gần",2026-10-17
+20530,Nước chè tươi,usda_fdc_ext,20853,Nước chè xanh,"alias=tên, số liệu gần",2026-10-17
+20162,Sốt cà chua,usda_fdc_ext,20883,Xốt cà chua,"alias=tên, số liệu gần",2026-10-17
+20498,Đậu đen (hạt khô),usda_fdc_ext,3004,Đậu đen,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20231,Dọc mùng (bạc hà),viendinhduong_fct_ext,4026,Dọc mùng,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20154,Hoa chuối (bắp chuối),viendinhduong_fct_ext,4043,Hoa chuối,trùng tên,2026-10-17
+20108,Khế,usda_fdc_ext,4045,Quả khế,cùng cụm trùng (duyệt thủ công),2026-10-17
+20124,Khế chua,usda_fdc_ext,4045,Quả khế,cùng cụm trùng (duyệt thủ công),2026-10-17
+20365,Quả khế,usda_fdc_ext,4045,Quả khế,trùng tên,2026-10-17
+20037,Ngô bao tử (bắp non),viendinhduong_fct,4058,Ngô bao tử,trùng tên,2026-10-17
+20306,Rau húng,usda_fdc_ext,4075,Rau húng,trùng tên,2026-10-17
+20872,Súp lơ xanh (bông cải xanh),usda_fdc_ext,4100,Súp lơ xanh,"alias=tên, số liệu gần; trùng tên",2026-10-17
+20363,Nấm hương (nấm đông cô tươi),usda_fdc_ext,4127,Nấm hương,trùng tên,2026-10-17
+20892,Nấm hương (nấm đông cô),usda_fdc_ext,4127,Nấm hương,trùng tên,2026-10-17
+20782,Táo tây (táo đỏ),usda_fdc_ext,5051,Táo tây,trùng tên,2026-10-17
+20497,Bơ động vật,usda_fdc_ext,6001,Bơ,"alias=tên, số liệu gần",2026-10-17
+20763,Lòng lợn (lòng non heo / phèo),usda_fdc_ext,7047,Lòng lợn (ruột non),trùng tên,2026-10-17
+20486,Giò lụa (chả lụa),viendinhduong_fct_ext,7069,Giò lụa,trùng tên,2026-10-17
+20190,Mì ăn liền,usda_fdc_ext,1043,"Mỳ ăn liền, lúa mì","cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20718,Rau cải non (cải mầm),usda_fdc_ext,20050,Rau mầm (mầm cải),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20702,Bột nổi (bột nở / baking powder),usda_fdc_ext,20143,Bột nở,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20369,Bột thì là (bột thì là Ai Cập),usda_fdc_ext,20176,Hạt thì là,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20621,Phô mai bột,usda_fdc_ext,20224,Phô mai Parmesan,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20786,Xốt Teriyaki,usda_fdc_ext,20235,Sốt teriyaki,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20388,Nước ngọt xá xị,usda_fdc_ext,20282,Nước ngọt có ga (xá xị),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20281,Đậu phụ chiên,usda_fdc_ext,20352,Đậu hũ chiên,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20755,Tương đậu nành Hàn Quốc (Doenjang),usda_fdc_ext,20403,Tương đậu Hàn Quốc,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20344,Rau củ hỗn hợp,usda_fdc_ext,20408,Rau củ hỗn hợp đông lạnh,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20836,Thạch konnyaku,usda_fdc_ext,20409,Khoai nưa (konnyaku),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20436,Bánh xếp gyoza đông lạnh,usda_fdc_ext,20421,Bánh xếp gyoza,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20460,Bánh gyoza nhân gà rau,usda_fdc_ext,20421,Bánh xếp gyoza,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20680,Nước dảo dừa,usda_fdc_ext,20511,Nước cốt dừa loãng (nước dừa dão),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20694,Cải mặn (cải muối/xá bấu),usda_fdc_ext,20541,Củ cải muối (xá bấu),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20318,Rau húng chanh,usda_fdc_ext,20577,Húng chanh (rau tần dày lá),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20489,Lá thơm khô,usda_fdc_ext,20622,Gia vị thảo mộc Ý,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20832,Lá thơm hỗn hợp kiểu Ý (gia vị Ý),usda_fdc_ext,20622,Gia vị thảo mộc Ý,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20555,Hoa hẹ,usda_fdc_ext,20648,Bông hẹ,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20450,Gừng muối chua,usda_fdc_ext,20701,Gừng muối (dưa gừng non),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20902,Nụ bạch hoa ngâm chua,usda_fdc_ext,20725,Nụ bạch hoa (ngâm giấm),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20834,Nước tỏi,usda_fdc_ext,20730,Nước cốt tỏi,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20687,Nước quất (nước tắc),usda_fdc_ext,20806,Nước cốt tắc (nước quất),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20546,Bột làm bánh pha sẵn,usda_fdc_ext,20813,Bột bánh pancake (bột làm bánh kếp),"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20635,Bí đỏ (bí ngô / bí hồ lô),usda_fdc_ext,4003,bí ngô,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20607,Rau cải cúc (tần ô),usda_fdc_ext,4013,Cải cúc,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20204,Rau thơm các loại,usda_fdc_ext,4094,Rau thơm,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17
+20216,Rau thơm,viendinhduong_fct_ext,4094,Rau thơm,"cùng thực phẩm, duyệt thủ công khi đối chiếu nguồn",2026-10-17

@@ -1,0 +1,312 @@
+{
+  "curated_at": "2026-10-16T07:17:09+00:00",
+  "scope": "Everyday Vietnamese meal coverage and requested acai bowl",
+  "baseline_selection_count": 1087,
+  "selection_count": 1123,
+  "baseline_corpus_fingerprint": "90e51422b36d9e2bd61dd8c8e9da624cd2450ee39c0fe1e73ef816f17b71fd98",
+  "corpus_fingerprint": "f5e234cbedf1adc9fafc667d9909a4793266260753987f717195a7c681d6d00e",
+  "selection_added": [
+    {
+      "id": "6c545407-aed9-4efc-9a61-75f27059a4f0",
+      "name": "Rau má xào tỏi",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-lam-rau-ma-xao-toi-thom-ngon-thanh-mat-cho-bua-com-gia-24436",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "24431673-4c7b-4083-b793-f9b3a2915d6a",
+      "name": "Rau lang xào thịt bò",
+      "source_url": "https://cookpad.com/vn/cong-thuc/17126593",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "7e8f7696-1ccf-41d4-ae1f-c52d9fb4586b",
+      "name": "Thịt thăn heo xào bắp cải trắng",
+      "source_url": "https://cookpad.com/vn/cong-thuc/17235541",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "5f9367ca-90de-402e-8f0d-87772ce687c9",
+      "name": "Canh rau ngót thịt băm",
+      "source_url": "https://cookpad.com/vn/cong-thuc/25590433",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "59e4e1ae-a4ac-4422-aa7c-4ca9388d4490",
+      "name": "Canh tôm bồ ngót",
+      "source_url": "https://monngonmoingay.com/canh-tom-bo-ngot-2/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "dd56e944-360e-41f7-9c52-74a48c086074",
+      "name": "Canh bầu nấu với tôm khô",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-nau-canh-bau-nau-voi-tom-kho-thom-ngon-thanh-dam-kho-13223",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "158d064b-3feb-4a80-a29c-1fa584b1c425",
+      "name": "Canh bầu nấu cá thác lác",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-nau-canh-bau-nau-ca-thac-lac-ngot-mat-don-gian-lai-ngon-13298",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "10541b89-c6df-4ef9-9530-2770a8444e6a",
+      "name": "Canh bí đao nấu tôm",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-nau-canh-bi-dao-nau-tom-tuoi-ngon-ngot-thanh-mat-don-11608",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "88b1a03f-e301-4e15-8055-efd59f00ba4e",
+      "name": "Canh sườn sấu",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-nau-canh-suon-nau-sau-dam-da-giai-nhiet-ngay-nang-he-08165",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "6a4fb9b5-c171-477d-bd6c-a26b8161a105",
+      "name": "Canh sườn chua với dứa",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-nau-canh-suon-chua-voi-dua-thanh-mat-bat-com-bang-bo-noi-23376",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "8c661b91-307a-4eb8-8d6e-36a0175ed4b1",
+      "name": "Canh sườn nấu dọc mùng",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-nau-canh-doc-mung-suon-chua-thanh-dam-vi-ngon-kho-cuong-23566",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "6ead3776-8b9a-4cdb-8d95-857a8836d789",
+      "name": "Canh sườn khoai sọ",
+      "source_url": "https://monngonmoingay.com/canh-suon-khoai-so/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "3acecf76-9918-48de-94d9-551ace361955",
+      "name": "Canh nghêu thì là",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-nau-canh-ngheu-thi-la-thom-ngon-thanh-mat-dua-com-trong-12323",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "baf09290-a39e-40cc-b91d-4679bfb12016",
+      "name": "Chuối đậu kho tương sả",
+      "source_url": "https://monngonmoingay.com/chuoi-dau-kho-tuong-sa/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "49e4cc14-ce29-42cc-b7cb-3f8929a8b439",
+      "name": "Đậu hũ kho rau củ",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-nau-mon-dau-hu-kho-rau-cu-thanh-dam-cho-bua-com-16826",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "9726b288-4ff8-4aa2-bb05-ec1ea815f505",
+      "name": "Cơm tấm sườn cây",
+      "source_url": "https://monngonmoingay.com/com-tam-suon-cay/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "a979ea6e-285f-4dae-ac61-6346a88cc4ea",
+      "name": "Cơm chiên dưa bò",
+      "source_url": "https://monngonmoingay.com/com-chien-dua-bo/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "a463a9d9-1bcb-4cca-93a7-95bce332f339",
+      "name": "Cơm chiên cá mặn",
+      "source_url": "https://monngonmoingay.com/com-chien-ca-man/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "db873a71-e86d-4f65-8865-bce651c63f4f",
+      "name": "Bánh Mì Chảo",
+      "source_url": "https://monngonmoingay.com/banh-mi-chao/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "0c9bf28e-9923-41ac-b515-ff30d0778308",
+      "name": "Xíu mại ăn bánh mì",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-lam-xiu-mai-an-banh-mi-thom-ngon-kho-cuong-cang-an-cang-15039",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "d37f1c16-c35d-4e39-931f-3e408ffbdd9d",
+      "name": "Bánh giò trứng cút",
+      "source_url": "https://monngonmoingay.com/banh-gio-trung-cut/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "f98c1db1-350a-4cb9-a71c-ff8f280db96b",
+      "name": "Thịt ba chỉ rang mắm tép",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-lam-thit-ba-chi-rang-mam-tep-dam-da-cuc-hao-com-cho-bua-24485",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "99f0f147-caac-448c-a082-5306e6714303",
+      "name": "Chả viên bọc lá lốt",
+      "source_url": "https://cookpad.com/vn/cong-thuc/26271838",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "5440bbd6-deb7-46f7-83fc-ec3c00c363ba",
+      "name": "Chả trứng chưng",
+      "source_url": "https://cookpad.com/vn/cong-thuc/25307905",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "8ea50d72-df3b-49d9-ab81-67802917006f",
+      "name": "Gà rang gừng",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-lam-ga-rang-gung-ngon-chuan-vi-don-gian-de-lam-12209",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "787ef7f7-3a92-4495-b3b3-8991fff33fda",
+      "name": "Gà kho sả ớt",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-lam-mon-ga-kho-sa-ot-chuan-vi-mien-nam-thom-ngon-01340",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "b635c585-d8bc-4801-b467-90b5bc69367b",
+      "name": "Cá trắm kho riềng",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/cach-lam-ca-tram-kho-rieng-mien-bac-de-ngon-chuan-vi-truyen-23248",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "a3870916-b7b1-4436-b215-1b3db97b05c7",
+      "name": "Cá nục kho thơm",
+      "source_url": "https://monngonmoingay.com/ca-nuc-kho-thom-2/",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "7a29697d-bab2-47b1-a4eb-6a84834d4c90",
+      "name": "Tôm rang thịt ba chỉ",
+      "source_url": "https://www.dienmayxanh.com/vao-bep/3-cong-thuc-cho-mon-tom-rang-thit-la-ma-quen-dam-da-hao-com--01449",
+      "origin": "existing_corpus"
+    },
+    {
+      "id": "4d7a2558-9c7b-5750-844c-f0ca902223a0",
+      "name": "Rau muống xào tỏi",
+      "source_url": "https://beptruong.edu.vn/cach-lam-rau-muong-xao-toi-ngon",
+      "origin": "sourced_import"
+    },
+    {
+      "id": "2316d42e-fbe6-5443-98e4-81cf0c34a145",
+      "name": "Bắp cải luộc chấm nước mắm trứng",
+      "source_url": "https://ngoisao.vnexpress.net/bap-cai-luoc-cham-nuoc-mam-trung-2564190.html",
+      "origin": "sourced_import"
+    },
+    {
+      "id": "05dae86b-448a-514e-a4dc-2a81394b5dbd",
+      "name": "Đậu hũ chiên sả ớt",
+      "source_url": "https://cooponline.vn/tin-tuc/cong-thuc-nau-an/dau-hu-chien-sa-ot-mon-chay-gion-thom-cay-nong-hap-dan/",
+      "origin": "sourced_import"
+    },
+    {
+      "id": "c5270778-4e98-584b-8b9f-4b8eb39b9afd",
+      "name": "Xôi xéo Hà Nội",
+      "source_url": "https://vnexpress.net/doi-song-cooking-xoi-xeo-ha-noi-4800338.html",
+      "origin": "sourced_import"
+    },
+    {
+      "id": "de9e2f72-4152-56c5-ad24-b2d11d232d67",
+      "name": "Cháo sườn sụn",
+      "source_url": "https://vnexpress.net/chao-suon-sun-gion-san-sat-4325217.html",
+      "origin": "sourced_import"
+    },
+    {
+      "id": "e4792ee5-a1be-52be-99ff-0264e7e19dc5",
+      "name": "Trứng rán hành lá",
+      "source_url": "https://phunutoday.vn/ran-trung-ngoai-hanh-la-dau-an-phai-them-thu-nay-de-trung-mem-xop-vang-uom-d433833.html",
+      "origin": "sourced_import"
+    },
+    {
+      "id": "4b767868-aae2-5b64-b459-fce529d7e0c9",
+      "name": "Acai bowl (tô açaí chuối)",
+      "source_url": "https://www.bakerita.com/acai-bowl/",
+      "origin": "sourced_import"
+    }
+  ],
+  "imported_recipes": [
+    {
+      "recipe_id": "4d7a2558-9c7b-5750-844c-f0ca902223a0",
+      "source_url": "https://beptruong.edu.vn/cach-lam-rau-muong-xao-toi-ngon",
+      "assumptions": "Dùng cách 1 của nguồn, có nước mắm nên không gắn ăn chay. 4 phần và 20 phút là ước tính. Muối và dầu trong nước chần bị đổ đi không tính vào lượng ăn; dầu xào tính toàn bộ. Tỏi ước tính 25 g/củ."
+    },
+    {
+      "recipe_id": "2316d42e-fbe6-5443-98e4-81cf0c34a145",
+      "source_url": "https://ngoisao.vnexpress.net/bap-cai-luoc-cham-nuoc-mam-trung-2564190.html",
+      "assumptions": "Nguồn nêu nửa bắp cải và một trứng; trọng lượng, lượng nước mắm, 2 phần và tổng 20 phút là ước tính. Dinh dưỡng tính cả bát nước chấm; thực tế có thể còn dư."
+    },
+    {
+      "recipe_id": "05dae86b-448a-514e-a4dc-2a81394b5dbd",
+      "source_url": "https://cooponline.vn/tin-tuc/cong-thuc-nau-an/dau-hu-chien-sa-ot-mon-chay-gion-thom-cay-nong-hap-dan/",
+      "assumptions": "Giữ bản nguyên liệu có nước mắm của nguồn, không gắn ăn chay. Nguồn không xác định cỡ muỗng/khối lượng miếng đậu/khẩu phần: quy đổi 100 g/miếng đậu, 4 phần ước tính; gia vị muỗng nhỏ theo ghi chú raw_text. Tính toàn bộ 75 g dầu đã cấp vào, có thể cao hơn dầu thực sự giữ lại sau chiên. Không dùng bảng macro thiếu nhất quán của bài viết."
+    },
+    {
+      "recipe_id": "c5270778-4e98-584b-8b9f-4b8eb39b9afd",
+      "source_url": "https://vnexpress.net/doi-song-cooking-xoi-xeo-ha-noi-4800338.html",
+      "assumptions": "Chọn 6 người trong khoảng 5–6 của nguồn; giữ 90 phút của nguồn, không gồm ngâm gạo 6–8 giờ và đỗ 4 giờ. Mỡ, muối, nghệ nguồn không định lượng: 50/5/2 g là ước tính, không phải số đo từ bài. Dùng mỡ gà nên không gắn ăn chay."
+    },
+    {
+      "recipe_id": "de9e2f72-4152-56c5-ad24-b2d11d232d67",
+      "source_url": "https://vnexpress.net/chao-suon-sun-gion-san-sat-4325217.html",
+      "assumptions": "4 phần và 120 phút là ước tính, chưa gồm ngâm gạo 2–3 giờ. Sườn sụn ánh xạ gần đúng sang thịt sườn non heo 20482; không có mã sụn riêng. Dinh dưỡng gồm 100 g quẩy theo quy tắc aggregate hiện tại. Hành phi, rau mùi tùy thích không tính; bột ngọt nhắc ở bước nêm nhưng không định lượng nên không thêm mặc định."
+    },
+    {
+      "recipe_id": "e4792ee5-a1be-52be-99ff-0264e7e19dc5",
+      "source_url": "https://phunutoday.vn/ran-trung-ngoai-hanh-la-dau-an-phai-them-thu-nay-de-trung-mem-xop-vang-uom-d433833.html",
+      "assumptions": "Bản cơ bản từ hướng dẫn trứng rán hành lá của nguồn; toàn bộ định lượng, 2 phần và 10 phút là biên soạn ước tính vì nguồn không cung cấp công thức định lượng. Không thêm các gợi ý tùy chọn như bơ/rượu/bột/thịt. Không coi định lượng này là số đo của tác giả."
+    },
+    {
+      "recipe_id": "4b767868-aae2-5b64-b459-fce529d7e0c9",
+      "source_url": "https://www.bakerita.com/acai-bowl/",
+      "assumptions": "Công thức Bakerita: 100 g açaí không đường + 1 chuối đông lạnh + 1/4 cốc sữa thực vật, 1 tô, 5 phút. Chọn sữa đậu nành không đường; quy đổi chuối tiêu 120 g ăn được và sữa 60 ml ≈ 60 g là ước tính. Xay các nguyên liệu đến sánh đặc, thêm sữa từng chút nếu cần và dùng ngay. Thời gian không gồm làm đông chuối. Granola/trái cây/bơ hạt là topping tùy chọn, chưa tính vào nguyên liệu bắt buộc hay dinh dưỡng. Dinh dưỡng açaí theo ảnh nhãn SAMBAZON 80 kcal/100 g; mô tả trang hãng ghi 70 kcal nhưng nhãn bao bì ghi 80 kcal. Không thay açaí bằng việt quất hoặc nguyên liệu khác. Các vi chất không công bố để trống; nutrition_confidence để null vì chưa chấm theo pipeline. Nguồn: https://www.bakerita.com/acai-bowl/ | https://www.sambazon.com/cdn/shop/files/sfp_pu_4pk_bag_back.webp?v=1703206032"
+    }
+  ],
+  "excluded_candidates": [
+    {
+      "id": "bfd8d383-9827-4a31-a064-cf10f20d62ee",
+      "name": "Rau củ luộc chấm tóp mỡ kho quẹt",
+      "reason": "Kho quẹt và rau luộc đã có; tránh thêm combo."
+    },
+    {
+      "id": "fc25adb2-19c7-4eca-af7c-0141df4ca8c4",
+      "name": "Bò xào rau muống",
+      "reason": "Đã có rau muống cọng xào bò."
+    },
+    {
+      "id": "2493c83c-c3f2-441b-ad25-a44a0a118e7f",
+      "name": "Gà luộc xôi gấc",
+      "reason": "Combo gà và xôi, không ưu tiên bữa thường ngày."
+    },
+    {
+      "id": "f0bafd99-d8d1-44c1-9fd7-bacf98de6546",
+      "name": "Cá kho tộ",
+      "reason": "Đã có nhiều đại diện cá kho tộ, cá basa kho."
+    },
+    {
+      "id": "5aed38bd-1347-4ebe-8917-3834c7ed8bc6",
+      "name": "Gà hấp tiêu xanh",
+      "reason": "Không ưu tiên nguyên con/tiệc so với món cơ bản."
+    },
+    {
+      "id": "1a0644ef-3e3a-45fe-a8aa-4969a3aa5dfc",
+      "name": "Tép ruộng xào khế - Bông điên điển",
+      "reason": "Biến thể bông điên điển theo mùa, không ưu tiên vòng này."
+    },
+    {
+      "id": "e8634f41-be06-479b-b125-036e2bbacf8b",
+      "name": "Xôi gà đậu xanh",
+      "reason": "Công thức xôi thiếu nếp trong processed ingredients."
+    },
+    {
+      "id": "1a965eb9-4bec-4833-82c2-2652b8e31f57",
+      "name": "Cháo cá nấu bắp nếp",
+      "reason": "Tên cháo bắp nếp nhưng processed ingredients không có bắp."
+    }
+  ],
+  "nutrition_policy": "Estimates from ingredient weights and master entries, not copied whole-recipe nutrition; unknown derived confidence is null. Imported recipe quantities/servings not specified in source are explicitly estimated in notes. No existing recipe, ingredient, mapping, master row or note changed.",
+  "master_ingredient_added": {
+    "code": "20903",
+    "source_ref": "https://www.sambazon.com/cdn/shop/files/sfp_pu_4pk_bag_back.webp?v=1703206032",
+    "unknown_micronutrients": "empty, not zero"
+  },
+  "backup_directory": "chosen_catalog\\state\\backups\\before-enrichment-20261016T071612Z"
+}

@@ -30,8 +30,6 @@ class SettingsHomeScreen extends ConsumerWidget {
             initials: user?.initials ?? '?',
             onTap: () => context.push(Routes.settingsProfile),
           ),
-          Gap.gapMd,
-          _PlanBar(onTap: () => context.push(Routes.paywall)),
           Gap.gapLg,
           SettingsGroup(
             label: l10n.settingsGroupAccount,
@@ -46,12 +44,6 @@ class SettingsHomeScreen extends ConsumerWidget {
                 label: l10n.settingsPlan,
                 trailing: l10n.settingsPremiumSoon,
                 onTap: () => context.push(Routes.settingsSubscription),
-              ),
-              SettingsRow(
-                icon: Icons.group_outlined,
-                label: l10n.settingsPantrySharing,
-                badge: l10n.commonComingSoon,
-                onTap: () => context.push(Routes.settingsPantrySharing),
               ),
             ],
           ),
@@ -89,11 +81,6 @@ class SettingsHomeScreen extends ConsumerWidget {
                 icon: Icons.tune_rounded,
                 label: l10n.prefsTitle,
                 onTap: () => context.push(Routes.settingsPreferences),
-              ),
-              SettingsRow(
-                icon: Icons.notifications_none_rounded,
-                label: l10n.notifTitle,
-                onTap: () => context.push(Routes.settingsNotifications),
               ),
               SettingsRow(
                 icon: Icons.language_rounded,
@@ -213,63 +200,6 @@ class _ProfileCard extends StatelessWidget {
               color: context.sweep.textTertiary,
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PlanBar extends StatelessWidget {
-  const _PlanBar({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return Material(
-      color: context.colors.primaryContainer,
-      borderRadius: Radii.brLg,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: Radii.brLg,
-        child: Padding(
-          padding: const EdgeInsets.all(Gap.md),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.planFullFree,
-                      style: context.text.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: context.colors.onPrimaryContainer,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      l10n.planPremiumDeveloping,
-                      style: context.text.bodySmall?.copyWith(
-                        color: context.colors.onPrimaryContainer.withValues(
-                          alpha: 0.8,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Gap.gapSm,
-              Text(
-                l10n.planInterested,
-                style: context.text.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: context.colors.onPrimaryContainer,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

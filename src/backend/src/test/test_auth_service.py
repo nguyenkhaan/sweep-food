@@ -113,32 +113,57 @@ def _user(status: AccountStatus = AccountStatus.ACTIVE) -> UserModel:
 
 def _service(
     database: FakeDatabaseSession,
-    delivery: FakeOTPDeliveryService,
+    sms_delivery: FakeOTPDeliveryService,
+    email_delivery: FakeOTPDeliveryService | None = None,
 ) -> AuthService:
     """Build the service using deterministic OTP/DB/delivery boundaries."""
     return AuthService(
         db_session=cast(AsyncSession, database),
         otp_service=OTPService(FakeOTPStore(), fixed_otp_code="123456"),
-        otp_delivery_service=delivery,
+        otp_delivery_service=sms_delivery,
+        email_delivery_service=email_delivery or FakeOTPDeliveryService(),
     )
 
 
 @pytest.mark.anyio
-async def test_register_creates_unverified_user_and_sends_otp() -> None:
-    """Registration persists only a temporary user before OTP verification."""
+async def test_register_sends_the_same_otp_by_sms_and_email() -> None:
+    """Registration sends one OTP to both channels when an email is supplied."""
     database = FakeDatabaseSession(query_values=[None])
-    delivery = FakeOTPDeliveryService()
+    sms_delivery = FakeOTPDeliveryService()
+    email_delivery = FakeOTPDeliveryService()
 
-    issued_otp = await _service(database, delivery).register(
-        RegisterRequestDTO(phone="+84901234567", password="new-password"),
+    issued_otp = await _service(database, sms_delivery, email_delivery).register(
+        RegisterRequestDTO(
+            phone="+84901234567",
+            password="new-password",
+            email="cloudian@example.com",
+        ),
     )
 
     created_user = database.added[0]
     assert isinstance(created_user, UserModel)
     assert created_user.status is AccountStatus.UNVERIFIED
     assert compare_hash("new-password", created_user.password_hash)
-    assert issued_otp.otp == delivery.requests[0].otp
-    assert delivery.requests[0].template_id == "REGISTER"
+    assert issued_otp.otp == sms_delivery.requests[0].otp
+    assert issued_otp.otp == email_delivery.requests[0].otp
+    assert sms_delivery.requests[0].destination == "+84901234567"
+    assert email_delivery.requests[0].destination == "cloudian@example.com"
+    assert email_delivery.requests[0].template_id == "REGISTER"
+
+
+@pytest.mark.anyio
+async def test_register_without_an_email_keeps_sms_delivery() -> None:
+    """Registration remains available to clients that have not supplied an email."""
+    database = FakeDatabaseSession(query_values=[None])
+    sms_delivery = FakeOTPDeliveryService()
+    email_delivery = FakeOTPDeliveryService()
+
+    await _service(database, sms_delivery, email_delivery).register(
+        RegisterRequestDTO(phone="+84901234567", password="new-password"),
+    )
+
+    assert len(sms_delivery.requests) == 1
+    assert email_delivery.requests == []
 
 
 @pytest.mark.anyio
@@ -174,13 +199,16 @@ async def test_resend_register_otp_replaces_the_previous_code(
 
     monkeypatch.setattr("src.service.otp_service.generate_otp", next_otp)
     user = _user(AccountStatus.UNVERIFIED)
+    user.email = "cloudian@example.com"
     database = FakeDatabaseSession(query_values=[user])
-    delivery = FakeOTPDeliveryService()
+    sms_delivery = FakeOTPDeliveryService()
+    email_delivery = FakeOTPDeliveryService()
     store = FakeOTPStore()
     service = AuthService(
         db_session=cast(AsyncSession, database),
         otp_service=OTPService(store, fixed_otp_code="123456"),
-        otp_delivery_service=delivery,
+        otp_delivery_service=sms_delivery,
+        email_delivery_service=email_delivery,
     )
     first_issue = await service.issue_and_send_otp(
         destination=user.phone_e164,
@@ -191,6 +219,9 @@ async def test_resend_register_otp_replaces_the_previous_code(
     second_issue = await service.resend_register_otp(user.phone_e164)
 
     assert second_issue.otp != first_issue.otp
+    assert sms_delivery.requests[-1].otp == second_issue.otp
+    assert email_delivery.requests[0].otp == second_issue.otp
+    assert email_delivery.requests[0].destination == "cloudian@example.com"
     with pytest.raises(OTPInvalidCodeError):
         await service.otp_service.verify_otp(
             OTPChannel.SMS,

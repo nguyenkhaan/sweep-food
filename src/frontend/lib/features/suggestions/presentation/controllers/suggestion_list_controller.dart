@@ -1,7 +1,10 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sweepfood/core/config/app_constants.dart';
+import 'package:sweepfood/core/network/network_providers.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
+import 'package:sweepfood/features/suggestions/data/datasources/suggestion_remote_data_source.dart';
 import 'package:sweepfood/features/suggestions/data/repositories/suggestion_repository_impl.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/suggestion_request.dart';
@@ -10,27 +13,27 @@ import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
 part 'suggestion_list_controller.g.dart';
 
-/// Fixed cook-time cap offered by the "≤ 30 phút" quick chip.
-const _quickCookMinutes = 30;
+final aiServiceHealthProvider = FutureProvider.autoDispose(
+  (ref) => SuggestionRemoteDataSource(
+    ref.watch(apiClientProvider),
+  ).health(),
+);
 
 /// UI filter state for S-01. Maps to a [SuggestionRequest] for the API.
 class SuggestionFilter {
   const SuggestionFilter({
     this.mealType,
-    this.quickCookOnly = false,
     this.dietaryPreference,
     this.prompt = '',
   });
 
   /// `null` = "Tất cả".
   final MealType? mealType;
-  final bool quickCookOnly;
   final DietaryPreference? dietaryPreference;
   final String prompt;
 
   SuggestionFilter copyWith({
     MealType? mealType,
-    bool? quickCookOnly,
     DietaryPreference? dietaryPreference,
     String? prompt,
     bool clearMealType = false,
@@ -38,7 +41,6 @@ class SuggestionFilter {
   }) {
     return SuggestionFilter(
       mealType: clearMealType ? null : mealType ?? this.mealType,
-      quickCookOnly: quickCookOnly ?? this.quickCookOnly,
       dietaryPreference: clearDietaryPreference
           ? null
           : dietaryPreference ?? this.dietaryPreference,
@@ -52,7 +54,6 @@ class SuggestionFilter {
       SuggestionRequest(
         pantryItems: pantryDrafts,
         mealType: mealType,
-        maxCookTimeMin: quickCookOnly ? _quickCookMinutes : null,
         dietaryPreference: dietaryPreference,
         prompt: prompt.isNotEmpty ? prompt : null,
         limit: AppConstants.maxSuggestions,
@@ -71,9 +72,6 @@ class SuggestionFilterController extends _$SuggestionFilterController {
   void toggleMeal(MealType meal) => state = state.mealType == meal
       ? state.copyWith(clearMealType: true)
       : state.copyWith(mealType: meal);
-
-  void toggleQuickCook() =>
-      state = state.copyWith(quickCookOnly: !state.quickCookOnly);
 
   void togglePreference(DietaryPreference pref) =>
       state = state.dietaryPreference == pref

@@ -237,20 +237,7 @@ def parse_receipt_text(raw_text: str) -> list[dict[str, Any]]:
         matched_standard_name = None
         matched_meta = None
         for std_name, unacc_name, meta in FOOD_KNOWLEDGE_LIST:
-            accented_match = re.search(
-                r"(?<!\w)" + re.escape(std_name) + r"(?!\w)", line.lower()
-            )
-            unaccented_match = re.search(
-                r"(?<!\w)" + re.escape(unacc_name) + r"(?!\w)", unacc_line
-            )
-            unaccented_source = (
-                line[unaccented_match.start():unaccented_match.end()]
-                if unaccented_match
-                else ""
-            )
-            if accented_match or (
-                unaccented_match and remove_accents(unaccented_source) == unaccented_source.lower()
-            ):
+            if re.search(r"\b" + re.escape(unacc_name) + r"\b", unacc_line) or unacc_name in unacc_line:
                 matched_standard_name = std_name
                 matched_meta = meta
                 break
@@ -265,21 +252,17 @@ def parse_receipt_text(raw_text: str) -> list[dict[str, Any]]:
 
         # First try weight on the same line (e.g. 150g, 500g, 1.2kg)
         weight_g = _extract_weight_grams(line, 0.0)
-        quantity_source = "extracted"
 
         # If no explicit weight in line text, lookahead for supermarket register scale weight
         if weight_g <= 0.0:
             scale_weight = _find_lookahead_scale_weight(lines, idx)
             weight_g = scale_weight if scale_weight is not None else matched_meta["default_w"]
-            if scale_weight is None:
-                quantity_source = "estimated"
 
         parsed_items.append({
             "name": canonical_name,
             "raw_receipt_line": raw_line,
             "quantity_g": weight_g,
             "unit": "g",
-            "quantity_source": quantity_source,
             "hours_to_expire": matched_meta["expiry_h"],
             "is_staple": matched_meta["is_staple"],
             "confidence": 0.96

@@ -66,11 +66,16 @@ class FreshnessAssessmentRequestDTO(BaseModel):
         return value
 
 
-class FreshnessAssessmentResponseDTO(BaseModel):
-    """The immutable FreshCheck result and any expiry safely applied to its batch."""
+class FreshnessPreviewRequestDTO(FreshnessAssessmentRequestDTO):
+    """Sensory answers for an ingredient that is not stored in inventory yet."""
 
-    assessment_id: UUID
-    batch_id: UUID
+    master_ingredient_id: UUID
+    storage_mode: StorageMode
+
+
+class FreshnessResultDTO(BaseModel):
+    """The deterministic FreshCheck decision shared by previews and assessments."""
+
     kb_version: str
     freshcheck_ingredient_id: str
     archetype_id: str | None
@@ -87,3 +92,14 @@ class FreshnessAssessmentResponseDTO(BaseModel):
     claims: tuple[str, ...]
     rule_version: str
     expires_at: datetime | None
+
+
+class FreshnessAssessmentResponseDTO(FreshnessResultDTO):
+    """The immutable FreshCheck result and any expiry safely applied to its batch."""
+
+    assessment_id: UUID
+    batch_id: UUID
+
+
+class FreshnessPreviewResponseDTO(FreshnessResultDTO):
+    """A non-persisted FreshCheck result; `expires_at` is the estimate to apply."""

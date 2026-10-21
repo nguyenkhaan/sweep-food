@@ -12,7 +12,7 @@ logger = logging.getLogger("sweepfood_crawler")
 
 @dataclass
 class RawRecipe:
-    """Raw crawled recipe before NLP parsing and semantic resolution."""
+    """Raw recipe exactly as extracted by a source spider."""
 
     source_url: str
     source_platform: str
