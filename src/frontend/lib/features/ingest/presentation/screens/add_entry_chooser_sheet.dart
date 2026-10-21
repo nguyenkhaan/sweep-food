@@ -96,12 +96,8 @@ class AddEntryChooserSheet extends StatelessWidget {
                           icon: const _BarcodeIcon(),
                           title: l10n.chooserScanBarcode,
                           subtitle: l10n.chooserScanBarcodeSub,
-                          onTap: () {
-                            context.pop();
-                            context.push(
-                              '${Routes.pantry}/${Routes.scanCamera}?mode=barcode',
-                            );
-                          },
+                          status: 'Coming soon',
+                          onTap: null,
                         ),
                       ),
                     ],
@@ -162,13 +158,15 @@ class _OptionCard extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
     this.isPrimary = false,
+    this.status,
   });
 
   final Widget icon;
   final String title;
   final String subtitle;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool isPrimary;
+  final String? status;
 
   @override
   Widget build(BuildContext context) {
@@ -241,6 +239,16 @@ class _OptionCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  if (status != null) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      status!,
+                      style: context.text.labelSmall?.copyWith(
+                        color: subtitleColor,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ],
