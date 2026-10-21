@@ -568,7 +568,7 @@ abstract class AppL10n {
   /// No description provided for @failUnauthorized.
   ///
   /// In vi, this message translates to:
-  /// **'Phiên đăng nhập đã hết hạn. Đăng nhập lại nhé.'**
+  /// **'Thông tin đăng nhập không hợp lệ. Đăng nhập lại nhé.'**
   String get failUnauthorized;
 
   /// No description provided for @failForbidden.

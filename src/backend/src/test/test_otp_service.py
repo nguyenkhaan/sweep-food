@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 
 import pytest
 
+from src.core.setting import DEFAULT_OTP
 from src.helper.pwd_hash import compare_hash, hashing
 from src.model.enum_model import OTPChannel, OTPPurpose
 from src.service.otp_service import (
@@ -110,10 +111,40 @@ def _service(
 
 
 @pytest.mark.anyio
-async def test_local_mock_code_verifies_a_random_stored_challenge(
+@pytest.mark.parametrize("purpose", tuple(OTPPurpose))
+async def test_default_otp_verifies_challenges_for_every_purpose(
+    purpose: OTPPurpose,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """The local code can verify while Redis still stores a random OTP hash."""
+    """The configured default code verifies every OTP-gated flow."""
+    generated_otp = "000000" if DEFAULT_OTP != "000000" else "999999"
+    monkeypatch.setattr(
+        "src.service.otp_service.generate_otp",
+        lambda: generated_otp,
+    )
+    service = OTPService(FakeOTPStore(), policy=_policy())
+    await service.issue_otp(
+        OTPChannel.SMS,
+        "+84901234567",
+        purpose,
+        "127.0.0.1",
+    )
+
+    grant = await service.verify_otp(
+        OTPChannel.SMS,
+        "+84901234567",
+        purpose,
+        DEFAULT_OTP,
+    )
+
+    assert grant.grant
+
+
+@pytest.mark.anyio
+async def test_configured_default_code_verifies_a_random_stored_challenge(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The configured code can verify while Redis stores a random OTP hash."""
     monkeypatch.setattr("src.service.otp_service.generate_otp", lambda: "654321")
     service = _service(FakeOTPStore())
     issue = await service.issue_otp(

@@ -2,7 +2,7 @@
 
 ## Objective
 
-Deliver phone/password authentication with temporary `UNVERIFIED` registrations, SMS OTP verification, password recovery/change, and purpose-scoped access/refresh JWT sessions. Local and test environments accept `DEFAULT_OTP`; production verification requires the Redis-stored OTP.
+Deliver phone/password authentication with temporary `UNVERIFIED` registrations, SMS OTP verification, password recovery/change, and purpose-scoped access/refresh JWT sessions. Every environment accepts the configured `DEFAULT_OTP` for OTP-gated testing flows.
 
 ## API Contract
 
@@ -40,7 +40,7 @@ Every function is typed. Database failures are rolled back through `SQLAlchemyEr
 
 Use deterministic fake Redis/delivery/session boundaries for service tests and FastAPI dependency overrides for router tests. Cover registration resend invalidation, plain-text account verification, OTP fallback, password, JWT purposes/secrets, refresh issuance, access renewal, logout, and session ownership.
 
-OTP issue responses contain `otp` and `expires_in_seconds`. Verification requests do not contain a challenge identifier: Redis finds the current OTP by channel, purpose, and hashed destination. The submitted value is valid when it matches the generated Redis-backed OTP or, in local/test MVP flows, `DEFAULT_OTP=123456`.
+OTP issue responses contain `otp` and `expires_in_seconds`. Verification requests do not contain a challenge identifier: Redis finds the current OTP by channel, purpose, and hashed destination. In every environment, the submitted value is valid when it matches either the generated Redis-backed OTP or the configured `DEFAULT_OTP`.
 
 OTP cooldown, request-limit, and failed-attempt limit errors use HTTP `429`; invalid, expired, mismatched, or already-consumed OTP state uses HTTP `400`. These domain outcomes must never fall through to HTTP `500`.
 
@@ -51,7 +51,8 @@ The custom OpenAPI builder recursively detects `require_authentication` in each 
 - Always: hash passwords and refresh tokens; store only OTP hashes in Redis; revoke sessions after password changes.
 - Always: sign access JWTs with `JWT_ACCESS_SECRET`, sign refresh JWTs with `JWT_REFRESH_SECRET`, and require the matching `purpose` claim.
 - Ask first: add dependencies, modify a production database outside a migration, or expand to email/phone identity changes.
-- Never: return passwords, password hashes, refresh-token hashes, or provider secrets; accept `DEFAULT_OTP` outside `dev` or `test`.
+- Always: require an existing, unexpired, destination- and purpose-scoped challenge before accepting either the generated OTP or `DEFAULT_OTP`.
+- Never: return passwords, password hashes, refresh-token hashes, or provider secrets.
 
 ## Success Criteria
 

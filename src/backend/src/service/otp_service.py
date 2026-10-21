@@ -9,7 +9,6 @@ from typing import ClassVar, Protocol
 
 from src.core.setting import (
     DEFAULT_OTP,
-    ENV,
     OTP_CHALLENGE_TTL_SECONDS,
     OTP_DESTINATION_REQUEST_LIMIT,
     OTP_FAILED_ATTEMPT_COOLDOWN_SECONDS,
@@ -190,7 +189,7 @@ class OTPService:
         self,
         store: OTPStore,
         policy: OTPPolicy = DEFAULT_OTP_POLICY,
-        fixed_otp_code: str | None = DEFAULT_OTP if ENV in {"dev", "test"} else None,
+        fixed_otp_code: str | None = DEFAULT_OTP,
     ) -> None:
         """Create an OTP service with a Redis-compatible store and policy."""
         self._store = store
@@ -251,10 +250,10 @@ class OTPService:
             raise OTPPurposeMismatchError()
 
         is_stored_otp_valid = compare_hash(otp, record.otp_hash)
-        is_local_mock_otp_valid = (
+        is_default_otp_valid = (
             self._fixed_otp_code is not None and otp == self._fixed_otp_code
         )
-        if not is_stored_otp_valid and not is_local_mock_otp_valid:
+        if not is_stored_otp_valid and not is_default_otp_valid:
             await self._record_failed_attempt(otp_key, record)
             raise OTPInvalidCodeError()
 
@@ -502,7 +501,7 @@ class OTPService:
         if self._fixed_otp_code is not None and (
             len(self._fixed_otp_code) != 6 or not self._fixed_otp_code.isdigit()
         ):
-            raise ValueError("OTP mock code must be six numeric digits")
+            raise ValueError("Default OTP code must be six numeric digits")
         if (
             min(
                 self._policy.challenge_ttl_seconds,
