@@ -90,7 +90,9 @@ class RecommendationAIService:
             [recommendation.id for recommendation in ai_response.recommendations]
         )
         recipe_by_id = {recipe.id: recipe for recipe in recipes}
-        pantry_by_name = {normalize(item.name): item for item in effective_request.items}
+        pantry_by_name = {
+            normalize(item.name): item for item in effective_request.items
+        }
         items: list[RecommendationItemDTO] = []
         for recommendation in ai_response.recommendations:
             recipe = recipe_by_id.get(recommendation.id)
@@ -325,9 +327,7 @@ def _with_saved_batches(
     if not batches:
         return item
     usable = [
-        batch
-        for batch in batches
-        if batch.expires_at is None or batch.expires_at > now
+        batch for batch in batches if batch.expires_at is None or batch.expires_at > now
     ]
     if not usable:
         return item.model_copy(update={"hours_to_expire": 0.0})
@@ -337,7 +337,9 @@ def _with_saved_batches(
     grams = sum(batch.grams for batch in usable if batch.grams is not None)
     if grams > 0:
         update["quantity_g"] = round(grams, 1)
-    source_code = next((batch.source_code for batch in usable if batch.source_code), None)
+    source_code = next(
+        (batch.source_code for batch in usable if batch.source_code), None
+    )
     if source_code is not None:
         update["code"] = source_code
     return item.model_copy(update=update)

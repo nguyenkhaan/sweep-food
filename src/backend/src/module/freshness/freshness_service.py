@@ -86,7 +86,9 @@ class FreshnessQuestionService:
             cache or FreshCheckKnowledgeBaseCache(),
         )
         self._engine = engine or FreshCheckEngine()
-        self._other_answer_service = other_answer_service or FreshCheckOtherAnswerService()
+        self._other_answer_service = (
+            other_answer_service or FreshCheckOtherAnswerService()
+        )
 
     async def questions(
         self, master_ingredient_id: UUID
@@ -180,7 +182,9 @@ class FreshnessAssessmentService:
             cache or FreshCheckKnowledgeBaseCache(),
         )
         self._engine = engine or FreshCheckEngine()
-        self._other_answer_service = other_answer_service or FreshCheckOtherAnswerService()
+        self._other_answer_service = (
+            other_answer_service or FreshCheckOtherAnswerService()
+        )
 
     async def assess_batch(
         self,
@@ -215,7 +219,10 @@ class FreshnessAssessmentService:
                 assessed_at,
             )
             _validate_answers(
-                knowledge_base, freshcheck_ingredient_id, body.answers, body.other_answers
+                knowledge_base,
+                freshcheck_ingredient_id,
+                body.answers,
+                body.other_answers,
             )
             other_scores = await self._other_answer_service.predict(
                 knowledge_base, freshcheck_ingredient_id, body.other_answers
