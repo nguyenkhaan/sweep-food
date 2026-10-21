@@ -386,6 +386,7 @@
   "camGalleryError": "Couldn't open the photo library: {error}",
   "@camGalleryError": { "placeholders": { "error": { "type": "String" } } },
   "camReading": "Reading the details…",
+  "camCaptured": "Photo captured",
   "camOpening": "Opening the camera…",
   "camGuideLabel": "Put the weight label in the frame, hold the phone level",
   "camGuideReceipt": "Fit the whole receipt in the frame",

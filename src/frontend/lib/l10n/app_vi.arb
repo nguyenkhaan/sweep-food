@@ -386,6 +386,7 @@
   "camGalleryError": "Không mở được thư viện ảnh: {error}",
   "@camGalleryError": { "placeholders": { "error": { "type": "String" } } },
   "camReading": "Đang đọc thông tin…",
+  "camCaptured": "Đã chụp ảnh",
   "camOpening": "Đang mở máy ảnh…",
   "camGuideLabel": "Đưa nhãn cân vào khung, giữ máy thẳng",
   "camGuideReceipt": "Đưa toàn bộ hóa đơn vào khung",

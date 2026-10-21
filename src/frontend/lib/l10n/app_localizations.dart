@@ -1909,6 +1909,12 @@ abstract class AppL10n {
   /// **'Đang đọc thông tin…'**
   String get camReading;
 
+  /// No description provided for @camCaptured.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã chụp ảnh'**
+  String get camCaptured;
+
   /// No description provided for @camOpening.
   ///
   /// In vi, this message translates to:

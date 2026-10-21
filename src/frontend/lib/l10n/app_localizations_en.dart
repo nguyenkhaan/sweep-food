@@ -1038,6 +1038,9 @@ class AppL10nEn extends AppL10n {
   String get camReading => 'Reading the details…';
 
   @override
+  String get camCaptured => 'Photo captured';
+
+  @override
   String get camOpening => 'Opening the camera…';
 
   @override

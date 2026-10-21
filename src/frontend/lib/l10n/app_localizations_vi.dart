@@ -1032,6 +1032,9 @@ class AppL10nVi extends AppL10n {
   String get camReading => 'Đang đọc thông tin…';
 
   @override
+  String get camCaptured => 'Đã chụp ảnh';
+
+  @override
   String get camOpening => 'Đang mở máy ảnh…';
 
   @override
