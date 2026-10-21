@@ -103,7 +103,7 @@
 
   "failNetwork": "Không có kết nối mạng. Kiểm tra lại và thử lại.",
   "failTimeout": "Máy chủ phản hồi quá lâu. Vui lòng thử lại.",
-  "failUnauthorized": "Phiên đăng nhập đã hết hạn. Đăng nhập lại nhé.",
+  "failUnauthorized": "Thông tin đăng nhập không hợp lệ. Đăng nhập lại nhé.",
   "failForbidden": "Bạn không có quyền thực hiện thao tác này.",
   "failQuota": "Bạn đã dùng hết lượt cho tính năng này trong tháng.",
   "failParse": "Dữ liệu trả về không đúng định dạng.",

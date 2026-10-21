@@ -14,7 +14,7 @@ Deliver authenticated, ownership-safe user profile and verified-contact APIs. Th
 - `POST /api/users/me/phone/request-change` sends and returns a `CHANGE_PHONE` SMS OTP. When `user.email` exists, it also sends the same OTP to that email using the `CHANGE_PHONE` template.
 - `POST /api/users/me/phone/confirm-change` accepts only `otp`, resolves the pending phone from Redis, consumes that SMS OTP, updates the caller's phone number, and returns `Verify Change Phone succesfully` as plain text.
 
-All OTP issuance remains production-shaped: a random OTP is stored hashed in Redis and sent through the configured provider. In `dev` and `test`, `DEFAULT_OTP` additionally verifies an existing matching challenge.
+All OTP issuance remains production-shaped: a random OTP is stored hashed in Redis and sent through the configured provider. In every environment, `DEFAULT_OTP` additionally verifies an existing matching challenge.
 
 ## Boundaries
 
