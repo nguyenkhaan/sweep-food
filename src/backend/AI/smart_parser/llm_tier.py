@@ -15,21 +15,22 @@ from src.core.setting import OPENAI_LLM_MODEL
 logger = logging.getLogger(__name__)
 
 LLM_SYSTEM_PROMPT = (
-    "Bạn là Chuyên gia Trích xuất Nguyên liệu Ẩm thực cho SweepFood AI.\n"
-    "Nhiệm vụ: Phân tích đoạn văn bản đầu vào (từ hóa đơn siêu thị OCR, giọng nói đi chợ, hoặc người dùng gõ) "
-    "thành danh sách các nguyên liệu thực phẩm để lưu vào Tủ Lạnh.\n\n"
-    "QUY TẮC BẮT BUỘC:\n"
-    "1. Trích xuất từng món nguyên liệu riêng biệt. Bỏ qua giá tiền, thuế, mã vạch, túi nilon.\n"
-    "2. Tách sạch thương hiệu siêu thị (CP, Vissan, Meat Deli...) và quy cách đóng gói (khay, vỉ, hộp).\n"
-    "3. Quy đổi định lượng về đơn vị Gram (quantity_g) là số thực:\n"
+    "You are the culinary ingredient extractor of SweepFood AI.\n"
+    "Task: turn the input text (from an OCR'd supermarket receipt, spoken shopping notes, or typed by the user) "
+    "into a list of food ingredients to store in the fridge.\n\n"
+    "RULES:\n"
+    "1. Extract each ingredient separately. Ignore prices, taxes, barcodes and plastic bags.\n"
+    "2. Strip supermarket brands (CP, Vissan, Meat Deli...) and packaging words (khay, vỉ, hộp).\n"
+    "3. Convert quantities to grams (quantity_g, float):\n"
     "   - 1 kg = 1000g, 1 lạng = 100g, nửa cân = 500g\n"
-    "   - Nếu là số lượng quả/bó: ước lượng gram (1 quả cà chua ~ 75g, 1 bó rau ~ 350g, 1 quả trứng ~ 60g).\n"
-    "4. Phán đoán storage_mode: 'fridge_2_4c' (ngăn mát), 'freezer_-18c' (ngăn đá), hoặc 'room_temp_25_30c' (nhiệt độ phòng cho hành, tỏi, củ).\n\n"
-    "Trả về DUY NHẤT một khối JSON hợp lệ theo cấu trúc:\n"
+    "   - For counts/bunches estimate grams (1 tomato ~ 75g, 1 bunch of greens ~ 350g, 1 egg ~ 60g).\n"
+    "4. Infer storage_mode: 'fridge_2_4c' (fridge), 'freezer_-18c' (freezer) or "
+    "'room_temp_25_30c' (room temperature, for onion, garlic, tubers).\n\n"
+    "Return ONLY one valid JSON object with this structure:\n"
     "{\n"
     '  "items": [\n'
     "    {\n"
-    '      "name": "tên nguyên liệu sạch tiếng Việt",\n'
+    '      "name": "clean Vietnamese ingredient name",\n'
     '      "quantity_g": 300.0,\n'
     '      "storage_mode": "fridge_2_4c"\n'
     "    }\n"
@@ -61,7 +62,7 @@ class LLMExtractor:
         if not text or not text.strip():
             return []
 
-        user_content = f"VĂN BẢN ĐẦU VÀO:\n\"\"\"{text.strip()}\"\"\""
+        user_content = f"INPUT TEXT:\n\"\"\"{text.strip()}\"\"\""
         messages = [
             {"role": "system", "content": LLM_SYSTEM_PROMPT},
             {"role": "user", "content": user_content},
@@ -71,7 +72,7 @@ class LLMExtractor:
             data = await self.openai_client.create_chat_completion_json(
                 messages=messages,
                 model=self.model,
-                max_completion_tokens=4096,
+                max_completion_tokens=1536,
             )
 
             raw_items: list[Any] = []

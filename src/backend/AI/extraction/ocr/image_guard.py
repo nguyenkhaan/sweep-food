@@ -21,17 +21,16 @@ from src.core.setting import (
 GUARD_MAX_DIM = 768
 
 GUARD_PROMPT = (
-    "Bạn là bộ lọc đầu vào cho hệ thống OCR của ứng dụng quản lý thực phẩm.\n"
-    "Phân loại ảnh thành đúng MỘT loại:\n"
-    '- "food_label": tem nhãn / bao bì sản phẩm thực phẩm hoặc nguyên liệu nấu ăn '
-    "(tem cân giá siêu thị, nhãn hộp, túi, vỉ; có thể chứa tên sản phẩm, khối lượng, HSD, NSX).\n"
-    '- "invoice": hóa đơn / biên lai mua hàng (siêu thị, chợ, cửa hàng), có danh sách mặt hàng.\n'
-    '- "other": mọi thứ còn lại (ảnh người, phong cảnh, món ăn đã nấu, màn hình, giấy tờ, '
-    "tài liệu không phải hóa đơn mua hàng, bao bì không phải thực phẩm như mỹ phẩm/thuốc/đồ gia dụng, "
-    "ảnh mờ không đọc được, ảnh trống).\n"
-    "Chỉ chọn food_label hoặc invoice khi chắc chắn; nghi ngờ thì chọn other.\n"
-    'Trả về DUY NHẤT JSON: {"category": "food_label|invoice|other", '
-    '"confidence": số từ 0 đến 1, "reason": "một câu ngắn tiếng Việt"}.'
+    "You are an input filter for the OCR pipeline of a food-management app.\n"
+    "Classify the image as exactly ONE category:\n"
+    '- "food_label": a label or packaging of a food product or cooking ingredient '
+    "(supermarket weigh-price tag, box, bag or tray label; may show product name, weight, expiry/production dates).\n"
+    '- "invoice": a purchase receipt or invoice (supermarket, market, shop) listing items.\n'
+    '- "other": anything else (people, scenery, cooked dishes, screens, documents that are not purchase receipts, '
+    "non-food packaging such as cosmetics/medicine/household goods, unreadable blurry or blank images).\n"
+    "Choose food_label or invoice only when certain; if in doubt choose other.\n"
+    'Return ONLY JSON: {"category": "food_label|invoice|other", '
+    '"confidence": number from 0 to 1, "reason": "one short sentence in Vietnamese"}.'
 )
 
 
@@ -108,7 +107,7 @@ class OpenAIImageGuard:
         payload = await self.openai_client.create_chat_completion_json(
             messages,
             model=self.model,
-            max_completion_tokens=200,
+            max_completion_tokens=128,
             timeout=self.timeout,
         )
         return _parse_verdict(payload)

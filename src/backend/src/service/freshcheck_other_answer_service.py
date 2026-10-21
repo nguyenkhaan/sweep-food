@@ -34,7 +34,7 @@ Do not mistake an explicit negation of spoilage for observed spoilage.
 For relevant non-spoiled observations, score must lie within the minimum and maximum
 NON-hard-stop anchor scores. Do not predict shelf life or a combined freshness score.
 Return a JSON object: {"axes": {"<axis>": {"status": "relevant"|"irrelevant"|"unclear",
-"score": <number or null>, "hard_stop": <boolean>, "reason_vi": "<short Vietnamese reason>"}}}.
+"score": <number or null>, "hard_stop": <boolean>, "reason_vi": "<short Vietnamese reason, or \"\" if none>"}}}.
 Return exactly the requested axis keys, no others. For irrelevant/unclear: score=null,
 hard_stop=false, and reason_vi should tell the user what observation the question needs.
 For relevant: score is required; hard_stop=true always requires score=0.
@@ -47,12 +47,10 @@ class _AxisVerdict(BaseModel):
     status: Literal["relevant", "irrelevant", "unclear"]
     score: float | None = Field(ge=0, le=10, allow_inf_nan=False)
     hard_stop: bool
-    reason_vi: str = Field(min_length=1, max_length=500)
+    reason_vi: str | None = Field(default=None, max_length=500)
 
     @model_validator(mode="after")
     def validate_decision(self) -> _AxisVerdict:
-        if not self.reason_vi.strip():
-            raise ValueError("A sensory verdict must explain its decision")
         if self.status == "relevant":
             if self.score is None or (self.hard_stop and self.score != 0):
                 raise ValueError("A relevant verdict needs a consistent numeric score")
@@ -136,7 +134,7 @@ class FreshCheckOtherAnswerService:
             payload = await client.create_chat_completion_json(
                 messages,
                 model=self.model,
-                max_completion_tokens=256 + 256 * len(axes),
+                max_completion_tokens=160 + 128 * len(axes),
             )
             verdict = _Verdict.model_validate(payload)
             if verdict.axes.keys() != other_answers.keys():
@@ -175,7 +173,16 @@ class FreshCheckOtherAnswerService:
             axis_name: FreshCheckAxisScore(
                 score=decision.score,
                 hard_stop=decision.hard_stop,
-                reason_vi=decision.reason_vi.strip(),
+                reason_vi=_reason_or_default(decision.reason_vi, decision.score),
             )
             for axis_name, decision in verdict.axes.items()
         }
+
+
+def _reason_or_default(reason: str | None, score: float | None) -> str:
+    """Models may leave the reason empty for an axis with nothing to note."""
+    if reason and reason.strip():
+        return reason.strip()
+    if score is not None and score >= 10:
+        return "Không có dấu hiệu giảm chất lượng."
+    return "Có dấu hiệu giảm chất lượng ở tiêu chí này."
