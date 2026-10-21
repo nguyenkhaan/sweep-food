@@ -3,6 +3,7 @@ import 'package:sweepfood/core/analytics/analytics_events.dart';
 import 'package:sweepfood/core/analytics/analytics_provider.dart';
 import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:sweepfood/features/shopping_list/data/repositories/shopping_list_repository_impl.dart';
 import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list.dart';
 import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
@@ -51,9 +52,9 @@ class ShoppingListController extends _$ShoppingListController {
   /// Checking an item requires [purchase] (the backend uses it to create the
   /// resulting inventory batch); un-checking must omit it. The caller decides
   /// which applies by checking `item.checked` before calling this.
-  Future<void> toggleChecked(String itemId, {ShoppingPurchaseDraft? purchase}) async {
+  Future<bool> toggleChecked(String itemId, {ShoppingPurchaseDraft? purchase}) async {
     final list = _list;
-    if (list == null) return;
+    if (list == null) return false;
     final item = list.items.firstWhere((i) => i.id == itemId);
     final next = !item.checked;
     state = AsyncData(
@@ -72,7 +73,18 @@ class ShoppingListController extends _$ShoppingListController {
           checked: next,
           purchase: next ? purchase : null,
         );
-    res.fold((_) => ref.invalidateSelf(), (_) {});
+    return res.fold(
+      (f) {
+        ref.invalidateSelf();
+        return false;
+      },
+      (_) {
+        if (next) {
+          ref.invalidate(pantryListControllerProvider);
+        }
+        return true;
+      },
+    );
   }
 
   Future<void> addManualItem(ShoppingListItemDraft draft) async {
