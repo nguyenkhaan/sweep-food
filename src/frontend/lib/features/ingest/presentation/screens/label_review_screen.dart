@@ -129,9 +129,11 @@ class LabelReviewScreen extends ConsumerWidget {
           Gap.gapMd,
           ConfidenceField(
             label: l10n.reviewCategory,
-            value: draft.category.isEmpty ? l10n.catOther : draft.category,
-            trailingIcon: Icons.keyboard_arrow_down_rounded,
-            onTap: () => _editCategory(context, draft.category, controller),
+            // Set by the smart parser only; there is no manual override.
+            value: draft.category.isEmpty
+                ? l10n.pantryFieldCategoryAuto
+                : draft.category,
+            trailingIcon: Icons.lock_outline_rounded,
           ),
         ],
       ),
@@ -157,7 +159,7 @@ class LabelReviewScreen extends ConsumerWidget {
                       context.go(Routes.pantry);
                     } on Object catch (e) {
                       if (!context.mounted) return;
-                      AppSnack.show(context, context.l10n.scanSaveError('$e'));
+                      AppSnack.show(context, context.saveErrorMessage(e));
                     }
                   },
             style: ElevatedButton.styleFrom(
@@ -251,52 +253,6 @@ class LabelReviewScreen extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _editCategory(
-    BuildContext context,
-    String current,
-    LabelReviewController controller,
-  ) async {
-    final l10n = context.l10n;
-    final categories = [
-      l10n.catVegetables,
-      l10n.catMeatSeafood,
-      l10n.catSpices,
-      l10n.catDairyEgg,
-      l10n.catDryGoods,
-      l10n.catOther,
-    ];
-    final result = await showModalBottomSheet<String>(
-      context: context,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(Gap.md),
-              child: Text(
-                l10n.reviewPickCategory,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            ...categories.map(
-              (cat) => ListTile(
-                title: Text(cat),
-                trailing: cat == current
-                    ? const Icon(Icons.check, color: BrandPalette.green700)
-                    : null,
-                onTap: () => ctx.pop(cat),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-    if (result != null) controller.setCategory(result);
   }
 
   Future<String?> _promptText(

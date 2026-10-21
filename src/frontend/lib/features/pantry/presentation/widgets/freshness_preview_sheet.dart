@@ -5,9 +5,12 @@ import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/features/pantry/data/datasources/freshness_remote_data_source.dart';
 import 'package:sweepfood/features/pantry/data/models/freshness_dto.dart';
+import 'package:sweepfood/features/pantry/domain/entities/freshness_answer_set.dart';
 import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/freshness_controller.dart';
+import 'package:sweepfood/features/pantry/presentation/widgets/freshness_questions_form.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
 
 /// FreshCheck before an item is saved: the user answers the sensory questions,
@@ -20,6 +23,7 @@ class FreshnessPreviewSheet extends ConsumerStatefulWidget {
     required this.itemName,
     required this.storageTier,
     this.initialAnswers,
+    this.initialOtherAnswers,
     super.key,
   });
 
@@ -27,6 +31,7 @@ class FreshnessPreviewSheet extends ConsumerStatefulWidget {
   final String itemName;
   final StorageTier storageTier;
   final Map<String, String>? initialAnswers;
+  final Map<String, String>? initialOtherAnswers;
 
   /// Resolves to the accepted estimate, or `null` when dismissed.
   static Future<FreshnessEstimate?> show(
@@ -35,16 +40,22 @@ class FreshnessPreviewSheet extends ConsumerStatefulWidget {
     required String itemName,
     required StorageTier storageTier,
     Map<String, String>? initialAnswers,
+    Map<String, String>? initialOtherAnswers,
   }) {
     return showModalBottomSheet<FreshnessEstimate>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (_) => FreshnessPreviewSheet(
-        masterIngredientId: masterIngredientId,
-        itemName: itemName,
-        storageTier: storageTier,
-        initialAnswers: initialAnswers,
+      builder: (ctx) => Padding(
+        // Lift the sheet above the keyboard while typing a "Khác" answer.
+        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(ctx).bottom),
+        child: FreshnessPreviewSheet(
+          masterIngredientId: masterIngredientId,
+          itemName: itemName,
+          storageTier: storageTier,
+          initialAnswers: initialAnswers,
+          initialOtherAnswers: initialOtherAnswers,
+        ),
       ),
     );
   }
@@ -55,16 +66,37 @@ class FreshnessPreviewSheet extends ConsumerStatefulWidget {
 }
 
 class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
-  final Map<String, String> _answers = {};
+  FreshnessAnswerSet _answers = const FreshnessAnswerSet();
+  Map<String, String> _axisErrors = const {};
   bool _initialized = false;
   bool _loading = false;
   String? _error;
   FreshnessPreviewDto? _result;
 
+  void _onAnswersChanged(FreshnessAnswerSet next) {
+    final stale = next.changedAxesFrom(_answers);
+    setState(() {
+      _axisErrors = {
+        for (final e in _axisErrors.entries)
+          if (!stale.contains(e.key)) e.key: e.value,
+      };
+      _answers = next;
+      _result = null;
+    });
+  }
+
   Future<void> _preview() async {
+    final empty = _answers.emptyOtherAxes;
+    if (empty.isNotEmpty) {
+      setState(() {
+        _axisErrors = {for (final a in empty) a: 'Vui lòng nhập mô tả cho mục Khác.'};
+      });
+      return;
+    }
     setState(() {
       _loading = true;
       _error = null;
+      _axisErrors = const {};
     });
     try {
       final result = await ref
@@ -72,11 +104,18 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
           .preview(
             masterIngredientId: widget.masterIngredientId,
             storageMode: widget.storageTier.backendWire,
-            answers: _answers,
+            answers: _answers.selected,
+            otherAnswers: _answers.otherToSend,
           );
       if (!mounted) return;
       setState(() {
         _result = result;
+        _loading = false;
+      });
+    } on FreshnessClarificationException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _axisErrors = e.axisErrors;
         _loading = false;
       });
     } on Object {
@@ -92,7 +131,8 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
     Navigator.pop(
       context,
       FreshnessEstimate(
-        answers: Map<String, String>.of(_answers),
+        answers: Map<String, String>.of(_answers.selected),
+        otherAnswers: _answers.otherToSend,
         expiresAt: result.expiresAt!,
         remainingDaysMin: result.remainingDaysMin,
         remainingDaysMax: result.remainingDaysMax,
@@ -127,10 +167,18 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
               ),
               data: (kb) {
                 if (!_initialized) {
-                  for (final q in kb.questions) {
-                    _answers[q.axis] =
-                        widget.initialAnswers?[q.axis] ?? q.defaultValue;
-                  }
+                  final other = <String, String>{
+                    ...?widget.initialOtherAnswers,
+                  };
+                  _answers = FreshnessAnswerSet(
+                    other: other,
+                    selected: {
+                      for (final q in kb.questions)
+                        if (!other.containsKey(q.axis))
+                          q.axis:
+                              widget.initialAnswers?[q.axis] ?? q.defaultValue,
+                    },
+                  );
                   _initialized = true;
                 }
                 if (kb.questions.isEmpty) {
@@ -144,36 +192,14 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (final q in kb.questions) ...[
-                        Text(
-                          q.questionVi,
-                          style: context.text.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Gap.gapXs,
-                        Wrap(
-                          spacing: Gap.xs,
-                          runSpacing: 4,
-                          children: [
-                            for (final opt in q.options)
-                              ChoiceChip(
-                                label: Text(opt.labelVi),
-                                selected: _answers[q.axis] == opt.value,
-                                onSelected: _loading
-                                    ? null
-                                    : (selected) {
-                                        if (!selected) return;
-                                        setState(() {
-                                          _answers[q.axis] = opt.value;
-                                          _result = null;
-                                        });
-                                      },
-                              ),
-                          ],
-                        ),
-                        Gap.gapMd,
-                      ],
+                      FreshnessQuestionsForm(
+                        questions: kb.questions,
+                        answers: _answers,
+                        axisErrors: _axisErrors,
+                        enabled: !_loading,
+                        onChanged: _onAnswersChanged,
+                      ),
+                      Gap.gapMd,
                       if (_error != null) ...[
                         Text(
                           _error!,

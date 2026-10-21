@@ -24,6 +24,7 @@ class ExtractionFields(BaseModel):
     ingredient_name: str | None = None
     raw_name: str | None = None
     master_ingredient_id: UUID | None = None
+    category: str | None = None
     quantity: float | None = None
     unit: str | None = None
     packaged_at: str | None = None
@@ -61,6 +62,7 @@ class InvoiceLineItem(BaseModel):
     name: str | None = None
     raw_name: str | None = None
     master_ingredient_id: UUID | None = None
+    category: str | None = None
     quantity: float | None = None
     unit: str | None = None
     unit_price: float | None = None

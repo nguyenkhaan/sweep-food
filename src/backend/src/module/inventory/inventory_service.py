@@ -1,10 +1,11 @@
 """Inventory calculations and database orchestration."""
 
+import inspect
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from math import isfinite
-from typing import Protocol
+from typing import Any, Protocol
 from uuid import UUID
 from zoneinfo import ZoneInfo
 
@@ -28,6 +29,7 @@ from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.inventory_ledger_entry_model import InventoryLedgerEntryModel
 from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.shelf_life_rule_model import ShelfLifeRuleModel
+from src.module.extractions.extraction_service import normalize_catalog_code
 from src.module.inventory.inventory_dto import (
     ConsumeInventoryBatchRequestDTO,
     CreateInventoryBatchRequestDTO,
@@ -84,6 +86,53 @@ class InventoryIngredientNotFoundError(HTTPException):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Ingredient was not found",
         )
+
+
+class IngredientNotSupportedError(HTTPException):
+    """Reject a custom ingredient name that the catalog cannot recognize."""
+
+    def __init__(self, detail: str = "INGREDIENT_NOT_SUPPORTED") -> None:
+        super().__init__(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail=detail,
+        )
+
+
+class IngredientResolver(Protocol):
+    """Resolve free-text ingredient names to catalog master ingredient IDs."""
+
+    async def resolve(self, name: str, session: AsyncSession) -> UUID | None:
+        """Return the master ingredient ID if recognized, or None."""
+        ...
+
+
+class SmartParserIngredientResolver:
+    """Resolve free-text ingredient names to master ingredient IDs using the deterministic smart parser."""
+
+    def __init__(self, parser: Any | None = None) -> None:
+        self._parser = parser
+
+    def _get_parser(self) -> Any:
+        if self._parser is not None:
+            return self._parser
+        from AI.extraction.service import get_ai_extraction_service
+
+        return get_ai_extraction_service().pantry_parser
+
+    async def resolve(self, name: str, session: AsyncSession) -> UUID | None:
+        parser = self._get_parser()
+        matched = parser.resolve_master_ingredient(name)
+        if not matched:
+            return None
+        code = normalize_catalog_code(matched.get("code"))
+        if not code:
+            return None
+        result = await session.execute(
+            select(MasterIngredientModel.id).where(
+                MasterIngredientModel.source_code == code
+            )
+        )
+        return result.scalar_one_or_none()
 
 
 @dataclass(frozen=True, slots=True)
@@ -151,9 +200,35 @@ def apply_quantity_change(
 class InventoryService:
     """Orchestrate ownership-safe inventory queries and atomic mutations."""
 
-    def __init__(self, db_session: AsyncSession, warning_days: int = 3) -> None:
+    def __init__(
+        self,
+        db_session: AsyncSession,
+        warning_days: int = 3,
+        ingredient_resolver: IngredientResolver | None = None,
+    ) -> None:
         self.db_session = db_session
         self.warning_days = warning_days
+        self._ingredient_resolver = (
+            ingredient_resolver
+            if ingredient_resolver is not None
+            else SmartParserIngredientResolver()
+        )
+
+    async def _resolve_ingredient_name(self, name: str) -> UUID | None:
+        resolver = self._ingredient_resolver
+        if resolver is None:
+            return None
+        if hasattr(resolver, "resolve"):
+            return await resolver.resolve(name, self.db_session)
+        if callable(resolver):
+            try:
+                res = resolver(name, self.db_session)
+            except TypeError:
+                res = resolver(name)
+            if inspect.isawaitable(res):
+                return await res
+            return res
+        return None
 
     async def create_batch(
         self,
@@ -162,12 +237,29 @@ class InventoryService:
         idempotency_key: str,
     ) -> InventoryBatchDTO:
         """Create one manual batch with an INITIAL_STOCK ledger entry."""
+        existing = await self._find_idempotent_batch(
+            user_id,
+            idempotency_key,
+            InventoryLedgerEventType.INITIAL_STOCK,
+        )
+        if existing is not None:
+            return await self._to_batch_dto(existing)
+
+        if body.custom_name is not None:
+            master_id = await self._resolve_ingredient_name(body.custom_name)
+            if master_id is None:
+                raise IngredientNotSupportedError()
+            body = body.model_copy(
+                update={"master_ingredient_id": master_id, "custom_name": None}
+            )
+
         try:
             batch = await self.stage_batch(
                 user_id,
                 body,
                 idempotency_key,
                 reason="Manual batch creation",
+                skip_idempotency_check=True,
             )
             await self.db_session.commit()
             return await self._to_batch_dto(batch)
@@ -194,16 +286,17 @@ class InventoryService:
         idempotency_key: str,
         *,
         reason: str,
+        skip_idempotency_check: bool = False,
     ) -> InventoryBatchModel:
         """Stage initial stock without committing a caller-owned transaction."""
-        existing = await self._find_idempotent_batch(
-            user_id,
-            idempotency_key,
-            InventoryLedgerEventType.INITIAL_STOCK,
-        )
-        if existing is not None:
-            return existing
-
+        if not skip_idempotency_check:
+            existing = await self._find_idempotent_batch(
+                user_id,
+                idempotency_key,
+                InventoryLedgerEventType.INITIAL_STOCK,
+            )
+            if existing is not None:
+                return existing
         await self._find_ingredient(body.master_ingredient_id)
         expires_at, expiration_source = resolve_expiration(
             manufacturer_expires_at=body.expires_at,

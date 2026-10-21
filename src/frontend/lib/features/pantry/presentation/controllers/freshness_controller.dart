@@ -28,11 +28,16 @@ class FreshnessAssessmentState {
     this.isLoading = false,
     this.result,
     this.errorMessage,
+    this.axisErrors = const {},
   });
 
   final bool isLoading;
   final FreshnessAssessmentResponseDto? result;
   final String? errorMessage;
+
+  /// Per-axis feedback for free-text answers the backend could not use; shown
+  /// under each axis' input box instead of as a general error.
+  final Map<String, String> axisErrors;
 }
 
 class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
@@ -43,6 +48,7 @@ class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
   Future<FreshnessAssessmentResponseDto?> submit({
     required String batchId,
     required Map<String, String> answers,
+    Map<String, String> otherAnswers = const {},
     String? storageMode,
     DateTime? purchasedAt,
   }) async {
@@ -53,6 +59,7 @@ class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
       final res = await remote.assessBatch(
         batchId,
         answers: answers,
+        otherAnswers: otherAnswers,
         storageMode: storageMode,
         purchasedAt: purchasedAt,
       );
@@ -61,6 +68,9 @@ class FreshnessController extends ValueNotifier<FreshnessAssessmentState> {
       // Invalidate pantry list so updated expiry is reflected immediately
       _ref.invalidate(pantryListControllerProvider);
       return res;
+    } on FreshnessClarificationException catch (e) {
+      value = FreshnessAssessmentState(axisErrors: e.axisErrors);
+      return null;
     } catch (e) {
       final message = e.toString().contains('MAPPING_UNAVAILABLE')
           ? 'Nguyên liệu này chưa được ánh xạ trong cơ sở dữ liệu cảm quan FreshCheck.'

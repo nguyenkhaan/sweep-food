@@ -22,6 +22,7 @@ class RegisterController extends _$RegisterController {
   Future<String?> submit({
     required String name,
     required String phone,
+    String email = '',
     required String password,
     required bool agreedToTerms,
     required AppL10n l10n,
@@ -29,6 +30,8 @@ class RegisterController extends _$RegisterController {
     final errors = <String, String>{
       if (name.trim().isEmpty) 'name': l10n.authEnterName,
       if (!isValidPhone(phone)) 'phone': l10n.authInvalidPhone,
+      if (email.trim().isNotEmpty && !isValidEmail(email))
+        'email': l10n.authInvalidEmail,
       if (!isValidPassword(password)) 'password': l10n.authPasswordTooShort,
     };
     if (errors.isNotEmpty) {
@@ -53,6 +56,7 @@ class RegisterController extends _$RegisterController {
           phone: e164,
           password: password,
           name: name.trim(),
+          email: email.trim().isEmpty ? null : email.trim().toLowerCase(),
         );
     return res.fold(
       (f) {

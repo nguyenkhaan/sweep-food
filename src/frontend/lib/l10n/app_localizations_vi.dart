@@ -277,6 +277,9 @@ class AppL10nVi extends AppL10n {
   String get failUnknown => 'Đã xảy ra lỗi không mong muốn.';
 
   @override
+  String get failUnsupportedIngredient => 'Thực phẩm này app chưa hỗ trợ';
+
+  @override
   String get permCameraTitle => 'Cho phép dùng máy ảnh';
 
   @override
@@ -557,6 +560,10 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get pantryFieldCategoryHint => 'VD: Rau củ';
+
+  @override
+  String get pantryFieldCategoryAuto =>
+      'Tự động nhận diện khi thực phẩm được hỗ trợ';
 
   @override
   String get pantryFieldStorage => 'Nơi bảo quản';
@@ -1220,6 +1227,9 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get authEmail => 'Email';
+
+  @override
+  String get authEmailOptional => 'Email (không bắt buộc)';
 
   @override
   String get authPassword => 'Mật khẩu';

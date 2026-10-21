@@ -13,6 +13,9 @@ from AI.errors import (
     ExtractionTimeoutError,
     ExtractionUnavailableError,
 )
+from src.service.freshcheck_other_answer_service import (
+    FreshCheckOtherAnswerClarificationError,
+)
 from src.service.otp_service import (
     OTPAttemptsCooldownError,
     OTPAttemptsExceededError,
@@ -117,6 +120,21 @@ async def http_exception_handler(
     )
 
 
+async def freshcheck_clarification_exception_handler(
+    request: Request,
+    exception: Exception,
+) -> JSONResponse:
+    """Preserve the shared string detail and expose actionable per-axis feedback."""
+    assert isinstance(exception, FreshCheckOtherAnswerClarificationError)
+    payload = ErrorResponseDTO(
+        status_code=exception.status_code,
+        detail=exception.detail,
+        path=request.url.path,
+    ).model_dump()
+    payload.update(code=exception.code, axes=exception.axes)
+    return JSONResponse(status_code=exception.status_code, content=payload)
+
+
 async def validation_exception_handler(
     request: Request,
     exception: Exception,
@@ -218,6 +236,10 @@ async def unhandled_exception_handler(
 def register_exception_handlers(application: FastAPI) -> None:
     """Register all application exception handlers on a FastAPI instance."""
     application.add_exception_handler(StarletteHTTPException, http_exception_handler)
+    application.add_exception_handler(
+        FreshCheckOtherAnswerClarificationError,
+        freshcheck_clarification_exception_handler,
+    )
     application.add_exception_handler(
         RequestValidationError, validation_exception_handler
     )
