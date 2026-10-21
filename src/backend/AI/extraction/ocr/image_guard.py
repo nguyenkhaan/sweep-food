@@ -18,7 +18,7 @@ from src.core.setting import (
     OPENAI_TIMEOUT_SECONDS,
 )
 
-GUARD_MAX_DIM = 768
+GUARD_MAX_DIM = 540
 
 GUARD_PROMPT = (
     "You are an input filter for the OCR pipeline of a food-management app.\n"

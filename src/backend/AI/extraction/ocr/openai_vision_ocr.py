@@ -22,6 +22,10 @@ from src.core.setting import (
     OPENAI_TIMEOUT_SECONDS,
 )
 
+# Longest side (px) of the image sent to the OCR model; smaller means fewer image
+# tokens and a faster upload, at the cost of legibility for tiny print.
+OCR_MAX_DIM = 540
+
 SYSTEM_PROMPT = (
     "You are an OCR system for Vietnamese supermarket food labels and receipts.\n"
     "Read all text in the image (a packaging label or a shopping receipt) and return it as strict JSON.\n\n"
@@ -116,7 +120,7 @@ class OpenAIVisionOCR:
     async def recognize_image_bytes(
         self,
         image_bytes: bytes,
-        max_dim: int = 1600,
+        max_dim: int = OCR_MAX_DIM,
         ref_date: datetime.date | None = None,
     ) -> dict[str, Any]:
         """Perform preprocessing and call OpenAI Chat Completions API with image input."""
