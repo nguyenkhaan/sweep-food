@@ -14,7 +14,10 @@ class NotificationsController extends _$NotificationsController {
     return res.fold((f) => throw f, (list) => list);
   }
 
-  Future<void> refresh() => ref.refresh(notificationsControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   Future<void> markRead(String id) async {
     final current = state.asData?.value;

@@ -14,8 +14,10 @@ class ActiveSessionsController extends _$ActiveSessionsController {
     return res.fold((f) => throw f, (list) => list);
   }
 
-  Future<void> refresh() =>
-      ref.refresh(activeSessionsControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   /// Revoke one session and drop it from the list. Rethrows the `Failure` so the
   /// screen can show a snackbar.

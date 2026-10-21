@@ -46,7 +46,10 @@ class FavoriteRecipesController extends _$FavoriteRecipesController {
     }
   }
 
-  Future<void> refresh() => ref.refresh(favoriteRecipesControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 }
 
 @riverpod

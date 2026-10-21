@@ -34,7 +34,10 @@ class ShoppingListController extends _$ShoppingListController {
 
   ShoppingList? get _list => state.asData?.value;
 
-  Future<void> refresh() => ref.refresh(shoppingListControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   /// M-01's "Tạo danh sách mua sắm" button.
   Future<Result<ShoppingList>> generateFromWeek(String mealPlanId) async {

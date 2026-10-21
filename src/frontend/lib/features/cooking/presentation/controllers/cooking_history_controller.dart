@@ -13,7 +13,10 @@ class CookingHistoryController extends _$CookingHistoryController {
     return res.fold((f) => throw f, (list) => list);
   }
 
-  Future<void> refresh() => ref.refresh(cookingHistoryControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 }
 
 /// One completed session in full (`GET /cooking/history/{id}`).

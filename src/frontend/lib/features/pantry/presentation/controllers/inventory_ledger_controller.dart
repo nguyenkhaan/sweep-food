@@ -17,8 +17,10 @@ class InventoryLedgerController extends _$InventoryLedgerController {
     return res.fold((f) => throw f, (p) => p);
   }
 
-  Future<void> refresh() =>
-      ref.refresh(inventoryLedgerControllerProvider(batchId).future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   Future<void> loadMore() async {
     final current = state.asData?.value;
