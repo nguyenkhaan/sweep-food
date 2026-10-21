@@ -109,7 +109,10 @@ class PantryListController extends _$PantryListController {
     );
   }
 
-  Future<void> refresh() => ref.refresh(pantryListControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 
   /// Insert an already-built item (leftover saved after cooking, D-06).
   void addExisting(PantryItem item) {

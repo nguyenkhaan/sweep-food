@@ -49,7 +49,10 @@ class FavoriteMenusController extends _$FavoriteMenusController {
     );
   }
 
-  Future<void> refresh() => ref.refresh(favoriteMenusControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 }
 
 @riverpod
@@ -88,6 +91,8 @@ class FavoriteMenuDetailController extends _$FavoriteMenuDetailController {
     );
   }
 
-  Future<void> refresh() =>
-      ref.refresh(favoriteMenuDetailControllerProvider(menuId).future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 }

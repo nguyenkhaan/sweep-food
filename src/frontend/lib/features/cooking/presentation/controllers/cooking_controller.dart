@@ -5,6 +5,7 @@ import 'package:sweepfood/features/cooking/data/repositories/cooking_repository_
 import 'package:sweepfood/features/cooking/domain/entities/cook_confirmation.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cook_result.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cooking_preview.dart';
+import 'package:sweepfood/features/dishes/domain/entities/local_dishes.dart';
 import 'package:sweepfood/features/meal_plan/data/repositories/meal_plan_repository_impl.dart';
 import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan.dart';
 import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan_entry.dart';
@@ -36,6 +37,10 @@ class CookingController extends _$CookingController {
     required String dishId,
     required double servings,
   }) async {
+    if (!isUuid(dishId)) {
+      return _buildLocalPreview(dishId, servings);
+    }
+
     final mealPlanRepo = ref.read(mealPlanRepositoryProvider);
     final weekStart = MealPlan.weekStartOf(DateTime.now());
     final planRes = await mealPlanRepo.forWeek(weekStart);
@@ -60,6 +65,61 @@ class CookingController extends _$CookingController {
     return res.fold((f) => throw f, (p) => p);
   }
 
+  Future<CookingPreview> _buildLocalPreview(String dishId, double servings) async {
+    final dish = getLocalDish(dishId).scaledTo(servings.toInt());
+    List<PantryItem> pantryItems;
+    try {
+      pantryItems = await ref.read(pantryListControllerProvider.future);
+    } catch (_) {
+      pantryItems =
+          ref.read(pantryListControllerProvider).asData?.value ?? const [];
+    }
+    final activePantry = pantryItems
+        .where((p) => p.status == PantryItemStatus.active && p.quantity > 0)
+        .toList();
+
+    final missing = <MissingIngredientPreview>[];
+    final deductions = <ProposedDeduction>[];
+
+    for (final ing in dish.ingredients) {
+      if (ing.isSeasoning) continue;
+      final norm = ing.name.toLowerCase().trim();
+      final batches = activePantry.where((p) {
+        final pNorm = p.name.toLowerCase().trim();
+        return pNorm == norm || pNorm.contains(norm) || norm.contains(pNorm);
+      }).toList();
+
+      final totalAvailable =
+          batches.fold<double>(0, (sum, p) => sum + p.quantity);
+      if (totalAvailable >= ing.quantity) {
+        if (batches.isNotEmpty) {
+          deductions.add(ProposedDeduction(
+            recipeIngredientId: '',
+            batchId: batches.first.id,
+            quantity: ing.quantity,
+            unit: ing.unit,
+          ));
+        }
+      } else {
+        missing.add(MissingIngredientPreview(
+          recipeIngredientId: '',
+          ingredientName: ing.name,
+          missingQuantity: ing.quantity - totalAvailable,
+          unit: ing.unit,
+        ));
+      }
+    }
+
+    return CookingPreview(
+      mealPlanItemId: 'local-$dishId',
+      recipeId: dishId,
+      recipeName: dish.name,
+      servings: servings,
+      proposedDeductions: deductions,
+      missingIngredients: missing,
+    );
+  }
+
   static MealSlot _slotForNow() {
     final h = DateTime.now().hour;
     if (h < 10) return MealSlot.breakfast;
@@ -74,14 +134,18 @@ class CookingController extends _$CookingController {
     required String dishName,
     List<ConsumptionLine>? consumptions,
   }) async {
-    final repo = ref.read(cookingRepositoryProvider);
+    String sessionId;
+    if (!isUuid(preview.recipeId)) {
+      sessionId = 'local-${DateTime.now().millisecondsSinceEpoch}';
+    } else {
+      final repo = ref.read(cookingRepositoryProvider);
+      final sessionRes = await repo.createSession(preview.mealPlanItemId);
+      sessionId = sessionRes.fold((f) => throw f, (id) => id);
 
-    final sessionRes = await repo.createSession(preview.mealPlanItemId);
-    final sessionId = sessionRes.fold((f) => throw f, (id) => id);
-
-    final completeRes =
-        await repo.complete(sessionId, mode, consumptions: consumptions);
-    completeRes.fold((f) => throw f, (_) {});
+      final completeRes =
+          await repo.complete(sessionId, mode, consumptions: consumptions);
+      completeRes.fold((f) => throw f, (_) {});
+    }
 
     final result = _buildResult(
       preview: preview,
@@ -95,12 +159,9 @@ class CookingController extends _$CookingController {
           updated: result.updatedPantryItems,
           depletedIds: result.depletedItemIds,
         );
-    // The deltas above are a client-side estimate (see CookResult doc comment)
-    // — refresh from the server so any drift self-heals without blocking the
-    // UI on it. Uses this controller's own `ref` (not the pantry notifier's
-    // `refresh()` helper, which calls `ref.refresh` on itself — fine from a
-    // widget, but "a provider cannot depend on itself" from another provider).
-    unawaited(ref.refresh(pantryListControllerProvider.future));
+    if (isUuid(preview.recipeId)) {
+      ref.invalidate(pantryListControllerProvider);
+    }
 
     state = result;
     return result;

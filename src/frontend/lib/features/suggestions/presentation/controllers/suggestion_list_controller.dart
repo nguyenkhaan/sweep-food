@@ -131,6 +131,8 @@ class SuggestionListController extends _$SuggestionListController {
     );
   }
 
-  Future<void> refresh() =>
-      ref.refresh(suggestionListControllerProvider.future);
+  Future<void> refresh() async {
+    ref.invalidateSelf();
+    await future;
+  }
 }
