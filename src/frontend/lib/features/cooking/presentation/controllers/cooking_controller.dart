@@ -89,12 +89,19 @@ class CookingController extends _$CookingController {
       created = true;
     }
 
-    final preview = await previewForItem(entry.id);
+    final resolvedEntry = entry;
+    if (resolvedEntry == null) {
+      throw StateError(
+        'Không thể tạo hoặc tìm bữa ăn để kiểm tra nguyên liệu.',
+      );
+    }
+
+    final preview = await previewForItem(resolvedEntry.id);
     if (created && preview.hasMissingIngredients) {
       // Not cookable: don't leave a phantom planned meal behind.
       await mealPlanRepo.removeEntry(
         weekStart: plan.weekStart,
-        itemId: entry.id,
+        itemId: resolvedEntry.id,
       );
     }
     return preview;
@@ -103,11 +110,16 @@ class CookingController extends _$CookingController {
   /// Same as [previewForDish] but for an existing meal-plan item (M-01 →
   /// "Đã nấu" on a planned slot — not wired to any screen yet).
   Future<CookingPreview> previewForItem(String mealPlanItemId) async {
-    final res = await ref.read(cookingRepositoryProvider).preview(mealPlanItemId);
+    final res = await ref
+        .read(cookingRepositoryProvider)
+        .preview(mealPlanItemId);
     return res.fold((f) => throw f, (p) => p);
   }
 
-  Future<CookingPreview> _buildLocalPreview(String dishId, double servings) async {
+  Future<CookingPreview> _buildLocalPreview(
+    String dishId,
+    double servings,
+  ) async {
     final dish = getLocalDish(dishId).scaledTo(servings.toInt());
     List<PantryItem> pantryItems;
     try {
@@ -131,24 +143,30 @@ class CookingController extends _$CookingController {
         return pNorm == norm || pNorm.contains(norm) || norm.contains(pNorm);
       }).toList();
 
-      final totalAvailable =
-          batches.fold<double>(0, (sum, p) => sum + p.quantity);
+      final totalAvailable = batches.fold<double>(
+        0,
+        (sum, p) => sum + p.quantity,
+      );
       if (totalAvailable >= ing.quantity) {
         if (batches.isNotEmpty) {
-          deductions.add(ProposedDeduction(
-            recipeIngredientId: '',
-            batchId: batches.first.id,
-            quantity: ing.quantity,
-            unit: ing.unit,
-          ));
+          deductions.add(
+            ProposedDeduction(
+              recipeIngredientId: '',
+              batchId: batches.first.id,
+              quantity: ing.quantity,
+              unit: ing.unit,
+            ),
+          );
         }
       } else {
-        missing.add(MissingIngredientPreview(
-          recipeIngredientId: '',
-          ingredientName: ing.name,
-          missingQuantity: ing.quantity - totalAvailable,
-          unit: ing.unit,
-        ));
+        missing.add(
+          MissingIngredientPreview(
+            recipeIngredientId: '',
+            ingredientName: ing.name,
+            missingQuantity: ing.quantity - totalAvailable,
+            unit: ing.unit,
+          ),
+        );
       }
     }
 
@@ -190,8 +208,11 @@ class CookingController extends _$CookingController {
       final sessionRes = await repo.createSession(preview.mealPlanItemId);
       sessionId = sessionRes.fold((f) => throw f, (id) => id);
 
-      final completeRes =
-          await repo.complete(sessionId, mode, consumptions: consumptions);
+      final completeRes = await repo.complete(
+        sessionId,
+        mode,
+        consumptions: consumptions,
+      );
       completeRes.fold((f) => throw f, (_) {});
     }
 
@@ -203,7 +224,9 @@ class CookingController extends _$CookingController {
       dishName: dishName,
     );
 
-    ref.read(pantryListControllerProvider.notifier).applyCookChanges(
+    ref
+        .read(pantryListControllerProvider.notifier)
+        .applyCookChanges(
           updated: result.updatedPantryItems,
           depletedIds: result.depletedItemIds,
         );
@@ -293,7 +316,8 @@ class CookingController extends _$CookingController {
   ) {
     if (consumptions == null) return null;
     for (final c in consumptions) {
-      if (c.batchId == d.batchId && c.recipeIngredientId == d.recipeIngredientId) {
+      if (c.batchId == d.batchId &&
+          c.recipeIngredientId == d.recipeIngredientId) {
         return c.quantity;
       }
     }

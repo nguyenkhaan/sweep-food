@@ -26,43 +26,46 @@ void main() {
   });
 
   group('list()', () {
-    test('maps the /inventory/batches payload to PantryItem entities', () async {
-      when(
-        () => api.get(ApiPaths.inventoryBatches, query: any(named: 'query')),
-      ).thenAnswer(
-        (_) async => {
-          'items': [
-            {
-              'id': 'batch-1',
-              'custom_name': 'Cà chua bi',
-              'ingredient_name': 'Cà chua bi',
-              'current_quantity': 250.0,
-              'unit': 'GRAM',
-              'storage_mode': 'REFRIGERATED',
-              'status': 'ACTIVE',
-              'source': 'MANUAL',
-              'created_at': '2026-08-30T00:00:00.000Z',
-              'expires_at': '2026-09-02T00:00:00.000Z',
-            },
-          ],
-          'total': 1,
-          'page': 1,
-          'per_page': 100,
-        },
-      );
+    test(
+      'maps the /inventory/batches payload to PantryItem entities',
+      () async {
+        when(
+          () => api.get(ApiPaths.inventoryBatches, query: any(named: 'query')),
+        ).thenAnswer(
+          (_) async => {
+            'items': [
+              {
+                'id': 'batch-1',
+                'custom_name': 'Cà chua bi',
+                'ingredient_name': 'Cà chua bi',
+                'current_quantity': 250.0,
+                'unit': 'GRAM',
+                'storage_mode': 'REFRIGERATED',
+                'status': 'ACTIVE',
+                'source': 'MANUAL',
+                'created_at': '2026-08-30T00:00:00.000Z',
+                'expires_at': '2026-09-02T00:00:00.000Z',
+              },
+            ],
+            'total': 1,
+            'page': 1,
+            'per_page': 100,
+          },
+        );
 
-      final res = await repo.list();
+        final res = await repo.list();
 
-      final page = res.fold((f) => fail('expected Right, got $f'), (r) => r);
-      expect(page.items, hasLength(1));
-      final item = page.items.single;
-      expect(item.name, 'Cà chua bi');
-      expect(item.quantity, 250.0);
-      expect(item.unit, MeasurementUnit.gram);
-      expect(item.storageTier, StorageTier.fridge);
-      expect(item.source, PantrySource.manual);
-      expect(item.status, PantryItemStatus.active);
-    });
+        final page = res.fold((f) => fail('expected Right, got $f'), (r) => r);
+        expect(page.items, hasLength(1));
+        final item = page.items.single;
+        expect(item.name, 'Cà chua bi');
+        expect(item.quantity, 250.0);
+        expect(item.unit, MeasurementUnit.gram);
+        expect(item.storageTier, StorageTier.fridge);
+        expect(item.source, PantrySource.manual);
+        expect(item.status, PantryItemStatus.active);
+      },
+    );
 
     test('returns a Failure (Left) when the client throws', () async {
       when(
@@ -114,9 +117,9 @@ void main() {
         final item = res.fold((f) => fail('expected Right, got $f'), (r) => r);
         expect(item.id, 'new-1');
         expect(item.name, 'Trứng gà');
-        // The backend has no "quả" unit — collapses to OTHER on write, which
-        // falls back to gram on read (documented limitation).
-        expect(item.unit, MeasurementUnit.gram);
+        // The backend has no "quả" unit — it collapses to OTHER on write and
+        // is presented as the explicit frontend "phần" unit on read.
+        expect(item.unit, MeasurementUnit.other);
 
         final captured = verify(
           () => api.post(
