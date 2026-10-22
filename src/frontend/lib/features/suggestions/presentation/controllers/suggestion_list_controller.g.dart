@@ -43,7 +43,7 @@ final class SuggestionFilterControllerProvider
 }
 
 String _$suggestionFilterControllerHash() =>
-    r'700f5e2a980ef93972cd94515527d281ab8d3d19';
+    r'd107e3eb11d7ca02452c5355769d897ea83ab824';
 
 abstract class _$SuggestionFilterController
     extends $Notifier<SuggestionFilter> {
@@ -97,7 +97,7 @@ final class SuggestionListControllerProvider
 }
 
 String _$suggestionListControllerHash() =>
-    r'465145a831ab0c24fcdd7cde9677852324fe57f7';
+    r'4f78cc4522f66edb847cef2c5626aad771dd0c58';
 
 /// S-01 list. Re-fetches whenever the filter changes; the server does the
 /// `0.4E + 0.3A + 0.2P + 0.1U` scoring.

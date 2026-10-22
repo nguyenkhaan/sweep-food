@@ -41,7 +41,7 @@ final class NotificationsControllerProvider
 }
 
 String _$notificationsControllerHash() =>
-    r'827cfa54a3145954423d207a77aad460ef0b82fe';
+    r'9f9ffca1bf3a658f611d9f8cadc753043582ac44';
 
 /// T-01 Trung tâm thông báo. Loads the list; `markRead` / `markAllRead` update
 /// optimistically and roll back on failure.

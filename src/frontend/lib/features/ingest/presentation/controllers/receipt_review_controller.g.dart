@@ -8,15 +8,21 @@ part of 'receipt_review_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Seeds from the receipt OCR [ScanJob]; every line is selected by default.
+/// Seeds from the receipt OCR [ScanJob]. Every supported line is ticked by
+/// default; a food the smart parser cannot recognize starts (and is kept)
+/// unticked, though the user may still tick it — which blocks adding.
 
 @ProviderFor(ReceiptReviewController)
 final receiptReviewControllerProvider = ReceiptReviewControllerFamily._();
 
-/// Seeds from the receipt OCR [ScanJob]; every line is selected by default.
+/// Seeds from the receipt OCR [ScanJob]. Every supported line is ticked by
+/// default; a food the smart parser cannot recognize starts (and is kept)
+/// unticked, though the user may still tick it — which blocks adding.
 final class ReceiptReviewControllerProvider
     extends $NotifierProvider<ReceiptReviewController, ReceiptReviewState> {
-  /// Seeds from the receipt OCR [ScanJob]; every line is selected by default.
+  /// Seeds from the receipt OCR [ScanJob]. Every supported line is ticked by
+  /// default; a food the smart parser cannot recognize starts (and is kept)
+  /// unticked, though the user may still tick it — which blocks adding.
   ReceiptReviewControllerProvider._({
     required ReceiptReviewControllerFamily super.from,
     required ScanJob super.argument,
@@ -63,9 +69,11 @@ final class ReceiptReviewControllerProvider
 }
 
 String _$receiptReviewControllerHash() =>
-    r'e2399bddcee32c39cee953d4219798595581a318';
+    r'd2d7121d146d97426117a96210fe2c30fd6687e2';
 
-/// Seeds from the receipt OCR [ScanJob]; every line is selected by default.
+/// Seeds from the receipt OCR [ScanJob]. Every supported line is ticked by
+/// default; a food the smart parser cannot recognize starts (and is kept)
+/// unticked, though the user may still tick it — which blocks adding.
 
 final class ReceiptReviewControllerFamily extends $Family
     with
@@ -85,7 +93,9 @@ final class ReceiptReviewControllerFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// Seeds from the receipt OCR [ScanJob]; every line is selected by default.
+  /// Seeds from the receipt OCR [ScanJob]. Every supported line is ticked by
+  /// default; a food the smart parser cannot recognize starts (and is kept)
+  /// unticked, though the user may still tick it — which blocks adding.
 
   ReceiptReviewControllerProvider call(ScanJob job) =>
       ReceiptReviewControllerProvider._(argument: job, from: this);
@@ -94,7 +104,9 @@ final class ReceiptReviewControllerFamily extends $Family
   String toString() => r'receiptReviewControllerProvider';
 }
 
-/// Seeds from the receipt OCR [ScanJob]; every line is selected by default.
+/// Seeds from the receipt OCR [ScanJob]. Every supported line is ticked by
+/// default; a food the smart parser cannot recognize starts (and is kept)
+/// unticked, though the user may still tick it — which blocks adding.
 
 abstract class _$ReceiptReviewController extends $Notifier<ReceiptReviewState> {
   late final _$args = ref.$arg as ScanJob;

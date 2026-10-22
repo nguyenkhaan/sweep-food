@@ -41,7 +41,7 @@ final class ActiveSessionsControllerProvider
 }
 
 String _$activeSessionsControllerHash() =>
-    r'6a68136781a90c36f5cf91d486a59a9c63fdaea3';
+    r'76bb7ddf6c0b161f5f4bae5813bccb6ed302c549';
 
 /// P-01c — the "devices signed into your account" list (`GET /auth/sessions`)
 /// plus per-row revoke (`DELETE /auth/sessions/{id}`).

@@ -9,7 +9,7 @@ part 'scan_controller.g.dart';
 /// Drives one capture → upload → extract cycle. The camera / voice screens
 /// `read` this to run a scan and watch it for the in-flight state; the review
 /// screens receive the resulting [ScanJob] via router `extra`.
-@riverpod
+@Riverpod(keepAlive: true)
 class ScanController extends _$ScanController {
   @override
   Future<ScanJob?> build() async => null;
@@ -29,25 +29,21 @@ class ScanController extends _$ScanController {
   Future<ScanJob> _run(
     Future<Result<ScanJob>> Function(ScanRepository repo) call,
   ) async {
-    // This provider is intentionally auto-disposed, but camera screens invoke
-    // it with ref.read rather than watching it. Keep it alive until the upload
-    // and OCR request completes so a slow AI response can still update state.
-    final keepAliveLink = ref.keepAlive();
-    try {
-      state = const AsyncValue<ScanJob?>.loading();
-      final result = await call(ref.read(scanRepositoryProvider));
-      return await result.fold(
-        (failure) {
+    state = const AsyncValue<ScanJob?>.loading();
+    final result = await call(ref.read(scanRepositoryProvider));
+    return result.fold(
+      (failure) {
+        if (ref.mounted) {
           state = AsyncValue<ScanJob?>.error(failure, StackTrace.current);
-          throw failure;
-        },
-        (job) {
+        }
+        throw failure;
+      },
+      (job) {
+        if (ref.mounted) {
           state = AsyncValue<ScanJob?>.data(job);
-          return job;
-        },
-      );
-    } finally {
-      keepAliveLink.close();
-    }
+        }
+        return job;
+      },
+    );
   }
 }

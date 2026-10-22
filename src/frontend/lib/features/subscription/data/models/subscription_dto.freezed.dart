@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SubscriptionDto {
 
- String get tier; List<String> get perks;@JsonKey(name: 'premium_interest_registered') bool get premiumInterestRegistered;
+@JsonKey(name: 'plan') String get tier; List<String> get perks;@JsonKey(name: 'premium_interest_registered') bool get premiumInterestRegistered;
 /// Create a copy of SubscriptionDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $SubscriptionDtoCopyWith<$Res>  {
   factory $SubscriptionDtoCopyWith(SubscriptionDto value, $Res Function(SubscriptionDto) _then) = _$SubscriptionDtoCopyWithImpl;
 @useResult
 $Res call({
- String tier, List<String> perks,@JsonKey(name: 'premium_interest_registered') bool premiumInterestRegistered
+@JsonKey(name: 'plan') String tier, List<String> perks,@JsonKey(name: 'premium_interest_registered') bool premiumInterestRegistered
 });
 
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String tier,  List<String> perks, @JsonKey(name: 'premium_interest_registered')  bool premiumInterestRegistered)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'plan')  String tier,  List<String> perks, @JsonKey(name: 'premium_interest_registered')  bool premiumInterestRegistered)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SubscriptionDto() when $default != null:
 return $default(_that.tier,_that.perks,_that.premiumInterestRegistered);case _:
@@ -176,7 +176,7 @@ return $default(_that.tier,_that.perks,_that.premiumInterestRegistered);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String tier,  List<String> perks, @JsonKey(name: 'premium_interest_registered')  bool premiumInterestRegistered)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'plan')  String tier,  List<String> perks, @JsonKey(name: 'premium_interest_registered')  bool premiumInterestRegistered)  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionDto():
 return $default(_that.tier,_that.perks,_that.premiumInterestRegistered);case _:
@@ -196,7 +196,7 @@ return $default(_that.tier,_that.perks,_that.premiumInterestRegistered);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String tier,  List<String> perks, @JsonKey(name: 'premium_interest_registered')  bool premiumInterestRegistered)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'plan')  String tier,  List<String> perks, @JsonKey(name: 'premium_interest_registered')  bool premiumInterestRegistered)?  $default,) {final _that = this;
 switch (_that) {
 case _SubscriptionDto() when $default != null:
 return $default(_that.tier,_that.perks,_that.premiumInterestRegistered);case _:
@@ -211,10 +211,10 @@ return $default(_that.tier,_that.perks,_that.premiumInterestRegistered);case _:
 @JsonSerializable()
 
 class _SubscriptionDto extends SubscriptionDto {
-  const _SubscriptionDto({required this.tier, final  List<String> perks = const <String>[], @JsonKey(name: 'premium_interest_registered') this.premiumInterestRegistered = false}): _perks = perks,super._();
+  const _SubscriptionDto({@JsonKey(name: 'plan') required this.tier, final  List<String> perks = const <String>[], @JsonKey(name: 'premium_interest_registered') this.premiumInterestRegistered = false}): _perks = perks,super._();
   factory _SubscriptionDto.fromJson(Map<String, dynamic> json) => _$SubscriptionDtoFromJson(json);
 
-@override final  String tier;
+@override@JsonKey(name: 'plan') final  String tier;
  final  List<String> _perks;
 @override@JsonKey() List<String> get perks {
   if (_perks is EqualUnmodifiableListView) return _perks;
@@ -257,7 +257,7 @@ abstract mixin class _$SubscriptionDtoCopyWith<$Res> implements $SubscriptionDto
   factory _$SubscriptionDtoCopyWith(_SubscriptionDto value, $Res Function(_SubscriptionDto) _then) = __$SubscriptionDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String tier, List<String> perks,@JsonKey(name: 'premium_interest_registered') bool premiumInterestRegistered
+@JsonKey(name: 'plan') String tier, List<String> perks,@JsonKey(name: 'premium_interest_registered') bool premiumInterestRegistered
 });
 
 

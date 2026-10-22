@@ -54,7 +54,7 @@ final class RegisterControllerProvider
 }
 
 String _$registerControllerHash() =>
-    r'd49c5bd6a3e56c35ff401e95749304843f908ba6';
+    r'96be813f8dd23e9eec7d26faec0a8b5ef2d0b216';
 
 /// Form state + submit for A-03 step 1. The "đồng ý điều khoản" checkbox is
 /// screen-local state and passed into [submit]. On success the account exists

@@ -35,7 +35,7 @@ final class FavoriteMenusControllerProvider
 }
 
 String _$favoriteMenusControllerHash() =>
-    r'34a905a0b92636a5fda43d40c1cf8550014b9583';
+    r'823cddb5c0ff94288d96944572904710ecf3e0aa';
 
 abstract class _$FavoriteMenusController
     extends $AsyncNotifier<List<FavoriteMenu>> {
@@ -105,7 +105,7 @@ final class FavoriteMenuDetailControllerProvider
 }
 
 String _$favoriteMenuDetailControllerHash() =>
-    r'4b7dd72ebf06e8c47adb3194c5bf786e47edc276';
+    r'07f1a4ffaaa95e8403d839d93bfcb17348921c69';
 
 final class FavoriteMenuDetailControllerFamily extends $Family
     with

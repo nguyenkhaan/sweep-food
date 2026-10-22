@@ -41,7 +41,7 @@ final class CookingHistoryControllerProvider
 }
 
 String _$cookingHistoryControllerHash() =>
-    r'1f41398bc61fd855e96833b88412084444c0ad08';
+    r'230e2bd435e83d955d647f95fcee59321853eab2';
 
 /// D-08 — the completed-cooking-session list (`GET /cooking/history`).
 

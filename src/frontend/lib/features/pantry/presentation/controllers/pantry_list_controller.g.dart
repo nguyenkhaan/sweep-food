@@ -94,7 +94,7 @@ final class PantryListControllerProvider
 }
 
 String _$pantryListControllerHash() =>
-    r'4d0ab01c107040b1e64de6d821e67a1a19ef3e58';
+    r'b7000934ddd8eefa0dda2985abb45ab66ce491ca';
 
 /// Loads the full active pantry list (mock returns everything) and owns the
 /// mutations. Filtering/sorting is applied client-side by [pantryListView].

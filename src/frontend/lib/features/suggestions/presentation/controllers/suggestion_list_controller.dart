@@ -35,10 +35,7 @@ final cookableSuggestionProvider = FutureProvider.autoDispose
       final result = await ref
           .watch(suggestionRepositoryProvider)
           .fetch(request);
-      return result.fold(
-        (failure) => throw failure,
-        (items) => items.where((item) => !item.isMock).toList(),
-      );
+      return result.fold((failure) => throw failure, (items) => items);
     });
 
 RecommendationPantryItemDraft _pantryItemToRecommendationDraft(
@@ -141,14 +138,13 @@ class SuggestionListController extends _$SuggestionListController {
         .watch(suggestionRepositoryProvider)
         .fetch(filter.toRequest(pantryDrafts: drafts));
     return res.fold((f) => throw f, (list) {
-      final realResults = list.where((item) => !item.isMock).toList();
       final q = filter.prompt.trim().toLowerCase();
-      if (q.isEmpty) return realResults;
+      if (q.isEmpty) return list;
       final keywords = q
           .split(RegExp(r'\s+'))
           .where((k) => k.isNotEmpty)
           .toList();
-      return realResults.where((item) {
+      return list.where((item) {
         final text =
             '${item.dish.name} ${item.dish.cuisine} ${item.nearExpiryIngredients.join(" ")}'
                 .toLowerCase();
