@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
@@ -91,23 +91,30 @@ class SettingsRow extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: context.text.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: fg,
                 ),
               ),
             ),
-            if (trailing != null)
+            if (trailing != null) ...[
+              const SizedBox(width: Gap.xs),
               Text(
                 trailing!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
                 style: context.text.bodySmall?.copyWith(
                   color: context.sweep.textTertiary,
                 ),
               ),
-            if (badge != null)
+            ],
+            if (badge != null) ...[
+              const SizedBox(width: Gap.xs),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: context.colors.primaryContainer,
                   borderRadius: Radii.pill.toBorderRadius(),
@@ -120,6 +127,7 @@ class SettingsRow extends StatelessWidget {
                   ),
                 ),
               ),
+            ],
             if (onTap != null && !danger) ...[
               const SizedBox(width: Gap.xs),
               Icon(

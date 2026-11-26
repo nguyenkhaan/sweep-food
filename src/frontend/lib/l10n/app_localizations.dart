@@ -3420,6 +3420,336 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Không'**
   String get commonNo;
+
+  /// No description provided for @dietVegetarian.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ăn chay'**
+  String get dietVegetarian;
+
+  /// No description provided for @dietVegetarianDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Loại bỏ hoàn toàn thịt, cá, hải sản, trứng và gia vị động vật'**
+  String get dietVegetarianDesc;
+
+  /// No description provided for @nutritionDisclaimer.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gợi ý tham khảo, không thay lời khuyên của bác sĩ'**
+  String get nutritionDisclaimer;
+
+  /// No description provided for @nutritionProfileTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hồ sơ ăn uống'**
+  String get nutritionProfileTitle;
+
+  /// No description provided for @nutritionProfileSubtitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cá nhân hoá gợi ý món theo khẩu phần, chế độ ăn, bệnh nền và dị ứng.'**
+  String get nutritionProfileSubtitle;
+
+  /// No description provided for @nutritionProfileRowSubtitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'{servings} người · {diet}'**
+  String nutritionProfileRowSubtitle(int servings, String diet);
+
+  /// No description provided for @nutritionProfileFilterBadge.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} ràng buộc'**
+  String nutritionProfileFilterBadge(int count);
+
+  /// No description provided for @nutritionProfileSaveCta.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lưu hồ sơ ăn uống'**
+  String get nutritionProfileSaveCta;
+
+  /// No description provided for @nutritionProfileSaved.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã lưu hồ sơ ăn uống. Gợi ý món sẽ được cập nhật.'**
+  String get nutritionProfileSaved;
+
+  /// No description provided for @nutritionProfileHouseholdTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Số người ăn'**
+  String get nutritionProfileHouseholdTitle;
+
+  /// No description provided for @nutritionProfileHouseholdHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Dùng để nhân khẩu phần và định lượng nguyên liệu phù hợp.'**
+  String get nutritionProfileHouseholdHint;
+
+  /// No description provided for @nutritionProfileHouseholdValue.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} người'**
+  String nutritionProfileHouseholdValue(int count);
+
+  /// No description provided for @nutritionProfileDietTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chế độ ăn'**
+  String get nutritionProfileDietTitle;
+
+  /// No description provided for @nutritionProfileDietHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ăn chay là bộ lọc cứng; các lựa chọn còn lại ưu tiên khi xếp hạng món.'**
+  String get nutritionProfileDietHint;
+
+  /// No description provided for @nutritionProfileHardFilterTag.
+  ///
+  /// In vi, this message translates to:
+  /// **'Lọc cứng'**
+  String get nutritionProfileHardFilterTag;
+
+  /// No description provided for @nutritionProfileHealthTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tình trạng sức khoẻ'**
+  String get nutritionProfileHealthTitle;
+
+  /// No description provided for @nutritionProfileHealthHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chọn nhiều nếu cần. Các món vi phạm sẽ được loại tự động.'**
+  String get nutritionProfileHealthHint;
+
+  /// No description provided for @nutritionProfileAllergiesTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Dị ứng thực phẩm'**
+  String get nutritionProfileAllergiesTitle;
+
+  /// No description provided for @nutritionProfileAllergiesHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ưu tiên loại nhầm hơn bỏ sót: món không chắc chắn sẽ bị ẩn.'**
+  String get nutritionProfileAllergiesHint;
+
+  /// No description provided for @nutritionProfileDislikedTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Món hoặc nguyên liệu không ăn'**
+  String get nutritionProfileDislikedTitle;
+
+  /// No description provided for @nutritionProfileDislikedHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gõ để tìm trong danh mục nguyên liệu hoặc tự thêm tên bất kỳ.'**
+  String get nutritionProfileDislikedHint;
+
+  /// No description provided for @nutritionProfileDislikedFieldHint.
+  ///
+  /// In vi, this message translates to:
+  /// **'Ví dụ: rau mùi, hành tây, mắm tôm…'**
+  String get nutritionProfileDislikedFieldHint;
+
+  /// No description provided for @nutritionProfileDislikedAdd.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thêm'**
+  String get nutritionProfileDislikedAdd;
+
+  /// No description provided for @nutritionProfileDislikedEmpty.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có nguyên liệu nào trong danh sách loại trừ.'**
+  String get nutritionProfileDislikedEmpty;
+
+  /// No description provided for @nutritionProfileDislikedLimit.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tối đa 50 nguyên liệu loại trừ.'**
+  String get nutritionProfileDislikedLimit;
+
+  /// No description provided for @healthCondDiabetes.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiểu đường'**
+  String get healthCondDiabetes;
+
+  /// No description provided for @healthCondDiabetesDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đường < 10g & tinh bột < 45g / suất'**
+  String get healthCondDiabetesDesc;
+
+  /// No description provided for @healthCondHypertension.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cao huyết áp'**
+  String get healthCondHypertension;
+
+  /// No description provided for @healthCondHypertensionDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Natri < 1.000 mg / suất'**
+  String get healthCondHypertensionDesc;
+
+  /// No description provided for @healthCondGout.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gout'**
+  String get healthCondGout;
+
+  /// No description provided for @healthCondGoutDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Loại thịt đỏ, nội tạng & hải sản giàu purin'**
+  String get healthCondGoutDesc;
+
+  /// No description provided for @healthCondGastritis.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đau dạ dày'**
+  String get healthCondGastritis;
+
+  /// No description provided for @healthCondGastritisDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bỏ các món chiên, rán nhiều dầu mỡ'**
+  String get healthCondGastritisDesc;
+
+  /// No description provided for @healthCondKetoLowCarb.
+  ///
+  /// In vi, this message translates to:
+  /// **'Keto / low-carb'**
+  String get healthCondKetoLowCarb;
+
+  /// No description provided for @healthCondKetoLowCarbDesc.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tinh bột ≤ 20g / suất'**
+  String get healthCondKetoLowCarbDesc;
+
+  /// No description provided for @allergyShellfish.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hải sản có vỏ'**
+  String get allergyShellfish;
+
+  /// No description provided for @allergyShellfishExamples.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tôm, cua, ghẹ, sò, nghêu, hến, ốc, mực'**
+  String get allergyShellfishExamples;
+
+  /// No description provided for @allergyFish.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cá'**
+  String get allergyFish;
+
+  /// No description provided for @allergyFishExamples.
+  ///
+  /// In vi, this message translates to:
+  /// **'Các loại cá, nước mắm, chả cá'**
+  String get allergyFishExamples;
+
+  /// No description provided for @allergyPeanut.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đậu phộng'**
+  String get allergyPeanut;
+
+  /// No description provided for @allergyPeanutExamples.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đậu phộng, bơ đậu phộng'**
+  String get allergyPeanutExamples;
+
+  /// No description provided for @allergyEgg.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trứng'**
+  String get allergyEgg;
+
+  /// No description provided for @allergyEggExamples.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trứng gà, trứng vịt, trứng cút'**
+  String get allergyEggExamples;
+
+  /// No description provided for @allergyDairy.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sữa'**
+  String get allergyDairy;
+
+  /// No description provided for @allergyDairyExamples.
+  ///
+  /// In vi, this message translates to:
+  /// **'Sữa, phô mai, bơ, kem'**
+  String get allergyDairyExamples;
+
+  /// No description provided for @allergySoy.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đậu nành'**
+  String get allergySoy;
+
+  /// No description provided for @allergySoyExamples.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đậu phụ, sữa đậu nành, nước tương'**
+  String get allergySoyExamples;
+
+  /// No description provided for @allergyGluten.
+  ///
+  /// In vi, this message translates to:
+  /// **'Gluten'**
+  String get allergyGluten;
+
+  /// No description provided for @allergyGlutenExamples.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bột mì, bánh mì, mì sợi lúa mì'**
+  String get allergyGlutenExamples;
+
+  /// No description provided for @allergySesame.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mè'**
+  String get allergySesame;
+
+  /// No description provided for @allergySesameExamples.
+  ///
+  /// In vi, this message translates to:
+  /// **'Mè, dầu mè'**
+  String get allergySesameExamples;
+
+  /// No description provided for @suggestionsFitReasonsTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Vì sao hợp với hồ sơ của bạn'**
+  String get suggestionsFitReasonsTitle;
+
+  /// No description provided for @suggestionsEmptyFilteredTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa có món hợp với hồ sơ hiện tại'**
+  String get suggestionsEmptyFilteredTitle;
+
+  /// No description provided for @suggestionsEmptyFilteredBody.
+  ///
+  /// In vi, this message translates to:
+  /// **'Các bộ lọc sức khoẻ, dị ứng hoặc nguyên liệu không ăn đang loại hết món phù hợp với kho hiện tại. Hãy thử thêm nguyên liệu hoặc xem lại hồ sơ ăn uống.'**
+  String get suggestionsEmptyFilteredBody;
+
+  /// No description provided for @suggestionsReviewProfileCta.
+  ///
+  /// In vi, this message translates to:
+  /// **'Xem hồ sơ ăn uống'**
+  String get suggestionsReviewProfileCta;
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

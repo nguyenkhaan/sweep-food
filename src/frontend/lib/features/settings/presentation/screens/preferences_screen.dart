@@ -1,6 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/locale_controller.dart';
+import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/app/theme/theme_mode_controller.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
@@ -36,6 +38,12 @@ class PreferencesScreen extends ConsumerWidget {
           SettingsGroup(
             label: l10n.prefsGroupMeal,
             rows: [
+              SettingsRow(
+                icon: Icons.health_and_safety_outlined,
+                label: l10n.nutritionProfileTitle,
+                trailing: prefs.dietaryPreference.label(l10n),
+                onTap: () => context.push(Routes.settingsNutritionProfile),
+              ),
               SettingsRow(
                 icon: Icons.straighten_rounded,
                 label: l10n.prefsUnit,

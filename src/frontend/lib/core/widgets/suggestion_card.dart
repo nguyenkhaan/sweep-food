@@ -17,6 +17,7 @@ class SuggestionCard extends StatelessWidget {
     required this.score,
     required this.meta,
     required this.chips,
+    this.fitReasons = const [],
     this.rank,
     this.imageUrl,
     this.onTap,
@@ -35,6 +36,9 @@ class SuggestionCard extends StatelessWidget {
   /// e.g. "15 phút · Dễ · 320 kcal / khẩu phần".
   final String meta;
   final List<SuggestionChip> chips;
+
+  /// Short nutrition/profile fit reasons returned by the recommendation engine.
+  final List<String> fitReasons;
   final String? imageUrl;
   final VoidCallback? onTap;
 
@@ -54,10 +58,7 @@ class SuggestionCard extends StatelessWidget {
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: RecipeImage(
-                      imageUrl: imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                    child: RecipeImage(imageUrl: imageUrl, fit: BoxFit.cover),
                   ),
                   Positioned(
                     top: 12,
@@ -87,12 +88,61 @@ class SuggestionCard extends StatelessWidget {
                     runSpacing: 6,
                     children: [for (final c in chips) _Chip(chip: c)],
                   ),
+                  if (fitReasons.isNotEmpty) ...[
+                    const SizedBox(height: Gap.sm),
+                    Divider(height: 1, color: context.sweep.hairline),
+                    const SizedBox(height: Gap.xs),
+                    _FitReasonsPreview(reasons: fitReasons.take(3).toList()),
+                  ],
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _FitReasonsPreview extends StatelessWidget {
+  const _FitReasonsPreview({required this.reasons});
+
+  final List<String> reasons;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (var i = 0; i < reasons.length; i++) ...[
+          if (i > 0) const SizedBox(height: Gap.xxs),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Icon(
+                  Icons.check_circle_outline_rounded,
+                  size: 14,
+                  color: context.colors.primary,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  reasons[i],
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.text.bodySmall?.copyWith(
+                    color: context.sweep.textSecondary,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }

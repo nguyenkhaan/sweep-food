@@ -136,6 +136,7 @@ class SuggestionRepositoryImpl implements SuggestionRepository {
                   ),
                 )
                 .toList(),
+            fitReasons: item.fitReasons,
             availabilityRatio: response.contractVersion == '2'
                 ? item.rankingFeatures.coreCoverage
                 : item.scoreComponents.availability,

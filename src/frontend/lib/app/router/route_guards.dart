@@ -15,7 +15,7 @@ const _authRoutes = {
   Routes.resetPassword,
 };
 
-const _onboardingRoutes = {Routes.onboardingPantry};
+const _onboardingRoutes = {Routes.onboardingDiet, Routes.onboardingPantry};
 
 /// Redirect logic for [appRouter]. Reads (never watches) the session + onboarding
 /// providers; the router's `refreshListenable` re-runs this whenever either
@@ -45,7 +45,7 @@ String? appRedirect(Ref ref, BuildContext context, GoRouterState state) {
   }
 
   if (!ref.read(onboardingControllerProvider)) {
-    return _onboardingRoutes.contains(loc) ? null : Routes.onboardingPantry;
+    return _onboardingRoutes.contains(loc) ? null : Routes.onboardingDiet;
   }
 
   if (atSplash ||

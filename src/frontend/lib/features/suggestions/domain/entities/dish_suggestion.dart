@@ -44,6 +44,10 @@ abstract class DishSuggestion with _$DishSuggestion {
     /// over the user's batches by the backend.
     @Default(<RescuedIngredient>[]) List<RescuedIngredient> rescuedIngredients,
 
+    /// Short human-readable reasons explaining why this dish fits the user's
+    /// nutrition profile (e.g. low sodium, allergen-free, kcal/protein).
+    @Default(<String>[]) List<String> fitReasons,
+
     /// Share of the dish's ingredients already in the pantry (`0..1`).
     @Default(0) double availabilityRatio,
 

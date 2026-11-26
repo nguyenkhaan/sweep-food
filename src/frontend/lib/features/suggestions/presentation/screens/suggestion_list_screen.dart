@@ -8,11 +8,14 @@ import 'package:sweepfood/core/widgets/async_value_widget.dart';
 import 'package:sweepfood/core/widgets/empty_state.dart';
 import 'package:sweepfood/core/widgets/suggestion_card.dart';
 import 'package:sweepfood/features/ingest/presentation/screens/add_entry_chooser_sheet.dart';
+import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
+import 'package:sweepfood/features/pantry/presentation/controllers/pantry_list_controller.dart';
 import 'package:sweepfood/features/suggestions/data/datasources/suggestion_remote_data_source.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/score_breakdown_sheet.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
+import 'package:sweepfood/shared/widgets/nutrition_disclaimer_banner.dart';
 
 /// S-01 — AI-ranked dishes for the current pantry.
 class SuggestionListScreen extends ConsumerWidget {
@@ -22,6 +25,13 @@ class SuggestionListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final async = ref.watch(suggestionListControllerProvider);
     final aiHealth = ref.watch(aiServiceHealthProvider);
+    final hasActivePantry =
+        ref
+            .watch(pantryListControllerProvider)
+            .asData
+            ?.value
+            .any((item) => item.status == PantryItemStatus.active) ??
+        false;
 
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.suggestionsTitle)),
@@ -35,7 +45,8 @@ class SuggestionListScreen extends ConsumerWidget {
               child: AsyncValueWidget<List<DishSuggestion>>(
                 value: async,
                 onRetry: () => ref.invalidate(suggestionListControllerProvider),
-                data: (items) => _List(items: items),
+                data: (items) =>
+                    _List(items: items, hasActivePantry: hasActivePantry),
               ),
             ),
           ),
@@ -46,14 +57,40 @@ class SuggestionListScreen extends ConsumerWidget {
 }
 
 class _List extends StatelessWidget {
-  const _List({required this.items});
+  const _List({required this.items, required this.hasActivePantry});
 
   final List<DishSuggestion> items;
+  final bool hasActivePantry;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     if (items.isEmpty) {
+      if (hasActivePantry) {
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xl, Gap.lg, Gap.xxl),
+          children: [
+            const SizedBox(height: Gap.lg),
+            EmptyState(
+              title: l10n.suggestionsEmptyFilteredTitle,
+              message: l10n.suggestionsEmptyFilteredBody,
+              icon: Icons.filter_alt_off_outlined,
+              actionLabel: l10n.pantryAddIngredient,
+              onAction: () => showAddEntryChooser(context),
+            ),
+            Center(
+              child: OutlinedButton.icon(
+                onPressed: () => context.push(Routes.settingsNutritionProfile),
+                icon: const Icon(Icons.health_and_safety_outlined, size: 18),
+                label: Text(l10n.suggestionsReviewProfileCta),
+              ),
+            ),
+            Gap.gapLg,
+            const NutritionDisclaimerBanner(compact: true),
+          ],
+        );
+      }
+
       return ListView(
         children: [
           const SizedBox(height: 80),
@@ -83,9 +120,13 @@ class _List extends StatelessWidget {
         ),
         if (items.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(bottom: Gap.md),
+            padding: const EdgeInsets.only(bottom: Gap.xs),
             child: _ModelSummary(suggestion: items.first),
           ),
+        const Padding(
+          padding: EdgeInsets.only(bottom: Gap.md),
+          child: NutritionDisclaimerBanner(compact: true),
+        ),
         for (final s in items)
           Padding(
             padding: const EdgeInsets.only(bottom: Gap.md),
@@ -113,6 +154,7 @@ class _SuggestionTile extends StatelessWidget {
           rank: suggestion.rank,
           meta: suggestion.dish.shortMeta(l10n),
           chips: suggestion.cardChips(l10n),
+          fitReasons: suggestion.fitReasons.take(3).toList(),
           imageUrl: suggestion.dish.imageUrl,
           onTap: () => context.push(
             '${Routes.suggestions}/dish/${suggestion.id}',

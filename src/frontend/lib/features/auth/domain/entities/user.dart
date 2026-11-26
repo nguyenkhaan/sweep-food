@@ -1,14 +1,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
+import 'package:sweepfood/shared/domain/nutrition_profile.dart';
 
 part 'user.freezed.dart';
 
 /// The signed-in account. UI-facing, immutable.
 ///
-/// Backend contract (`docs/api-contract.md` §1): sign-in is by **phone (E.164)**
+/// Backend contract (`docs/api-contract.md` §12): sign-in is by **phone (E.164)**
 /// + password. `GET /users/profile` is the source — [name]/[email] are optional
-/// there, and [dietaryPreference]/[avatarUrl] are read from its free-form
-/// `preferences` map.
+/// there, and [nutritionProfile]/[avatarUrl] are read from its `preferences`
+/// JSONB map.
 @freezed
 abstract class User with _$User {
   const User._();
@@ -19,6 +20,7 @@ abstract class User with _$User {
     String? name,
     String? email,
     DietaryPreference? dietaryPreference,
+    @Default(NutritionProfile()) NutritionProfile nutritionProfile,
     String? avatarUrl,
   }) = _User;
 

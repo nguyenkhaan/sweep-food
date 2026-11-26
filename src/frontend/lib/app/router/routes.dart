@@ -46,6 +46,7 @@ abstract final class Routes {
   static const favorites = '/favorites';
   static const favoriteMenuDetail = '/favorites/menu/:id';
   static const settingsPreferences = '/settings/preferences';
+  static const settingsNutritionProfile = '/settings/nutrition-profile';
   static const settingsNotifications = '/settings/notifications';
   static const settingsAbout = '/settings/about';
   static const settingsSubscription = '/settings/subscription';

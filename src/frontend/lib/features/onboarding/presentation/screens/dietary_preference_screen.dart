@@ -10,8 +10,10 @@ import 'package:sweepfood/features/onboarding/domain/entities/onboarding_state.d
 import 'package:sweepfood/features/onboarding/presentation/controllers/onboarding_controller.dart';
 import 'package:sweepfood/features/onboarding/presentation/widgets/onboarding_progress.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
+import 'package:sweepfood/shared/widgets/dietary_preference_selector.dart';
+import 'package:sweepfood/shared/widgets/nutrition_disclaimer_banner.dart';
 
-/// A-05 Onboarding · Ưu tiên dinh dưỡng (N-01). Skippable.
+/// A-05 Onboarding · Chọn chế độ ăn (5 lựa chọn gồm Ăn chay). Skippable.
 class DietaryPreferenceScreen extends ConsumerStatefulWidget {
   const DietaryPreferenceScreen({super.key});
 
@@ -22,142 +24,79 @@ class DietaryPreferenceScreen extends ConsumerStatefulWidget {
 
 class _DietaryPreferenceScreenState
     extends ConsumerState<DietaryPreferenceScreen> {
-  DietaryPreference _selected = DietaryPreference.balanced;
+  late DietaryPreference _selected;
+  bool _saving = false;
 
-  void _next({DietaryPreference? save}) {
+  @override
+  void initState() {
+    super.initState();
+    _selected =
+        ref.read(dietaryPreferenceControllerProvider) ??
+        DietaryPreference.balanced;
+  }
+
+  Future<void> _next({DietaryPreference? save}) async {
+    if (_saving) return;
     if (save != null) {
-      ref.read(dietaryPreferenceControllerProvider.notifier).set(save);
+      setState(() => _saving = true);
+      await ref.read(dietaryPreferenceControllerProvider.notifier).set(save);
+      if (!mounted) return;
+      setState(() => _saving = false);
     }
-    context.push(Routes.onboardingPantry);
+    if (mounted) {
+      context.push(Routes.onboardingPantry);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = context.l10n;
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(Gap.xl, Gap.md, Gap.xl, Gap.xl),
+          padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.lg),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const OnboardingProgress(step: OnboardingStep.dietaryPreference),
-              Gap.gapXl,
+              Gap.gapLg,
               Text(
                 l10n.onbDietTitle,
-                style: theme.textTheme.headlineSmall?.copyWith(
+                style: context.text.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              Gap.gapXs,
+              Gap.gapXxs,
               Text(
                 l10n.onbDietSubtitle,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              Gap.gapLg,
-              Expanded(
-                child: ListView.separated(
-                  itemCount: DietaryPreference.values.length,
-                  separatorBuilder: (_, __) => Gap.gapSm,
-                  itemBuilder: (context, i) {
-                    final pref = DietaryPreference.values[i];
-                    return _PreferenceCard(
-                      preference: pref,
-                      selected: pref == _selected,
-                      onTap: () => setState(() => _selected = pref),
-                    );
-                  },
+                style: context.text.bodyMedium?.copyWith(
+                  color: context.sweep.textSecondary,
                 ),
               ),
               Gap.gapMd,
+              Expanded(
+                child: DietaryPreferenceSelector(
+                  selected: _selected,
+                  onChanged: (pref) => setState(() => _selected = pref),
+                ),
+              ),
+              Gap.gapSm,
+              const NutritionDisclaimerBanner(compact: true),
+              Gap.gapSm,
               PrimaryButton(
                 label: l10n.commonContinue,
+                loading: _saving,
                 onPressed: () => _next(save: _selected),
               ),
               Gap.gapXxs,
               Center(
-                child: AppTextButton(label: l10n.commonSkip, onPressed: _next),
+                child: AppTextButton(
+                  label: l10n.commonSkip,
+                  onPressed: _saving ? null : () => _next(),
+                ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PreferenceCard extends StatelessWidget {
-  const _PreferenceCard({
-    required this.preference,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final DietaryPreference preference;
-  final bool selected;
-  final VoidCallback onTap;
-
-  static const _icons = {
-    DietaryPreference.balanced: Icons.balance_rounded,
-    DietaryPreference.highProtein: Icons.egg_alt_outlined,
-    DietaryPreference.lowCalorie: Icons.local_fire_department_outlined,
-    DietaryPreference.moreVeg: Icons.eco_outlined,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final theme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      borderRadius: Radii.brLg,
-      child: Container(
-        padding: const EdgeInsets.all(Gap.md),
-        decoration: BoxDecoration(
-          color: selected ? scheme.primaryContainer : scheme.surface,
-          borderRadius: Radii.brLg,
-          border: Border.all(
-            color: selected ? scheme.primary : scheme.outlineVariant,
-            width: selected ? 1.5 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              _icons[preference],
-              color: selected ? scheme.primary : scheme.onSurfaceVariant,
-            ),
-            Gap.gapSm,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    preference.label(context.l10n),
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  Gap.gapXxs,
-                  Text(
-                    preference.description(context.l10n),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              selected
-                  ? Icons.radio_button_checked_rounded
-                  : Icons.radio_button_unchecked_rounded,
-              color: selected ? scheme.primary : scheme.outline,
-            ),
-          ],
         ),
       ),
     );

@@ -3,6 +3,9 @@ import 'package:sweepfood/core/analytics/analytics_events.dart';
 import 'package:sweepfood/core/analytics/analytics_provider.dart';
 import 'package:sweepfood/core/config/app_constants.dart';
 import 'package:sweepfood/core/storage/prefs.dart';
+import 'package:sweepfood/core/utils/logger.dart';
+import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:sweepfood/features/auth/presentation/controllers/session_controller.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
 
 part 'onboarding_controller.g.dart';
@@ -14,7 +17,9 @@ part 'onboarding_controller.g.dart';
 class OnboardingController extends _$OnboardingController {
   @override
   bool build() =>
-      ref.watch(sharedPreferencesProvider).getBool(AppConstants.kOnboardingDone) ??
+      ref
+          .watch(sharedPreferencesProvider)
+          .getBool(AppConstants.kOnboardingDone) ??
       false;
 
   Future<void> complete() async {
@@ -34,28 +39,59 @@ class OnboardingController extends _$OnboardingController {
   }
 }
 
-/// The persisted meal-ranking preference (N-01). Chosen at onboarding (A-05),
-/// later editable in Cài đặt → Tùy chọn. Feeds the `P` term of suggestion
-/// scoring — `SuggestionFilterController` seeds its default from here.
+/// The persisted diet mode chosen at onboarding (A-05) and synced with
+/// `users.preferences.diet` via `PATCH /users/profile`.
 @Riverpod(keepAlive: true)
 class DietaryPreferenceController extends _$DietaryPreferenceController {
   @override
   DietaryPreference? build() {
-    final raw =
-        ref.watch(sharedPreferencesProvider).getString(AppConstants.kDietaryPreference);
+    final userDiet = ref
+        .watch(sessionControllerProvider)
+        .asData
+        ?.value
+        ?.user
+        .nutritionProfile
+        .diet;
+    final raw = ref
+        .watch(sharedPreferencesProvider)
+        .getString(AppConstants.kDietaryPreference);
+    if (userDiet != null) return userDiet;
     return raw == null ? null : DietaryPreference.fromWire(raw);
   }
 
-  Future<void> set(DietaryPreference? preference) async {
+  /// Updates local storage and optionally syncs `diet` to `PATCH /users/profile`.
+  Future<void> set(
+    DietaryPreference? preference, {
+    bool syncRemote = true,
+  }) async {
     state = preference;
     ref
         .read(analyticsProvider)
-        .setUserProperty(AnalyticsUserProps.dietaryPreference, preference?.wire);
+        .setUserProperty(
+          AnalyticsUserProps.dietaryPreference,
+          preference?.wire,
+        );
     final prefs = ref.read(sharedPreferencesProvider);
     if (preference == null) {
       await prefs.remove(AppConstants.kDietaryPreference);
-    } else {
-      await prefs.setString(AppConstants.kDietaryPreference, preference.wire);
+      return;
     }
+    await prefs.setString(AppConstants.kDietaryPreference, preference.wire);
+
+    if (!syncRemote) return;
+    final session = ref.read(sessionControllerProvider).asData?.value;
+    if (session == null) return;
+
+    final result = await ref
+        .read(authRepositoryProvider)
+        .updateProfile(preferences: {'diet': preference.wire});
+    if (!ref.mounted) return;
+    result.fold(
+      (failure) => log.w(
+        'Onboarding diet sync failed (kept locally): ${failure.message}',
+      ),
+      (user) =>
+          ref.read(sessionControllerProvider.notifier).applyUpdatedUser(user),
+    );
   }
 }

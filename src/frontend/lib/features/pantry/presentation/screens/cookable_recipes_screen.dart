@@ -80,6 +80,7 @@ class _CookableRecipeList extends StatelessWidget {
             rank: suggestion.rank,
             meta: suggestion.dish.shortMeta(context.l10n),
             chips: suggestion.cardChips(context.l10n),
+            fitReasons: suggestion.fitReasons.take(3).toList(),
             imageUrl: suggestion.dish.imageUrl,
             onTap: () => context.push(
               '${Routes.suggestions}/dish/${suggestion.id}',
