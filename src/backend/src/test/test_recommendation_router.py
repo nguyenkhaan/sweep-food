@@ -202,9 +202,14 @@ def test_recommendation_openapi_documents_the_authenticated_request_contract() -
     assert set(schemas["RecommendationRequestDTO"]["properties"]) == {
         "items",
         "household_size",
+        "diet",
         "scenario_type",
+        "scenario_types",
         "dietary_restrictions",
         "allergies",
         "disliked_ingredients",
         "preferred_cuisines",
     }
+    assert "fit_reasons" in cast(
+        dict[str, object], schemas["RecommendationItemDTO"]["properties"]
+    )

@@ -52,6 +52,26 @@ class SettingsHomeScreen extends ConsumerWidget {
             label: l10n.settingsGroupMealPlanning,
             rows: [
               SettingsRow(
+                icon: Icons.health_and_safety_outlined,
+                label: l10n.nutritionProfileTitle,
+                trailing:
+                    user == null ||
+                        user.nutritionProfile.activeConstraintCount > 0
+                    ? null
+                    : l10n.nutritionProfileRowSubtitle(
+                        user.nutritionProfile.householdSize,
+                        user.nutritionProfile.diet.label(l10n),
+                      ),
+                badge:
+                    user != null &&
+                        user.nutritionProfile.activeConstraintCount > 0
+                    ? l10n.nutritionProfileFilterBadge(
+                        user.nutritionProfile.activeConstraintCount,
+                      )
+                    : null,
+                onTap: () => context.push(Routes.settingsNutritionProfile),
+              ),
+              SettingsRow(
                 icon: Icons.calendar_month_rounded,
                 label: l10n.mealPlanTitle,
                 onTap: () => context.push(Routes.mealPlan),

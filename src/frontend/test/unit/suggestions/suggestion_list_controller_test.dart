@@ -20,57 +20,37 @@ void main() {
   setUpAll(() => registerFallbackValue(const SuggestionRequest()));
 
   group('SuggestionRequest.toBody()', () {
-    test(
-      'defaults to empty items and standard defaults when fields are empty',
-      () {
-        const req = SuggestionRequest();
-        expect(req.toBody(), {
-          'items': [],
-          'household_size': 4.0,
-          'scenario_type': 'custom',
-          'dietary_restrictions': [],
-          'allergies': [],
-          'disliked_ingredients': [],
-          'preferred_cuisines': [],
-        });
-      },
-    );
+    test('sends only empty items list when pantry is empty', () {
+      const req = SuggestionRequest();
+      expect(req.toBody(), {'items': <Map<String, dynamic>>[]});
+    });
 
-    test(
-      'combines meal, preference, and pantry items into request body',
-      () {
-        const req = SuggestionRequest(
-          prompt: 'Món cay',
-          mealType: MealType.dinner,
-          dietaryPreference: DietaryPreference.moreVeg,
-          pantryItems: [
-            RecommendationPantryItemDraft(
-              name: 'Rau chân vịt',
-              code: 'ing-1',
-              quantityG: 300,
-              hoursToExpire: 12,
-            ),
-          ],
-        );
-        expect(req.toBody(), {
-          'items': [
-            {
-              'name': 'Rau chân vịt',
-              'code': 'ing-1',
-              'quantity_g': 300.0,
-              'hours_to_expire': 12.0,
-              'is_staple': false,
-            },
-          ],
-          'household_size': 4.0,
-          'scenario_type': 'dinner',
-          'dietary_restrictions': ['vegetarian'],
-          'allergies': [],
-          'disliked_ingredients': [],
-          'preferred_cuisines': [],
-        });
-      },
-    );
+    test('sends pantry items only and never maps moreVeg to vegetarian', () {
+      const req = SuggestionRequest(
+        prompt: 'Món cay',
+        mealType: MealType.dinner,
+        dietaryPreference: DietaryPreference.moreVeg,
+        pantryItems: [
+          RecommendationPantryItemDraft(
+            name: 'Rau chân vịt',
+            code: 'ing-1',
+            quantityG: 300,
+            hoursToExpire: 12,
+          ),
+        ],
+      );
+      expect(req.toBody(), {
+        'items': [
+          {
+            'name': 'Rau chân vịt',
+            'code': 'ing-1',
+            'quantity_g': 300.0,
+            'hours_to_expire': 12.0,
+            'is_staple': false,
+          },
+        ],
+      });
+    });
 
     test('never includes max_cooking_time_min in the request body', () {
       const req = SuggestionRequest();
@@ -234,6 +214,10 @@ void main() {
                     'expires_at': '2026-10-22T08:00:00Z',
                   },
                 ],
+                'fit_reasons': [
+                  'Ít muối, hợp người cao huyết áp',
+                  '≈ 420 kcal/suất · 32 g đạm',
+                ],
                 'status_badge': 'elastic',
                 'explanation': 'AI-ranked from pantry availability.',
                 'provider': 'SWEEP_FOOD_AI',
@@ -280,6 +264,10 @@ void main() {
         expect(suggestion.rankerModel, 'LightGBM LambdaMART');
         expect(suggestion.dish.imageUrl, 'https://example.test/bo.jpg');
         expect(suggestion.dish.nutritionPerServing.energyKcal, 420);
+        expect(suggestion.fitReasons, [
+          'Ít muối, hợp người cao huyết áp',
+          '≈ 420 kcal/suất · 32 g đạm',
+        ]);
         expect(suggestion.isMock, isFalse);
         verifyNever(() => dishRemote.getById(any()));
       },

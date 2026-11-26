@@ -323,6 +323,7 @@ class _HomeSuggestionCard extends StatelessWidget {
       rank: suggestion.rank,
       meta: suggestion.dish.shortMeta(l10n),
       chips: suggestion.cardChips(l10n),
+      fitReasons: suggestion.fitReasons.take(3).toList(),
       imageUrl: suggestion.dish.imageUrl,
       onTap: () => context.push(
         '${Routes.suggestions}/dish/${suggestion.id}',

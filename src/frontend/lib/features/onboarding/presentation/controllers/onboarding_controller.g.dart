@@ -75,22 +75,19 @@ abstract class _$OnboardingController extends $Notifier<bool> {
   }
 }
 
-/// The persisted meal-ranking preference (N-01). Chosen at onboarding (A-05),
-/// later editable in Cài đặt → Tùy chọn. Feeds the `P` term of suggestion
-/// scoring — `SuggestionFilterController` seeds its default from here.
+/// The persisted diet mode chosen at onboarding (A-05) and synced with
+/// `users.preferences.diet` via `PATCH /users/profile`.
 
 @ProviderFor(DietaryPreferenceController)
 final dietaryPreferenceControllerProvider =
     DietaryPreferenceControllerProvider._();
 
-/// The persisted meal-ranking preference (N-01). Chosen at onboarding (A-05),
-/// later editable in Cài đặt → Tùy chọn. Feeds the `P` term of suggestion
-/// scoring — `SuggestionFilterController` seeds its default from here.
+/// The persisted diet mode chosen at onboarding (A-05) and synced with
+/// `users.preferences.diet` via `PATCH /users/profile`.
 final class DietaryPreferenceControllerProvider
     extends $NotifierProvider<DietaryPreferenceController, DietaryPreference?> {
-  /// The persisted meal-ranking preference (N-01). Chosen at onboarding (A-05),
-  /// later editable in Cài đặt → Tùy chọn. Feeds the `P` term of suggestion
-  /// scoring — `SuggestionFilterController` seeds its default from here.
+  /// The persisted diet mode chosen at onboarding (A-05) and synced with
+  /// `users.preferences.diet` via `PATCH /users/profile`.
   DietaryPreferenceControllerProvider._()
     : super(
         from: null,
@@ -119,11 +116,10 @@ final class DietaryPreferenceControllerProvider
 }
 
 String _$dietaryPreferenceControllerHash() =>
-    r'2662bb7d4dca5a4fdf456209f238bee38fc15067';
+    r'd65c1ac661d118b51e76eeecd371d95f2397d547';
 
-/// The persisted meal-ranking preference (N-01). Chosen at onboarding (A-05),
-/// later editable in Cài đặt → Tùy chọn. Feeds the `P` term of suggestion
-/// scoring — `SuggestionFilterController` seeds its default from here.
+/// The persisted diet mode chosen at onboarding (A-05) and synced with
+/// `users.preferences.diet` via `PATCH /users/profile`.
 
 abstract class _$DietaryPreferenceController
     extends $Notifier<DietaryPreference?> {

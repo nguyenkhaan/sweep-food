@@ -4,6 +4,7 @@ import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
+import 'package:sweepfood/shared/widgets/nutrition_disclaimer_banner.dart';
 
 /// S-02 — "Vì sao món này đạt N điểm?". Explains the `0.4E + 0.3A + 0.2P + 0.1U`
 /// components with a short reason and a bar per term.
@@ -32,6 +33,10 @@ class ScoreBreakdownSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _AiResultHeader(suggestion: suggestion),
+              if (suggestion.fitReasons.isNotEmpty) ...[
+                Gap.gapMd,
+                _FitReasonsSection(reasons: suggestion.fitReasons),
+              ],
               Gap.gapMd,
               Text(
                 context.l10n.scoreFormula,
@@ -81,9 +86,82 @@ class ScoreBreakdownSheet extends StatelessWidget {
                 Gap.gapSm,
               ],
               _AiFeatureList(suggestion: suggestion),
+              Gap.gapSm,
+              const NutritionDisclaimerBanner(compact: true),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _FitReasonsSection extends StatelessWidget {
+  const _FitReasonsSection({required this.reasons});
+
+  final List<String> reasons;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(Gap.sm),
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer.withValues(alpha: 0.35),
+        borderRadius: Radii.brMd,
+        border: Border.all(
+          color: context.colors.primary.withValues(alpha: 0.22),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.verified_outlined,
+                size: 16,
+                color: context.colors.primary,
+              ),
+              const SizedBox(width: Gap.xs),
+              Expanded(
+                child: Text(
+                  context.l10n.suggestionsFitReasonsTitle,
+                  style: context.text.labelMedium?.copyWith(
+                    color: context.colors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: Gap.xs),
+          for (var i = 0; i < reasons.length; i++) ...[
+            if (i > 0) const SizedBox(height: Gap.xxs),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: Icon(
+                    Icons.check_rounded,
+                    size: 14,
+                    color: context.colors.primary,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    reasons[i],
+                    style: context.text.bodySmall?.copyWith(
+                      color: context.colors.onSurface,
+                      height: 1.35,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }

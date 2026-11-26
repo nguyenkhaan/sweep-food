@@ -1,0 +1,117 @@
+{
+  "version": 2,
+  "skills": {
+    "accessibility-as-code": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/accessibility-as-code/SKILL.md",
+      "computedHash": "620135253b28bac2b85d21b8b5838641d8c97d2a38345ec7cddfdce765068114",
+      "installMode": "copy"
+    },
+    "design-system-structure": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/design-system-structure/SKILL.md",
+      "computedHash": "c54fc91241a53d9c6b78fc21f3ab7b3d3211384301b6735c163d8a2fde0f4056",
+      "installMode": "copy"
+    },
+    "flutter-adaptive-ui": {
+      "source": "MADTeacher/mad-agents-skills",
+      "commit": "2fb67e384c6d91f32025bd96400d33b73f21bdc7",
+      "sourceType": "github",
+      "skillPath": "flutter-adaptive-ui/SKILL.md",
+      "computedHash": "1ac519a23929e8c08ba30511f1bee1aea03195e797aadbd410ad087af7ff5c1a",
+      "installMode": "copy"
+    },
+    "flutter-animations": {
+      "source": "MADTeacher/mad-agents-skills",
+      "commit": "2fb67e384c6d91f32025bd96400d33b73f21bdc7",
+      "sourceType": "github",
+      "skillPath": "flutter-animations/SKILL.md",
+      "computedHash": "8dbaafa7cf75772b389d2ee2560c772378b72e1e50bd53eced99dc93912fe7fb",
+      "installMode": "copy"
+    },
+    "flutter-networking": {
+      "source": "MADTeacher/mad-agents-skills",
+      "commit": "2fb67e384c6d91f32025bd96400d33b73f21bdc7",
+      "sourceType": "github",
+      "skillPath": "flutter-networking/SKILL.md",
+      "computedHash": "bb8b7b6ee01cd59278af5b8bc62482d10da6a7716b6b7c5699f12fc9fbc45a8d",
+      "installMode": "copy"
+    },
+    "flutter-performance": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/flutter-performance/SKILL.md",
+      "computedHash": "8ca8b7a4171f91bc1d67f8ab235b1941896ef98e5cf4c9411dcc9db7c264404e",
+      "installMode": "copy"
+    },
+    "flutter-testing": {
+      "source": "MADTeacher/mad-agents-skills",
+      "commit": "2fb67e384c6d91f32025bd96400d33b73f21bdc7",
+      "sourceType": "github",
+      "skillPath": "flutter-testing/SKILL.md",
+      "computedHash": "0b97dd7fc613727b9b5f081e85f6c57d8262a53e0d41817658f42d947fee180e",
+      "installMode": "copy"
+    },
+    "forms-and-input": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/forms-and-input/SKILL.md",
+      "computedHash": "eceedc232260da3f92b75af31b63cd8b15019a9e724d6abd86c3e6b22ac270c2",
+      "installMode": "copy"
+    },
+    "navigation-and-routing": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/navigation-and-routing/SKILL.md",
+      "computedHash": "eb2bdfe9293e22e8c7a2bee9c22307354e68ba9883110ccdfcffe9c20214dae9",
+      "installMode": "copy"
+    },
+    "release-and-store-shipping": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/release-and-store-shipping/SKILL.md",
+      "computedHash": "bb3cce57f1313996277efaf4540e495ef41e403291175397c78dd4069def24b2",
+      "installMode": "copy"
+    },
+    "state-management-riverpod": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/state-management-riverpod/SKILL.md",
+      "computedHash": "b779beeda28f33b92a480003b9aed6ced0e1ef0e24bde8242f937e20843595ca",
+      "installMode": "copy"
+    },
+    "ui-states-and-feedback": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/ui-states-and-feedback/SKILL.md",
+      "computedHash": "a0987c8846e40a4a906d73a567eb433a2ac061f7bf17d6cfc1939cc19105c3c2",
+      "installMode": "copy"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "a0d04109f4193a04ec6959549cd735d95ecaa90a",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "computedHash": "afed70612f3b12d464c4730404d2757d72b61fc90ff06071def58ec50e98a851",
+      "installMode": "copy"
+    },
+    "widget-composition": {
+      "source": "zakariaf/Flutter-Skills",
+      "commit": "e073e5ea10c963d2c52ab1e423bd314c28a56154",
+      "sourceType": "github",
+      "skillPath": "skills/widget-composition/SKILL.md",
+      "computedHash": "36a33699be2f51f0dc748da97935298973946716d1d38c7945323ae816fb7fd1",
+      "installMode": "copy"
+    }
+  }
+}

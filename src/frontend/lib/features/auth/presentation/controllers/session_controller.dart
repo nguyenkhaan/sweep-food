@@ -11,6 +11,7 @@ import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.d
 import 'package:sweepfood/features/auth/domain/entities/session.dart';
 import 'package:sweepfood/features/auth/domain/entities/user.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
+import 'package:sweepfood/shared/domain/nutrition_profile.dart';
 
 part 'session_controller.g.dart';
 
@@ -156,6 +157,15 @@ class SessionController extends _$SessionController {
     if (raw == null || raw.isEmpty) return null;
     try {
       final json = jsonDecode(raw) as Map<String, dynamic>;
+      final rawProfile = json['nutrition_profile'];
+      final nutritionProfile = rawProfile is Map
+          ? NutritionProfile.fromPreferencesMap(
+              Map<String, dynamic>.from(rawProfile),
+            )
+          : NutritionProfile.fromPreferencesMap({
+              if (json['dietary_preference'] != null)
+                'diet': json['dietary_preference'],
+            });
       return User(
         id: json['id']?.toString() ?? '',
         phone: json['phone']?.toString() ?? '',
@@ -166,6 +176,7 @@ class SessionController extends _$SessionController {
             : DietaryPreference.fromWire(
                 json['dietary_preference']?.toString(),
               ),
+        nutritionProfile: nutritionProfile,
         avatarUrl: json['avatar_url']?.toString(),
       );
     } on Object {
@@ -183,6 +194,7 @@ class SessionController extends _$SessionController {
           'name': user.name,
           'email': user.email,
           'dietary_preference': user.dietaryPreference?.wire,
+          'nutrition_profile': user.nutritionProfile.toPreferencesMap(),
           'avatar_url': user.avatarUrl,
         }),
       );

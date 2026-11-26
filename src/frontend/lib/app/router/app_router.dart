@@ -45,6 +45,7 @@ import 'package:sweepfood/features/settings/presentation/screens/change_password
 import 'package:sweepfood/features/settings/presentation/screens/change_phone_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/edit_profile_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/notification_settings_screen.dart';
+import 'package:sweepfood/features/settings/presentation/screens/nutrition_profile_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/preferences_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/profile_screen.dart';
 import 'package:sweepfood/features/settings/presentation/screens/settings_home_screen.dart';
@@ -351,6 +352,11 @@ GoRouter appRouter(Ref ref) {
         path: Routes.settingsPreferences,
         parentNavigatorKey: _rootKey,
         builder: (context, state) => const PreferencesScreen(),
+      ),
+      GoRoute(
+        path: Routes.settingsNutritionProfile,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const NutritionProfileScreen(),
       ),
       GoRoute(
         path: Routes.settingsNotifications,

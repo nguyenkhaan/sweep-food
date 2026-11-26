@@ -36,6 +36,11 @@
         "Ức gà",
         "Cà chua bi"
       ],
+      "fit_reasons": [
+        "≈ 380 kcal/suất · 34 g đạm",
+        "Ít muối, hợp người cao huyết áp",
+        "Không có hải sản có vỏ"
+      ],
       "explanation": "Tận dụng bơ và ức gà sắp hết hạn trong kho.",
       "provider": "MOCK",
       "model_version": "mock-v1"
@@ -56,6 +61,10 @@
         "Cà chua bi",
         "Cải bó xôi"
       ],
+      "fit_reasons": [
+        "≈ 260 kcal/suất · 24 g đạm",
+        "Không chiên rán, nhẹ dạ dày"
+      ],
       "explanation": "Đầy đủ nguyên liệu sẵn có trong tủ lạnh.",
       "provider": "MOCK",
       "model_version": "mock-v1"
@@ -74,6 +83,10 @@
       "missing_ingredients": [],
       "near_expiry_ingredients": [
         "Trứng gà"
+      ],
+      "fit_reasons": [
+        "≈ 290 kcal/suất · 18 g đạm",
+        "Ít tinh bột (< 10 g/suất)"
       ],
       "explanation": "Món nấu nhanh dưới 15 phút, nguyên liệu 100% sẵn có.",
       "provider": "MOCK",

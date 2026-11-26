@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/auth/domain/entities/active_session.dart';
 import 'package:sweepfood/features/auth/domain/entities/user.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
+import 'package:sweepfood/shared/domain/nutrition_profile.dart';
 
 part 'auth_dto.freezed.dart';
 part 'auth_dto.g.dart';
@@ -70,13 +71,13 @@ abstract class AuthSessionDto with _$AuthSessionDto {
       _$AuthSessionDtoFromJson(json);
 
   ActiveSession toEntity() => ActiveSession(
-        id: id,
-        ipAddress: ipAddress,
-        userAgent: userAgent,
-        expiresAt: expiresAt,
-        createdAt: createdAt,
-        lastUsedAt: lastUsedAt,
-      );
+    id: id,
+    ipAddress: ipAddress,
+    userAgent: userAgent,
+    expiresAt: expiresAt,
+    createdAt: createdAt,
+    lastUsedAt: lastUsedAt,
+  );
 }
 
 /// `GET /users/profile` payload. `name`/`email` are nullable; the meal-ranking
@@ -99,15 +100,18 @@ abstract class UserProfileDto with _$UserProfileDto {
       _$UserProfileDtoFromJson(json);
 
   User toEntity() {
-    final rawDiet = preferences['dietary_preference'];
+    final rawDiet = preferences['diet'] ?? preferences['dietary_preference'];
     final rawAvatar = preferences['avatar_url'];
+    final profile = NutritionProfile.fromPreferencesMap(preferences);
     return User(
       id: userId,
       phone: phone,
       name: name,
       email: email,
-      dietaryPreference:
-          rawDiet is String ? DietaryPreference.fromWire(rawDiet) : null,
+      dietaryPreference: rawDiet is String
+          ? DietaryPreference.fromWire(rawDiet)
+          : null,
+      nutritionProfile: profile,
       avatarUrl: rawAvatar is String ? rawAvatar : null,
     );
   }

@@ -1856,4 +1856,190 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get commonNo => 'Không';
+
+  @override
+  String get dietVegetarian => 'Ăn chay';
+
+  @override
+  String get dietVegetarianDesc =>
+      'Loại bỏ hoàn toàn thịt, cá, hải sản, trứng và gia vị động vật';
+
+  @override
+  String get nutritionDisclaimer =>
+      'Gợi ý tham khảo, không thay lời khuyên của bác sĩ';
+
+  @override
+  String get nutritionProfileTitle => 'Hồ sơ ăn uống';
+
+  @override
+  String get nutritionProfileSubtitle =>
+      'Cá nhân hoá gợi ý món theo khẩu phần, chế độ ăn, bệnh nền và dị ứng.';
+
+  @override
+  String nutritionProfileRowSubtitle(int servings, String diet) {
+    return '$servings người · $diet';
+  }
+
+  @override
+  String nutritionProfileFilterBadge(int count) {
+    return '$count ràng buộc';
+  }
+
+  @override
+  String get nutritionProfileSaveCta => 'Lưu hồ sơ ăn uống';
+
+  @override
+  String get nutritionProfileSaved =>
+      'Đã lưu hồ sơ ăn uống. Gợi ý món sẽ được cập nhật.';
+
+  @override
+  String get nutritionProfileHouseholdTitle => 'Số người ăn';
+
+  @override
+  String get nutritionProfileHouseholdHint =>
+      'Dùng để nhân khẩu phần và định lượng nguyên liệu phù hợp.';
+
+  @override
+  String nutritionProfileHouseholdValue(int count) {
+    return '$count người';
+  }
+
+  @override
+  String get nutritionProfileDietTitle => 'Chế độ ăn';
+
+  @override
+  String get nutritionProfileDietHint =>
+      'Ăn chay là bộ lọc cứng; các lựa chọn còn lại ưu tiên khi xếp hạng món.';
+
+  @override
+  String get nutritionProfileHardFilterTag => 'Lọc cứng';
+
+  @override
+  String get nutritionProfileHealthTitle => 'Tình trạng sức khoẻ';
+
+  @override
+  String get nutritionProfileHealthHint =>
+      'Chọn nhiều nếu cần. Các món vi phạm sẽ được loại tự động.';
+
+  @override
+  String get nutritionProfileAllergiesTitle => 'Dị ứng thực phẩm';
+
+  @override
+  String get nutritionProfileAllergiesHint =>
+      'Ưu tiên loại nhầm hơn bỏ sót: món không chắc chắn sẽ bị ẩn.';
+
+  @override
+  String get nutritionProfileDislikedTitle => 'Món hoặc nguyên liệu không ăn';
+
+  @override
+  String get nutritionProfileDislikedHint =>
+      'Gõ để tìm trong danh mục nguyên liệu hoặc tự thêm tên bất kỳ.';
+
+  @override
+  String get nutritionProfileDislikedFieldHint =>
+      'Ví dụ: rau mùi, hành tây, mắm tôm…';
+
+  @override
+  String get nutritionProfileDislikedAdd => 'Thêm';
+
+  @override
+  String get nutritionProfileDislikedEmpty =>
+      'Chưa có nguyên liệu nào trong danh sách loại trừ.';
+
+  @override
+  String get nutritionProfileDislikedLimit => 'Tối đa 50 nguyên liệu loại trừ.';
+
+  @override
+  String get healthCondDiabetes => 'Tiểu đường';
+
+  @override
+  String get healthCondDiabetesDesc => 'Đường < 10g & tinh bột < 45g / suất';
+
+  @override
+  String get healthCondHypertension => 'Cao huyết áp';
+
+  @override
+  String get healthCondHypertensionDesc => 'Natri < 1.000 mg / suất';
+
+  @override
+  String get healthCondGout => 'Gout';
+
+  @override
+  String get healthCondGoutDesc =>
+      'Loại thịt đỏ, nội tạng & hải sản giàu purin';
+
+  @override
+  String get healthCondGastritis => 'Đau dạ dày';
+
+  @override
+  String get healthCondGastritisDesc => 'Bỏ các món chiên, rán nhiều dầu mỡ';
+
+  @override
+  String get healthCondKetoLowCarb => 'Keto / low-carb';
+
+  @override
+  String get healthCondKetoLowCarbDesc => 'Tinh bột ≤ 20g / suất';
+
+  @override
+  String get allergyShellfish => 'Hải sản có vỏ';
+
+  @override
+  String get allergyShellfishExamples =>
+      'Tôm, cua, ghẹ, sò, nghêu, hến, ốc, mực';
+
+  @override
+  String get allergyFish => 'Cá';
+
+  @override
+  String get allergyFishExamples => 'Các loại cá, nước mắm, chả cá';
+
+  @override
+  String get allergyPeanut => 'Đậu phộng';
+
+  @override
+  String get allergyPeanutExamples => 'Đậu phộng, bơ đậu phộng';
+
+  @override
+  String get allergyEgg => 'Trứng';
+
+  @override
+  String get allergyEggExamples => 'Trứng gà, trứng vịt, trứng cút';
+
+  @override
+  String get allergyDairy => 'Sữa';
+
+  @override
+  String get allergyDairyExamples => 'Sữa, phô mai, bơ, kem';
+
+  @override
+  String get allergySoy => 'Đậu nành';
+
+  @override
+  String get allergySoyExamples => 'Đậu phụ, sữa đậu nành, nước tương';
+
+  @override
+  String get allergyGluten => 'Gluten';
+
+  @override
+  String get allergyGlutenExamples => 'Bột mì, bánh mì, mì sợi lúa mì';
+
+  @override
+  String get allergySesame => 'Mè';
+
+  @override
+  String get allergySesameExamples => 'Mè, dầu mè';
+
+  @override
+  String get suggestionsFitReasonsTitle => 'Vì sao hợp với hồ sơ của bạn';
+
+  @override
+  String get suggestionsEmptyFilteredTitle =>
+      'Chưa có món hợp với hồ sơ hiện tại';
+
+  @override
+  String get suggestionsEmptyFilteredBody =>
+      'Các bộ lọc sức khoẻ, dị ứng hoặc nguyên liệu không ăn đang loại hết món phù hợp với kho hiện tại. Hãy thử thêm nguyên liệu hoặc xem lại hồ sơ ăn uống.';
+
+  @override
+  String get suggestionsReviewProfileCta => 'Xem hồ sơ ăn uống';
 }

@@ -89,6 +89,9 @@ class _Result:
     def all(self) -> list[object]:
         return cast(list[object], self._value)
 
+    def scalar_one_or_none(self) -> object:
+        return self._value
+
 
 class _Session:
     def __init__(
@@ -96,8 +99,13 @@ class _Session:
         *,
         recipes: list[_Recipe],
         inventory_expiries: list[object] | None = None,
+        user_preferences: dict[str, object] | None = None,
     ) -> None:
-        self._values: list[object] = [inventory_expiries or [], recipes]
+        self._values: list[object] = [
+            user_preferences if user_preferences is not None else {},
+            inventory_expiries or [],
+            recipes,
+        ]
         self.statements: list[object] = []
 
     async def execute(self, statement: object) -> _Result:
@@ -108,8 +116,16 @@ class _Session:
 class _SequenceSession:
     """Return ordered query results for pantry enrichment tests."""
 
-    def __init__(self, values: list[object]) -> None:
-        self._values = values
+    def __init__(
+        self,
+        values: list[object],
+        *,
+        user_preferences: dict[str, object] | None = None,
+    ) -> None:
+        self._values: list[object] = [
+            user_preferences if user_preferences is not None else {},
+            *values,
+        ]
 
     async def execute(self, _statement: object) -> _Result:
         return _Result(self._values.pop(0))
@@ -174,6 +190,11 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
             _Recipe(RECIPE_ONE_ID, "Backend soup"),
             _Recipe(RECIPE_TWO_ID, "Backend salad"),
         ],
+        user_preferences={
+            "household_size": 2,
+            "diet": "balanced",
+            "allergies": ["peanut"],
+        },
     )
     fake_engine = _FakeEngine(
         EngineResult(
@@ -237,7 +258,7 @@ async def test_recommendation_uses_user_pantry_and_preserves_ai_order() -> None:
     assert response.ranker_model == "LightGBM LambdaMART"
     assert response.analysis.is_mock is False
     assert f"UNKNOWN_RECIPE_ID:{UNKNOWN_RECIPE_ID}" in response.warnings
-    assert len(session.statements) == 2
+    assert len(session.statements) == 3
 
 
 @pytest.mark.anyio
@@ -429,3 +450,120 @@ async def test_items_without_saved_stock_keep_client_urgency_for_rescue() -> Non
     assert detail.rescued_g == 200
     assert detail.expiring_g == 200
     assert detail.expires_at == NOW + timedelta(hours=6)
+
+
+class _EngineRecommendationWithFitReasons(EngineRecommendation):
+    """Simulate the upcoming AI EngineRecommendation carrying `fit_reasons`."""
+
+    fit_reasons: list[str]
+
+    def __init__(self, base: EngineRecommendation, fit_reasons: list[str]) -> None:
+        super().__init__(
+            id=base.id,
+            name=base.name,
+            rank_score=base.rank_score,
+            ranking_features=base.ranking_features,
+            matched_ingredients=base.matched_ingredients,
+            missing_ingredients=base.missing_ingredients,
+            optional_ingredients=base.optional_ingredients,
+            rescued_items=base.rescued_items,
+            status_badge=base.status_badge,
+            rescued_requirements=base.rescued_requirements,
+        )
+        object.__setattr__(self, "fit_reasons", fit_reasons)
+
+
+@pytest.mark.anyio
+async def test_recommendation_overrides_client_filters_with_user_nutrition_profile() -> (
+    None
+):
+    """Backend reads authoritative preferences from DB and forwards fit_reasons."""
+    session = _Session(
+        recipes=[_Recipe(RECIPE_ONE_ID, "Đậu phụ sốt cà chua")],
+        user_preferences={
+            "household_size": 3,
+            "diet": "vegetarian",
+            "health_conditions": ["nguoi_cao_huyet_ap", "nguoi_tieu_duong"],
+            "allergies": ["shellfish", "peanut"],
+            "disliked_ingredients": ["rau mùi"],
+        },
+    )
+    ai_item = _EngineRecommendationWithFitReasons(
+        _engine_item(RECIPE_ONE_ID, 2.4),
+        fit_reasons=[
+            "Món ăn chay",
+            "Ít muối, hợp người cao huyết áp",
+            "Không có hải sản có vỏ",
+        ],
+    )
+    fake_engine = _FakeEngine(
+        replace(_empty_result(), status="success", recommendations=[ai_item])
+    )
+    service = RecommendationAIService(
+        cast(AsyncSession, session),
+        cast(RecommendationEngine, fake_engine),
+        clock=lambda: NOW,
+    )
+
+    response = await service.recommend(
+        USER_ID,
+        RecommendationRequestDTO(
+            items=[{"name": "Đậu phụ", "quantity_g": 300}],
+            household_size=9,
+            scenario_type="breakfast",
+            dietary_restrictions=["high_protein"],
+            allergies=[],
+            disliked_ingredients=[],
+        ),
+    )
+
+    forwarded = fake_engine.requests[0]
+    assert forwarded.household_size == 3.0
+    assert forwarded.diet == "vegetarian"
+    assert forwarded.scenario_types == [
+        "an_chay",
+        "nguoi_cao_huyet_ap",
+        "nguoi_tieu_duong",
+    ]
+    assert forwarded.scenario_type == "an_chay"
+    assert forwarded.dietary_restrictions == ["vegetarian"]
+    assert forwarded.allergies == ["shellfish", "peanut"]
+    assert forwarded.disliked_ingredients == ["rau mùi"]
+    assert response.items[0].fit_reasons == [
+        "Món ăn chay",
+        "Ít muối, hợp người cao huyết áp",
+        "Không có hải sản có vỏ",
+    ]
+
+
+@pytest.mark.anyio
+async def test_empty_result_with_non_empty_pantry_emits_filter_warning() -> None:
+    """When hard filters eliminate all candidates, BE surfaces a clear warning."""
+    session = _Session(
+        recipes=[],
+        user_preferences={"diet": "vegetarian", "allergies": ["soy"]},
+    )
+    fake_engine = _FakeEngine(
+        replace(
+            _empty_result(),
+            status="empty",
+            message="Không tìm thấy món phù hợp với hồ sơ dinh dưỡng hiện tại.",
+        )
+    )
+    service = RecommendationAIService(
+        cast(AsyncSession, session),
+        cast(RecommendationEngine, fake_engine),
+        clock=lambda: NOW,
+    )
+
+    response = await service.recommend(
+        USER_ID,
+        RecommendationRequestDTO(items=[{"name": "Thịt bò", "quantity_g": 300}]),
+    )
+
+    assert response.items == []
+    assert "NO_MATCH_AFTER_FILTERS" in response.warnings
+    assert (
+        response.analysis.summary
+        == "Không tìm thấy món phù hợp với hồ sơ dinh dưỡng hiện tại."
+    )

@@ -239,6 +239,7 @@ abstract class RecommendationItemDto with _$RecommendationItemDto {
     @JsonKey(name: 'rescued_details')
     @Default(<RecommendationRescuedItemDto>[])
     List<RecommendationRescuedItemDto> rescuedDetails,
+    @JsonKey(name: 'fit_reasons') @Default(<String>[]) List<String> fitReasons,
     @Default('') String explanation,
     @Default('') String provider,
     @JsonKey(name: 'status_badge') @Default('') String statusBadge,
@@ -320,6 +321,13 @@ abstract class RecommendationItemDto with _$RecommendationItemDto {
             .toList() ??
         const <RecommendationRescuedItemDto>[];
 
+    final fitReasons =
+        (json['fit_reasons'] as List<dynamic>?)
+            ?.map((e) => e.toString().trim())
+            .where((e) => e.isNotEmpty)
+            .toList() ??
+        const <String>[];
+
     final explanation = (json['explanation'] ?? '').toString();
     final provider = (json['provider'] ?? '').toString();
     final modelVersion = (json['model_version'] ?? '').toString();
@@ -337,6 +345,7 @@ abstract class RecommendationItemDto with _$RecommendationItemDto {
       optionalIngredients: ingredients('optional_ingredients'),
       nearExpiryIngredients: nearExpiry,
       rescuedDetails: rescuedDetails,
+      fitReasons: fitReasons,
       explanation: explanation,
       provider: provider,
       statusBadge: (json['status_badge'] ?? '').toString(),

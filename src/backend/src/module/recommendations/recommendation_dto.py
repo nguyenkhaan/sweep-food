@@ -28,7 +28,9 @@ class RecommendationRequestDTO(BaseModel):
 
     items: list[RecommendationPantryItemDTO]
     household_size: float = Field(default=4, gt=0)
+    diet: str | None = None
     scenario_type: str = "custom"
+    scenario_types: list[str] = Field(default_factory=list)
     dietary_restrictions: list[str] = Field(default_factory=list)
     allergies: list[str] = Field(default_factory=list)
     disliked_ingredients: list[str] = Field(default_factory=list)
@@ -108,6 +110,7 @@ class RecommendationItemDTO(BaseModel):
     optional_ingredients: list[RecommendationIngredientDTO]
     rescued_items: list[str]
     rescued_details: list[RecommendationRescuedItemDTO] = Field(default_factory=list)
+    fit_reasons: list[str] = Field(default_factory=list)
     status_badge: str
     explanation: str
     provider: str

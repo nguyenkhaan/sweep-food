@@ -38,12 +38,12 @@ class RecommendationPantryItemDraft {
   final bool isStaple;
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        if (code != null) 'code': code,
-        if (quantityG != null && quantityG! > 0) 'quantity_g': quantityG,
-        if (hoursToExpire != null) 'hours_to_expire': hoursToExpire,
-        'is_staple': isStaple,
-      };
+    'name': name,
+    if (code != null) 'code': code,
+    if (quantityG != null && quantityG! > 0) 'quantity_g': quantityG,
+    if (hoursToExpire != null) 'hours_to_expire': hoursToExpire,
+    'is_staple': isStaple,
+  };
 }
 
 /// Body for `POST /recommendations`. Aligned with backend `RecommendationRequestDTO` (AI v2).
@@ -102,31 +102,12 @@ class SuggestionRequest {
   }
 
   /// Builds a payload strictly adhering to Backend `RecommendationRequestDTO`.
-  Map<String, dynamic> toBody() {
-    final restrictions = <String>[];
-    if (dietaryPreference != null) {
-      final tag = switch (dietaryPreference!) {
-        DietaryPreference.balanced => 'balanced',
-        DietaryPreference.moreVeg => 'vegetarian',
-        DietaryPreference.highProtein => 'high_protein',
-        DietaryPreference.lowCalorie => 'low_calorie',
-      };
-      restrictions.add(tag);
-    }
-
-    final effectiveScenario = scenarioType ??
-        (mealType != null ? mealType!.wire : 'custom');
-
-    return {
-      'items': pantryItems.map((e) => e.toJson()).toList(),
-      'household_size': householdSize > 0 ? householdSize : 4.0,
-      'scenario_type': effectiveScenario,
-      'dietary_restrictions': restrictions,
-      'allergies': <String>[],
-      'disliked_ingredients': <String>[],
-      'preferred_cuisines': <String>[],
-    };
-  }
+  ///
+  /// Diet, health conditions, allergies, disliked ingredients, and household
+  /// size are read authoritatively from `users.preferences` on the backend.
+  Map<String, dynamic> toBody() => {
+    'items': pantryItems.map((e) => e.toJson()).toList(),
+  };
 
   String buildRequestText() {
     if (request != null && request!.trim().isNotEmpty) {
@@ -150,6 +131,7 @@ class SuggestionRequest {
         DietaryPreference.moreVeg => 'Nhiều rau',
         DietaryPreference.highProtein => 'Giàu đạm',
         DietaryPreference.lowCalorie => 'Ít calo',
+        DietaryPreference.vegetarian => 'Ăn chay',
       });
     }
     if (parts.isEmpty) {

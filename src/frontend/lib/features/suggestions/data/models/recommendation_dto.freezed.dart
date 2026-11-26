@@ -1377,7 +1377,7 @@ as String,
 /// @nodoc
 mixin _$RecommendationItemDto {
 
-@JsonKey(name: 'recipe_id') String get recipeId;@JsonKey(name: 'recipe_name') String get recipeName; int get rank;@JsonKey(fromJson: _asDoubleDefault) double get score;@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double get rankScore;@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto get rankingFeatures;@JsonKey(name: 'score_components') RecommendationScoreComponentsDto get scoreComponents;@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> get missingIngredients;@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> get matchedIngredients;@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> get optionalIngredients;@JsonKey(name: 'near_expiry_ingredients') List<String> get nearExpiryIngredients;@JsonKey(name: 'rescued_details') List<RecommendationRescuedItemDto> get rescuedDetails; String get explanation; String get provider;@JsonKey(name: 'status_badge') String get statusBadge;@JsonKey(name: 'model_version') String get modelVersion;// Optional embedded dish for backward compatibility with legacy fixtures/mocks
+@JsonKey(name: 'recipe_id') String get recipeId;@JsonKey(name: 'recipe_name') String get recipeName; int get rank;@JsonKey(fromJson: _asDoubleDefault) double get score;@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double get rankScore;@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto get rankingFeatures;@JsonKey(name: 'score_components') RecommendationScoreComponentsDto get scoreComponents;@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> get missingIngredients;@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> get matchedIngredients;@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> get optionalIngredients;@JsonKey(name: 'near_expiry_ingredients') List<String> get nearExpiryIngredients;@JsonKey(name: 'rescued_details') List<RecommendationRescuedItemDto> get rescuedDetails;@JsonKey(name: 'fit_reasons') List<String> get fitReasons; String get explanation; String get provider;@JsonKey(name: 'status_badge') String get statusBadge;@JsonKey(name: 'model_version') String get modelVersion;// Optional embedded dish for backward compatibility with legacy fixtures/mocks
  DishDto? get dish;
 /// Create a copy of RecommendationItemDto
 /// with the given fields replaced by the non-null parameter values.
@@ -1389,16 +1389,16 @@ $RecommendationItemDtoCopyWith<RecommendationItemDto> get copyWith => _$Recommen
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecommendationItemDto&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.score, score) || other.score == score)&&(identical(other.rankScore, rankScore) || other.rankScore == rankScore)&&(identical(other.rankingFeatures, rankingFeatures) || other.rankingFeatures == rankingFeatures)&&(identical(other.scoreComponents, scoreComponents) || other.scoreComponents == scoreComponents)&&const DeepCollectionEquality().equals(other.missingIngredients, missingIngredients)&&const DeepCollectionEquality().equals(other.matchedIngredients, matchedIngredients)&&const DeepCollectionEquality().equals(other.optionalIngredients, optionalIngredients)&&const DeepCollectionEquality().equals(other.nearExpiryIngredients, nearExpiryIngredients)&&const DeepCollectionEquality().equals(other.rescuedDetails, rescuedDetails)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.statusBadge, statusBadge) || other.statusBadge == statusBadge)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.dish, dish) || other.dish == dish));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RecommendationItemDto&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.score, score) || other.score == score)&&(identical(other.rankScore, rankScore) || other.rankScore == rankScore)&&(identical(other.rankingFeatures, rankingFeatures) || other.rankingFeatures == rankingFeatures)&&(identical(other.scoreComponents, scoreComponents) || other.scoreComponents == scoreComponents)&&const DeepCollectionEquality().equals(other.missingIngredients, missingIngredients)&&const DeepCollectionEquality().equals(other.matchedIngredients, matchedIngredients)&&const DeepCollectionEquality().equals(other.optionalIngredients, optionalIngredients)&&const DeepCollectionEquality().equals(other.nearExpiryIngredients, nearExpiryIngredients)&&const DeepCollectionEquality().equals(other.rescuedDetails, rescuedDetails)&&const DeepCollectionEquality().equals(other.fitReasons, fitReasons)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.statusBadge, statusBadge) || other.statusBadge == statusBadge)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.dish, dish) || other.dish == dish));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,recipeId,recipeName,rank,score,rankScore,rankingFeatures,scoreComponents,const DeepCollectionEquality().hash(missingIngredients),const DeepCollectionEquality().hash(matchedIngredients),const DeepCollectionEquality().hash(optionalIngredients),const DeepCollectionEquality().hash(nearExpiryIngredients),const DeepCollectionEquality().hash(rescuedDetails),explanation,provider,statusBadge,modelVersion,dish);
+int get hashCode => Object.hash(runtimeType,recipeId,recipeName,rank,score,rankScore,rankingFeatures,scoreComponents,const DeepCollectionEquality().hash(missingIngredients),const DeepCollectionEquality().hash(matchedIngredients),const DeepCollectionEquality().hash(optionalIngredients),const DeepCollectionEquality().hash(nearExpiryIngredients),const DeepCollectionEquality().hash(rescuedDetails),const DeepCollectionEquality().hash(fitReasons),explanation,provider,statusBadge,modelVersion,dish);
 
 @override
 String toString() {
-  return 'RecommendationItemDto(recipeId: $recipeId, recipeName: $recipeName, rank: $rank, score: $score, rankScore: $rankScore, rankingFeatures: $rankingFeatures, scoreComponents: $scoreComponents, missingIngredients: $missingIngredients, matchedIngredients: $matchedIngredients, optionalIngredients: $optionalIngredients, nearExpiryIngredients: $nearExpiryIngredients, rescuedDetails: $rescuedDetails, explanation: $explanation, provider: $provider, statusBadge: $statusBadge, modelVersion: $modelVersion, dish: $dish)';
+  return 'RecommendationItemDto(recipeId: $recipeId, recipeName: $recipeName, rank: $rank, score: $score, rankScore: $rankScore, rankingFeatures: $rankingFeatures, scoreComponents: $scoreComponents, missingIngredients: $missingIngredients, matchedIngredients: $matchedIngredients, optionalIngredients: $optionalIngredients, nearExpiryIngredients: $nearExpiryIngredients, rescuedDetails: $rescuedDetails, fitReasons: $fitReasons, explanation: $explanation, provider: $provider, statusBadge: $statusBadge, modelVersion: $modelVersion, dish: $dish)';
 }
 
 
@@ -1409,7 +1409,7 @@ abstract mixin class $RecommendationItemDtoCopyWith<$Res>  {
   factory $RecommendationItemDtoCopyWith(RecommendationItemDto value, $Res Function(RecommendationItemDto) _then) = _$RecommendationItemDtoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String recipeName, int rank,@JsonKey(fromJson: _asDoubleDefault) double score,@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double rankScore,@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto rankingFeatures,@JsonKey(name: 'score_components') RecommendationScoreComponentsDto scoreComponents,@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> missingIngredients,@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> matchedIngredients,@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> optionalIngredients,@JsonKey(name: 'near_expiry_ingredients') List<String> nearExpiryIngredients,@JsonKey(name: 'rescued_details') List<RecommendationRescuedItemDto> rescuedDetails, String explanation, String provider,@JsonKey(name: 'status_badge') String statusBadge,@JsonKey(name: 'model_version') String modelVersion, DishDto? dish
+@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String recipeName, int rank,@JsonKey(fromJson: _asDoubleDefault) double score,@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double rankScore,@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto rankingFeatures,@JsonKey(name: 'score_components') RecommendationScoreComponentsDto scoreComponents,@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> missingIngredients,@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> matchedIngredients,@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> optionalIngredients,@JsonKey(name: 'near_expiry_ingredients') List<String> nearExpiryIngredients,@JsonKey(name: 'rescued_details') List<RecommendationRescuedItemDto> rescuedDetails,@JsonKey(name: 'fit_reasons') List<String> fitReasons, String explanation, String provider,@JsonKey(name: 'status_badge') String statusBadge,@JsonKey(name: 'model_version') String modelVersion, DishDto? dish
 });
 
 
@@ -1426,7 +1426,7 @@ class _$RecommendationItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of RecommendationItemDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? recipeId = null,Object? recipeName = null,Object? rank = null,Object? score = null,Object? rankScore = null,Object? rankingFeatures = null,Object? scoreComponents = null,Object? missingIngredients = null,Object? matchedIngredients = null,Object? optionalIngredients = null,Object? nearExpiryIngredients = null,Object? rescuedDetails = null,Object? explanation = null,Object? provider = null,Object? statusBadge = null,Object? modelVersion = null,Object? dish = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? recipeId = null,Object? recipeName = null,Object? rank = null,Object? score = null,Object? rankScore = null,Object? rankingFeatures = null,Object? scoreComponents = null,Object? missingIngredients = null,Object? matchedIngredients = null,Object? optionalIngredients = null,Object? nearExpiryIngredients = null,Object? rescuedDetails = null,Object? fitReasons = null,Object? explanation = null,Object? provider = null,Object? statusBadge = null,Object? modelVersion = null,Object? dish = freezed,}) {
   return _then(_self.copyWith(
 recipeId: null == recipeId ? _self.recipeId : recipeId // ignore: cast_nullable_to_non_nullable
 as String,recipeName: null == recipeName ? _self.recipeName : recipeName // ignore: cast_nullable_to_non_nullable
@@ -1440,7 +1440,8 @@ as List<RecommendationMissingIngredientDto>,matchedIngredients: null == matchedI
 as List<RecommendationMissingIngredientDto>,optionalIngredients: null == optionalIngredients ? _self.optionalIngredients : optionalIngredients // ignore: cast_nullable_to_non_nullable
 as List<RecommendationMissingIngredientDto>,nearExpiryIngredients: null == nearExpiryIngredients ? _self.nearExpiryIngredients : nearExpiryIngredients // ignore: cast_nullable_to_non_nullable
 as List<String>,rescuedDetails: null == rescuedDetails ? _self.rescuedDetails : rescuedDetails // ignore: cast_nullable_to_non_nullable
-as List<RecommendationRescuedItemDto>,explanation: null == explanation ? _self.explanation : explanation // ignore: cast_nullable_to_non_nullable
+as List<RecommendationRescuedItemDto>,fitReasons: null == fitReasons ? _self.fitReasons : fitReasons // ignore: cast_nullable_to_non_nullable
+as List<String>,explanation: null == explanation ? _self.explanation : explanation // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
 as String,statusBadge: null == statusBadge ? _self.statusBadge : statusBadge // ignore: cast_nullable_to_non_nullable
 as String,modelVersion: null == modelVersion ? _self.modelVersion : modelVersion // ignore: cast_nullable_to_non_nullable
@@ -1453,7 +1454,7 @@ as DishDto?,
 @override
 @pragma('vm:prefer-inline')
 $RecommendationRankingFeaturesDtoCopyWith<$Res> get rankingFeatures {
-
+  
   return $RecommendationRankingFeaturesDtoCopyWith<$Res>(_self.rankingFeatures, (value) {
     return _then(_self.copyWith(rankingFeatures: value));
   });
@@ -1560,10 +1561,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients, @JsonKey(name: 'rescued_details')  List<RecommendationRescuedItemDto> rescuedDetails,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients, @JsonKey(name: 'rescued_details')  List<RecommendationRescuedItemDto> rescuedDetails, @JsonKey(name: 'fit_reasons')  List<String> fitReasons,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RecommendationItemDto() when $default != null:
-return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.rescuedDetails,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
+return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.rescuedDetails,_that.fitReasons,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
   return orElse();
 
 }
@@ -1581,10 +1582,10 @@ return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.ran
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients, @JsonKey(name: 'rescued_details')  List<RecommendationRescuedItemDto> rescuedDetails,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients, @JsonKey(name: 'rescued_details')  List<RecommendationRescuedItemDto> rescuedDetails, @JsonKey(name: 'fit_reasons')  List<String> fitReasons,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)  $default,) {final _that = this;
 switch (_that) {
 case _RecommendationItemDto():
-return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.rescuedDetails,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
+return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.rescuedDetails,_that.fitReasons,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1601,10 +1602,10 @@ return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.ran
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients, @JsonKey(name: 'rescued_details')  List<RecommendationRescuedItemDto> rescuedDetails,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'recipe_id')  String recipeId, @JsonKey(name: 'recipe_name')  String recipeName,  int rank, @JsonKey(fromJson: _asDoubleDefault)  double score, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault)  double rankScore, @JsonKey(name: 'ranking_features')  RecommendationRankingFeaturesDto rankingFeatures, @JsonKey(name: 'score_components')  RecommendationScoreComponentsDto scoreComponents, @JsonKey(name: 'missing_ingredients')  List<RecommendationMissingIngredientDto> missingIngredients, @JsonKey(name: 'matched_ingredients')  List<RecommendationMissingIngredientDto> matchedIngredients, @JsonKey(name: 'optional_ingredients')  List<RecommendationMissingIngredientDto> optionalIngredients, @JsonKey(name: 'near_expiry_ingredients')  List<String> nearExpiryIngredients, @JsonKey(name: 'rescued_details')  List<RecommendationRescuedItemDto> rescuedDetails, @JsonKey(name: 'fit_reasons')  List<String> fitReasons,  String explanation,  String provider, @JsonKey(name: 'status_badge')  String statusBadge, @JsonKey(name: 'model_version')  String modelVersion,  DishDto? dish)?  $default,) {final _that = this;
 switch (_that) {
 case _RecommendationItemDto() when $default != null:
-return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.rescuedDetails,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
+return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.rankScore,_that.rankingFeatures,_that.scoreComponents,_that.missingIngredients,_that.matchedIngredients,_that.optionalIngredients,_that.nearExpiryIngredients,_that.rescuedDetails,_that.fitReasons,_that.explanation,_that.provider,_that.statusBadge,_that.modelVersion,_that.dish);case _:
   return null;
 
 }
@@ -1616,7 +1617,7 @@ return $default(_that.recipeId,_that.recipeName,_that.rank,_that.score,_that.ran
 
 
 class _RecommendationItemDto extends RecommendationItemDto {
-  const _RecommendationItemDto({@JsonKey(name: 'recipe_id') required this.recipeId, @JsonKey(name: 'recipe_name') required this.recipeName, this.rank = 1, @JsonKey(fromJson: _asDoubleDefault) this.score = 0.0, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) this.rankScore = 0.0, @JsonKey(name: 'ranking_features') this.rankingFeatures = const RecommendationRankingFeaturesDto(), @JsonKey(name: 'score_components') this.scoreComponents = const RecommendationScoreComponentsDto(), @JsonKey(name: 'missing_ingredients') final  List<RecommendationMissingIngredientDto> missingIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'matched_ingredients') final  List<RecommendationMissingIngredientDto> matchedIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'optional_ingredients') final  List<RecommendationMissingIngredientDto> optionalIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'near_expiry_ingredients') final  List<String> nearExpiryIngredients = const <String>[], @JsonKey(name: 'rescued_details') final  List<RecommendationRescuedItemDto> rescuedDetails = const <RecommendationRescuedItemDto>[], this.explanation = '', this.provider = '', @JsonKey(name: 'status_badge') this.statusBadge = '', @JsonKey(name: 'model_version') this.modelVersion = '', this.dish}): _missingIngredients = missingIngredients,_matchedIngredients = matchedIngredients,_optionalIngredients = optionalIngredients,_nearExpiryIngredients = nearExpiryIngredients,_rescuedDetails = rescuedDetails,super._();
+  const _RecommendationItemDto({@JsonKey(name: 'recipe_id') required this.recipeId, @JsonKey(name: 'recipe_name') required this.recipeName, this.rank = 1, @JsonKey(fromJson: _asDoubleDefault) this.score = 0.0, @JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) this.rankScore = 0.0, @JsonKey(name: 'ranking_features') this.rankingFeatures = const RecommendationRankingFeaturesDto(), @JsonKey(name: 'score_components') this.scoreComponents = const RecommendationScoreComponentsDto(), @JsonKey(name: 'missing_ingredients') final  List<RecommendationMissingIngredientDto> missingIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'matched_ingredients') final  List<RecommendationMissingIngredientDto> matchedIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'optional_ingredients') final  List<RecommendationMissingIngredientDto> optionalIngredients = const <RecommendationMissingIngredientDto>[], @JsonKey(name: 'near_expiry_ingredients') final  List<String> nearExpiryIngredients = const <String>[], @JsonKey(name: 'rescued_details') final  List<RecommendationRescuedItemDto> rescuedDetails = const <RecommendationRescuedItemDto>[], @JsonKey(name: 'fit_reasons') final  List<String> fitReasons = const <String>[], this.explanation = '', this.provider = '', @JsonKey(name: 'status_badge') this.statusBadge = '', @JsonKey(name: 'model_version') this.modelVersion = '', this.dish}): _missingIngredients = missingIngredients,_matchedIngredients = matchedIngredients,_optionalIngredients = optionalIngredients,_nearExpiryIngredients = nearExpiryIngredients,_rescuedDetails = rescuedDetails,_fitReasons = fitReasons,super._();
   
 
 @override@JsonKey(name: 'recipe_id') final  String recipeId;
@@ -1661,6 +1662,13 @@ class _RecommendationItemDto extends RecommendationItemDto {
   return EqualUnmodifiableListView(_rescuedDetails);
 }
 
+ final  List<String> _fitReasons;
+@override@JsonKey(name: 'fit_reasons') List<String> get fitReasons {
+  if (_fitReasons is EqualUnmodifiableListView) return _fitReasons;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_fitReasons);
+}
+
 @override@JsonKey() final  String explanation;
 @override@JsonKey() final  String provider;
 @override@JsonKey(name: 'status_badge') final  String statusBadge;
@@ -1678,16 +1686,16 @@ _$RecommendationItemDtoCopyWith<_RecommendationItemDto> get copyWith => __$Recom
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecommendationItemDto&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.score, score) || other.score == score)&&(identical(other.rankScore, rankScore) || other.rankScore == rankScore)&&(identical(other.rankingFeatures, rankingFeatures) || other.rankingFeatures == rankingFeatures)&&(identical(other.scoreComponents, scoreComponents) || other.scoreComponents == scoreComponents)&&const DeepCollectionEquality().equals(other._missingIngredients, _missingIngredients)&&const DeepCollectionEquality().equals(other._matchedIngredients, _matchedIngredients)&&const DeepCollectionEquality().equals(other._optionalIngredients, _optionalIngredients)&&const DeepCollectionEquality().equals(other._nearExpiryIngredients, _nearExpiryIngredients)&&const DeepCollectionEquality().equals(other._rescuedDetails, _rescuedDetails)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.statusBadge, statusBadge) || other.statusBadge == statusBadge)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.dish, dish) || other.dish == dish));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RecommendationItemDto&&(identical(other.recipeId, recipeId) || other.recipeId == recipeId)&&(identical(other.recipeName, recipeName) || other.recipeName == recipeName)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.score, score) || other.score == score)&&(identical(other.rankScore, rankScore) || other.rankScore == rankScore)&&(identical(other.rankingFeatures, rankingFeatures) || other.rankingFeatures == rankingFeatures)&&(identical(other.scoreComponents, scoreComponents) || other.scoreComponents == scoreComponents)&&const DeepCollectionEquality().equals(other._missingIngredients, _missingIngredients)&&const DeepCollectionEquality().equals(other._matchedIngredients, _matchedIngredients)&&const DeepCollectionEquality().equals(other._optionalIngredients, _optionalIngredients)&&const DeepCollectionEquality().equals(other._nearExpiryIngredients, _nearExpiryIngredients)&&const DeepCollectionEquality().equals(other._rescuedDetails, _rescuedDetails)&&const DeepCollectionEquality().equals(other._fitReasons, _fitReasons)&&(identical(other.explanation, explanation) || other.explanation == explanation)&&(identical(other.provider, provider) || other.provider == provider)&&(identical(other.statusBadge, statusBadge) || other.statusBadge == statusBadge)&&(identical(other.modelVersion, modelVersion) || other.modelVersion == modelVersion)&&(identical(other.dish, dish) || other.dish == dish));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,recipeId,recipeName,rank,score,rankScore,rankingFeatures,scoreComponents,const DeepCollectionEquality().hash(_missingIngredients),const DeepCollectionEquality().hash(_matchedIngredients),const DeepCollectionEquality().hash(_optionalIngredients),const DeepCollectionEquality().hash(_nearExpiryIngredients),const DeepCollectionEquality().hash(_rescuedDetails),explanation,provider,statusBadge,modelVersion,dish);
+int get hashCode => Object.hash(runtimeType,recipeId,recipeName,rank,score,rankScore,rankingFeatures,scoreComponents,const DeepCollectionEquality().hash(_missingIngredients),const DeepCollectionEquality().hash(_matchedIngredients),const DeepCollectionEquality().hash(_optionalIngredients),const DeepCollectionEquality().hash(_nearExpiryIngredients),const DeepCollectionEquality().hash(_rescuedDetails),const DeepCollectionEquality().hash(_fitReasons),explanation,provider,statusBadge,modelVersion,dish);
 
 @override
 String toString() {
-  return 'RecommendationItemDto(recipeId: $recipeId, recipeName: $recipeName, rank: $rank, score: $score, rankScore: $rankScore, rankingFeatures: $rankingFeatures, scoreComponents: $scoreComponents, missingIngredients: $missingIngredients, matchedIngredients: $matchedIngredients, optionalIngredients: $optionalIngredients, nearExpiryIngredients: $nearExpiryIngredients, rescuedDetails: $rescuedDetails, explanation: $explanation, provider: $provider, statusBadge: $statusBadge, modelVersion: $modelVersion, dish: $dish)';
+  return 'RecommendationItemDto(recipeId: $recipeId, recipeName: $recipeName, rank: $rank, score: $score, rankScore: $rankScore, rankingFeatures: $rankingFeatures, scoreComponents: $scoreComponents, missingIngredients: $missingIngredients, matchedIngredients: $matchedIngredients, optionalIngredients: $optionalIngredients, nearExpiryIngredients: $nearExpiryIngredients, rescuedDetails: $rescuedDetails, fitReasons: $fitReasons, explanation: $explanation, provider: $provider, statusBadge: $statusBadge, modelVersion: $modelVersion, dish: $dish)';
 }
 
 
@@ -1698,7 +1706,7 @@ abstract mixin class _$RecommendationItemDtoCopyWith<$Res> implements $Recommend
   factory _$RecommendationItemDtoCopyWith(_RecommendationItemDto value, $Res Function(_RecommendationItemDto) _then) = __$RecommendationItemDtoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String recipeName, int rank,@JsonKey(fromJson: _asDoubleDefault) double score,@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double rankScore,@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto rankingFeatures,@JsonKey(name: 'score_components') RecommendationScoreComponentsDto scoreComponents,@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> missingIngredients,@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> matchedIngredients,@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> optionalIngredients,@JsonKey(name: 'near_expiry_ingredients') List<String> nearExpiryIngredients,@JsonKey(name: 'rescued_details') List<RecommendationRescuedItemDto> rescuedDetails, String explanation, String provider,@JsonKey(name: 'status_badge') String statusBadge,@JsonKey(name: 'model_version') String modelVersion, DishDto? dish
+@JsonKey(name: 'recipe_id') String recipeId,@JsonKey(name: 'recipe_name') String recipeName, int rank,@JsonKey(fromJson: _asDoubleDefault) double score,@JsonKey(name: 'rank_score', fromJson: _asDoubleDefault) double rankScore,@JsonKey(name: 'ranking_features') RecommendationRankingFeaturesDto rankingFeatures,@JsonKey(name: 'score_components') RecommendationScoreComponentsDto scoreComponents,@JsonKey(name: 'missing_ingredients') List<RecommendationMissingIngredientDto> missingIngredients,@JsonKey(name: 'matched_ingredients') List<RecommendationMissingIngredientDto> matchedIngredients,@JsonKey(name: 'optional_ingredients') List<RecommendationMissingIngredientDto> optionalIngredients,@JsonKey(name: 'near_expiry_ingredients') List<String> nearExpiryIngredients,@JsonKey(name: 'rescued_details') List<RecommendationRescuedItemDto> rescuedDetails,@JsonKey(name: 'fit_reasons') List<String> fitReasons, String explanation, String provider,@JsonKey(name: 'status_badge') String statusBadge,@JsonKey(name: 'model_version') String modelVersion, DishDto? dish
 });
 
 
@@ -1715,7 +1723,7 @@ class __$RecommendationItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of RecommendationItemDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? recipeId = null,Object? recipeName = null,Object? rank = null,Object? score = null,Object? rankScore = null,Object? rankingFeatures = null,Object? scoreComponents = null,Object? missingIngredients = null,Object? matchedIngredients = null,Object? optionalIngredients = null,Object? nearExpiryIngredients = null,Object? rescuedDetails = null,Object? explanation = null,Object? provider = null,Object? statusBadge = null,Object? modelVersion = null,Object? dish = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? recipeId = null,Object? recipeName = null,Object? rank = null,Object? score = null,Object? rankScore = null,Object? rankingFeatures = null,Object? scoreComponents = null,Object? missingIngredients = null,Object? matchedIngredients = null,Object? optionalIngredients = null,Object? nearExpiryIngredients = null,Object? rescuedDetails = null,Object? fitReasons = null,Object? explanation = null,Object? provider = null,Object? statusBadge = null,Object? modelVersion = null,Object? dish = freezed,}) {
   return _then(_RecommendationItemDto(
 recipeId: null == recipeId ? _self.recipeId : recipeId // ignore: cast_nullable_to_non_nullable
 as String,recipeName: null == recipeName ? _self.recipeName : recipeName // ignore: cast_nullable_to_non_nullable
@@ -1729,7 +1737,8 @@ as List<RecommendationMissingIngredientDto>,matchedIngredients: null == matchedI
 as List<RecommendationMissingIngredientDto>,optionalIngredients: null == optionalIngredients ? _self._optionalIngredients : optionalIngredients // ignore: cast_nullable_to_non_nullable
 as List<RecommendationMissingIngredientDto>,nearExpiryIngredients: null == nearExpiryIngredients ? _self._nearExpiryIngredients : nearExpiryIngredients // ignore: cast_nullable_to_non_nullable
 as List<String>,rescuedDetails: null == rescuedDetails ? _self._rescuedDetails : rescuedDetails // ignore: cast_nullable_to_non_nullable
-as List<RecommendationRescuedItemDto>,explanation: null == explanation ? _self.explanation : explanation // ignore: cast_nullable_to_non_nullable
+as List<RecommendationRescuedItemDto>,fitReasons: null == fitReasons ? _self._fitReasons : fitReasons // ignore: cast_nullable_to_non_nullable
+as List<String>,explanation: null == explanation ? _self.explanation : explanation // ignore: cast_nullable_to_non_nullable
 as String,provider: null == provider ? _self.provider : provider // ignore: cast_nullable_to_non_nullable
 as String,statusBadge: null == statusBadge ? _self.statusBadge : statusBadge // ignore: cast_nullable_to_non_nullable
 as String,modelVersion: null == modelVersion ? _self.modelVersion : modelVersion // ignore: cast_nullable_to_non_nullable
@@ -1743,7 +1752,7 @@ as DishDto?,
 @override
 @pragma('vm:prefer-inline')
 $RecommendationRankingFeaturesDtoCopyWith<$Res> get rankingFeatures {
-
+  
   return $RecommendationRankingFeaturesDtoCopyWith<$Res>(_self.rankingFeatures, (value) {
     return _then(_self.copyWith(rankingFeatures: value));
   });
@@ -1841,7 +1850,7 @@ as List<String>,
 @override
 @pragma('vm:prefer-inline')
 $RecommendationTimingsDtoCopyWith<$Res> get timings {
-
+  
   return $RecommendationTimingsDtoCopyWith<$Res>(_self.timings, (value) {
     return _then(_self.copyWith(timings: value));
   });
@@ -2090,7 +2099,7 @@ as List<String>,
 @override
 @pragma('vm:prefer-inline')
 $RecommendationTimingsDtoCopyWith<$Res> get timings {
-
+  
   return $RecommendationTimingsDtoCopyWith<$Res>(_self.timings, (value) {
     return _then(_self.copyWith(timings: value));
   });

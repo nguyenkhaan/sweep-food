@@ -1870,4 +1870,190 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get commonNo => 'No';
+
+  @override
+  String get dietVegetarian => 'Vegetarian';
+
+  @override
+  String get dietVegetarianDesc =>
+      'Strictly excludes meat, fish, seafood, eggs and animal products';
+
+  @override
+  String get nutritionDisclaimer =>
+      'Suggestions are for reference only and do not replace medical advice';
+
+  @override
+  String get nutritionProfileTitle => 'Nutrition profile';
+
+  @override
+  String get nutritionProfileSubtitle =>
+      'Personalize dish recommendations by household size, diet, health conditions and allergies.';
+
+  @override
+  String nutritionProfileRowSubtitle(int servings, String diet) {
+    return '$servings people · $diet';
+  }
+
+  @override
+  String nutritionProfileFilterBadge(int count) {
+    return '$count filters';
+  }
+
+  @override
+  String get nutritionProfileSaveCta => 'Save nutrition profile';
+
+  @override
+  String get nutritionProfileSaved =>
+      'Nutrition profile saved. Dish suggestions will refresh.';
+
+  @override
+  String get nutritionProfileHouseholdTitle => 'Household size';
+
+  @override
+  String get nutritionProfileHouseholdHint =>
+      'Used to scale servings and ingredient quantities.';
+
+  @override
+  String nutritionProfileHouseholdValue(int count) {
+    return '$count people';
+  }
+
+  @override
+  String get nutritionProfileDietTitle => 'Diet style';
+
+  @override
+  String get nutritionProfileDietHint =>
+      'Vegetarian is a hard filter; other options boost matching dishes in ranking.';
+
+  @override
+  String get nutritionProfileHardFilterTag => 'Hard filter';
+
+  @override
+  String get nutritionProfileHealthTitle => 'Health conditions';
+
+  @override
+  String get nutritionProfileHealthHint =>
+      'Select all that apply. Non-compliant dishes are filtered out automatically.';
+
+  @override
+  String get nutritionProfileAllergiesTitle => 'Food allergies';
+
+  @override
+  String get nutritionProfileAllergiesHint =>
+      'Safety first: uncertain dishes are excluded rather than risked.';
+
+  @override
+  String get nutritionProfileDislikedTitle => 'Disliked dishes or ingredients';
+
+  @override
+  String get nutritionProfileDislikedHint =>
+      'Type to pick from the catalog or add any ingredient name.';
+
+  @override
+  String get nutritionProfileDislikedFieldHint =>
+      'e.g., cilantro, onion, shrimp paste…';
+
+  @override
+  String get nutritionProfileDislikedAdd => 'Add';
+
+  @override
+  String get nutritionProfileDislikedEmpty => 'No excluded ingredients yet.';
+
+  @override
+  String get nutritionProfileDislikedLimit =>
+      'Maximum of 50 excluded ingredients.';
+
+  @override
+  String get healthCondDiabetes => 'Diabetes';
+
+  @override
+  String get healthCondDiabetesDesc => 'Sugar < 10g & carbs < 45g / serving';
+
+  @override
+  String get healthCondHypertension => 'Hypertension';
+
+  @override
+  String get healthCondHypertensionDesc => 'Sodium < 1,000 mg / serving';
+
+  @override
+  String get healthCondGout => 'Gout';
+
+  @override
+  String get healthCondGoutDesc =>
+      'Excludes high-purine red meat, organs & seafood';
+
+  @override
+  String get healthCondGastritis => 'Gastritis';
+
+  @override
+  String get healthCondGastritisDesc => 'Excludes deep-fried dishes';
+
+  @override
+  String get healthCondKetoLowCarb => 'Keto / low-carb';
+
+  @override
+  String get healthCondKetoLowCarbDesc => 'Carbs ≤ 20g / serving';
+
+  @override
+  String get allergyShellfish => 'Shellfish';
+
+  @override
+  String get allergyShellfishExamples =>
+      'Shrimp, crab, clams, mussels, snails, squid';
+
+  @override
+  String get allergyFish => 'Fish';
+
+  @override
+  String get allergyFishExamples => 'Fish, fish sauce, fish cakes';
+
+  @override
+  String get allergyPeanut => 'Peanuts';
+
+  @override
+  String get allergyPeanutExamples => 'Peanuts, peanut butter';
+
+  @override
+  String get allergyEgg => 'Eggs';
+
+  @override
+  String get allergyEggExamples => 'Chicken, duck and quail eggs';
+
+  @override
+  String get allergyDairy => 'Dairy';
+
+  @override
+  String get allergyDairyExamples => 'Milk, cheese, butter, cream';
+
+  @override
+  String get allergySoy => 'Soy';
+
+  @override
+  String get allergySoyExamples => 'Tofu, soy milk, soy sauce';
+
+  @override
+  String get allergyGluten => 'Gluten';
+
+  @override
+  String get allergyGlutenExamples => 'Wheat flour, bread, wheat noodles';
+
+  @override
+  String get allergySesame => 'Sesame';
+
+  @override
+  String get allergySesameExamples => 'Sesame seeds, sesame oil';
+
+  @override
+  String get suggestionsFitReasonsTitle => 'Why this fits your profile';
+
+  @override
+  String get suggestionsEmptyFilteredTitle =>
+      'No dishes match your nutrition profile';
+
+  @override
+  String get suggestionsEmptyFilteredBody =>
+      'Your health, allergy, or excluded-ingredient filters removed all dishes for your current pantry. Try adding ingredients or reviewing your nutrition profile.';
+
+  @override
+  String get suggestionsReviewProfileCta => 'Review nutrition profile';
 }
