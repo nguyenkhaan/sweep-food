@@ -6,6 +6,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field, field_validator
 
+from src.module.user.nutrition_profile import validate_preferences_patch
+
 _EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _PHONE_E164_PATTERN = re.compile(r"^\+[1-9][0-9]{7,14}$")
 
@@ -40,6 +42,17 @@ class UpdateUserProfileRequestDTO(BaseModel):
     def normalize_name(cls, value: str | None) -> str | None:
         """Trim a supplied display name while allowing it to be cleared."""
         return value.strip() if value is not None else None
+
+    @field_validator("preferences")
+    @classmethod
+    def normalize_preferences(
+        cls,
+        value: dict[str, object] | None,
+    ) -> dict[str, object] | None:
+        """Validate and normalize nutrition profile fields inside preferences."""
+        if value is None:
+            return None
+        return validate_preferences_patch(value)
 
 
 class EmailRequestDTO(BaseModel):

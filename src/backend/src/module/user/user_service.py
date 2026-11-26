@@ -131,7 +131,13 @@ class UserService:
             if "name" in request.model_fields_set:
                 user.name = request.name
             if "preferences" in request.model_fields_set and request.preferences is not None:
-                user.preferences = request.preferences
+                existing_preferences = (
+                    dict(user.preferences)
+                    if isinstance(user.preferences, dict)
+                    else {}
+                )
+                existing_preferences.update(request.preferences)
+                user.preferences = existing_preferences
             await self.db_session.commit()
             return UserProfileDTO(
                 user_id=user.id,

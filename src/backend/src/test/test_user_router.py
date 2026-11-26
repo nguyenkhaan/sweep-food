@@ -128,6 +128,50 @@ async def test_email_request_rejects_an_invalid_email_with_a_clear_422_error(
     }
 
 
+@pytest.mark.anyio
+@pytest.mark.parametrize(
+    "preferences",
+    [
+        {"household_size": 0},
+        {"household_size": 11},
+        {"household_size": True},
+        {"household_size": 2.5},
+        {"diet": "carnivore"},
+        {"health_conditions": ["unknown_condition"]},
+        {"health_conditions": "nguoi_tieu_duong"},
+        {"allergies": ["unknown_allergy"]},
+        {"disliked_ingredients": ["x" * 101]},
+        {"disliked_ingredients": [f"item-{idx}" for idx in range(51)]},
+    ],
+)
+async def test_patch_profile_rejects_invalid_nutrition_preferences_with_422(
+    api_client: httpx.AsyncClient,
+    preferences: dict[str, object],
+) -> None:
+    """Invalid nutrition preference payloads fail validation before service calls."""
+    fake_service = FakeUserService()
+
+    async def get_fake_user_service() -> FakeUserService:
+        return fake_service
+
+    async def get_authenticated_user() -> AuthenticatedUser:
+        return AuthenticatedUser(USER_ID, (UserRole.USER,))
+
+    app.dependency_overrides[get_user_service] = get_fake_user_service
+    app.dependency_overrides[require_authentication] = get_authenticated_user
+    try:
+        response = await api_client.patch(
+            "/api/users/profile",
+            json={"preferences": preferences},
+        )
+    finally:
+        app.dependency_overrides.pop(get_user_service, None)
+        app.dependency_overrides.pop(require_authentication, None)
+
+    assert response.status_code == 422
+    assert response.json()["path"] == "/api/users/profile"
+
+
 def test_user_openapi_marks_bearer_routes_and_otp_only_email_verification() -> None:
     """Swagger exposes custom auth and the no-email confirmation request body."""
     schema = app.openapi()

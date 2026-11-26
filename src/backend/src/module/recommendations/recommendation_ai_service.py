@@ -20,6 +20,7 @@ from src.model.enum_model import InventoryBatchStatus, MeasurementUnit
 from src.model.inventory_batch_model import InventoryBatchModel
 from src.model.master_ingredient_model import MasterIngredientModel
 from src.model.recipe_model import RecipeModel
+from src.model.user_model import UserModel
 from src.module.recommendations.recommendation_dto import (
     MockRecommendationAnalysisDTO,
     RecommendationIngredientDTO,
@@ -32,6 +33,10 @@ from src.module.recommendations.recommendation_dto import (
     RecommendationTimingsDTO,
 )
 from src.module.recommendations.recommendation_mapper import to_recipe_summary
+from src.module.user.nutrition_profile import (
+    UserNutritionProfile,
+    parse_nutrition_profile,
+)
 from src.service.fefo_service import (
     FEFOCandidate,
     FEFOService,
@@ -78,14 +83,15 @@ class RecommendationAIService:
     ) -> RecommendationListResponseDTO:
         """Return calibrated AI rankings backed by the backend recipe catalog."""
         now = self._clock()
-        stock = await self._load_stock(_user_id) if body.items else {}
-        effective_request = _with_saved_stock(body, stock, now)
+        stock, effective_request = await self._prepare_request(_user_id, body, now)
         ai_response = await run_in_threadpool(
             self._engine.recommend,
             effective_request,
         )
 
         warnings: list[str] = []
+        if ai_response.status == "empty" and body.items:
+            warnings.append("NO_MATCH_AFTER_FILTERS")
         recipes = await self._load_recipes(
             [recommendation.id for recommendation in ai_response.recommendations]
         )
@@ -121,6 +127,15 @@ class RecommendationAIService:
                 )
             )
 
+        summary = (
+            ai_response.message
+            if ai_response.status == "empty" and ai_response.message
+            else (
+                "Recommendations were ranked from the supplied pantry and "
+                "preferences."
+            )
+        )
+
         return RecommendationListResponseDTO(
             request=effective_request,
             contract_version=ai_response.contract_version,
@@ -130,15 +145,38 @@ class RecommendationAIService:
             timings=RecommendationTimingsDTO(**ai_response.timings.model_dump()),
             analysis=MockRecommendationAnalysisDTO(
                 intent="meal_recommendation",
-                summary=(
-                    "Recommendations were ranked from the supplied pantry and "
-                    "preferences."
-                ),
+                summary=summary,
                 is_mock=False,
             ),
             items=items,
             warnings=warnings,
         )
+
+    async def _prepare_request(
+        self,
+        user_id: UUID,
+        body: RecommendationRequestDTO,
+        now: datetime,
+    ) -> tuple[_StockByName, RecommendationRequestDTO]:
+        """Enrich pantry stock and attach authoritative nutrition preferences."""
+        if not body.items:
+            return {}, body
+        preferences = await self._load_user_preferences(user_id)
+        profile = parse_nutrition_profile(preferences)
+        stock = await self._load_stock(user_id)
+        effective_request = _with_user_profile(
+            _with_saved_stock(body, stock, now),
+            profile,
+        )
+        return stock, effective_request
+
+    async def _load_user_preferences(self, user_id: UUID) -> dict[str, object]:
+        """Read the authenticated user's persisted preferences JSONB."""
+        result = await self._db_session.execute(
+            select(UserModel.preferences).where(UserModel.id == user_id)
+        )
+        raw = result.scalar_one_or_none()
+        return raw if isinstance(raw, dict) else {}
 
     async def _load_stock(self, user_id: UUID) -> _StockByName:
         """Group the user's active batches by normalized pantry name."""
@@ -291,11 +329,42 @@ class RecommendationAIService:
             ],
             rescued_items=_unique_names(recommendation.rescued_items),
             rescued_details=rescued_details,
+            fit_reasons=_extract_fit_reasons(recommendation),
             status_badge=recommendation.status_badge,
             explanation="AI-ranked from pantry availability, expiry, and shopping gaps.",
             provider="SWEEP_FOOD_AI",
             recipe_summary=to_recipe_summary(recipe),
         )
+
+
+def _with_user_profile(
+    request: RecommendationRequestDTO,
+    profile: UserNutritionProfile,
+) -> RecommendationRequestDTO:
+    """Populate authoritative nutrition profile fields from `users.preferences`."""
+    return request.model_copy(
+        update={
+            "household_size": float(profile.household_size),
+            "diet": profile.diet,
+            "scenario_types": profile.scenario_types(),
+            "scenario_type": profile.primary_scenario_type(),
+            "dietary_restrictions": [profile.diet],
+            "allergies": list(profile.allergies),
+            "disliked_ingredients": list(profile.disliked_ingredients),
+        }
+    )
+
+
+def _extract_fit_reasons(recommendation: EngineRecommendation) -> list[str]:
+    """Read `fit_reasons` safely while the AI branch adds the attribute."""
+    raw: object = getattr(recommendation, "fit_reasons", None)
+    if not isinstance(raw, list):
+        return []
+    return [
+        reason.strip()
+        for reason in raw
+        if isinstance(reason, str) and reason.strip()
+    ]
 
 
 def _with_saved_stock(

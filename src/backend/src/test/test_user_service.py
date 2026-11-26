@@ -128,6 +128,54 @@ async def test_update_profile_changes_only_the_current_users_fields() -> None:
 
 
 @pytest.mark.anyio
+async def test_update_profile_shallow_merges_and_normalizes_nutrition_preferences() -> (
+    None
+):
+    """Updating nutrition keys keeps existing preference keys and normalizes input."""
+    user = build_user()
+    user.preferences = {
+        "locale": "vi",
+        "onboarding_completed": True,
+        "avatar_url": "https://cdn.example.com/a.png",
+    }
+    database = FakeDatabaseSession(query_values=[user])
+    service = build_service(
+        database,
+        FakeOTPDeliveryService(),
+        FakeOTPDeliveryService(),
+    )
+
+    profile = await service.update_profile(
+        USER_ID,
+        UpdateUserProfileRequestDTO(
+            preferences={
+                "household_size": 2,
+                "diet": "  VEGETARIAN ",
+                "health_conditions": [
+                    "nguoi_cao_huyet_ap",
+                    "nguoi_tieu_duong",
+                    "nguoi_cao_huyet_ap",
+                ],
+                "allergies": ["shellfish", "peanut", "shellfish"],
+                "disliked_ingredients": [" rau mùi ", "", "Rau Mùi", "Hành tây"],
+            }
+        ),
+    )
+
+    assert profile.preferences == {
+        "locale": "vi",
+        "onboarding_completed": True,
+        "avatar_url": "https://cdn.example.com/a.png",
+        "household_size": 2,
+        "diet": "vegetarian",
+        "health_conditions": ["nguoi_cao_huyet_ap", "nguoi_tieu_duong"],
+        "allergies": ["shellfish", "peanut"],
+        "disliked_ingredients": ["rau mùi", "Hành tây"],
+    }
+    assert database.commits == 1
+
+
+@pytest.mark.anyio
 async def test_request_and_verify_email_uses_verify_email_otp_scope() -> None:
     """A user without email can attach it only after the email OTP verifies."""
     user = build_user()
