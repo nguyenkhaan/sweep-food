@@ -105,29 +105,42 @@ Không truyền `servings` → BE dùng `default_servings`. Trả về **định
 
 ## 3. Recommendations — `POST /recommendations`
 
-BE xếp hạng trực tiếp bằng LightGBM trên catalog trong Postgres, bổ sung hạn dùng authoritative từ kho người dùng, rồi map kết quả về recipe catalog. `analysis.is_mock` là `false`. Chưa import catalog (`python -m AI.catalog.importer`) thì route trả `503 AI catalog is not loaded.`
+BE xếp hạng trực tiếp bằng LightGBM trên catalog trong Postgres, bổ sung hạn dùng authoritative từ kho người dùng, **tự đọc hồ sơ ăn uống từ `users.preferences`** để điền tham số lọc/xếp hạng gửi AI engine (không phụ thuộc vào chế độ ăn/dị ứng mà FE gửi lên), rồi map kết quả về recipe catalog. `analysis.is_mock` là `false`. Chưa import catalog (`python -m AI.catalog.importer`) thì route trả `503 AI catalog is not loaded.`
 
-**Request:**
+**Request (FE chỉ cần gửi `items`; các trường hồ sơ bên dưới giữ optional để tương thích ngược nhưng BE luôn ghi đè từ `users.preferences`):**
 ```json
 {
   "items": [
     { "name": "Thịt bò", "code": "7003", "quantity_g": 300, "hours_to_expire": 12, "is_staple": false }
-  ],
-  "household_size": 2,
-  "scenario_type": "quick_meal",
-  "dietary_restrictions": [],
-  "allergies": [],
-  "disliked_ingredients": [],
-  "preferred_cuisines": []
+  ]
 }
 ```
 
 `hours_to_expire` và `code` có thể bỏ qua; khi thiếu `hours_to_expire`, engine áp dụng mặc định. Nếu tên nguyên liệu khớp một batch active của user, BE dùng hạn sớm nhất trong kho. **BE không nhận ràng buộc thời gian nấu**: gửi `max_cooking_time_min` (hoặc field lạ bất kỳ) trả `422`.
 
+**Mapping hồ sơ BE → AI Engine (`RecommendationEngine.recommend`):**
+- `household_size`: đọc từ `users.preferences.household_size` (`1..10`, mặc định `4`).
+- `diet`: đọc từ `users.preferences.diet` (fallback `dietary_preference` cũ, mặc định `"balanced"`).
+- `scenario_types`: gộp `["an_chay"]` (nếu `diet == "vegetarian"`) + `users.preferences.health_conditions` (giữ thứ tự, không trùng).
+- `scenario_type`: tương thích ngược — lấy `scenario_types[0]` nếu không rỗng, ngược lại `"custom"`.
+- `dietary_restrictions`: `[diet]` (tương thích ngược).
+- `allergies`: đọc từ `users.preferences.allergies`.
+- `disliked_ingredients`: đọc từ `users.preferences.disliked_ingredients`.
+
 **Response 200:**
 ```json
 {
-  "request": { "items": [], "household_size": 2, "scenario_type": "quick_meal", "dietary_restrictions": [], "allergies": [], "disliked_ingredients": [], "preferred_cuisines": [] },
+  "request": {
+    "items": [],
+    "household_size": 2,
+    "diet": "balanced",
+    "scenario_type": "nguoi_cao_huyet_ap",
+    "scenario_types": ["nguoi_cao_huyet_ap", "nguoi_tieu_duong"],
+    "dietary_restrictions": ["balanced"],
+    "allergies": ["shellfish", "peanut"],
+    "disliked_ingredients": ["rau mùi"],
+    "preferred_cuisines": []
+  },
   "contract_version": "2",
   "model_version": "lgbm-contextual-v3.1.0",
   "catalog_revision": "catalog-r1259-n31-...",
@@ -152,6 +165,11 @@ BE xếp hạng trực tiếp bằng LightGBM trên catalog trong Postgres, bổ
       "rescued_details": [
         { "name": "Thịt bò", "code": "7003", "required_g": 250, "rescued_g": 200, "expiring_g": 200, "expires_at": "2026-10-22T08:00:00Z" }
       ],
+      "fit_reasons": [
+        "Ít muối, hợp người cao huyết áp",
+        "≈ 420 kcal/suất · 32 g đạm",
+        "Không có hải sản có vỏ"
+      ],
       "status_badge": "elastic",
       "explanation": "AI-ranked from pantry availability, expiry, and shopping gaps.",
       "provider": "SWEEP_FOOD_AI",
@@ -166,7 +184,7 @@ BE xếp hạng trực tiếp bằng LightGBM trên catalog trong Postgres, bổ
 }
 ```
 
-`rank_score` là điểm raw, không bị chặn trong `0..1` và **không được hiển thị như phần trăm**. Thứ tự chính thức là `rank`, vì AI còn áp dụng feasibility tier/diversity sau điểm LightGBM. `status_badge` ∈ `ready|elastic|shopping`. Card dùng `recipe_summary`; màn chi tiết vẫn gọi `GET /recipes/{recipe_id}`.
+`rank_score` là điểm raw, không bị chặn trong `0..1` và **không được hiển thị như phần trăm**. Thứ tự chính thức là `rank`, vì AI còn áp dụng feasibility tier/diversity sau điểm LightGBM. `status_badge` ∈ `ready|elastic|shopping`. `fit_reasons` là danh sách 0–3+ lý do ngắn tiếng Việt giải thích vì sao món hợp hồ sơ người dùng (mặc định `[]` nếu engine chưa trả). Khi `items` rỗng dù kho gửi lên không trống (do lọc sức khoẻ/dị ứng chặt), `warnings` chứa `"NO_MATCH_AFTER_FILTERS"` và `analysis.summary` giữ nguyên thông điệp từ engine; app **không** tự nới lỏng bộ lọc dị ứng. Card dùng `recipe_summary`; màn chi tiết vẫn gọi `GET /recipes/{recipe_id}`.
 
 Kho lưu mỗi lần nhập là một lô riêng. Backend gộp các `items` trùng tên thành một nguyên liệu, rồi lấy tổng gam và hạn sớm nhất từ các lô còn dùng được của user. `rescued_items` không lặp tên. `rescued_details` chia lượng món cần (`required_g`, đã nhân theo `household_size`) cho các lô theo FEFO: `rescued_g` là phần lấy từ lô hết hạn trong 24h, `expiring_g` là tổng gam sắp hết hạn trong 24h, `expires_at` là hạn sớm nhất trong phần được giải cứu. Lô tính theo cái/gói không quy ra gam nên không có trong `rescued_g`.
 ---
@@ -659,14 +677,24 @@ FE giữ mock cho tới Checkpoint Phase 6: người phụ trách phải tạo/a
 
 ---
 
-## 12. Onboarding & User Preferences — `/users/profile` & `/users/onboarding`
+## 12. Onboarding & Hồ sơ ăn uống — `/users/profile`
 
-> **[MỚI]** Đặc tả quản lý trạng thái Onboarding và lưu trữ Tùy chọn khẩu vị / mục tiêu dinh dưỡng ban đầu của người dùng.
+> **[CẬP NHẬT — Hướng 3: Cá nhân hoá dinh dưỡng]** Hồ sơ ăn uống lưu trực tiếp trong cột JSONB `users.preferences` (không cần migration). Mọi màn hình liên quan trên app phải ghi rõ: *"Gợi ý tham khảo, không thay lời khuyên của bác sĩ"*.
 
-### Quy trình Onboarding phía Client:
-1. **Bước 1 (Khẩu vị / Dinh dưỡng):** Người dùng chọn mục tiêu dinh dưỡng (`dietary_preference` ∈ `BALANCED|LOW_CARB|HIGH_PROTEIN|VEGETARIAN|VEGAN|QUICK_MEAL`). Có thể Skip.
-2. **Bước 2 (Khởi tạo kho):** Giới thiệu 3 phương thức quét nhãn / giọng nói / thủ công. Người dùng bấm "Thêm nguyên liệu đầu tiên" hoặc "Bỏ qua".
-3. **Hoàn tất Onboarding:** Client gửi cập nhật `preferences` lên Backend để đồng bộ giữa các thiết bị.
+### Cấu trúc chuẩn của hồ sơ ăn uống trong `users.preferences`
+
+| Trường | Kiểu & Giá trị hợp lệ | Mặc định | Ghi chú |
+|---|---|---|---|
+| `household_size` | `int`, `1..10` | `4` | Nhân khẩu phần và định lượng nguyên liệu |
+| `diet` | `"balanced"` \| `"high_protein"` \| `"low_calorie"` \| `"more_veg"` \| `"vegetarian"` | `"balanced"` | `"vegetarian"` là bộ lọc cứng (`an_chay`); 4 giá trị còn lại là ưu tiên xếp hạng. Tương thích ngược fallback đọc `dietary_preference` cũ nếu `diet` chưa có |
+| `health_conditions` | `string[]` (không trùng) thuộc `nguoi_tieu_duong`, `nguoi_cao_huyet_ap`, `nguoi_benh_gout`, `nguoi_dau_da_day`, `an_kieng_keto_lowcarb` | `[]` | Bộ lọc cứng khớp trực tiếp `scenario_rules.py` |
+| `allergies` | `string[]` (không trùng) thuộc `shellfish`, `fish`, `peanut`, `egg`, `dairy`, `soy`, `gluten`, `sesame` | `[]` | Bộ lọc cứng mới (ưu tiên loại nhầm hơn bỏ sót) |
+| `disliked_ingredients` | `string[]` (tối đa 50 mục, mỗi mục trim không rỗng ≤ 100 ký tự, tự loại trùng không phân biệt hoa/thường) | `[]` | Bộ lọc cứng mới theo tên/nguyên liệu catalog |
+
+### Quy trình Onboarding & Cài đặt phía Client:
+1. **Onboarding bước 1 (Chế độ ăn):** Người dùng chọn 1 trong 5 chế độ ăn (`balanced`, `high_protein`, `low_calorie`, `more_veg`, `vegetarian`). Bấm Tiếp tục lưu cục bộ và gửi `PATCH /users/profile` với `{"preferences": {"diet": "..."}}` (best-effort khi offline).
+2. **Onboarding bước 2 (Khởi tạo kho):** Giới thiệu 3 phương thức quét nhãn / giọng nói / thủ công.
+3. **Cài đặt → Hồ sơ ăn uống:** Người dùng xem/chỉnh đủ 5 trường và lưu qua `PATCH /users/profile`.
 
 ### GET `/users/profile`
 
@@ -682,24 +710,33 @@ FE giữ mock cho tới Checkpoint Phase 6: người phụ trách phải tạo/a
   "email": "a@example.com",
   "email_verified_at": "2026-09-01T08:00:00Z",
   "preferences": {
+    "locale": "vi",
     "onboarding_completed": true,
-    "onboarding_completed_at": "2026-09-01T08:05:00Z",
-    "dietary_preference": "BALANCED"
+    "household_size": 2,
+    "diet": "balanced",
+    "health_conditions": ["nguoi_cao_huyet_ap", "nguoi_tieu_duong"],
+    "allergies": ["shellfish", "peanut"],
+    "disliked_ingredients": ["rau mùi"]
   }
 }
 ```
 
 ### PATCH `/users/profile`
 
-Cập nhật `name` hoặc `preferences` (gồm cờ onboarding và tùy chọn dinh dưỡng).
+Cập nhật `name` và/hoặc **shallow-merge** `preferences` (chỉ ghi đè các key xuất hiện trong body gửi lên; các key sẵn có như `locale`, `avatar_url`, `onboarding_completed` được giữ nguyên).
 
-**Request Body:**
+- Nếu bất kỳ trường nào trong 5 trường hồ sơ ăn uống có giá trị không hợp lệ (`household_size` ngoài `1..10` hoặc kiểu boolean/float, enum sai, không phải list string, quá giới hạn `disliked_ingredients`), BE trả `422` theo error envelope chung.
+- `disliked_ingredients` được BE chuẩn hoá (trim, bỏ chuỗi rỗng, loại trùng không phân biệt hoa/thường) trước khi lưu.
+
+**Request Body (ví dụ cập nhật đầy đủ hồ sơ ăn uống):**
 ```json
 {
   "preferences": {
-    "onboarding_completed": true,
-    "onboarding_completed_at": "2026-09-29T10:00:00Z",
-    "dietary_preference": "HIGH_PROTEIN"
+    "household_size": 2,
+    "diet": "vegetarian",
+    "health_conditions": ["nguoi_cao_huyet_ap"],
+    "allergies": ["shellfish", "peanut"],
+    "disliked_ingredients": ["rau mùi"]
   }
 }
 ```
