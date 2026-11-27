@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/core/widgets/app_dialog.dart';
 
 class CreateEditMenuDialog extends StatefulWidget {
   const CreateEditMenuDialog({
@@ -57,53 +58,45 @@ class _CreateEditMenuDialogState extends State<CreateEditMenuDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.title),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _nameCtrl,
-              autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Tên thực đơn *',
-                hintText: 'Ví dụ: Bữa cơm gia đình, Món ăn Eat Clean',
-              ),
-              textCapitalization: TextCapitalization.sentences,
+    return AppDialog(
+      title: widget.title,
+      tone: AppDialogTone.primary,
+      cancelLabel: 'Hủy',
+      confirmLabel: widget.actionLabel,
+      onCancel: () => Navigator.of(context).pop(),
+      onConfirm: () {
+        final name = _nameCtrl.text.trim();
+        if (name.isEmpty) return;
+        final desc = _descCtrl.text.trim();
+        Navigator.of(
+          context,
+        ).pop((name: name, description: desc.isNotEmpty ? desc : null));
+      },
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextField(
+            controller: _nameCtrl,
+            autofocus: true,
+            decoration: const InputDecoration(
+              labelText: 'Tên thực đơn *',
+              hintText: 'Ví dụ: Bữa cơm gia đình, Món ăn Eat Clean',
             ),
-            Gap.gapMd,
-            TextField(
-              controller: _descCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Mô tả (tùy chọn)',
-                hintText: 'Ghi chú về thực đơn này...',
-              ),
-              maxLines: 2,
-              textCapitalization: TextCapitalization.sentences,
+            textCapitalization: TextCapitalization.sentences,
+          ),
+          Gap.gapSm,
+          TextField(
+            controller: _descCtrl,
+            decoration: const InputDecoration(
+              labelText: 'Mô tả (tùy chọn)',
+              hintText: 'Ghi chú về thực đơn này...',
             ),
-          ],
-        ),
+            maxLines: 2,
+            textCapitalization: TextCapitalization.sentences,
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
-        ),
-        FilledButton(
-          onPressed: () {
-            final name = _nameCtrl.text.trim();
-            if (name.isEmpty) return;
-            final desc = _descCtrl.text.trim();
-            Navigator.of(context).pop((
-              name: name,
-              description: desc.isNotEmpty ? desc : null,
-            ));
-          },
-          child: Text(widget.actionLabel),
-        ),
-      ],
     );
   }
 }

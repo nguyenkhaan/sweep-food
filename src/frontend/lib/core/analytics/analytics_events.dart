@@ -21,7 +21,8 @@ abstract final class AnalyticsEvents {
 
   // Notifications
   static const notificationOpened = 'notification_opened';
-  static const notificationPermissionChanged = 'notification_permission_changed';
+  static const notificationPermissionChanged =
+      'notification_permission_changed';
 
   // Monetisation
   static const paywallViewed = 'paywall_viewed';

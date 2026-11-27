@@ -53,8 +53,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live shopping list (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live shopping list (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -72,7 +75,11 @@ void main() {
     final tail = DateTime.now().microsecondsSinceEpoch.toString();
     final phone = '+8493${tail.substring(tail.length - 8)}';
     const password = 'secret12345';
-    await auth.register(phone: phone, password: password, name: 'Shopping Live');
+    await auth.register(
+      phone: phone,
+      password: password,
+      name: 'Shopping Live',
+    );
     final session = await auth.verifyRegisterAndLogin(
       phone: phone,
       otp: '123456',
@@ -83,18 +90,21 @@ void main() {
     mealPlans = MealPlanRepositoryImpl(MealPlanRemoteDataSource(api));
     SharedPreferences.setMockInitialValues({});
     final prefs = await SharedPreferences.getInstance();
-    shoppingLists = ShoppingListRepositoryImpl(ShoppingListRemoteDataSource(api), prefs);
+    shoppingLists = ShoppingListRepositoryImpl(
+      ShoppingListRemoteDataSource(api),
+      prefs,
+    );
   });
 
   Future<String> chickenRecipeId() async {
     final body = await api.get('/recipes') as Map<String, dynamic>;
     final items = (body['items'] as List).cast<Map<String, dynamic>>();
     expect(items, isNotEmpty, reason: 'is the seed dataset loaded?');
-    return items
-        .firstWhere(
+    return items.firstWhere(
           (r) => (r['name'] as String).toLowerCase().contains('chicken'),
           orElse: () => fail('no "chicken" recipe in $items'),
-        )['id'] as String;
+        )['id']
+        as String;
   }
 
   /// A meal plan with one item, for `generate {meal_plan_id}`.
@@ -102,8 +112,9 @@ void main() {
     final weekStart = MealPlan.weekStartOf(
       DateTime.now().add(const Duration(days: 386)),
     );
-    final plan = (await mealPlans.forWeek(weekStart))
-        .fold((f) => fail('forWeek failed: $f'), (p) => p);
+    final plan = (await mealPlans.forWeek(
+      weekStart,
+    )).fold((f) => fail('forWeek failed: $f'), (p) => p);
     final recipeId = await chickenRecipeId();
     await mealPlans.addEntry(
       weekStart: weekStart,
@@ -136,8 +147,9 @@ void main() {
 
   test('addItem() adds a manual line', () async {
     final planId = await planWithOneItem();
-    final list = (await shoppingLists.generate(mealPlanId: planId))
-        .fold((f) => fail('generate failed: $f'), (l) => l);
+    final list = (await shoppingLists.generate(
+      mealPlanId: planId,
+    )).fold((f) => fail('generate failed: $f'), (l) => l);
 
     final res = await shoppingLists.addItem(
       listId: list.id,
@@ -153,42 +165,47 @@ void main() {
   });
 
   test(
-      'setChecked(true) requires purchase and setChecked(false) omits it',
-      () async {
-    final planId = await planWithOneItem();
-    final list = (await shoppingLists.generate(mealPlanId: planId))
-        .fold((f) => fail('generate failed: $f'), (l) => l);
+    'setChecked(true) requires purchase and setChecked(false) omits it',
+    () async {
+      final planId = await planWithOneItem();
+      final list = (await shoppingLists.generate(
+        mealPlanId: planId,
+      )).fold((f) => fail('generate failed: $f'), (l) => l);
 
-    final added = await shoppingLists.addItem(
-      listId: list.id,
-      draft: const ShoppingListItemDraft(
-        name: 'Muối live',
-        quantity: 1,
-        unit: MeasurementUnit.piece,
-      ),
-    );
-    final item = added.fold((f) => fail('addItem failed: $f'), (i) => i);
+      final added = await shoppingLists.addItem(
+        listId: list.id,
+        draft: const ShoppingListItemDraft(
+          name: 'Muối live',
+          quantity: 1,
+          unit: MeasurementUnit.piece,
+        ),
+      );
+      final item = added.fold((f) => fail('addItem failed: $f'), (i) => i);
 
-    final checked = await shoppingLists.setChecked(
-      listId: list.id,
-      itemId: item.id,
-      checked: true,
-      purchase: const ShoppingPurchaseDraft(storageTier: StorageTier.pantryShelf),
-    );
-    expect(checked.isRight(), isTrue);
+      final checked = await shoppingLists.setChecked(
+        listId: list.id,
+        itemId: item.id,
+        checked: true,
+        purchase: const ShoppingPurchaseDraft(
+          storageTier: StorageTier.pantryShelf,
+        ),
+      );
+      expect(checked.isRight(), isTrue);
 
-    final unchecked = await shoppingLists.setChecked(
-      listId: list.id,
-      itemId: item.id,
-      checked: false,
-    );
-    expect(unchecked.isRight(), isTrue);
-  });
+      final unchecked = await shoppingLists.setChecked(
+        listId: list.id,
+        itemId: item.id,
+        checked: false,
+      );
+      expect(unchecked.isRight(), isTrue);
+    },
+  );
 
   test('removeItem() deletes a manual line', () async {
     final planId = await planWithOneItem();
-    final list = (await shoppingLists.generate(mealPlanId: planId))
-        .fold((f) => fail('generate failed: $f'), (l) => l);
+    final list = (await shoppingLists.generate(
+      mealPlanId: planId,
+    )).fold((f) => fail('generate failed: $f'), (l) => l);
 
     final added = await shoppingLists.addItem(
       listId: list.id,

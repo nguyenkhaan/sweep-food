@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
@@ -32,7 +32,7 @@ class WasteStatisticsTab extends ConsumerWidget {
                   title: 'Tuyệt vời! Không có thực phẩm lãng phí',
                   message:
                       'Bạn chưa có thực phẩm nào bị hỏng hoặc bỏ phí trong kỳ này.',
-                  icon: Icons.check_circle_outline_rounded,
+                  icon: AppIcons.checkCircle,
                 ),
               ],
             );
@@ -132,8 +132,8 @@ class WasteStatisticsTab extends ConsumerWidget {
                               Container(
                                 width: 8,
                                 height: 8,
-                                decoration: const BoxDecoration(
-                                  color: BrandPalette.brick500,
+                                decoration: BoxDecoration(
+                                  color: context.sweep.expired.fg,
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -151,9 +151,10 @@ class WasteStatisticsTab extends ConsumerWidget {
                                     if (item.expiredAt != null)
                                       Text(
                                         'Hết hạn: ${_dateFmt.format(item.expiredAt!)}',
-                                        style: context.text.labelSmall?.copyWith(
-                                          color: context.sweep.textTertiary,
-                                        ),
+                                        style: context.text.labelSmall
+                                            ?.copyWith(
+                                              color: context.sweep.textTertiary,
+                                            ),
                                       ),
                                   ],
                                 ),
@@ -162,7 +163,7 @@ class WasteStatisticsTab extends ConsumerWidget {
                                 item.quantityLabel,
                                 style: context.text.bodyMedium?.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: BrandPalette.brick500,
+                                  color: context.sweep.expired.fg,
                                 ),
                               ),
                             ],
@@ -191,25 +192,27 @@ class _HeroWasteCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(Gap.lg),
       decoration: BoxDecoration(
-        color: BrandPalette.brick100,
+        color: context.sweep.expired.bg,
         borderRadius: Radii.brLg,
-        border: Border.all(color: BrandPalette.brick500.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: context.sweep.expired.fg.withValues(alpha: 0.2),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(
-                Icons.delete_outline_rounded,
+              Icon(
+                AppIcons.trash,
                 size: 20,
-                color: BrandPalette.brick500,
+                color: context.sweep.expired.fg,
               ),
               const SizedBox(width: Gap.xs),
               Text(
                 'Lượng thực phẩm lãng phí trong kỳ',
                 style: context.text.labelMedium?.copyWith(
-                  color: BrandPalette.brick500,
+                  color: context.sweep.expired.fg,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -220,14 +223,14 @@ class _HeroWasteCard extends StatelessWidget {
             stats.totalWastedKgLabel,
             style: context.text.headlineMedium?.copyWith(
               fontWeight: FontWeight.w800,
-              color: BrandPalette.brick500,
+              color: context.sweep.expired.fg,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             'Khoảng ${stats.wastedItemsCount} nguyên liệu đã không được dùng kịp thời.',
             style: context.text.bodySmall?.copyWith(
-              color: BrandPalette.brick500.withValues(alpha: 0.9),
+              color: context.sweep.expired.fg.withValues(alpha: 0.9),
             ),
           ),
         ],

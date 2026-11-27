@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
@@ -66,7 +67,7 @@ class ExpiryFreshnessRow extends ConsumerWidget {
     if (expiryDate != null) {
       chips.add(
         InputChip(
-          avatar: const Icon(Icons.event_rounded, size: 16),
+          avatar: const Icon(AppIcons.calendar, size: 16),
           label: Text('Hạn: ${expiryDate!.ddMMyyyy}'),
           onPressed: () => _pickDate(context),
           onDeleted: () => onChanged(null, null),
@@ -75,7 +76,7 @@ class ExpiryFreshnessRow extends ConsumerWidget {
     } else if (freshness != null) {
       chips.add(
         InputChip(
-          avatar: const Icon(Icons.health_and_safety_outlined, size: 16),
+          avatar: const Icon(AppIcons.shield, size: 16),
           label: Text(_summary(freshness!)),
           onPressed: () => _openFreshCheck(context),
           onDeleted: () => onChanged(null, null),
@@ -84,7 +85,7 @@ class ExpiryFreshnessRow extends ConsumerWidget {
     } else {
       chips.add(
         ActionChip(
-          avatar: const Icon(Icons.edit_calendar_rounded, size: 16),
+          avatar: const Icon(AppIcons.calendar, size: 16),
           label: const Text('Nhập hạn'),
           onPressed: () => _pickDate(context),
         ),
@@ -92,7 +93,7 @@ class ExpiryFreshnessRow extends ConsumerWidget {
       if (freshCheckSupported) {
         chips.add(
           ActionChip(
-            avatar: const Icon(Icons.health_and_safety_outlined, size: 16),
+            avatar: const Icon(AppIcons.shield, size: 16),
             label: const Text('Kiểm tra hạn nhanh'),
             onPressed: () => _openFreshCheck(context),
           ),
@@ -120,7 +121,9 @@ class ExpiryFreshnessRow extends ConsumerWidget {
           const SizedBox(height: Gap.xxs),
           Text(
             'Hạn đọc từ ảnh có thể chưa chính xác — hãy kiểm tra lại.',
-            style: context.text.bodySmall?.copyWith(color: Colors.orange),
+            style: context.text.bodySmall?.copyWith(
+              color: context.sweep.soon.fg,
+            ),
           ),
         ],
       ],

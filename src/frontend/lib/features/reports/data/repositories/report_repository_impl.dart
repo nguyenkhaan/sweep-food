@@ -12,9 +12,8 @@ import 'package:sweepfood/features/reports/domain/repositories/report_repository
 part 'report_repository_impl.g.dart';
 
 @Riverpod(keepAlive: true)
-ReportRepository reportRepository(Ref ref) => ReportRepositoryImpl(
-      ReportRemoteDataSource(ref.watch(apiClientProvider)),
-    );
+ReportRepository reportRepository(Ref ref) =>
+    ReportRepositoryImpl(ReportRemoteDataSource(ref.watch(apiClientProvider)));
 
 class ReportRepositoryImpl implements ReportRepository {
   ReportRepositoryImpl(this._remote);
@@ -31,9 +30,14 @@ class ReportRepositoryImpl implements ReportRepository {
 
   @override
   Future<Result<WasteStatistics>> wasteStatistics(ReportPeriod period) =>
-      runGuarded(() async => (await _remote.wasteStatistics(period)).toEntity());
+      runGuarded(
+        () async => (await _remote.wasteStatistics(period)).toEntity(),
+      );
 
   @override
-  Future<Result<EfficiencyEvaluation>> efficiencyEvaluation(ReportPeriod period) =>
-      runGuarded(() async => (await _remote.efficiencyEvaluation(period)).toEntity());
+  Future<Result<EfficiencyEvaluation>> efficiencyEvaluation(
+    ReportPeriod period,
+  ) => runGuarded(
+    () async => (await _remote.efficiencyEvaluation(period)).toEntity(),
+  );
 }

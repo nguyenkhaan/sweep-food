@@ -66,7 +66,7 @@ void main() {
       );
       expect(find.text('Ít muối, hợp người cao huyết áp'), findsOneWidget);
 
-      await tester.tap(find.byIcon(Icons.help_outline_rounded).first);
+      await tester.tap(find.text('Vì sao điểm này?').first);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 

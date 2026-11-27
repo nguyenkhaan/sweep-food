@@ -10,49 +10,49 @@ import 'package:sweepfood/shared/domain/measurement_unit.dart';
 class _MockApiClient extends Mock implements ApiClient {}
 
 Map<String, dynamic> _recipeJson({Object servings = 2.0}) => {
-      'id': 'r1',
-      'name': 'Grilled chicken breast',
-      'description': 'Simple high-protein chicken breast.',
-      'media_url': null,
-      'default_servings': 2.0,
-      'estimated_cooking_minutes': 25,
-      'estimated_cost': 75000.0,
-      'tags': {
-        'values': ['high-protein'],
-      },
-      'servings': servings,
-      'instructions': {
-        'steps': ['Season chicken', 'Grill until cooked'],
-      },
-      'nutrition': {
-        'calories': 330.0,
-        'protein_g': 62.0,
-        'fat_g': 7.2,
-        'carbs_g': 0.0,
-        'sugar_g': 0.0,
-        'other_nutrients': <String, dynamic>{},
-      },
-      'ingredients': [
-        {
-          'recipe_ingredient_id': 'ri1',
-          'master_ingredient_id': 'mi1',
-          'name': 'Chicken breast',
-          'required_quantity': 300.0,
-          'unit': 'GRAM',
-          'is_optional': false,
-          'preparation_note': null,
-        },
-        {
-          'recipe_ingredient_id': 'ri2',
-          'master_ingredient_id': 'mi2',
-          'name': 'Olive oil',
-          'required_quantity': 15.0,
-          'unit': 'ML',
-          'is_optional': true,
-          'preparation_note': null,
-        },
-      ],
-    };
+  'id': 'r1',
+  'name': 'Grilled chicken breast',
+  'description': 'Simple high-protein chicken breast.',
+  'media_url': null,
+  'default_servings': 2.0,
+  'estimated_cooking_minutes': 25,
+  'estimated_cost': 75000.0,
+  'tags': {
+    'values': ['high-protein'],
+  },
+  'servings': servings,
+  'instructions': {
+    'steps': ['Season chicken', 'Grill until cooked'],
+  },
+  'nutrition': {
+    'calories': 330.0,
+    'protein_g': 62.0,
+    'fat_g': 7.2,
+    'carbs_g': 0.0,
+    'sugar_g': 0.0,
+    'other_nutrients': <String, dynamic>{},
+  },
+  'ingredients': [
+    {
+      'recipe_ingredient_id': 'ri1',
+      'master_ingredient_id': 'mi1',
+      'name': 'Chicken breast',
+      'required_quantity': 300.0,
+      'unit': 'GRAM',
+      'is_optional': false,
+      'preparation_note': null,
+    },
+    {
+      'recipe_ingredient_id': 'ri2',
+      'master_ingredient_id': 'mi2',
+      'name': 'Olive oil',
+      'required_quantity': 15.0,
+      'unit': 'ML',
+      'is_optional': true,
+      'preparation_note': null,
+    },
+  ],
+};
 
 void main() {
   group('RecipeDto.toEntity()', () {
@@ -79,23 +79,31 @@ void main() {
       expect(dish.steps.first.durationMin, isNull);
     });
 
-    test('maps ingredients: unit via fromWire, isSeasoning from is_optional', () {
-      final dish = RecipeDto.fromJson(_recipeJson()).toEntity();
+    test(
+      'maps ingredients: unit via fromWire, isSeasoning from is_optional',
+      () {
+        final dish = RecipeDto.fromJson(_recipeJson()).toEntity();
 
-      final chicken = dish.ingredients.firstWhere((i) => i.name == 'Chicken breast');
-      expect(chicken.quantity, 300.0);
-      expect(chicken.unit, MeasurementUnit.gram);
-      expect(chicken.isSeasoning, isFalse);
-      expect(chicken.availableInPantry, isFalse); // backend has no pantry join
+        final chicken = dish.ingredients.firstWhere(
+          (i) => i.name == 'Chicken breast',
+        );
+        expect(chicken.quantity, 300.0);
+        expect(chicken.unit, MeasurementUnit.gram);
+        expect(chicken.isSeasoning, isFalse);
+        expect(
+          chicken.availableInPantry,
+          isFalse,
+        ); // backend has no pantry join
 
-      final oil = dish.ingredients.firstWhere((i) => i.name == 'Olive oil');
-      expect(oil.unit, MeasurementUnit.milliliter);
-      expect(oil.isSeasoning, isTrue); // is_optional → seasoning chip
+        final oil = dish.ingredients.firstWhere((i) => i.name == 'Olive oil');
+        expect(oil.unit, MeasurementUnit.milliliter);
+        expect(oil.isSeasoning, isTrue); // is_optional → seasoning chip
 
-      // mainIngredients excludes the optional one; it becomes a seasoning.
-      expect(dish.mainIngredients.map((i) => i.name), ['Chicken breast']);
-      expect(dish.seasonings.map((i) => i.name), ['Olive oil']);
-    });
+        // mainIngredients excludes the optional one; it becomes a seasoning.
+        expect(dish.mainIngredients.map((i) => i.name), ['Chicken breast']);
+        expect(dish.seasonings.map((i) => i.name), ['Olive oil']);
+      },
+    );
 
     test('tolerates decimal fields encoded as JSON strings', () {
       final json = _recipeJson(servings: '3.00')
@@ -116,7 +124,10 @@ void main() {
 
       final dish = RecipeDto.fromJson(json).toEntity();
       expect(dish.servings, 3);
-      expect(dish.nutritionPerServing.energyKcal, closeTo(110.0, 1e-9)); // 330/3
+      expect(
+        dish.nutritionPerServing.energyKcal,
+        closeTo(110.0, 1e-9),
+      ); // 330/3
       expect(dish.ingredients.single.quantity, 450.0);
     });
 
@@ -138,8 +149,9 @@ void main() {
   group('DishRepositoryImpl.getById()', () {
     test('reads GET /recipes/{id} and maps to a Dish', () async {
       final api = _MockApiClient();
-      when(() => api.get(ApiPaths.recipe('r1')))
-          .thenAnswer((_) async => _recipeJson());
+      when(
+        () => api.get(ApiPaths.recipe('r1')),
+      ).thenAnswer((_) async => _recipeJson());
       final repo = DishRepositoryImpl(DishRemoteDataSource(api));
 
       final res = await repo.getById('r1');

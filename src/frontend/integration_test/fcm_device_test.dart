@@ -79,8 +79,10 @@ void main() {
 
     final devices = DeviceRepositoryImpl(DeviceRemoteDataSource(api));
     final registered = await devices.register(token, platform: 'ANDROID');
-    final deviceId =
-        registered.fold((f) => fail('device register failed: $f'), (id) => id);
+    final deviceId = registered.fold(
+      (f) => fail('device register failed: $f'),
+      (id) => id,
+    );
     debugPrint('>>> DEVICE_ID=$deviceId');
 
     // Ask the backend to deliver a real push to this token.
@@ -100,6 +102,8 @@ void main() {
       reason: 'backend did not report a Firebase message id',
     );
 
-    debugPrint('>>> Background the app now to see the notification in the tray.');
+    debugPrint(
+      '>>> Background the app now to see the notification in the tray.',
+    );
   });
 }

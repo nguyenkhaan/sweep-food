@@ -8,14 +8,14 @@ import 'package:sweepfood/features/favorites/presentation/screens/favorites_scre
 import 'package:sweepfood/l10n/app_localizations.dart';
 
 void main() {
-  testWidgets('FavoritesScreen displays favorite recipes and menus tabs', (tester) async {
+  testWidgets('FavoritesScreen displays favorite recipes and menus tabs', (
+    tester,
+  ) async {
     final mockApi = MockApiClient();
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          apiClientProvider.overrideWithValue(mockApi),
-        ],
+        overrides: [apiClientProvider.overrideWithValue(mockApi)],
         child: MaterialApp(
           locale: const Locale('vi'),
           supportedLocales: AppL10n.supportedLocales,

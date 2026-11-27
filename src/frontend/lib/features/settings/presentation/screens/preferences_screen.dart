@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/locale_controller.dart';
 import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/app/theme/theme_mode_controller.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/features/settings/presentation/controllers/preferences_controller.dart';
 import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
 import 'package:sweepfood/l10n/app_localizations.dart';
@@ -30,51 +32,66 @@ class PreferencesScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeModeControllerProvider);
     final locale = ref.watch(localeControllerProvider);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.prefsTitle)),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
-        children: [
-          SettingsGroup(
-            label: l10n.prefsGroupMeal,
-            rows: [
-              SettingsRow(
-                icon: Icons.health_and_safety_outlined,
-                label: l10n.nutritionProfileTitle,
-                trailing: prefs.dietaryPreference.label(l10n),
-                onTap: () => context.push(Routes.settingsNutritionProfile),
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: context.colors.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(title: l10n.prefsTitle),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Gap.lg,
+                  Gap.xs,
+                  Gap.lg,
+                  Gap.xxl,
+                ),
+                children: [
+                  SettingsGroup(
+                    label: l10n.prefsGroupMeal,
+                    rows: [
+                      SettingsRow(
+                        icon: AppIcons.shield,
+                        label: l10n.nutritionProfileTitle,
+                        trailing: prefs.dietaryPreference.label(l10n),
+                        onTap: () =>
+                            context.push(Routes.settingsNutritionProfile),
+                      ),
+                      SettingsRow(
+                        icon: AppIcons.ruler,
+                        label: l10n.prefsUnit,
+                        trailing: prefs.defaultUnit.label,
+                        onTap: () => _pickUnit(context, ref),
+                      ),
+                    ],
+                  ),
+                  Gap.gapMd,
+                  SettingsGroup(
+                    label: l10n.prefsGroupAppearance,
+                    rows: [
+                      SettingsRow(
+                        icon: AppIcons.globe,
+                        label: l10n.prefsLanguage,
+                        trailing: _localeLabel(l10n, locale),
+                        onTap: () => _pickLanguage(context, ref),
+                      ),
+                      SettingsRow(
+                        icon: AppIcons.sun,
+                        label: l10n.prefsTheme,
+                        trailing: switch (themeMode) {
+                          ThemeMode.light => l10n.themeLight,
+                          ThemeMode.dark => l10n.themeDark,
+                          ThemeMode.system => l10n.themeSystem,
+                        },
+                        onTap: () => _pickTheme(context, ref),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              SettingsRow(
-                icon: Icons.straighten_rounded,
-                label: l10n.prefsUnit,
-                trailing: prefs.defaultUnit.label,
-                onTap: () => _pickUnit(context, ref),
-              ),
-            ],
-          ),
-          Gap.gapMd,
-          SettingsGroup(
-            label: l10n.prefsGroupAppearance,
-            rows: [
-              SettingsRow(
-                icon: Icons.language_rounded,
-                label: l10n.prefsLanguage,
-                trailing: _localeLabel(l10n, locale),
-                onTap: () => _pickLanguage(context, ref),
-              ),
-              SettingsRow(
-                icon: Icons.brightness_6_outlined,
-                label: l10n.prefsTheme,
-                trailing: switch (themeMode) {
-                  ThemeMode.light => l10n.themeLight,
-                  ThemeMode.dark => l10n.themeDark,
-                  ThemeMode.system => l10n.themeSystem,
-                },
-                onTap: () => _pickTheme(context, ref),
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -175,7 +192,7 @@ class _OptionSheet<T> extends StatelessWidget {
               title: Text(o.label),
               subtitle: o.subtitle == null ? null : Text(o.subtitle!),
               trailing: o.value == current
-                  ? Icon(Icons.check_rounded, color: context.colors.primary)
+                  ? Icon(AppIcons.check, color: context.colors.primary)
                   : null,
             ),
         ],

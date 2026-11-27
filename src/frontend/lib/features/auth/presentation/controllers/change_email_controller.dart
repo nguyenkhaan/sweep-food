@@ -17,7 +17,10 @@ class ChangeEmailController extends _$ChangeEmailController {
   AuthFormState build() => const AuthFormState();
 
   /// Step 1 — validate [email] and request the OTP. Returns `true` when sent.
-  Future<bool> requestOtp({required String email, required AppL10n l10n}) async {
+  Future<bool> requestOtp({
+    required String email,
+    required AppL10n l10n,
+  }) async {
     final trimmed = email.trim();
     if (!isValidEmail(trimmed)) {
       state = state.copyWith(
@@ -62,8 +65,9 @@ class ChangeEmailController extends _$ChangeEmailController {
       fieldErrors: const {},
       formError: null,
     );
-    final res =
-        await ref.read(authRepositoryProvider).confirmEmailChange(otp.trim());
+    final res = await ref
+        .read(authRepositoryProvider)
+        .confirmEmailChange(otp.trim());
     return res.fold(
       (f) {
         state = state.copyWith(

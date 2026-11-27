@@ -18,11 +18,10 @@ class ShoppingPurchaseDraft {
   final String? note;
 
   Map<String, dynamic> toBody() => {
-        'storage_mode': storageTier.backendWire,
-        'purchased_at': DateTime.now().toUtc().toIso8601String(),
-        if (expiryDate != null)
-          'expires_at': expiryDate!.toUtc().toIso8601String(),
-        if (priceVnd != null) 'unit_cost': priceVnd,
-        if (note != null && note!.trim().isNotEmpty) 'note': note!.trim(),
-      };
+    'storage_mode': storageTier.backendWire,
+    'purchased_at': DateTime.now().toUtc().toIso8601String(),
+    if (expiryDate != null) 'expires_at': expiryDate!.toUtc().toIso8601String(),
+    if (priceVnd != null) 'unit_cost': priceVnd,
+    if (note != null && note!.trim().isNotEmpty) 'note': note!.trim(),
+  };
 }

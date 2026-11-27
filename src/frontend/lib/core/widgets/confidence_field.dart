@@ -1,8 +1,8 @@
-﻿// lib/core/widgets/confidence_field.dart
+// lib/core/widgets/confidence_field.dart
 // Read-only field card used on the OCR review screens (I-03 / I-05).
 
 import 'package:flutter/material.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
@@ -17,7 +17,7 @@ class ConfidenceField extends StatelessWidget {
     this.needsReview = false,
     this.reviewLabel,
     this.errorText,
-    this.trailingIcon = Icons.edit_outlined,
+    this.trailingIcon = AppIcons.edit,
     super.key,
   });
 
@@ -54,13 +54,14 @@ class ConfidenceField extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                 decoration: BoxDecoration(
-                  color: BrandPalette.warnSoon.withValues(alpha: 0.15),
+                  color: sweep.soon.bg,
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
                   reviewLabel ?? context.l10n.confidenceNeedsReview,
-                  style: const TextStyle(
-                    color: BrandPalette.warnSoon,
+                  style: context.text.labelSmall?.copyWith(
+                    letterSpacing: 0,
+                    color: sweep.soon.fg,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                   ),
@@ -71,7 +72,7 @@ class ConfidenceField extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Material(
-          color: context.colors.surface,
+          color: context.colors.surfaceContainerLowest,
           borderRadius: Radii.brMd,
           child: InkWell(
             onTap: onTap,
@@ -85,7 +86,7 @@ class ConfidenceField extends StatelessWidget {
                   color: errorText != null
                       ? context.colors.error
                       : needsReview
-                      ? BrandPalette.warnSoon
+                      ? sweep.soon.fg
                       : sweep.hairline,
                   width: errorText != null || needsReview ? 2 : 1,
                 ),

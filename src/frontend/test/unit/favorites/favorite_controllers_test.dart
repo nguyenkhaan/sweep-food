@@ -18,9 +18,7 @@ void main() {
   setUp(() {
     repo = _MockFavoriteRepository();
     container = ProviderContainer(
-      overrides: [
-        favoriteRepositoryProvider.overrideWithValue(repo),
-      ],
+      overrides: [favoriteRepositoryProvider.overrideWithValue(repo)],
     );
   });
 
@@ -36,15 +34,22 @@ void main() {
         createdAt: DateTime(2026, 3, 1),
       );
 
-      when(() => repo.fetchFavoriteRecipes())
-          .thenAnswer((_) async => Right([item]));
-      when(() => repo.removeFavoriteRecipe('rec-1'))
-          .thenAnswer((_) async => const Right(null));
-      when(() => repo.addFavoriteRecipe('rec-2'))
-          .thenAnswer((_) async => const Right(true));
+      when(
+        () => repo.fetchFavoriteRecipes(),
+      ).thenAnswer((_) async => Right([item]));
+      when(
+        () => repo.removeFavoriteRecipe('rec-1'),
+      ).thenAnswer((_) async => const Right(null));
+      when(
+        () => repo.addFavoriteRecipe('rec-2'),
+      ).thenAnswer((_) async => const Right(true));
 
-      final controller = container.read(favoriteRecipesControllerProvider.notifier);
-      final list = await container.read(favoriteRecipesControllerProvider.future);
+      final controller = container.read(
+        favoriteRecipesControllerProvider.notifier,
+      );
+      final list = await container.read(
+        favoriteRecipesControllerProvider.future,
+      );
       expect(list.length, 1);
       expect(list.first.recipeId, 'rec-1');
 
@@ -75,28 +80,50 @@ void main() {
         updatedAt: DateTime(2026, 3, 1),
       );
 
-      when(() => repo.fetchFavoriteMenus())
-          .thenAnswer((_) async => Right([menu]));
-      when(() => repo.createFavoriteMenu(name: 'Thực đơn 2', description: null))
-          .thenAnswer((_) async => Right(menu.copyWith(id: 'menu-2', name: 'Thực đơn 2')));
-      when(() => repo.updateFavoriteMenu('menu-1', name: 'Thực đơn mới', description: null))
-          .thenAnswer((_) async => Right(menu.copyWith(name: 'Thực đơn mới')));
-      when(() => repo.deleteFavoriteMenu('menu-1'))
-          .thenAnswer((_) async => const Right(null));
+      when(
+        () => repo.fetchFavoriteMenus(),
+      ).thenAnswer((_) async => Right([menu]));
+      when(
+        () => repo.createFavoriteMenu(name: 'Thực đơn 2', description: null),
+      ).thenAnswer(
+        (_) async => Right(menu.copyWith(id: 'menu-2', name: 'Thực đơn 2')),
+      );
+      when(
+        () => repo.updateFavoriteMenu(
+          'menu-1',
+          name: 'Thực đơn mới',
+          description: null,
+        ),
+      ).thenAnswer((_) async => Right(menu.copyWith(name: 'Thực đơn mới')));
+      when(
+        () => repo.deleteFavoriteMenu('menu-1'),
+      ).thenAnswer((_) async => const Right(null));
 
-      final controller = container.read(favoriteMenusControllerProvider.notifier);
-      final menus = await container.read(favoriteMenusControllerProvider.future);
+      final controller = container.read(
+        favoriteMenusControllerProvider.notifier,
+      );
+      final menus = await container.read(
+        favoriteMenusControllerProvider.future,
+      );
       expect(menus.length, 1);
       expect(menus.first.name, 'Thực đơn 1');
 
       // Create
       final created = await controller.createMenu(name: 'Thực đơn 2');
       expect(created.id, 'menu-2');
-      verify(() => repo.createFavoriteMenu(name: 'Thực đơn 2', description: null)).called(1);
+      verify(
+        () => repo.createFavoriteMenu(name: 'Thực đơn 2', description: null),
+      ).called(1);
 
       // Update
       await controller.updateMenu('menu-1', name: 'Thực đơn mới');
-      verify(() => repo.updateFavoriteMenu('menu-1', name: 'Thực đơn mới', description: null)).called(1);
+      verify(
+        () => repo.updateFavoriteMenu(
+          'menu-1',
+          name: 'Thực đơn mới',
+          description: null,
+        ),
+      ).called(1);
 
       // Delete
       await controller.deleteMenu('menu-1');
@@ -124,24 +151,31 @@ void main() {
         updatedAt: DateTime(2026, 3, 1),
       );
 
-      when(() => repo.fetchFavoriteMenuDetail('menu-1'))
-          .thenAnswer((_) async => Right(detail));
-      when(() => repo.addMenuItem('menu-1', 'rec-2'))
-          .thenAnswer((_) async => Right(
-                FavoriteMenuItem(
-                  id: 'item-2',
-                  recipeId: 'rec-2',
-                  recipeName: 'Món 2',
-                  recipeDescription: '',
-                  mediaUrl: null,
-                  createdAt: DateTime(2026, 3, 1),
-                ),
-              ));
-      when(() => repo.removeMenuItem('menu-1', 'item-1'))
-          .thenAnswer((_) async => const Right(null));
+      when(
+        () => repo.fetchFavoriteMenuDetail('menu-1'),
+      ).thenAnswer((_) async => Right(detail));
+      when(() => repo.addMenuItem('menu-1', 'rec-2')).thenAnswer(
+        (_) async => Right(
+          FavoriteMenuItem(
+            id: 'item-2',
+            recipeId: 'rec-2',
+            recipeName: 'Món 2',
+            recipeDescription: '',
+            mediaUrl: null,
+            createdAt: DateTime(2026, 3, 1),
+          ),
+        ),
+      );
+      when(
+        () => repo.removeMenuItem('menu-1', 'item-1'),
+      ).thenAnswer((_) async => const Right(null));
 
-      final controller = container.read(favoriteMenuDetailControllerProvider('menu-1').notifier);
-      final loadedDetail = await container.read(favoriteMenuDetailControllerProvider('menu-1').future);
+      final controller = container.read(
+        favoriteMenuDetailControllerProvider('menu-1').notifier,
+      );
+      final loadedDetail = await container.read(
+        favoriteMenuDetailControllerProvider('menu-1').future,
+      );
       expect(loadedDetail.items.length, 1);
 
       // Add item

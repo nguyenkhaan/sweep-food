@@ -24,9 +24,7 @@ class _FakeShoppingListController extends ShoppingListController {
     final list = state.asData?.value;
     if (list != null) {
       state = AsyncData(
-        list.copyWith(
-          items: list.items.where((i) => i.id != itemId).toList(),
-        ),
+        list.copyWith(items: list.items.where((i) => i.id != itemId).toList()),
       );
     }
     return true;
@@ -85,7 +83,9 @@ void main() {
     expect(find.byType(ShoppingItemRow), findsOneWidget);
   });
 
-  testWidgets('renders all bought empty state when all items are checked', (tester) async {
+  testWidgets('renders all bought empty state when all items are checked', (
+    tester,
+  ) async {
     const listAllBought = ShoppingList(
       id: 'sl1',
       items: [
@@ -125,7 +125,9 @@ void main() {
     expect(find.text('Đã mua hết nguyên liệu'), findsOneWidget);
   });
 
-  testWidgets('swiping horizontally deletes ingredient from shopping list', (tester) async {
+  testWidgets('swiping horizontally deletes ingredient from shopping list', (
+    tester,
+  ) async {
     const initialList = ShoppingList(
       id: 'sl1',
       items: [

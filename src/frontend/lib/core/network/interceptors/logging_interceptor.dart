@@ -1,4 +1,4 @@
-﻿import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:sweepfood/core/utils/logger.dart';
 
 /// Compact request/response logging for the live [Dio] client.
@@ -10,7 +10,10 @@ class LoggingInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     log.d('← ${response.statusCode} ${response.requestOptions.uri}');
     handler.next(response);
   }

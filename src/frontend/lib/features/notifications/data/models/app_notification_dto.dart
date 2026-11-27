@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/notifications/domain/entities/app_notification.dart';
 
 part 'app_notification_dto.freezed.dart';
@@ -28,13 +28,13 @@ abstract class AppNotificationDto with _$AppNotificationDto {
       _$AppNotificationDtoFromJson(json);
 
   AppNotification toEntity() => AppNotification(
-        id: id,
-        type: AppNotificationType.fromWire(type),
-        title: title,
-        body: body,
-        createdAt: createdAt.toLocal(),
-        read: status.toUpperCase() != 'UNREAD',
-        pantryItemId: inventoryBatchId,
-        dishIds: const [],
-      );
+    id: id,
+    type: AppNotificationType.fromWire(type),
+    title: title,
+    body: body,
+    createdAt: createdAt.toLocal(),
+    read: status.toUpperCase() != 'UNREAD',
+    pantryItemId: inventoryBatchId,
+    dishIds: const [],
+  );
 }

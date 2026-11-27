@@ -38,17 +38,17 @@ abstract class ShoppingListItemDto with _$ShoppingListItemDto {
       _$ShoppingListItemDtoFromJson(json);
 
   ShoppingListItem toEntity() => ShoppingListItem(
-        id: id,
-        name: customName ?? name,
-        quantity: missingQuantity,
-        unit: MeasurementUnit.fromWire(unit),
-        category: isGenerated ? 'Từ công thức' : 'Khác',
-        checked: isChecked,
-        alreadyInPantry: missingQuantity <= 0,
-        fromDishIds: sourceRecipeIds,
-        isGenerated: isGenerated,
-        estPriceVnd: estimatedCost?.round(),
-      );
+    id: id,
+    name: customName ?? name,
+    quantity: missingQuantity,
+    unit: MeasurementUnit.fromWire(unit),
+    category: isGenerated ? 'Từ công thức' : 'Khác',
+    checked: isChecked,
+    alreadyInPantry: missingQuantity <= 0,
+    fromDishIds: sourceRecipeIds,
+    isGenerated: isGenerated,
+    estPriceVnd: estimatedCost?.round(),
+  );
 }
 
 /// `POST /shopping-lists/generate` / `GET /shopping-lists/{list_id}` response.
@@ -70,8 +70,8 @@ abstract class ShoppingListDto with _$ShoppingListDto {
   /// The backend has no descriptive label — the B-01 screen already renders
   /// nothing when this is null.
   ShoppingList toEntity() => ShoppingList(
-        id: id,
-        sourceLabel: null,
-        items: [for (final i in items) i.toEntity()],
-      );
+    id: id,
+    sourceLabel: null,
+    items: [for (final i in items) i.toEntity()],
+  );
 }

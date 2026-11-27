@@ -1,7 +1,8 @@
-﻿import 'package:fpdart/fpdart.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:sweepfood/core/error/failure.dart';
 
-export 'package:fpdart/fpdart.dart' show Either, Left, Right, Option, Some, None;
+export 'package:fpdart/fpdart.dart'
+    show Either, Left, Right, Option, Some, None;
 
 /// The repository return type: `Right(value)` on success, `Left(failure)` on error.
 typedef Result<T> = Either<Failure, T>;

@@ -25,7 +25,8 @@ abstract class RecipeDto with _$RecipeDto {
     required String name,
     @Default('') String description,
     @JsonKey(name: 'media_url') String? mediaUrl,
-    @JsonKey(name: 'default_servings', fromJson: _asDouble) double? defaultServings,
+    @JsonKey(name: 'default_servings', fromJson: _asDouble)
+    double? defaultServings,
     @JsonKey(name: 'estimated_cooking_minutes')
     @Default(0)
     int estimatedCookingMinutes,
@@ -129,15 +130,15 @@ abstract class RecipeIngredientDto with _$RecipeIngredientDto {
   /// here — every ingredient renders as "còn thiếu" until the inventory
   /// feature is wired. Optional ingredients render as seasoning chips.
   DishIngredient toDishIngredient() => DishIngredient(
-        name: name,
-        quantity: requiredQuantity ?? 0,
-        unit: MeasurementUnit.fromWire(unit),
-        isSeasoning: isOptional,
-        availableInPantry: false,
-        missingQty: 0,
-        nearExpiry: false,
-        pantryItemId: null,
-      );
+    name: name,
+    quantity: requiredQuantity ?? 0,
+    unit: MeasurementUnit.fromWire(unit),
+    isSeasoning: isOptional,
+    availableInPantry: false,
+    missingQty: 0,
+    nearExpiry: false,
+    pantryItemId: null,
+  );
 }
 
 /// Tolerates numbers that arrive as JSON strings (pydantic `Decimal`).
@@ -172,4 +173,3 @@ class RecipeListResponseDto {
     );
   }
 }
-

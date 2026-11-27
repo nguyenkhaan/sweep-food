@@ -47,8 +47,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live recipe (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live recipe (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -80,29 +83,31 @@ void main() {
     final body = await api.get('/recipes') as Map<String, dynamic>;
     final items = (body['items'] as List).cast<Map<String, dynamic>>();
     expect(items, isNotEmpty, reason: 'is the seed dataset loaded?');
-    return items
-        .firstWhere(
+    return items.firstWhere(
           (r) => (r['name'] as String).toLowerCase().contains('chicken'),
           orElse: () => fail('no "chicken" recipe in $items'),
-        )['id'] as String;
+        )['id']
+        as String;
   }
 
-  test('GET /recipes/{id} maps into a Dish with steps and per-serving macros',
-      () async {
-    final id = await chickenRecipeId();
+  test(
+    'GET /recipes/{id} maps into a Dish with steps and per-serving macros',
+    () async {
+      final id = await chickenRecipeId();
 
-    final res = await recipes.getById(id);
-    final dish = res.fold((f) => fail('getById failed: $f'), (d) => d);
+      final res = await recipes.getById(id);
+      final dish = res.fold((f) => fail('getById failed: $f'), (d) => d);
 
-    expect(dish.name.toLowerCase(), contains('chicken'));
-    expect(dish.servings, greaterThanOrEqualTo(1));
-    expect(dish.cookTimeMin, greaterThan(0));
-    expect(dish.steps, isNotEmpty);
-    expect(dish.steps.first.order, 1);
-    expect(dish.ingredients, isNotEmpty);
-    // Seeded macros are non-zero and already divided to per-serving.
-    expect(dish.nutritionPerServing.energyKcal, greaterThan(0));
-  });
+      expect(dish.name.toLowerCase(), contains('chicken'));
+      expect(dish.servings, greaterThanOrEqualTo(1));
+      expect(dish.cookTimeMin, greaterThan(0));
+      expect(dish.steps, isNotEmpty);
+      expect(dish.steps.first.order, 1);
+      expect(dish.ingredients, isNotEmpty);
+      // Seeded macros are non-zero and already divided to per-serving.
+      expect(dish.nutritionPerServing.energyKcal, greaterThan(0));
+    },
+  );
 
   test('a scaled serving request keeps per-serving macros stable', () async {
     final id = await chickenRecipeId();

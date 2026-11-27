@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_dialog.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/voice_capture_controller.dart';
@@ -29,224 +31,247 @@ class VoiceReviewScreen extends ConsumerWidget {
     final controller = ref.read(voiceCaptureControllerProvider(job).notifier);
     final sweep = context.sweep;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: const Icon(Icons.arrow_back_rounded),
-        ),
-        title: Text(l10n.voiceReviewTitle),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 3),
-        children: [
-          if (state.transcript.isNotEmpty) ...[
-            Container(
-              padding: const EdgeInsets.all(Gap.md),
-              decoration: BoxDecoration(
-                color: context.colors.surface,
-                borderRadius: Radii.brMd,
-                border: Border.all(color: sweep.hairline),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: context.colors.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(
+              title: l10n.voiceReviewTitle,
+              trailing: EmeraldHeaderPill(label: '${state.items.length} món'),
+              onBack: () => context.pop(),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Gap.lg,
+                  Gap.xs,
+                  Gap.lg,
+                  Gap.xxl * 2,
+                ),
                 children: [
+                  if (state.transcript.isNotEmpty) ...[
+                    Container(
+                      padding: const EdgeInsets.all(Gap.md),
+                      decoration: BoxDecoration(
+                        color: context.colors.surfaceContainerLowest,
+                        borderRadius: Radii.brXl,
+                        border: Border.all(color: sweep.hairline),
+                        boxShadow: Shadows.e1,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '“${state.transcript}”',
+                            style: context.text.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: Gap.sm),
+                          GestureDetector(
+                            onTap: () => context.pushReplacement(
+                              '${Routes.pantry}/${Routes.scanVoiceCapture}',
+                            ),
+                            child: Text(
+                              l10n.voiceRerecord,
+                              style: context.text.bodySmall?.copyWith(
+                                color: context.colors.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Gap.gapMd,
+                  ],
                   Text(
-                    '“${state.transcript}”',
-                    style: context.text.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      height: 1.5,
+                    l10n.voiceParsedCount(state.items.length),
+                    style: context.text.labelMedium?.copyWith(
+                      color: sweep.textSecondary,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: Gap.sm),
-                  GestureDetector(
-                    onTap: () => context.pushReplacement(
-                      '${Routes.pantry}/${Routes.scanVoiceCapture}',
-                    ),
-                    child: Text(
-                      l10n.voiceRerecord,
-                      style: context.text.bodySmall?.copyWith(
-                        color: BrandPalette.green700,
-                        fontWeight: FontWeight.w600,
+                  if (state.needsReview) ...[
+                    Gap.gapSm,
+                    Semantics(
+                      liveRegion: true,
+                      child: Container(
+                        padding: const EdgeInsets.all(Gap.sm + 2),
+                        decoration: BoxDecoration(
+                          color: sweep.soon.bg,
+                          borderRadius: Radii.brLg,
+                          border: Border.all(
+                            color: sweep.soon.fg.withValues(alpha: 0.35),
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              AppIcons.warning,
+                              size: 18,
+                              color: sweep.soon.fg,
+                            ),
+                            const SizedBox(width: Gap.xs + 2),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Cần kiểm tra lại kết quả',
+                                    style: context.text.labelMedium?.copyWith(
+                                      color: sweep.soon.fg,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  if (state.suspectedMissingCount > 0)
+                                    Text(
+                                      'Có thể thiếu ${state.suspectedMissingCount} nguyên liệu so với câu đã nghe. Hãy thêm dòng hoặc ghi lại.',
+                                      style: context.text.bodySmall?.copyWith(
+                                        color: sweep.textSecondary,
+                                      ),
+                                    ),
+                                  if (state.hasSuspiciousQuantity)
+                                    Text(
+                                      'Có số lượng bất thường. Hãy chạm vào số lượng để kiểm tra trước khi thêm.',
+                                      style: context.text.bodySmall?.copyWith(
+                                        color: sweep.textSecondary,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
+                    ),
+                  ],
+                  Gap.gapSm,
+                  for (var i = 0; i < state.items.length; i++) ...[
+                    _VoiceItemRow(
+                      item: state.items[i],
+                      unsupported: !state.items[i].isSupported,
+                      onQuantityChanged: (qty) => controller.updateItem(
+                        i,
+                        state.items[i].copyWith(quantity: qty),
+                      ),
+                      onUnitChanged: (unit) => controller.updateItem(
+                        i,
+                        state.items[i].copyWith(unit: unit),
+                      ),
+                      onNameChanged: (name) {
+                        controller.renameItem(i, name);
+                        controller.rematchItem(i);
+                      },
+                      onDelete: () => controller.removeItem(i),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        Gap.sm,
+                        Gap.xs,
+                        Gap.sm,
+                        0,
+                      ),
+                      child: ExpiryFreshnessRow(
+                        itemName: state.items[i].name,
+                        storageTier: state.items[i].storageTier,
+                        expiryDate: state.items[i].expiryDate,
+                        freshness: state.items[i].freshness,
+                        masterIngredientId: state.items[i].ingredientId,
+                        onChanged: (expiry, freshness) =>
+                            controller.setItemExpiry(i, expiry, freshness),
+                      ),
+                    ),
+                    const SizedBox(height: Gap.sm),
+                  ],
+                  const SizedBox(height: Gap.xs),
+                  GestureDetector(
+                    onTap: () => controller.addItem(kBlankVoiceDraft),
+                    child: Row(
+                      children: [
+                        Icon(
+                          AppIcons.add,
+                          size: 17,
+                          color: context.colors.primary,
+                        ),
+                        const SizedBox(width: Gap.xs),
+                        Text(
+                          l10n.scanAddRow,
+                          style: context.text.labelLarge?.copyWith(
+                            color: context.colors.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-            Gap.gapMd,
           ],
-          Text(
-            l10n.voiceParsedCount(state.items.length),
-            style: context.text.labelMedium?.copyWith(
-              color: sweep.textSecondary,
-              fontWeight: FontWeight.w600,
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.all(Gap.md),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerLowest,
+              border: Border(top: BorderSide(color: sweep.hairline)),
             ),
-          ),
-          if (state.needsReview) ...[
-            Gap.gapSm,
-            Semantics(
-              liveRegion: true,
-              child: Container(
-                padding: const EdgeInsets.all(Gap.sm),
-                decoration: BoxDecoration(
-                  color: BrandPalette.warnSoon.withValues(alpha: 0.12),
-                  borderRadius: Radii.brMd,
-                  border: Border.all(
-                    color: BrandPalette.warnSoon.withValues(alpha: 0.45),
-                  ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(
-                      Icons.warning_amber_rounded,
-                      size: 20,
-                      color: BrandPalette.warnSoon,
-                    ),
-                    const SizedBox(width: Gap.xs),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Cần kiểm tra lại kết quả',
-                            style: context.text.labelMedium?.copyWith(
-                              color: BrandPalette.warnSoon,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          if (state.suspectedMissingCount > 0)
-                            Text(
-                              'Có thể thiếu ${state.suspectedMissingCount} nguyên liệu so với câu đã nghe. Hãy thêm dòng hoặc ghi lại.',
-                              style: context.text.bodySmall?.copyWith(
-                                color: sweep.textSecondary,
-                              ),
-                            ),
-                          if (state.hasSuspiciousQuantity)
-                            Text(
-                              'Có số lượng bất thường. Hãy chạm vào số lượng để kiểm tra trước khi thêm.',
-                              style: context.text.bodySmall?.copyWith(
-                                color: sweep.textSecondary,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-          Gap.gapSm,
-          for (var i = 0; i < state.items.length; i++) ...[
-            _VoiceItemRow(
-              item: state.items[i],
-              unsupported: !state.items[i].isSupported,
-              onQuantityChanged: (qty) => controller.updateItem(
-                i,
-                state.items[i].copyWith(quantity: qty),
-              ),
-              onUnitChanged: (unit) =>
-                  controller.updateItem(i, state.items[i].copyWith(unit: unit)),
-              onNameChanged: (name) {
-                controller.renameItem(i, name);
-                // Renamed: let the smart parser look at the new name.
-                controller.rematchItem(i);
-              },
-              onDelete: () => controller.removeItem(i),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(Gap.sm, Gap.xs, Gap.sm, 0),
-              child: ExpiryFreshnessRow(
-                itemName: state.items[i].name,
-                storageTier: state.items[i].storageTier,
-                expiryDate: state.items[i].expiryDate,
-                freshness: state.items[i].freshness,
-                masterIngredientId: state.items[i].ingredientId,
-                onChanged: (expiry, freshness) =>
-                    controller.setItemExpiry(i, expiry, freshness),
-              ),
-            ),
-            const SizedBox(height: Gap.sm),
-          ],
-          const SizedBox(height: Gap.xs),
-          GestureDetector(
-            onTap: () => controller.addItem(kBlankVoiceDraft),
-            child: Row(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Icon(
-                  Icons.add_rounded,
-                  size: 18,
-                  color: BrandPalette.green700,
-                ),
-                const SizedBox(width: Gap.xs),
-                Text(
-                  l10n.scanAddRow,
-                  style: context.text.labelLarge?.copyWith(
-                    color: BrandPalette.green700,
-                    fontWeight: FontWeight.w600,
+                if (state.hasUnsupported) ...[
+                  Text(
+                    l10n.scanRemoveUnsupportedHint,
+                    textAlign: TextAlign.center,
+                    style: context.text.bodySmall?.copyWith(
+                      color: context.colors.error,
+                    ),
+                  ),
+                  const SizedBox(height: Gap.xs),
+                ],
+                FilledButton(
+                  onPressed: state.items.isEmpty || state.hasUnsupported
+                      ? null
+                      : () async {
+                          try {
+                            final count = state.items.length;
+                            await controller.saveAllToPantry();
+                            if (!context.mounted) return;
+                            AppSnack.show(
+                              context,
+                              context.l10n.scanAddedCountToPantry(count),
+                            );
+                            context.go(Routes.pantry);
+                          } on Object catch (e) {
+                            if (!context.mounted) return;
+                            AppSnack.show(context, context.saveErrorMessage(e));
+                          }
+                        },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: sweep.ctaWarm,
+                    foregroundColor: sweep.onCtaWarm,
+                    disabledBackgroundColor: sweep.subtleFill,
+                    disabledForegroundColor: sweep.textTertiary,
+                    minimumSize: const Size.fromHeight(50),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: Radii.brMd,
+                    ),
+                  ),
+                  child: Text(
+                    l10n.voiceAddCount(state.items.length),
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(Gap.md),
-          decoration: BoxDecoration(
-            color: context.colors.surface,
-            border: Border(top: BorderSide(color: sweep.hairline)),
-            boxShadow: Shadows.e2,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (state.hasUnsupported) ...[
-                Text(
-                  l10n.scanRemoveUnsupportedHint,
-                  textAlign: TextAlign.center,
-                  style: context.text.bodySmall?.copyWith(
-                    color: context.colors.error,
-                  ),
-                ),
-                const SizedBox(height: Gap.xs),
-              ],
-              ElevatedButton(
-            onPressed: state.items.isEmpty || state.hasUnsupported
-                ? null
-                : () async {
-                    try {
-                      final count = state.items.length;
-                      await controller.saveAllToPantry();
-                      if (!context.mounted) return;
-                      AppSnack.show(
-                        context,
-                        context.l10n.scanAddedCountToPantry(count),
-                      );
-                      context.go(Routes.pantry);
-                    } on Object catch (e) {
-                      if (!context.mounted) return;
-                      AppSnack.show(context, context.saveErrorMessage(e));
-                    }
-                  },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: BrandPalette.green700,
-              foregroundColor: Colors.white,
-              disabledBackgroundColor: sweep.subtleFill,
-              disabledForegroundColor: sweep.textTertiary,
-              minimumSize: const Size.fromHeight(50),
-              shape: const RoundedRectangleBorder(borderRadius: Radii.brMd),
-            ),
-            child: Text(
-              l10n.voiceAddCount(state.items.length),
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-            ),
-          ),
-            ],
           ),
         ),
       ),
@@ -347,8 +372,8 @@ class _VoiceItemRow extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: 16,
+                    AppIcons.chevronDown,
+                    size: 15,
                     color: sweep.textTertiary,
                   ),
                 ],
@@ -379,8 +404,8 @@ class _VoiceItemRow extends StatelessWidget {
           IconButton(
             visualDensity: VisualDensity.compact,
             icon: Icon(
-              Icons.close_rounded,
-              size: 18,
+              AppIcons.close,
+              size: 17,
               color: sweep.textTertiary,
             ),
             onPressed: onDelete,
@@ -415,23 +440,18 @@ class _VoiceItemRow extends StatelessWidget {
     final textController = TextEditingController(text: initial);
     return showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title),
+      builder: (ctx) => AppDialog(
+        title: title,
+        tone: AppDialogTone.primary,
+        cancelLabel: context.l10n.commonCancel,
+        confirmLabel: context.l10n.commonSave,
+        onCancel: () => ctx.pop(),
+        onConfirm: () => ctx.pop(textController.text.trim()),
         content: TextField(
           controller: textController,
           autofocus: true,
           keyboardType: number ? TextInputType.number : null,
         ),
-        actions: [
-          TextButton(
-            onPressed: () => ctx.pop(),
-            child: Text(context.l10n.commonCancel),
-          ),
-          ElevatedButton(
-            onPressed: () => ctx.pop(textController.text.trim()),
-            child: Text(context.l10n.commonSave),
-          ),
-        ],
       ),
     );
   }

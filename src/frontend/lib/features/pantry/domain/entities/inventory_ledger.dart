@@ -19,32 +19,29 @@ enum LedgerEventType {
   const LedgerEventType(this.wire);
   final String wire;
 
-  static LedgerEventType fromWire(String? v) => LedgerEventType.values.firstWhere(
-        (e) => e.wire == v,
-        orElse: () => LedgerEventType.correction,
-      );
+  static LedgerEventType fromWire(String? v) => LedgerEventType.values
+      .firstWhere((e) => e.wire == v, orElse: () => LedgerEventType.correction);
 
   String get label => switch (this) {
-        LedgerEventType.initialStock => 'Nhập kho ban đầu',
-        LedgerEventType.manualAdjustment => 'Điều chỉnh thủ công',
-        LedgerEventType.manualConsumption => 'Đã dùng (thủ công)',
-        LedgerEventType.cookingConsumption => 'Trừ kho khi nấu',
-        LedgerEventType.discarded => 'Bỏ đi',
-        LedgerEventType.leftoverCreated => 'Tạo món ăn thừa',
-        LedgerEventType.correction => 'Chỉnh sửa',
-        LedgerEventType.metadataUpdated => 'Cập nhật thông tin',
-        LedgerEventType.moved => 'Chuyển ngăn bảo quản',
-        LedgerEventType.archived => 'Lưu trữ',
-      };
+    LedgerEventType.initialStock => 'Nhập kho ban đầu',
+    LedgerEventType.manualAdjustment => 'Điều chỉnh thủ công',
+    LedgerEventType.manualConsumption => 'Đã dùng (thủ công)',
+    LedgerEventType.cookingConsumption => 'Trừ kho khi nấu',
+    LedgerEventType.discarded => 'Bỏ đi',
+    LedgerEventType.leftoverCreated => 'Tạo món ăn thừa',
+    LedgerEventType.correction => 'Chỉnh sửa',
+    LedgerEventType.metadataUpdated => 'Cập nhật thông tin',
+    LedgerEventType.moved => 'Chuyển ngăn bảo quản',
+    LedgerEventType.archived => 'Lưu trữ',
+  };
 
   /// Whether this event changed the quantity (vs. just metadata / a move).
   bool get affectsQuantity => switch (this) {
-        LedgerEventType.metadataUpdated ||
-        LedgerEventType.moved ||
-        LedgerEventType.archived =>
-          false,
-        _ => true,
-      };
+    LedgerEventType.metadataUpdated ||
+    LedgerEventType.moved ||
+    LedgerEventType.archived => false,
+    _ => true,
+  };
 }
 
 /// One `GET /inventory/ledger` row.

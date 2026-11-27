@@ -29,11 +29,11 @@ class WasteReasonShare {
   final double percentage;
 
   String get label => switch (reason) {
-        'EXPIRED' => 'Hết hạn sử dụng',
-        'SPOILED' => 'Bị hư hỏng / ẩm mốc',
-        'DAMAGED' => 'Bị vỡ / biến chất',
-        _ => 'Khác',
-      };
+    'EXPIRED' => 'Hết hạn sử dụng',
+    'SPOILED' => 'Bị hư hỏng / ẩm mốc',
+    'DAMAGED' => 'Bị vỡ / biến chất',
+    _ => 'Khác',
+  };
 }
 
 class WastedBatchItem {

@@ -61,7 +61,9 @@ class ChangePasswordController extends _$ChangePasswordController {
       fieldErrors: const {},
       formError: null,
     );
-    final res = await ref.read(authRepositoryProvider).confirmPasswordChange(
+    final res = await ref
+        .read(authRepositoryProvider)
+        .confirmPasswordChange(
           phone: phone,
           otp: otp.trim(),
           newPassword: newPassword,

@@ -77,10 +77,10 @@ void main() {
         'total_wasted_kg': 0.8,
         'wasted_items_count': 1,
         'by_category': [
-          {'category_name': 'Rau củ', 'wasted_kg': 0.8, 'percentage': 100.0}
+          {'category_name': 'Rau củ', 'wasted_kg': 0.8, 'percentage': 100.0},
         ],
         'waste_reasons': [
-          {'reason': 'EXPIRED', 'count': 1, 'percentage': 100.0}
+          {'reason': 'EXPIRED', 'count': 1, 'percentage': 100.0},
         ],
         'wasted_batches': [
           {
@@ -91,7 +91,7 @@ void main() {
             'expired_at': '2026-09-27T00:00:00Z',
             'discarded_at': '2026-09-28T00:00:00Z',
             'reason': 'EXPIRED',
-          }
+          },
         ],
       };
 
@@ -119,7 +119,7 @@ void main() {
             'type': 'POSITIVE',
             'title': 'Bảo quản tốt',
             'message': 'Rất ít thực phẩm bị hỏng.',
-          }
+          },
         ],
       };
 

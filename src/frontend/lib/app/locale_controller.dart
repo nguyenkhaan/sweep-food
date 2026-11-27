@@ -15,7 +15,9 @@ part 'locale_controller.g.dart';
 class LocaleController extends _$LocaleController {
   @override
   Locale build() {
-    final raw = ref.watch(sharedPreferencesProvider).getString(AppConstants.kLocale);
+    final raw = ref
+        .watch(sharedPreferencesProvider)
+        .getString(AppConstants.kLocale);
     return _fromCode(raw) ?? const Locale('vi');
   }
 

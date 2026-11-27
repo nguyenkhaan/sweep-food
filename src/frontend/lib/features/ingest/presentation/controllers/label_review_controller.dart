@@ -54,8 +54,8 @@ class LabelReviewController extends _$LabelReviewController {
       state = state.copyWith(packedDate: date);
 
   /// A manual date and a FreshCheck estimate are mutually exclusive.
-  void setExpiry(DateTime? date, FreshnessEstimate? freshness) => state =
-      state.copyWith(expiryDate: date, freshness: freshness, isExpiryWarn: false);
+  void setExpiry(DateTime? date, FreshnessEstimate? freshness) => state = state
+      .copyWith(expiryDate: date, freshness: freshness, isExpiryWarn: false);
 
   /// FreshCheck depends on where the item is stored.
   void setStorageTier(StorageTier tier) => state = state.copyWith(

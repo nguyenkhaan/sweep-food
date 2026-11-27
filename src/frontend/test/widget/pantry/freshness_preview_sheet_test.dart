@@ -142,39 +142,42 @@ void main() {
   group('"Khác" free-text answer', () {
     setUp(() {});
 
-    testWidgets('is sent as other_answers and carried into the accepted estimate', (
-      tester,
-    ) async {
-      await tester.binding.setSurfaceSize(const Size(800, 1400));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      when(
-        () => api.post(ApiPaths.freshnessPreview, body: any(named: 'body')),
-      ).thenAnswer((_) async => _preview(blocked: false));
+    testWidgets(
+      'is sent as other_answers and carried into the accepted estimate',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(800, 1400));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        when(
+          () => api.post(ApiPaths.freshnessPreview, body: any(named: 'body')),
+        ).thenAnswer((_) async => _preview(blocked: false));
 
-      final accepted = await _open(tester, api);
-      await tester.tap(find.text('Khác'));
-      await tester.pump();
-      await tester.enterText(find.byType(TextField), 'Lá hơi vàng ở mép');
-      await tester.pump();
-      await tester.tap(find.text('Xem hạn ước tính'));
-      await tester.pumpAndSettle();
+        final accepted = await _open(tester, api);
+        await tester.tap(find.text('Khác'));
+        await tester.pump();
+        await tester.enterText(find.byType(TextField), 'Lá hơi vàng ở mép');
+        await tester.pump();
+        await tester.tap(find.text('Xem hạn ước tính'));
+        await tester.pumpAndSettle();
 
-      final sent =
-          verify(
-                () => api.post(
-                  ApiPaths.freshnessPreview,
-                  body: captureAny(named: 'body'),
-                ),
-              ).captured.single
-              as Map<String, dynamic>;
-      expect(sent['answers'], isEmpty);
-      expect(sent['other_answers'], {'appearance': 'Lá hơi vàng ở mép'});
+        final sent =
+            verify(
+                  () => api.post(
+                    ApiPaths.freshnessPreview,
+                    body: captureAny(named: 'body'),
+                  ),
+                ).captured.single
+                as Map<String, dynamic>;
+        expect(sent['answers'], isEmpty);
+        expect(sent['other_answers'], {'appearance': 'Lá hơi vàng ở mép'});
 
-      await tester.tap(find.text('Dùng hạn này (04/09/2026)'));
-      await tester.pumpAndSettle();
-      expect(accepted.value?.answers, isEmpty);
-      expect(accepted.value?.otherAnswers, {'appearance': 'Lá hơi vàng ở mép'});
-    });
+        await tester.tap(find.text('Dùng hạn này (04/09/2026)'));
+        await tester.pumpAndSettle();
+        expect(accepted.value?.answers, isEmpty);
+        expect(accepted.value?.otherAnswers, {
+          'appearance': 'Lá hơi vàng ở mép',
+        });
+      },
+    );
 
     testWidgets('an off-topic answer shows the backend message under the box', (
       tester,

@@ -5,15 +5,13 @@ import 'package:sweepfood/app/router/routes.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_text_button.dart';
-import 'package:sweepfood/core/widgets/primary_button.dart';
-import 'package:sweepfood/features/onboarding/domain/entities/onboarding_state.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/features/onboarding/presentation/controllers/onboarding_controller.dart';
-import 'package:sweepfood/features/onboarding/presentation/widgets/onboarding_progress.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
 import 'package:sweepfood/shared/widgets/dietary_preference_selector.dart';
 import 'package:sweepfood/shared/widgets/nutrition_disclaimer_banner.dart';
 
-/// A-05 Onboarding · Chọn chế độ ăn (5 lựa chọn gồm Ăn chay). Skippable.
+/// A-05 Onboarding · Chọn chế độ ăn (Concept B · Format 1).
 class DietaryPreferenceScreen extends ConsumerStatefulWidget {
   const DietaryPreferenceScreen({super.key});
 
@@ -51,52 +49,95 @@ class _DietaryPreferenceScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const OnboardingProgress(step: OnboardingStep.dietaryPreference),
-              Gap.gapLg,
-              Text(
-                l10n.onbDietTitle,
-                style: context.text.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
+    final cs = context.colors;
+    final sweep = context.sweep;
+
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: cs.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(
+              title: l10n.onbDietTitle,
+              subtitle: l10n.onbDietSubtitle,
+              showBack: false,
+              trailing: const EmeraldHeaderPill(label: '1 / 2'),
+              bottom: ClipRRect(
+                borderRadius: BorderRadius.circular(Radii.pill),
+                child: LinearProgressIndicator(
+                  value: 0.5,
+                  minHeight: 5,
+                  backgroundColor: sweep.onHeroSurface.withValues(alpha: 0.2),
+                  valueColor: AlwaysStoppedAnimation(sweep.onHeroSurface),
                 ),
               ),
-              Gap.gapXxs,
-              Text(
-                l10n.onbDietSubtitle,
-                style: context.text.bodyMedium?.copyWith(
-                  color: context.sweep.textSecondary,
+            ),
+            Expanded(
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    Gap.lg,
+                    Gap.xs,
+                    Gap.lg,
+                    Gap.md,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: DietaryPreferenceSelector(
+                          selected: _selected,
+                          onChanged: (pref) => setState(() => _selected = pref),
+                        ),
+                      ),
+                      Gap.gapSm,
+                      const NutritionDisclaimerBanner(compact: true),
+                      Gap.gapSm,
+                      SizedBox(
+                        height: 50,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: sweep.ctaWarm,
+                            foregroundColor: sweep.onCtaWarm,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: Radii.brMd,
+                            ),
+                          ),
+                          onPressed: _saving
+                              ? null
+                              : () => _next(save: _selected),
+                          child: _saving
+                              ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.2,
+                                    color: sweep.onCtaWarm,
+                                  ),
+                                )
+                              : Text(
+                                  l10n.commonContinue,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                        ),
+                      ),
+                      Gap.gapXxs,
+                      Center(
+                        child: AppTextButton(
+                          label: l10n.commonSkip,
+                          onPressed: _saving ? null : () => _next(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Gap.gapMd,
-              Expanded(
-                child: DietaryPreferenceSelector(
-                  selected: _selected,
-                  onChanged: (pref) => setState(() => _selected = pref),
-                ),
-              ),
-              Gap.gapSm,
-              const NutritionDisclaimerBanner(compact: true),
-              Gap.gapSm,
-              PrimaryButton(
-                label: l10n.commonContinue,
-                loading: _saving,
-                onPressed: () => _next(save: _selected),
-              ),
-              Gap.gapXxs,
-              Center(
-                child: AppTextButton(
-                  label: l10n.commonSkip,
-                  onPressed: _saving ? null : () => _next(),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 
 /// Labelled text field shared by the login / register / forgot-password forms
@@ -56,17 +57,23 @@ class AuthTextField extends StatelessWidget {
           onSubmitted: onSubmitted,
           decoration: InputDecoration(
             hintText: hintText,
-            prefixIcon: prefixIcon == null ? null : Icon(prefixIcon, size: 20),
+            prefixIcon: prefixIcon == null
+                ? null
+                : Icon(
+                    prefixIcon,
+                    size: 18,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
             errorText: errorText,
             suffixIcon: onToggleObscure == null
                 ? null
                 : IconButton(
+                    tooltip: obscureText ? 'Hiện mật khẩu' : 'Ẩn mật khẩu',
                     onPressed: onToggleObscure,
                     icon: Icon(
-                      obscureText
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
-                      size: 20,
+                      obscureText ? AppIcons.eye : AppIcons.eyeOff,
+                      size: 18,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
           ),

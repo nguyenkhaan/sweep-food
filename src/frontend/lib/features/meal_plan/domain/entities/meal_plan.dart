@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/meal_plan/domain/entities/meal_plan_entry.dart';
 
 part 'meal_plan.freezed.dart';
@@ -23,8 +23,9 @@ abstract class MealPlan with _$MealPlan {
     return dateOnly.subtract(Duration(days: dateOnly.weekday - 1));
   }
 
-  List<DateTime> get days =>
-      [for (var i = 0; i < 7; i++) weekStart.add(Duration(days: i))];
+  List<DateTime> get days => [
+    for (var i = 0; i < 7; i++) weekStart.add(Duration(days: i)),
+  ];
 
   MealPlanEntry? entryAt(DateTime day, MealSlot slot) {
     for (final e in entries) {
@@ -37,14 +38,17 @@ abstract class MealPlan with _$MealPlan {
 
   /// Add / replace the entry in a cell.
   MealPlan withEntry(MealPlanEntry entry) => copyWith(
-        entries: [
-          for (final e in entries)
-            if (!e.isAt(entry.date, entry.slot)) e,
-          entry,
-        ],
-      );
+    entries: [
+      for (final e in entries)
+        if (!e.isAt(entry.date, entry.slot)) e,
+      entry,
+    ],
+  );
 
   MealPlan withoutEntry(DateTime day, MealSlot slot) => copyWith(
-        entries: [for (final e in entries) if (!e.isAt(day, slot)) e],
-      );
+    entries: [
+      for (final e in entries)
+        if (!e.isAt(day, slot)) e,
+    ],
+  );
 }

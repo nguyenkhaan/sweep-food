@@ -62,9 +62,13 @@ abstract class CookResult with _$CookResult {
 
   double get wasteAvoidedKg => wasteAvoidedGrams / 1000;
 
-  List<String> get depletedNames =>
-      [for (final c in changes) if (c.depleted) c.name];
+  List<String> get depletedNames => [
+    for (final c in changes)
+      if (c.depleted) c.name,
+  ];
 
-  List<String> get lowStockNames =>
-      [for (final c in changes) if (c.lowAndUrgent) c.name];
+  List<String> get lowStockNames => [
+    for (final c in changes)
+      if (c.lowAndUrgent) c.name,
+  ];
 }

@@ -1,8 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_text_button.dart';
 
-/// Overline label with an optional trailing action ("CẦN DÙNG SỚM · Xem tất cả").
+/// Overline section header with an optional trailing action.
 class SectionHeader extends StatelessWidget {
   const SectionHeader({
     required this.title,
@@ -22,8 +23,14 @@ class SectionHeader extends StatelessWidget {
         Expanded(
           child: Text(title.toUpperCase(), style: context.text.labelSmall),
         ),
-        if (actionLabel != null && onAction != null)
-          AppTextButton(label: actionLabel!, onPressed: onAction),
+        if (actionLabel != null && onAction != null) ...[
+          const SizedBox(width: Gap.xs),
+          AppTextButton(
+            label: actionLabel!,
+            onPressed: onAction,
+            trailingChevron: true,
+          ),
+        ],
       ],
     );
   }

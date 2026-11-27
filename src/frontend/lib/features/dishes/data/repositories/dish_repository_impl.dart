@@ -9,9 +9,8 @@ import 'package:sweepfood/features/dishes/domain/repositories/dish_repository.da
 part 'dish_repository_impl.g.dart';
 
 @Riverpod(keepAlive: true)
-DishRepository dishRepository(Ref ref) => DishRepositoryImpl(
-      DishRemoteDataSource(ref.watch(apiClientProvider)),
-    );
+DishRepository dishRepository(Ref ref) =>
+    DishRepositoryImpl(DishRemoteDataSource(ref.watch(apiClientProvider)));
 
 class DishRepositoryImpl implements DishRepository {
   DishRepositoryImpl(this._remote);
@@ -29,15 +28,14 @@ class DishRepositoryImpl implements DishRepository {
     int? maxCookingMinutes,
     int page = 1,
     int perPage = 20,
-  }) =>
-      runGuarded(() async {
-        final res = await _remote.searchRecipes(
-          query: query,
-          tag: tag,
-          maxCookingMinutes: maxCookingMinutes,
-          page: page,
-          perPage: perPage,
-        );
-        return res.items.map((dto) => dto.toEntity()).toList();
-      });
+  }) => runGuarded(() async {
+    final res = await _remote.searchRecipes(
+      query: query,
+      tag: tag,
+      maxCookingMinutes: maxCookingMinutes,
+      page: page,
+      perPage: perPage,
+    );
+    return res.items.map((dto) => dto.toEntity()).toList();
+  });
 }

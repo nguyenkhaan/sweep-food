@@ -15,5 +15,7 @@ abstract interface class ReportRepository {
   Future<Result<WasteStatistics>> wasteStatistics(ReportPeriod period);
 
   /// `GET /reports/efficiency?period=` (week | month).
-  Future<Result<EfficiencyEvaluation>> efficiencyEvaluation(ReportPeriod period);
+  Future<Result<EfficiencyEvaluation>> efficiencyEvaluation(
+    ReportPeriod period,
+  );
 }

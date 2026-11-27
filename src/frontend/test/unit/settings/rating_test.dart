@@ -16,34 +16,32 @@ void main() {
 
   group('RatingRemoteDataSource', () {
     test('submitRating calls post successfully', () async {
-      when(() => mockApi.post(
-            any(),
-            query: any(named: 'query'),
-            body: any(named: 'body'),
-            headers: any(named: 'headers'),
-          )).thenAnswer((_) async => {'success': true});
+      when(
+        () => mockApi.post(
+          any(),
+          query: any(named: 'query'),
+          body: any(named: 'body'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => {'success': true});
 
       await expectLater(
-        dataSource.submitRating(
-          rating: 5,
-          feedback: 'Ứng dụng tuyệt vời!',
-        ),
+        dataSource.submitRating(rating: 5, feedback: 'Ứng dụng tuyệt vời!'),
         completes,
       );
     });
 
     test('submitRating handles null feedback', () async {
-      when(() => mockApi.post(
-            any(),
-            query: any(named: 'query'),
-            body: any(named: 'body'),
-            headers: any(named: 'headers'),
-          )).thenAnswer((_) async => {'success': true});
+      when(
+        () => mockApi.post(
+          any(),
+          query: any(named: 'query'),
+          body: any(named: 'body'),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer((_) async => {'success': true});
 
-      await expectLater(
-        dataSource.submitRating(rating: 4),
-        completes,
-      );
+      await expectLater(dataSource.submitRating(rating: 4), completes);
     });
   });
 }

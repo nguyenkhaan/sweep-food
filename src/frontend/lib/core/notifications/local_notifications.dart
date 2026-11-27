@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sweepfood/core/utils/logger.dart';
 import 'package:sweepfood/features/settings/domain/entities/notification_preferences.dart';
@@ -20,15 +20,15 @@ class LocalNotifications {
   static const _nearExpiryDigestId = 1001;
 
   NotificationDetails get _details => const NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: 'Nhắc nguyên liệu sắp hết hạn',
-          importance: Importance.defaultImportance,
-          priority: Priority.defaultPriority,
-        ),
-        iOS: DarwinNotificationDetails(),
-      );
+    android: AndroidNotificationDetails(
+      _channelId,
+      _channelName,
+      channelDescription: 'Nhắc nguyên liệu sắp hết hạn',
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+    ),
+    iOS: DarwinNotificationDetails(),
+  );
 
   Future<void> init() async {
     if (kIsWeb || _ready) return;
@@ -50,11 +50,13 @@ class LocalNotifications {
     try {
       final ios = await _plugin
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
+            IOSFlutterLocalNotificationsPlugin
+          >()
           ?.requestPermissions(alert: true, badge: true, sound: true);
       final android = await _plugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin
+          >()
           ?.requestNotificationsPermission();
       return ios ?? android ?? false;
     } catch (e) {
@@ -119,7 +121,7 @@ class LocalNotifications {
       log.d(
         prefs.nearExpiry
             ? 'Near-expiry digest armed for ${prefs.nearExpiryTimeLabel} '
-                '(DND ${prefs.dndWindowLabel})'
+                  '(DND ${prefs.dndWindowLabel})'
             : 'Near-expiry digest disabled',
       );
     } catch (e) {

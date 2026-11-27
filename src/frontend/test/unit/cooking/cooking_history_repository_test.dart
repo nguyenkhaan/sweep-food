@@ -59,8 +59,9 @@ void main() {
     });
 
     test('returns a Failure when the client throws', () async {
-      when(() => api.get(ApiPaths.cookingHistory))
-          .thenThrow(Exception('offline'));
+      when(
+        () => api.get(ApiPaths.cookingHistory),
+      ).thenThrow(Exception('offline'));
       final res = await repo.history();
       expect(res.isLeft(), isTrue);
     });

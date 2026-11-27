@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 
-/// Tonal / lower-emphasis action. Outlined in the design; use next to a
-/// [PrimaryButton] (e.g. "Hủy" / "Xong").
+/// Lower-emphasis outlined action paired next to a [PrimaryButton].
 class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
     required this.label,
@@ -18,13 +18,19 @@ class SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final handler = onPressed == null
+        ? null
+        : () {
+            AppHaptics.selection();
+            onPressed!();
+          };
     final button = icon != null
         ? OutlinedButton.icon(
-            onPressed: onPressed,
+            onPressed: handler,
             icon: Icon(icon, size: 18),
             label: Text(label),
           )
-        : OutlinedButton(onPressed: onPressed, child: Text(label));
+        : OutlinedButton(onPressed: handler, child: Text(label));
     return expand ? SizedBox(width: double.infinity, child: button) : button;
   }
 }

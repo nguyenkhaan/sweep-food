@@ -40,7 +40,8 @@ abstract class ActiveSession with _$ActiveSession {
       _ => null,
     };
     final app = switch (lower) {
-      _ when lower.contains('sweepfood') || lower.contains('dart') => 'Ứng dụng SweepFood',
+      _ when lower.contains('sweepfood') || lower.contains('dart') =>
+        'Ứng dụng SweepFood',
       _ when lower.contains('chrome') => 'Chrome',
       _ when lower.contains('firefox') => 'Firefox',
       _ when lower.contains('safari') => 'Safari',

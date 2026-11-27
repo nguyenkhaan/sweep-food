@@ -29,8 +29,9 @@ class EditProfileController extends _$EditProfileController {
       fieldErrors: const {},
       formError: null,
     );
-    final res =
-        await ref.read(authRepositoryProvider).updateProfile(name: trimmed);
+    final res = await ref
+        .read(authRepositoryProvider)
+        .updateProfile(name: trimmed);
     return res.fold(
       (f) {
         state = state.copyWith(

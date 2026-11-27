@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
-import 'package:sweepfood/core/widgets/primary_button.dart';
 import 'package:sweepfood/features/auth/presentation/controllers/otp_controller.dart';
 import 'package:sweepfood/features/auth/presentation/widgets/auth_form_error.dart';
+import 'package:sweepfood/features/auth/presentation/widgets/auth_split_scaffold.dart';
 import 'package:sweepfood/features/auth/presentation/widgets/auth_text_field.dart';
 
 /// Registration-step-2 arguments passed via `GoRouter` `extra`.
 typedef OtpArgs = ({String phone, String password});
 
-/// A-03 step 2. Enter the 6-digit registration OTP. On success the session
-/// flips and `appRedirect` moves the router on to onboarding.
+/// A-03 step 2 — Concept B Culinary Split Hero.
 class OtpScreen extends ConsumerStatefulWidget {
   const OtpScreen({required this.args, super.key});
 
@@ -34,7 +34,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     final args = widget.args;
     if (args == null) return;
     FocusScope.of(context).unfocus();
-    await ref.read(otpControllerProvider.notifier).submit(
+    await ref
+        .read(otpControllerProvider.notifier)
+        .submit(
           phone: args.phone,
           password: args.password,
           otp: _otp.text,
@@ -49,73 +51,58 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
         .read(otpControllerProvider.notifier)
         .resend(phone: args.phone, l10n: context.l10n);
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.authOtpResent)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.authOtpResent)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = context.l10n;
     final args = widget.args;
     final state = ref.watch(otpControllerProvider);
 
-    return Scaffold(
-      appBar: AppBar(leading: const BackButton()),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(Gap.xl, Gap.xs, Gap.xl, Gap.xl),
-          children: [
-            Text(
-              l10n.authOtpTitle,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+    return AuthSplitScaffold(
+      title: l10n.authOtpTitle,
+      subtitle: args == null
+          ? l10n.authOtpMissingArgs
+          : l10n.authOtpSubtitle(args.phone),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (args != null) ...[
+            AuthTextField(
+              label: l10n.authOtpLabel,
+              controller: _otp,
+              hintText: '000000',
+              prefixIcon: AppIcons.messageCode,
+              keyboardType: TextInputType.number,
+              textInputAction: TextInputAction.done,
+              autofillHints: const [AutofillHints.oneTimeCode],
+              onSubmitted: (_) => _submit(),
+              errorText: state.fieldErrors['otp'],
             ),
-            Gap.gapXxs,
-            Text(
-              args == null
-                  ? l10n.authOtpMissingArgs
-                  : l10n.authOtpSubtitle(args.phone),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            Gap.gapXl,
-            if (args != null) ...[
-              AuthTextField(
-                label: l10n.authOtpLabel,
-                controller: _otp,
-                hintText: '000000',
-                prefixIcon: Icons.sms_outlined,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                autofillHints: const [AutofillHints.oneTimeCode],
-                onSubmitted: (_) => _submit(),
-                errorText: state.fieldErrors['otp'],
-              ),
-              if (state.formError != null) ...[
-                Gap.gapXs,
-                AuthFormError(state.formError!),
-              ],
-              Gap.gapMd,
-              PrimaryButton(
-                label: l10n.authOtpConfirm,
-                loading: state.submitting,
-                onPressed: state.submitting ? null : _submit,
-              ),
+            if (state.formError != null) ...[
               Gap.gapXs,
-              Center(
-                child: TextButton(
-                  onPressed: state.submitting ? null : _resend,
-                  child: Text(l10n.authOtpResendCta),
-                ),
-              ),
+              AuthFormError(state.formError!),
             ],
+            Gap.gapLg,
+            AuthPrimaryButton(
+              label: l10n.authOtpConfirm,
+              loading: state.submitting,
+              onPressed: state.submitting ? null : _submit,
+            ),
+            Gap.gapSm,
+            Center(
+              child: TextButton(
+                style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+                onPressed: state.submitting ? null : _resend,
+                child: Text(l10n.authOtpResendCta),
+              ),
+            ),
           ],
-        ),
+        ],
       ),
     );
   }

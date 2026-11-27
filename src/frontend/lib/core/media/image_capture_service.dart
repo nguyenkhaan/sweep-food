@@ -9,8 +9,8 @@ export 'package:image_picker/image_picker.dart' show ImageSource;
 /// isn't available on this platform.
 class ImageCaptureService {
   ImageCaptureService({ImagePicker? picker, ImageCropper? cropper})
-      : _picker = picker ?? ImagePicker(),
-        _cropper = cropper ?? ImageCropper();
+    : _picker = picker ?? ImagePicker(),
+      _cropper = cropper ?? ImageCropper();
 
   final ImagePicker _picker;
   final ImageCropper _cropper;

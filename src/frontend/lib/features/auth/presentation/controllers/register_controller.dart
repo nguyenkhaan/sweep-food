@@ -52,7 +52,9 @@ class RegisterController extends _$RegisterController {
       fieldErrors: const {},
       formError: null,
     );
-    final res = await ref.read(authRepositoryProvider).register(
+    final res = await ref
+        .read(authRepositoryProvider)
+        .register(
           phone: e164,
           password: password,
           name: name.trim(),

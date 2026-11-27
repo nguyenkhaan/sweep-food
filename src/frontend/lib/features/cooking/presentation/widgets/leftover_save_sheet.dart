@@ -1,14 +1,16 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/app/theme/app_typography.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/features/cooking/domain/entities/cooked_food.dart';
 import 'package:sweepfood/features/cooking/presentation/controllers/leftover_controller.dart';
 
-/// D-06 — "Còn dư món ăn?". Saves leftover portions as an "Ăn liền" batch with
-/// a use-by reminder.
+/// D-06 — "Còn dư món ăn?" (Concept B · Format 1 Crisp Sheet).
 class LeftoverSaveSheet extends ConsumerStatefulWidget {
   const LeftoverSaveSheet({
     required this.sessionId,
@@ -70,80 +72,167 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final cs = context.colors;
+    final sweep = context.sweep;
+
     return SheetBody(
+      icon: AppIcons.packagePlus,
+      warmIcon: true,
       title: l10n.leftoverTitle,
       subtitle: l10n.leftoverSubtitle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Row(
-            label: l10n.leftoverServingsLabel,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+          SheetGroupCard(
+            child: Column(
               children: [
-                IconButton.filledTonal(
-                  visualDensity: VisualDensity.compact,
-                  onPressed: _servings > 1
-                      ? () => setState(() => _servings--)
-                      : null,
-                  icon: const Icon(Icons.remove_rounded, size: 18),
-                ),
-                const SizedBox(width: Gap.sm),
-                Text(
-                  l10n.servingsCount(_servings),
-                  style: context.text.titleSmall,
-                ),
-                const SizedBox(width: Gap.sm),
-                IconButton.filledTonal(
-                  visualDensity: VisualDensity.compact,
-                  onPressed: _servings < 12
-                      ? () => setState(() => _servings++)
-                      : null,
-                  icon: const Icon(Icons.add_rounded, size: 18),
-                ),
-              ],
-            ),
-          ),
-          Gap.gapSm,
-          _Row(
-            label: l10n.leftoverReminderLabel,
-            child: DropdownButton<int>(
-              value: _reminderDays,
-              underline: const SizedBox.shrink(),
-              onChanged: _busy
-                  ? null
-                  : (v) => setState(() => _reminderDays = v ?? 2),
-              items: [
-                for (final d in const [1, 2, 3])
-                  DropdownMenuItem(
-                    value: d,
-                    child: Text(l10n.leftoverReminderInDays(d)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Gap.md,
+                    vertical: Gap.sm + 4,
                   ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          l10n.leftoverServingsLabel,
+                          style: context.text.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: sweep.subtleFill,
+                          borderRadius: BorderRadius.circular(Radii.pill),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _RoundStepBtn(
+                              icon: AppIcons.minus,
+                              onTap: !_busy && _servings > 1
+                                  ? () => setState(() => _servings--)
+                                  : null,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Gap.sm,
+                              ),
+                              child: Text(
+                                l10n.servingsCount(_servings),
+                                style: AppTypography.tabular(
+                                  context.text.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            _RoundStepBtn(
+                              icon: AppIcons.add,
+                              onTap: !_busy && _servings < 12
+                                  ? () => setState(() => _servings++)
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(height: 1, color: sweep.hairline),
+                Padding(
+                  padding: const EdgeInsets.all(Gap.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.leftoverReminderLabel,
+                        style: context.text.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: Gap.sm),
+                      Row(
+                        children: [
+                          for (final d in const [1, 2, 3]) ...[
+                            if (d > 1) const SizedBox(width: Gap.xs),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: _busy
+                                    ? null
+                                    : () {
+                                        AppHaptics.selection();
+                                        setState(() => _reminderDays = d);
+                                      },
+                                child: AnimatedContainer(
+                                  duration: AppMotion.resolve(
+                                    context,
+                                    context.motion.fast,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 9,
+                                  ),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: _reminderDays == d
+                                        ? cs.primary
+                                        : sweep.subtleFill,
+                                    borderRadius: BorderRadius.circular(
+                                      Radii.pill,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    l10n.leftoverReminderInDays(d),
+                                    style: context.text.labelMedium?.copyWith(
+                                      color: _reminderDays == d
+                                          ? cs.onPrimary
+                                          : sweep.textSecondary,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
           Gap.gapSm,
           Container(
-            padding: const EdgeInsets.all(Gap.sm),
+            padding: const EdgeInsets.all(Gap.sm + 4),
             decoration: BoxDecoration(
-              color: context.sweep.expired.bg,
-              borderRadius: Radii.brMd,
+              color: sweep.expired.bg,
+              borderRadius: Radii.brLg,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.info_outline_rounded,
-                  size: 15,
-                  color: context.sweep.expired.fg,
+                Padding(
+                  padding: const EdgeInsets.only(top: 1),
+                  child: Icon(
+                    AppIcons.info,
+                    size: 16,
+                    color: sweep.expired.fg,
+                  ),
                 ),
-                const SizedBox(width: Gap.xs),
+                const SizedBox(width: Gap.xs + 2),
                 Expanded(
                   child: Text(
                     l10n.leftoverSafetyNote,
-                    style: context.text.labelMedium?.copyWith(
-                      color: context.sweep.expired.fg,
+                    style: context.text.bodySmall?.copyWith(
+                      color: sweep.expired.fg,
+                      fontWeight: FontWeight.w600,
                       height: 1.4,
                     ),
                   ),
@@ -155,25 +244,20 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
           Row(
             children: [
               Expanded(
-                child: OutlinedButton(
+                flex: 4,
+                child: SheetCancelButton(
+                  label: l10n.commonSkip,
                   onPressed: _busy ? null : () => Navigator.of(context).pop(),
-                  child: Text(l10n.commonSkip),
                 ),
               ),
               const SizedBox(width: Gap.sm),
               Expanded(
-                child: FilledButton(
+                flex: 6,
+                child: SheetWarmButton(
+                  label: l10n.leftoverSaveCta,
+                  icon: AppIcons.check,
+                  loading: _busy,
                   onPressed: _busy ? null : _save,
-                  child: _busy
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.4,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(l10n.leftoverSaveCta),
                 ),
               ),
             ],
@@ -184,25 +268,35 @@ class _State extends ConsumerState<LeftoverSaveSheet> {
   }
 }
 
-class _Row extends StatelessWidget {
-  const _Row({required this.label, required this.child});
+class _RoundStepBtn extends StatelessWidget {
+  const _RoundStepBtn({required this.icon, this.onTap});
 
-  final String label;
-  final Widget child;
+  final IconData icon;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Gap.sm, vertical: Gap.xs),
-      decoration: BoxDecoration(
-        borderRadius: Radii.brMd,
-        border: Border.all(color: context.sweep.hairline),
-      ),
-      child: Row(
-        children: [
-          Expanded(child: Text(label, style: context.text.titleSmall)),
-          child,
-        ],
+    final cs = context.colors;
+    return Material(
+      color: cs.surfaceContainerLowest,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap == null
+            ? null
+            : () {
+                AppHaptics.selection();
+                onTap!();
+              },
+        child: SizedBox(
+          width: 30,
+          height: 30,
+          child: Icon(
+            icon,
+            size: 15,
+            color: onTap != null ? cs.primary : context.sweep.textTertiary,
+          ),
+        ),
       ),
     );
   }

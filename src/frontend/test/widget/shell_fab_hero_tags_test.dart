@@ -1,4 +1,4 @@
-﻿// Regression: the 5 StatefulShellRoute branches stay mounted in one IndexedStack
+// Regression: the 5 StatefulShellRoute branches stay mounted in one IndexedStack
 // subtree, so two default-tagged FloatingActionButtons (Pantry + Shopping) throw
 // "multiple heroes share the same tag" on any route transition. Each shell FAB
 // must carry a unique heroTag.
@@ -57,8 +57,6 @@ void main() {
 
 class _FakeShoppingListController extends ShoppingListController {
   @override
-  Future<ShoppingList?> build() async => const ShoppingList(
-        id: 'sl1',
-        items: [],
-      );
+  Future<ShoppingList?> build() async =>
+      const ShoppingList(id: 'sl1', items: []);
 }

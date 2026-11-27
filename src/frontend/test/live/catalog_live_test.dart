@@ -48,8 +48,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live catalog (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live catalog (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -76,19 +79,21 @@ void main() {
     catalog = IngredientRepositoryImpl(IngredientRemoteDataSource(api));
   });
 
-  test('search matches a seeded canonical name and maps units/category',
-      () async {
-    final res = await catalog.search('milk');
-    final list = res.fold((f) => fail('search failed: $f'), (l) => l);
-    expect(list, isNotEmpty, reason: 'is the seed dataset loaded?');
+  test(
+    'search matches a seeded canonical name and maps units/category',
+    () async {
+      final res = await catalog.search('milk');
+      final list = res.fold((f) => fail('search failed: $f'), (l) => l);
+      expect(list, isNotEmpty, reason: 'is the seed dataset loaded?');
 
-    final milk = list.firstWhere(
-      (i) => i.name.toLowerCase().contains('milk'),
-      orElse: () => fail('no "milk" ingredient in $list'),
-    );
-    expect(milk.category, 'Dairy');
-    expect(milk.defaultUnit, MeasurementUnit.milliliter);
-  });
+      final milk = list.firstWhere(
+        (i) => i.name.toLowerCase().contains('milk'),
+        orElse: () => fail('no "milk" ingredient in $list'),
+      );
+      expect(milk.category, 'Dairy');
+      expect(milk.defaultUnit, MeasurementUnit.milliliter);
+    },
+  );
 
   test('search matches a seeded alias', () async {
     // "Ức gà" is a seeded alias of "Chicken breast" (normalized "uc ga").

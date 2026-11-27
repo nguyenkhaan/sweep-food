@@ -11,8 +11,8 @@ part 'favorite_repository_impl.g.dart';
 
 @Riverpod(keepAlive: true)
 FavoriteRepository favoriteRepository(Ref ref) => FavoriteRepositoryImpl(
-      FavoriteRemoteDataSource(ref.watch(apiClientProvider)),
-    );
+  FavoriteRemoteDataSource(ref.watch(apiClientProvider)),
+);
 
 class FavoriteRepositoryImpl implements FavoriteRepository {
   FavoriteRepositoryImpl(this._remote);
@@ -34,21 +34,19 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
   Future<Result<List<FavoriteRecipe>>> fetchFavoriteRecipes({
     int limit = 50,
     int offset = 0,
-  }) =>
-      runGuarded(() async {
-        final dto = await _remote.getFavoriteRecipes(limit: limit, offset: offset);
-        return dto.items.map((e) => e.toEntity()).toList();
-      });
+  }) => runGuarded(() async {
+    final dto = await _remote.getFavoriteRecipes(limit: limit, offset: offset);
+    return dto.items.map((e) => e.toEntity()).toList();
+  });
 
   @override
   Future<Result<List<FavoriteMenu>>> fetchFavoriteMenus({
     int limit = 50,
     int offset = 0,
-  }) =>
-      runGuarded(() async {
-        final dto = await _remote.getFavoriteMenus(limit: limit, offset: offset);
-        return dto.items.map((e) => e.toEntity()).toList();
-      });
+  }) => runGuarded(() async {
+    final dto = await _remote.getFavoriteMenus(limit: limit, offset: offset);
+    return dto.items.map((e) => e.toEntity()).toList();
+  });
 
   @override
   Future<Result<FavoriteMenuDetail>> fetchFavoriteMenuDetail(String menuId) =>
@@ -61,29 +59,27 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
   Future<Result<FavoriteMenu>> createFavoriteMenu({
     required String name,
     String? description,
-  }) =>
-      runGuarded(() async {
-        final dto = await _remote.createFavoriteMenu(
-          name: name,
-          description: description,
-        );
-        return dto.toEntity();
-      });
+  }) => runGuarded(() async {
+    final dto = await _remote.createFavoriteMenu(
+      name: name,
+      description: description,
+    );
+    return dto.toEntity();
+  });
 
   @override
   Future<Result<FavoriteMenu>> updateFavoriteMenu(
     String menuId, {
     String? name,
     String? description,
-  }) =>
-      runGuarded(() async {
-        final dto = await _remote.updateFavoriteMenu(
-          menuId,
-          name: name,
-          description: description,
-        );
-        return dto.toEntity();
-      });
+  }) => runGuarded(() async {
+    final dto = await _remote.updateFavoriteMenu(
+      menuId,
+      name: name,
+      description: description,
+    );
+    return dto.toEntity();
+  });
 
   @override
   Future<Result<void>> deleteFavoriteMenu(String menuId) =>
@@ -93,11 +89,10 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
   Future<Result<FavoriteMenuItem>> addMenuItem(
     String menuId,
     String recipeId,
-  ) =>
-      runGuarded(() async {
-        final dto = await _remote.addMenuItem(menuId, recipeId);
-        return dto.toEntity();
-      });
+  ) => runGuarded(() async {
+    final dto = await _remote.addMenuItem(menuId, recipeId);
+    return dto.toEntity();
+  });
 
   @override
   Future<Result<void>> removeMenuItem(String menuId, String itemId) =>

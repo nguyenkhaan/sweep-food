@@ -21,10 +21,10 @@ enum CookingSessionStatus {
       );
 
   String get label => switch (this) {
-        CookingSessionStatus.planned => 'Đã lên kế hoạch',
-        CookingSessionStatus.completed => 'Đã nấu',
-        CookingSessionStatus.cancelled => 'Đã huỷ',
-      };
+    CookingSessionStatus.planned => 'Đã lên kế hoạch',
+    CookingSessionStatus.completed => 'Đã nấu',
+    CookingSessionStatus.cancelled => 'Đã huỷ',
+  };
 }
 
 /// One row in the cooking-history list (`GET /cooking/history`).

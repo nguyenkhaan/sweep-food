@@ -21,7 +21,7 @@ import 'package:sweepfood/core/utils/logger.dart';
 /// [_fixtures] as endpoints come online.
 class MockApiClient implements ApiClient {
   MockApiClient({Duration? latency})
-      : _latency = latency ?? AppConstants.mockLatency;
+    : _latency = latency ?? AppConstants.mockLatency;
 
   final Duration _latency;
   final _cache = <String, dynamic>{};
@@ -72,7 +72,9 @@ class MockApiClient implements ApiClient {
   Future<dynamic> _loadKey(String key) async {
     if (_cache.containsKey(key)) return _cache[key];
     try {
-      final raw = _fillDates(await rootBundle.loadString('assets/mock/$key.json'));
+      final raw = _fillDates(
+        await rootBundle.loadString('assets/mock/$key.json'),
+      );
       final decoded = jsonDecode(raw);
       _cache[key] = decoded;
       return decoded;
@@ -86,8 +88,9 @@ class MockApiClient implements ApiClient {
   /// Replaces `{{today}}` / `{{today+N}}` / `{{today-N}}` — optionally with a
   /// `THH:MM` suffix (`{{today-1T19:00}}`) — with an ISO datetime so fixtures
   /// stay demo-stable regardless of run date.
-  static final _dateToken =
-      RegExp(r'\{\{today([+-]\d+)?(?:T(\d{2}):(\d{2}))?\}\}');
+  static final _dateToken = RegExp(
+    r'\{\{today([+-]\d+)?(?:T(\d{2}):(\d{2}))?\}\}',
+  );
   String _fillDates(String raw) {
     final today = DateTime.now();
     return raw.replaceAllMapped(_dateToken, (m) {
@@ -152,12 +155,13 @@ class MockApiClient implements ApiClient {
   Future<Map<String, dynamic>> _inventoryBatchById(String id) async {
     final items = await _inventoryItems();
     return _clone(
-      items.firstWhere(
-        (i) => i['id'] == id,
-        orElse: () =>
-            throw MockFixtureException('Không có inventory batch "$id"'),
-      ),
-    ) as Map<String, dynamic>;
+          items.firstWhere(
+            (i) => i['id'] == id,
+            orElse: () =>
+                throw MockFixtureException('Không có inventory batch "$id"'),
+          ),
+        )
+        as Map<String, dynamic>;
   }
 
   /// Applies [apply] to the cached batch and writes it back so later GETs see it.
@@ -194,7 +198,9 @@ class MockApiClient implements ApiClient {
       'packaged_at': body['packaged_at'],
       'stored_at': body['stored_at'],
       'expires_at': body['expires_at'],
-      'expiration_source': body['expires_at'] != null ? 'MANUFACTURER' : 'UNKNOWN',
+      'expiration_source': body['expires_at'] != null
+          ? 'MANUFACTURER'
+          : 'UNKNOWN',
       'unit_cost': body['unit_cost'],
       'note': body['note'],
       'media_url': body['media_url'],
@@ -298,12 +304,14 @@ class MockApiClient implements ApiClient {
   // in-memory list for the mock session (starts empty, not persisted).
 
   final _mealPlans = <Map<String, dynamic>>[];
-  static final _mealPlanItemPath = RegExp(r'^/meal-plans/([^/]+)/items/([^/]+)$');
+  static final _mealPlanItemPath = RegExp(
+    r'^/meal-plans/([^/]+)/items/([^/]+)$',
+  );
 
   Map<String, dynamic> _findMealPlan(String id) => _mealPlans.firstWhere(
-        (p) => p['id'] == id,
-        orElse: () => throw MockFixtureException('Không có meal plan "$id"'),
-      );
+    (p) => p['id'] == id,
+    orElse: () => throw MockFixtureException('Không có meal plan "$id"'),
+  );
 
   Map<String, dynamic> _createMealPlan(Map<String, dynamic> body) {
     final plan = {
@@ -351,8 +359,9 @@ class MockApiClient implements ApiClient {
   }
 
   void _deleteMealPlanItem(String planId, String itemId) {
-    (_findMealPlan(planId)['items'] as List)
-        .removeWhere((i) => (i as Map)['id'] == itemId);
+    (_findMealPlan(planId)['items'] as List).removeWhere(
+      (i) => (i as Map)['id'] == itemId,
+    );
   }
 
   // --- Shopping list emulation -----------------------------------------------
@@ -364,10 +373,12 @@ class MockApiClient implements ApiClient {
   // in-memory copy so check/add/delete persist for the session.
 
   final _shoppingLists = <Map<String, dynamic>>[];
-  static final _shoppingListItemPath =
-      RegExp(r'^/shopping-lists/([^/]+)/items/([^/]+)$');
+  static final _shoppingListItemPath = RegExp(
+    r'^/shopping-lists/([^/]+)/items/([^/]+)$',
+  );
 
-  Map<String, dynamic> _findShoppingList(String id) => _shoppingLists.firstWhere(
+  Map<String, dynamic> _findShoppingList(String id) =>
+      _shoppingLists.firstWhere(
         (l) => l['id'] == id,
         orElse: () =>
             throw MockFixtureException('Không có shopping list "$id"'),
@@ -378,7 +389,9 @@ class MockApiClient implements ApiClient {
   ) async {
     final seed = await _loadKey('shopping_list') as Map<String, dynamic>;
     final items = (seed['items'] as List)
-        .map((e) => {...e as Map<String, dynamic>, 'id': 'mock-sli-${_autoId++}'})
+        .map(
+          (e) => {...e as Map<String, dynamic>, 'id': 'mock-sli-${_autoId++}'},
+        )
         .toList();
     final list = {
       'id': 'mock-list-${_autoId++}',
@@ -442,8 +455,9 @@ class MockApiClient implements ApiClient {
   }
 
   void _deleteShoppingListItem(String listId, String itemId) {
-    (_findShoppingList(listId)['items'] as List)
-        .removeWhere((i) => (i as Map)['id'] == itemId);
+    (_findShoppingList(listId)['items'] as List).removeWhere(
+      (i) => (i as Map)['id'] == itemId,
+    );
   }
 
   // --- Favorites emulation --------------------------------------------------
@@ -468,9 +482,11 @@ class MockApiClient implements ApiClient {
     },
   ];
 
-  Map<String, dynamic> _findFavoriteMenu(String id) => _favoriteMenus.firstWhere(
+  Map<String, dynamic> _findFavoriteMenu(String id) =>
+      _favoriteMenus.firstWhere(
         (m) => m['id'] == id,
-        orElse: () => throw MockFixtureException('Không có favorite menu "$id"'),
+        orElse: () =>
+            throw MockFixtureException('Không có favorite menu "$id"'),
       );
 
   Map<String, dynamic> _createFavoriteMenu(Map<String, dynamic> body) {
@@ -488,7 +504,10 @@ class MockApiClient implements ApiClient {
     return menu;
   }
 
-  Map<String, dynamic> _updateFavoriteMenu(String menuId, Map<String, dynamic> body) {
+  Map<String, dynamic> _updateFavoriteMenu(
+    String menuId,
+    Map<String, dynamic> body,
+  ) {
     final menu = _findFavoriteMenu(menuId);
     if (body.containsKey('name')) menu['name'] = body['name'];
     if (body.containsKey('description')) {
@@ -502,13 +521,18 @@ class MockApiClient implements ApiClient {
     _favoriteMenus.removeWhere((m) => m['id'] == menuId);
   }
 
-  Map<String, dynamic> _addFavoriteMenuItem(String menuId, Map<String, dynamic> body) {
+  Map<String, dynamic> _addFavoriteMenuItem(
+    String menuId,
+    Map<String, dynamic> body,
+  ) {
     final menu = _findFavoriteMenu(menuId);
     final recipeId = body['recipe_id'] as String;
     final item = {
       'id': 'mock-fav-item-${_autoId++}',
       'recipe_id': recipeId,
-      'recipe_name': recipeId == 'd1' ? 'Canh chua cá lóc' : 'Món ngon #$recipeId',
+      'recipe_name': recipeId == 'd1'
+          ? 'Canh chua cá lóc'
+          : 'Món ngon #$recipeId',
       'recipe_image_url': null,
       'created_at': DateTime.now().toIso8601String(),
     };
@@ -522,7 +546,6 @@ class MockApiClient implements ApiClient {
     (menu['items'] as List).removeWhere((i) => (i as Map)['id'] == itemId);
     menu['item_count'] = (menu['items'] as List).length;
   }
-
 
   // --- Cooking emulation -------------------------------------------------
   //
@@ -579,21 +602,24 @@ class MockApiClient implements ApiClient {
   /// by name. Shared by preview (read-only) and complete (which also applies
   /// the deduction), so a later re-fetch of the pantry stays consistent with
   /// what preview already showed the user.
-  Future<({List<Map<String, dynamic>> proposed, List<Map<String, dynamic>> missing})>
-      _matchIngredients(
+  Future<
+    ({List<Map<String, dynamic>> proposed, List<Map<String, dynamic>> missing})
+  >
+  _matchIngredients(
     Map<String, dynamic> recipe,
     List<Map<String, dynamic>> batches,
   ) async {
     final proposed = <Map<String, dynamic>>[];
     final missing = <Map<String, dynamic>>[];
-    for (final ing in (recipe['ingredients'] as List).cast<Map<String, dynamic>>()) {
+    for (final ing
+        in (recipe['ingredients'] as List).cast<Map<String, dynamic>>()) {
       final ingName = (ing['name'] as String).toLowerCase();
       final match = batches.cast<Map<String, dynamic>?>().firstWhere(
-            (b) =>
-                (b!['ingredient_name'] as String?)?.toLowerCase() == ingName ||
-                (b['custom_name'] as String?)?.toLowerCase() == ingName,
-            orElse: () => null,
-          );
+        (b) =>
+            (b!['ingredient_name'] as String?)?.toLowerCase() == ingName ||
+            (b['custom_name'] as String?)?.toLowerCase() == ingName,
+        orElse: () => null,
+      );
       if (match != null) {
         proposed.add({
           'recipe_ingredient_id': ing['recipe_ingredient_id'],
@@ -614,7 +640,9 @@ class MockApiClient implements ApiClient {
     return (proposed: proposed, missing: missing);
   }
 
-  Future<Map<String, dynamic>> _cookingPreview(Map<String, dynamic> body) async {
+  Future<Map<String, dynamic>> _cookingPreview(
+    Map<String, dynamic> body,
+  ) async {
     final itemId = body['meal_plan_item_id'] as String;
     final item = _findMealPlanItem(itemId);
     if (item == null) {
@@ -663,8 +691,8 @@ class MockApiClient implements ApiClient {
     final matched = await _matchIngredients(recipe, items);
 
     final mode = body['consumption_mode'] as String?;
-    final consumptions =
-        (body['consumptions'] as List?)?.cast<Map<String, dynamic>>();
+    final consumptions = (body['consumptions'] as List?)
+        ?.cast<Map<String, dynamic>>();
 
     final recordedConsumptions = <Map<String, dynamic>>[];
     for (final d in matched.proposed) {
@@ -676,15 +704,17 @@ class MockApiClient implements ApiClient {
       final used = switch (mode) {
         'HALF' => proposedQty / 2,
         'USE_ALL_MATCHED' => current,
-        'CUSTOM' => (consumptions
-                    ?.firstWhere(
-                      (c) =>
-                          c['inventory_batch_id'] == d['batch_id'] &&
-                          c['recipe_ingredient_id'] == d['recipe_ingredient_id'],
-                      orElse: () => const {},
-                    )['quantity'] as num?)
-                ?.toDouble() ??
-            proposedQty,
+        'CUSTOM' =>
+          (consumptions?.firstWhere(
+                        (c) =>
+                            c['inventory_batch_id'] == d['batch_id'] &&
+                            c['recipe_ingredient_id'] ==
+                                d['recipe_ingredient_id'],
+                        orElse: () => const {},
+                      )['quantity']
+                      as num?)
+                  ?.toDouble() ??
+              proposedQty,
         _ => proposedQty, // EXACT
       };
       final next = (current - used).clamp(0, double.infinity);
@@ -723,9 +753,9 @@ class MockApiClient implements ApiClient {
     final now = DateTime.now().toIso8601String();
     final batchId = 'mock-${_autoId++}';
     final hist = _cookingHistory.cast<Map<String, dynamic>?>().firstWhere(
-          (h) => h!['session_id'] == sessionId,
-          orElse: () => null,
-        );
+      (h) => h!['session_id'] == sessionId,
+      orElse: () => null,
+    );
     if (hist != null) hist['leftover_batch_id'] = batchId;
     return {
       'batch_id': batchId,
@@ -766,10 +796,24 @@ class MockApiClient implements ApiClient {
 
   // ---------------------------------------------------------------------------
 
+  final Map<String, Object?> _notificationPreferences = {
+    'near_expiry': true,
+    'daily_suggestions': true,
+    'weekly_report': true,
+    'post_cook_reminder': true,
+    'promos_and_tips': false,
+    'near_expiry_hour': 8,
+    'dnd_start_hour': 22,
+    'dnd_end_hour': 7,
+  };
+
   @override
   Future<dynamic> get(String path, {Map<String, dynamic>? query}) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK GET $path ${query ?? ''}');
+    if (path == ApiPaths.notificationPreferences) {
+      return Map<String, dynamic>.from(_notificationPreferences);
+    }
     final batchId = _inventoryBatchIdFromPath(path);
     if (batchId != null) return _inventoryBatchById(batchId);
     if (path == ApiPaths.aiHealth) {
@@ -787,23 +831,20 @@ class MockApiClient implements ApiClient {
     if (path == ApiPaths.recipes) {
       final recipeData = await _load('recipe');
       final list = [recipeData];
-      return {
-        'items': list,
-        'total': list.length,
-        'page': 1,
-        'per_page': 20,
-      };
+      return {'items': list, 'total': list.length, 'page': 1, 'per_page': 20};
     }
     if (path == ApiPaths.shoppingLists) {
       return {
         'items': _shoppingLists
-            .map((l) => {
-                  'id': l['id'],
-                  'meal_plan_id': l['meal_plan_id'],
-                  'status': l['status'] ?? 'ACTIVE',
-                  'generated_at':
-                      l['generated_at'] ?? DateTime.now().toIso8601String(),
-                })
+            .map(
+              (l) => {
+                'id': l['id'],
+                'meal_plan_id': l['meal_plan_id'],
+                'status': l['status'] ?? 'ACTIVE',
+                'generated_at':
+                    l['generated_at'] ?? DateTime.now().toIso8601String(),
+              },
+            )
             .toList(),
         'total': _shoppingLists.length,
       };
@@ -846,10 +887,14 @@ class MockApiClient implements ApiClient {
       };
     }
     if (path.startsWith('${ApiPaths.mealPlans}/')) {
-      return _clone(_findMealPlan(path.substring('${ApiPaths.mealPlans}/'.length)));
+      return _clone(
+        _findMealPlan(path.substring('${ApiPaths.mealPlans}/'.length)),
+      );
     }
     if (path.startsWith('/shopping-lists/') && !path.contains('/items')) {
-      return _clone(_findShoppingList(path.substring('/shopping-lists/'.length)));
+      return _clone(
+        _findShoppingList(path.substring('/shopping-lists/'.length)),
+      );
     }
     if (path == ApiPaths.cookingHistory) {
       return {'items': _clone(_cookingHistory)};
@@ -862,31 +907,32 @@ class MockApiClient implements ApiClient {
       return _inventoryLedgerPage(query ?? const {});
     }
     if (path == ApiPaths.favoriteRecipes) {
-      final items = _favoriteRecipeIds.map((id) => {
-        'recipe_id': id,
-        'recipe_name': id == 'd1' ? 'Canh chua cá lóc' : 'Món ngon #$id',
-        'recipe_image_url': null,
-        'favorited_at': '2026-03-01T08:00:00Z',
-      }).toList();
-      return {
-        'items': items,
-        'total': items.length,
-        'limit': 50,
-        'offset': 0,
-      };
+      final items = _favoriteRecipeIds
+          .map(
+            (id) => {
+              'recipe_id': id,
+              'recipe_name': id == 'd1' ? 'Canh chua cá lóc' : 'Món ngon #$id',
+              'recipe_image_url': null,
+              'favorited_at': '2026-03-01T08:00:00Z',
+            },
+          )
+          .toList();
+      return {'items': items, 'total': items.length, 'limit': 50, 'offset': 0};
     }
     if (path == ApiPaths.favoriteMenus) {
-      final items = _favoriteMenus.map((m) => {
-        'id': m['id'],
-        'name': m['name'],
-        'description': m['description'],
-        'item_count': (m['items'] as List).length,
-        'created_at': m['created_at'],
-        'updated_at': m['updated_at'],
-      }).toList();
-      return {
-        'items': items,
-      };
+      final items = _favoriteMenus
+          .map(
+            (m) => {
+              'id': m['id'],
+              'name': m['name'],
+              'description': m['description'],
+              'item_count': (m['items'] as List).length,
+              'created_at': m['created_at'],
+              'updated_at': m['updated_at'],
+            },
+          )
+          .toList();
+      return {'items': items};
     }
     if (path.startsWith('${ApiPaths.favoriteMenus}/')) {
       final menuId = path.substring('${ApiPaths.favoriteMenus}/'.length);
@@ -921,7 +967,9 @@ class MockApiClient implements ApiClient {
             'recipe_name': 'Gà nướng thảo mộc',
             'usage_type': 'COOKING',
             'used_before_expiry': true,
-            'used_at': DateTime.now().subtract(const Duration(hours: 3)).toIso8601String(),
+            'used_at': DateTime.now()
+                .subtract(const Duration(hours: 3))
+                .toIso8601String(),
           },
           {
             'id': 'use-2',
@@ -931,7 +979,9 @@ class MockApiClient implements ApiClient {
             'recipe_name': 'Canh chua cá lóc',
             'usage_type': 'COOKING',
             'used_before_expiry': true,
-            'used_at': DateTime.now().subtract(const Duration(days: 1, hours: 2)).toIso8601String(),
+            'used_at': DateTime.now()
+                .subtract(const Duration(days: 1, hours: 2))
+                .toIso8601String(),
           },
           {
             'id': 'use-3',
@@ -941,7 +991,9 @@ class MockApiClient implements ApiClient {
             'recipe_name': null,
             'usage_type': 'MANUAL',
             'used_before_expiry': true,
-            'used_at': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+            'used_at': DateTime.now()
+                .subtract(const Duration(days: 2))
+                .toIso8601String(),
           },
           {
             'id': 'use-4',
@@ -951,7 +1003,9 @@ class MockApiClient implements ApiClient {
             'recipe_name': 'Thịt ba chỉ rang cháy cạnh',
             'usage_type': 'COOKING',
             'used_before_expiry': true,
-            'used_at': DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+            'used_at': DateTime.now()
+                .subtract(const Duration(days: 3))
+                .toIso8601String(),
           },
           {
             'id': 'use-5',
@@ -961,7 +1015,9 @@ class MockApiClient implements ApiClient {
             'recipe_name': 'Trứng chiên hành lá',
             'usage_type': 'COOKING',
             'used_before_expiry': true,
-            'used_at': DateTime.now().subtract(const Duration(days: 4)).toIso8601String(),
+            'used_at': DateTime.now()
+                .subtract(const Duration(days: 4))
+                .toIso8601String(),
           },
         ],
         'page': 1,
@@ -977,8 +1033,16 @@ class MockApiClient implements ApiClient {
         'wasted_items_count': 3,
         'by_category': [
           {'category_name': 'Rau củ', 'wasted_kg': 0.50, 'percentage': 58.8},
-          {'category_name': 'Sữa & Chế phẩm', 'wasted_kg': 0.20, 'percentage': 23.5},
-          {'category_name': 'Thịt & Thủy sản', 'wasted_kg': 0.15, 'percentage': 17.7},
+          {
+            'category_name': 'Sữa và Chế phẩm',
+            'wasted_kg': 0.20,
+            'percentage': 23.5,
+          },
+          {
+            'category_name': 'Thịt và Thủy sản',
+            'wasted_kg': 0.15,
+            'percentage': 17.7,
+          },
         ],
         'waste_reasons': [
           {'reason': 'EXPIRED', 'count': 2, 'percentage': 66.7},
@@ -990,8 +1054,12 @@ class MockApiClient implements ApiClient {
             'ingredient_name': 'Rau cải ngọt',
             'quantity': 300.0,
             'unit': 'GRAM',
-            'expired_at': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
-            'discarded_at': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+            'expired_at': DateTime.now()
+                .subtract(const Duration(days: 2))
+                .toIso8601String(),
+            'discarded_at': DateTime.now()
+                .subtract(const Duration(days: 1))
+                .toIso8601String(),
             'reason': 'EXPIRED',
           },
           {
@@ -999,8 +1067,12 @@ class MockApiClient implements ApiClient {
             'ingredient_name': 'Bánh mì sandwich',
             'quantity': 200.0,
             'unit': 'GRAM',
-            'expired_at': DateTime.now().subtract(const Duration(days: 4)).toIso8601String(),
-            'discarded_at': DateTime.now().subtract(const Duration(days: 3)).toIso8601String(),
+            'expired_at': DateTime.now()
+                .subtract(const Duration(days: 4))
+                .toIso8601String(),
+            'discarded_at': DateTime.now()
+                .subtract(const Duration(days: 3))
+                .toIso8601String(),
             'reason': 'SPOILED',
           },
           {
@@ -1008,8 +1080,12 @@ class MockApiClient implements ApiClient {
             'ingredient_name': 'Sữa tươi thanh trùng',
             'quantity': 350.0,
             'unit': 'ML',
-            'expired_at': DateTime.now().subtract(const Duration(days: 5)).toIso8601String(),
-            'discarded_at': DateTime.now().subtract(const Duration(days: 5)).toIso8601String(),
+            'expired_at': DateTime.now()
+                .subtract(const Duration(days: 5))
+                .toIso8601String(),
+            'discarded_at': DateTime.now()
+                .subtract(const Duration(days: 5))
+                .toIso8601String(),
             'reason': 'EXPIRED',
           },
         ],
@@ -1031,17 +1107,20 @@ class MockApiClient implements ApiClient {
           {
             'type': 'POSITIVE',
             'title': 'Tận dụng thực phẩm cận hạn xuất sắc',
-            'message': 'Bạn đã sử dụng kịp thời 91.5% thực phẩm trước ngày hết hạn.',
+            'message':
+                'Bạn đã sử dụng kịp thời 91.5% thực phẩm trước ngày hết hạn.',
           },
           {
             'type': 'RECOMMENDATION',
             'title': 'Ưu tiên chế biến rau lá xanh',
-            'message': 'Rau củ chiếm 58% lượng lãng phí. Nên ưu tiên đưa vào thực đơn trong 3 ngày đầu sau khi mua.',
+            'message':
+                'Rau củ chiếm 58% lượng lãng phí. Nên ưu tiên đưa vào thực đơn trong 3 ngày đầu sau khi mua.',
           },
           {
             'type': 'POSITIVE',
             'title': 'Tiết kiệm hơn kỳ trước',
-            'message': 'Lượng thực phẩm lãng phí giảm 0.35 kg so với tháng trước. Giữ vững phong độ!',
+            'message':
+                'Lượng thực phẩm lãng phí giảm 0.35 kg so với tháng trước. Giữ vững phong độ!',
           },
         ],
       };
@@ -1078,7 +1157,8 @@ class MockApiClient implements ApiClient {
     if (path == ApiPaths.favoriteMenus) {
       return _createFavoriteMenu(body as Map<String, dynamic>);
     }
-    if (path.startsWith('${ApiPaths.favoriteMenus}/') && path.endsWith('/items')) {
+    if (path.startsWith('${ApiPaths.favoriteMenus}/') &&
+        path.endsWith('/items')) {
       final menuId = path.split('/')[2];
       return _addFavoriteMenuItem(menuId, body as Map<String, dynamic>);
     }
@@ -1088,11 +1168,13 @@ class MockApiClient implements ApiClient {
     if (path == ApiPaths.cookingSessions) {
       return _createCookingSession(body as Map<String, dynamic>);
     }
-    if (path.startsWith('${ApiPaths.cookingSessions}/') && path.endsWith('/complete')) {
+    if (path.startsWith('${ApiPaths.cookingSessions}/') &&
+        path.endsWith('/complete')) {
       final sessionId = path.split('/')[3];
       return _completeCookingSession(sessionId, body as Map<String, dynamic>);
     }
-    if (path.startsWith('${ApiPaths.cookingSessions}/') && path.endsWith('/leftovers')) {
+    if (path.startsWith('${ApiPaths.cookingSessions}/') &&
+        path.endsWith('/leftovers')) {
       final sessionId = path.split('/')[3];
       return _createLeftoverBatch(sessionId, body as Map<String, dynamic>);
     }
@@ -1127,7 +1209,8 @@ class MockApiClient implements ApiClient {
       num? before;
       final res = await _mutateInventoryBatch(batchId, (batch) {
         before = batch['current_quantity'] as num;
-        final next = (batch['current_quantity'] as num) - (b['quantity'] as num);
+        final next =
+            (batch['current_quantity'] as num) - (b['quantity'] as num);
         batch['current_quantity'] = next < 0 ? 0 : next;
         batch['status'] = next <= 0 ? 'DEPLETED' : 'ACTIVE';
         return batch;
@@ -1171,7 +1254,7 @@ class MockApiClient implements ApiClient {
           'barcode': barcode,
           'product_name': 'Sữa tươi tiệt trùng',
           'brand': 'Vinamilk',
-          'category': 'Trứng & Sữa',
+          'category': 'Trứng và Sữa',
           'ingredient_name': 'Sữa tươi',
           'quantity': 1.0,
           'unit': 'LITER',
@@ -1208,7 +1291,8 @@ class MockApiClient implements ApiClient {
     if (path == ApiPaths.freshnessPreview) {
       return _mockFreshnessResult(body as Map<String, dynamic>);
     }
-    if (path.startsWith('/freshness/batches/') && path.endsWith('/assessment')) {
+    if (path.startsWith('/freshness/batches/') &&
+        path.endsWith('/assessment')) {
       return {
         ..._mockFreshnessResult(body as Map<String, dynamic>),
         'assessment_id': 'mock-asm-${_autoId++}',
@@ -1246,6 +1330,12 @@ class MockApiClient implements ApiClient {
   }) async {
     await Future<void>.delayed(_latency);
     log.d('MOCK PATCH $path');
+    if (path == ApiPaths.notificationPreferences) {
+      if (body is Map) {
+        _notificationPreferences.addAll(Map<String, Object?>.from(body));
+      }
+      return Map<String, dynamic>.from(_notificationPreferences);
+    }
     if (path.startsWith('${ApiPaths.favoriteMenus}/')) {
       final menuId = path.substring('${ApiPaths.favoriteMenus}/'.length);
       return _updateFavoriteMenu(menuId, body! as Map<String, dynamic>);
@@ -1287,7 +1377,8 @@ class MockApiClient implements ApiClient {
       _favoriteRecipeIds.remove(recipeId);
       return null;
     }
-    if (path.startsWith('${ApiPaths.favoriteMenus}/') && path.contains('/items/')) {
+    if (path.startsWith('${ApiPaths.favoriteMenus}/') &&
+        path.contains('/items/')) {
       final parts = path.split('/');
       final menuId = parts[2];
       final itemId = parts[4];
@@ -1316,7 +1407,10 @@ class MockApiClient implements ApiClient {
     }
     final shoppingItemMatch = _shoppingListItemPath.firstMatch(path);
     if (shoppingItemMatch != null) {
-      _deleteShoppingListItem(shoppingItemMatch.group(1)!, shoppingItemMatch.group(2)!);
+      _deleteShoppingListItem(
+        shoppingItemMatch.group(1)!,
+        shoppingItemMatch.group(2)!,
+      );
     }
     return null;
   }

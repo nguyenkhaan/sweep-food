@@ -44,7 +44,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live auth (skipped: set --dart-define=LIVE_BASE_URL)', () {}, skip: true);
+    test(
+      'live auth (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -114,8 +118,11 @@ void main() {
     const password = 'secret12345';
     await repo.register(phone: phone, password: password, name: 'Dart Live');
 
-    final again =
-        await repo.register(phone: phone, password: password, name: 'dup');
+    final again = await repo.register(
+      phone: phone,
+      password: password,
+      name: 'dup',
+    );
     expect(again.isLeft(), isTrue);
   });
 
@@ -139,59 +146,68 @@ void main() {
     );
 
     final me = await repo.me();
-    expect(me.fold((f) => fail('me failed: $f'), (u) => u.name), 'Renamed Live');
-  });
-
-  test('email change: request OTP -> verify -> me() shows the new email',
-      () async {
-    await registerAndSignIn(uniquePhone(), 'secret12345');
-    final tail = DateTime.now().microsecondsSinceEpoch.toString();
-    final email = 'live_$tail@example.com';
-
-    final requested = await repo.requestEmailChange(email);
-    expect(requested.fold((f) => -1, (ttl) => ttl), greaterThan(0));
-
-    final confirmed = await repo.confirmEmailChange('123456');
-    expect(confirmed.isRight(), isTrue);
-
-    final me = await repo.me();
-    expect(me.fold((f) => fail('me failed: $f'), (u) => u.email), email);
-  });
-
-  test('phone change: request OTP -> confirm -> me() shows the new phone',
-      () async {
-    await registerAndSignIn(uniquePhone(), 'secret12345');
-    final newPhone = uniquePhone();
-
-    final requested = await repo.requestPhoneChange(newPhone);
-    expect(requested.fold((f) => -1, (ttl) => ttl), greaterThan(0));
-
-    final confirmed = await repo.confirmPhoneChange('123456');
-    expect(confirmed.isRight(), isTrue);
-
-    final me = await repo.me();
-    expect(me.fold((f) => fail('me failed: $f'), (u) => u.phone), newPhone);
-  });
-
-  test('password change: request OTP -> verify -> sign in with new password',
-      () async {
-    final phone = uniquePhone();
-    await registerAndSignIn(phone, 'secret12345');
-
-    final requested = await repo.requestPasswordChange();
-    expect(requested.fold((f) => -1, (ttl) => ttl), greaterThan(0));
-
-    final confirmed = await repo.confirmPasswordChange(
-      phone: phone,
-      otp: '123456',
-      newPassword: 'brandnew12345',
+    expect(
+      me.fold((f) => fail('me failed: $f'), (u) => u.name),
+      'Renamed Live',
     );
-    expect(confirmed.isRight(), isTrue);
-
-    // Sessions are revoked server-side; the new password must work.
-    final again = await repo.login(phone: phone, password: 'brandnew12345');
-    expect(again.isRight(), isTrue);
   });
+
+  test(
+    'email change: request OTP -> verify -> me() shows the new email',
+    () async {
+      await registerAndSignIn(uniquePhone(), 'secret12345');
+      final tail = DateTime.now().microsecondsSinceEpoch.toString();
+      final email = 'live_$tail@example.com';
+
+      final requested = await repo.requestEmailChange(email);
+      expect(requested.fold((f) => -1, (ttl) => ttl), greaterThan(0));
+
+      final confirmed = await repo.confirmEmailChange('123456');
+      expect(confirmed.isRight(), isTrue);
+
+      final me = await repo.me();
+      expect(me.fold((f) => fail('me failed: $f'), (u) => u.email), email);
+    },
+  );
+
+  test(
+    'phone change: request OTP -> confirm -> me() shows the new phone',
+    () async {
+      await registerAndSignIn(uniquePhone(), 'secret12345');
+      final newPhone = uniquePhone();
+
+      final requested = await repo.requestPhoneChange(newPhone);
+      expect(requested.fold((f) => -1, (ttl) => ttl), greaterThan(0));
+
+      final confirmed = await repo.confirmPhoneChange('123456');
+      expect(confirmed.isRight(), isTrue);
+
+      final me = await repo.me();
+      expect(me.fold((f) => fail('me failed: $f'), (u) => u.phone), newPhone);
+    },
+  );
+
+  test(
+    'password change: request OTP -> verify -> sign in with new password',
+    () async {
+      final phone = uniquePhone();
+      await registerAndSignIn(phone, 'secret12345');
+
+      final requested = await repo.requestPasswordChange();
+      expect(requested.fold((f) => -1, (ttl) => ttl), greaterThan(0));
+
+      final confirmed = await repo.confirmPasswordChange(
+        phone: phone,
+        otp: '123456',
+        newPassword: 'brandnew12345',
+      );
+      expect(confirmed.isRight(), isTrue);
+
+      // Sessions are revoked server-side; the new password must work.
+      final again = await repo.login(phone: phone, password: 'brandnew12345');
+      expect(again.isRight(), isTrue);
+    },
+  );
 
   test('activeSessions() lists the session created by signing in', () async {
     final phone = uniquePhone();
@@ -214,15 +230,19 @@ void main() {
     final second = await repo.login(phone: phone, password: password);
     second.fold((f) => fail('second login failed: $f'), (_) {});
 
-    final before = (await repo.activeSessions())
-        .fold((f) => fail('list failed: $f'), (r) => r);
+    final before = (await repo.activeSessions()).fold(
+      (f) => fail('list failed: $f'),
+      (r) => r,
+    );
     expect(before.length, greaterThanOrEqualTo(2));
 
     final revoke = await repo.revokeSession(before.last.id);
     expect(revoke.isRight(), isTrue);
 
-    final after = (await repo.activeSessions())
-        .fold((f) => fail('list failed: $f'), (r) => r);
+    final after = (await repo.activeSessions()).fold(
+      (f) => fail('list failed: $f'),
+      (r) => r,
+    );
     expect(after.any((s) => s.id == before.last.id), isFalse);
     expect(after.length, before.length - 1);
   });

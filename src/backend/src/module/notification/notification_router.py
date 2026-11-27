@@ -14,10 +14,12 @@ from src.module.notification.notification_dependency import (
 from src.module.notification.notification_dto import (
     DeviceRegistrationResponseDTO,
     NotificationListResponseDTO,
+    NotificationPreferencesDTO,
     NotificationResponseDTO,
     RegisterDeviceRequestDTO,
     SendNotificationRequestDTO,
     SendNotificationResponseDTO,
+    UpdateNotificationPreferencesRequestDTO,
     UpdateNotificationRequestDTO,
 )
 from src.module.notification.notification_service import NotificationService
@@ -152,6 +154,33 @@ async def get_notifications(
 ) -> NotificationListResponseDTO:
     """Return a timestamp-cursor page of the caller's notifications."""
     return await service.list_notifications(user.user_id, limit, before)
+
+
+@notification_router.get(
+    "/notifications/preferences",
+    response_model=NotificationPreferencesDTO,
+    summary="Get my notification preferences",
+)
+async def get_notification_preferences(
+    user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[NotificationService, Depends(get_notification_service)],
+) -> NotificationPreferencesDTO:
+    """Return the authenticated user's notification toggles and schedule."""
+    return await service.get_preferences(user.user_id)
+
+
+@notification_router.patch(
+    "/notifications/preferences",
+    response_model=NotificationPreferencesDTO,
+    summary="Update my notification preferences",
+)
+async def patch_notification_preferences(
+    body: UpdateNotificationPreferencesRequestDTO,
+    user: Annotated[AuthenticatedUser, Depends(require_authentication)],
+    service: Annotated[NotificationService, Depends(get_notification_service)],
+) -> NotificationPreferencesDTO:
+    """Persist partial notification preference changes for the caller."""
+    return await service.update_preferences(user.user_id, body)
 
 
 @notification_router.patch(

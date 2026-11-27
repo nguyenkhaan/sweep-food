@@ -110,6 +110,7 @@ abstract final class ApiPaths {
   static const devices = '/users/me/devices';
   static String device(String deviceId) => '/users/me/devices/$deviceId';
   static const notifications = '/notifications';
+  static const notificationPreferences = '/notifications/preferences';
   static String notification(String id) => '/notifications/$id';
 
   // Subscription

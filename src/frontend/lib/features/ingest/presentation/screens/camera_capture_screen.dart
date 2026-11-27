@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/media/image_capture_service.dart';
 import 'package:sweepfood/core/media/media_providers.dart';
@@ -456,9 +456,9 @@ class _ProcessingOverlay extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    Icons.check_circle_rounded,
-                    color: BrandPalette.green300,
+                  Icon(
+                    AppIcons.checkCircle,
+                    color: context.colors.primaryContainer,
                     size: 20,
                   ),
                   const SizedBox(width: Gap.xs),
@@ -580,8 +580,8 @@ class _Stage extends StatelessWidget {
         children: [
           Icon(
             isPermission
-                ? Icons.lock_outline_rounded
-                : Icons.videocam_off_outlined,
+                ? AppIcons.lock
+                : AppIcons.cameraOff,
             color: white70,
             size: 40,
           ),
@@ -597,8 +597,8 @@ class _Stage extends StatelessWidget {
                 onPressed: isPermission ? onGrant : onRetry,
                 icon: Icon(
                   isPermission
-                      ? Icons.lock_open_rounded
-                      : Icons.refresh_rounded,
+                      ? AppIcons.shield
+                      : AppIcons.refresh,
                   size: 18,
                 ),
                 label: Text(
@@ -607,7 +607,7 @@ class _Stage extends StatelessWidget {
               ),
               OutlinedButton.icon(
                 onPressed: onGallery,
-                icon: const Icon(Icons.photo_library_outlined, size: 18),
+                icon: const Icon(AppIcons.image, size: 18),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
                   side: const BorderSide(color: Colors.white54),
@@ -652,7 +652,7 @@ class _Topbar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            icon: const Icon(Icons.close_rounded, size: 20),
+            icon: const Icon(AppIcons.close, size: 20),
           ),
           const Spacer(),
           Text(
@@ -667,14 +667,16 @@ class _Topbar extends StatelessWidget {
             onPressed: torchEnabled ? onToggleTorch : null,
             style: IconButton.styleFrom(
               backgroundColor: Colors.white.withValues(alpha: 0.12),
-              foregroundColor: torchOn ? BrandPalette.green300 : Colors.white,
+              foregroundColor: torchOn
+                  ? context.colors.primaryContainer
+                  : Colors.white,
               disabledForegroundColor: Colors.white24,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
             icon: Icon(
-              torchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+              torchOn ? AppIcons.flashlight : AppIcons.flashlightOff,
               size: 20,
             ),
           ),
@@ -767,7 +769,7 @@ class _ActionBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            icon: const Icon(Icons.photo_library_outlined),
+            icon: const Icon(AppIcons.image),
           ),
           GestureDetector(
             behavior: HitTestBehavior.opaque,

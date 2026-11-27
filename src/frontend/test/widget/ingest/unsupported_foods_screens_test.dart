@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_theme.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
@@ -35,42 +36,43 @@ Future<void> _pump(WidgetTester tester, Widget screen) async {
   await tester.pump(const Duration(seconds: 1));
 }
 
-ElevatedButton _button(WidgetTester tester, String label) =>
-    tester.widget<ElevatedButton>(find.widgetWithText(ElevatedButton, label));
+FilledButton _button(WidgetTester tester, String label) =>
+    tester.widget<FilledButton>(find.widgetWithText(FilledButton, label));
 
 void main() {
-  testWidgets('receipt: only the unsupported row is red, and ticking it blocks adding', (
-    tester,
-  ) async {
-    await _pump(
-      tester,
-      ReceiptReviewScreen(
-        job: ScanJob(
-          id: 'r',
-          type: ScanType.receipt,
-          items: [...receiptScanJob().items, _unknown],
+  testWidgets(
+    'receipt: only the unsupported row is red, and ticking it blocks adding',
+    (tester) async {
+      await _pump(
+        tester,
+        ReceiptReviewScreen(
+          job: ScanJob(
+            id: 'r',
+            type: ScanType.receipt,
+            items: [...receiptScanJob().items, _unknown],
+          ),
         ),
-      ),
-    );
+      );
 
-    // One message, under the unrecognized food only; the other six are clean.
-    expect(find.text(_rowMessage), findsOneWidget);
-    // It starts unticked, so the supported six can be added right away.
-    expect(find.text(_hint), findsNothing);
-    expect(_button(tester, 'Thêm 6 mục vào kho').onPressed, isNotNull);
+      // One message, under the unrecognized food only; the other six are clean.
+      expect(find.text(_rowMessage), findsOneWidget);
+      // It starts unticked, so the supported six can be added right away.
+      expect(find.text(_hint), findsNothing);
+      expect(_button(tester, 'Thêm 6 mục vào kho').onPressed, isNotNull);
 
-    // Ticking the unsupported food blocks the whole add and explains why.
-    await tester.tap(find.text('Món lạ'));
-    await tester.pumpAndSettle();
-    expect(find.text(_hint), findsOneWidget);
-    expect(_button(tester, 'Thêm 7 mục vào kho').onPressed, isNull);
+      // Ticking the unsupported food blocks the whole add and explains why.
+      await tester.tap(find.text('Món lạ'));
+      await tester.pumpAndSettle();
+      expect(find.text(_hint), findsOneWidget);
+      expect(_button(tester, 'Thêm 7 mục vào kho').onPressed, isNull);
 
-    // Unticking it (or removing it) lets the rest through again.
-    await tester.tap(find.text('Món lạ'));
-    await tester.pumpAndSettle();
-    expect(find.text(_hint), findsNothing);
-    expect(_button(tester, 'Thêm 6 mục vào kho').onPressed, isNotNull);
-  });
+      // Unticking it (or removing it) lets the rest through again.
+      await tester.tap(find.text('Món lạ'));
+      await tester.pumpAndSettle();
+      expect(find.text(_hint), findsNothing);
+      expect(_button(tester, 'Thêm 6 mục vào kho').onPressed, isNotNull);
+    },
+  );
 
   testWidgets('receipt: a fully supported list shows no unsupported message', (
     tester,
@@ -82,47 +84,49 @@ void main() {
     expect(_button(tester, 'Thêm 6 mục vào kho').onPressed, isNotNull);
   });
 
-  testWidgets('voice: an unsupported row is red and the add stays blocked until it is removed', (
-    tester,
-  ) async {
-    await _pump(
-      tester,
-      VoiceReviewScreen(
-        job: ScanJob(
-          id: 'v',
-          type: ScanType.voice,
-          rawText: 'thịt bò, cải bó xôi, trứng, món lạ',
-          items: [...voiceScanJob().items, _unknown],
+  testWidgets(
+    'voice: an unsupported row is red and the add stays blocked until it is removed',
+    (tester) async {
+      await _pump(
+        tester,
+        VoiceReviewScreen(
+          job: ScanJob(
+            id: 'v',
+            type: ScanType.voice,
+            rawText: 'thịt bò, cải bó xôi, trứng, món lạ',
+            items: [...voiceScanJob().items, _unknown],
+          ),
         ),
-      ),
-    );
+      );
 
-    expect(find.text(_rowMessage), findsOneWidget);
-    expect(find.text(_hint), findsOneWidget);
-    expect(_button(tester, 'Thêm 4 nguyên liệu').onPressed, isNull);
+      expect(find.text(_rowMessage), findsOneWidget);
+      expect(find.text(_hint), findsOneWidget);
+      expect(_button(tester, 'Thêm 4 nguyên liệu').onPressed, isNull);
 
-    // Remove the unsupported food (its row has the last close icon).
-    await tester.tap(find.byIcon(Icons.close_rounded).last);
-    await tester.pumpAndSettle();
+      // Remove the unsupported food (its row has the last close icon).
+      await tester.tap(find.byIcon(AppIcons.close).last);
+      await tester.pumpAndSettle();
 
-    expect(find.text(_rowMessage), findsNothing);
-    expect(find.text(_hint), findsNothing);
-    expect(_button(tester, 'Thêm 3 nguyên liệu').onPressed, isNotNull);
-  });
+      expect(find.text(_rowMessage), findsNothing);
+      expect(find.text(_hint), findsNothing);
+      expect(_button(tester, 'Thêm 3 nguyên liệu').onPressed, isNotNull);
+    },
+  );
 
-  testWidgets('label: an unrecognized food shows the red message and disables saving', (
-    tester,
-  ) async {
-    await _pump(
-      tester,
-      const LabelReviewScreen(
-        job: ScanJob(id: 'l', type: ScanType.label, items: [_unknown]),
-      ),
-    );
+  testWidgets(
+    'label: an unrecognized food shows the red message and disables saving',
+    (tester) async {
+      await _pump(
+        tester,
+        const LabelReviewScreen(
+          job: ScanJob(id: 'l', type: ScanType.label, items: [_unknown]),
+        ),
+      );
 
-    expect(find.text(_rowMessage), findsOneWidget);
-    expect(_button(tester, 'Thêm vào kho').onPressed, isNull);
-  });
+      expect(find.text(_rowMessage), findsOneWidget);
+      expect(_button(tester, 'Thêm vào kho').onPressed, isNull);
+    },
+  );
 
   testWidgets('label: a recognized food has no message and can be saved', (
     tester,

@@ -2056,4 +2056,132 @@ class AppL10nEn extends AppL10n {
 
   @override
   String get suggestionsReviewProfileCta => 'Review nutrition profile';
+
+  @override
+  String get homeKitchenHealth => 'Kitchen pulse';
+
+  @override
+  String homeFreshCount(int count) {
+    return '$count fresh';
+  }
+
+  @override
+  String homeNearExpiryCta(int count) {
+    return 'Cook to save $count soon';
+  }
+
+  @override
+  String get homeAllFreshTitle => 'Your pantry looks fresh!';
+
+  @override
+  String get homeQuickActionsLabel => 'Quick actions';
+
+  @override
+  String get pantrySwipeConsume => 'Used up';
+
+  @override
+  String get pantrySwipeAdjust => 'Adjust';
+
+  @override
+  String get pantryFreshnessCheckCta => 'Run FreshCheck now';
+
+  @override
+  String get pantryFreshnessCheckSub =>
+      'Answer 2–3 quick questions to estimate safe shelf life';
+
+  @override
+  String pantryRestored(String name) {
+    return 'Restored $name to pantry';
+  }
+
+  @override
+  String get suggestionsFilterAll => 'All';
+
+  @override
+  String get suggestionsFilterNearExpiry => 'Save near expiry';
+
+  @override
+  String get suggestionsFilterReadyToCook => 'Ready to cook';
+
+  @override
+  String get suggestionsFilterQuick => '≤ 20 min';
+
+  @override
+  String get dishGuidedCookCta => 'Guided step-by-step cook';
+
+  @override
+  String dishStepOf(int current, int total) {
+    return 'Step $current/$total';
+  }
+
+  @override
+  String dishTimerStart(int minutes) {
+    return 'Start ${minutes}m timer';
+  }
+
+  @override
+  String get dishTimerPause => 'Pause';
+
+  @override
+  String get dishTimerResume => 'Resume';
+
+  @override
+  String get dishTimerDone => 'Time\'s up!';
+
+  @override
+  String get dishNextStep => 'Next step';
+
+  @override
+  String get dishPrevStep => 'Previous';
+
+  @override
+  String get dishFinishCooking => 'Finish & update pantry';
+
+  @override
+  String get dishTabIngredients => 'Ingredients';
+
+  @override
+  String get dishTabSteps => 'Steps';
+
+  @override
+  String get dishTabNutrition => 'Nutrition';
+
+  @override
+  String shoppingProgressLabel(int bought, int total) {
+    return 'Bought $bought/$total items';
+  }
+
+  @override
+  String shoppingRemainingLabel(int count) {
+    return '$count items left to buy';
+  }
+
+  @override
+  String get mealPlanDayEmpty => 'No dish planned';
+
+  @override
+  String mealPlanDayNutrition(int kcal) {
+    return 'Day estimate · $kcal kcal';
+  }
+
+  @override
+  String purchasePresetDays(int days) {
+    return '+${days}d';
+  }
+
+  @override
+  String get paywallCompareFree => 'Current · Free';
+
+  @override
+  String get paywallComparePro => 'Premium · Coming soon';
+
+  @override
+  String settingsCookedStats(int count) {
+    return '$count cooked';
+  }
+
+  @override
+  String settingsSavedStats(int count) {
+    return '$count saved';
+  }
 }

@@ -112,9 +112,14 @@ GoRouter appRouter(Ref ref) {
         path: Routes.onboardingPantry,
         builder: (context, state) => const OnboardingPantryScreen(),
       ),
-      StatefulShellRoute.indexedStack(
+      StatefulShellRoute(
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
+        navigatorContainerBuilder: (context, navigationShell, children) =>
+            _BranchStackContainer(
+              currentIndex: navigationShell.currentIndex,
+              children: children,
+            ),
         branches: [
           StatefulShellBranch(
             navigatorKey: _homeKey,
@@ -375,4 +380,34 @@ GoRouter appRouter(Ref ref) {
       ),
     ],
   );
+}
+
+class _BranchStackContainer extends StatelessWidget {
+  const _BranchStackContainer({
+    required this.currentIndex,
+    required this.children,
+  });
+
+  final int currentIndex;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return IndexedStack(
+      index: currentIndex,
+      children: [
+        for (var i = 0; i < children.length; i++)
+          Offstage(
+            offstage: i != currentIndex,
+            child: TickerMode(
+              enabled: i == currentIndex,
+              // Inactive IndexedStack tabs stay mounted inside the AppShell route
+              // subtree; disable Hero participation off-tab so shared dish tags
+              // never collide when navigating to DishDetailScreen.
+              child: HeroMode(enabled: i == currentIndex, child: children[i]),
+            ),
+          ),
+      ],
+    );
+  }
 }

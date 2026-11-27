@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
+import 'package:sweepfood/core/widgets/app_dialog.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
 import 'package:sweepfood/core/widgets/confidence_field.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/label_review_controller.dart';
@@ -33,141 +36,161 @@ class LabelReviewScreen extends ConsumerWidget {
     final sweep = context.sweep;
     final fieldCount = job.fieldCount ?? 0;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: const Icon(Icons.arrow_back_rounded),
-        ),
-        title: Text(l10n.reviewLabelTitle),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 3),
-        children: [
-          _Thumbnail(onRetake: () => context.pop()),
-          Gap.gapMd,
-          if (fieldCount > 0) ...[
-            _Banner(text: l10n.reviewFieldsRead(fieldCount)),
-            Gap.gapMd,
-          ],
-          ConfidenceField(
-            label: l10n.pantryFieldName,
-            value: draft.name.isEmpty ? '—' : draft.name,
-            errorText: draft.isSupported
-                ? null
-                : l10n.ingredientUnsupportedRetry,
-            onTap: () => _editName(context, draft.name, controller),
-          ),
-          Gap.gapSm,
-          ConfidenceField(
-            label: l10n.reviewNetWeight,
-            value: '${draft.quantity.round()} ${draft.unit.label}',
-            onTap: () => _editQuantity(context, draft, controller),
-          ),
-          Gap.gapSm,
-          ConfidenceField(
-            label: l10n.reviewPackedDate,
-            value: draft.packedDate.ddMMyyyyOrDash,
-            onTap: () async {
-              final date = await showDatePicker(
-                context: context,
-                initialDate: draft.packedDate ?? DateTime.now(),
-                firstDate: DateTime(2020),
-                lastDate: DateTime(2030),
-              );
-              if (date != null) controller.setPackedDate(date);
-            },
-          ),
-          Gap.gapMd,
-          ExpiryFreshnessRow(
-            itemName: draft.name,
-            storageTier: draft.storageTier,
-            expiryDate: draft.expiryDate,
-            freshness: draft.freshness,
-            masterIngredientId: draft.ingredientId,
-            needsReview: draft.isExpiryWarn,
-            onChanged: controller.setExpiry,
-          ),
-          Gap.gapMd,
-          Text(
-            l10n.reviewStorageTier,
-            style: context.text.labelMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: sweep.textSecondary,
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: context.colors.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(
+              title: l10n.reviewLabelTitle,
+              onBack: () => context.pop(),
             ),
-          ),
-          Gap.gapXs,
-          Wrap(
-            spacing: Gap.xs,
-            runSpacing: Gap.xs,
-            children: StorageTier.values.map((tier) {
-              final selected = draft.storageTier == tier;
-              return ChoiceChip(
-                label: Text(tier.label(l10n)),
-                selected: selected,
-                showCheckmark: false,
-                selectedColor: BrandPalette.green100,
-                backgroundColor: context.colors.surface,
-                side: BorderSide(
-                  color: selected ? BrandPalette.green700 : sweep.hairline,
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Gap.lg,
+                  Gap.xs,
+                  Gap.lg,
+                  Gap.xxl * 2,
                 ),
-                labelStyle: TextStyle(
-                  color: selected ? BrandPalette.green800 : sweep.textSecondary,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                ),
-                shape: const StadiumBorder(),
-                onSelected: (_) => controller.setStorageTier(tier),
-              );
-            }).toList(),
-          ),
-          Gap.gapMd,
-          ConfidenceField(
-            label: l10n.reviewCategory,
-            // Set by the smart parser only; there is no manual override.
-            value: draft.category.isEmpty
-                ? l10n.pantryFieldCategoryAuto
-                : draft.category,
-            trailingIcon: Icons.lock_outline_rounded,
-          ),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(Gap.md),
-          decoration: BoxDecoration(
-            color: context.colors.surface,
-            border: Border(top: BorderSide(color: sweep.hairline)),
-            boxShadow: Shadows.e2,
-          ),
-          child: ElevatedButton(
-            onPressed: !draft.isValid || !draft.isSupported
-                ? null
-                : () async {
-                    try {
-                      await controller.saveToPantry();
-                      if (!context.mounted) return;
-                      AppSnack.show(
-                        context,
-                        context.l10n.scanAddedToPantry(draft.name),
+                children: [
+                  _Thumbnail(onRetake: () => context.pop()),
+                  Gap.gapMd,
+                  if (fieldCount > 0) ...[
+                    _Banner(text: l10n.reviewFieldsRead(fieldCount)),
+                    Gap.gapMd,
+                  ],
+                  ConfidenceField(
+                    label: l10n.pantryFieldName,
+                    value: draft.name.isEmpty ? '—' : draft.name,
+                    errorText: draft.isSupported
+                        ? null
+                        : l10n.ingredientUnsupportedRetry,
+                    onTap: () => _editName(context, draft.name, controller),
+                  ),
+                  Gap.gapSm,
+                  ConfidenceField(
+                    label: l10n.reviewNetWeight,
+                    value: '${draft.quantity.round()} ${draft.unit.label}',
+                    onTap: () => _editQuantity(context, draft, controller),
+                  ),
+                  Gap.gapSm,
+                  ConfidenceField(
+                    label: l10n.reviewPackedDate,
+                    value: draft.packedDate.ddMMyyyyOrDash,
+                    onTap: () async {
+                      final date = await showDatePicker(
+                        context: context,
+                        initialDate: draft.packedDate ?? DateTime.now(),
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2030),
                       );
-                      context.go(Routes.pantry);
-                    } on Object catch (e) {
-                      if (!context.mounted) return;
-                      AppSnack.show(context, context.saveErrorMessage(e));
-                    }
-                  },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: BrandPalette.green700,
-              foregroundColor: Colors.white,
-              disabledBackgroundColor: sweep.subtleFill,
-              disabledForegroundColor: sweep.textTertiary,
-              minimumSize: const Size.fromHeight(50),
-              shape: const RoundedRectangleBorder(borderRadius: Radii.brMd),
+                      if (date != null) controller.setPackedDate(date);
+                    },
+                  ),
+                  Gap.gapMd,
+                  ExpiryFreshnessRow(
+                    itemName: draft.name,
+                    storageTier: draft.storageTier,
+                    expiryDate: draft.expiryDate,
+                    freshness: draft.freshness,
+                    masterIngredientId: draft.ingredientId,
+                    needsReview: draft.isExpiryWarn,
+                    onChanged: controller.setExpiry,
+                  ),
+                  Gap.gapMd,
+                  Text(
+                    l10n.reviewStorageTier,
+                    style: context.text.labelMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: sweep.textSecondary,
+                    ),
+                  ),
+                  Gap.gapXs,
+                  Wrap(
+                    spacing: Gap.xs,
+                    runSpacing: Gap.xs,
+                    children: StorageTier.values.map((tier) {
+                      final selected = draft.storageTier == tier;
+                      return ChoiceChip(
+                        label: Text(tier.label(l10n)),
+                        selected: selected,
+                        showCheckmark: false,
+                        selectedColor: context.colors.primaryContainer,
+                        backgroundColor: context.colors.surfaceContainerLowest,
+                        side: BorderSide(
+                          color: selected
+                              ? context.colors.primary
+                              : sweep.hairline,
+                        ),
+                        labelStyle: context.text.labelSmall?.copyWith(
+                          letterSpacing: 0,
+                          color: selected
+                              ? context.colors.onPrimaryContainer
+                              : sweep.textSecondary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                        shape: const StadiumBorder(),
+                        onSelected: (_) {
+                          AppHaptics.selection();
+                          controller.setStorageTier(tier);
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  Gap.gapMd,
+                  ConfidenceField(
+                    label: l10n.reviewCategory,
+                    value: draft.category.isEmpty
+                        ? l10n.pantryFieldCategoryAuto
+                        : draft.category,
+                    trailingIcon: AppIcons.lock,
+                  ),
+                ],
+              ),
             ),
-            child: Text(
-              l10n.pantryAddToPantry,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.all(Gap.md),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerLowest,
+              border: Border(top: BorderSide(color: sweep.hairline)),
+            ),
+            child: FilledButton(
+              onPressed: !draft.isValid || !draft.isSupported
+                  ? null
+                  : () async {
+                      try {
+                        await controller.saveToPantry();
+                        if (!context.mounted) return;
+                        AppSnack.show(
+                          context,
+                          context.l10n.scanAddedToPantry(draft.name),
+                        );
+                        context.go(Routes.pantry);
+                      } on Object catch (e) {
+                        if (!context.mounted) return;
+                        AppSnack.show(context, context.saveErrorMessage(e));
+                      }
+                    },
+              style: FilledButton.styleFrom(
+                backgroundColor: sweep.ctaWarm,
+                foregroundColor: sweep.onCtaWarm,
+                disabledBackgroundColor: sweep.subtleFill,
+                disabledForegroundColor: sweep.textTertiary,
+                minimumSize: const Size.fromHeight(50),
+                shape: const RoundedRectangleBorder(borderRadius: Radii.brMd),
+              ),
+              child: Text(
+                l10n.pantryAddToPantry,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ),
         ),
@@ -207,8 +230,20 @@ class LabelReviewScreen extends ConsumerWidget {
     await showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setState) => AlertDialog(
-          title: Text(l10n.reviewNetWeight),
+        builder: (ctx, setState) => AppDialog(
+          title: l10n.reviewNetWeight,
+          tone: AppDialogTone.primary,
+          cancelLabel: l10n.commonCancel,
+          confirmLabel: l10n.commonSave,
+          onCancel: () => ctx.pop(),
+          onConfirm: () {
+            final qty = double.tryParse(qtyController.text.trim());
+            if (qty != null && qty > 0) {
+              controller.setQuantity(qty);
+              controller.setUnit(selectedUnit);
+            }
+            ctx.pop();
+          },
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -217,9 +252,10 @@ class LabelReviewScreen extends ConsumerWidget {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: l10n.pantryStatQuantity),
               ),
-              const SizedBox(height: Gap.md),
+              const SizedBox(height: Gap.sm),
               DropdownButtonFormField<MeasurementUnit>(
                 initialValue: selectedUnit,
+                icon: const Icon(AppIcons.chevronDown, size: 18),
                 decoration: InputDecoration(labelText: l10n.reviewUnit),
                 items: MeasurementUnit.values
                     .map(
@@ -232,23 +268,6 @@ class LabelReviewScreen extends ConsumerWidget {
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => ctx.pop(),
-              child: Text(l10n.commonCancel),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final qty = double.tryParse(qtyController.text.trim());
-                if (qty != null && qty > 0) {
-                  controller.setQuantity(qty);
-                  controller.setUnit(selectedUnit);
-                }
-                ctx.pop();
-              },
-              child: Text(l10n.commonSave),
-            ),
-          ],
         ),
       ),
     );
@@ -264,24 +283,19 @@ class LabelReviewScreen extends ConsumerWidget {
     final textController = TextEditingController(text: initial);
     return showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title),
+      builder: (ctx) => AppDialog(
+        title: title,
+        tone: AppDialogTone.primary,
+        cancelLabel: context.l10n.commonCancel,
+        confirmLabel: context.l10n.commonSave,
+        onCancel: () => ctx.pop(),
+        onConfirm: () => ctx.pop(textController.text.trim()),
         content: TextField(
           controller: textController,
           autofocus: true,
           keyboardType: number ? TextInputType.number : null,
           decoration: InputDecoration(hintText: hint),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => ctx.pop(),
-            child: Text(context.l10n.commonCancel),
-          ),
-          ElevatedButton(
-            onPressed: () => ctx.pop(textController.text.trim()),
-            child: Text(context.l10n.commonSave),
-          ),
-        ],
       ),
     );
   }
@@ -306,10 +320,10 @@ class _Thumbnail extends StatelessWidget {
             border: Border.all(color: sweep.hairline),
             borderRadius: Radii.brMd,
           ),
-          child: const Icon(
-            Icons.receipt_long_outlined,
-            size: 24,
-            color: BrandPalette.green700,
+          child: Icon(
+            AppIcons.receipt,
+            size: 22,
+            color: context.colors.primary,
           ),
         ),
         const SizedBox(width: Gap.md),
@@ -328,7 +342,7 @@ class _Thumbnail extends StatelessWidget {
               child: Text(
                 context.l10n.reviewRetake,
                 style: context.text.bodySmall?.copyWith(
-                  color: BrandPalette.green700,
+                  color: context.colors.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -349,24 +363,24 @@ class _Banner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Gap.md, vertical: Gap.sm),
-      decoration: const BoxDecoration(
-        color: BrandPalette.green100,
+      decoration: BoxDecoration(
+        color: context.colors.primaryContainer,
         borderRadius: Radii.brMd,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.check_circle_rounded,
+          Icon(
+            AppIcons.checkCircle,
             size: 16,
-            color: BrandPalette.green800,
+            color: context.colors.onPrimaryContainer,
           ),
           const SizedBox(width: Gap.xs),
           Expanded(
             child: Text(
               text,
               style: context.text.bodySmall?.copyWith(
-                color: BrandPalette.green800,
+                color: context.colors.onPrimaryContainer,
                 height: 1.45,
               ),
             ),

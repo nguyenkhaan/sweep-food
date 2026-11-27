@@ -14,8 +14,8 @@ part 'cooking_repository_impl.g.dart';
 
 @Riverpod(keepAlive: true)
 CookingRepository cookingRepository(Ref ref) => CookingRepositoryImpl(
-      CookingRemoteDataSource(ref.watch(apiClientProvider)),
-    );
+  CookingRemoteDataSource(ref.watch(apiClientProvider)),
+);
 
 class CookingRepositoryImpl implements CookingRepository {
   CookingRepositoryImpl(this._remote);
@@ -23,9 +23,10 @@ class CookingRepositoryImpl implements CookingRepository {
   final CookingRemoteDataSource _remote;
 
   @override
-  Future<Result<CookingPreview>> preview(String mealPlanItemId) =>
-      runGuarded(() async =>
-          (await _remote.preview(mealPlanItemId)).toEntity(mealPlanItemId));
+  Future<Result<CookingPreview>> preview(String mealPlanItemId) => runGuarded(
+    () async =>
+        (await _remote.preview(mealPlanItemId)).toEntity(mealPlanItemId),
+  );
 
   @override
   Future<Result<String>> createSession(String mealPlanItemId) =>
@@ -36,23 +37,22 @@ class CookingRepositoryImpl implements CookingRepository {
     String sessionId,
     CookMode mode, {
     List<ConsumptionLine>? consumptions,
-  }) =>
-      guardVoid(() => _remote.completeSession(sessionId, mode, consumptions));
+  }) => guardVoid(() => _remote.completeSession(sessionId, mode, consumptions));
 
   @override
   Future<Result<PantryItem>> saveLeftover(CookedFood food) => runGuarded(
-        () async => (await _remote.saveLeftover(food)).toEntity(food.dishName),
-      );
+    () async => (await _remote.saveLeftover(food)).toEntity(food.dishName),
+  );
 
   @override
   Future<Result<List<CookingHistoryEntry>>> history() => runGuarded(
-        () async => (await _remote.history())
-            .items
-            .map((e) => e.toEntity())
-            .toList(),
-      );
+    () async =>
+        (await _remote.history()).items.map((e) => e.toEntity()).toList(),
+  );
 
   @override
   Future<Result<CookingHistoryDetail>> historyDetail(String sessionId) =>
-      runGuarded(() async => (await _remote.historyDetail(sessionId)).toEntity());
+      runGuarded(
+        () async => (await _remote.historyDetail(sessionId)).toEntity(),
+      );
 }

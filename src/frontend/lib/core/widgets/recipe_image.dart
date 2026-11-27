@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 
-/// Displays a remote recipe image with graceful fallback to a restaurant
-/// placeholder if [imageUrl] is null/empty or if image loading fails.
+/// Displays a remote recipe image with smooth fade-in, optional [Hero]
+/// transition, and graceful fallback to a warm culinary placeholder if
+/// [imageUrl] is null/empty or fails to load.
 ///
-/// Limits decode memory overhead via [cacheWidth] (sized to display width)
-/// and avoids spinner flicker by holding the placeholder until the first frame loads.
+/// Limits decode memory overhead via [cacheWidth] (sized to display width).
 class RecipeImage extends StatelessWidget {
   const RecipeImage({
     this.imageUrl,
@@ -17,6 +19,7 @@ class RecipeImage extends StatelessWidget {
     this.iconColor,
     this.backgroundColor,
     this.borderRadius,
+    this.heroTag,
     super.key,
   });
 
@@ -29,22 +32,62 @@ class RecipeImage extends StatelessWidget {
   final Color? iconColor;
   final Color? backgroundColor;
   final BorderRadius? borderRadius;
+  final Object? heroTag;
 
   Widget _buildPlaceholder(BuildContext context) {
     final sweep = Theme.of(context).extension<SweepColors>();
-    final bg = backgroundColor ?? sweep?.subtleFill ?? const Color(0xFFEFF1EC);
-    final fg = iconColor ?? sweep?.textTertiary ?? const Color(0xFF8A8D87);
+    final colors = Theme.of(context).colorScheme;
+    final bg = backgroundColor ?? sweep?.subtleFill ?? colors.surfaceContainer;
+    final fg = iconColor ?? sweep?.textTertiary ?? colors.onSurfaceVariant;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: width,
       height: height,
-      color: bg,
-      alignment: Alignment.center,
-      child: Icon(
-        Icons.restaurant_rounded,
-        size: iconSize ?? 34,
-        color: fg,
+      decoration: BoxDecoration(
+        gradient: backgroundColor == null
+            ? LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  bg,
+                  Color.alphaBlend(
+                    colors.primary.withValues(alpha: isDark ? 0.14 : 0.08),
+                    bg,
+                  ),
+                ],
+              )
+            : null,
+        color: backgroundColor,
       ),
+      alignment: Alignment.center,
+      child: Icon(AppIcons.utensils, size: iconSize ?? 32, color: fg),
+    );
+  }
+
+  Widget _fadeInFrame(
+    BuildContext context,
+    Widget child,
+    int? frame,
+    bool wasSynchronouslyLoaded,
+  ) {
+    if (wasSynchronouslyLoaded || MediaQuery.disableAnimationsOf(context)) {
+      return frame == null ? _buildPlaceholder(context) : child;
+    }
+    return Stack(
+      fit: StackFit.passthrough,
+      children: [
+        if (frame == null) _buildPlaceholder(context),
+        AnimatedOpacity(
+          opacity: frame == null ? 0 : 1,
+          duration: AppMotion.resolve(
+            context,
+            const Duration(milliseconds: 220),
+          ),
+          curve: Curves.easeOut,
+          child: child,
+        ),
+      ],
     );
   }
 
@@ -76,6 +119,7 @@ class RecipeImage extends StatelessWidget {
               width: width,
               height: height,
               fit: fit,
+              frameBuilder: _fadeInFrame,
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return _buildPlaceholder(context);
@@ -92,6 +136,7 @@ class RecipeImage extends StatelessWidget {
             height: height,
             fit: fit,
             cacheWidth: targetCacheWidth,
+            frameBuilder: _fadeInFrame,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) return child;
               return _buildPlaceholder(context);
@@ -105,10 +150,11 @@ class RecipeImage extends StatelessWidget {
     }
 
     if (borderRadius != null) {
-      return ClipRRect(
-        borderRadius: borderRadius!,
-        child: content,
-      );
+      content = ClipRRect(borderRadius: borderRadius!, child: content);
+    }
+
+    if (heroTag != null) {
+      content = Hero(tag: heroTag!, child: content);
     }
     return content;
   }

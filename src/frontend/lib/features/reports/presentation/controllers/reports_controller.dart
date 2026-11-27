@@ -22,22 +22,26 @@ class ReportsController extends _$ReportsController {
   @override
   Future<WasteReductionSummary> build() async {
     final period = ref.watch(reportPeriodControllerProvider);
-    final res = await ref.watch(reportRepositoryProvider).wasteReduction(period);
+    final res = await ref
+        .watch(reportRepositoryProvider)
+        .wasteReduction(period);
     return res.fold((f) => throw f, (s) => s);
   }
 }
 
 /// Provider cho Lịch sử sử dụng thực phẩm
-final foodUsageHistoryProvider =
-    FutureProvider.autoDispose<FoodUsageHistory>((ref) async {
+final foodUsageHistoryProvider = FutureProvider.autoDispose<FoodUsageHistory>((
+  ref,
+) async {
   final period = ref.watch(reportPeriodControllerProvider);
   final res = await ref.watch(reportRepositoryProvider).usageHistory(period);
   return res.fold((f) => throw f, (s) => s);
 });
 
 /// Provider cho Thống kê thực phẩm lãng phí
-final wasteStatisticsProvider =
-    FutureProvider.autoDispose<WasteStatistics>((ref) async {
+final wasteStatisticsProvider = FutureProvider.autoDispose<WasteStatistics>((
+  ref,
+) async {
   final period = ref.watch(reportPeriodControllerProvider);
   final res = await ref.watch(reportRepositoryProvider).wasteStatistics(period);
   return res.fold((f) => throw f, (s) => s);
@@ -46,8 +50,9 @@ final wasteStatisticsProvider =
 /// Provider cho Đánh giá hiệu quả sử dụng thực phẩm
 final efficiencyEvaluationProvider =
     FutureProvider.autoDispose<EfficiencyEvaluation>((ref) async {
-  final period = ref.watch(reportPeriodControllerProvider);
-  final res =
-      await ref.watch(reportRepositoryProvider).efficiencyEvaluation(period);
-  return res.fold((f) => throw f, (s) => s);
-});
+      final period = ref.watch(reportPeriodControllerProvider);
+      final res = await ref
+          .watch(reportRepositoryProvider)
+          .efficiencyEvaluation(period);
+      return res.fold((f) => throw f, (s) => s);
+    });

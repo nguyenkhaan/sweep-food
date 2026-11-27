@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/app/theme/app_typography.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/recipe_image.dart';
+import 'package:sweepfood/core/widgets/tactile_card.dart';
 
 /// A coloured chip under a suggestion ("Dùng 3 đồ cận hạn", "Đủ nấu ngay"…).
 enum SuggestionChipTone { nearExpiry, available, toBuy }
 
 typedef SuggestionChip = ({String label, SuggestionChipTone tone});
 
-/// Dish suggestion card (S-01, H-01 quick suggestions).
-///
-/// Primitive params — M3 maps a `DishSuggestion` → these.
+/// Editorial dish suggestion card (S-01, H-01 quick suggestions).
 class SuggestionCard extends StatelessWidget {
   const SuggestionCard({
     required this.title,
@@ -20,85 +22,156 @@ class SuggestionCard extends StatelessWidget {
     this.fitReasons = const [],
     this.rank,
     this.imageUrl,
+    this.heroTag,
     this.onTap,
+    this.onScoreTap,
     super.key,
   });
 
   final String title;
-
-  /// 0–100 match score.
   final int score;
-
-  /// Rank-defined order (#1, #2, ...). When present, it is shown on the badge
-  /// to indicate the dish's priority rank.
   final int? rank;
-
-  /// e.g. "15 phút · Dễ · 320 kcal / khẩu phần".
   final String meta;
   final List<SuggestionChip> chips;
-
-  /// Short nutrition/profile fit reasons returned by the recommendation engine.
   final List<String> fitReasons;
   final String? imageUrl;
+  final Object? heroTag;
   final VoidCallback? onTap;
+  final VoidCallback? onScoreTap;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: context.colors.surfaceContainerLowest,
-      borderRadius: Radii.brLg,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 130,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: RecipeImage(imageUrl: imageUrl, fit: BoxFit.cover),
+    return TactileCard(
+      boxShadow: Shadows.e1,
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: 158,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: RecipeImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.cover,
+                    heroTag: heroTag,
                   ),
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: _ScoreBadge(score: score, rank: rank),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(Gap.sm + 2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: context.text.titleMedium),
-                  const SizedBox(height: 3),
-                  Text(
-                    meta,
-                    style: context.text.bodyMedium?.copyWith(
-                      color: context.sweep.textTertiary,
-                      fontSize: 12,
+                ),
+                // Bottom gradient scrim for image depth & badge legibility
+                Positioned.fill(
+                  child: IgnorePointer(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.14),
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.36),
+                          ],
+                          stops: const [0.0, 0.45, 1.0],
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: Gap.xs),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: [for (final c in chips) _Chip(chip: c)],
+                ),
+                if (rank != null)
+                  Positioned(
+                    top: Gap.sm,
+                    left: Gap.sm,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: rank == 1
+                            ? context.sweep.ctaWarm
+                            : context.colors.surfaceContainerLowest.withValues(
+                                alpha: 0.94,
+                              ),
+                        borderRadius: BorderRadius.circular(Radii.pill),
+                        boxShadow: Shadows.e1,
+                      ),
+                      child: Text(
+                        '#$rank',
+                        style: AppTypography.tabular(
+                          context.text.labelLarge?.copyWith(
+                            color: rank == 1
+                                ? context.sweep.onCtaWarm
+                                : context.colors.primary,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  if (fitReasons.isNotEmpty) ...[
-                    const SizedBox(height: Gap.sm),
-                    Divider(height: 1, color: context.sweep.hairline),
-                    const SizedBox(height: Gap.xs),
-                    _FitReasonsPreview(reasons: fitReasons.take(3).toList()),
-                  ],
-                ],
-              ),
+                Positioned(
+                  top: Gap.sm,
+                  right: Gap.sm,
+                  child: _ScoreBadge(score: score, onTap: onScoreTap),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(Gap.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: context.text.headlineSmall?.copyWith(
+                    fontSize: 19,
+                    height: 1.24,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  meta,
+                  style: context.text.bodySmall?.copyWith(
+                    color: context.sweep.textTertiary,
+                  ),
+                ),
+                const SizedBox(height: Gap.sm),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [for (final c in chips) _Chip(chip: c)],
+                ),
+                if (fitReasons.isNotEmpty) ...[
+                  const SizedBox(height: Gap.sm),
+                  Divider(height: 1, color: context.sweep.hairline),
+                  const SizedBox(height: Gap.xs + 2),
+                  _FitReasonsPreview(reasons: fitReasons.take(3).toList()),
+                ],
+                if (onScoreTap != null) ...[
+                  const SizedBox(height: Gap.xs),
+                  Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: TextButton.icon(
+                      style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Gap.xs,
+                          vertical: 4,
+                        ),
+                      ),
+                      onPressed: () {
+                        AppHaptics.selection();
+                        onScoreTap!();
+                      },
+                      icon: const Icon(AppIcons.info, size: 15),
+                      label: Text(context.l10n.suggestionsWhyScore),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -122,7 +195,7 @@ class _FitReasonsPreview extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 2),
                 child: Icon(
-                  Icons.check_circle_outline_rounded,
+                  AppIcons.checkCircle,
                   size: 14,
                   color: context.colors.primary,
                 ),
@@ -135,7 +208,7 @@ class _FitReasonsPreview extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: context.text.bodySmall?.copyWith(
                     color: context.sweep.textSecondary,
-                    height: 1.3,
+                    height: 1.35,
                   ),
                 ),
               ),
@@ -148,53 +221,58 @@ class _FitReasonsPreview extends StatelessWidget {
 }
 
 class _ScoreBadge extends StatelessWidget {
-  const _ScoreBadge({required this.score, this.rank});
+  const _ScoreBadge({required this.score, this.onTap});
+
   final int score;
-  final int? rank;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 42,
-      height: 42,
-      alignment: Alignment.center,
+    final pill = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: context.colors.primary,
-        shape: BoxShape.circle,
-        boxShadow: Shadows.e2,
+        color: context.sweep.heroSurface,
+        borderRadius: BorderRadius.circular(Radii.pill),
+        boxShadow: Shadows.e1,
       ),
-      child: rank != null
-          ? Text(
-              '#$rank',
-              style: context.text.titleMedium?.copyWith(
-                color: context.colors.onPrimary,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$score',
+            style: AppTypography.tabular(
+              context.text.titleSmall?.copyWith(
+                color: context.sweep.onHeroSurface,
+                fontWeight: FontWeight.w800,
                 height: 1,
               ),
-            )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '$score',
-                  style: context.text.titleSmall?.copyWith(
-                    color: context.colors.onPrimary,
-                    fontSize: 15,
-                    height: 1,
-                  ),
-                ),
-                Text(
-                  context.l10n.scoreBadgeLabel,
-                  style: TextStyle(
-                    color: context.colors.onPrimary.withValues(alpha: 0.85),
-                    fontSize: 7,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.4,
-                  ),
-                ),
-              ],
             ),
+          ),
+          const SizedBox(width: 3),
+          Text(
+            context.l10n.scoreBadgeLabel,
+            style: context.text.labelSmall?.copyWith(
+              color: context.sweep.onHeroMuted,
+              fontSize: 9,
+              letterSpacing: 0.4,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (onTap == null) return pill;
+    return Semantics(
+      button: true,
+      label: context.l10n.suggestionsWhyScore,
+      child: InkWell(
+        onTap: () {
+          AppHaptics.selection();
+          onTap!();
+        },
+        borderRadius: BorderRadius.circular(Radii.pill),
+        child: pill,
+      ),
     );
   }
 }
@@ -220,14 +298,18 @@ class _Chip extends StatelessWidget {
       ),
     };
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(Radii.pill),
       ),
       child: Text(
         chip.label,
-        style: context.text.labelSmall?.copyWith(letterSpacing: 0, color: fg),
+        style: context.text.labelSmall?.copyWith(
+          letterSpacing: 0,
+          color: fg,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

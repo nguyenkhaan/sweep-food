@@ -37,8 +37,9 @@ void main() {
     expect(qty(before, 'b2'), 500); // Cà chua bi
 
     // Suggestions come back ranked; the top pick is "Salad bơ ức gà" (d1).
-    final suggestions =
-        await container.read(suggestionListControllerProvider.future);
+    final suggestions = await container.read(
+      suggestionListControllerProvider.future,
+    );
     expect(suggestions, isNotEmpty);
     expect(suggestions.first.id, 'd1');
     expect(suggestions.first.score, 95);

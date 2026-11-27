@@ -48,9 +48,9 @@ class ShoppingListItemDraft {
   final int? estPriceVnd;
 
   Map<String, dynamic> toBody() => {
-        'custom_name': name.trim(),
-        'quantity': quantity,
-        'unit': unit.backendWire,
-        if (estPriceVnd != null) 'estimated_cost': estPriceVnd,
-      };
+    'custom_name': name.trim(),
+    'quantity': quantity,
+    'unit': unit.backendWire,
+    if (estPriceVnd != null) 'estimated_cost': estPriceVnd,
+  };
 }

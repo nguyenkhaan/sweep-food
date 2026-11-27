@@ -46,8 +46,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live meal plan (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live meal plan (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -64,7 +67,11 @@ void main() {
     final tail = DateTime.now().microsecondsSinceEpoch.toString();
     final phone = '+8493${tail.substring(tail.length - 8)}';
     const password = 'secret12345';
-    await auth.register(phone: phone, password: password, name: 'MealPlan Live');
+    await auth.register(
+      phone: phone,
+      password: password,
+      name: 'MealPlan Live',
+    );
     final session = await auth.verifyRegisterAndLogin(
       phone: phone,
       otp: '123456',
@@ -79,30 +86,33 @@ void main() {
     final body = await api.get('/recipes') as Map<String, dynamic>;
     final items = (body['items'] as List).cast<Map<String, dynamic>>();
     expect(items, isNotEmpty, reason: 'is the seed dataset loaded?');
-    return items
-        .firstWhere(
+    return items.firstWhere(
           (r) => (r['name'] as String).toLowerCase().contains('chicken'),
           orElse: () => fail('no "chicken" recipe in $items'),
-        )['id'] as String;
+        )['id']
+        as String;
   }
 
-  test('forWeek() creates a plan for a never-seen week, then reuses it', () async {
-    // A far-future week is very unlikely to collide with another test run.
-    final weekStart = MealPlan.weekStartOf(
-      DateTime.now().add(const Duration(days: 365)),
-    );
+  test(
+    'forWeek() creates a plan for a never-seen week, then reuses it',
+    () async {
+      // A far-future week is very unlikely to collide with another test run.
+      final weekStart = MealPlan.weekStartOf(
+        DateTime.now().add(const Duration(days: 365)),
+      );
 
-    final first = await mealPlans.forWeek(weekStart);
-    final plan1 = first.fold((f) => fail('forWeek failed: $f'), (p) => p);
-    expect(plan1.id, isNotNull);
-    expect(plan1.weekStart, weekStart);
-    expect(plan1.entries, isEmpty);
+      final first = await mealPlans.forWeek(weekStart);
+      final plan1 = first.fold((f) => fail('forWeek failed: $f'), (p) => p);
+      expect(plan1.id, isNotNull);
+      expect(plan1.weekStart, weekStart);
+      expect(plan1.entries, isEmpty);
 
-    final second = await mealPlans.forWeek(weekStart);
-    final plan2 = second.fold((f) => fail('forWeek failed: $f'), (p) => p);
-    // Same week -> same backend plan, not a duplicate.
-    expect(plan2.id, plan1.id);
-  });
+      final second = await mealPlans.forWeek(weekStart);
+      final plan2 = second.fold((f) => fail('forWeek failed: $f'), (p) => p);
+      // Same week -> same backend plan, not a duplicate.
+      expect(plan2.id, plan1.id);
+    },
+  );
 
   test('addEntry() then updateEntry() keeps the same item id', () async {
     final weekStart = MealPlan.weekStartOf(
@@ -130,12 +140,16 @@ void main() {
       dishId: recipeId,
       servings: 4,
     );
-    final entry2 = updated.fold((f) => fail('updateEntry failed: $f'), (e) => e);
+    final entry2 = updated.fold(
+      (f) => fail('updateEntry failed: $f'),
+      (e) => e,
+    );
     expect(entry2.id, entry.id); // same item, not delete+recreate
     expect(entry2.servings, 4);
 
-    final plan = (await mealPlans.forWeek(weekStart))
-        .fold((f) => fail('forWeek failed: $f'), (p) => p);
+    final plan = (await mealPlans.forWeek(
+      weekStart,
+    )).fold((f) => fail('forWeek failed: $f'), (p) => p);
     expect(plan.entryAt(day, MealSlot.dinner)?.servings, 4);
   });
 
@@ -161,8 +175,9 @@ void main() {
     );
     expect(removed.isRight(), isTrue);
 
-    final plan = (await mealPlans.forWeek(weekStart))
-        .fold((f) => fail('forWeek failed: $f'), (p) => p);
+    final plan = (await mealPlans.forWeek(
+      weekStart,
+    )).fold((f) => fail('forWeek failed: $f'), (p) => p);
     expect(plan.entryAt(day, MealSlot.lunch), isNull);
   });
 }

@@ -18,7 +18,9 @@ void main() {
 
   group('register()', () {
     test('POSTs token + platform and returns the server device_id', () async {
-      when(() => api.post(ApiPaths.devices, body: any(named: 'body'))).thenAnswer(
+      when(
+        () => api.post(ApiPaths.devices, body: any(named: 'body')),
+      ).thenAnswer(
         (_) async => {
           'device_id': 'dev-123',
           'platform': 'ANDROID',
@@ -30,15 +32,19 @@ void main() {
       final res = await repo.register('a-fcm-token', platform: 'ANDROID');
 
       expect(res.fold((f) => fail('$f'), (id) => id), 'dev-123');
-      final body = verify(
-        () => api.post(ApiPaths.devices, body: captureAny(named: 'body')),
-      ).captured.single as Map<String, dynamic>;
+      final body =
+          verify(
+                () =>
+                    api.post(ApiPaths.devices, body: captureAny(named: 'body')),
+              ).captured.single
+              as Map<String, dynamic>;
       expect(body, {'fcm_token': 'a-fcm-token', 'platform': 'ANDROID'});
     });
 
     test('returns a Failure when the request throws', () async {
-      when(() => api.post(ApiPaths.devices, body: any(named: 'body')))
-          .thenThrow(Exception('boom'));
+      when(
+        () => api.post(ApiPaths.devices, body: any(named: 'body')),
+      ).thenThrow(Exception('boom'));
 
       expect((await repo.register('t', platform: 'ANDROID')).isLeft(), isTrue);
     });
@@ -46,8 +52,9 @@ void main() {
 
   group('unregister()', () {
     test('DELETEs /users/me/devices/{device_id}', () async {
-      when(() => api.delete(ApiPaths.device('dev-123')))
-          .thenAnswer((_) async => null);
+      when(
+        () => api.delete(ApiPaths.device('dev-123')),
+      ).thenAnswer((_) async => null);
 
       final res = await repo.unregister('dev-123');
 

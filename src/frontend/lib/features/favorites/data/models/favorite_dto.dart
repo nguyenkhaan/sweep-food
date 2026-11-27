@@ -45,12 +45,12 @@ abstract class FavoriteRecipeListItemDto with _$FavoriteRecipeListItemDto {
       _$FavoriteRecipeListItemDtoFromJson(json);
 
   FavoriteRecipe toEntity() => FavoriteRecipe(
-        recipeId: recipeId,
-        recipeName: recipeName,
-        recipeDescription: recipeDescription,
-        mediaUrl: mediaUrl,
-        createdAt: createdAt,
-      );
+    recipeId: recipeId,
+    recipeName: recipeName,
+    recipeDescription: recipeDescription,
+    mediaUrl: mediaUrl,
+    createdAt: createdAt,
+  );
 }
 
 @freezed
@@ -87,13 +87,13 @@ abstract class FavoriteMenuDto with _$FavoriteMenuDto {
       _$FavoriteMenuDtoFromJson(json);
 
   FavoriteMenu toEntity({int itemCount = 0}) => FavoriteMenu(
-        id: id,
-        name: name,
-        description: description,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        itemCount: itemCount,
-      );
+    id: id,
+    name: name,
+    description: description,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+    itemCount: itemCount,
+  );
 }
 
 @freezed
@@ -129,13 +129,13 @@ abstract class FavoriteMenuItemDto with _$FavoriteMenuItemDto {
       _$FavoriteMenuItemDtoFromJson(json);
 
   FavoriteMenuItem toEntity() => FavoriteMenuItem(
-        id: id,
-        recipeId: recipeId,
-        recipeName: recipeName,
-        recipeDescription: recipeDescription,
-        mediaUrl: mediaUrl,
-        createdAt: createdAt,
-      );
+    id: id,
+    recipeId: recipeId,
+    recipeName: recipeName,
+    recipeDescription: recipeDescription,
+    mediaUrl: mediaUrl,
+    createdAt: createdAt,
+  );
 }
 
 @freezed
@@ -157,11 +157,11 @@ abstract class FavoriteMenuDetailDto with _$FavoriteMenuDetailDto {
       _$FavoriteMenuDetailDtoFromJson(json);
 
   FavoriteMenuDetail toEntity() => FavoriteMenuDetail(
-        id: id,
-        name: name,
-        description: description,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        items: items.map((e) => e.toEntity()).toList(),
-      );
+    id: id,
+    name: name,
+    description: description,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+    items: items.map((e) => e.toEntity()).toList(),
+  );
 }

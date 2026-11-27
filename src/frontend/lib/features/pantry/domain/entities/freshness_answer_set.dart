@@ -7,10 +7,7 @@ import 'package:flutter/foundation.dart';
 /// entry whose text is still empty means "Khác" is chosen but not described yet.
 @immutable
 class FreshnessAnswerSet {
-  const FreshnessAnswerSet({
-    this.selected = const {},
-    this.other = const {},
-  });
+  const FreshnessAnswerSet({this.selected = const {}, this.other = const {}});
 
   /// axis -> predefined option value.
   final Map<String, String> selected;

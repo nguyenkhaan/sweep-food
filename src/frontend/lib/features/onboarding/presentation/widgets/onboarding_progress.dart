@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/features/onboarding/domain/entities/onboarding_state.dart';
 
@@ -16,13 +17,21 @@ class OnboardingProgress extends StatelessWidget {
         for (var i = 0; i < OnboardingStep.totalBars; i++) ...[
           if (i > 0) const SizedBox(width: Gap.xs),
           Expanded(
-            child: Container(
-              height: 4,
+            child: AnimatedContainer(
+              duration: AppMotion.resolve(
+                context,
+                AppMotion.of(context).medium,
+              ),
+              curve: AppMotion.resolveCurve(
+                context,
+                AppMotion.of(context).enterCurve,
+              ),
+              height: 5,
               decoration: BoxDecoration(
                 color: i < step.stepNumber
                     ? scheme.primary
                     : scheme.outlineVariant,
-                borderRadius: Radii.brSm,
+                borderRadius: BorderRadius.circular(Radii.pill),
               ),
             ),
           ),

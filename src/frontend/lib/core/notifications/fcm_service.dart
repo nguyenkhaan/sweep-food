@@ -38,10 +38,10 @@ class FcmService {
       );
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+            alert: true,
+            badge: true,
+            sound: true,
+          );
       _initialised = true;
     } catch (e, st) {
       log.w('FcmService.initialize skipped', error: e, stackTrace: st);

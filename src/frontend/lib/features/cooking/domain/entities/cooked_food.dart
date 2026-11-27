@@ -22,13 +22,12 @@ class CookedFood {
   /// "Nhắc dùng sau N ngày" — cooked food keeps 1–2 days.
   final int reminderInDays;
 
-  DateTime get reminderAt =>
-      DateTime.now().add(Duration(days: reminderInDays));
+  DateTime get reminderAt => DateTime.now().add(Duration(days: reminderInDays));
 
   Map<String, dynamic> toBody() => {
-        'quantity': servings,
-        'unit': 'PIECE',
-        'storage_mode': 'REFRIGERATED',
-        'expires_at': reminderAt.toUtc().toIso8601String(),
-      };
+    'quantity': servings,
+    'unit': 'PIECE',
+    'storage_mode': 'REFRIGERATED',
+    'expires_at': reminderAt.toUtc().toIso8601String(),
+  };
 }

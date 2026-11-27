@@ -38,6 +38,6 @@ void main() {
     expect(find.text('Nói để thêm'), findsOneWidget);
     expect(find.text('Đọc tên nguyên liệu và số lượng'), findsOneWidget);
     expect(find.text('Đang nghe…'), findsOneWidget);
-    expect(find.text('Dừng & Kiểm tra'), findsOneWidget);
+    expect(find.text('Dừng và Kiểm tra'), findsOneWidget);
   });
 }

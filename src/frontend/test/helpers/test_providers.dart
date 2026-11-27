@@ -18,15 +18,15 @@ ProviderContainer createContainer({List<Override> overrides = const []}) {
 
 /// Points the app at a fake [ApiClient] and a mock/dev [AppConfig].
 List<Override> apiOverrides(ApiClient client) => [
-      apiClientProvider.overrideWithValue(client),
-      appConfigProvider.overrideWithValue(
-        const AppConfig(
-          flavor: Flavor.dev,
-          backend: Backend.mock,
-          apiBaseUrl: 'http://test/api/v1',
-          premiumEnabled: false,
-          nearExpiryDays: 3,
-          fcmEnabled: false,
-        ),
-      ),
-    ];
+  apiClientProvider.overrideWithValue(client),
+  appConfigProvider.overrideWithValue(
+    const AppConfig(
+      flavor: Flavor.dev,
+      backend: Backend.mock,
+      apiBaseUrl: 'http://test/api/v1',
+      premiumEnabled: false,
+      nearExpiryDays: 3,
+      fcmEnabled: false,
+    ),
+  ),
+];

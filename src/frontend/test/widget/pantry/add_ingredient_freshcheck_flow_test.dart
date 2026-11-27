@@ -141,10 +141,7 @@ void main() {
             path: '/',
             builder: (_, _) => const Scaffold(body: Text('pantry')),
           ),
-          GoRoute(
-            path: '/add',
-            builder: (_, _) => const AddIngredientScreen(),
-          ),
+          GoRoute(path: '/add', builder: (_, _) => const AddIngredientScreen()),
         ],
       );
       await tester.pumpWidget(
@@ -171,7 +168,10 @@ void main() {
       expect(find.text('500'), findsOneWidget); // quantity from the text
       // The food group is filled in by the smart parser, not typed by the user.
       expect(find.text('Thịt & Hải sản'), findsOneWidget);
-      expect(find.text('Tự động nhận diện khi thực phẩm được hỗ trợ'), findsNothing);
+      expect(
+        find.text('Tự động nhận diện khi thực phẩm được hỗ trợ'),
+        findsNothing,
+      );
       expect(find.text('Nhập hạn'), findsOneWidget);
       expect(find.text('Kiểm tra hạn nhanh'), findsOneWidget);
 
@@ -285,10 +285,7 @@ void main() {
             path: '/',
             builder: (_, _) => const Scaffold(body: Text('pantry')),
           ),
-          GoRoute(
-            path: '/add',
-            builder: (_, _) => const AddIngredientScreen(),
-          ),
+          GoRoute(path: '/add', builder: (_, _) => const AddIngredientScreen()),
         ],
       );
       await tester.pumpWidget(
@@ -311,7 +308,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Not recognized: the group stays empty and cannot be typed into.
-      expect(find.text('Tự động nhận diện khi thực phẩm được hỗ trợ'), findsOneWidget);
+      expect(
+        find.text('Tự động nhận diện khi thực phẩm được hỗ trợ'),
+        findsOneWidget,
+      );
       expect(find.text('NHÓM THỰC PHẨM'), findsOneWidget);
       expect(find.byType(TextField), findsNWidgets(2)); // name + quantity only
 
@@ -320,7 +320,10 @@ void main() {
       await tester.tap(find.text('Thêm vào kho'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Thực phẩm này app chưa hỗ trợ, thử lại sau'), findsOneWidget);
+      expect(
+        find.text('Thực phẩm này app chưa hỗ trợ, thử lại sau'),
+        findsOneWidget,
+      );
       expect(find.text('pantry'), findsNothing); // still on the form
       // Blocked on the device: nothing unrecognized is ever sent to the backend.
       verifyNever(

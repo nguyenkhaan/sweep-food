@@ -35,9 +35,9 @@ class PushRegistrar {
   bool _listenersWired = false;
 
   String get _platform => switch (defaultTargetPlatform) {
-        TargetPlatform.iOS => 'IOS',
-        _ => kIsWeb ? 'WEB' : 'ANDROID',
-      };
+    TargetPlatform.iOS => 'IOS',
+    _ => kIsWeb ? 'WEB' : 'ANDROID',
+  };
 
   /// Call after a session becomes active. Gets the token, registers it, and
   /// wires the message/token-refresh listeners (idempotent).
@@ -85,14 +85,13 @@ class PushRegistrar {
     final res = await _ref
         .read(deviceRepositoryProvider)
         .register(token, platform: _platform);
-    res.fold(
-      (f) => log.w('device register failed: ${f.message}'),
-      (deviceId) async {
-        log.i('FCM device registered ($deviceId)');
-        await prefs.setString(_kDeviceId, deviceId);
-        await prefs.setString(_kToken, token);
-      },
-    );
+    res.fold((f) => log.w('device register failed: ${f.message}'), (
+      deviceId,
+    ) async {
+      log.i('FCM device registered ($deviceId)');
+      await prefs.setString(_kDeviceId, deviceId);
+      await prefs.setString(_kToken, token);
+    });
   }
 
   void _wireListeners() {
@@ -113,7 +112,9 @@ class PushRegistrar {
     final n = message.notification;
     if (n == null) return;
     unawaited(
-      _ref.read(localNotificationsProvider).showPush(
+      _ref
+          .read(localNotificationsProvider)
+          .showPush(
             title: n.title ?? '',
             body: n.body ?? '',
             data: message.data.map((k, v) => MapEntry(k, v.toString())),

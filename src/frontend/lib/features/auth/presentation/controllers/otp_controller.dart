@@ -31,11 +31,9 @@ class OtpController extends _$OtpController {
       formError: null,
     );
     try {
-      await ref.read(sessionControllerProvider.notifier).verifyRegister(
-            phone: phone,
-            otp: otp.trim(),
-            password: password,
-          );
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .verifyRegister(phone: phone, otp: otp.trim(), password: password);
       // Success: session flips, router redirects. Leave `submitting` true so
       // the button stays disabled through the transition.
     } on Failure catch (f) {

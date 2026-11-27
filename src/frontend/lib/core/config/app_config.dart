@@ -1,4 +1,4 @@
-﻿import 'package:sweepfood/core/config/flavor.dart';
+import 'package:sweepfood/core/config/flavor.dart';
 
 /// Immutable runtime configuration, read once from compile-time
 /// `--dart-define` values (supplied via `--dart-define-from-file=config/<f>.json`).
@@ -65,4 +65,3 @@ class AppConfig {
       'apiBaseUrl: $apiBaseUrl, premiumEnabled: $premiumEnabled, '
       'nearExpiryDays: $nearExpiryDays, fcmEnabled: $fcmEnabled)';
 }
-

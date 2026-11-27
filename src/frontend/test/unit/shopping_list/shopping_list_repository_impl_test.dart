@@ -103,53 +103,62 @@ void main() {
       final list = res.fold((f) => fail('expected Right, got $f'), (r) => r);
       expect(list.id, 'sl-new');
       expect(prefs.getString('pref.active_shopping_list_id'), 'sl-new');
-      final body = verify(
-        () => api.post(
-          ApiPaths.shoppingListsGenerate,
-          body: captureAny(named: 'body'),
-          headers: any(named: 'headers'),
-        ),
-      ).captured.single as Map<String, dynamic>;
+      final body =
+          verify(
+                () => api.post(
+                  ApiPaths.shoppingListsGenerate,
+                  body: captureAny(named: 'body'),
+                  headers: any(named: 'headers'),
+                ),
+              ).captured.single
+              as Map<String, dynamic>;
       expect(body['meal_plan_id'], 'plan-1');
     });
   });
 
   group('addItem()', () {
-    test('sends custom_name/quantity/unit (no category/from_dish_ids)', () async {
-      when(
-        () => api.post(
-          ApiPaths.shoppingListItems('sl1'),
-          body: any(named: 'body'),
-          headers: any(named: 'headers'),
-        ),
-      ).thenAnswer((_) async => _item(id: 'new-1', name: 'Chanh', isGenerated: false));
+    test(
+      'sends custom_name/quantity/unit (no category/from_dish_ids)',
+      () async {
+        when(
+          () => api.post(
+            ApiPaths.shoppingListItems('sl1'),
+            body: any(named: 'body'),
+            headers: any(named: 'headers'),
+          ),
+        ).thenAnswer(
+          (_) async => _item(id: 'new-1', name: 'Chanh', isGenerated: false),
+        );
 
-      final res = await repo.addItem(
-        listId: 'sl1',
-        draft: const ShoppingListItemDraft(
-          name: 'Chanh',
-          quantity: 3,
-          unit: MeasurementUnit.fruit,
-        ),
-      );
+        final res = await repo.addItem(
+          listId: 'sl1',
+          draft: const ShoppingListItemDraft(
+            name: 'Chanh',
+            quantity: 3,
+            unit: MeasurementUnit.fruit,
+          ),
+        );
 
-      final item = res.fold((f) => fail('expected Right, got $f'), (r) => r);
-      expect(item.id, 'new-1');
-      expect(item.isManual, isTrue);
+        final item = res.fold((f) => fail('expected Right, got $f'), (r) => r);
+        expect(item.id, 'new-1');
+        expect(item.isManual, isTrue);
 
-      final body = verify(
-        () => api.post(
-          ApiPaths.shoppingListItems('sl1'),
-          body: captureAny(named: 'body'),
-          headers: any(named: 'headers'),
-        ),
-      ).captured.single as Map<String, dynamic>;
-      expect(body['custom_name'], 'Chanh');
-      // The backend has no "quả" unit — collapses to OTHER.
-      expect(body['unit'], 'OTHER');
-      expect(body.containsKey('category'), isFalse);
-      expect(body.containsKey('from_dish_ids'), isFalse);
-    });
+        final body =
+            verify(
+                  () => api.post(
+                    ApiPaths.shoppingListItems('sl1'),
+                    body: captureAny(named: 'body'),
+                    headers: any(named: 'headers'),
+                  ),
+                ).captured.single
+                as Map<String, dynamic>;
+        expect(body['custom_name'], 'Chanh');
+        // The backend has no "quả" unit — collapses to OTHER.
+        expect(body['unit'], 'OTHER');
+        expect(body.containsKey('category'), isFalse);
+        expect(body.containsKey('from_dish_ids'), isFalse);
+      },
+    );
   });
 
   group('setChecked()', () {
@@ -168,24 +177,28 @@ void main() {
         checked: true,
         purchase: const ShoppingPurchaseDraft(storageTier: StorageTier.fridge),
       );
-      final checkedBody = verify(
-        () => api.patch(
-          ApiPaths.shoppingListItem('sl1', 'a'),
-          body: captureAny(named: 'body'),
-          headers: any(named: 'headers'),
-        ),
-      ).captured.single as Map<String, dynamic>;
+      final checkedBody =
+          verify(
+                () => api.patch(
+                  ApiPaths.shoppingListItem('sl1', 'a'),
+                  body: captureAny(named: 'body'),
+                  headers: any(named: 'headers'),
+                ),
+              ).captured.single
+              as Map<String, dynamic>;
       expect(checkedBody['checked'], isTrue);
       expect(checkedBody['purchase'], isNotNull);
 
       await repo.setChecked(listId: 'sl1', itemId: 'a', checked: false);
-      final uncheckedBody = verify(
-        () => api.patch(
-          ApiPaths.shoppingListItem('sl1', 'a'),
-          body: captureAny(named: 'body'),
-          headers: any(named: 'headers'),
-        ),
-      ).captured.single as Map<String, dynamic>;
+      final uncheckedBody =
+          verify(
+                () => api.patch(
+                  ApiPaths.shoppingListItem('sl1', 'a'),
+                  body: captureAny(named: 'body'),
+                  headers: any(named: 'headers'),
+                ),
+              ).captured.single
+              as Map<String, dynamic>;
       expect(uncheckedBody['checked'], isFalse);
       expect(uncheckedBody.containsKey('purchase'), isFalse);
     });

@@ -71,15 +71,16 @@ void main() {
       // Initial state: no bottom bar
       expect(find.textContaining('Đã chọn'), findsNothing);
 
-      // Select first item by tapping checkbox
-      expect(find.byType(Checkbox), findsWidgets);
-      await tester.tap(find.byType(Checkbox).first);
+      // Select first item by tapping leading category icon toggle
+      final selectToggles = find.byKey(const ValueKey('pantry-select-toggle'));
+      expect(selectToggles, findsWidgets);
+      await tester.tap(selectToggles.first);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
 
       // Bottom action bar appears with AI button
       expect(find.text('Đã chọn 1'), findsOneWidget);
-      expect(find.text('AI Yêu cầu'), findsOneWidget);
+      expect(find.text('Yêu cầu AI'), findsOneWidget);
       expect(find.text('Xem công thức'), findsOneWidget);
 
       // Prompt input is hidden initially
@@ -92,8 +93,8 @@ void main() {
         findsNothing,
       );
 
-      // Tap AI Yêu cầu to expand prompt input
-      await tester.tap(find.text('AI Yêu cầu'));
+      // Tap Yêu cầu AI to expand prompt input
+      await tester.tap(find.text('Yêu cầu AI'));
       await tester.pumpAndSettle();
 
       final promptField = find.byWidgetPredicate(
@@ -108,7 +109,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Select second item
-      await tester.tap(find.byType(Checkbox).at(1));
+      await tester.tap(selectToggles.at(1));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Đã chọn 2'), findsOneWidget);

@@ -17,8 +17,10 @@ class DeviceRepositoryImpl implements DeviceRepository {
   final DeviceRemoteDataSource _remote;
 
   @override
-  Future<Result<String>> register(String fcmToken, {required String platform}) =>
-      runGuarded(() => _remote.register(fcmToken, platform: platform));
+  Future<Result<String>> register(
+    String fcmToken, {
+    required String platform,
+  }) => runGuarded(() => _remote.register(fcmToken, platform: platform));
 
   @override
   Future<Result<void>> unregister(String deviceId) =>

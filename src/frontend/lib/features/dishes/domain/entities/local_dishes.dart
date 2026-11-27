@@ -31,21 +31,13 @@ final Map<String, Dish> _kLocalDishes = {
       lipidG: 14,
     ),
     ingredients: [
-      DishIngredient(
-        name: 'Ức gà',
-        quantity: 200,
-        unit: MeasurementUnit.gram,
-      ),
+      DishIngredient(name: 'Ức gà', quantity: 200, unit: MeasurementUnit.gram),
       DishIngredient(
         name: 'Cà chua bi',
         quantity: 100,
         unit: MeasurementUnit.gram,
       ),
-      DishIngredient(
-        name: 'Bơ',
-        quantity: 1,
-        unit: MeasurementUnit.fruit,
-      ),
+      DishIngredient(name: 'Bơ', quantity: 1, unit: MeasurementUnit.fruit),
       DishIngredient(
         name: 'Xà lách',
         quantity: 150,
@@ -92,11 +84,7 @@ final Map<String, Dish> _kLocalDishes = {
       lipidG: 11,
     ),
     ingredients: [
-      DishIngredient(
-        name: 'Cá lóc',
-        quantity: 300,
-        unit: MeasurementUnit.gram,
-      ),
+      DishIngredient(name: 'Cá lóc', quantity: 300, unit: MeasurementUnit.gram),
       DishIngredient(
         name: 'Cà chua bi',
         quantity: 100,
@@ -107,16 +95,8 @@ final Map<String, Dish> _kLocalDishes = {
         quantity: 1,
         unit: MeasurementUnit.bunch,
       ),
-      DishIngredient(
-        name: 'Đậu bắp',
-        quantity: 50,
-        unit: MeasurementUnit.gram,
-      ),
-      DishIngredient(
-        name: 'Giá đỗ',
-        quantity: 100,
-        unit: MeasurementUnit.gram,
-      ),
+      DishIngredient(name: 'Đậu bắp', quantity: 50, unit: MeasurementUnit.gram),
+      DishIngredient(name: 'Giá đỗ', quantity: 100, unit: MeasurementUnit.gram),
       DishIngredient(
         name: 'Nước mắm',
         quantity: 10,
@@ -135,7 +115,8 @@ final Map<String, Dish> _kLocalDishes = {
       ),
       CookingStep(
         order: 3,
-        text: 'Cho cà chua, đậu bắp, giá đỗ và cải vào nấu sôi lại khoảng 3-5 phút.',
+        text:
+            'Cho cà chua, đậu bắp, giá đỗ và cải vào nấu sôi lại khoảng 3-5 phút.',
       ),
       CookingStep(
         order: 4,
@@ -163,11 +144,7 @@ final Map<String, Dish> _kLocalDishes = {
         quantity: 3,
         unit: MeasurementUnit.fruit,
       ),
-      DishIngredient(
-        name: 'Hành lá',
-        quantity: 20,
-        unit: MeasurementUnit.gram,
-      ),
+      DishIngredient(name: 'Hành lá', quantity: 20, unit: MeasurementUnit.gram),
       DishIngredient(
         name: 'Nước mắm',
         quantity: 10,
@@ -239,7 +216,8 @@ final Map<String, Dish> _kLocalDishes = {
       ),
       CookingStep(
         order: 2,
-        text: 'Cho thịt vào chảo đảo đều trên lửa vừa cho đến khi xém cạnh và ra bớt mỡ.',
+        text:
+            'Cho thịt vào chảo đảo đều trên lửa vừa cho đến khi xém cạnh và ra bớt mỡ.',
       ),
       CookingStep(
         order: 3,
@@ -247,7 +225,8 @@ final Map<String, Dish> _kLocalDishes = {
       ),
       CookingStep(
         order: 4,
-        text: 'Cho nước mắm, đường vào đảo đều đến khi thịt lên màu cánh gián đẹp mắt thì tắt bếp.',
+        text:
+            'Cho nước mắm, đường vào đảo đều đến khi thịt lên màu cánh gián đẹp mắt thì tắt bếp.',
       ),
     ],
   ),
@@ -276,16 +255,13 @@ final Map<String, Dish> _kLocalDishes = {
         quantity: 200,
         unit: MeasurementUnit.gram,
       ),
-      DishIngredient(
-        name: 'Hành lá',
-        quantity: 20,
-        unit: MeasurementUnit.gram,
-      ),
+      DishIngredient(name: 'Hành lá', quantity: 20, unit: MeasurementUnit.gram),
     ],
     steps: [
       CookingStep(
         order: 1,
-        text: 'Đậu hũ cắt miếng vuông vừa ăn, có thể chiên sơ hoặc để non tùy thích.',
+        text:
+            'Đậu hũ cắt miếng vuông vừa ăn, có thể chiên sơ hoặc để non tùy thích.',
       ),
       CookingStep(
         order: 2,
@@ -293,7 +269,8 @@ final Map<String, Dish> _kLocalDishes = {
       ),
       CookingStep(
         order: 3,
-        text: 'Cho đậu hũ vào đun cùng sốt cà chua trên lửa nhỏ khoảng 5 phút cho ngấm gia vị.',
+        text:
+            'Cho đậu hũ vào đun cùng sốt cà chua trên lửa nhỏ khoảng 5 phút cho ngấm gia vị.',
       ),
       CookingStep(
         order: 4,
@@ -335,7 +312,8 @@ final Map<String, Dish> _kLocalDishes = {
     steps: [
       CookingStep(
         order: 1,
-        text: 'Rau cải rửa sạch, cắt khúc vừa ăn. Thịt xay ướp chút gia vị và hành tím băm.',
+        text:
+            'Rau cải rửa sạch, cắt khúc vừa ăn. Thịt xay ướp chút gia vị và hành tím băm.',
       ),
       CookingStep(
         order: 2,
@@ -382,10 +360,7 @@ Dish getLocalDish(String id, {String? customName}) {
       ),
     ],
     steps: const [
-      CookingStep(
-        order: 1,
-        text: 'Sơ chế sạch các nguyên liệu trước khi nấu.',
-      ),
+      CookingStep(order: 1, text: 'Sơ chế sạch các nguyên liệu trước khi nấu.'),
       CookingStep(
         order: 2,
         text: 'Nấu chín các nguyên liệu theo khẩu vị gia đình.',
@@ -400,12 +375,7 @@ DishSuggestion getLocalDishSuggestion(String id, {String? customName}) {
   final dish = getLocalDish(id, customName: customName);
   return DishSuggestion(
     dish: dish,
-    breakdown: const ScoreBreakdown(
-      e: 0.8,
-      a: 0.9,
-      p: 0.8,
-      u: 0.9,
-    ),
+    breakdown: const ScoreBreakdown(e: 0.8, a: 0.9, p: 0.8, u: 0.9),
     rank: 1,
   );
 }

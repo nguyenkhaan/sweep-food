@@ -24,10 +24,7 @@ class RatingController extends ValueNotifier<RatingSubmitState> {
 
   final Ref _ref;
 
-  Future<bool> submitRating({
-    required double rating,
-    String? feedback,
-  }) async {
+  Future<bool> submitRating({required double rating, String? feedback}) async {
     value = const RatingSubmitState(isLoading: true);
     try {
       final remote = _ref.read(ratingRemoteDataSourceProvider);
@@ -47,8 +44,7 @@ class RatingController extends ValueNotifier<RatingSubmitState> {
   }
 }
 
-final ratingControllerProvider =
-    Provider.autoDispose<RatingController>((ref) {
+final ratingControllerProvider = Provider.autoDispose<RatingController>((ref) {
   final controller = RatingController(ref);
   ref.onDispose(controller.dispose);
   return controller;

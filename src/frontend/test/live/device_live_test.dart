@@ -44,8 +44,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live device (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live device (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -73,11 +76,14 @@ void main() {
   });
 
   test('register then unregister a device token round-trips', () async {
-    final token = 'fake-fcm-token-${DateTime.now().microsecondsSinceEpoch}-abcdef';
+    final token =
+        'fake-fcm-token-${DateTime.now().microsecondsSinceEpoch}-abcdef';
 
     final registered = await devices.register(token, platform: 'ANDROID');
-    final deviceId =
-        registered.fold((f) => fail('register failed: $f'), (id) => id);
+    final deviceId = registered.fold(
+      (f) => fail('register failed: $f'),
+      (id) => id,
+    );
     expect(deviceId, isNotEmpty);
 
     final removed = await devices.unregister(deviceId);
@@ -85,8 +91,9 @@ void main() {
   });
 
   test('unregister on an unknown device id surfaces a Failure', () async {
-    final res =
-        await devices.unregister('00000000-0000-0000-0000-000000000000');
+    final res = await devices.unregister(
+      '00000000-0000-0000-0000-000000000000',
+    );
     expect(res.isLeft(), isTrue);
   });
 }

@@ -72,16 +72,17 @@ class ReceiptReviewController extends _$ReceiptReviewController {
   }
 
   void selectAll() => state = state.copyWith(
-        selectedIndices: {
-          for (var i = 0; i < state.items.length; i++)
-            if (state.items[i].isSupported) i,
-        },
-      );
+    selectedIndices: {
+      for (var i = 0; i < state.items.length; i++)
+        if (state.items[i].isSupported) i,
+    },
+  );
 
   void deselectAll() => state = state.copyWith(selectedIndices: {});
 
   void updateItem(int index, ParsedItemDraft updated) {
-    final becameUnsupported = state.items[index].isSupported && !updated.isSupported;
+    final becameUnsupported =
+        state.items[index].isSupported && !updated.isSupported;
     final newItems = List<ParsedItemDraft>.from(state.items);
     newItems[index] = updated;
     state = state.copyWith(
@@ -113,9 +114,7 @@ class ReceiptReviewController extends _$ReceiptReviewController {
       ),
     );
     // Recognized after all: tick it again.
-    state = state.copyWith(
-      selectedIndices: {...state.selectedIndices, index},
-    );
+    state = state.copyWith(selectedIndices: {...state.selectedIndices, index});
   }
 
   /// A manual date and a FreshCheck estimate are mutually exclusive.
@@ -148,13 +147,16 @@ class ReceiptReviewController extends _$ReceiptReviewController {
   /// Confirms every selected line into the pantry.
   Future<List<PantryItem>> saveSelectedToPantry() async {
     // Never add a partial list: every ticked food must be supported.
-    if (state.hasSelectedUnsupported) throw const UnsupportedIngredientFailure();
+    if (state.hasSelectedUnsupported) {
+      throw const UnsupportedIngredientFailure();
+    }
     final pantryNotifier = ref.read(pantryListControllerProvider.notifier);
     final saved = <PantryItem>[];
     for (final idx in state.selectedIndices.toList()..sort()) {
       if (idx >= 0 && idx < state.items.length) {
-        final draft = state.items[idx]
-            .toPantryItemDraft(source: PantrySource.receiptScan);
+        final draft = state.items[idx].toPantryItemDraft(
+          source: PantrySource.receiptScan,
+        );
         saved.add(await pantryNotifier.add(draft));
       }
     }

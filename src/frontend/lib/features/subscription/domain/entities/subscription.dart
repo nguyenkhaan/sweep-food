@@ -43,8 +43,8 @@ abstract class Subscription with _$Subscription {
     tier: SubscriptionTier.free,
     perks: [
       'Kho nguyên liệu không giới hạn',
-      'Quét tem & hóa đơn không giới hạn',
-      'Gợi ý món & dinh dưỡng đầy đủ',
+      'Quét tem và hóa đơn không giới hạn',
+      'Gợi ý món và dinh dưỡng đầy đủ',
       'Thực đơn tuần, danh sách mua sắm, báo cáo',
     ],
   );

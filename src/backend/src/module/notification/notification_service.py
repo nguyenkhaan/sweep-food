@@ -18,12 +18,15 @@ from src.model.enum_model import (
     NotificationStatus,
 )
 from src.model.notification_model import NotificationModel
+from src.model.user_model import UserModel
 from src.module.notification.notification_dto import (
     CreateNotificationData,
     DeviceRegistrationResponseDTO,
     NotificationListResponseDTO,
+    NotificationPreferencesDTO,
     NotificationResponseDTO,
     RegisterDeviceRequestDTO,
+    UpdateNotificationPreferencesRequestDTO,
     UpdateNotificationRequestDTO,
 )
 
@@ -244,6 +247,63 @@ class NotificationService:
         except SQLAlchemyError:
             await self.db_session.rollback()
             raise
+
+    async def get_preferences(
+        self,
+        user_id: UUID,
+    ) -> NotificationPreferencesDTO:
+        """Read the user's notification preferences from `users.preferences`."""
+        try:
+            result = await self.db_session.execute(
+                select(UserModel).where(UserModel.id == user_id),
+            )
+            user = result.scalar_one_or_none()
+            if user is None:
+                raise NotificationNotFoundError("User was not found")
+            return self._parse_preferences(user.preferences)
+        except SQLAlchemyError:
+            await self.db_session.rollback()
+            raise
+
+    async def update_preferences(
+        self,
+        user_id: UUID,
+        request: UpdateNotificationPreferencesRequestDTO,
+    ) -> NotificationPreferencesDTO:
+        """Merge and persist notification preferences inside `users.preferences`."""
+        try:
+            result = await self.db_session.execute(
+                select(UserModel).where(UserModel.id == user_id),
+            )
+            user = result.scalar_one_or_none()
+            if user is None:
+                raise NotificationNotFoundError("User was not found")
+            current = self._parse_preferences(user.preferences)
+            patch = request.model_dump(exclude_none=True)
+            updated = current.model_copy(update=patch)
+            merged_prefs = dict(user.preferences) if isinstance(user.preferences, dict) else {}
+            merged_prefs["notifications"] = updated.model_dump()
+            user.preferences = merged_prefs
+            await self.db_session.commit()
+            return updated
+        except SQLAlchemyError:
+            await self.db_session.rollback()
+            raise
+
+    @staticmethod
+    def _parse_preferences(
+        raw_preferences: object,
+    ) -> NotificationPreferencesDTO:
+        """Tolerantly extract notification settings from a user's JSONB map."""
+        if not isinstance(raw_preferences, dict):
+            return NotificationPreferencesDTO()
+        notif = raw_preferences.get("notifications")
+        if not isinstance(notif, dict):
+            return NotificationPreferencesDTO()
+        try:
+            return NotificationPreferencesDTO.model_validate(notif)
+        except ValueError:
+            return NotificationPreferencesDTO()
 
     @staticmethod
     def _to_notification_dto(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/formatters/quantity_format.dart';
@@ -66,10 +67,7 @@ class _PostCookMissingSheetState extends ConsumerState<PostCookMissingSheet> {
       .replaceAll(RegExp(r'\s+'), ' ')
       .trim();
 
-  PantryItem? _findPantryMatch(
-    String name,
-    List<PantryItem> activePantry,
-  ) {
+  PantryItem? _findPantryMatch(String name, List<PantryItem> activePantry) {
     final norm = _normalize(name);
     for (final p in activePantry) {
       final pNorm = _normalize(p.name);
@@ -91,8 +89,8 @@ class _PostCookMissingSheetState extends ConsumerState<PostCookMissingSheet> {
       for (final item in widget.missingIngredients) {
         final match = _findPantryMatch(item.ingredientName, activePantry);
         if (match != null && match.quantity > 0) {
-          final toConsume = match.quantity >= item.missingQuantity &&
-                  item.missingQuantity > 0
+          final toConsume =
+              match.quantity >= item.missingQuantity && item.missingQuantity > 0
               ? item.missingQuantity
               : match.quantity;
           if (toConsume > 0) {
@@ -157,7 +155,7 @@ class _PostCookMissingSheetState extends ConsumerState<PostCookMissingSheet> {
 
     final pantryItems =
         ref.watch(pantryListControllerProvider).asData?.value ??
-            const <PantryItem>[];
+        const <PantryItem>[];
     final activePantry = pantryItems
         .where((p) => p.status == PantryItemStatus.active && p.quantity > 0)
         .toList();
@@ -170,193 +168,141 @@ class _PostCookMissingSheetState extends ConsumerState<PostCookMissingSheet> {
       }
     }
 
+    final sweep = context.sweep;
     final hasAnyPantryMatch = matchedInPantry.isNotEmpty;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.lg),
+    return SheetBody(
+      icon: hasAnyPantryMatch ? AppIcons.pantry : AppIcons.archive,
+      iconBg: hasAnyPantryMatch ? sweep.successBg : sweep.soon.bg,
+      iconFg: hasAnyPantryMatch ? sweep.successFg : sweep.soon.fg,
+      title: hasAnyPantryMatch
+          ? 'Kiểm tra nguyên liệu trong kho'
+          : 'Chưa đủ nguyên liệu ($servingsInt phần)',
+      subtitle: hasAnyPantryMatch
+          ? 'Tìm thấy ${matchedInPantry.length}/$count nguyên liệu có sẵn trong kho của bạn'
+          : 'Cần bổ sung $count nguyên liệu để nấu món này',
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: hasAnyPantryMatch
-                      ? Colors.teal.withValues(alpha: 0.15)
-                      : Colors.amber.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  hasAnyPantryMatch
-                      ? Icons.kitchen_rounded
-                      : Icons.inventory_2_outlined,
-                  color: hasAnyPantryMatch ? Colors.teal : Colors.amber,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: Gap.sm),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      hasAnyPantryMatch
-                          ? 'Kiểm tra nguyên liệu trong kho'
-                          : 'Chưa đủ nguyên liệu ($servingsInt phần)',
-                      style: context.text.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      hasAnyPantryMatch
-                          ? 'Tìm thấy ${matchedInPantry.length}/$count nguyên liệu có sẵn trong kho của bạn'
-                          : 'Cần bổ sung $count nguyên liệu để nấu món này',
-                      style: context.text.bodySmall?.copyWith(
-                        color: context.sweep.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: Gap.md),
           Text(
             hasAnyPantryMatch
-              ? 'Một số nguyên liệu có trong kho nhưng khác đơn vị hoặc tên tùy chỉnh:'
-              : 'Kho hiện tại không có đủ số lượng nguyên liệu sau để nấu:',
+                ? 'Một số nguyên liệu có trong kho nhưng khác đơn vị hoặc tên tùy chỉnh:'
+                : 'Kho hiện tại không có đủ số lượng nguyên liệu sau để nấu:',
             style: context.text.bodySmall?.copyWith(
-              color: context.sweep.textTertiary,
+              color: sweep.textSecondary,
             ),
           ),
-          const SizedBox(height: Gap.xs),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 220),
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: widget.missingIngredients.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                final item = widget.missingIngredients[index];
-                final match = matchedInPantry[item];
-                final isAvailable = match != null;
+          const SizedBox(height: Gap.sm),
+          SheetGroupCard(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 220),
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemCount: widget.missingIngredients.length,
+                separatorBuilder: (_, __) =>
+                    Divider(height: 1, color: sweep.hairline),
+                itemBuilder: (context, index) {
+                  final item = widget.missingIngredients[index];
+                  final match = matchedInPantry[item];
+                  final isAvailable = match != null;
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        isAvailable
-                            ? Icons.check_circle_rounded
-                            : Icons.remove_circle_outline_rounded,
-                        color: isAvailable ? Colors.teal : Colors.redAccent,
-                        size: 16,
-                      ),
-                      const SizedBox(width: Gap.xs),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.ingredientName,
-                              style: context.text.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            if (isAvailable)
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Gap.md,
+                      vertical: 11,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isAvailable
+                              ? AppIcons.checkCircle
+                              : AppIcons.minus,
+                          color: isAvailable
+                              ? sweep.successFg
+                              : sweep.expired.fg,
+                          size: 16,
+                        ),
+                        const SizedBox(width: Gap.xs + 2),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Text(
-                                'Có sẵn: ${formatQuantity(match.quantity, match.unit)}',
-                                style: context.text.bodySmall?.copyWith(
-                                  color: Colors.teal[700],
-                                  fontSize: 11,
+                                item.ingredientName,
+                                style: context.text.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isAvailable
-                              ? Colors.teal.withValues(alpha: 0.1)
-                              : Colors.red.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(Radii.pill),
-                        ),
-                        child: Text(
-                          isAvailable
-                              ? 'Có trong kho'
-                              : 'Thiếu ${formatQuantity(item.missingQuantity, item.unit)}',
-                          style: context.text.labelSmall?.copyWith(
-                            color: isAvailable ? Colors.teal[800] : Colors.red[700],
-                            fontWeight: FontWeight.w700,
+                              if (isAvailable)
+                                Text(
+                                  'Có sẵn: ${formatQuantity(match.quantity, match.unit)}',
+                                  style: context.text.bodySmall?.copyWith(
+                                    color: sweep.successFg,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                        const SizedBox(width: Gap.xs),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 9,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isAvailable
+                                ? sweep.successBg
+                                : sweep.expired.bg,
+                            borderRadius: BorderRadius.circular(Radii.pill),
+                          ),
+                          child: Text(
+                            isAvailable
+                                ? 'Có trong kho'
+                                : 'Thiếu ${formatQuantity(item.missingQuantity, item.unit)}',
+                            style: context.text.labelSmall?.copyWith(
+                              letterSpacing: 0,
+                              color: isAvailable
+                                  ? sweep.successFg
+                                  : sweep.expired.fg,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-          const SizedBox(height: Gap.lg),
+          const SizedBox(height: Gap.md),
           if (hasAnyPantryMatch) ...[
-            FilledButton.icon(
+            SheetWarmButton(
+              loading: _consuming,
+              icon: AppIcons.utensils,
+              label: _consuming
+                  ? 'Đang trừ kho...'
+                  : 'Xác nhận đã nấu và Trừ kho (${matchedInPantry.length} có sẵn)',
               onPressed: _consuming
                   ? null
                   : () => _cookAndDeductFromPantry(activePantry),
-              icon: _consuming
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Icon(Icons.restaurant_rounded, size: 18),
-              label: Text(
-                _consuming
-                    ? 'Đang trừ kho...'
-                    : 'Xác nhận đã nấu & Trừ kho (${matchedInPantry.length} có sẵn)',
-              ),
             ),
-            const SizedBox(height: Gap.xs),
-            OutlinedButton.icon(
+            const SizedBox(height: Gap.xs + 2),
+            SheetCancelButton(
+              icon: AppIcons.shopping,
+              label: _adding ? 'Đang thêm...' : 'Thêm vào danh sách mua',
               onPressed: _adding ? null : _addAllToShopping,
-              icon: _adding
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.add_shopping_cart_rounded, size: 18),
-              label: Text(
-                _adding
-                    ? 'Đang thêm...'
-                    : 'Thêm vào danh sách mua',
-              ),
             ),
           ] else ...[
-            FilledButton.icon(
+            SheetWarmButton(
+              loading: _adding,
+              icon: AppIcons.shopping,
+              label: _adding
+                  ? 'Đang thêm...'
+                  : 'Thêm $count nguyên liệu vào danh sách mua',
               onPressed: _adding ? null : _addAllToShopping,
-              icon: _adding
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.add_shopping_cart_rounded, size: 18),
-              label: Text(
-                _adding
-                    ? 'Đang thêm...'
-                    : 'Thêm $count nguyên liệu vào danh sách mua',
-              ),
             ),
           ],
           if (widget.servings > 1 && widget.onReduceServings != null) ...[
@@ -366,7 +312,7 @@ class _PostCookMissingSheetState extends ConsumerState<PostCookMissingSheet> {
                 Navigator.of(context).pop();
                 widget.onReduceServings!();
               },
-              icon: const Icon(Icons.tune_rounded, size: 18),
+              icon: const Icon(AppIcons.filter, size: 17),
               label: Text(
                 'Thử giảm khẩu phần (${widget.servings == 4 ? "2" : "1"} phần)',
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
@@ -29,7 +30,7 @@ class NutritionDisclaimerBanner extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(
-              Icons.info_outline_rounded,
+              AppIcons.info,
               size: compact ? 15 : 17,
               color: textColor,
             ),

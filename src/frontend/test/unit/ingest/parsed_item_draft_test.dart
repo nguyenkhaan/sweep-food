@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
@@ -38,8 +38,9 @@ void main() {
         isExpiryWarn: true,
       );
 
-      final pantryDraft =
-          draft.toPantryItemDraft(source: PantrySource.labelScan);
+      final pantryDraft = draft.toPantryItemDraft(
+        source: PantrySource.labelScan,
+      );
 
       expect(pantryDraft.name, 'Thịt bò phi lê');
       expect(pantryDraft.category, 'Thịt & Hải sản');

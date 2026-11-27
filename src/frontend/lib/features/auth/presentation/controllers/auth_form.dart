@@ -31,8 +31,9 @@ class AuthFormState {
     return AuthFormState(
       obscure: obscure ?? this.obscure,
       submitting: submitting ?? this.submitting,
-      formError:
-          identical(formError, _sentinel) ? this.formError : formError as String?,
+      formError: identical(formError, _sentinel)
+          ? this.formError
+          : formError as String?,
       fieldErrors: fieldErrors ?? this.fieldErrors,
     );
   }

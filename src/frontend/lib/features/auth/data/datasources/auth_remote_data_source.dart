@@ -43,10 +43,7 @@ class AuthRemoteDataSource {
   }
 
   /// `POST /auth/verify/register` — returns plain text, nothing to decode.
-  Future<void> verifyRegister({
-    required String phone,
-    required String otp,
-  }) =>
+  Future<void> verifyRegister({required String phone, required String otp}) =>
       _api.post(ApiPaths.verifyRegister, body: {'phone': phone, 'otp': otp});
 
   /// `POST /auth/login` → token pair (no user block).
@@ -81,22 +78,21 @@ class AuthRemoteDataSource {
     required String phone,
     required String otp,
     required String newPassword,
-  }) =>
-      _api.post(
-        ApiPaths.verifyChangePassword,
-        body: {
-          'phone': phone,
-          'otp': otp,
-          'purpose': 'RESET_PASSWORD',
-          'new_password': newPassword,
-        },
-      );
+  }) => _api.post(
+    ApiPaths.verifyChangePassword,
+    body: {
+      'phone': phone,
+      'otp': otp,
+      'purpose': 'RESET_PASSWORD',
+      'new_password': newPassword,
+    },
+  );
 
   /// `POST /auth/logout` — authenticated; revokes the given refresh session.
   Future<void> logout(String? refreshToken) => _api.post(
-        ApiPaths.logout,
-        body: {if (refreshToken != null) 'refresh_token': refreshToken},
-      );
+    ApiPaths.logout,
+    body: {if (refreshToken != null) 'refresh_token': refreshToken},
+  );
 
   /// `GET /auth/sessions` — authenticated; the caller's active login sessions,
   /// newest first. Returns a bare JSON array.
@@ -143,16 +139,15 @@ class AuthRemoteDataSource {
     required String phone,
     required String otp,
     required String newPassword,
-  }) =>
-      _api.post(
-        ApiPaths.verifyChangePassword,
-        body: {
-          'phone': phone,
-          'otp': otp,
-          'purpose': 'CHANGE_PASSWORD',
-          'new_password': newPassword,
-        },
-      );
+  }) => _api.post(
+    ApiPaths.verifyChangePassword,
+    body: {
+      'phone': phone,
+      'otp': otp,
+      'purpose': 'CHANGE_PASSWORD',
+      'new_password': newPassword,
+    },
+  );
 
   /// `POST /users/me/email/request-verification` — sends an OTP to [email].
   Future<OtpIssueDto> requestEmailChange(String email) async {

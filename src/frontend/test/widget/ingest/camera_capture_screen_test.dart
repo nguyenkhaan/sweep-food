@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_theme.dart';
 import 'package:sweepfood/core/media/media_providers.dart';
 import 'package:sweepfood/core/permissions/permission_service.dart';
@@ -151,11 +152,11 @@ void main() {
 
     final galleryButton = find.widgetWithIcon(
       IconButton,
-      Icons.photo_library_outlined,
+      AppIcons.image,
     );
     final torchButton = find.widgetWithIcon(
       IconButton,
-      Icons.flash_off_rounded,
+      AppIcons.flashlightOff,
     );
     final manualTap = find.ancestor(
       of: find.text('Nhập tay'),

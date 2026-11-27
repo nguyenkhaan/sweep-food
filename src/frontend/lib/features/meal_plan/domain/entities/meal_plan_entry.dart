@@ -38,11 +38,8 @@ enum MealPlanItemStatus {
   const MealPlanItemStatus(this.wire);
   final String wire;
 
-  static MealPlanItemStatus fromWire(String? v) =>
-      MealPlanItemStatus.values.firstWhere(
-        (s) => s.wire == v,
-        orElse: () => MealPlanItemStatus.planned,
-      );
+  static MealPlanItemStatus fromWire(String? v) => MealPlanItemStatus.values
+      .firstWhere((s) => s.wire == v, orElse: () => MealPlanItemStatus.planned);
 }
 
 /// One filled cell of the weekly grid — a `meal-plans/{id}/items/{item_id}`

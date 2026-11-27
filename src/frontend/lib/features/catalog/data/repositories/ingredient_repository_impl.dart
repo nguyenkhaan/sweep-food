@@ -10,8 +10,8 @@ part 'ingredient_repository_impl.g.dart';
 
 @Riverpod(keepAlive: true)
 IngredientRepository ingredientRepository(Ref ref) => IngredientRepositoryImpl(
-      IngredientRemoteDataSource(ref.watch(apiClientProvider)),
-    );
+  IngredientRemoteDataSource(ref.watch(apiClientProvider)),
+);
 
 class IngredientRepositoryImpl implements IngredientRepository {
   IngredientRepositoryImpl(this._remote);
@@ -20,9 +20,9 @@ class IngredientRepositoryImpl implements IngredientRepository {
 
   @override
   Future<Result<List<Ingredient>>> search(String query) => runGuarded(() async {
-        final dtos = await _remote.search(query);
-        return [for (final d in dtos) d.toEntity()];
-      });
+    final dtos = await _remote.search(query);
+    return [for (final d in dtos) d.toEntity()];
+  });
 
   @override
   Future<Result<Ingredient>> byId(String id) =>

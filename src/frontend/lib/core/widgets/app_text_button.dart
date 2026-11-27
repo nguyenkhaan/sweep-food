@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 
 /// Low-emphasis inline action — "Xem tất cả", "Bỏ qua", footer links.
 class AppTextButton extends StatelessWidget {
@@ -16,7 +18,12 @@ class AppTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onPressed,
+      onPressed: onPressed == null
+          ? null
+          : () {
+              AppHaptics.selection();
+              onPressed!();
+            },
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         minimumSize: Size.zero,
@@ -25,8 +32,11 @@ class AppTextButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(label),
-          if (trailingChevron) const Icon(Icons.chevron_right_rounded, size: 16),
+          Flexible(child: Text(label, textAlign: TextAlign.center)),
+          if (trailingChevron) ...[
+            const SizedBox(width: 2),
+            const Icon(AppIcons.chevronRight, size: 15),
+          ],
         ],
       ),
     );

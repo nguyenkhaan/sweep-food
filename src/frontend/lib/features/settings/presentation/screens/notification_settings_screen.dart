@@ -1,106 +1,132 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/features/settings/presentation/controllers/notification_settings_controller.dart';
 import 'package:sweepfood/features/settings/presentation/widgets/settings_group.dart';
 
-/// P-04 Cài đặt thông báo — per-type toggles + timing.
+/// P-04 Cài đặt thông báo (Concept B · Format 1).
 class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+    final cs = context.colors;
+    final sweep = context.sweep;
     final prefs = ref.watch(notificationSettingsControllerProvider);
     final ctrl = ref.read(notificationSettingsControllerProvider.notifier);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.notifTitle)),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: Gap.xxs, bottom: Gap.xs),
-            child: Text(
-              l10n.notifSettingsTypesHeader,
-              style: context.text.labelSmall,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: context.colors.surfaceContainerLowest,
-              borderRadius: Radii.brLg,
-              border: Border.all(color: context.sweep.hairline),
-            ),
-            child: Column(
-              children: [
-                _ToggleRow(
-                  label: l10n.notifTypeNearExpiry,
-                  subtitle: l10n.notifTypeNearExpirySub,
-                  value: prefs.nearExpiry,
-                  onChanged: ctrl.toggleNearExpiry,
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: cs.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(title: l10n.notifTitle),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Gap.lg,
+                  Gap.xs,
+                  Gap.lg,
+                  Gap.xxl,
                 ),
-                _divider(context),
-                _ToggleRow(
-                  label: l10n.notifTypeDailySuggestions,
-                  value: prefs.dailySuggestions,
-                  onChanged: ctrl.toggleDailySuggestions,
-                ),
-                _divider(context),
-                _ToggleRow(
-                  label: l10n.notifTypeWeeklyReport,
-                  value: prefs.weeklyReport,
-                  onChanged: ctrl.toggleWeeklyReport,
-                ),
-                _divider(context),
-                _ToggleRow(
-                  label: l10n.notifTypePostCook,
-                  value: prefs.postCookReminder,
-                  onChanged: ctrl.togglePostCookReminder,
-                ),
-                _divider(context),
-                _ToggleRow(
-                  label: l10n.notifTypePromos,
-                  value: prefs.promosAndTips,
-                  onChanged: ctrl.togglePromosAndTips,
-                ),
-              ],
-            ),
-          ),
-          Gap.gapMd,
-          SettingsGroup(
-            label: l10n.notifSettingsTiming,
-            rows: [
-              SettingsRow(
-                icon: Icons.schedule_rounded,
-                label: l10n.notifRemindAt,
-                trailing: prefs.nearExpiryTimeLabel,
-                onTap: () async {
-                  final picked = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay(
-                      hour: prefs.nearExpiryHour,
-                      minute: 0,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4, bottom: Gap.xs + 2),
+                    child: Text(
+                      l10n.notifSettingsTypesHeader.toUpperCase(),
+                      style: context.text.labelSmall?.copyWith(
+                        letterSpacing: 0.7,
+                        fontWeight: FontWeight.w800,
+                        color: sweep.textTertiary,
+                      ),
                     ),
-                  );
-                  if (picked != null) await ctrl.setNearExpiryHour(picked.hour);
-                },
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: cs.surfaceContainerLowest,
+                      borderRadius: Radii.brXl,
+                      border: Border.all(color: sweep.hairline),
+                      boxShadow: Shadows.e1,
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Column(
+                      children: [
+                        _ToggleRow(
+                          label: l10n.notifTypeNearExpiry,
+                          subtitle: l10n.notifTypeNearExpirySub,
+                          value: prefs.nearExpiry,
+                          onChanged: ctrl.toggleNearExpiry,
+                        ),
+                        _divider(context),
+                        _ToggleRow(
+                          label: l10n.notifTypeDailySuggestions,
+                          value: prefs.dailySuggestions,
+                          onChanged: ctrl.toggleDailySuggestions,
+                        ),
+                        _divider(context),
+                        _ToggleRow(
+                          label: l10n.notifTypeWeeklyReport,
+                          value: prefs.weeklyReport,
+                          onChanged: ctrl.toggleWeeklyReport,
+                        ),
+                        _divider(context),
+                        _ToggleRow(
+                          label: l10n.notifTypePostCook,
+                          value: prefs.postCookReminder,
+                          onChanged: ctrl.togglePostCookReminder,
+                        ),
+                        _divider(context),
+                        _ToggleRow(
+                          label: l10n.notifTypePromos,
+                          value: prefs.promosAndTips,
+                          onChanged: ctrl.togglePromosAndTips,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap.gapMd,
+                  SettingsGroup(
+                    label: l10n.notifSettingsTiming,
+                    rows: [
+                      SettingsRow(
+                        icon: AppIcons.clock,
+                        label: l10n.notifRemindAt,
+                        trailing: prefs.nearExpiryTimeLabel,
+                        onTap: () async {
+                          final picked = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay(
+                              hour: prefs.nearExpiryHour,
+                              minute: 0,
+                            ),
+                          );
+                          if (picked != null) {
+                            await ctrl.setNearExpiryHour(picked.hour);
+                          }
+                        },
+                      ),
+                      SettingsRow(
+                        icon: AppIcons.moon,
+                        label: l10n.notifDnd,
+                        trailing: prefs.dndWindowLabel,
+                        onTap: () => _editDnd(
+                          context,
+                          ref,
+                          prefs.dndStartHour,
+                          prefs.dndEndHour,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              SettingsRow(
-                icon: Icons.do_not_disturb_on_outlined,
-                label: l10n.notifDnd,
-                trailing: prefs.dndWindowLabel,
-                onTap: () => _editDnd(
-                  context,
-                  ref,
-                  prefs.dndStartHour,
-                  prefs.dndEndHour,
-                ),
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

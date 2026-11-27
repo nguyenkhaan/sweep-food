@@ -14,9 +14,9 @@ part 'auth_repository_impl.g.dart';
 
 @Riverpod(keepAlive: true)
 AuthRepository authRepository(Ref ref) => AuthRepositoryImpl(
-      AuthRemoteDataSource(ref.watch(apiClientProvider)),
-      ref.watch(secureStoreProvider),
-    );
+  AuthRemoteDataSource(ref.watch(apiClientProvider)),
+  ref.watch(secureStoreProvider),
+);
 
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._remote, this._store);
@@ -30,41 +30,37 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
     String? name,
     String? email,
-  }) =>
-      runGuarded(() async {
-        final dto = await _remote.register(
-          phone: phone,
-          password: password,
-          name: name,
-          email: email,
-        );
-        return dto.expiresInSeconds;
-      });
+  }) => runGuarded(() async {
+    final dto = await _remote.register(
+      phone: phone,
+      password: password,
+      name: name,
+      email: email,
+    );
+    return dto.expiresInSeconds;
+  });
 
   @override
   Future<Result<int>> resendRegisterOtp(String phone) => runGuarded(
-        () async => (await _remote.resendRegisterOtp(phone)).expiresInSeconds,
-      );
+    () async => (await _remote.resendRegisterOtp(phone)).expiresInSeconds,
+  );
 
   @override
   Future<Result<Session>> verifyRegisterAndLogin({
     required String phone,
     required String otp,
     required String password,
-  }) =>
-      runGuarded(() async {
-        await _remote.verifyRegister(phone: phone, otp: otp);
-        return _loginAndBuildSession(phone: phone, password: password);
-      });
+  }) => runGuarded(() async {
+    await _remote.verifyRegister(phone: phone, otp: otp);
+    return _loginAndBuildSession(phone: phone, password: password);
+  });
 
   @override
   Future<Result<Session>> login({
     required String phone,
     required String password,
   }) =>
-      runGuarded(
-        () => _loginAndBuildSession(phone: phone, password: password),
-      );
+      runGuarded(() => _loginAndBuildSession(phone: phone, password: password));
 
   @override
   Future<Result<User>> me() =>
@@ -72,32 +68,31 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Result<int>> requestPasswordReset(String phone) => runGuarded(
-        () async => (await _remote.requestPasswordReset(phone)).expiresInSeconds,
-      );
+    () async => (await _remote.requestPasswordReset(phone)).expiresInSeconds,
+  );
 
   @override
   Future<Result<void>> confirmPasswordReset({
     required String phone,
     required String otp,
     required String newPassword,
-  }) =>
-      guardVoid(
-        () => _remote.confirmPasswordReset(
-          phone: phone,
-          otp: otp,
-          newPassword: newPassword,
-        ),
-      );
+  }) => guardVoid(
+    () => _remote.confirmPasswordReset(
+      phone: phone,
+      otp: otp,
+      newPassword: newPassword,
+    ),
+  );
 
   @override
   Future<Result<void>> logout() => guardVoid(() async {
-        try {
-          await _remote.logout(await _store.readRefreshToken());
-        } catch (_) {
-          // Best-effort: local sign-out proceeds even if the server call fails.
-        }
-        await _store.clear();
-      });
+    try {
+      await _remote.logout(await _store.readRefreshToken());
+    } catch (_) {
+      // Best-effort: local sign-out proceeds even if the server call fails.
+    }
+    await _store.clear();
+  });
 
   @override
   Future<bool> hasStoredSession() async {
@@ -107,10 +102,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Result<List<ActiveSession>>> activeSessions() => runGuarded(
-        () async => [
-          for (final dto in await _remote.sessions()) dto.toEntity(),
-        ],
-      );
+    () async => [for (final dto in await _remote.sessions()) dto.toEntity()],
+  );
 
   @override
   Future<Result<void>> revokeSession(String id) =>
@@ -120,38 +113,35 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Result<User>> updateProfile({
     String? name,
     Map<String, dynamic>? preferences,
-  }) =>
-      runGuarded(
-        () async => (await _remote.updateProfile(
-          name: name,
-          preferences: preferences,
-        ))
-            .toEntity(),
-      );
+  }) => runGuarded(
+    () async => (await _remote.updateProfile(
+      name: name,
+      preferences: preferences,
+    )).toEntity(),
+  );
 
   @override
   Future<Result<int>> requestPasswordChange() => runGuarded(
-        () async => (await _remote.requestPasswordChange()).expiresInSeconds,
-      );
+    () async => (await _remote.requestPasswordChange()).expiresInSeconds,
+  );
 
   @override
   Future<Result<void>> confirmPasswordChange({
     required String phone,
     required String otp,
     required String newPassword,
-  }) =>
-      guardVoid(
-        () => _remote.confirmPasswordChange(
-          phone: phone,
-          otp: otp,
-          newPassword: newPassword,
-        ),
-      );
+  }) => guardVoid(
+    () => _remote.confirmPasswordChange(
+      phone: phone,
+      otp: otp,
+      newPassword: newPassword,
+    ),
+  );
 
   @override
   Future<Result<int>> requestEmailChange(String email) => runGuarded(
-        () async => (await _remote.requestEmailChange(email)).expiresInSeconds,
-      );
+    () async => (await _remote.requestEmailChange(email)).expiresInSeconds,
+  );
 
   @override
   Future<Result<void>> confirmEmailChange(String otp) =>
@@ -159,8 +149,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Result<int>> requestPhoneChange(String phone) => runGuarded(
-        () async => (await _remote.requestPhoneChange(phone)).expiresInSeconds,
-      );
+    () async => (await _remote.requestPhoneChange(phone)).expiresInSeconds,
+  );
 
   @override
   Future<Result<void>> confirmPhoneChange(String otp) =>

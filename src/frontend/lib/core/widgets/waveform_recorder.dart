@@ -1,10 +1,11 @@
-﻿// lib/core/widgets/waveform_recorder.dart
+// lib/core/widgets/waveform_recorder.dart
 // Live mic-amplitude bar visualizer for voice capture (I-06).
 
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
+import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
 /// Renders a scrolling row of bars driven by a `0.0`–`1.0` amplitude [stream]
 /// (see `AudioRecorderService.amplitude`). When the stream is idle the bars
@@ -13,24 +14,28 @@ class WaveformRecorder extends StatefulWidget {
   const WaveformRecorder({
     required this.stream,
     this.barCount = 32,
-    this.color = BrandPalette.green600,
+    this.color,
     super.key,
   });
 
   final Stream<double> stream;
   final int barCount;
-  final Color color;
+  final Color? color;
 
   @override
   State<WaveformRecorder> createState() => _WaveformRecorderState();
 }
 
 class _WaveformRecorderState extends State<WaveformRecorder> {
-  late final Queue<double> _levels =
-      Queue<double>.from(List.filled(widget.barCount, 0.08));
+  late final Queue<double> _levels = Queue<double>.from(
+    List.filled(widget.barCount, 0.08),
+  );
 
   @override
   Widget build(BuildContext context) {
+    final barColor = widget.color ?? context.colors.primary;
+    final barDuration = AppMotion.resolve(context, context.motion.fast);
+
     return StreamBuilder<double>(
       stream: widget.stream,
       builder: (context, snapshot) {
@@ -47,12 +52,12 @@ class _WaveformRecorderState extends State<WaveformRecorder> {
             children: [
               for (final level in _levels)
                 AnimatedContainer(
-                  duration: const Duration(milliseconds: 120),
+                  duration: barDuration,
                   width: 4,
                   height: 6 + level * 52,
                   margin: const EdgeInsets.symmetric(horizontal: 2),
                   decoration: BoxDecoration(
-                    color: widget.color,
+                    color: barColor,
                     borderRadius: BorderRadius.circular(999),
                   ),
                 ),

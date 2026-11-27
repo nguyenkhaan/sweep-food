@@ -4,9 +4,9 @@ enum Flavor {
   prod;
 
   static Flavor fromName(String value) => Flavor.values.firstWhere(
-        (f) => f.name == value,
-        orElse: () => Flavor.dev,
-      );
+    (f) => f.name == value,
+    orElse: () => Flavor.dev,
+  );
 
   bool get isDev => this == Flavor.dev;
   bool get isProd => this == Flavor.prod;
@@ -21,9 +21,9 @@ enum Backend {
   live;
 
   static Backend fromName(String value) => Backend.values.firstWhere(
-        (b) => b.name == value,
-        orElse: () => Backend.mock,
-      );
+    (b) => b.name == value,
+    orElse: () => Backend.mock,
+  );
 
   bool get isMock => this == Backend.mock;
 }
