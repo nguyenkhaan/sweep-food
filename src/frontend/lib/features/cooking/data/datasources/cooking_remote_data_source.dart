@@ -38,16 +38,15 @@ class CookingRemoteDataSource {
     String sessionId,
     CookMode mode,
     List<ConsumptionLine>? consumptions,
-  ) =>
-      _api.post(
-        ApiPaths.cookingSessionComplete(sessionId),
-        body: {
-          'consumption_mode': mode.wire,
-          if (consumptions != null)
-            'consumptions': [for (final c in consumptions) c.toBody()],
-        },
-        headers: {'Idempotency-Key': Idempotency.newKey()},
-      );
+  ) => _api.post(
+    ApiPaths.cookingSessionComplete(sessionId),
+    body: {
+      'consumption_mode': mode.wire,
+      if (consumptions != null)
+        'consumptions': [for (final c in consumptions) c.toBody()],
+    },
+    headers: {'Idempotency-Key': Idempotency.newKey()},
+  );
 
   Future<CookedLeftoverDto> saveLeftover(CookedFood food) async {
     final json = await _api.post(

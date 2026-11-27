@@ -21,4 +21,3 @@ FcmService fcmService(Ref ref) {
   final config = ref.watch(appConfigProvider);
   return FcmService(enabled: config.fcmEnabled);
 }
-

@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart'
+    show LicenseEntryWithLineBreaks, LicenseRegistry, kIsWeb;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +22,7 @@ Future<void> bootstrap() async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      _registerFontLicenses();
 
       final config = AppConfig.fromEnvironment();
       final prefs = await SharedPreferences.getInstance();
@@ -82,4 +85,21 @@ Future<void> _initFirebase(AppConfig config) async {
   } catch (e, st) {
     log.w('Firebase init skipped', error: e, stackTrace: st);
   }
+}
+
+void _registerFontLicenses() {
+  LicenseRegistry.addLicense(() async* {
+    try {
+      final beVietnam = await rootBundle.loadString(
+        'assets/fonts/BeVietnamPro-OFL.txt',
+      );
+      yield LicenseEntryWithLineBreaks(['BeVietnamPro'], beVietnam);
+      final fraunces = await rootBundle.loadString(
+        'assets/fonts/Fraunces-OFL.txt',
+      );
+      yield LicenseEntryWithLineBreaks(['Fraunces'], fraunces);
+    } catch (e) {
+      log.w('Font license registration skipped', error: e);
+    }
+  });
 }

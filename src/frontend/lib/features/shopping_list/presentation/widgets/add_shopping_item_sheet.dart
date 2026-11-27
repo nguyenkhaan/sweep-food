@@ -1,16 +1,16 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
-import 'package:sweepfood/core/widgets/primary_button.dart';
 import 'package:sweepfood/features/settings/presentation/controllers/preferences_controller.dart';
 import 'package:sweepfood/features/shopping_list/domain/entities/shopping_list_item.dart';
 import 'package:sweepfood/features/shopping_list/presentation/controllers/shopping_list_controller.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
-/// B-02 Thêm món thủ công.
+/// B-02 Thêm món thủ công (Concept B · Format 1 Crisp Sheet).
 class AddShoppingItemSheet extends ConsumerStatefulWidget {
   const AddShoppingItemSheet({super.key});
 
@@ -43,7 +43,9 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
     setState(() => _busy = true);
     await ref
         .read(shoppingListControllerProvider.notifier)
-        .addManualItem(ShoppingListItemDraft(name: name, quantity: qty, unit: _unit));
+        .addManualItem(
+          ShoppingListItemDraft(name: name, quantity: qty, unit: _unit),
+        );
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -51,51 +53,62 @@ class _State extends ConsumerState<AddShoppingItemSheet> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return SheetBody(
+      icon: AppIcons.shopping,
       title: l10n.shoppingAddItem,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(
-            controller: _name,
-            autofocus: true,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(labelText: l10n.shoppingItemName),
-          ),
-          Gap.gapSm,
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _qty,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-                  ],
-                  decoration: InputDecoration(
-                    labelText: l10n.pantryStatQuantity,
-                  ),
+          SheetGroupCard(
+            padding: const EdgeInsets.all(Gap.md),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextField(
+                  controller: _name,
+                  autofocus: true,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: InputDecoration(labelText: l10n.shoppingItemName),
                 ),
-              ),
-              Gap.gapSm,
-              Expanded(
-                child: DropdownButtonFormField<MeasurementUnit>(
-                  initialValue: _unit,
-                  decoration: InputDecoration(labelText: l10n.reviewUnit),
-                  items: [
-                    for (final u in MeasurementUnit.values)
-                      DropdownMenuItem(value: u, child: Text(u.label)),
+                Gap.gapSm,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _qty,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
+                        ],
+                        decoration: InputDecoration(
+                          labelText: l10n.pantryStatQuantity,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: Gap.sm),
+                    Expanded(
+                      child: DropdownButtonFormField<MeasurementUnit>(
+                        initialValue: _unit,
+                        icon: const Icon(AppIcons.chevronDown, size: 18),
+                        decoration: InputDecoration(labelText: l10n.reviewUnit),
+                        items: [
+                          for (final u in MeasurementUnit.values)
+                            DropdownMenuItem(value: u, child: Text(u.label)),
+                        ],
+                        onChanged: (u) => setState(() => _unit = u ?? _unit),
+                      ),
+                    ),
                   ],
-                  onChanged: (u) => setState(() => _unit = u ?? _unit),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Gap.gapLg,
-          PrimaryButton(
+          Gap.gapMd,
+          SheetWarmButton(
             label: l10n.shoppingAddToList,
+            icon: AppIcons.add,
             loading: _busy,
             onPressed: _busy ? null : _submit,
           ),

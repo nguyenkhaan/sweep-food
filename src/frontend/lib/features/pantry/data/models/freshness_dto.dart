@@ -32,8 +32,11 @@ class FreshnessQuestionDto {
         axis: json['axis'] as String,
         questionVi: json['question_vi'] as String,
         options: (json['options'] as List<dynamic>)
-            .map((e) =>
-                FreshnessQuestionOptionDto.fromJson(e as Map<String, dynamic>))
+            .map(
+              (e) => FreshnessQuestionOptionDto.fromJson(
+                e as Map<String, dynamic>,
+              ),
+            )
             .toList(),
         defaultValue: (json['default'] ?? '') as String,
       );
@@ -52,16 +55,16 @@ class FreshnessQuestionsResponseDto {
   final String archetypeId;
   final List<FreshnessQuestionDto> questions;
 
-  factory FreshnessQuestionsResponseDto.fromJson(Map<String, dynamic> json) =>
-      FreshnessQuestionsResponseDto(
-        kbVersion: json['kb_version'] as String? ?? '',
-        freshcheckIngredientId:
-            json['freshcheck_ingredient_id'] as String? ?? '',
-        archetypeId: json['archetype_id'] as String? ?? '',
-        questions: (json['questions'] as List<dynamic>? ?? [])
-            .map((e) => FreshnessQuestionDto.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+  factory FreshnessQuestionsResponseDto.fromJson(
+    Map<String, dynamic> json,
+  ) => FreshnessQuestionsResponseDto(
+    kbVersion: json['kb_version'] as String? ?? '',
+    freshcheckIngredientId: json['freshcheck_ingredient_id'] as String? ?? '',
+    archetypeId: json['archetype_id'] as String? ?? '',
+    questions: (json['questions'] as List<dynamic>? ?? [])
+        .map((e) => FreshnessQuestionDto.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 }
 
 class FreshnessAssessmentResponseDto {

@@ -1,4 +1,4 @@
-﻿// test/helpers/media_fakes.dart
+// test/helpers/media_fakes.dart
 // Test doubles for the M4 media / permission services (no platform channels).
 import 'package:sweepfood/core/media/audio_recorder_service.dart';
 import 'package:sweepfood/core/media/image_capture_service.dart';
@@ -41,8 +41,7 @@ class FakeAudioRecorderService extends AudioRecorderService {
   @override
   Stream<double> amplitude({
     Duration interval = const Duration(milliseconds: 120),
-  }) =>
-      const Stream<double>.empty();
+  }) => const Stream<double>.empty();
   @override
   Future<void> dispose() async {}
 }
@@ -54,6 +53,8 @@ class FakeImageCaptureService extends ImageCaptureService {
   final String? path;
 
   @override
-  Future<String?> capture({required ImageSource source, bool crop = false}) async =>
-      path;
+  Future<String?> capture({
+    required ImageSource source,
+    bool crop = false,
+  }) async => path;
 }

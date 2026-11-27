@@ -47,6 +47,7 @@ class AddIngredientController extends _$AddIngredientController {
         );
   void setQuantity(double v) => state = state.copyWith(quantity: v);
   void setUnit(MeasurementUnit v) => state = state.copyWith(unit: v);
+
   /// FreshCheck depends on where the item is stored, so changing the tier
   /// discards an estimate computed for the previous one.
   void setTier(StorageTier v) => state = state.copyWith(
@@ -54,6 +55,7 @@ class AddIngredientController extends _$AddIngredientController {
     freshness: v == state.storageTier ? state.freshness : null,
   );
   void setPackedDate(DateTime? v) => state = state.copyWith(packedDate: v);
+
   /// A manual date and a FreshCheck estimate are mutually exclusive.
   void setExpiry(DateTime? expiry, FreshnessEstimate? freshness) =>
       state = state.copyWith(expiryDate: expiry, freshness: freshness);
@@ -61,12 +63,12 @@ class AddIngredientController extends _$AddIngredientController {
 
   /// Fill name / category / unit from a picked catalog [ingredient].
   void applyIngredient(Ingredient ingredient) => state = state.copyWith(
-        name: ingredient.name,
-        category: ingredient.category,
-        unit: ingredient.defaultUnit,
-        ingredientId: ingredient.id,
-        referenceShelfLifeDays: ingredient.referenceShelfLifeDays,
-      );
+    name: ingredient.name,
+    category: ingredient.category,
+    unit: ingredient.defaultUnit,
+    ingredientId: ingredient.id,
+    referenceShelfLifeDays: ingredient.referenceShelfLifeDays,
+  );
 
   /// Runs the typed name through the smart parser. A catalog match links the
   /// item to its master ingredient (enabling FreshCheck) and fills the
@@ -77,7 +79,9 @@ class AddIngredientController extends _$AddIngredientController {
     if (typed.isEmpty || state.ingredientId != null || isEditing) return false;
     final IngredientMatch? match;
     try {
-      match = await ref.read(ingredientMatchRemoteDataSourceProvider).match(typed);
+      match = await ref
+          .read(ingredientMatchRemoteDataSourceProvider)
+          .match(typed);
     } on Object {
       return false;
     }
@@ -124,7 +128,9 @@ class AddIngredientController extends _$AddIngredientController {
         } catch (_) {}
       }
       // Still unrecognized after the parser and the catalog lookup: unsupported.
-      if (state.ingredientId == null) throw const UnsupportedIngredientFailure();
+      if (state.ingredientId == null) {
+        throw const UnsupportedIngredientFailure();
+      }
     }
     final list = ref.read(pantryListControllerProvider.notifier);
     final id = editItemId;

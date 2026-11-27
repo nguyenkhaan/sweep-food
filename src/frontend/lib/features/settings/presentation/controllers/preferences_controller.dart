@@ -17,7 +17,8 @@ class PreferencesController extends _$PreferencesController {
   AppPreferences build() {
     final prefs = ref.watch(sharedPreferencesProvider);
     return AppPreferences(
-      dietaryPreference: ref.watch(dietaryPreferenceControllerProvider) ??
+      dietaryPreference:
+          ref.watch(dietaryPreferenceControllerProvider) ??
           DietaryPreference.balanced,
       defaultUnit: MeasurementUnit.fromWire(
         prefs.getString(AppConstants.kDefaultUnit) ?? MeasurementUnit.gram.wire,

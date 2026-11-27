@@ -13,22 +13,22 @@ enum ScanType {
 
   /// `POST` endpoint that accepts this channel's media.
   String get endpoint => switch (this) {
-        ScanType.label => ApiPaths.extractionOcrLabel,
-        ScanType.receipt => ApiPaths.extractionOcrInvoice,
-        ScanType.voice => ApiPaths.extractionAsr,
-      };
+    ScanType.label => ApiPaths.extractionOcrLabel,
+    ScanType.receipt => ApiPaths.extractionOcrInvoice,
+    ScanType.voice => ApiPaths.extractionAsr,
+  };
 
   /// Which [PantrySource] a saved item from this channel carries.
   PantrySource get pantrySource => switch (this) {
-        ScanType.label => PantrySource.labelScan,
-        ScanType.receipt => PantrySource.receiptScan,
-        ScanType.voice => PantrySource.voice,
-      };
+    ScanType.label => PantrySource.labelScan,
+    ScanType.receipt => PantrySource.receiptScan,
+    ScanType.voice => PantrySource.voice,
+  };
 
   static ScanType fromWire(String? value) => ScanType.values.firstWhere(
-        (t) => t.wire == value,
-        orElse: () => ScanType.label,
-      );
+    (t) => t.wire == value,
+    orElse: () => ScanType.label,
+  );
 }
 
 /// Lifecycle of a [ScanJob] as reported by the extraction backend.

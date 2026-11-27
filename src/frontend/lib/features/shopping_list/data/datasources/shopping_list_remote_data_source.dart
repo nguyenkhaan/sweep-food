@@ -40,15 +40,14 @@ class ShoppingListRemoteDataSource {
     String itemId,
     bool checked,
     ShoppingPurchaseDraft? purchase,
-  ) =>
-      _api.patch(
-        ApiPaths.shoppingListItem(listId, itemId),
-        body: {
-          'checked': checked,
-          if (checked && purchase != null) 'purchase': purchase.toBody(),
-        },
-        headers: _idempotencyHeaders(),
-      );
+  ) => _api.patch(
+    ApiPaths.shoppingListItem(listId, itemId),
+    body: {
+      'checked': checked,
+      if (checked && purchase != null) 'purchase': purchase.toBody(),
+    },
+    headers: _idempotencyHeaders(),
+  );
 
   Future<ShoppingListItemDto> addItem(
     String listId,
@@ -63,10 +62,11 @@ class ShoppingListRemoteDataSource {
   }
 
   Future<void> removeItem(String listId, String itemId) => _api.delete(
-        ApiPaths.shoppingListItem(listId, itemId),
-        headers: _idempotencyHeaders(),
-      );
+    ApiPaths.shoppingListItem(listId, itemId),
+    headers: _idempotencyHeaders(),
+  );
 
-  Map<String, String> _idempotencyHeaders() =>
-      {'Idempotency-Key': Idempotency.newKey()};
+  Map<String, String> _idempotencyHeaders() => {
+    'Idempotency-Key': Idempotency.newKey(),
+  };
 }

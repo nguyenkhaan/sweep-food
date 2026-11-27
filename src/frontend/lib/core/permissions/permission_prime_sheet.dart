@@ -1,13 +1,14 @@
-﻿// lib/core/permissions/permission_prime_sheet.dart
+// lib/core/permissions/permission_prime_sheet.dart
 // G-04 — Bottom sheet xin quyền trước khi gọi prompt hệ thống
 // Design: PermissionPrime.dc.html
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/permissions/permission_service.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 
 enum PermissionKind { camera, microphone }
 
@@ -97,7 +98,7 @@ class PermissionPrimeSheet extends StatelessWidget {
     final isCamera = kind == PermissionKind.camera;
     final title = isCamera ? l10n.permCameraTitle : l10n.permMicTitle;
     final description = isCamera ? l10n.permCameraDesc : l10n.permMicDesc;
-    final iconData = isCamera ? Icons.camera_alt_outlined : Icons.mic_outlined;
+    final iconData = isCamera ? AppIcons.camera : AppIcons.mic;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -130,10 +131,10 @@ class PermissionPrimeSheet extends StatelessWidget {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: BrandPalette.green100,
+                  color: context.colors.primaryContainer,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Icon(iconData, size: 30, color: BrandPalette.green700),
+                child: Icon(iconData, size: 30, color: context.colors.primary),
               ),
               Gap.gapMd,
 
@@ -162,26 +163,14 @@ class PermissionPrimeSheet extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ElevatedButton(
+                  SheetWarmButton(
+                    label: l10n.commonAllow,
                     onPressed: () => Navigator.of(context).pop(true),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: BrandPalette.green700,
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size.fromHeight(48),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: Radii.brMd,
-                      ),
-                    ),
-                    child: Text(l10n.commonAllow),
                   ),
                   Gap.gapXs,
-                  TextButton(
+                  SheetCancelButton(
+                    label: l10n.commonNotNow,
                     onPressed: () => Navigator.of(context).pop(false),
-                    style: TextButton.styleFrom(
-                      foregroundColor: sweep.textSecondary,
-                      minimumSize: const Size.fromHeight(48),
-                    ),
-                    child: Text(l10n.commonNotNow),
                   ),
                 ],
               ),

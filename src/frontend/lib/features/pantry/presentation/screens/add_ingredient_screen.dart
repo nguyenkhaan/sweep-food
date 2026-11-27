@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/error/failure.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
-import 'package:sweepfood/core/widgets/primary_button.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
 import 'package:sweepfood/features/catalog/presentation/controllers/ingredient_search_controller.dart';
 import 'package:sweepfood/features/pantry/presentation/controllers/add_ingredient_controller.dart';
@@ -15,9 +17,8 @@ import 'package:sweepfood/features/pantry/presentation/widgets/expiry_freshness_
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
 
-/// K-03 — Thêm / Sửa nguyên liệu (thủ công).
-///
-/// `editItemId == null` → add mode; otherwise the form is seeded from that item.
+/// K-03 — Thêm / Sửa nguyên liệu (thủ công · Concept B Format 1: Emerald Split
+/// Header + 2 Unified Hairline Section Cards + Sticky Flat Warm-Orange CTA).
 class AddIngredientScreen extends ConsumerStatefulWidget {
   const AddIngredientScreen({this.editItemId, super.key});
 
@@ -89,8 +90,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
     setState(() {});
   }
 
-  /// Smart parser: once the user leaves the name field, match the typed text to
-  /// a catalog ingredient (enables FreshCheck) and fill the normalized name.
   Future<void> _matchName() async {
     final changed = await _ctrl.matchTypedName();
     if (!changed || !mounted) return;
@@ -132,7 +131,6 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
       if (!mounted) return;
       setState(() {
         _busy = false;
-        // The smart parser could not recognize this food: say so under the name.
         _unsupported = e is UnsupportedIngredientFailure;
       });
       if (!_unsupported) AppSnack.show(context, context.l10n.pantrySaveFailed);
@@ -142,131 +140,254 @@ class _AddIngredientScreenState extends ConsumerState<AddIngredientScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final cs = context.colors;
+    final sweep = context.sweep;
     final draft = ref.watch(addIngredientControllerProvider(_key));
     final showSuggestions =
         _nameFocus.hasFocus &&
         _query.trim().isNotEmpty &&
         draft.ingredientId == null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_isEditing ? l10n.pantryEditTitle : l10n.pantryAddTitle),
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: cs.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(
+              title: _isEditing ? l10n.pantryEditTitle : l10n.pantryAddTitle,
+              subtitle: _isEditing
+                  ? null
+                  : 'Tự động nhận diện nhóm thực phẩm và gợi ý hạn dùng',
+            ),
+            Expanded(
+              child: ListView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: const EdgeInsets.fromLTRB(
+                  Gap.lg,
+                  Gap.xs,
+                  Gap.lg,
+                  Gap.xxl,
+                ),
+                children: [
+                  _FormSectionCard(
+                    title: 'THÔNG TIN CHÍNH',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _FieldLabel(l10n.pantryFieldName),
+                        TextField(
+                          controller: _nameCtrl,
+                          focusNode: _nameFocus,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            hintText: l10n.pantryFieldNameHint,
+                            errorText: _unsupported
+                                ? l10n.ingredientUnsupportedRetry
+                                : null,
+                          ),
+                          onChanged: (v) {
+                            _ctrl.setName(v);
+                            setState(() {
+                              _query = v;
+                              _unsupported = false;
+                            });
+                          },
+                        ),
+                        if (showSuggestions)
+                          _SuggestionList(
+                            query: _query,
+                            onPick: _pickIngredient,
+                          ),
+                        Gap.gapMd,
+                        _FieldLabel(l10n.pantryFieldCategory),
+                        _ReadOnlyField(
+                          value: draft.category,
+                          placeholder: l10n.pantryFieldCategoryAuto,
+                        ),
+                        Gap.gapMd,
+                        _FieldLabel(l10n.pantryStatQuantity),
+                        Row(
+                          children: [
+                            _StepButton(
+                              icon: AppIcons.minus,
+                              onTap: draft.quantity <= 0
+                                  ? null
+                                  : () {
+                                      AppHaptics.selection();
+                                      _bumpQty(-_stepFor(draft.unit));
+                                    },
+                            ),
+                            const SizedBox(width: Gap.xs),
+                            Expanded(
+                              child: TextField(
+                                controller: _qtyCtrl,
+                                textAlign: TextAlign.center,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9.,]'),
+                                  ),
+                                ],
+                                decoration: const InputDecoration(
+                                  hintText: '0',
+                                ),
+                                onChanged: (v) => _ctrl.setQuantity(
+                                  double.tryParse(v.replaceAll(',', '.')) ?? 0,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: Gap.xs),
+                            _StepButton(
+                              icon: AppIcons.add,
+                              onTap: () {
+                                AppHaptics.selection();
+                                _bumpQty(_stepFor(draft.unit));
+                              },
+                            ),
+                            const SizedBox(width: Gap.sm),
+                            _UnitDropdown(
+                              value: draft.unit,
+                              onChanged: (u) => _ctrl.setUnit(u),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap.gapMd,
+                  _FormSectionCard(
+                    title: 'BẢO QUẢN VÀ HẠN DÙNG',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _FieldLabel(l10n.pantryFieldStorage),
+                        Wrap(
+                          spacing: Gap.xs,
+                          runSpacing: Gap.xs,
+                          children: [
+                            for (final tier in StorageTier.values)
+                              ChoiceChip(
+                                label: Text(tier.shortLabel(l10n)),
+                                selected: draft.storageTier == tier,
+                                onSelected: (_) => _ctrl.setTier(tier),
+                              ),
+                          ],
+                        ),
+                        Gap.gapMd,
+                        _DateField(
+                          label: l10n.pantryDetailPacked,
+                          value: draft.packedDate,
+                          onTap: () => _pickDate(
+                            initial: draft.packedDate,
+                            onPicked: _ctrl.setPackedDate,
+                          ),
+                          onClear: draft.packedDate == null
+                              ? null
+                              : () => _ctrl.setPackedDate(null),
+                        ),
+                        Gap.gapMd,
+                        ExpiryFreshnessRow(
+                          itemName: draft.name,
+                          storageTier: draft.storageTier,
+                          expiryDate: draft.expiryDate,
+                          freshness: draft.freshness,
+                          masterIngredientId: draft.ingredientId,
+                          allowFreshness: !_isEditing,
+                          onChanged: _ctrl.setExpiry,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.sm, Gap.lg, Gap.md),
+            decoration: BoxDecoration(
+              color: cs.surfaceContainerLowest,
+              border: Border(top: BorderSide(color: sweep.hairline)),
+            ),
+            child: SizedBox(
+              height: 50,
+              child: FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: sweep.ctaWarm,
+                  foregroundColor: sweep.onCtaWarm,
+                  disabledBackgroundColor: sweep.subtleFill,
+                  disabledForegroundColor: sweep.textTertiary,
+                  shape: const RoundedRectangleBorder(borderRadius: Radii.brMd),
+                ),
+                onPressed: draft.isValid && !_busy ? _submit : null,
+                child: _busy
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.2,
+                          color: sweep.onCtaWarm,
+                        ),
+                      )
+                    : Text(
+                        _isEditing
+                            ? l10n.pantrySaveChanges
+                            : l10n.pantryAddToPantry,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+              ),
+            ),
+          ),
+        ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
+    );
+  }
+}
+
+class _FormSectionCard extends StatelessWidget {
+  const _FormSectionCard({required this.title, required this.child});
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final sweep = context.sweep;
+    return Container(
+      padding: const EdgeInsets.all(Gap.md),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerLowest,
+        borderRadius: Radii.brXl,
+        border: Border.all(color: sweep.hairline),
+        boxShadow: Shadows.e1,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Label(l10n.pantryFieldName),
-          TextField(
-            controller: _nameCtrl,
-            focusNode: _nameFocus,
-            textCapitalization: TextCapitalization.sentences,
-            decoration: InputDecoration(
-              hintText: l10n.pantryFieldNameHint,
-              errorText: _unsupported ? l10n.ingredientUnsupportedRetry : null,
+          Text(
+            title,
+            style: context.text.labelSmall?.copyWith(
+              letterSpacing: 0.7,
+              fontWeight: FontWeight.w800,
+              color: sweep.textTertiary,
             ),
-            onChanged: (v) {
-              _ctrl.setName(v);
-              setState(() {
-                _query = v;
-                _unsupported = false;
-              });
-            },
           ),
-          if (showSuggestions)
-            _SuggestionList(query: _query, onPick: _pickIngredient),
-          Gap.gapMd,
-          _Label(l10n.pantryFieldCategory),
-          _ReadOnlyField(
-            value: draft.category,
-            placeholder: l10n.pantryFieldCategoryAuto,
-          ),
-          Gap.gapMd,
-          _Label(l10n.pantryStatQuantity),
-          Row(
-            children: [
-              _StepButton(
-                icon: Icons.remove_rounded,
-                onTap: draft.quantity <= 0
-                    ? null
-                    : () => _bumpQty(-_stepFor(draft.unit)),
-              ),
-              const SizedBox(width: Gap.xs),
-              Expanded(
-                child: TextField(
-                  controller: _qtyCtrl,
-                  textAlign: TextAlign.center,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
-                  ],
-                  decoration: const InputDecoration(hintText: '0'),
-                  onChanged: (v) => _ctrl.setQuantity(
-                    double.tryParse(v.replaceAll(',', '.')) ?? 0,
-                  ),
-                ),
-              ),
-              const SizedBox(width: Gap.xs),
-              _StepButton(
-                icon: Icons.add_rounded,
-                onTap: () => _bumpQty(_stepFor(draft.unit)),
-              ),
-              const SizedBox(width: Gap.sm),
-              _UnitDropdown(
-                value: draft.unit,
-                onChanged: (u) => _ctrl.setUnit(u),
-              ),
-            ],
-          ),
-          Gap.gapMd,
-          _Label(l10n.pantryFieldStorage),
-          Wrap(
-            spacing: Gap.xs,
-            children: [
-              for (final tier in StorageTier.values)
-                ChoiceChip(
-                  label: Text(tier.shortLabel(l10n)),
-                  selected: draft.storageTier == tier,
-                  onSelected: (_) => _ctrl.setTier(tier),
-                ),
-            ],
-          ),
-          Gap.gapMd,
-          _DateField(
-            label: l10n.pantryDetailPacked,
-            value: draft.packedDate,
-            onTap: () => _pickDate(
-              initial: draft.packedDate,
-              onPicked: _ctrl.setPackedDate,
-            ),
-            onClear: draft.packedDate == null
-                ? null
-                : () => _ctrl.setPackedDate(null),
-          ),
-          Gap.gapMd,
-          ExpiryFreshnessRow(
-            itemName: draft.name,
-            storageTier: draft.storageTier,
-            expiryDate: draft.expiryDate,
-            freshness: draft.freshness,
-            masterIngredientId: draft.ingredientId,
-            allowFreshness: !_isEditing,
-            onChanged: _ctrl.setExpiry,
-          ),
-          Gap.gapXl,
-          PrimaryButton(
-            label: _isEditing ? l10n.pantrySaveChanges : l10n.pantryAddToPantry,
-            loading: _busy,
-            onPressed: draft.isValid && !_busy ? _submit : null,
-          ),
+          Gap.gapSm,
+          child,
         ],
       ),
     );
   }
 }
 
-/// A read-only value (e.g. the food group) that the user cannot type into.
 class _ReadOnlyField extends StatelessWidget {
   const _ReadOnlyField({required this.value, required this.placeholder});
 
@@ -280,30 +401,38 @@ class _ReadOnlyField extends StatelessWidget {
       decoration: InputDecoration(
         enabled: false,
         suffixIcon: Icon(
-          Icons.lock_outline_rounded,
-          size: 18,
+          AppIcons.lock,
+          size: 17,
           color: context.sweep.textTertiary,
         ),
       ),
       child: Text(
         empty ? placeholder : value,
         style: context.text.bodyLarge?.copyWith(
-          color: empty ? context.sweep.textTertiary : context.sweep.textSecondary,
+          color: empty
+              ? context.sweep.textTertiary
+              : context.sweep.textSecondary,
         ),
       ),
     );
   }
 }
 
-class _Label extends StatelessWidget {
-  const _Label(this.text);
+class _FieldLabel extends StatelessWidget {
+  const _FieldLabel(this.text);
 
   final String text;
 
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: Gap.xxs),
-    child: Text(text.toUpperCase(), style: context.text.labelSmall),
+    child: Text(
+      text.toUpperCase(),
+      style: context.text.labelSmall?.copyWith(
+        color: context.sweep.textSecondary,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
   );
 }
 
@@ -327,7 +456,7 @@ class _SuggestionList extends ConsumerWidget {
             children: [
               for (final ing in list.take(8))
                 ActionChip(
-                  avatar: const Icon(Icons.add_rounded, size: 16),
+                  avatar: const Icon(AppIcons.add, size: 15),
                   label: Text(ing.name),
                   onPressed: () => onPick(ing),
                 ),
@@ -367,6 +496,11 @@ class _UnitDropdown extends StatelessWidget {
     return DropdownButton<MeasurementUnit>(
       value: value,
       underline: const SizedBox.shrink(),
+      icon: Icon(
+        AppIcons.chevronDown,
+        size: 16,
+        color: context.sweep.textSecondary,
+      ),
       onChanged: (u) {
         if (u != null) onChanged(u);
       },
@@ -401,10 +535,10 @@ class _DateField extends StatelessWidget {
           labelText: label,
           suffixIcon: onClear != null
               ? IconButton(
-                  icon: const Icon(Icons.close_rounded, size: 18),
+                  icon: const Icon(AppIcons.close, size: 17),
                   onPressed: onClear,
                 )
-              : const Icon(Icons.event_outlined, size: 18),
+              : const Icon(AppIcons.calendar, size: 17),
         ),
         child: Text(
           value?.ddMMyyyy ?? context.l10n.commonNotChosen,

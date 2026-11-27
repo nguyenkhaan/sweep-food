@@ -10,9 +10,8 @@ import 'package:sweepfood/features/ingest/domain/repositories/scan_repository.da
 part 'scan_repository_impl.g.dart';
 
 @Riverpod(keepAlive: true)
-ScanRepository scanRepository(Ref ref) => ScanRepositoryImpl(
-      ScanRemoteDataSource(ref.watch(apiClientProvider)),
-    );
+ScanRepository scanRepository(Ref ref) =>
+    ScanRepositoryImpl(ScanRemoteDataSource(ref.watch(apiClientProvider)));
 
 class ScanRepositoryImpl implements ScanRepository {
   ScanRepositoryImpl(this._remote);
@@ -32,23 +31,21 @@ class ScanRepositoryImpl implements ScanRepository {
       _submit(ScanType.voice, mediaPath: audioPath, transcript: transcript);
 
   @override
-  Future<Result<ScanJob>> lookupBarcode(String barcode) =>
-      runGuarded(() async {
-        final dto = await _remote.lookupBarcode(barcode);
-        return dto.toEntity();
-      });
+  Future<Result<ScanJob>> lookupBarcode(String barcode) => runGuarded(() async {
+    final dto = await _remote.lookupBarcode(barcode);
+    return dto.toEntity();
+  });
 
   Future<Result<ScanJob>> _submit(
     ScanType type, {
     String? mediaPath,
     String? transcript,
-  }) =>
-      runGuarded(() async {
-        final dto = await _remote.submit(
-          type,
-          mediaPath: mediaPath,
-          transcript: transcript,
-        );
-        return dto.toEntity().copyWith(sourcePath: mediaPath);
-      });
+  }) => runGuarded(() async {
+    final dto = await _remote.submit(
+      type,
+      mediaPath: mediaPath,
+      transcript: transcript,
+    );
+    return dto.toEntity().copyWith(sourcePath: mediaPath);
+  });
 }

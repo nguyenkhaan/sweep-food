@@ -48,19 +48,19 @@ abstract class PantryItemDto with _$PantryItemDto {
       _$PantryItemDtoFromJson(json);
 
   PantryItem toEntity() => PantryItem(
-        id: id,
-        name: customName ?? ingredientName,
-        category: '',
-        quantity: currentQuantity,
-        unit: MeasurementUnit.fromWire(unit),
-        storageTier: StorageTier.fromBackendWire(storageMode),
-        addedAt: createdAt,
-        source: source == 'LEFTOVER' ? PantrySource.cooked : PantrySource.manual,
-        status: PantryItemStatus.fromWire(_statusFromBackend(status)),
-        ingredientId: masterIngredientId,
-        packedDate: packagedAt,
-        expiryDate: expiresAt,
-        referenceShelfLifeDays: null,
-        priceVnd: unitCost?.round(),
-      );
+    id: id,
+    name: customName ?? ingredientName,
+    category: '',
+    quantity: currentQuantity,
+    unit: MeasurementUnit.fromWire(unit),
+    storageTier: StorageTier.fromBackendWire(storageMode),
+    addedAt: createdAt,
+    source: source == 'LEFTOVER' ? PantrySource.cooked : PantrySource.manual,
+    status: PantryItemStatus.fromWire(_statusFromBackend(status)),
+    ingredientId: masterIngredientId,
+    packedDate: packagedAt,
+    expiryDate: expiresAt,
+    referenceShelfLifeDays: null,
+    priceVnd: unitCost?.round(),
+  );
 }

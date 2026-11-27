@@ -19,9 +19,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          sharedPreferencesProvider.overrideWithValue(prefs),
-        ],
+        overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
         child: MaterialApp(
           locale: const Locale('vi'),
           supportedLocales: AppL10n.supportedLocales,
@@ -48,9 +46,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          sharedPreferencesProvider.overrideWithValue(prefs),
-        ],
+        overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
         child: MaterialApp(
           locale: const Locale('en'),
           supportedLocales: AppL10n.supportedLocales,

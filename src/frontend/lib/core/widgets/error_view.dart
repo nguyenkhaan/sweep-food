@@ -1,9 +1,11 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/error/failure.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
-/// Full-body error state with a retry button (spec 3.3).
+/// Full-body error state with an actionable retry button.
 class ErrorView extends StatelessWidget {
   const ErrorView({required String this.message, this.onRetry, super.key})
     : failure = null;
@@ -26,29 +28,39 @@ class ErrorView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 72,
-              height: 72,
+              width: 76,
+              height: 76,
               decoration: BoxDecoration(
                 color: context.sweep.expired.bg,
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: context.sweep.expired.fg.withValues(alpha: 0.16),
+                  width: 4,
+                ),
               ),
               child: Icon(
-                Icons.error_outline_rounded,
+                AppIcons.warning,
                 size: 30,
                 color: context.sweep.expired.fg,
               ),
             ),
-            Gap.gapSm,
-            Text(
-              message,
-              style: context.text.titleSmall,
-              textAlign: TextAlign.center,
+            Gap.gapMd,
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 300),
+              child: Text(
+                message,
+                style: context.text.titleSmall,
+                textAlign: TextAlign.center,
+              ),
             ),
             if (onRetry != null) ...[
-              Gap.gapMd,
+              Gap.gapLg,
               OutlinedButton.icon(
-                onPressed: onRetry,
-                icon: const Icon(Icons.refresh_rounded, size: 18),
+                onPressed: () {
+                  AppHaptics.selection();
+                  onRetry!();
+                },
+                icon: const Icon(AppIcons.refresh, size: 18),
                 label: Text(context.l10n.commonRetry),
               ),
             ],

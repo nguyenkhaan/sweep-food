@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/core/widgets/primary_button.dart';
 import 'package:sweepfood/features/catalog/presentation/controllers/ingredient_search_controller.dart';
 import 'package:sweepfood/features/settings/presentation/controllers/nutrition_profile_controller.dart';
@@ -74,145 +76,175 @@ class _NutritionProfileScreenState
     final profile = formState.profile;
     final notifier = ref.read(nutritionProfileControllerProvider.notifier);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(title: Text(l10n.nutritionProfileTitle)),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.sm, Gap.lg, Gap.xxl),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: [
-          Text(
-            l10n.nutritionProfileSubtitle,
-            style: context.text.bodyMedium?.copyWith(
-              color: context.sweep.textSecondary,
-              height: 1.4,
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: context.colors.surface,
+        resizeToAvoidBottomInset: true,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(
+              title: l10n.nutritionProfileTitle,
+              subtitle: l10n.nutritionProfileRowSubtitle(
+                profile.householdSize,
+                profile.diet.label(l10n),
+              ),
+              trailing: EmeraldHeaderPill(
+                label: '${profile.householdSize} người',
+              ),
             ),
-          ),
-          Gap.gapSm,
-          const NutritionDisclaimerBanner(),
-          Gap.gapLg,
-
-          // ── 1. Household size (1–10) ────────────────────────────────────────
-          _SectionCard(
-            title: l10n.nutritionProfileHouseholdTitle,
-            subtitle: l10n.nutritionProfileHouseholdHint,
-            icon: Icons.groups_outlined,
-            child: _HouseholdSizePicker(
-              value: profile.householdSize,
-              onChanged: notifier.setHouseholdSize,
-            ),
-          ),
-          Gap.gapMd,
-
-          // ── 2. Diet mode (5 options, reused from Onboarding) ────────────────
-          _SectionHeaderBlock(
-            title: l10n.nutritionProfileDietTitle,
-            subtitle: l10n.nutritionProfileDietHint,
-            icon: Icons.restaurant_outlined,
-          ),
-          Gap.gapXs,
-          DietaryPreferenceSelector(
-            selected: profile.diet,
-            onChanged: notifier.setDiet,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-          ),
-          Gap.gapLg,
-
-          // ── 3. Health conditions (multi-select) ─────────────────────────────
-          _SectionCard(
-            title: l10n.nutritionProfileHealthTitle,
-            subtitle: l10n.nutritionProfileHealthHint,
-            icon: Icons.monitor_heart_outlined,
-            child: Column(
-              children: [
-                for (var i = 0; i < HealthCondition.values.length; i++) ...[
-                  if (i > 0) Gap.gapXs,
-                  _HealthConditionTile(
-                    condition: HealthCondition.values[i],
-                    selected: profile.healthConditions.contains(
-                      HealthCondition.values[i],
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Gap.lg,
+                  Gap.xs,
+                  Gap.lg,
+                  Gap.xxl,
+                ),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                children: [
+                  Text(
+                    l10n.nutritionProfileSubtitle,
+                    style: context.text.bodyMedium?.copyWith(
+                      color: context.sweep.textSecondary,
+                      height: 1.4,
                     ),
-                    onTap: () => notifier.toggleHealthCondition(
-                      HealthCondition.values[i],
+                  ),
+                  Gap.gapSm,
+                  const NutritionDisclaimerBanner(),
+                  Gap.gapLg,
+
+                  // ── 1. Household size (1–10) ────────────────────────────────────────
+                  _SectionCard(
+                    title: l10n.nutritionProfileHouseholdTitle,
+                    subtitle: l10n.nutritionProfileHouseholdHint,
+                    icon: AppIcons.users,
+                    child: _HouseholdSizePicker(
+                      value: profile.householdSize,
+                      onChanged: notifier.setHouseholdSize,
+                    ),
+                  ),
+                  Gap.gapMd,
+
+                  // ── 2. Diet mode (5 options, reused from Onboarding) ────────────────
+                  _SectionHeaderBlock(
+                    title: l10n.nutritionProfileDietTitle,
+                    subtitle: l10n.nutritionProfileDietHint,
+                    icon: AppIcons.utensils,
+                  ),
+                  Gap.gapXs,
+                  DietaryPreferenceSelector(
+                    selected: profile.diet,
+                    onChanged: notifier.setDiet,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                  ),
+                  Gap.gapLg,
+
+                  // ── 3. Health conditions (multi-select) ─────────────────────────────
+                  _SectionCard(
+                    title: l10n.nutritionProfileHealthTitle,
+                    subtitle: l10n.nutritionProfileHealthHint,
+                    icon: AppIcons.heartPulse,
+                    child: Column(
+                      children: [
+                        for (
+                          var i = 0;
+                          i < HealthCondition.values.length;
+                          i++
+                        ) ...[
+                          if (i > 0) Gap.gapXs,
+                          _HealthConditionTile(
+                            condition: HealthCondition.values[i],
+                            selected: profile.healthConditions.contains(
+                              HealthCondition.values[i],
+                            ),
+                            onTap: () => notifier.toggleHealthCondition(
+                              HealthCondition.values[i],
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Gap.gapMd,
+
+                  // ── 4. Food allergies (8 groups, safety-first styling) ──────────────
+                  _SectionCard(
+                    title: l10n.nutritionProfileAllergiesTitle,
+                    subtitle: l10n.nutritionProfileAllergiesHint,
+                    icon: AppIcons.shieldAlert,
+                    accentWarning: profile.allergies.isNotEmpty,
+                    child: Column(
+                      children: [
+                        for (var i = 0; i < AllergyGroup.values.length; i++) ...[
+                          if (i > 0) Gap.gapXs,
+                          _AllergyGroupTile(
+                            group: AllergyGroup.values[i],
+                            selected: profile.allergies.contains(
+                              AllergyGroup.values[i],
+                            ),
+                            onTap: () =>
+                                notifier.toggleAllergy(AllergyGroup.values[i]),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Gap.gapMd,
+
+                  // ── 5. Disliked ingredients (free text + catalog autocomplete) ──────
+                  _SectionCard(
+                    title: l10n.nutritionProfileDislikedTitle,
+                    subtitle: l10n.nutritionProfileDislikedHint,
+                    icon: AppIcons.close,
+                    child: _DislikedIngredientsEditor(
+                      controller: _dislikedController,
+                      focusNode: _dislikedFocus,
+                      query: _dislikedQuery,
+                      selectedItems: profile.dislikedIngredients,
+                      onQueryChanged: (q) =>
+                          setState(() => _dislikedQuery = q.trim()),
+                      onSubmit: _submitDisliked,
+                      onRemove: notifier.removeDislikedIngredient,
                     ),
                   ),
                 ],
-              ],
+              ),
             ),
-          ),
-          Gap.gapMd,
-
-          // ── 4. Food allergies (8 groups, safety-first styling) ──────────────
-          _SectionCard(
-            title: l10n.nutritionProfileAllergiesTitle,
-            subtitle: l10n.nutritionProfileAllergiesHint,
-            icon: Icons.shield_outlined,
-            accentWarning: profile.allergies.isNotEmpty,
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          top: false,
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.sm, Gap.lg, Gap.md),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerLowest,
+              border: Border(top: BorderSide(color: context.sweep.hairline)),
+            ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                for (var i = 0; i < AllergyGroup.values.length; i++) ...[
-                  if (i > 0) Gap.gapXs,
-                  _AllergyGroupTile(
-                    group: AllergyGroup.values[i],
-                    selected: profile.allergies.contains(
-                      AllergyGroup.values[i],
+                if (formState.errorMessage != null) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: Gap.xs),
+                    child: Text(
+                      formState.errorMessage!,
+                      style: context.text.bodySmall?.copyWith(
+                        color: context.colors.error,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    onTap: () => notifier.toggleAllergy(AllergyGroup.values[i]),
                   ),
                 ],
-              ],
-            ),
-          ),
-          Gap.gapMd,
-
-          // ── 5. Disliked ingredients (free text + catalog autocomplete) ──────
-          _SectionCard(
-            title: l10n.nutritionProfileDislikedTitle,
-            subtitle: l10n.nutritionProfileDislikedHint,
-            icon: Icons.no_food_outlined,
-            child: _DislikedIngredientsEditor(
-              controller: _dislikedController,
-              focusNode: _dislikedFocus,
-              query: _dislikedQuery,
-              selectedItems: profile.dislikedIngredients,
-              onQueryChanged: (q) => setState(() => _dislikedQuery = q.trim()),
-              onSubmit: _submitDisliked,
-              onRemove: notifier.removeDislikedIngredient,
-            ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.sm, Gap.lg, Gap.md),
-          decoration: BoxDecoration(
-            color: context.colors.surface,
-            border: Border(top: BorderSide(color: context.sweep.hairline)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (formState.errorMessage != null) ...[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: Gap.xs),
-                  child: Text(
-                    formState.errorMessage!,
-                    style: context.text.bodySmall?.copyWith(
-                      color: context.colors.error,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                PrimaryButton(
+                  label: l10n.nutritionProfileSaveCta,
+                  loading: formState.isSaving,
+                  onPressed: _save,
                 ),
               ],
-              PrimaryButton(
-                label: l10n.nutritionProfileSaveCta,
-                loading: formState.isSaving,
-                onPressed: _save,
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -339,7 +371,7 @@ class _HouseholdSizePicker extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _StepperButton(
-              icon: Icons.remove_rounded,
+              icon: AppIcons.minus,
               tooltip: '-',
               enabled: canDecrement,
               onPressed: canDecrement ? () => onChanged(value - 1) : null,
@@ -367,7 +399,7 @@ class _HouseholdSizePicker extends StatelessWidget {
               ),
             ),
             _StepperButton(
-              icon: Icons.add_rounded,
+              icon: AppIcons.add,
               tooltip: '+',
               enabled: canIncrement,
               onPressed: canIncrement ? () => onChanged(value + 1) : null,
@@ -476,8 +508,8 @@ class _HealthConditionTile extends StatelessWidget {
             children: [
               Icon(
                 selected
-                    ? Icons.check_box_rounded
-                    : Icons.check_box_outline_blank_rounded,
+                    ? AppIcons.checkSquare
+                    : AppIcons.square,
                 size: 22,
                 color: selected ? scheme.primary : sweep.textTertiary,
               ),
@@ -555,8 +587,8 @@ class _AllergyGroupTile extends StatelessWidget {
             children: [
               Icon(
                 selected
-                    ? Icons.gpp_maybe_rounded
-                    : Icons.add_circle_outline_rounded,
+                    ? AppIcons.shieldAlert
+                    : AppIcons.add,
                 size: 22,
                 color: selected ? scheme.tertiary : sweep.textTertiary,
               ),
@@ -644,7 +676,7 @@ class _DislikedIngredientsEditor extends ConsumerWidget {
                 onSubmitted: onSubmit,
                 decoration: InputDecoration(
                   hintText: l10n.nutritionProfileDislikedFieldHint,
-                  prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                  prefixIcon: const Icon(AppIcons.search, size: 19),
                 ),
               ),
             ),
@@ -678,7 +710,7 @@ class _DislikedIngredientsEditor extends ConsumerWidget {
                     dense: true,
                     visualDensity: VisualDensity.compact,
                     leading: Icon(
-                      Icons.add_rounded,
+                      AppIcons.add,
                       size: 18,
                       color: context.colors.primary,
                     ),

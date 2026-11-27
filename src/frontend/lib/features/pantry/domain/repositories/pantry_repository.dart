@@ -1,4 +1,4 @@
-﻿import 'package:sweepfood/core/utils/result.dart';
+import 'package:sweepfood/core/utils/result.dart';
 import 'package:sweepfood/features/pantry/domain/entities/inventory_ledger.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item_draft.dart';
@@ -34,7 +34,18 @@ abstract interface class PantryRepository {
 
   Future<Result<List<PantryItem>>> addBatch(List<PantryItemDraft> drafts);
 
-  Future<Result<PantryItem>> update(String id, PantryItemDraft draft);
+  Future<Result<PantryItem>> update(
+    String id,
+    PantryItemDraft draft, {
+    double? previousQuantity,
+  });
+
+  /// Apply a signed quantity delta (`+` or `-`) via `/adjustments`.
+  Future<Result<PantryItem>> adjustQuantity(
+    String id, {
+    required double delta,
+    String reason,
+  });
 
   Future<Result<void>> delete(String id);
 

@@ -4,6 +4,8 @@ from collections.abc import Sequence
 from datetime import UTC, datetime
 import json
 from pathlib import Path
+import subprocess
+import sys
 from types import SimpleNamespace
 from typing import cast
 from uuid import UUID
@@ -92,7 +94,15 @@ class _InMemoryFreshCheckSession:
 
 @pytest.fixture(scope="module")
 def built_kb_data() -> dict[str, object]:
-    kb_path = Path(__file__).resolve().parents[4] / "data_freshness" / "build" / "freshcheck_kb.json"
+    repo_root = Path(__file__).resolve().parents[4]
+    kb_path = repo_root / "data_freshness" / "build" / "freshcheck_kb.json"
+    if not kb_path.is_file():
+        build_script = repo_root / "data_freshness" / "scripts" / "build_kb.py"
+        subprocess.run(
+            [sys.executable, str(build_script)],
+            cwd=repo_root / "data_freshness",
+            check=True,
+        )
     assert kb_path.is_file(), f"Built artifact not found at {kb_path}"
     return json.loads(kb_path.read_text(encoding="utf-8"))
 

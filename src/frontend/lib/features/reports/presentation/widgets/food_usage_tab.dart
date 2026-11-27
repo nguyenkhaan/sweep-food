@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
@@ -30,8 +30,9 @@ class FoodUsageTab extends ConsumerWidget {
                 SizedBox(height: 72),
                 EmptyState(
                   title: 'Chưa có lịch sử sử dụng',
-                  message: 'Các lượt nấu ăn và tiêu thụ thực phẩm sẽ hiển thị tại đây.',
-                  icon: Icons.history_toggle_off_rounded,
+                  message:
+                      'Các lượt nấu ăn và tiêu thụ thực phẩm sẽ hiển thị tại đây.',
+                  icon: AppIcons.history,
                 ),
               ],
             );
@@ -101,7 +102,9 @@ class _UsageHeroCard extends StatelessWidget {
               Text(
                 '(${history.totalUsedCount} lượt sử dụng)',
                 style: context.text.bodyMedium?.copyWith(
-                  color: context.colors.onPrimaryContainer.withValues(alpha: 0.9),
+                  color: context.colors.onPrimaryContainer.withValues(
+                    alpha: 0.9,
+                  ),
                 ),
               ),
             ],
@@ -134,18 +137,18 @@ class _UsageEntryCard extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               color: entry.usedBeforeExpiry
-                  ? BrandPalette.green100
-                  : BrandPalette.brick100,
+                  ? context.sweep.successBg
+                  : context.sweep.expired.bg,
               borderRadius: Radii.brSm,
             ),
             child: Icon(
               entry.usageType == FoodUsageType.cooking
-                  ? Icons.soup_kitchen_outlined
-                  : Icons.restaurant_outlined,
+                  ? AppIcons.cook
+                  : AppIcons.utensils,
               size: 20,
               color: entry.usedBeforeExpiry
-                  ? BrandPalette.green700
-                  : BrandPalette.brick500,
+                  ? context.sweep.successFg
+                  : context.sweep.expired.fg,
             ),
           ),
           const SizedBox(width: Gap.md),
@@ -191,16 +194,16 @@ class _UsageEntryCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: entry.usedBeforeExpiry
-                            ? BrandPalette.green100
-                            : BrandPalette.brick100,
+                            ? context.sweep.successBg
+                            : context.sweep.expired.bg,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         entry.usedBeforeExpiry ? 'Dùng kịp thời' : 'Quá hạn',
                         style: context.text.labelSmall?.copyWith(
                           color: entry.usedBeforeExpiry
-                              ? BrandPalette.green700
-                              : BrandPalette.brick500,
+                              ? context.sweep.successFg
+                              : context.sweep.expired.fg,
                           fontWeight: FontWeight.w600,
                           fontSize: 11,
                         ),

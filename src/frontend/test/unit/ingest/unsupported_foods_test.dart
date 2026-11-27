@@ -107,31 +107,36 @@ void main() {
       expect(state.selectedCount, 6);
     });
 
-    test('a ticked unsupported food blocks the whole add; nothing is saved', () async {
-      final repo = _acceptingRepo();
-      final container = createContainer(
-        overrides: [pantryRepositoryProvider.overrideWithValue(repo)],
-      );
-      final notifier = container.read(
-        receiptReviewControllerProvider(job).notifier,
-      )..toggleItem(6);
-      expect(
-        container.read(receiptReviewControllerProvider(job)).hasSelectedUnsupported,
-        isTrue,
-      );
+    test(
+      'a ticked unsupported food blocks the whole add; nothing is saved',
+      () async {
+        final repo = _acceptingRepo();
+        final container = createContainer(
+          overrides: [pantryRepositoryProvider.overrideWithValue(repo)],
+        );
+        final notifier = container.read(
+          receiptReviewControllerProvider(job).notifier,
+        )..toggleItem(6);
+        expect(
+          container
+              .read(receiptReviewControllerProvider(job))
+              .hasSelectedUnsupported,
+          isTrue,
+        );
 
-      await expectLater(
-        notifier.saveSelectedToPantry(),
-        throwsA(isA<UnsupportedIngredientFailure>()),
-      );
-      verifyNever(() => repo.add(any()));
+        await expectLater(
+          notifier.saveSelectedToPantry(),
+          throwsA(isA<UnsupportedIngredientFailure>()),
+        );
+        verifyNever(() => repo.add(any()));
 
-      // Unticking it unblocks the rest, and the unsupported food is never added.
-      notifier.toggleItem(6);
-      final saved = await notifier.saveSelectedToPantry();
-      expect(saved, hasLength(6));
-      expect(saved.map((e) => e.name), isNot(contains('Món lạ')));
-    });
+        // Unticking it unblocks the rest, and the unsupported food is never added.
+        notifier.toggleItem(6);
+        final saved = await notifier.saveSelectedToPantry();
+        expect(saved, hasLength(6));
+        expect(saved.map((e) => e.name), isNot(contains('Món lạ')));
+      },
+    );
 
     test('renaming a food to something unrecognized unticks it', () {
       final container = createContainer();
@@ -143,7 +148,9 @@ void main() {
         isTrue,
       );
 
-      final item = container.read(receiptReviewControllerProvider(job)).items[0];
+      final item = container
+          .read(receiptReviewControllerProvider(job))
+          .items[0];
       notifier.updateItem(
         0,
         item.copyWith(name: 'Tên khác', ingredientId: null, category: ''),
@@ -154,38 +161,44 @@ void main() {
       expect(state.isSelected(0), isFalse);
     });
 
-    test('re-recognizing a renamed food makes it supported and ticks it again', () async {
-      final container = createContainer(
-        overrides: [apiClientProvider.overrideWithValue(_parserApi())],
-      );
-      final notifier = container.read(
-        receiptReviewControllerProvider(job).notifier,
-      );
+    test(
+      're-recognizing a renamed food makes it supported and ticks it again',
+      () async {
+        final container = createContainer(
+          overrides: [apiClientProvider.overrideWithValue(_parserApi())],
+        );
+        final notifier = container.read(
+          receiptReviewControllerProvider(job).notifier,
+        );
 
-      notifier.updateItem(6, _unknown.copyWith(name: 'thịt bò xào'));
-      await notifier.rematchItem(6);
+        notifier.updateItem(6, _unknown.copyWith(name: 'thịt bò xào'));
+        await notifier.rematchItem(6);
 
-      final state = container.read(receiptReviewControllerProvider(job));
-      expect(state.items[6].isSupported, isTrue);
-      expect(state.items[6].ingredientId, 'ing-thit-bo');
-      expect(state.items[6].category, 'Thịt & Hải sản');
-      expect(state.isSelected(6), isTrue);
-    });
+        final state = container.read(receiptReviewControllerProvider(job));
+        expect(state.items[6].isSupported, isTrue);
+        expect(state.items[6].ingredientId, 'ing-thit-bo');
+        expect(state.items[6].category, 'Thịt & Hải sản');
+        expect(state.isSelected(6), isTrue);
+      },
+    );
 
-    test('a name the parser still does not know stays unsupported and unticked', () async {
-      final container = createContainer(
-        overrides: [apiClientProvider.overrideWithValue(_parserApi())],
-      );
-      final notifier = container.read(
-        receiptReviewControllerProvider(job).notifier,
-      );
+    test(
+      'a name the parser still does not know stays unsupported and unticked',
+      () async {
+        final container = createContainer(
+          overrides: [apiClientProvider.overrideWithValue(_parserApi())],
+        );
+        final notifier = container.read(
+          receiptReviewControllerProvider(job).notifier,
+        );
 
-      await notifier.rematchItem(6);
+        await notifier.rematchItem(6);
 
-      final state = container.read(receiptReviewControllerProvider(job));
-      expect(state.items[6].isSupported, isFalse);
-      expect(state.isSelected(6), isFalse);
-    });
+        final state = container.read(receiptReviewControllerProvider(job));
+        expect(state.items[6].isSupported, isFalse);
+        expect(state.isSelected(6), isFalse);
+      },
+    );
   });
 
   group('voice', () {
@@ -195,33 +208,48 @@ void main() {
       items: [...voiceScanJob().items, _unknown],
     );
 
-    test('one unsupported food blocks saving everything until it is removed', () async {
-      final repo = _acceptingRepo();
-      final container = createContainer(
-        overrides: [pantryRepositoryProvider.overrideWithValue(repo)],
-      );
-      final notifier = container.read(voiceCaptureControllerProvider(job).notifier);
-      expect(container.read(voiceCaptureControllerProvider(job)).hasUnsupported, isTrue);
+    test(
+      'one unsupported food blocks saving everything until it is removed',
+      () async {
+        final repo = _acceptingRepo();
+        final container = createContainer(
+          overrides: [pantryRepositoryProvider.overrideWithValue(repo)],
+        );
+        final notifier = container.read(
+          voiceCaptureControllerProvider(job).notifier,
+        );
+        expect(
+          container.read(voiceCaptureControllerProvider(job)).hasUnsupported,
+          isTrue,
+        );
 
-      await expectLater(
-        notifier.saveAllToPantry(),
-        throwsA(isA<UnsupportedIngredientFailure>()),
-      );
-      verifyNever(() => repo.add(any()));
+        await expectLater(
+          notifier.saveAllToPantry(),
+          throwsA(isA<UnsupportedIngredientFailure>()),
+        );
+        verifyNever(() => repo.add(any()));
 
-      notifier.removeItem(3);
-      expect(container.read(voiceCaptureControllerProvider(job)).hasUnsupported, isFalse);
-      expect(await notifier.saveAllToPantry(), hasLength(3));
-      verify(() => repo.add(any())).called(3);
-    });
+        notifier.removeItem(3);
+        expect(
+          container.read(voiceCaptureControllerProvider(job)).hasUnsupported,
+          isFalse,
+        );
+        expect(await notifier.saveAllToPantry(), hasLength(3));
+        verify(() => repo.add(any())).called(3);
+      },
+    );
 
     test('renaming to a food the parser knows clears the block', () async {
       final container = createContainer(
         overrides: [apiClientProvider.overrideWithValue(_parserApi())],
       );
-      final notifier = container.read(voiceCaptureControllerProvider(job).notifier)
-        ..renameItem(3, 'thịt bò hầm');
-      expect(container.read(voiceCaptureControllerProvider(job)).hasUnsupported, isTrue);
+      final notifier = container.read(
+        voiceCaptureControllerProvider(job).notifier,
+      )..renameItem(3, 'thịt bò hầm');
+      expect(
+        container.read(voiceCaptureControllerProvider(job)).hasUnsupported,
+        isTrue,
+      );
 
       await notifier.rematchItem(3);
 
@@ -232,21 +260,25 @@ void main() {
   });
 
   group('label', () {
-    const job = ScanJob(
-      id: 'l',
-      type: ScanType.label,
-      items: [_unknown],
-    );
+    const job = ScanJob(id: 'l', type: ScanType.label, items: [_unknown]);
 
     test('an unsupported food cannot be saved', () async {
       final repo = _acceptingRepo();
       final container = createContainer(
         overrides: [pantryRepositoryProvider.overrideWithValue(repo)],
       );
-      final notifier = container.read(labelReviewControllerProvider(job).notifier);
+      final notifier = container.read(
+        labelReviewControllerProvider(job).notifier,
+      );
 
-      expect(container.read(labelReviewControllerProvider(job)).isSupported, isFalse);
-      expect(notifier.saveToPantry, throwsA(isA<UnsupportedIngredientFailure>()));
+      expect(
+        container.read(labelReviewControllerProvider(job)).isSupported,
+        isFalse,
+      );
+      expect(
+        notifier.saveToPantry,
+        throwsA(isA<UnsupportedIngredientFailure>()),
+      );
       verifyNever(() => repo.add(any()));
     });
 
@@ -258,8 +290,9 @@ void main() {
           apiClientProvider.overrideWithValue(_parserApi()),
         ],
       );
-      final notifier = container.read(labelReviewControllerProvider(job).notifier)
-        ..setName('thịt bò');
+      final notifier = container.read(
+        labelReviewControllerProvider(job).notifier,
+      )..setName('thịt bò');
       await notifier.rematchName();
 
       final draft = container.read(labelReviewControllerProvider(job));

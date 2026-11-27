@@ -50,8 +50,8 @@ class ConsumptionLine {
   final double? quantity;
 
   Map<String, dynamic> toBody() => {
-        'recipe_ingredient_id': recipeIngredientId,
-        'inventory_batch_id': batchId,
-        if (quantity != null) 'quantity': quantity,
-      };
+    'recipe_ingredient_id': recipeIngredientId,
+    'inventory_batch_id': batchId,
+    if (quantity != null) 'quantity': quantity,
+  };
 }

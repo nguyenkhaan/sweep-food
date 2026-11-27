@@ -121,3 +121,31 @@ class NotificationListResponseDTO(BaseModel):
 
     items: list[NotificationResponseDTO]
     next_before: datetime | None = None
+
+
+class NotificationPreferencesDTO(BaseModel):
+    """Per-user notification toggles and quiet-hours schedule."""
+
+    near_expiry: bool = True
+    daily_suggestions: bool = True
+    weekly_report: bool = True
+    post_cook_reminder: bool = True
+    promos_and_tips: bool = False
+    near_expiry_hour: int = Field(default=8, ge=0, le=23)
+    dnd_start_hour: int = Field(default=22, ge=0, le=23)
+    dnd_end_hour: int = Field(default=7, ge=0, le=23)
+
+
+class UpdateNotificationPreferencesRequestDTO(BaseModel):
+    """Partial update for the authenticated user's notification preferences."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    near_expiry: bool | None = None
+    daily_suggestions: bool | None = None
+    weekly_report: bool | None = None
+    post_cook_reminder: bool | None = None
+    promos_and_tips: bool | None = None
+    near_expiry_hour: int | None = Field(default=None, ge=0, le=23)
+    dnd_start_hour: int | None = Field(default=None, ge=0, le=23)
+    dnd_end_hour: int | None = Field(default=None, ge=0, le=23)

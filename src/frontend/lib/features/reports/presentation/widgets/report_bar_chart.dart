@@ -1,6 +1,5 @@
-﻿import 'package:fl_chart/fl_chart.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/features/reports/domain/entities/waste_reduction_summary.dart';
 
@@ -19,21 +18,39 @@ class ReportBarChart extends StatelessWidget {
         bars.map((b) => b.value).fold<int>(1, (m, v) => v > m ? v : m) + 1;
 
     return SizedBox(
-      height: 140,
+      height: 156,
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceAround,
           maxY: maxY.toDouble(),
-          barTouchData: BarTouchData(enabled: false),
+          barTouchData: BarTouchData(
+            enabled: true,
+            touchTooltipData: BarTouchTooltipData(
+              getTooltipColor: (_) => context.colors.surfaceContainerHighest,
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                final b = bars[groupIndex];
+                return BarTooltipItem(
+                  '${b.label}: ${b.value}',
+                  context.text.labelMedium!.copyWith(
+                    color: context.colors.onSurface,
+                    fontWeight: FontWeight.w700,
+                  ),
+                );
+              },
+            ),
+          ),
           gridData: const FlGridData(show: false),
           borderData: FlBorderData(show: false),
           titlesData: FlTitlesData(
-            leftTitles:
-                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles:
-                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles:
-                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
@@ -46,6 +63,7 @@ class ReportBarChart extends StatelessWidget {
                     child: Text(
                       bars[i].label,
                       style: context.text.labelSmall?.copyWith(
+                        letterSpacing: 0,
                         color: context.sweep.textTertiary,
                       ),
                     ),
@@ -61,10 +79,17 @@ class ReportBarChart extends StatelessWidget {
                 barRods: [
                   BarChartRodData(
                     toY: bars[i].value.toDouble(),
-                    width: 22,
-                    color: BrandPalette.green600,
+                    width: 24,
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        context.colors.primary,
+                        context.colors.secondary,
+                      ],
+                    ),
                     borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(6),
+                      top: Radius.circular(8),
                     ),
                   ),
                 ],

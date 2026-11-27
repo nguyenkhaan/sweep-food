@@ -131,8 +131,7 @@ class RecommendationAIService:
             ai_response.message
             if ai_response.status == "empty" and ai_response.message
             else (
-                "Recommendations were ranked from the supplied pantry and "
-                "preferences."
+                "Recommendations were ranked from the supplied pantry and preferences."
             )
         )
 
@@ -361,9 +360,7 @@ def _extract_fit_reasons(recommendation: EngineRecommendation) -> list[str]:
     if not isinstance(raw, list):
         return []
     return [
-        reason.strip()
-        for reason in raw
-        if isinstance(reason, str) and reason.strip()
+        reason.strip() for reason in raw if isinstance(reason, str) and reason.strip()
     ]
 
 

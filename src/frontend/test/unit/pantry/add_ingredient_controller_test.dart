@@ -55,26 +55,29 @@ void main() {
   }
 
   group('matchTypedName()', () {
-    test('links the catalog match, normalizes the name and fills an empty quantity', () async {
-      stubMatch(
-        _textResponse(
-          name: 'Thịt ba chỉ',
-          masterId: 'ing-7',
-          quantity: 500,
-          unit: 'GRAM',
-        ),
-      );
-      notifier().setName('thịt ba rọi 500g');
+    test(
+      'links the catalog match, normalizes the name and fills an empty quantity',
+      () async {
+        stubMatch(
+          _textResponse(
+            name: 'Thịt ba chỉ',
+            masterId: 'ing-7',
+            quantity: 500,
+            unit: 'GRAM',
+          ),
+        );
+        notifier().setName('thịt ba rọi 500g');
 
-      final changed = await notifier().matchTypedName();
+        final changed = await notifier().matchTypedName();
 
-      final draft = container.read(addIngredientControllerProvider(null));
-      expect(changed, isTrue);
-      expect(draft.name, 'Thịt ba chỉ');
-      expect(draft.ingredientId, 'ing-7');
-      expect(draft.quantity, 500);
-      expect(draft.unit, MeasurementUnit.gram);
-    });
+        final draft = container.read(addIngredientControllerProvider(null));
+        expect(changed, isTrue);
+        expect(draft.name, 'Thịt ba chỉ');
+        expect(draft.ingredientId, 'ing-7');
+        expect(draft.quantity, 500);
+        expect(draft.unit, MeasurementUnit.gram);
+      },
+    );
 
     test('keeps a quantity the user already entered', () async {
       stubMatch(
@@ -98,17 +101,20 @@ void main() {
       expect(draft.ingredientId, 'ing-7');
     });
 
-    test('leaves the draft untouched when the text has no catalog match', () async {
-      stubMatch(_textResponse(name: 'Món lạ'));
-      notifier().setName('món lạ');
+    test(
+      'leaves the draft untouched when the text has no catalog match',
+      () async {
+        stubMatch(_textResponse(name: 'Món lạ'));
+        notifier().setName('món lạ');
 
-      final changed = await notifier().matchTypedName();
+        final changed = await notifier().matchTypedName();
 
-      final draft = container.read(addIngredientControllerProvider(null));
-      expect(changed, isFalse);
-      expect(draft.name, 'món lạ');
-      expect(draft.ingredientId, isNull);
-    });
+        final draft = container.read(addIngredientControllerProvider(null));
+        expect(changed, isFalse);
+        expect(draft.name, 'món lạ');
+        expect(draft.ingredientId, isNull);
+      },
+    );
 
     test('swallows backend failures so manual entry keeps working', () async {
       when(
@@ -155,33 +161,39 @@ void main() {
       expect(draft.freshness, isNull);
     });
 
-    test('editing the name detaches the catalog match and the estimate', () async {
-      stubMatch(_textResponse(name: 'Cà chua', masterId: 'ing-1'));
-      notifier().setName('cà chua');
-      await notifier().matchTypedName();
-      notifier().setExpiry(null, estimate);
+    test(
+      'editing the name detaches the catalog match and the estimate',
+      () async {
+        stubMatch(_textResponse(name: 'Cà chua', masterId: 'ing-1'));
+        notifier().setName('cà chua');
+        await notifier().matchTypedName();
+        notifier().setExpiry(null, estimate);
 
-      notifier().setName('cà rốt');
+        notifier().setName('cà rốt');
 
-      final draft = container.read(addIngredientControllerProvider(null));
-      expect(draft.ingredientId, isNull);
-      expect(draft.freshness, isNull);
-    });
+        final draft = container.read(addIngredientControllerProvider(null));
+        expect(draft.ingredientId, isNull);
+        expect(draft.freshness, isNull);
+      },
+    );
 
-    test('changing the storage tier discards an estimate made for another tier', () {
-      notifier().setExpiry(null, estimate);
+    test(
+      'changing the storage tier discards an estimate made for another tier',
+      () {
+        notifier().setExpiry(null, estimate);
 
-      notifier().setTier(StorageTier.fridge); // unchanged
-      expect(
-        container.read(addIngredientControllerProvider(null)).freshness,
-        estimate,
-      );
+        notifier().setTier(StorageTier.fridge); // unchanged
+        expect(
+          container.read(addIngredientControllerProvider(null)).freshness,
+          estimate,
+        );
 
-      notifier().setTier(StorageTier.freezer);
-      expect(
-        container.read(addIngredientControllerProvider(null)).freshness,
-        isNull,
-      );
-    });
+        notifier().setTier(StorageTier.freezer);
+        expect(
+          container.read(addIngredientControllerProvider(null)).freshness,
+          isNull,
+        );
+      },
+    );
   });
 }

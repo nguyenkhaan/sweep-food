@@ -6,10 +6,7 @@ class RatingRemoteDataSource {
 
   final ApiClient _api;
 
-  Future<void> submitRating({
-    required double rating,
-    String? feedback,
-  }) async {
+  Future<void> submitRating({required double rating, String? feedback}) async {
     await _api.post(
       '${ApiPaths.rating}?rating=$rating',
       body: (feedback != null && feedback.trim().isNotEmpty)

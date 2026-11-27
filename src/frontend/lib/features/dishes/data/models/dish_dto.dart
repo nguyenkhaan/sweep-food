@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/dishes/domain/entities/cooking_step.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish_ingredient.dart';
@@ -26,22 +26,23 @@ abstract class DishDto with _$DishDto {
     @Default(<CookingStepDto>[]) List<CookingStepDto> steps,
   }) = _DishDto;
 
-  factory DishDto.fromJson(Map<String, dynamic> json) => _$DishDtoFromJson(json);
+  factory DishDto.fromJson(Map<String, dynamic> json) =>
+      _$DishDtoFromJson(json);
 
   Dish toEntity() => Dish(
-        id: id,
-        name: name,
-        servings: servings <= 0 ? 1 : servings,
-        prepTimeMin: prepTimeMin,
-        cookTimeMin: cookTimeMin,
-        cuisine: cuisine,
-        difficulty: difficulty,
-        imageUrl: imageUrl,
-        nutritionPerServing:
-            nutritionPerServing?.toEntity() ?? const NutritionInfo.zero(),
-        ingredients: [for (final i in ingredients) i.toEntity()],
-        steps: [for (final s in steps) s.toEntity()],
-      );
+    id: id,
+    name: name,
+    servings: servings <= 0 ? 1 : servings,
+    prepTimeMin: prepTimeMin,
+    cookTimeMin: cookTimeMin,
+    cuisine: cuisine,
+    difficulty: difficulty,
+    imageUrl: imageUrl,
+    nutritionPerServing:
+        nutritionPerServing?.toEntity() ?? const NutritionInfo.zero(),
+    ingredients: [for (final i in ingredients) i.toEntity()],
+    steps: [for (final s in steps) s.toEntity()],
+  );
 }
 
 @freezed
@@ -53,7 +54,9 @@ abstract class DishIngredientDto with _$DishIngredientDto {
     @Default(0) double quantity,
     @Default('g') String unit,
     @JsonKey(name: 'is_seasoning') @Default(false) bool isSeasoning,
-    @JsonKey(name: 'available_in_pantry') @Default(false) bool availableInPantry,
+    @JsonKey(name: 'available_in_pantry')
+    @Default(false)
+    bool availableInPantry,
     @JsonKey(name: 'missing_qty') @Default(0) double missingQty,
     @JsonKey(name: 'near_expiry') @Default(false) bool nearExpiry,
     @JsonKey(name: 'pantry_item_id') String? pantryItemId,
@@ -63,15 +66,15 @@ abstract class DishIngredientDto with _$DishIngredientDto {
       _$DishIngredientDtoFromJson(json);
 
   DishIngredient toEntity() => DishIngredient(
-        name: name,
-        quantity: quantity,
-        unit: MeasurementUnit.fromWire(unit),
-        isSeasoning: isSeasoning,
-        availableInPantry: availableInPantry,
-        missingQty: missingQty,
-        nearExpiry: nearExpiry,
-        pantryItemId: pantryItemId,
-      );
+    name: name,
+    quantity: quantity,
+    unit: MeasurementUnit.fromWire(unit),
+    isSeasoning: isSeasoning,
+    availableInPantry: availableInPantry,
+    missingQty: missingQty,
+    nearExpiry: nearExpiry,
+    pantryItemId: pantryItemId,
+  );
 }
 
 @freezed
@@ -108,9 +111,9 @@ abstract class MacrosDto with _$MacrosDto {
       _$MacrosDtoFromJson(json);
 
   NutritionInfo toEntity() => NutritionInfo(
-        energyKcal: energyKcal,
-        proteinG: proteinG,
-        carbG: carbG,
-        lipidG: lipidG,
-      );
+    energyKcal: energyKcal,
+    proteinG: proteinG,
+    carbG: carbG,
+    lipidG: lipidG,
+  );
 }

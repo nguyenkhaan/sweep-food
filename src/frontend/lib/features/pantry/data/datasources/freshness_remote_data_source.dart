@@ -22,8 +22,8 @@ class FreshnessClarificationException implements Exception {
     final errors = <String, String>{
       for (final a in axes)
         if (a is Map && a['axis'] is String)
-          a['axis'] as String:
-              (a['message_vi'] ?? body['detail'] ?? '').toString(),
+          a['axis'] as String: (a['message_vi'] ?? body['detail'] ?? '')
+              .toString(),
     };
     return errors.isEmpty ? null : FreshnessClarificationException(errors);
   }
@@ -44,9 +44,7 @@ class FreshnessRemoteDataSource {
       ApiPaths.freshnessQuestions,
       query: {'master_ingredient_id': masterIngredientId},
     );
-    return FreshnessQuestionsResponseDto.fromJson(
-      json as Map<String, dynamic>,
-    );
+    return FreshnessQuestionsResponseDto.fromJson(json as Map<String, dynamic>);
   }
 
   Future<FreshnessAssessmentResponseDto> assessBatch(

@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/catalog/domain/entities/ingredient.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 import 'package:sweepfood/shared/domain/nutrition_info.dart';
@@ -27,20 +27,21 @@ abstract class IngredientDto with _$IngredientDto {
     String? description,
     IngredientNutritionDto? nutrition,
     @JsonKey(name: 'shelf_life_rules')
-    @Default(<ShelfLifeRuleDto>[]) List<ShelfLifeRuleDto> shelfLifeRules,
+    @Default(<ShelfLifeRuleDto>[])
+    List<ShelfLifeRuleDto> shelfLifeRules,
   }) = _IngredientDto;
 
   factory IngredientDto.fromJson(Map<String, dynamic> json) =>
       _$IngredientDtoFromJson(json);
 
   Ingredient toEntity() => Ingredient(
-        id: id,
-        name: name,
-        category: category.name,
-        defaultUnit: MeasurementUnit.fromWire(defaultUnit),
-        nutritionPer100g: nutrition?.toEntityOrNull(),
-        referenceShelfLifeDays: _flattenedShelfLifeDays(),
-      );
+    id: id,
+    name: name,
+    category: category.name,
+    defaultUnit: MeasurementUnit.fromWire(defaultUnit),
+    nutritionPer100g: nutrition?.toEntityOrNull(),
+    referenceShelfLifeDays: _flattenedShelfLifeDays(),
+  );
 
   /// The backend models shelf life as one rule per storage mode. The frontend
   /// only needs a single hint, so prefer the rule that matches the ingredient's

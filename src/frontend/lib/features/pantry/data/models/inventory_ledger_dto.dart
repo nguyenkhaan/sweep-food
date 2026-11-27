@@ -41,17 +41,17 @@ abstract class InventoryLedgerEntryDto with _$InventoryLedgerEntryDto {
       _$InventoryLedgerEntryDtoFromJson(json);
 
   InventoryLedgerEntry toEntity() => InventoryLedgerEntry(
-        id: id,
-        inventoryBatchId: inventoryBatchId,
-        eventType: LedgerEventType.fromWire(eventType),
-        quantityBefore: quantityBefore,
-        quantityDelta: quantityDelta,
-        quantityAfter: quantityAfter,
-        unit: MeasurementUnit.fromWire(unit),
-        cookingSessionId: cookingSessionId,
-        reason: reason,
-        createdAt: createdAt,
-      );
+    id: id,
+    inventoryBatchId: inventoryBatchId,
+    eventType: LedgerEventType.fromWire(eventType),
+    quantityBefore: quantityBefore,
+    quantityDelta: quantityDelta,
+    quantityAfter: quantityAfter,
+    unit: MeasurementUnit.fromWire(unit),
+    cookingSessionId: cookingSessionId,
+    reason: reason,
+    createdAt: createdAt,
+  );
 }
 
 @freezed

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
 
@@ -22,9 +22,9 @@ class AppPreferences {
   final String languageTag;
 
   String get languageLabel => switch (languageTag) {
-        'en' => 'English',
-        _ => 'Tiếng Việt',
-      };
+    'en' => 'English',
+    _ => 'Tiếng Việt',
+  };
 
   AppPreferences copyWith({
     DietaryPreference? dietaryPreference,

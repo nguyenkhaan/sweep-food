@@ -20,16 +20,16 @@ Map<String, dynamic> _row({
   String unit = 'GRAM',
   String? reason,
 }) => {
-      'id': id,
-      'inventory_batch_id': batchId,
-      'event_type': eventType,
-      'quantity_before': before,
-      'quantity_delta': delta,
-      'quantity_after': after,
-      'unit': unit,
-      'reason': reason,
-      'created_at': '2026-09-01T18:30:00.000Z',
-    };
+  'id': id,
+  'inventory_batch_id': batchId,
+  'event_type': eventType,
+  'quantity_before': before,
+  'quantity_delta': delta,
+  'quantity_after': after,
+  'unit': unit,
+  'reason': reason,
+  'created_at': '2026-09-01T18:30:00.000Z',
+};
 
 void main() {
   late _MockApiClient api;
@@ -45,8 +45,9 @@ void main() {
 
   group('ledger()', () {
     test('maps GET /inventory/ledger rows to entities', () async {
-      when(() => api.get(ApiPaths.inventoryLedger, query: any(named: 'query')))
-          .thenAnswer(
+      when(
+        () => api.get(ApiPaths.inventoryLedger, query: any(named: 'query')),
+      ).thenAnswer(
         (_) async => {
           'items': [
             _row(
@@ -94,8 +95,9 @@ void main() {
     });
 
     test('reports another page when total exceeds what is loaded', () async {
-      when(() => api.get(ApiPaths.inventoryLedger, query: any(named: 'query')))
-          .thenAnswer(
+      when(
+        () => api.get(ApiPaths.inventoryLedger, query: any(named: 'query')),
+      ).thenAnswer(
         (_) async => {
           'items': [for (var i = 0; i < 30; i++) _row(id: 'l$i')],
           'total': 74,
@@ -113,24 +115,36 @@ void main() {
     });
 
     test('forwards the batch_id filter to the query', () async {
-      when(() => api.get(ApiPaths.inventoryLedger, query: any(named: 'query')))
-          .thenAnswer(
-        (_) async => {'items': <dynamic>[], 'total': 0, 'page': 1, 'per_page': 30},
+      when(
+        () => api.get(ApiPaths.inventoryLedger, query: any(named: 'query')),
+      ).thenAnswer(
+        (_) async => {
+          'items': <dynamic>[],
+          'total': 0,
+          'page': 1,
+          'per_page': 30,
+        },
       );
 
       await repo.ledger(batchId: 'batch-42', eventType: LedgerEventType.moved);
 
-      final captured = verify(
-        () => api.get(ApiPaths.inventoryLedger, query: captureAny(named: 'query')),
-      ).captured.single as Map<String, dynamic>;
+      final captured =
+          verify(
+                () => api.get(
+                  ApiPaths.inventoryLedger,
+                  query: captureAny(named: 'query'),
+                ),
+              ).captured.single
+              as Map<String, dynamic>;
       expect(captured['batch_id'], 'batch-42');
       expect(captured['event_type'], 'MOVED');
       expect(captured['page'], 1);
     });
 
     test('returns a Failure when the client throws', () async {
-      when(() => api.get(ApiPaths.inventoryLedger, query: any(named: 'query')))
-          .thenThrow(Exception('offline'));
+      when(
+        () => api.get(ApiPaths.inventoryLedger, query: any(named: 'query')),
+      ).thenThrow(Exception('offline'));
       final res = await repo.ledger();
       expect(res.isLeft(), isTrue);
     });

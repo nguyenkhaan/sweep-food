@@ -1294,7 +1294,7 @@ abstract class AppL10n {
   /// No description provided for @scoreCompP.
   ///
   /// In vi, this message translates to:
-  /// **'Hợp khẩu phần & sở thích'**
+  /// **'Hợp khẩu phần và sở thích'**
   String get scoreCompP;
 
   /// No description provided for @scoreCompU.
@@ -1732,7 +1732,7 @@ abstract class AppL10n {
   /// No description provided for @catMeatSeafood.
   ///
   /// In vi, this message translates to:
-  /// **'Thịt & Hải sản'**
+  /// **'Thịt và Hải sản'**
   String get catMeatSeafood;
 
   /// No description provided for @catSpices.
@@ -1744,7 +1744,7 @@ abstract class AppL10n {
   /// No description provided for @catDairyEgg.
   ///
   /// In vi, this message translates to:
-  /// **'Trứng & Sữa'**
+  /// **'Trứng và Sữa'**
   String get catDairyEgg;
 
   /// No description provided for @catDryGoods.
@@ -2158,7 +2158,7 @@ abstract class AppL10n {
   /// No description provided for @voiceStopReview.
   ///
   /// In vi, this message translates to:
-  /// **'Dừng & Kiểm tra'**
+  /// **'Dừng và Kiểm tra'**
   String get voiceStopReview;
 
   /// No description provided for @voiceReviewTitle.
@@ -2692,7 +2692,7 @@ abstract class AppL10n {
   /// No description provided for @settingsProfilePassword.
   ///
   /// In vi, this message translates to:
-  /// **'Hồ sơ & mật khẩu'**
+  /// **'Hồ sơ và mật khẩu'**
   String get settingsProfilePassword;
 
   /// No description provided for @settingsPlan.
@@ -2734,7 +2734,7 @@ abstract class AppL10n {
   /// No description provided for @settingsAboutData.
   ///
   /// In vi, this message translates to:
-  /// **'Giới thiệu & nguồn dữ liệu'**
+  /// **'Giới thiệu và nguồn dữ liệu'**
   String get settingsAboutData;
 
   /// No description provided for @settingsSignOut.
@@ -2776,7 +2776,7 @@ abstract class AppL10n {
   /// No description provided for @aboutTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Giới thiệu & dữ liệu'**
+  /// **'Giới thiệu và dữ liệu'**
   String get aboutTitle;
 
   /// No description provided for @aboutVersion.
@@ -2866,7 +2866,7 @@ abstract class AppL10n {
   /// No description provided for @notifTypePromos.
   ///
   /// In vi, this message translates to:
-  /// **'Khuyến mãi & mẹo'**
+  /// **'Khuyến mãi và mẹo'**
   String get notifTypePromos;
 
   /// No description provided for @notifSettingsTiming.
@@ -3274,13 +3274,13 @@ abstract class AppL10n {
   /// No description provided for @paywallBenefit2.
   ///
   /// In vi, this message translates to:
-  /// **'Quét tem & hóa đơn không giới hạn'**
+  /// **'Quét tem và hóa đơn không giới hạn'**
   String get paywallBenefit2;
 
   /// No description provided for @paywallBenefit3.
   ///
   /// In vi, this message translates to:
-  /// **'Lập thực đơn tuần & danh sách mua sắm'**
+  /// **'Lập thực đơn tuần và danh sách mua sắm'**
   String get paywallBenefit3;
 
   /// No description provided for @paywallBenefit4.
@@ -3316,13 +3316,13 @@ abstract class AppL10n {
   /// No description provided for @paywallFinePrint.
   ///
   /// In vi, this message translates to:
-  /// **'Chưa tính phí · giá & gói đang trong giai đoạn kiểm chứng'**
+  /// **'Chưa tính phí · giá và gói đang trong giai đoạn kiểm chứng'**
   String get paywallFinePrint;
 
   /// No description provided for @favoritesTitle.
   ///
   /// In vi, this message translates to:
-  /// **'Món & thực đơn yêu thích'**
+  /// **'Món và thực đơn yêu thích'**
   String get favoritesTitle;
 
   /// No description provided for @favAddToMenuTitle.
@@ -3580,7 +3580,7 @@ abstract class AppL10n {
   /// No description provided for @healthCondDiabetesDesc.
   ///
   /// In vi, this message translates to:
-  /// **'Đường < 10g & tinh bột < 45g / suất'**
+  /// **'Đường < 10g và tinh bột < 45g / suất'**
   String get healthCondDiabetesDesc;
 
   /// No description provided for @healthCondHypertension.
@@ -3604,7 +3604,7 @@ abstract class AppL10n {
   /// No description provided for @healthCondGoutDesc.
   ///
   /// In vi, this message translates to:
-  /// **'Loại thịt đỏ, nội tạng & hải sản giàu purin'**
+  /// **'Loại thịt đỏ, nội tạng và hải sản giàu purin'**
   String get healthCondGoutDesc;
 
   /// No description provided for @healthCondGastritis.
@@ -3750,6 +3750,216 @@ abstract class AppL10n {
   /// In vi, this message translates to:
   /// **'Xem hồ sơ ăn uống'**
   String get suggestionsReviewProfileCta;
+
+  /// No description provided for @homeKitchenHealth.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nhịp bếp hôm nay'**
+  String get homeKitchenHealth;
+
+  /// No description provided for @homeFreshCount.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} tươi tốt'**
+  String homeFreshCount(int count);
+
+  /// No description provided for @homeNearExpiryCta.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nấu cứu {count} đồ cận hạn'**
+  String homeNearExpiryCta(int count);
+
+  /// No description provided for @homeAllFreshTitle.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tủ bếp đang rất tươi!'**
+  String get homeAllFreshTitle;
+
+  /// No description provided for @homeQuickActionsLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Thao tác nhanh'**
+  String get homeQuickActionsLabel;
+
+  /// No description provided for @pantrySwipeConsume.
+  ///
+  /// In vi, this message translates to:
+  /// **'Dùng hết'**
+  String get pantrySwipeConsume;
+
+  /// No description provided for @pantrySwipeAdjust.
+  ///
+  /// In vi, this message translates to:
+  /// **'Điều chỉnh'**
+  String get pantrySwipeAdjust;
+
+  /// No description provided for @pantryFreshnessCheckCta.
+  ///
+  /// In vi, this message translates to:
+  /// **'Kiểm tra độ tươi ngay'**
+  String get pantryFreshnessCheckCta;
+
+  /// No description provided for @pantryFreshnessCheckSub.
+  ///
+  /// In vi, this message translates to:
+  /// **'Trả lời 2–3 câu cảm quan để ước tính hạn dùng an toàn'**
+  String get pantryFreshnessCheckSub;
+
+  /// No description provided for @pantryRestored.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã hoàn tác {name} vào kho'**
+  String pantryRestored(String name);
+
+  /// No description provided for @suggestionsFilterAll.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tất cả'**
+  String get suggestionsFilterAll;
+
+  /// No description provided for @suggestionsFilterNearExpiry.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cứu đồ cận hạn'**
+  String get suggestionsFilterNearExpiry;
+
+  /// No description provided for @suggestionsFilterReadyToCook.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đủ nấu ngay'**
+  String get suggestionsFilterReadyToCook;
+
+  /// No description provided for @suggestionsFilterQuick.
+  ///
+  /// In vi, this message translates to:
+  /// **'≤ 20 phút'**
+  String get suggestionsFilterQuick;
+
+  /// No description provided for @dishGuidedCookCta.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chế độ nấu từng bước'**
+  String get dishGuidedCookCta;
+
+  /// No description provided for @dishStepOf.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bước {current}/{total}'**
+  String dishStepOf(int current, int total);
+
+  /// No description provided for @dishTimerStart.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hẹn giờ {minutes} phút'**
+  String dishTimerStart(int minutes);
+
+  /// No description provided for @dishTimerPause.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tạm dừng'**
+  String get dishTimerPause;
+
+  /// No description provided for @dishTimerResume.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tiếp tục'**
+  String get dishTimerResume;
+
+  /// No description provided for @dishTimerDone.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hết giờ!'**
+  String get dishTimerDone;
+
+  /// No description provided for @dishNextStep.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bước tiếp'**
+  String get dishNextStep;
+
+  /// No description provided for @dishPrevStep.
+  ///
+  /// In vi, this message translates to:
+  /// **'Bước trước'**
+  String get dishPrevStep;
+
+  /// No description provided for @dishFinishCooking.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hoàn tất và Trừ kho'**
+  String get dishFinishCooking;
+
+  /// No description provided for @dishTabIngredients.
+  ///
+  /// In vi, this message translates to:
+  /// **'Nguyên liệu'**
+  String get dishTabIngredients;
+
+  /// No description provided for @dishTabSteps.
+  ///
+  /// In vi, this message translates to:
+  /// **'Cách làm'**
+  String get dishTabSteps;
+
+  /// No description provided for @dishTabNutrition.
+  ///
+  /// In vi, this message translates to:
+  /// **'Dinh dưỡng'**
+  String get dishTabNutrition;
+
+  /// No description provided for @shoppingProgressLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Đã mua {bought}/{total} món'**
+  String shoppingProgressLabel(int bought, int total);
+
+  /// No description provided for @shoppingRemainingLabel.
+  ///
+  /// In vi, this message translates to:
+  /// **'Còn {count} món cần mua'**
+  String shoppingRemainingLabel(int count);
+
+  /// No description provided for @mealPlanDayEmpty.
+  ///
+  /// In vi, this message translates to:
+  /// **'Chưa chọn món'**
+  String get mealPlanDayEmpty;
+
+  /// No description provided for @mealPlanDayNutrition.
+  ///
+  /// In vi, this message translates to:
+  /// **'Tổng dự kiến · {kcal} kcal'**
+  String mealPlanDayNutrition(int kcal);
+
+  /// No description provided for @purchasePresetDays.
+  ///
+  /// In vi, this message translates to:
+  /// **'+{days} ngày'**
+  String purchasePresetDays(int days);
+
+  /// No description provided for @paywallCompareFree.
+  ///
+  /// In vi, this message translates to:
+  /// **'Hiện tại · Miễn phí'**
+  String get paywallCompareFree;
+
+  /// No description provided for @paywallComparePro.
+  ///
+  /// In vi, this message translates to:
+  /// **'Premium · Sắp ra mắt'**
+  String get paywallComparePro;
+
+  /// No description provided for @settingsCookedStats.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} món đã nấu'**
+  String settingsCookedStats(int count);
+
+  /// No description provided for @settingsSavedStats.
+  ///
+  /// In vi, this message translates to:
+  /// **'{count} nguyên liệu đã cứu'**
+  String settingsSavedStats(int count);
 }
 
 class _AppL10nDelegate extends LocalizationsDelegate<AppL10n> {

@@ -43,8 +43,9 @@ void main() {
 
     test('toggleItem, selectAll, deselectAll operate properly', () {
       final container = createContainer();
-      final notifier =
-          container.read(receiptReviewControllerProvider(job).notifier);
+      final notifier = container.read(
+        receiptReviewControllerProvider(job).notifier,
+      );
 
       notifier.toggleItem(0);
       expect(
@@ -71,29 +72,32 @@ void main() {
       );
     });
 
-    test('updateItem and removeItem modify the list + keep selection aligned',
-        () {
-      final container = createContainer();
-      final notifier =
-          container.read(receiptReviewControllerProvider(job).notifier);
+    test(
+      'updateItem and removeItem modify the list + keep selection aligned',
+      () {
+        final container = createContainer();
+        final notifier = container.read(
+          receiptReviewControllerProvider(job).notifier,
+        );
 
-      notifier.updateItem(
-        0,
-        const ParsedItemDraft(
-          name: 'Cà chua organic',
-          category: 'Rau củ',
-          quantity: 600,
-        ),
-      );
-      var state = container.read(receiptReviewControllerProvider(job));
-      expect(state.items[0].name, 'Cà chua organic');
-      expect(state.items[0].quantity, 600);
+        notifier.updateItem(
+          0,
+          const ParsedItemDraft(
+            name: 'Cà chua organic',
+            category: 'Rau củ',
+            quantity: 600,
+          ),
+        );
+        var state = container.read(receiptReviewControllerProvider(job));
+        expect(state.items[0].name, 'Cà chua organic');
+        expect(state.items[0].quantity, 600);
 
-      notifier.removeItem(0);
-      state = container.read(receiptReviewControllerProvider(job));
-      expect(state.items, hasLength(5));
-      expect(state.items[0].name, 'Trứng gà');
-    });
+        notifier.removeItem(0);
+        state = container.read(receiptReviewControllerProvider(job));
+        expect(state.items, hasLength(5));
+        expect(state.items[0].name, 'Trứng gà');
+      },
+    );
 
     test('saveSelectedToPantry adds only the selected lines', () async {
       final repo = MockPantryRepository();

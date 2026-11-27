@@ -44,8 +44,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live notification (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live notification (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -69,7 +72,9 @@ void main() {
     );
     session.fold((f) => fail('sign-in failed: $f'), (_) {});
 
-    notifications = NotificationRepositoryImpl(NotificationRemoteDataSource(api));
+    notifications = NotificationRepositoryImpl(
+      NotificationRemoteDataSource(api),
+    );
   });
 
   test('GET /notifications returns a parseable list for a new user', () async {
@@ -79,8 +84,9 @@ void main() {
   });
 
   test('PATCH on an unknown notification id surfaces a Failure', () async {
-    final res = await notifications
-        .markRead('00000000-0000-0000-0000-000000000000');
+    final res = await notifications.markRead(
+      '00000000-0000-0000-0000-000000000000',
+    );
     expect(res.isLeft(), isTrue);
   });
 }

@@ -10,19 +10,19 @@ enum EfficiencyRatingLevel {
   final String wire;
 
   static EfficiencyRatingLevel fromWire(String? wire) => switch (wire) {
-        'EXCELLENT' => EfficiencyRatingLevel.excellent,
-        'GOOD' => EfficiencyRatingLevel.good,
-        'AVERAGE' => EfficiencyRatingLevel.average,
-        'POOR' => EfficiencyRatingLevel.poor,
-        _ => EfficiencyRatingLevel.good,
-      };
+    'EXCELLENT' => EfficiencyRatingLevel.excellent,
+    'GOOD' => EfficiencyRatingLevel.good,
+    'AVERAGE' => EfficiencyRatingLevel.average,
+    'POOR' => EfficiencyRatingLevel.poor,
+    _ => EfficiencyRatingLevel.good,
+  };
 
   String get label => switch (this) {
-        EfficiencyRatingLevel.excellent => 'Xuất sắc',
-        EfficiencyRatingLevel.good => 'Tốt',
-        EfficiencyRatingLevel.average => 'Trung bình',
-        EfficiencyRatingLevel.poor => 'Cần cải thiện',
-      };
+    EfficiencyRatingLevel.excellent => 'Xuất sắc',
+    EfficiencyRatingLevel.good => 'Tốt',
+    EfficiencyRatingLevel.average => 'Trung bình',
+    EfficiencyRatingLevel.poor => 'Cần cải thiện',
+  };
 }
 
 enum InsightType {
@@ -34,11 +34,11 @@ enum InsightType {
   final String wire;
 
   static InsightType fromWire(String? wire) => switch (wire) {
-        'POSITIVE' => InsightType.positive,
-        'RECOMMENDATION' => InsightType.recommendation,
-        'WARNING' => InsightType.warning,
-        _ => InsightType.recommendation,
-      };
+    'POSITIVE' => InsightType.positive,
+    'RECOMMENDATION' => InsightType.recommendation,
+    'WARNING' => InsightType.warning,
+    _ => InsightType.recommendation,
+  };
 }
 
 class SmartInsight {
@@ -54,10 +54,7 @@ class SmartInsight {
 }
 
 class EfficiencyTrend {
-  const EfficiencyTrend({
-    required this.scoreDelta,
-    required this.wasteKgDelta,
-  });
+  const EfficiencyTrend({required this.scoreDelta, required this.wasteKgDelta});
 
   final double scoreDelta;
   final double wasteKgDelta;

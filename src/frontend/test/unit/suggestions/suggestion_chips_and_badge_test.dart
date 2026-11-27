@@ -32,14 +32,19 @@ void main() {
       final labels = chips.map((c) => c.label).toList();
 
       for (final label in labels) {
-        expect(label.contains('Có sẵn'), isFalse,
-            reason: 'Found unexpected "Có sẵn" in chip label: $label');
+        expect(
+          label.contains('Có sẵn'),
+          isFalse,
+          reason: 'Found unexpected "Có sẵn" in chip label: $label',
+        );
       }
     });
   });
 
   group('SuggestionCard rank badge', () {
-    testWidgets('shows #1 and does not display AI text on rank badge', (tester) async {
+    testWidgets('shows #1 and does not display AI text on rank badge', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           locale: const Locale('vi'),

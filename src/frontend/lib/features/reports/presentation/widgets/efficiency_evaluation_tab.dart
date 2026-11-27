@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
@@ -30,7 +30,7 @@ class EfficiencyEvaluationTab extends ConsumerWidget {
               _TrendCard(evaluation: evaluation),
               Gap.gapMd,
               Text(
-                'LỜI KHUYÊN & ĐÁNH GIÁ THÔNG MINH',
+                'LỜI KHUYÊN VÀ ĐÁNH GIÁ THÔNG MINH',
                 style: context.text.labelSmall?.copyWith(
                   color: context.sweep.textSecondary,
                   letterSpacing: 0.5,
@@ -54,15 +54,15 @@ class _ScoreHeroCard extends StatelessWidget {
 
   final EfficiencyEvaluation evaluation;
 
-  Color _scoreColor() {
-    if (evaluation.efficiencyScore >= 85) return BrandPalette.green700;
-    if (evaluation.efficiencyScore >= 70) return BrandPalette.warnSoon;
-    return BrandPalette.brick500;
+  Color _scoreColor(BuildContext context) {
+    if (evaluation.efficiencyScore >= 85) return context.sweep.successFg;
+    if (evaluation.efficiencyScore >= 70) return context.sweep.soon.fg;
+    return context.sweep.expired.fg;
   }
 
   @override
   Widget build(BuildContext context) {
-    final scoreColor = _scoreColor();
+    final scoreColor = _scoreColor(context);
 
     return Container(
       width: double.infinity,
@@ -96,7 +96,11 @@ class _ScoreHeroCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.workspace_premium_rounded, size: 14, color: scoreColor),
+                    Icon(
+                      AppIcons.award,
+                      size: 14,
+                      color: scoreColor,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       evaluation.ratingLevel.label,
@@ -162,10 +166,10 @@ class _KpiRow extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(
-                      Icons.trending_up_rounded,
+                    Icon(
+                      AppIcons.trendingUp,
                       size: 16,
-                      color: BrandPalette.green700,
+                      color: context.sweep.successFg,
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -193,7 +197,7 @@ class _KpiRow extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(Gap.md),
             decoration: BoxDecoration(
-              color: BrandPalette.brick100.withValues(alpha: 0.5),
+              color: context.sweep.expired.bg,
               borderRadius: Radii.brMd,
               border: Border.all(color: context.sweep.hairline),
             ),
@@ -202,16 +206,16 @@ class _KpiRow extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(
-                      Icons.trending_down_rounded,
+                    Icon(
+                      AppIcons.trendingUp,
                       size: 16,
-                      color: BrandPalette.brick500,
+                      color: context.sweep.expired.fg,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       'Tỷ lệ lãng phí',
                       style: context.text.labelSmall?.copyWith(
-                        color: BrandPalette.brick500,
+                        color: context.sweep.expired.fg,
                       ),
                     ),
                   ],
@@ -221,7 +225,7 @@ class _KpiRow extends StatelessWidget {
                   evaluation.wasteRateLabel,
                   style: context.text.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: BrandPalette.brick500,
+                    color: context.sweep.expired.fg,
                   ),
                 ),
               ],
@@ -256,13 +260,13 @@ class _TrendCard extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: isPos ? BrandPalette.green100 : BrandPalette.brick100,
+              color: isPos ? context.sweep.successBg : context.sweep.expired.bg,
               shape: BoxShape.circle,
             ),
             child: Icon(
-              isPos ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+              isPos ? AppIcons.trendingUp : AppIcons.chevronDown,
               size: 20,
-              color: isPos ? BrandPalette.green700 : BrandPalette.brick500,
+              color: isPos ? context.sweep.successFg : context.sweep.expired.fg,
             ),
           ),
           const SizedBox(width: Gap.md),
@@ -272,16 +276,16 @@ class _TrendCard extends StatelessWidget {
               children: [
                 Text(
                   isPos
-                    ? 'Tiến bộ hơn kỳ trước (+${trend.scoreDelta.toStringAsFixed(1)} điểm)'
-                    : 'Giảm so với kỳ trước (${trend.scoreDelta.toStringAsFixed(1)} điểm)',
+                      ? 'Tiến bộ hơn kỳ trước (+${trend.scoreDelta.toStringAsFixed(1)} điểm)'
+                      : 'Giảm so với kỳ trước (${trend.scoreDelta.toStringAsFixed(1)} điểm)',
                   style: context.text.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   trend.wasteKgDelta <= 0
-                    ? 'Giảm ${(trend.wasteKgDelta.abs()).toStringAsFixed(2)} kg thực phẩm bị lãng phí.'
-                    : 'Tăng ${(trend.wasteKgDelta).toStringAsFixed(2)} kg thực phẩm bị lãng phí.',
+                      ? 'Giảm ${(trend.wasteKgDelta.abs()).toStringAsFixed(2)} kg thực phẩm bị lãng phí.'
+                      : 'Tăng ${(trend.wasteKgDelta).toStringAsFixed(2)} kg thực phẩm bị lãng phí.',
                   style: context.text.bodySmall?.copyWith(
                     color: context.sweep.textSecondary,
                   ),
@@ -304,20 +308,20 @@ class _InsightCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final (icon, color, bg) = switch (insight.type) {
       InsightType.positive => (
-          Icons.eco_rounded,
-          BrandPalette.green700,
-          BrandPalette.green100,
-        ),
+        AppIcons.leaf,
+        context.sweep.successFg,
+        context.sweep.successBg,
+      ),
       InsightType.recommendation => (
-          Icons.lightbulb_outline_rounded,
-          BrandPalette.warnSoon,
-          const Color(0xFFFFF3CD),
-        ),
+        AppIcons.lightbulb,
+        context.sweep.soon.fg,
+        context.sweep.soon.bg,
+      ),
       InsightType.warning => (
-          Icons.warning_amber_rounded,
-          BrandPalette.brick500,
-          BrandPalette.brick100,
-        ),
+        AppIcons.warning,
+        context.sweep.expired.fg,
+        context.sweep.expired.bg,
+      ),
     };
 
     return Container(
@@ -333,10 +337,7 @@ class _InsightCard extends StatelessWidget {
           Container(
             width: 36,
             height: 36,
-            decoration: BoxDecoration(
-              color: bg,
-              borderRadius: Radii.brSm,
-            ),
+            decoration: BoxDecoration(color: bg, borderRadius: Radii.brSm),
             child: Icon(icon, size: 20, color: color),
           ),
           const SizedBox(width: Gap.md),

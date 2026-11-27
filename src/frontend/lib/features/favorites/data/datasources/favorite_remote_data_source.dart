@@ -49,10 +49,7 @@ class FavoriteRemoteDataSource {
   }) async {
     final json = await _api.post(
       ApiPaths.favoriteMenus,
-      body: {
-        'name': name,
-        if (description != null) 'description': description,
-      },
+      body: {'name': name, if (description != null) 'description': description},
     );
     return FavoriteMenuDto.fromJson(json as Map<String, dynamic>);
   }
@@ -76,7 +73,10 @@ class FavoriteRemoteDataSource {
     await _api.delete(ApiPaths.favoriteMenu(menuId));
   }
 
-  Future<FavoriteMenuItemDto> addMenuItem(String menuId, String recipeId) async {
+  Future<FavoriteMenuItemDto> addMenuItem(
+    String menuId,
+    String recipeId,
+  ) async {
     final json = await _api.post(
       ApiPaths.favoriteMenuItems(menuId),
       body: {'recipe_id': recipeId},

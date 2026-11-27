@@ -23,9 +23,7 @@ const _questions = [
     axis: 'smell',
     questionVi: 'Ngửi gần miếng thịt?',
     defaultValue: 'fresh',
-    options: [
-      FreshnessQuestionOptionDto(value: 'fresh', labelVi: 'Thơm tươi'),
-    ],
+    options: [FreshnessQuestionOptionDto(value: 'fresh', labelVi: 'Thơm tươi')],
   ),
 ];
 

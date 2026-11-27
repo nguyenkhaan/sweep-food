@@ -29,8 +29,9 @@ Future<void> _pump(
       overrides: [
         if (masterIngredientId != null)
           freshnessQuestionsProvider(masterIngredientId).overrideWith(
-            (ref) async =>
-                questionsFail ? throw Exception('MAPPING_UNAVAILABLE') : _questions,
+            (ref) async => questionsFail
+                ? throw Exception('MAPPING_UNAVAILABLE')
+                : _questions,
           ),
       ],
       child: MaterialApp(
@@ -74,16 +75,19 @@ void main() {
     expect(find.text('Kiểm tra hạn nhanh'), findsOneWidget);
   });
 
-  testWidgets('hides FreshCheck when the ingredient has no FreshCheck mapping', (
+  testWidgets(
+    'hides FreshCheck when the ingredient has no FreshCheck mapping',
+    (tester) async {
+      await _pump(tester, masterIngredientId: 'ing-1', questionsFail: true);
+
+      expect(find.text('Nhập hạn'), findsOneWidget);
+      expect(find.text('Kiểm tra hạn nhanh'), findsNothing);
+    },
+  );
+
+  testWidgets('a printed/read date is shown and can be cleared', (
     tester,
   ) async {
-    await _pump(tester, masterIngredientId: 'ing-1', questionsFail: true);
-
-    expect(find.text('Nhập hạn'), findsOneWidget);
-    expect(find.text('Kiểm tra hạn nhanh'), findsNothing);
-  });
-
-  testWidgets('a printed/read date is shown and can be cleared', (tester) async {
     (DateTime?, FreshnessEstimate?)? changed;
     await _pump(
       tester,

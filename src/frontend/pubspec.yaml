@@ -53,6 +53,7 @@ dependencies:
   cached_network_image: any
   fl_chart: any
   intl: any
+  lucide_icons_flutter: ^4.0.3
 
   # Utilities
   logger: any
@@ -85,4 +86,22 @@ flutter:
   assets:
     - assets/icons/
     - assets/images/
+    - assets/illustrations/
+    - assets/fonts/
     - assets/mock/
+  fonts:
+    - family: BeVietnamPro
+      fonts:
+        - asset: assets/fonts/BeVietnamPro-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/BeVietnamPro-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/BeVietnamPro-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/BeVietnamPro-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/BeVietnamPro-ExtraBold.ttf
+          weight: 800
+    - family: Fraunces
+      fonts:
+        - asset: assets/fonts/Fraunces-Variable.ttf

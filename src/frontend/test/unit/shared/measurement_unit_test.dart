@@ -25,10 +25,13 @@ void main() {
       expect(MeasurementUnit.fromWire('Kg'), MeasurementUnit.kilogram);
     });
 
-    test('maps OTHER to its own count-like unit, unknown falls back to gram', () {
-      expect(MeasurementUnit.fromWire('OTHER'), MeasurementUnit.other);
-      expect(MeasurementUnit.fromWire('parsec'), MeasurementUnit.gram);
-      expect(MeasurementUnit.fromWire(''), MeasurementUnit.gram);
-    });
+    test(
+      'maps OTHER to its own count-like unit, unknown falls back to gram',
+      () {
+        expect(MeasurementUnit.fromWire('OTHER'), MeasurementUnit.other);
+        expect(MeasurementUnit.fromWire('parsec'), MeasurementUnit.gram);
+        expect(MeasurementUnit.fromWire(''), MeasurementUnit.gram);
+      },
+    );
   });
 }

@@ -31,25 +31,25 @@ class ShoppingListRepositoryImpl implements ShoppingListRepository {
 
   @override
   Future<Result<ShoppingList?>> current() => runGuarded(() async {
-        var id = _savedListId;
-        if (id == null) {
-          try {
-            final lists = await _remote.listAll();
-            final active = lists.firstWhere(
-              (l) => l['status'] == 'ACTIVE',
-              orElse: () => lists.isNotEmpty ? lists.first : <String, dynamic>{},
-            );
-            if (active.containsKey('id')) {
-              id = active['id'].toString();
-              await _prefs.setString(AppConstants.kActiveShoppingListId, id);
-            }
-          } catch (_) {
-            // Ignore error when querying list summary
-          }
+    var id = _savedListId;
+    if (id == null) {
+      try {
+        final lists = await _remote.listAll();
+        final active = lists.firstWhere(
+          (l) => l['status'] == 'ACTIVE',
+          orElse: () => lists.isNotEmpty ? lists.first : <String, dynamic>{},
+        );
+        if (active.containsKey('id')) {
+          id = active['id'].toString();
+          await _prefs.setString(AppConstants.kActiveShoppingListId, id);
         }
-        if (id == null) return null;
-        return (await _remote.getById(id)).toEntity();
-      });
+      } catch (_) {
+        // Ignore error when querying list summary
+      }
+    }
+    if (id == null) return null;
+    return (await _remote.getById(id)).toEntity();
+  });
 
   @override
   Future<Result<ShoppingList>> generate({required String mealPlanId}) =>
@@ -65,8 +65,7 @@ class ShoppingListRepositoryImpl implements ShoppingListRepository {
     required String itemId,
     required bool checked,
     ShoppingPurchaseDraft? purchase,
-  }) =>
-      guardVoid(() => _remote.setChecked(listId, itemId, checked, purchase));
+  }) => guardVoid(() => _remote.setChecked(listId, itemId, checked, purchase));
 
   @override
   Future<Result<ShoppingListItem>> addItem({
@@ -79,6 +78,5 @@ class ShoppingListRepositoryImpl implements ShoppingListRepository {
   Future<Result<void>> removeItem({
     required String listId,
     required String itemId,
-  }) =>
-      guardVoid(() => _remote.removeItem(listId, itemId));
+  }) => guardVoid(() => _remote.removeItem(listId, itemId));
 }

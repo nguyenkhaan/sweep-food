@@ -31,13 +31,13 @@ abstract class CookingHistorySummaryDto with _$CookingHistorySummaryDto {
       _$CookingHistorySummaryDtoFromJson(json);
 
   CookingHistoryEntry toEntity() => CookingHistoryEntry(
-        sessionId: sessionId,
-        recipeId: recipeId,
-        recipeName: recipeName,
-        servings: servings,
-        status: CookingSessionStatus.fromWire(status),
-        completedAt: completedAt,
-      );
+    sessionId: sessionId,
+    recipeId: recipeId,
+    recipeName: recipeName,
+    servings: servings,
+    status: CookingSessionStatus.fromWire(status),
+    completedAt: completedAt,
+  );
 }
 
 @freezed
@@ -65,11 +65,11 @@ abstract class CookingConsumptionDto with _$CookingConsumptionDto {
       _$CookingConsumptionDtoFromJson(json);
 
   CookingConsumption toEntity() => CookingConsumption(
-        recipeIngredientId: recipeIngredientId,
-        inventoryBatchId: inventoryBatchId,
-        quantity: quantity,
-        unit: MeasurementUnit.fromWire(unit),
-      );
+    recipeIngredientId: recipeIngredientId,
+    inventoryBatchId: inventoryBatchId,
+    quantity: quantity,
+    unit: MeasurementUnit.fromWire(unit),
+  );
 }
 
 @freezed
@@ -97,7 +97,8 @@ abstract class CookingHistoryDetailDto with _$CookingHistoryDetailDto {
     required CookingSessionDto session,
     @JsonKey(name: 'recipe_id') required String recipeId,
     @JsonKey(name: 'recipe_name') @Default('') String recipeName,
-    @Default(<CookingConsumptionDto>[]) List<CookingConsumptionDto> consumptions,
+    @Default(<CookingConsumptionDto>[])
+    List<CookingConsumptionDto> consumptions,
     @JsonKey(name: 'leftover_batch_id') String? leftoverBatchId,
     @JsonKey(name: 'completed_at') DateTime? completedAt,
   }) = _CookingHistoryDetailDto;
@@ -106,14 +107,14 @@ abstract class CookingHistoryDetailDto with _$CookingHistoryDetailDto {
       _$CookingHistoryDetailDtoFromJson(json);
 
   CookingHistoryDetail toEntity() => CookingHistoryDetail(
-        sessionId: session.id,
-        recipeId: recipeId,
-        recipeName: recipeName,
-        servings: session.servings,
-        status: CookingSessionStatus.fromWire(session.status),
-        consumptionMode: CookMode.fromWire(session.consumptionMode),
-        completedAt: completedAt ?? session.completedAt,
-        leftoverBatchId: leftoverBatchId,
-        consumptions: [for (final c in consumptions) c.toEntity()],
-      );
+    sessionId: session.id,
+    recipeId: recipeId,
+    recipeName: recipeName,
+    servings: session.servings,
+    status: CookingSessionStatus.fromWire(session.status),
+    consumptionMode: CookMode.fromWire(session.consumptionMode),
+    completedAt: completedAt ?? session.completedAt,
+    leftoverBatchId: leftoverBatchId,
+    consumptions: [for (final c in consumptions) c.toEntity()],
+  );
 }

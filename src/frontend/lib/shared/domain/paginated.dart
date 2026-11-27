@@ -7,10 +7,7 @@ class Paginated<T> {
     this.total,
   });
 
-  const Paginated.single(this.items)
-      : page = 1,
-        nextPage = null,
-        total = null;
+  const Paginated.single(this.items) : page = 1, nextPage = null, total = null;
 
   final List<T> items;
   final int page;
@@ -20,16 +17,16 @@ class Paginated<T> {
   bool get hasMore => nextPage != null;
 
   Paginated<R> map<R>(R Function(T) f) => Paginated(
-        items: items.map(f).toList(),
-        page: page,
-        nextPage: nextPage,
-        total: total,
-      );
+    items: items.map(f).toList(),
+    page: page,
+    nextPage: nextPage,
+    total: total,
+  );
 
   Paginated<T> append(Paginated<T> next) => Paginated(
-        items: [...items, ...next.items],
-        page: next.page,
-        nextPage: next.nextPage,
-        total: next.total,
-      );
+    items: [...items, ...next.items],
+    page: next.page,
+    nextPage: next.nextPage,
+    total: next.total,
+  );
 }

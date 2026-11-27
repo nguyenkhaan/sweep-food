@@ -11,8 +11,8 @@ part 'custom_usage_controller.g.dart';
 class CustomUsageController extends _$CustomUsageController {
   @override
   Map<String, double> build(CookingPreview preview) => {
-        for (final d in preview.proposedDeductions) _key(d): d.quantity,
-      };
+    for (final d in preview.proposedDeductions) _key(d): d.quantity,
+  };
 
   static String _key(ProposedDeduction d) =>
       '${d.recipeIngredientId}|${d.batchId}';

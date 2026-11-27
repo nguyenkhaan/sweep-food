@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
@@ -12,11 +14,7 @@ import 'package:sweepfood/features/cooking/domain/entities/cooking_preview.dart'
 import 'package:sweepfood/features/cooking/presentation/controllers/cooking_controller.dart';
 import 'package:sweepfood/features/cooking/presentation/widgets/custom_usage_sheet.dart';
 
-/// D-03 — "Bạn đã nấu …?". Pick a consumption mode; exact/half/all deduct stock
-/// straight away, "Tự điều chỉnh" opens the per-batch sheet (D-04). Needs an
-/// already-fetched [CookingPreview] (see `CookingController.previewForDish` /
-/// `previewForItem`) since even the mode picker's "recommended" copy and the
-/// custom sheet both need the preview's proposed deductions.
+/// D-03 — "Bạn đã nấu …?" (Concept B · Format 1 Crisp Sheet + Grouped Options).
 class PostCookConfirmSheet extends ConsumerStatefulWidget {
   const PostCookConfirmSheet({
     required this.preview,
@@ -27,8 +25,6 @@ class PostCookConfirmSheet extends ConsumerStatefulWidget {
   final CookingPreview preview;
   final String dishName;
 
-  /// Opens the sheet, then routes to the cook-result screen (D-05/D-07) or the
-  /// custom-usage sheet depending on what the user chose.
   static Future<void> show(
     BuildContext context, {
     required CookingPreview preview,
@@ -36,12 +32,17 @@ class PostCookConfirmSheet extends ConsumerStatefulWidget {
   }) async {
     final outcome = await showAppBottomSheet<_Outcome>(
       context,
-      builder: (_) => PostCookConfirmSheet(preview: preview, dishName: dishName),
+      builder: (_) =>
+          PostCookConfirmSheet(preview: preview, dishName: dishName),
     );
     if (outcome == null || !context.mounted) return;
     switch (outcome) {
       case _WantCustom():
-        await CustomUsageSheet.show(context, preview: preview, dishName: dishName);
+        await CustomUsageSheet.show(
+          context,
+          preview: preview,
+          dishName: dishName,
+        );
       case _Cooked(:final result):
         context.push(Routes.cookResult, extra: result);
     }
@@ -88,52 +89,85 @@ class _State extends ConsumerState<PostCookConfirmSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final sweep = context.sweep;
+    final cs = context.colors;
+
     return SheetBody(
+      icon: AppIcons.cook,
+      warmIcon: true,
       title: l10n.cookConfirmTitle(widget.dishName),
       subtitle: l10n.cookConfirmSubtitle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _Option(
-            icon: Icons.check_rounded,
-            label: CookMode.exact.label(l10n),
-            description: l10n.cookExactWithServings(widget.preview.servings.round()),
-            recommended: true,
-            enabled: !_busy,
-            onTap: () => _confirm(CookMode.exact),
+          SheetGroupCard(
+            child: Column(
+              children: [
+                _OptionRow(
+                  icon: AppIcons.check,
+                  iconBg: cs.primaryContainer,
+                  iconFg: cs.primary,
+                  label: CookMode.exact.label(l10n),
+                  description: l10n.cookExactWithServings(
+                    widget.preview.servings.round(),
+                  ),
+                  recommended: true,
+                  enabled: !_busy,
+                  onTap: () => _confirm(CookMode.exact),
+                ),
+                Divider(height: 1, color: sweep.hairline),
+                _OptionRow(
+                  iconText: '½',
+                  iconBg: sweep.subtleFill,
+                  iconFg: sweep.textSecondary,
+                  label: CookMode.half.label(l10n),
+                  description: CookMode.half.description(l10n),
+                  enabled: !_busy,
+                  onTap: () => _confirm(CookMode.half),
+                ),
+                Divider(height: 1, color: sweep.hairline),
+                _OptionRow(
+                  icon: AppIcons.trash,
+                  iconBg: sweep.culinaryAccentBg,
+                  iconFg: sweep.ctaWarm,
+                  label: CookMode.all.label(l10n),
+                  description: CookMode.all.description(l10n),
+                  enabled: !_busy,
+                  onTap: () => _confirm(CookMode.all),
+                ),
+                Divider(height: 1, color: sweep.hairline),
+                _OptionRow(
+                  icon: AppIcons.filter,
+                  iconBg: sweep.subtleFill,
+                  iconFg: sweep.textSecondary,
+                  label: CookMode.custom.label(l10n),
+                  description: CookMode.custom.description(l10n),
+                  enabled: !_busy,
+                  onTap: () => Navigator.of(context).pop(const _WantCustom()),
+                ),
+              ],
+            ),
           ),
-          _Option(
-            iconText: '½',
-            label: CookMode.half.label(l10n),
-            description: CookMode.half.description(l10n),
-            enabled: !_busy,
-            onTap: () => _confirm(CookMode.half),
-          ),
-          _Option(
-            icon: Icons.delete_sweep_outlined,
-            label: CookMode.all.label(l10n),
-            description: CookMode.all.description(l10n),
-            enabled: !_busy,
-            onTap: () => _confirm(CookMode.all),
-          ),
-          _Option(
-            icon: Icons.tune_rounded,
-            label: CookMode.custom.label(l10n),
-            description: CookMode.custom.description(l10n),
-            enabled: !_busy,
-            onTap: () => Navigator.of(context).pop(const _WantCustom()),
-          ),
-          if (_busy) ...[Gap.gapSm, const LinearProgressIndicator()],
+          if (_busy) ...[
+            Gap.gapSm,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(Radii.pill),
+              child: const LinearProgressIndicator(minHeight: 4),
+            ),
+          ],
         ],
       ),
     );
   }
 }
 
-class _Option extends StatelessWidget {
-  const _Option({
+class _OptionRow extends StatelessWidget {
+  const _OptionRow({
     required this.label,
     required this.description,
+    required this.iconBg,
+    required this.iconFg,
     required this.onTap,
     this.icon,
     this.iconText,
@@ -143,6 +177,8 @@ class _Option extends StatelessWidget {
 
   final String label;
   final String description;
+  final Color iconBg;
+  final Color iconFg;
   final VoidCallback onTap;
   final IconData? icon;
   final String? iconText;
@@ -151,52 +187,109 @@ class _Option extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      enabled: enabled,
-      leading: Container(
-        width: 34,
-        height: 34,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: context.colors.primaryContainer,
-          borderRadius: Radii.brSm,
+    final cs = context.colors;
+    final sweep = context.sweep;
+    final rowBg = recommended
+        ? Color.alphaBlend(
+            cs.primaryContainer.withValues(alpha: 0.32),
+            cs.surfaceContainerLowest,
+          )
+        : Colors.transparent;
+
+    return Material(
+      color: rowBg,
+      child: InkWell(
+        onTap: !enabled
+            ? null
+            : () {
+                AppHaptics.selection();
+                onTap();
+              },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Gap.md,
+            vertical: Gap.sm + 4,
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: iconBg,
+                  borderRadius: Radii.brMd,
+                ),
+                child: iconText != null
+                    ? Text(
+                        iconText!,
+                        style: context.text.titleSmall?.copyWith(
+                          color: iconFg,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      )
+                    : Icon(icon, size: 17, color: iconFg),
+              ),
+              const SizedBox(width: Gap.sm + 2),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: context.text.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        if (recommended) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 7,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: cs.primaryContainer,
+                              borderRadius: BorderRadius.circular(Radii.pill),
+                            ),
+                            child: Text(
+                              context.l10n.commonRecommended,
+                              style: context.text.labelSmall?.copyWith(
+                                letterSpacing: 0,
+                                color: cs.primary,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      description,
+                      style: context.text.bodySmall?.copyWith(
+                        color: sweep.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: Gap.xs),
+              Icon(
+                AppIcons.chevronRight,
+                size: 17,
+                color: sweep.textTertiary,
+              ),
+            ],
+          ),
         ),
-        child: iconText != null
-            ? Text(
-                iconText!,
-                style: context.text.titleSmall?.copyWith(
-                  color: context.colors.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              )
-            : Icon(icon, size: 17, color: context.colors.primary),
       ),
-      title: Row(
-        children: [
-          Flexible(child: Text(label, style: context.text.titleSmall)),
-          if (recommended) ...[
-            const SizedBox(width: 6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-              decoration: BoxDecoration(
-                color: context.colors.primaryContainer,
-                borderRadius: BorderRadius.circular(Radii.pill),
-              ),
-              child: Text(
-                context.l10n.commonRecommended,
-                style: context.text.labelSmall?.copyWith(
-                  letterSpacing: 0,
-                  color: context.colors.primary,
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-      subtitle: Text(description),
-      trailing: const Icon(Icons.chevron_right_rounded),
-      onTap: enabled ? onTap : null,
     );
   }
 }

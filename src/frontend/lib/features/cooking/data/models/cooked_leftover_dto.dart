@@ -30,15 +30,15 @@ abstract class CookedLeftoverDto with _$CookedLeftoverDto {
   /// The backend has no name/category for a leftover batch — [dishName]
   /// (known client-side from the cooking session) fills the display name.
   PantryItem toEntity(String dishName) => PantryItem(
-        id: batchId,
-        name: dishName,
-        category: '',
-        quantity: quantity,
-        unit: MeasurementUnit.fromWire(unit),
-        storageTier: StorageTier.fromBackendWire(storageMode),
-        addedAt: createdAt,
-        source: PantrySource.cooked,
-        status: PantryItemStatus.active,
-        expiryDate: expiresAt,
-      );
+    id: batchId,
+    name: dishName,
+    category: '',
+    quantity: quantity,
+    unit: MeasurementUnit.fromWire(unit),
+    storageTier: StorageTier.fromBackendWire(storageMode),
+    addedAt: createdAt,
+    source: PantrySource.cooked,
+    status: PantryItemStatus.active,
+    expiryDate: expiresAt,
+  );
 }

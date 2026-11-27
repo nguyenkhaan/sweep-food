@@ -116,13 +116,10 @@ class ShoppingListController extends _$ShoppingListController {
     final res = await ref
         .read(shoppingListRepositoryProvider)
         .removeItem(listId: list.id, itemId: itemId);
-    return res.fold(
-      (_) {
-        ref.invalidateSelf();
-        return false;
-      },
-      (_) => true,
-    );
+    return res.fold((_) {
+      ref.invalidateSelf();
+      return false;
+    }, (_) => true);
   }
 
   /// D-01 "Thêm phần thiếu vào danh sách mua". Returns how many lines were

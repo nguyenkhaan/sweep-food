@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_theme.dart';
 import 'package:sweepfood/core/widgets/recipe_image.dart';
 
@@ -39,7 +40,7 @@ void main() {
         ),
       );
 
-      expect(find.byIcon(Icons.restaurant_rounded), findsOneWidget);
+      expect(find.byIcon(AppIcons.utensils), findsOneWidget);
     });
 
     testWidgets('empty url renders restaurant placeholder icon', (
@@ -51,7 +52,7 @@ void main() {
         ),
       );
 
-      expect(find.byIcon(Icons.restaurant_rounded), findsOneWidget);
+      expect(find.byIcon(AppIcons.utensils), findsOneWidget);
     });
 
     testWidgets('failing image provider degrades gracefully to placeholder', (
@@ -69,7 +70,7 @@ void main() {
       await tester.pump();
       tester.takeException();
 
-      expect(find.byIcon(Icons.restaurant_rounded), findsOneWidget);
+      expect(find.byIcon(AppIcons.utensils), findsOneWidget);
     });
 
     testWidgets('failing remote url degrades gracefully to placeholder', (
@@ -87,7 +88,7 @@ void main() {
       await tester.pump();
       tester.takeException();
 
-      expect(find.byIcon(Icons.restaurant_rounded), findsOneWidget);
+      expect(find.byIcon(AppIcons.utensils), findsOneWidget);
     });
   });
 }

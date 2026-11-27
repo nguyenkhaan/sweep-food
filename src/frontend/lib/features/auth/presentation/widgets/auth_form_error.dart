@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 
 /// Form-level error banner for the auth forms (wrong credentials, "cần đồng ý
@@ -21,7 +22,7 @@ class AuthFormError extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.error_outline_rounded,
+            AppIcons.warning,
             size: 18,
             color: scheme.onErrorContainer,
           ),

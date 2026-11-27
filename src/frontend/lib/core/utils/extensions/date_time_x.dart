@@ -10,8 +10,7 @@ extension DateTimeX on DateTime {
       year == other.year && month == other.month && day == other.day;
 
   /// Whole days from `this` (date-only) to [other] (date-only). Negative = past.
-  int daysUntil(DateTime other) =>
-      other.dateOnly.difference(dateOnly).inDays;
+  int daysUntil(DateTime other) => other.dateOnly.difference(dateOnly).inDays;
 
   String get ddMMyyyy => _dmy.format(this);
   String get ddMM => _dm.format(this);

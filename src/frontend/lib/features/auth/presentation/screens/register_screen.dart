@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
-import 'package:sweepfood/core/widgets/primary_button.dart';
 import 'package:sweepfood/features/auth/presentation/controllers/register_controller.dart';
 import 'package:sweepfood/features/auth/presentation/widgets/auth_form_error.dart';
+import 'package:sweepfood/features/auth/presentation/widgets/auth_split_scaffold.dart';
 import 'package:sweepfood/features/auth/presentation/widgets/auth_text_field.dart';
 
-/// A-03 Tạo tài khoản.
+/// A-03 Tạo tài khoản — Concept B Culinary Split Hero.
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
@@ -59,110 +60,90 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final l10n = context.l10n;
     final state = ref.watch(registerControllerProvider);
 
-    return Scaffold(
-      appBar: AppBar(leading: const BackButton()),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(Gap.xl, Gap.xs, Gap.xl, Gap.xl),
-          children: [
-            Text(
-              l10n.authCreateAccount,
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Gap.gapXxs,
-            Text(
-              l10n.registerSubtitle,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            Gap.gapXl,
-            AuthTextField(
-              label: l10n.authFullName,
-              controller: _name,
-              hintText: l10n.authFullNameHint,
-              prefixIcon: Icons.person_outline_rounded,
-              textCapitalization: TextCapitalization.words,
-              textInputAction: TextInputAction.next,
-              autofillHints: const [AutofillHints.name],
-              errorText: state.fieldErrors['name'],
-            ),
-            Gap.gapMd,
-            AuthTextField(
-              label: l10n.authPhone,
-              controller: _phone,
-              hintText: '0901 234 567',
-              prefixIcon: Icons.phone_outlined,
-              keyboardType: TextInputType.phone,
-              textInputAction: TextInputAction.next,
-              autofillHints: const [AutofillHints.telephoneNumber],
-              errorText: state.fieldErrors['phone'],
-            ),
-            Gap.gapMd,
-            AuthTextField(
-              label: l10n.authEmailOptional,
-              controller: _email,
-              hintText: 'ten@example.com',
-              prefixIcon: Icons.mail_outline_rounded,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              autofillHints: const [AutofillHints.email],
-              errorText: state.fieldErrors['email'],
-            ),
-            Gap.gapMd,
-            AuthTextField(
-              label: l10n.authPassword,
-              controller: _password,
-              hintText: l10n.authPasswordHint,
-              prefixIcon: Icons.lock_outline_rounded,
-              obscureText: state.obscure,
-              onToggleObscure: ref
-                  .read(registerControllerProvider.notifier)
-                  .toggleObscure,
-              textInputAction: TextInputAction.done,
-              autofillHints: const [AutofillHints.newPassword],
-              onSubmitted: (_) => _submit(),
-              errorText: state.fieldErrors['password'],
-            ),
-            Gap.gapSm,
-            _TermsCheckbox(
-              value: _agree,
-              onChanged: (v) => setState(() => _agree = v),
-            ),
-            if (state.formError != null) ...[
-              Gap.gapXs,
-              AuthFormError(state.formError!),
-            ],
-            Gap.gapMd,
-            PrimaryButton(
-              label: l10n.authCreateAccount,
-              loading: state.submitting,
-              onPressed: state.submitting ? null : _submit,
-            ),
-            Gap.gapLg,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  l10n.registerHaveAccount,
-                  style: theme.textTheme.bodyMedium,
-                ),
-                GestureDetector(
-                  onTap: () => context.pushReplacement(Routes.login),
-                  child: Text(
-                    l10n.authSignIn,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    return AuthSplitScaffold(
+      title: l10n.authCreateAccount,
+      subtitle: l10n.registerSubtitle,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AuthTextField(
+            label: l10n.authFullName,
+            controller: _name,
+            hintText: l10n.authFullNameHint,
+            prefixIcon: AppIcons.profile,
+            textCapitalization: TextCapitalization.words,
+            textInputAction: TextInputAction.next,
+            autofillHints: const [AutofillHints.name],
+            errorText: state.fieldErrors['name'],
+          ),
+          Gap.gapMd,
+          AuthTextField(
+            label: l10n.authPhone,
+            controller: _phone,
+            hintText: '0901 234 567',
+            prefixIcon: AppIcons.phone,
+            keyboardType: TextInputType.phone,
+            textInputAction: TextInputAction.next,
+            autofillHints: const [AutofillHints.telephoneNumber],
+            errorText: state.fieldErrors['phone'],
+          ),
+          Gap.gapMd,
+          AuthTextField(
+            label: l10n.authEmailOptional,
+            controller: _email,
+            hintText: 'ten@example.com',
+            prefixIcon: AppIcons.mail,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            autofillHints: const [AutofillHints.email],
+            errorText: state.fieldErrors['email'],
+          ),
+          Gap.gapMd,
+          AuthTextField(
+            label: l10n.authPassword,
+            controller: _password,
+            hintText: l10n.authPasswordHint,
+            prefixIcon: AppIcons.lock,
+            obscureText: state.obscure,
+            onToggleObscure: ref
+                .read(registerControllerProvider.notifier)
+                .toggleObscure,
+            textInputAction: TextInputAction.done,
+            autofillHints: const [AutofillHints.newPassword],
+            onSubmitted: (_) => _submit(),
+            errorText: state.fieldErrors['password'],
+          ),
+          Gap.gapSm,
+          _TermsCheckbox(
+            value: _agree,
+            onChanged: (v) => setState(() => _agree = v),
+          ),
+          if (state.formError != null) ...[
+            Gap.gapXs,
+            AuthFormError(state.formError!),
           ],
-        ),
+          Gap.gapMd,
+          AuthPrimaryButton(
+            label: l10n.authCreateAccount,
+            loading: state.submitting,
+            onPressed: state.submitting ? null : _submit,
+          ),
+          Gap.gapLg,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(l10n.registerHaveAccount, style: theme.textTheme.bodyMedium),
+              TextButton(
+                style: TextButton.styleFrom(
+                  minimumSize: const Size(48, 48),
+                  padding: const EdgeInsets.symmetric(horizontal: Gap.xs),
+                ),
+                onPressed: () => context.pushReplacement(Routes.login),
+                child: Text(l10n.authSignIn),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -182,32 +163,42 @@ class _TermsCheckbox extends StatelessWidget {
       onTap: () => onChanged(!value),
       borderRadius: Radii.brSm,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Gap.xxs),
+        padding: const EdgeInsets.symmetric(vertical: Gap.xs),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Checkbox(
-              value: value,
-              onChanged: (v) => onChanged(v ?? false),
-              visualDensity: VisualDensity.compact,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            SizedBox(
+              width: 24,
+              height: 24,
+              child: Checkbox(
+                value: value,
+                onChanged: (v) => onChanged(v ?? false),
+                visualDensity: VisualDensity.compact,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
             ),
-            Gap.gapXs,
+            Gap.gapSm,
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 2),
                 child: Text.rich(
                   TextSpan(
                     text: l10n.termsPrefix,
                     children: [
                       TextSpan(
                         text: l10n.termsOfUse,
-                        style: TextStyle(color: theme.colorScheme.primary),
+                        style: TextStyle(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       TextSpan(text: l10n.termsAnd),
                       TextSpan(
                         text: l10n.termsPrivacy,
-                        style: TextStyle(color: theme.colorScheme.primary),
+                        style: TextStyle(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       const TextSpan(text: '.'),
                     ],

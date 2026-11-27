@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_theme.dart';
 import 'package:sweepfood/core/storage/prefs.dart';
 import 'package:sweepfood/features/auth/data/repositories/auth_repository_impl.dart';
@@ -110,7 +111,7 @@ void main() {
       expect(find.text('Ăn chay'), findsOneWidget);
 
       // Increment household size to 3 and pick Vegetarian.
-      await tester.tap(find.byIcon(Icons.add_rounded));
+      await tester.tap(find.byIcon(AppIcons.add).first);
       await tester.pumpAndSettle();
       expect(find.text('3'), findsOneWidget);
 

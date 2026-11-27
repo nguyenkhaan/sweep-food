@@ -49,8 +49,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live inventory (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live inventory (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -66,7 +69,11 @@ void main() {
     final tail = DateTime.now().microsecondsSinceEpoch.toString();
     final phone = '+8493${tail.substring(tail.length - 8)}';
     const password = 'secret12345';
-    await auth.register(phone: phone, password: password, name: 'Inventory Live');
+    await auth.register(
+      phone: phone,
+      password: password,
+      name: 'Inventory Live',
+    );
     final session = await auth.verifyRegisterAndLogin(
       phone: phone,
       otp: '123456',
@@ -113,7 +120,10 @@ void main() {
     final created = await addBatch(quantity: 200);
 
     final partial = await pantry.consume(created.id, quantityUsed: 50);
-    final afterPartial = partial.fold((f) => fail('consume failed: $f'), (i) => i);
+    final afterPartial = partial.fold(
+      (f) => fail('consume failed: $f'),
+      (i) => i,
+    );
     expect(afterPartial.quantity, 150);
     expect(afterPartial.status, PantryItemStatus.active);
 
@@ -129,7 +139,9 @@ void main() {
 
     final res = await pantry.update(
       created.id,
-      PantryItemDraft.fromItem(created).copyWith(storageTier: StorageTier.freezer),
+      PantryItemDraft.fromItem(
+        created,
+      ).copyWith(storageTier: StorageTier.freezer),
     );
     final updated = res.fold((f) => fail('update failed: $f'), (i) => i);
     expect(updated.storageTier, StorageTier.freezer);

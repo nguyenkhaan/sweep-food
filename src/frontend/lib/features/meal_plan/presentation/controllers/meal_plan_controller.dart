@@ -43,10 +43,9 @@ class MealPlanController extends _$MealPlanController {
     if (plan == null) return;
     final existing = plan.entryAt(date, slot);
 
-    ref.read(analyticsProvider).log(
-      AnalyticsEvents.mealPlanEntryAdded,
-      {AnalyticsParams.dishId: dishId},
-    );
+    ref.read(analyticsProvider).log(AnalyticsEvents.mealPlanEntryAdded, {
+      AnalyticsParams.dishId: dishId,
+    });
 
     final repo = ref.read(mealPlanRepositoryProvider);
     final res = existing == null

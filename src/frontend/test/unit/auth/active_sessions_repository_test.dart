@@ -16,13 +16,13 @@ Map<String, dynamic> _session({
   String? ua = 'Mozilla/5.0 (Linux; Android 14) Chrome/120',
   String? lastUsed = '2026-09-06T09:00:00.000Z',
 }) => {
-      'id': id,
-      'ip_address': ip,
-      'user_agent': ua,
-      'expires_at': '2026-10-01T09:00:00.000Z',
-      'created_at': '2026-09-01T09:00:00.000Z',
-      'last_used_at': lastUsed,
-    };
+  'id': id,
+  'ip_address': ip,
+  'user_agent': ua,
+  'expires_at': '2026-10-01T09:00:00.000Z',
+  'created_at': '2026-09-01T09:00:00.000Z',
+  'last_used_at': lastUsed,
+};
 
 void main() {
   late _MockApiClient api;
@@ -83,7 +83,9 @@ void main() {
 
   group('revokeSession()', () {
     test('DELETEs /auth/sessions/{id}', () async {
-      when(() => api.delete(ApiPaths.session('s2'))).thenAnswer((_) async => null);
+      when(
+        () => api.delete(ApiPaths.session('s2')),
+      ).thenAnswer((_) async => null);
 
       final res = await repo.revokeSession('s2');
 
@@ -92,8 +94,9 @@ void main() {
     });
 
     test('returns a Failure when the delete throws', () async {
-      when(() => api.delete(ApiPaths.session('s2')))
-          .thenThrow(Exception('boom'));
+      when(
+        () => api.delete(ApiPaths.session('s2')),
+      ).thenThrow(Exception('boom'));
       final res = await repo.revokeSession('s2');
       expect(res.isLeft(), isTrue);
     });

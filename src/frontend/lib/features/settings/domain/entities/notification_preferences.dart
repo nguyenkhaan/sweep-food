@@ -59,15 +59,15 @@ class NotificationPreferences {
   }
 
   Map<String, Object?> toJson() => {
-        'near_expiry': nearExpiry,
-        'daily_suggestions': dailySuggestions,
-        'weekly_report': weeklyReport,
-        'post_cook_reminder': postCookReminder,
-        'promos_and_tips': promosAndTips,
-        'near_expiry_hour': nearExpiryHour,
-        'dnd_start_hour': dndStartHour,
-        'dnd_end_hour': dndEndHour,
-      };
+    'near_expiry': nearExpiry,
+    'daily_suggestions': dailySuggestions,
+    'weekly_report': weeklyReport,
+    'post_cook_reminder': postCookReminder,
+    'promos_and_tips': promosAndTips,
+    'near_expiry_hour': nearExpiryHour,
+    'dnd_start_hour': dndStartHour,
+    'dnd_end_hour': dndEndHour,
+  };
 
   factory NotificationPreferences.fromJson(Map<String, Object?> json) {
     bool b(String k, bool d) => json[k] as bool? ?? d;

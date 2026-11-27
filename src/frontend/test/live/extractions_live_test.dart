@@ -40,8 +40,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live extractions (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live extractions (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -56,12 +59,73 @@ void main() {
     // Minimal valid 1x1 PNG
     samplePng = File('${tempDir.path}/label.png');
     await samplePng.writeAsBytes([
-      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
-      0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
-      0x08, 0x06, 0x00, 0x00, 0x00, 0x1f, 0x15, 0xc4, 0x89, 0x00, 0x00, 0x00,
-      0x0a, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9c, 0x63, 0x00, 0x01, 0x00, 0x00,
-      0x05, 0x00, 0x01, 0x0d, 0x0a, 0x2d, 0xb4, 0x00, 0x00, 0x00, 0x00, 0x49,
-      0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
+      0x89,
+      0x50,
+      0x4e,
+      0x47,
+      0x0d,
+      0x0a,
+      0x1a,
+      0x0a,
+      0x00,
+      0x00,
+      0x00,
+      0x0d,
+      0x49,
+      0x48,
+      0x44,
+      0x52,
+      0x00,
+      0x00,
+      0x00,
+      0x01,
+      0x00,
+      0x00,
+      0x00,
+      0x01,
+      0x08,
+      0x06,
+      0x00,
+      0x00,
+      0x00,
+      0x1f,
+      0x15,
+      0xc4,
+      0x89,
+      0x00,
+      0x00,
+      0x00,
+      0x0a,
+      0x49,
+      0x44,
+      0x41,
+      0x54,
+      0x78,
+      0x9c,
+      0x63,
+      0x00,
+      0x01,
+      0x00,
+      0x00,
+      0x05,
+      0x00,
+      0x01,
+      0x0d,
+      0x0a,
+      0x2d,
+      0xb4,
+      0x00,
+      0x00,
+      0x00,
+      0x00,
+      0x49,
+      0x45,
+      0x4e,
+      0x44,
+      0xae,
+      0x42,
+      0x60,
+      0x82,
     ]);
 
     // Sample audio file
@@ -100,17 +164,20 @@ void main() {
     scanRepo = ScanRepositoryImpl(ScanRemoteDataSource(api));
   });
 
-  test('POST /extractions/ocr/label extracts label from uploaded image', () async {
-    final result = await scanRepo.scanLabel(samplePng.path);
-    final job = result.fold((f) => fail('scanLabel failed: '), (j) => j);
+  test(
+    'POST /extractions/ocr/label extracts label from uploaded image',
+    () async {
+      final result = await scanRepo.scanLabel(samplePng.path);
+      final job = result.fold((f) => fail('scanLabel failed: '), (j) => j);
 
-    expect(job.type, ScanType.label);
-    expect(job.status, ScanStatus.completed);
-    expect(job.sourcePath, samplePng.path);
-    expect(job.hasItems, isTrue);
-    expect(job.items.first.name, isNotEmpty);
-    expect(job.items.first.quantity, greaterThan(0));
-  });
+      expect(job.type, ScanType.label);
+      expect(job.status, ScanStatus.completed);
+      expect(job.sourcePath, samplePng.path);
+      expect(job.hasItems, isTrue);
+      expect(job.items.first.name, isNotEmpty);
+      expect(job.items.first.quantity, greaterThan(0));
+    },
+  );
 
   test('POST /extractions/ocr/invoice extracts invoice line items', () async {
     final result = await scanRepo.scanReceipt(samplePng.path);
@@ -127,15 +194,18 @@ void main() {
     }
   });
 
-  test('POST /extractions/asr transcribes and extracts ingredient fields', () async {
-    final result = await scanRepo.scanVoice(audioPath: sampleMp3.path);
-    final job = result.fold((f) => fail('scanVoice failed: '), (j) => j);
+  test(
+    'POST /extractions/asr transcribes and extracts ingredient fields',
+    () async {
+      final result = await scanRepo.scanVoice(audioPath: sampleMp3.path);
+      final job = result.fold((f) => fail('scanVoice failed: '), (j) => j);
 
-    expect(job.type, ScanType.voice);
-    expect(job.status, ScanStatus.completed);
-    expect(job.hasItems, isTrue);
-    expect(job.items.first.name, isNotEmpty);
-  });
+      expect(job.type, ScanType.voice);
+      expect(job.status, ScanStatus.completed);
+      expect(job.hasItems, isTrue);
+      expect(job.items.first.name, isNotEmpty);
+    },
+  );
 
   test('POST /extractions/barcode looks up product by query param', () async {
     final result = await scanRepo.lookupBarcode('8934567890123');

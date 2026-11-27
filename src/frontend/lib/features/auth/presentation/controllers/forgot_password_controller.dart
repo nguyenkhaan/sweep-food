@@ -25,8 +25,9 @@ class ForgotPasswordController extends _$ForgotPasswordController {
       fieldErrors: const {},
       formError: null,
     );
-    final res =
-        await ref.read(authRepositoryProvider).requestPasswordReset(e164);
+    final res = await ref
+        .read(authRepositoryProvider)
+        .requestPasswordReset(e164);
     return res.fold(
       (f) {
         state = state.copyWith(

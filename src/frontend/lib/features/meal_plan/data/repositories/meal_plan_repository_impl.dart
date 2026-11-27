@@ -11,8 +11,8 @@ part 'meal_plan_repository_impl.g.dart';
 
 @Riverpod(keepAlive: true)
 MealPlanRepository mealPlanRepository(Ref ref) => MealPlanRepositoryImpl(
-      MealPlanRemoteDataSource(ref.watch(apiClientProvider)),
-    );
+  MealPlanRemoteDataSource(ref.watch(apiClientProvider)),
+);
 
 /// The backend has no "current week" concept — a plan is just an id with a
 /// date range. This repository resolves each Monday-anchored week to a plan
@@ -56,15 +56,15 @@ class MealPlanRepositoryImpl implements MealPlanRepository {
 
   @override
   Future<Result<MealPlan>> forWeek(DateTime weekStart) => runGuarded(() async {
-        final key = _dateOnly(weekStart);
-        final id = await _resolvePlanId(key);
-        final dto = await _remote.getPlan(id);
-        return MealPlan(
-          id: dto.id,
-          weekStart: key,
-          entries: [for (final item in dto.items) item.toEntity()],
-        );
-      });
+    final key = _dateOnly(weekStart);
+    final id = await _resolvePlanId(key);
+    final dto = await _remote.getPlan(id);
+    return MealPlan(
+      id: dto.id,
+      weekStart: key,
+      entries: [for (final item in dto.items) item.toEntity()],
+    );
+  });
 
   @override
   Future<Result<MealPlanEntry>> addEntry({
@@ -75,18 +75,17 @@ class MealPlanRepositoryImpl implements MealPlanRepository {
     required double servings,
     String? dishName,
     String? dishImageUrl,
-  }) =>
-      runGuarded(() async {
-        final planId = await _resolvePlanId(weekStart);
-        final dto = await _remote.addItem(
-          planId,
-          recipeId: dishId,
-          plannedFor: date,
-          slot: slot,
-          servings: servings,
-        );
-        return dto.toEntity(dishName: dishName, dishImageUrl: dishImageUrl);
-      });
+  }) => runGuarded(() async {
+    final planId = await _resolvePlanId(weekStart);
+    final dto = await _remote.addItem(
+      planId,
+      recipeId: dishId,
+      plannedFor: date,
+      slot: slot,
+      servings: servings,
+    );
+    return dto.toEntity(dishName: dishName, dishImageUrl: dishImageUrl);
+  });
 
   @override
   Future<Result<MealPlanEntry>> updateEntry({
@@ -96,25 +95,23 @@ class MealPlanRepositoryImpl implements MealPlanRepository {
     required double servings,
     String? dishName,
     String? dishImageUrl,
-  }) =>
-      runGuarded(() async {
-        final planId = await _resolvePlanId(weekStart);
-        final dto = await _remote.updateItem(
-          planId,
-          itemId,
-          recipeId: dishId,
-          servings: servings,
-        );
-        return dto.toEntity(dishName: dishName, dishImageUrl: dishImageUrl);
-      });
+  }) => runGuarded(() async {
+    final planId = await _resolvePlanId(weekStart);
+    final dto = await _remote.updateItem(
+      planId,
+      itemId,
+      recipeId: dishId,
+      servings: servings,
+    );
+    return dto.toEntity(dishName: dishName, dishImageUrl: dishImageUrl);
+  });
 
   @override
   Future<Result<void>> removeEntry({
     required DateTime weekStart,
     required String itemId,
-  }) =>
-      guardVoid(() async {
-        final planId = await _resolvePlanId(weekStart);
-        await _remote.deleteItem(planId, itemId);
-      });
+  }) => guardVoid(() async {
+    final planId = await _resolvePlanId(weekStart);
+    await _remote.deleteItem(planId, itemId);
+  });
 }

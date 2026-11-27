@@ -21,11 +21,11 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Future<Result<List<AppNotification>>> list() => runGuarded(() async {
-        final dtos = await _remote.list();
-        final items = [for (final d in dtos) d.toEntity()]
-          ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        return items;
-      });
+    final dtos = await _remote.list();
+    final items = [for (final d in dtos) d.toEntity()]
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return items;
+  });
 
   @override
   Future<Result<void>> markRead(String id) =>
@@ -33,6 +33,6 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Future<Result<void>> markAllRead(Iterable<String> ids) => guardVoid(() async {
-        await Future.wait([for (final id in ids) _remote.markRead(id)]);
-      });
+    await Future.wait([for (final id in ids) _remote.markRead(id)]);
+  });
 }

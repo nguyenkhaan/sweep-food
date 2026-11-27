@@ -2,24 +2,51 @@
 // Camera frame guide overlay (I-01 / I-04)
 
 import 'package:flutter/material.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
 
-/// Rounded corner-bracket guide drawn over the camera preview. [portrait] uses
-/// a tall frame for receipts; labels use a wide frame.
-class ViewfinderOverlay extends StatelessWidget {
-  const ViewfinderOverlay({
-    this.portrait = false,
-    this.color = BrandPalette.green300,
-    super.key,
-  });
+/// Rounded corner-bracket guide with a gentle scanning beam drawn over the
+/// camera preview. [portrait] uses a tall frame for receipts; labels use wide.
+class ViewfinderOverlay extends StatefulWidget {
+  const ViewfinderOverlay({this.portrait = false, this.color, super.key});
 
   final bool portrait;
-  final Color color;
+  final Color? color;
+
+  @override
+  State<ViewfinderOverlay> createState() => _ViewfinderOverlayState();
+}
+
+class _ViewfinderOverlayState extends State<ViewfinderOverlay>
+    with SingleTickerProviderStateMixin {
+  AnimationController? _beamController;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final disableMotion = MediaQuery.disableAnimationsOf(context);
+    if (disableMotion) {
+      _beamController?.stop();
+      _beamController?.dispose();
+      _beamController = null;
+    } else {
+      _beamController ??= AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 1800),
+      )..repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _beamController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final w = portrait ? 280.0 : 260.0;
-    final h = portrait ? 340.0 : 180.0;
+    final w = widget.portrait ? 280.0 : 260.0;
+    final h = widget.portrait ? 340.0 : 180.0;
+    final accent =
+        widget.color ?? Theme.of(context).colorScheme.primaryContainer;
 
     return SizedBox(
       width: w,
@@ -29,8 +56,32 @@ class ViewfinderOverlay extends StatelessWidget {
         children: [
           CustomPaint(
             size: Size(w, h),
-            painter: _CornerGuidePainter(color: color),
+            painter: _CornerGuidePainter(color: accent),
           ),
+          if (_beamController != null)
+            AnimatedBuilder(
+              animation: _beamController!,
+              builder: (_, __) {
+                final y = 16 + _beamController!.value * (h - 32);
+                return Positioned(
+                  left: 14,
+                  right: 14,
+                  top: y,
+                  child: Container(
+                    height: 2,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          accent.withValues(alpha: 0),
+                          accent.withValues(alpha: 0.9),
+                          accent.withValues(alpha: 0),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );
@@ -47,7 +98,8 @@ class _CornerGuidePainter extends CustomPainter {
     final paint = Paint()
       ..color = color
       ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
 
     const cornerLength = 26.0;
     const radius = 8.0;

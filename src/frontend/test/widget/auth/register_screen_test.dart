@@ -47,10 +47,7 @@ Future<_MockApiClient> _pump(WidgetTester tester) async {
 }
 
 // Fields in screen order: name, phone, email, password.
-Future<void> _fill(
-  WidgetTester tester, {
-  required String email,
-}) async {
+Future<void> _fill(WidgetTester tester, {required String email}) async {
   final fields = find.byType(TextField);
   await tester.enterText(fields.at(0), 'Nguyễn Văn A');
   await tester.enterText(fields.at(1), '0901234567');
@@ -61,39 +58,44 @@ Future<void> _fill(
 }
 
 void main() {
-  testWidgets('the email typed on the form is registered, trimmed and lower-cased', (
-    tester,
-  ) async {
-    final api = await _pump(tester);
-    expect(find.text('Email (không bắt buộc)'), findsOneWidget);
+  testWidgets(
+    'the email typed on the form is registered, trimmed and lower-cased',
+    (tester) async {
+      final api = await _pump(tester);
+      expect(find.text('Email (không bắt buộc)'), findsOneWidget);
 
-    await _fill(tester, email: '  Nguyen.A@Example.COM ');
-    await tester.tap(find.text('Tạo tài khoản').last);
-    await tester.pumpAndSettle();
+      await _fill(tester, email: '  Nguyen.A@Example.COM ');
+      await tester.tap(find.text('Tạo tài khoản').last);
+      await tester.pumpAndSettle();
 
-    final body =
-        verify(
-              () => api.post(ApiPaths.register, body: captureAny(named: 'body')),
-            ).captured.single
-            as Map<String, dynamic>;
-    expect(body['email'], 'nguyen.a@example.com');
-    expect(body['phone'], '+84901234567');
-    expect(find.text('otp screen'), findsOneWidget);
-  });
+      final body =
+          verify(
+                () => api.post(
+                  ApiPaths.register,
+                  body: captureAny(named: 'body'),
+                ),
+              ).captured.single
+              as Map<String, dynamic>;
+      expect(body['email'], 'nguyen.a@example.com');
+      expect(body['phone'], '+84901234567');
+      expect(find.text('otp screen'), findsOneWidget);
+    },
+  );
 
-  testWidgets('an invalid email blocks the request and is flagged on the field', (
-    tester,
-  ) async {
-    final api = await _pump(tester);
+  testWidgets(
+    'an invalid email blocks the request and is flagged on the field',
+    (tester) async {
+      final api = await _pump(tester);
 
-    await _fill(tester, email: 'not-an-email');
-    await tester.tap(find.text('Tạo tài khoản').last);
-    await tester.pumpAndSettle();
+      await _fill(tester, email: 'not-an-email');
+      await tester.tap(find.text('Tạo tài khoản').last);
+      await tester.pumpAndSettle();
 
-    expect(find.text('Email không hợp lệ'), findsOneWidget);
-    verifyNever(() => api.post(ApiPaths.register, body: any(named: 'body')));
-    expect(find.text('otp screen'), findsNothing);
-  });
+      expect(find.text('Email không hợp lệ'), findsOneWidget);
+      verifyNever(() => api.post(ApiPaths.register, body: any(named: 'body')));
+      expect(find.text('otp screen'), findsNothing);
+    },
+  );
 
   testWidgets('leaving the email empty still registers, without an email', (
     tester,
@@ -106,7 +108,8 @@ void main() {
 
     final body =
         verify(
-              () => api.post(ApiPaths.register, body: captureAny(named: 'body')),
+              () =>
+                  api.post(ApiPaths.register, body: captureAny(named: 'body')),
             ).captured.single
             as Map<String, dynamic>;
     expect(body.containsKey('email'), isFalse);

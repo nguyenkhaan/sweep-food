@@ -1,14 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
-
-const _tierIcon = {
-  StorageTier.eatSoon: Icons.local_fire_department_rounded,
-  StorageTier.fridge: Icons.kitchen_rounded,
-  StorageTier.freezer: Icons.ac_unit_rounded,
-  StorageTier.pantryShelf: Icons.inventory_2_rounded,
-};
 
 const _tierKind = {
   StorageTier.eatSoon: TierKind.eatSoon,
@@ -30,16 +25,16 @@ class TierChip extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: dense ? 7 : 10,
-        vertical: dense ? 2 : 4,
+        vertical: dense ? 2.5 : 4,
       ),
       decoration: BoxDecoration(
         color: c.bg,
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(Radii.pill),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(_tierIcon[tier], size: dense ? 11 : 13, color: c.fg),
+          Icon(AppIcons.forTier(tier), size: dense ? 11 : 13, color: c.fg),
           const SizedBox(width: 5),
           Text(
             tier.shortLabel(context.l10n),

@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/pantry/domain/entities/freshness_estimate.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/shared/domain/measurement_unit.dart';
@@ -31,18 +31,18 @@ abstract class PantryItemDraft with _$PantryItemDraft {
   }) = _PantryItemDraft;
 
   factory PantryItemDraft.fromItem(PantryItem i) => PantryItemDraft(
-        name: i.name,
-        category: i.category,
-        quantity: i.quantity,
-        unit: i.unit,
-        storageTier: i.storageTier,
-        source: i.source,
-        ingredientId: i.ingredientId,
-        packedDate: i.packedDate,
-        expiryDate: i.expiryDate,
-        referenceShelfLifeDays: i.referenceShelfLifeDays,
-        priceVnd: i.priceVnd,
-      );
+    name: i.name,
+    category: i.category,
+    quantity: i.quantity,
+    unit: i.unit,
+    storageTier: i.storageTier,
+    source: i.source,
+    ingredientId: i.ingredientId,
+    packedDate: i.packedDate,
+    expiryDate: i.expiryDate,
+    referenceShelfLifeDays: i.referenceShelfLifeDays,
+    priceVnd: i.priceVnd,
+  );
 
   bool get isValid => name.trim().isNotEmpty && quantity > 0;
 }

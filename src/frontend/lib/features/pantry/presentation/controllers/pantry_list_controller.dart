@@ -62,7 +62,14 @@ class PantryListController extends _$PantryListController {
   }
 
   Future<PantryItem> updateItem(String id, PantryItemDraft draft) async {
-    final res = await _repo.update(id, draft);
+    double? prevQty;
+    for (final i in _current) {
+      if (i.id == id) {
+        prevQty = i.quantity;
+        break;
+      }
+    }
+    final res = await _repo.update(id, draft, previousQuantity: prevQty);
     return res.fold((f) => throw f, (updated) {
       state = AsyncData([for (final i in _current) i.id == id ? updated : i]);
       ref.invalidate(pantrySummaryProvider);

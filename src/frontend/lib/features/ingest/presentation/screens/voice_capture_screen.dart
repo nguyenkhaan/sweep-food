@@ -8,13 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
+import 'package:sweepfood/app/theme/app_typography.dart';
 import 'package:sweepfood/core/media/audio_recorder_service.dart';
 import 'package:sweepfood/core/media/media_providers.dart';
 import 'package:sweepfood/core/permissions/permission_prime_sheet.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/logger.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/core/widgets/waveform_recorder.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_type.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/scan_controller.dart';
@@ -136,108 +138,127 @@ class _VoiceCaptureScreenState extends ConsumerState<VoiceCaptureScreen> {
     final sweep = context.sweep;
     final l10n = context.l10n;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: const Icon(Icons.close_rounded),
-        ),
-        title: Text(l10n.voiceCaptureTitle),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.md, Gap.lg, Gap.xxl),
-          child: Column(
-            children: [
-              Text(
-                l10n.voiceCapturePrompt,
-                textAlign: TextAlign.center,
-                style: context.text.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Gap.gapSm,
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Gap.md,
-                  vertical: Gap.sm,
-                ),
-                decoration: BoxDecoration(
-                  color: sweep.subtleFill,
-                  borderRadius: Radii.brMd,
-                ),
-                child: Text(
-                  l10n.voiceCaptureExample,
-                  textAlign: TextAlign.center,
-                  style: context.text.bodySmall?.copyWith(
-                    color: sweep.textTertiary,
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: context.colors.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(
+              title: l10n.voiceCaptureTitle,
+              onBack: () => context.pop(),
+            ),
+            Expanded(
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    Gap.lg,
+                    Gap.sm,
+                    Gap.lg,
+                    Gap.xl,
                   ),
-                ),
-              ),
-              Expanded(
-                child: Center(child: WaveformRecorder(stream: _amplitude)),
-              ),
-              Text(
-                _listening ? l10n.voiceListening : l10n.voiceMicOff,
-                textAlign: TextAlign.center,
-                style: context.text.titleSmall?.copyWith(
-                  color: _listening
-                      ? BrandPalette.green700
-                      : sweep.textTertiary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                _formatTimer(_seconds),
-                style: context.text.bodyMedium?.copyWith(
-                  color: sweep.textTertiary,
-                ),
-              ),
-              const SizedBox(height: Gap.xl),
-              GestureDetector(
-                onTap: _submitting ? null : _stopAndReview,
-                child: Container(
-                  width: 78,
-                  height: 78,
-                  decoration: BoxDecoration(
-                    color: BrandPalette.warnCritical,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: BrandPalette.warnCritical.withValues(
-                          alpha: 0.25,
+                  child: Column(
+                    children: [
+                      Text(
+                        l10n.voiceCapturePrompt,
+                        textAlign: TextAlign.center,
+                        style: context.text.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
                         ),
-                        blurRadius: 0,
-                        spreadRadius: 8,
+                      ),
+                      Gap.gapSm,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Gap.md,
+                          vertical: Gap.sm + 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.colors.surfaceContainerLowest,
+                          borderRadius: Radii.brLg,
+                          border: Border.all(color: sweep.hairline),
+                        ),
+                        child: Text(
+                          l10n.voiceCaptureExample,
+                          textAlign: TextAlign.center,
+                          style: context.text.bodySmall?.copyWith(
+                            color: sweep.textSecondary,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: WaveformRecorder(stream: _amplitude),
+                        ),
+                      ),
+                      Text(
+                        _listening ? l10n.voiceListening : l10n.voiceMicOff,
+                        textAlign: TextAlign.center,
+                        style: context.text.titleSmall?.copyWith(
+                          color: _listening
+                              ? context.colors.primary
+                              : sweep.textTertiary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _formatTimer(_seconds),
+                        style: AppTypography.tabular(
+                          context.text.bodyMedium?.copyWith(
+                            color: sweep.textTertiary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: Gap.xl),
+                      Material(
+                        color: sweep.ctaWarm,
+                        shape: const CircleBorder(),
+                        child: InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: _submitting
+                              ? null
+                              : () {
+                                  AppHaptics.medium();
+                                  _stopAndReview();
+                                },
+                          child: SizedBox(
+                            width: 78,
+                            height: 78,
+                            child: _submitting
+                                ? Padding(
+                                    padding: const EdgeInsets.all(24),
+                                    child: CircularProgressIndicator(
+                                      color: sweep.onCtaWarm,
+                                      strokeWidth: 3,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: sweep.onCtaWarm,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: Gap.sm),
+                      Text(
+                        l10n.voiceStopReview,
+                        style: context.text.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: sweep.textSecondary,
+                        ),
                       ),
                     ],
                   ),
-                  child: _submitting
-                      ? const Padding(
-                          padding: EdgeInsets.all(22),
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 3,
-                          ),
-                        )
-                      : const Icon(
-                          Icons.stop_rounded,
-                          size: 36,
-                          color: Colors.white,
-                        ),
                 ),
               ),
-              const SizedBox(height: Gap.sm),
-              Text(
-                l10n.voiceStopReview,
-                style: context.text.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: sweep.textSecondary,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

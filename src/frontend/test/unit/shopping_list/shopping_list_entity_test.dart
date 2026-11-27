@@ -43,22 +43,28 @@ void main() {
       items: [itemToBuy, itemBought, itemInPantry],
     );
 
-    test('grouped() filters out checked (bought) items regardless of showInStock', () {
-      final hiddenStock = list.grouped(showInStock: false);
-      expect(hiddenStock['Từ công thức'], hasLength(1));
-      expect(hiddenStock['Từ công thức']!.first.id, 'item-1');
+    test(
+      'grouped() filters out checked (bought) items regardless of showInStock',
+      () {
+        final hiddenStock = list.grouped(showInStock: false);
+        expect(hiddenStock['Từ công thức'], hasLength(1));
+        expect(hiddenStock['Từ công thức']!.first.id, 'item-1');
 
-      final withStock = list.grouped(showInStock: true);
-      expect(withStock['Từ công thức'], hasLength(2));
-      final ids = withStock['Từ công thức']!.map((i) => i.id).toList();
-      expect(ids, containsAll(['item-1', 'item-3']));
-      expect(ids, isNot(contains('item-2')));
-    });
+        final withStock = list.grouped(showInStock: true);
+        expect(withStock['Từ công thức'], hasLength(2));
+        final ids = withStock['Từ công thức']!.map((i) => i.id).toList();
+        expect(ids, containsAll(['item-1', 'item-3']));
+        expect(ids, isNot(contains('item-2')));
+      },
+    );
 
-    test('toBuy and toBuyCount only include unchecked and not-in-pantry items', () {
-      expect(list.toBuyCount, 1);
-      expect(list.toBuy.first.id, 'item-1');
-    });
+    test(
+      'toBuy and toBuyCount only include unchecked and not-in-pantry items',
+      () {
+        expect(list.toBuyCount, 1);
+        expect(list.toBuy.first.id, 'item-1');
+      },
+    );
 
     test('estTotalVnd only sums remaining unbought items', () {
       expect(list.estTotalVnd, 150000);

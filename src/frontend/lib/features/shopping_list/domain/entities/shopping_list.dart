@@ -17,15 +17,17 @@ abstract class ShoppingList with _$ShoppingList {
   }) = _ShoppingList;
 
   /// Items still to buy (not already in the pantry and not yet checked/bought).
-  List<ShoppingListItem> get toBuy =>
-      [for (final i in items) if (!i.alreadyInPantry && !i.checked) i];
+  List<ShoppingListItem> get toBuy => [
+    for (final i in items)
+      if (!i.alreadyInPantry && !i.checked) i,
+  ];
 
   int get toBuyCount => toBuy.length;
 
   int get checkedCount => items.where((i) => i.checked).length;
 
-  int get estTotalVnd => toBuy
-      .fold<int>(0, (sum, i) => sum + (i.estPriceVnd ?? 0));
+  int get estTotalVnd =>
+      toBuy.fold<int>(0, (sum, i) => sum + (i.estPriceVnd ?? 0));
 
   bool get hasPriceData => items.any((i) => i.estPriceVnd != null);
 

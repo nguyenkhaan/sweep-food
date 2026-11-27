@@ -61,8 +61,11 @@ class _MemStore implements SecureStore {
 
 void main() {
   if (_baseUrl.isEmpty) {
-    test('live cooking (skipped: set --dart-define=LIVE_BASE_URL)', () {},
-        skip: true);
+    test(
+      'live cooking (skipped: set --dart-define=LIVE_BASE_URL)',
+      () {},
+      skip: true,
+    );
     return;
   }
 
@@ -102,11 +105,12 @@ void main() {
     final list = await api.get('/recipes') as Map<String, dynamic>;
     final items = (list['items'] as List).cast<Map<String, dynamic>>();
     expect(items, isNotEmpty, reason: 'is the seed dataset loaded?');
-    final id = items
-        .firstWhere(
-          (r) => (r['name'] as String).toLowerCase().contains('chicken'),
-          orElse: () => fail('no "chicken" recipe in $items'),
-        )['id'] as String;
+    final id =
+        items.firstWhere(
+              (r) => (r['name'] as String).toLowerCase().contains('chicken'),
+              orElse: () => fail('no "chicken" recipe in $items'),
+            )['id']
+            as String;
     return await api.get('/recipes/$id') as Map<String, dynamic>;
   }
 
@@ -114,12 +118,14 @@ void main() {
   /// same as the backend's own preview matching) and creates a meal-plan item
   /// for the recipe. Returns the created item's id.
   Future<({String mealPlanItemId, String masterIngredientId, PantryItem batch})>
-      setUpCookableItem() async {
+  setUpCookableItem() async {
     final recipe = await chickenRecipeDetail();
-    final ingredients = (recipe['ingredients'] as List).cast<Map<String, dynamic>>();
+    final ingredients = (recipe['ingredients'] as List)
+        .cast<Map<String, dynamic>>();
     final ing = ingredients.firstWhere(
       (i) => i['is_optional'] != true && i['master_ingredient_id'] != null,
-      orElse: () => fail('no matchable non-optional ingredient in $ingredients'),
+      orElse: () =>
+          fail('no matchable non-optional ingredient in $ingredients'),
     );
     final masterIngredientId = ing['master_ingredient_id'] as String;
     // Pydantic Decimal fields serialize as JSON strings on this backend.
@@ -154,7 +160,11 @@ void main() {
     );
     final entry = entryRes.fold((f) => fail('addEntry failed: $f'), (e) => e);
 
-    return (mealPlanItemId: entry.id, masterIngredientId: masterIngredientId, batch: batch);
+    return (
+      mealPlanItemId: entry.id,
+      masterIngredientId: masterIngredientId,
+      batch: batch,
+    );
   }
 
   test('preview() proposes a deduction from the stocked batch', () async {
@@ -172,35 +182,48 @@ void main() {
     );
   });
 
-  test('createSession() then complete(EXACT) deducts the stocked batch',
-      () async {
-    final setup = await setUpCookableItem();
-    final preview = (await cooking.preview(setup.mealPlanItemId))
-        .fold((f) => fail('preview failed: $f'), (p) => p);
-    final deduction = preview.proposedDeductions
-        .firstWhere((d) => d.batchId == setup.batch.id);
+  test(
+    'createSession() then complete(EXACT) deducts the stocked batch',
+    () async {
+      final setup = await setUpCookableItem();
+      final preview = (await cooking.preview(
+        setup.mealPlanItemId,
+      )).fold((f) => fail('preview failed: $f'), (p) => p);
+      final deduction = preview.proposedDeductions.firstWhere(
+        (d) => d.batchId == setup.batch.id,
+      );
 
-    final sessionRes = await cooking.createSession(setup.mealPlanItemId);
-    final sessionId = sessionRes.fold((f) => fail('createSession failed: $f'), (id) => id);
-    expect(sessionId, isNotEmpty);
+      final sessionRes = await cooking.createSession(setup.mealPlanItemId);
+      final sessionId = sessionRes.fold(
+        (f) => fail('createSession failed: $f'),
+        (id) => id,
+      );
+      expect(sessionId, isNotEmpty);
 
-    final completeRes = await cooking.complete(sessionId, CookMode.exact);
-    expect(completeRes.isRight(), isTrue);
+      final completeRes = await cooking.complete(sessionId, CookMode.exact);
+      expect(completeRes.isRight(), isTrue);
 
-    final after = (await pantry.list())
-        .fold((f) => fail('list failed: $f'), (p) => p)
-        .items
-        .firstWhere(
-          (i) => i.id == setup.batch.id,
-          orElse: () => fail('batch ${setup.batch.id} missing after cooking'),
-        );
-    expect(after.quantity, closeTo(setup.batch.quantity - deduction.quantity, 0.001));
-  });
+      final after = (await pantry.list())
+          .fold((f) => fail('list failed: $f'), (p) => p)
+          .items
+          .firstWhere(
+            (i) => i.id == setup.batch.id,
+            orElse: () => fail('batch ${setup.batch.id} missing after cooking'),
+          );
+      expect(
+        after.quantity,
+        closeTo(setup.batch.quantity - deduction.quantity, 0.001),
+      );
+    },
+  );
 
   test('saveLeftover() creates a new batch tied to the session', () async {
     final setup = await setUpCookableItem();
     final sessionRes = await cooking.createSession(setup.mealPlanItemId);
-    final sessionId = sessionRes.fold((f) => fail('createSession failed: $f'), (id) => id);
+    final sessionId = sessionRes.fold(
+      (f) => fail('createSession failed: $f'),
+      (id) => id,
+    );
     await cooking.complete(sessionId, CookMode.exact);
 
     final res = await cooking.saveLeftover(
@@ -213,8 +236,9 @@ void main() {
 
   test('history() lists the completed session', () async {
     final setup = await setUpCookableItem();
-    final sessionId = (await cooking.createSession(setup.mealPlanItemId))
-        .fold((f) => fail('createSession failed: $f'), (id) => id);
+    final sessionId = (await cooking.createSession(
+      setup.mealPlanItemId,
+    )).fold((f) => fail('createSession failed: $f'), (id) => id);
     await cooking.complete(sessionId, CookMode.exact);
 
     final res = await cooking.history();
@@ -230,8 +254,9 @@ void main() {
 
   test('historyDetail() returns the session with its consumptions', () async {
     final setup = await setUpCookableItem();
-    final sessionId = (await cooking.createSession(setup.mealPlanItemId))
-        .fold((f) => fail('createSession failed: $f'), (id) => id);
+    final sessionId = (await cooking.createSession(
+      setup.mealPlanItemId,
+    )).fold((f) => fail('createSession failed: $f'), (id) => id);
     await cooking.complete(sessionId, CookMode.exact);
 
     final res = await cooking.historyDetail(sessionId);

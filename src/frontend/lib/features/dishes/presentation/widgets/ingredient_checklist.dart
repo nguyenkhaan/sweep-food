@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/features/dishes/domain/entities/dish_ingredient.dart';
@@ -59,7 +60,7 @@ class _Row extends StatelessWidget {
           height: 22,
           decoration: BoxDecoration(color: checkBg, shape: BoxShape.circle),
           child: Icon(
-            available ? Icons.check_rounded : Icons.add_rounded,
+            available ? AppIcons.check : AppIcons.add,
             size: 13,
             color: checkFg,
           ),

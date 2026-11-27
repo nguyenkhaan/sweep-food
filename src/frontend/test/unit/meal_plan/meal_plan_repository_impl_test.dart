@@ -33,9 +33,7 @@ void main() {
           'items': <dynamic>[],
         },
       );
-      when(
-        () => api.get(ApiPaths.mealPlan('plan-1')),
-      ).thenAnswer(
+      when(() => api.get(ApiPaths.mealPlan('plan-1'))).thenAnswer(
         (_) async => {
           'id': 'plan-1',
           'starts_on': '2026-08-31',
@@ -57,46 +55,53 @@ void main() {
       ).called(1);
     });
 
-    test('reuses an existing plan matching starts_on instead of creating one', () async {
-      when(
-        () => api.get(ApiPaths.mealPlansList, query: any(named: 'query')),
-      ).thenAnswer(
-        (_) async => {
-          'items': [
-            {'id': 'plan-existing', 'starts_on': '2026-08-31', 'ends_on': '2026-09-06'},
-          ],
-          'total': 1,
-        },
-      );
-      when(
-        () => api.get(ApiPaths.mealPlan('plan-existing')),
-      ).thenAnswer(
-        (_) async => {
-          'id': 'plan-existing',
-          'starts_on': '2026-08-31',
-          'ends_on': '2026-09-06',
-          'items': [
-            {
-              'id': 'item-1',
-              'recipe_id': 'd1',
-              'recipe_name': 'Salad bơ ức gà',
-              'planned_for': '2026-09-02',
-              'meal_slot': 'LUNCH',
-              'servings': 2.0,
-              'status': 'PLANNED',
-            },
-          ],
-        },
-      );
+    test(
+      'reuses an existing plan matching starts_on instead of creating one',
+      () async {
+        when(
+          () => api.get(ApiPaths.mealPlansList, query: any(named: 'query')),
+        ).thenAnswer(
+          (_) async => {
+            'items': [
+              {
+                'id': 'plan-existing',
+                'starts_on': '2026-08-31',
+                'ends_on': '2026-09-06',
+              },
+            ],
+            'total': 1,
+          },
+        );
+        when(() => api.get(ApiPaths.mealPlan('plan-existing'))).thenAnswer(
+          (_) async => {
+            'id': 'plan-existing',
+            'starts_on': '2026-08-31',
+            'ends_on': '2026-09-06',
+            'items': [
+              {
+                'id': 'item-1',
+                'recipe_id': 'd1',
+                'recipe_name': 'Salad bơ ức gà',
+                'planned_for': '2026-09-02',
+                'meal_slot': 'LUNCH',
+                'servings': 2.0,
+                'status': 'PLANNED',
+              },
+            ],
+          },
+        );
 
-      final res = await repo.forWeek(monday);
+        final res = await repo.forWeek(monday);
 
-      final plan = res.fold((f) => fail('expected Right, got $f'), (r) => r);
-      expect(plan.entries, hasLength(1));
-      expect(plan.entries.single.dishName, 'Salad bơ ức gà');
-      expect(plan.entries.single.slot, MealSlot.lunch);
-      verifyNever(() => api.post(ApiPaths.mealPlans, body: any(named: 'body')));
-    });
+        final plan = res.fold((f) => fail('expected Right, got $f'), (r) => r);
+        expect(plan.entries, hasLength(1));
+        expect(plan.entries.single.dishName, 'Salad bơ ức gà');
+        expect(plan.entries.single.slot, MealSlot.lunch);
+        verifyNever(
+          () => api.post(ApiPaths.mealPlans, body: any(named: 'body')),
+        );
+      },
+    );
   });
 
   group('addEntry()', () {
@@ -106,12 +111,19 @@ void main() {
       ).thenAnswer(
         (_) async => {
           'items': [
-            {'id': 'plan-1', 'starts_on': '2026-08-31', 'ends_on': '2026-09-06'},
+            {
+              'id': 'plan-1',
+              'starts_on': '2026-08-31',
+              'ends_on': '2026-09-06',
+            },
           ],
         },
       );
       when(
-        () => api.post(ApiPaths.mealPlanItems('plan-1'), body: any(named: 'body')),
+        () => api.post(
+          ApiPaths.mealPlanItems('plan-1'),
+          body: any(named: 'body'),
+        ),
       ).thenAnswer(
         (_) async => {
           'id': 'item-9',
@@ -138,12 +150,14 @@ void main() {
       // recipe_name is null in the response -> falls back to the caller's dishName.
       expect(entry.dishName, 'Canh chua cá lóc');
 
-      final body = verify(
-        () => api.post(
-          ApiPaths.mealPlanItems('plan-1'),
-          body: captureAny(named: 'body'),
-        ),
-      ).captured.single as Map<String, dynamic>;
+      final body =
+          verify(
+                () => api.post(
+                  ApiPaths.mealPlanItems('plan-1'),
+                  body: captureAny(named: 'body'),
+                ),
+              ).captured.single
+              as Map<String, dynamic>;
       expect(body['meal_slot'], 'DINNER');
       expect(body['planned_for'], '2026-09-01');
     });

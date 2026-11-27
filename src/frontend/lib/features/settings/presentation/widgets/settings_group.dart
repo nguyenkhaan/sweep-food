@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 
@@ -11,26 +12,36 @@ class SettingsGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sweep = context.sweep;
+    final cs = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (label != null) ...[
           Padding(
-            padding: const EdgeInsets.only(left: Gap.xxs, bottom: Gap.xs),
-            child: Text(label!.toUpperCase(), style: context.text.labelSmall),
+            padding: const EdgeInsets.only(left: 2, bottom: Gap.xs + 2),
+            child: Text(
+              label!.toUpperCase(),
+              style: context.text.labelSmall?.copyWith(
+                letterSpacing: 0.7,
+                fontWeight: FontWeight.w800,
+                color: sweep.textTertiary,
+              ),
+            ),
           ),
         ],
-        Container(
-          decoration: BoxDecoration(
-            color: context.colors.surfaceContainerLowest,
-            borderRadius: Radii.brLg,
-            border: Border.all(color: context.sweep.hairline),
+        Material(
+          color: cs.surfaceContainerLowest,
+          shape: RoundedRectangleBorder(
+            borderRadius: Radii.brXl,
+            side: BorderSide(color: sweep.hairline),
           ),
+          clipBehavior: Clip.antiAlias,
           child: Column(
             children: [
               for (var i = 0; i < rows.length; i++) ...[
                 if (i > 0)
-                  Divider(height: 1, color: context.sweep.hairline, indent: 52),
+                  Divider(height: 1, color: sweep.hairline, indent: 56),
                 rows[i],
               ],
             ],
@@ -56,93 +67,109 @@ class SettingsRow extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  /// Right-aligned grey value text (e.g. "Tiếng Việt").
+  /// Right-aligned muted value text (e.g. "Tiếng Việt").
   final String? trailing;
 
-  /// A pill (e.g. "Sắp có").
+  /// A pill (e.g. "2 bộ lọc").
   final String? badge;
   final bool danger;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final fg = danger ? context.colors.error : context.colors.onSurface;
+    final cs = context.colors;
+    final sweep = context.sweep;
+    final textFg = danger ? cs.error : cs.onSurface;
+    final iconBg = danger ? cs.errorContainer : cs.primaryContainer;
+    final iconFg = danger ? cs.error : cs.primary;
+
     return InkWell(
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: Gap.md,
-          vertical: Gap.sm + 1,
+          vertical: Gap.sm + 3,
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: danger
-                    ? context.colors.errorContainer
-                    : context.sweep.subtleFill,
-                borderRadius: Radii.brSm,
-              ),
-              child: Icon(icon, size: 17, color: fg),
-            ),
-            Gap.gapSm,
-            Expanded(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.text.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: fg,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final maxTrailing = constraints.maxWidth * 0.44;
+            return Row(
+              children: [
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: iconBg,
+                    borderRadius: Radii.brSm,
+                  ),
+                  child: Icon(icon, size: 16, color: iconFg),
                 ),
-              ),
-            ),
-            if (trailing != null) ...[
-              const SizedBox(width: Gap.xs),
-              Text(
-                trailing!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.end,
-                style: context.text.bodySmall?.copyWith(
-                  color: context.sweep.textTertiary,
-                ),
-              ),
-            ],
-            if (badge != null) ...[
-              const SizedBox(width: Gap.xs),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: context.colors.primaryContainer,
-                  borderRadius: Radii.pill.toBorderRadius(),
-                ),
-                child: Text(
-                  badge!,
-                  style: context.text.labelSmall?.copyWith(
-                    color: context.colors.onPrimaryContainer,
-                    fontWeight: FontWeight.w700,
+                const SizedBox(width: Gap.sm + 2),
+                Expanded(
+                  child: Text(
+                    label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.text.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: textFg,
+                    ),
                   ),
                 ),
-              ),
-            ],
-            if (onTap != null && !danger) ...[
-              const SizedBox(width: Gap.xs),
-              Icon(
-                Icons.chevron_right_rounded,
-                size: 18,
-                color: context.sweep.textTertiary,
-              ),
-            ],
-          ],
+                if (trailing != null) ...[
+                  const SizedBox(width: Gap.xs),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxTrailing),
+                    child: Text(
+                      trailing!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: context.text.bodySmall?.copyWith(
+                        color: sweep.textTertiary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+                if (badge != null) ...[
+                  const SizedBox(width: Gap.xs),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: maxTrailing),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: cs.primaryContainer,
+                        borderRadius: BorderRadius.circular(Radii.pill),
+                      ),
+                      child: Text(
+                        badge!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.text.labelSmall?.copyWith(
+                          color: cs.onPrimaryContainer,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                if (onTap != null && !danger) ...[
+                  const SizedBox(width: Gap.xs),
+                  Icon(
+                    AppIcons.chevronRight,
+                    size: 16,
+                    color: sweep.textTertiary,
+                  ),
+                ],
+              ],
+            );
+          },
         ),
       ),
     );
   }
-}
-
-extension on double {
-  BorderRadius toBorderRadius() => BorderRadius.circular(this);
 }

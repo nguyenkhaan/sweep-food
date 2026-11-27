@@ -21,7 +21,10 @@ class ChangePhoneController extends _$ChangePhoneController {
   String? _pendingPhone;
 
   /// Step 1 — validate [phone] and request the OTP. Returns `true` when sent.
-  Future<bool> requestOtp({required String phone, required AppL10n l10n}) async {
+  Future<bool> requestOtp({
+    required String phone,
+    required AppL10n l10n,
+  }) async {
     if (!isValidPhone(phone)) {
       state = state.copyWith(
         fieldErrors: {'phone': l10n.authInvalidPhone},
@@ -36,8 +39,7 @@ class ChangePhoneController extends _$ChangePhoneController {
       fieldErrors: const {},
       formError: null,
     );
-    final res =
-        await ref.read(authRepositoryProvider).requestPhoneChange(e164);
+    final res = await ref.read(authRepositoryProvider).requestPhoneChange(e164);
     return res.fold(
       (f) {
         state = state.copyWith(
@@ -66,8 +68,9 @@ class ChangePhoneController extends _$ChangePhoneController {
       fieldErrors: const {},
       formError: null,
     );
-    final res =
-        await ref.read(authRepositoryProvider).confirmPhoneChange(otp.trim());
+    final res = await ref
+        .read(authRepositoryProvider)
+        .confirmPhoneChange(otp.trim());
     return res.fold(
       (f) {
         state = state.copyWith(

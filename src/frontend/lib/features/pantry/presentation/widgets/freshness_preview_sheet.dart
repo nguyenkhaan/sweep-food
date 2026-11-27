@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
@@ -42,20 +43,14 @@ class FreshnessPreviewSheet extends ConsumerStatefulWidget {
     Map<String, String>? initialAnswers,
     Map<String, String>? initialOtherAnswers,
   }) {
-    return showModalBottomSheet<FreshnessEstimate>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (ctx) => Padding(
-        // Lift the sheet above the keyboard while typing a "Khác" answer.
-        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(ctx).bottom),
-        child: FreshnessPreviewSheet(
-          masterIngredientId: masterIngredientId,
-          itemName: itemName,
-          storageTier: storageTier,
-          initialAnswers: initialAnswers,
-          initialOtherAnswers: initialOtherAnswers,
-        ),
+    return showAppBottomSheet<FreshnessEstimate>(
+      context,
+      builder: (_) => FreshnessPreviewSheet(
+        masterIngredientId: masterIngredientId,
+        itemName: itemName,
+        storageTier: storageTier,
+        initialAnswers: initialAnswers,
+        initialOtherAnswers: initialOtherAnswers,
       ),
     );
   }
@@ -89,7 +84,9 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
     final empty = _answers.emptyOtherAxes;
     if (empty.isNotEmpty) {
       setState(() {
-        _axisErrors = {for (final a in empty) a: 'Vui lòng nhập mô tả cho mục Khác.'};
+        _axisErrors = {
+          for (final a in empty) a: 'Vui lòng nhập mô tả cho mục Khác.',
+        };
       });
       return;
     }
@@ -146,21 +143,20 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
       freshnessQuestionsProvider(widget.masterIngredientId),
     );
 
-    return SafeArea(
-      top: false,
-      child: FractionallySizedBox(
-        heightFactor: 0.9,
-        child: SheetBody(
-          title: 'Kiểm tra hạn nhanh (FreshCheck)',
-          subtitle: widget.itemName,
-          child: Expanded(
-            child: questionsAsync.when(
+    return FractionallySizedBox(
+      heightFactor: 0.9,
+      child: SheetBody(
+        icon: AppIcons.shield,
+        title: 'Kiểm tra hạn nhanh (FreshCheck)',
+        subtitle: widget.itemName,
+        expandChild: true,
+        child: questionsAsync.when(
               loading: () => const SizedBox(
                 height: 200,
                 child: Center(child: CircularProgressIndicator.adaptive()),
               ),
               error: (_, _) => const _Message(
-                icon: Icons.info_outline_rounded,
+                icon: AppIcons.info,
                 text:
                     'Nguyên liệu này chưa có bộ câu hỏi cảm quan FreshCheck. '
                     'Bạn có thể nhập hạn sử dụng thủ công.',
@@ -183,7 +179,7 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
                 }
                 if (kb.questions.isEmpty) {
                   return const _Message(
-                    icon: Icons.info_outline_rounded,
+                    icon: AppIcons.info,
                     text: 'Không có câu hỏi cảm quan cho nguyên liệu này.',
                   );
                 }
@@ -233,8 +229,6 @@ class _FreshnessPreviewSheetState extends ConsumerState<FreshnessPreviewSheet> {
                 );
               },
             ),
-          ),
-        ),
       ),
     );
   }
@@ -249,7 +243,9 @@ class _ResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final blocked = result.blocked;
     final noEstimate = !blocked && result.expiresAt == null;
-    final color = blocked || noEstimate ? Colors.red : Colors.green;
+    final color = blocked || noEstimate
+        ? context.sweep.expired.fg
+        : context.sweep.successFg;
     final min = result.remainingDaysMin;
     final max = result.remainingDaysMax;
 
@@ -290,7 +286,21 @@ class _ResultCard extends StatelessWidget {
           ],
           for (final tip in result.storageTipsVi) ...[
             Gap.gapXs,
-            Text('💡 $tip', style: context.text.bodySmall),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Icon(
+                    AppIcons.lightbulb,
+                    size: 15,
+                    color: context.sweep.culinaryAccent,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Expanded(child: Text(tip, style: context.text.bodySmall)),
+              ],
+            ),
           ],
         ],
       ),

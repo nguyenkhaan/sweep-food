@@ -23,7 +23,9 @@ from src.module.notification.notification_dependency import (
 from src.module.notification.notification_dto import (
     DeviceRegistrationResponseDTO,
     NotificationListResponseDTO,
+    NotificationPreferencesDTO,
     NotificationResponseDTO,
+    UpdateNotificationPreferencesRequestDTO,
 )
 from src.service.fcm_service import FCMDeliveryResult
 
@@ -70,6 +72,23 @@ class FakeNotificationService:
     ) -> NotificationResponseDTO:
         """Return the updated notification."""
         return build_notification_response(status=NotificationStatus.READ)
+
+    async def get_preferences(
+        self,
+        _user_id: UUID,
+    ) -> NotificationPreferencesDTO:
+        """Return default notification preferences."""
+        return NotificationPreferencesDTO()
+
+    async def update_preferences(
+        self,
+        _user_id: UUID,
+        request: UpdateNotificationPreferencesRequestDTO,
+    ) -> NotificationPreferencesDTO:
+        """Return merged notification preferences."""
+        return NotificationPreferencesDTO().model_copy(
+            update=request.model_dump(exclude_none=True),
+        )
 
 
 class FakeProductionFCMService:
@@ -221,3 +240,34 @@ def test_notification_routes_require_bearer_authentication() -> None:
     paths = schema["paths"]
     assert paths["/api/users/me/devices"]["post"]["security"] == [{"BearerAuth": []}]
     assert paths["/api/notifications"]["get"]["security"] == [{"BearerAuth": []}]
+    assert paths["/api/notifications/preferences"]["get"]["security"] == [
+        {"BearerAuth": []}
+    ]
+    assert paths["/api/notifications/preferences"]["patch"]["security"] == [
+        {"BearerAuth": []}
+    ]
+
+
+@pytest.mark.anyio
+@pytest.mark.usefixtures("notification_api_dependencies")
+async def test_get_and_patch_notification_preferences_routes(
+    api_client: httpx.AsyncClient,
+) -> None:
+    """Authenticated clients can read and partially update notification preferences."""
+    get_response = await api_client.get("/api/notifications/preferences")
+    patch_response = await api_client.patch(
+        "/api/notifications/preferences",
+        json={"near_expiry_hour": 9, "promos_and_tips": True},
+    )
+    invalid_response = await api_client.patch(
+        "/api/notifications/preferences",
+        json={"near_expiry_hour": 25},
+    )
+
+    assert get_response.status_code == 200
+    assert get_response.json()["near_expiry"] is True
+    assert get_response.json()["near_expiry_hour"] == 8
+    assert patch_response.status_code == 200
+    assert patch_response.json()["near_expiry_hour"] == 9
+    assert patch_response.json()["promos_and_tips"] is True
+    assert invalid_response.status_code == 422

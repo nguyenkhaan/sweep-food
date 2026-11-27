@@ -1,4 +1,4 @@
-﻿import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:sweepfood/core/network/api_paths.dart';
 import 'package:sweepfood/core/storage/secure_storage.dart';
 
@@ -14,11 +14,8 @@ import 'package:sweepfood/core/storage/secure_storage.dart';
 /// The refresh call goes through a bare [Dio] with no interceptors, so it can't
 /// recurse back into this one.
 class AuthInterceptor extends Interceptor {
-  AuthInterceptor(
-    this._store, {
-    required String baseUrl,
-    this.onSessionExpired,
-  }) : _refresher = Dio(BaseOptions(baseUrl: baseUrl));
+  AuthInterceptor(this._store, {required String baseUrl, this.onSessionExpired})
+    : _refresher = Dio(BaseOptions(baseUrl: baseUrl));
 
   final SecureStore _store;
   final Dio _refresher;

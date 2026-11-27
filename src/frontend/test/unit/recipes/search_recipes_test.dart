@@ -19,26 +19,30 @@ void main() {
 
   group('DishRepository searchRecipes', () {
     test('searchRecipes returns parsed recipes from API', () async {
-      when(() => mockApi.get(
-            '/recipes',
-            query: {'q': 'canh chua', 'page': 1, 'per_page': 20},
-          )).thenAnswer((_) async => {
-            'items': [
-              {
-                'id': 'r1',
-                'name': 'Canh chua cá lóc',
-                'servings': 4,
-                'prep_time_minutes': 15,
-                'cook_time_minutes': 25,
-                'difficulty': 'MEDIUM',
-                'ingredients': [],
-                'steps': [],
-              }
-            ],
-            'total': 1,
-            'page': 1,
-            'per_page': 20,
-          });
+      when(
+        () => mockApi.get(
+          '/recipes',
+          query: {'q': 'canh chua', 'page': 1, 'per_page': 20},
+        ),
+      ).thenAnswer(
+        (_) async => {
+          'items': [
+            {
+              'id': 'r1',
+              'name': 'Canh chua cá lóc',
+              'servings': 4,
+              'prep_time_minutes': 15,
+              'cook_time_minutes': 25,
+              'difficulty': 'MEDIUM',
+              'ingredients': [],
+              'steps': [],
+            },
+          ],
+          'total': 1,
+          'page': 1,
+          'per_page': 20,
+        },
+      );
 
       final result = await repo.searchRecipes(query: 'canh chua');
       expect(result.isRight(), isTrue);

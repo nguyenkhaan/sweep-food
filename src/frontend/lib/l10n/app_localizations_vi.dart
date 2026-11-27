@@ -684,7 +684,7 @@ class AppL10nVi extends AppL10n {
   String get scoreCompA => 'Tỉ lệ nguyên liệu có sẵn';
 
   @override
-  String get scoreCompP => 'Hợp khẩu phần & sở thích';
+  String get scoreCompP => 'Hợp khẩu phần và sở thích';
 
   @override
   String get scoreCompU => 'Ít phải mua thêm';
@@ -931,13 +931,13 @@ class AppL10nVi extends AppL10n {
   String get catVegetables => 'Rau củ';
 
   @override
-  String get catMeatSeafood => 'Thịt & Hải sản';
+  String get catMeatSeafood => 'Thịt và Hải sản';
 
   @override
   String get catSpices => 'Gia vị';
 
   @override
-  String get catDairyEgg => 'Trứng & Sữa';
+  String get catDairyEgg => 'Trứng và Sữa';
 
   @override
   String get catDryGoods => 'Đồ khô';
@@ -1168,7 +1168,7 @@ class AppL10nVi extends AppL10n {
   String get voiceMicOff => 'Chưa bật được micro — cứ đọc rồi kiểm tra';
 
   @override
-  String get voiceStopReview => 'Dừng & Kiểm tra';
+  String get voiceStopReview => 'Dừng và Kiểm tra';
 
   @override
   String get voiceReviewTitle => 'Kiểm tra kết quả';
@@ -1460,7 +1460,7 @@ class AppL10nVi extends AppL10n {
   String get settingsGroupAccount => 'Tài khoản';
 
   @override
-  String get settingsProfilePassword => 'Hồ sơ & mật khẩu';
+  String get settingsProfilePassword => 'Hồ sơ và mật khẩu';
 
   @override
   String get settingsPlan => 'Gói dịch vụ';
@@ -1481,7 +1481,7 @@ class AppL10nVi extends AppL10n {
   String get settingsGroupOther => 'Khác';
 
   @override
-  String get settingsAboutData => 'Giới thiệu & nguồn dữ liệu';
+  String get settingsAboutData => 'Giới thiệu và nguồn dữ liệu';
 
   @override
   String get settingsSignOut => 'Đăng xuất';
@@ -1504,7 +1504,7 @@ class AppL10nVi extends AppL10n {
   String get planInterested => 'Quan tâm';
 
   @override
-  String get aboutTitle => 'Giới thiệu & dữ liệu';
+  String get aboutTitle => 'Giới thiệu và dữ liệu';
 
   @override
   String get aboutVersion => 'Phiên bản 1.0.0 (MVP)';
@@ -1550,7 +1550,7 @@ class AppL10nVi extends AppL10n {
   String get notifTypePostCook => 'Nhắc sau khi nấu';
 
   @override
-  String get notifTypePromos => 'Khuyến mãi & mẹo';
+  String get notifTypePromos => 'Khuyến mãi và mẹo';
 
   @override
   String get notifSettingsTiming => 'Thời điểm';
@@ -1776,10 +1776,10 @@ class AppL10nVi extends AppL10n {
   String get paywallBenefit1 => 'Kho nguyên liệu không giới hạn';
 
   @override
-  String get paywallBenefit2 => 'Quét tem & hóa đơn không giới hạn';
+  String get paywallBenefit2 => 'Quét tem và hóa đơn không giới hạn';
 
   @override
-  String get paywallBenefit3 => 'Lập thực đơn tuần & danh sách mua sắm';
+  String get paywallBenefit3 => 'Lập thực đơn tuần và danh sách mua sắm';
 
   @override
   String get paywallBenefit4 => 'Mục tiêu dinh dưỡng theo ngày';
@@ -1798,10 +1798,10 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get paywallFinePrint =>
-      'Chưa tính phí · giá & gói đang trong giai đoạn kiểm chứng';
+      'Chưa tính phí · giá và gói đang trong giai đoạn kiểm chứng';
 
   @override
-  String get favoritesTitle => 'Món & thực đơn yêu thích';
+  String get favoritesTitle => 'Món và thực đơn yêu thích';
 
   @override
   String get favAddToMenuTitle => 'Thêm vào thực đơn mẫu';
@@ -1953,7 +1953,7 @@ class AppL10nVi extends AppL10n {
   String get healthCondDiabetes => 'Tiểu đường';
 
   @override
-  String get healthCondDiabetesDesc => 'Đường < 10g & tinh bột < 45g / suất';
+  String get healthCondDiabetesDesc => 'Đường < 10g và tinh bột < 45g / suất';
 
   @override
   String get healthCondHypertension => 'Cao huyết áp';
@@ -1966,7 +1966,7 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get healthCondGoutDesc =>
-      'Loại thịt đỏ, nội tạng & hải sản giàu purin';
+      'Loại thịt đỏ, nội tạng và hải sản giàu purin';
 
   @override
   String get healthCondGastritis => 'Đau dạ dày';
@@ -2042,4 +2042,132 @@ class AppL10nVi extends AppL10n {
 
   @override
   String get suggestionsReviewProfileCta => 'Xem hồ sơ ăn uống';
+
+  @override
+  String get homeKitchenHealth => 'Nhịp bếp hôm nay';
+
+  @override
+  String homeFreshCount(int count) {
+    return '$count tươi tốt';
+  }
+
+  @override
+  String homeNearExpiryCta(int count) {
+    return 'Nấu cứu $count đồ cận hạn';
+  }
+
+  @override
+  String get homeAllFreshTitle => 'Tủ bếp đang rất tươi!';
+
+  @override
+  String get homeQuickActionsLabel => 'Thao tác nhanh';
+
+  @override
+  String get pantrySwipeConsume => 'Dùng hết';
+
+  @override
+  String get pantrySwipeAdjust => 'Điều chỉnh';
+
+  @override
+  String get pantryFreshnessCheckCta => 'Kiểm tra độ tươi ngay';
+
+  @override
+  String get pantryFreshnessCheckSub =>
+      'Trả lời 2–3 câu cảm quan để ước tính hạn dùng an toàn';
+
+  @override
+  String pantryRestored(String name) {
+    return 'Đã hoàn tác $name vào kho';
+  }
+
+  @override
+  String get suggestionsFilterAll => 'Tất cả';
+
+  @override
+  String get suggestionsFilterNearExpiry => 'Cứu đồ cận hạn';
+
+  @override
+  String get suggestionsFilterReadyToCook => 'Đủ nấu ngay';
+
+  @override
+  String get suggestionsFilterQuick => '≤ 20 phút';
+
+  @override
+  String get dishGuidedCookCta => 'Chế độ nấu từng bước';
+
+  @override
+  String dishStepOf(int current, int total) {
+    return 'Bước $current/$total';
+  }
+
+  @override
+  String dishTimerStart(int minutes) {
+    return 'Hẹn giờ $minutes phút';
+  }
+
+  @override
+  String get dishTimerPause => 'Tạm dừng';
+
+  @override
+  String get dishTimerResume => 'Tiếp tục';
+
+  @override
+  String get dishTimerDone => 'Hết giờ!';
+
+  @override
+  String get dishNextStep => 'Bước tiếp';
+
+  @override
+  String get dishPrevStep => 'Bước trước';
+
+  @override
+  String get dishFinishCooking => 'Hoàn tất và Trừ kho';
+
+  @override
+  String get dishTabIngredients => 'Nguyên liệu';
+
+  @override
+  String get dishTabSteps => 'Cách làm';
+
+  @override
+  String get dishTabNutrition => 'Dinh dưỡng';
+
+  @override
+  String shoppingProgressLabel(int bought, int total) {
+    return 'Đã mua $bought/$total món';
+  }
+
+  @override
+  String shoppingRemainingLabel(int count) {
+    return 'Còn $count món cần mua';
+  }
+
+  @override
+  String get mealPlanDayEmpty => 'Chưa chọn món';
+
+  @override
+  String mealPlanDayNutrition(int kcal) {
+    return 'Tổng dự kiến · $kcal kcal';
+  }
+
+  @override
+  String purchasePresetDays(int days) {
+    return '+$days ngày';
+  }
+
+  @override
+  String get paywallCompareFree => 'Hiện tại · Miễn phí';
+
+  @override
+  String get paywallComparePro => 'Premium · Sắp ra mắt';
+
+  @override
+  String settingsCookedStats(int count) {
+    return '$count món đã nấu';
+  }
+
+  @override
+  String settingsSavedStats(int count) {
+    return '$count nguyên liệu đã cứu';
+  }
 }

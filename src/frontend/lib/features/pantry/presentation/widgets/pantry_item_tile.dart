@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/core/widgets/pantry_item_card.dart';
 import 'package:sweepfood/features/pantry/domain/entities/pantry_item.dart';
 import 'package:sweepfood/shared/domain/storage_tier.dart';
-
-const _categoryIcon = <String, IconData>{
-  'Rau lá': Icons.grass_rounded,
-  'Rau củ': Icons.eco_outlined,
-  'Rau gia vị': Icons.spa_outlined,
-  'Thịt': Icons.restaurant_rounded,
-  'Hải sản': Icons.set_meal_rounded,
-  'Đạm': Icons.egg_outlined,
-  'Đạm thực vật': Icons.spa_outlined,
-  'Sữa': Icons.local_drink_outlined,
-  'Ngũ cốc': Icons.rice_bowl_outlined,
-  'Gia vị': Icons.science_outlined,
-};
 
 /// Adapts a [PantryItem] entity onto the shared [PantryItemCard] presentation
 /// widget (K-01, H-01 "Cần dùng sớm").
@@ -44,7 +32,9 @@ class PantryItemTile extends StatelessWidget {
       ].join(' · '),
       daysUntilExpiry: item.daysUntilExpiry,
       tier: item.storageTier,
-      leadingIcon: _categoryIcon[item.category] ?? Icons.eco_outlined,
+      category: item.category,
+      referenceShelfLifeDays: item.referenceShelfLifeDays,
+      leadingIcon: AppIcons.forCategory(item.category, fallbackName: item.name),
       selected: selected,
       onSelectedChanged: onSelectedChanged,
       onTap: onTap,
@@ -54,9 +44,4 @@ class PantryItemTile extends StatelessWidget {
 }
 
 /// Icon for a tier (used by the detail screen chips).
-IconData tierIcon(StorageTier tier) => switch (tier) {
-  StorageTier.eatSoon => Icons.local_fire_department_rounded,
-  StorageTier.fridge => Icons.kitchen_rounded,
-  StorageTier.freezer => Icons.ac_unit_rounded,
-  StorageTier.pantryShelf => Icons.inventory_2_rounded,
-};
+IconData tierIcon(StorageTier tier) => AppIcons.forTier(tier);

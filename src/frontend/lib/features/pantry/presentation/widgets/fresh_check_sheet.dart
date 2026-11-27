@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
@@ -17,15 +18,9 @@ class FreshCheckSheet extends ConsumerStatefulWidget {
   final PantryItem item;
 
   static Future<void> show(BuildContext context, PantryItem item) {
-    return showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (ctx) => Padding(
-        // Lift the sheet above the keyboard while typing a "Khác" answer.
-        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(ctx).bottom),
-        child: FreshCheckSheet(item: item),
-      ),
+    return showAppBottomSheet<void>(
+      context,
+      builder: (_) => FreshCheckSheet(item: item),
     );
   }
 
@@ -48,30 +43,48 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
       builder: (context, assessmentState, _) {
         if (item.ingredientId == null) {
           return SheetBody(
+            icon: AppIcons.shield,
             title: 'Đánh giá độ tươi (FreshCheck)',
             subtitle: item.name,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: Gap.md),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    size: 48,
-                    color: context.sweep.textTertiary,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SheetGroupCard(
+                  padding: const EdgeInsets.all(Gap.md),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: context.sweep.subtleFill,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          AppIcons.info,
+                          size: 24,
+                          color: context.sweep.textSecondary,
+                        ),
+                      ),
+                      Gap.gapSm,
+                      Text(
+                        'Nguyên liệu này được tạo với tên tùy chỉnh, chưa liên kết với danh mục chuẩn nên chưa có bộ câu hỏi cảm quan FreshCheck.',
+                        textAlign: TextAlign.center,
+                        style: context.text.bodyMedium?.copyWith(
+                          color: context.sweep.textSecondary,
+                          height: 1.45,
+                        ),
+                      ),
+                    ],
                   ),
-                  Gap.gapMd,
-                  Text(
-                    'Nguyên liệu này được tạo với tên tùy chỉnh, chưa liên kết với danh mục chuẩn nên chưa có bộ câu hỏi cảm quan FreshCheck.',
-                    textAlign: TextAlign.center,
-                    style: context.text.bodyMedium,
-                  ),
-                  Gap.gapLg,
-                  FilledButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Đã hiểu'),
-                  ),
-                ],
-              ),
+                ),
+                Gap.gapMd,
+                SheetWarmButton(
+                  label: 'Đã hiểu',
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
             ),
           );
         }
@@ -80,10 +93,13 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
         if (assessmentState.result != null) {
           final res = assessmentState.result!;
           final tierColor = res.blocked
-              ? Colors.red
-              : (res.tier == 'USE_SOON' ? Colors.orange : Colors.green);
+              ? context.sweep.expired.fg
+              : (res.tier == 'USE_SOON'
+                    ? context.sweep.soon.fg
+                    : context.sweep.successFg);
 
           return SheetBody(
+            icon: AppIcons.shield,
             title: 'Kết quả FreshCheck',
             subtitle: item.name,
             child: SingleChildScrollView(
@@ -105,8 +121,8 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                           children: [
                             Icon(
                               res.blocked
-                                  ? Icons.warning_amber_rounded
-                                  : Icons.check_circle_outline_rounded,
+                                  ? AppIcons.warning
+                                  : AppIcons.checkCircle,
                               color: tierColor,
                             ),
                             Gap.gapSm,
@@ -135,8 +151,9 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                     Gap.gapMd,
                     Text(
                       'Đánh giá cảm quan:',
-                      style: context.text.titleSmall
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: context.text.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Gap.gapXs,
                     for (final r in res.reasonsVi)
@@ -146,7 +163,9 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text('• '),
-                            Expanded(child: Text(r, style: context.text.bodySmall)),
+                            Expanded(
+                              child: Text(r, style: context.text.bodySmall),
+                            ),
                           ],
                         ),
                       ),
@@ -155,8 +174,9 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                     Gap.gapMd,
                     Text(
                       'Khuyến nghị bảo quản:',
-                      style: context.text.titleSmall
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: context.text.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     Gap.gapXs,
                     for (final tip in res.storageTipsVi)
@@ -165,15 +185,25 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('💡 '),
-                            Expanded(child: Text(tip, style: context.text.bodySmall)),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: Icon(
+                                AppIcons.lightbulb,
+                                size: 15,
+                                color: context.sweep.culinaryAccent,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(tip, style: context.text.bodySmall),
+                            ),
                           ],
                         ),
                       ),
                   ],
                   Gap.gapLg,
                   PrimaryButton(
-                    label: 'Hoàn tất & Cập nhật kho',
+                    label: 'Hoàn tất và Cập nhật kho',
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -182,10 +212,12 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
           );
         }
 
-        final questionsAsync =
-            ref.watch(freshnessQuestionsProvider(item.ingredientId!));
+        final questionsAsync = ref.watch(
+          freshnessQuestionsProvider(item.ingredientId!),
+        );
 
         return SheetBody(
+          icon: AppIcons.shield,
           title: 'Đánh giá độ tươi (FreshCheck)',
           subtitle: 'Kiểm tra trạng thái cảm quan của "${item.name}"',
           child: questionsAsync.when(
@@ -197,8 +229,11 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
               padding: const EdgeInsets.symmetric(vertical: Gap.md),
               child: Column(
                 children: [
-                  Icon(Icons.error_outline_rounded,
-                      size: 40, color: context.colors.error),
+                  Icon(
+                    AppIcons.warning,
+                    size: 40,
+                    color: context.colors.error,
+                  ),
                   Gap.gapSm,
                   Text(
                     'Chưa có dữ liệu cảm quan cho nguyên liệu này.',
@@ -216,7 +251,9 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
             data: (kb) {
               if (!_initialized) {
                 _answers = FreshnessAnswerSet(
-                  selected: {for (final q in kb.questions) q.axis: q.defaultValue},
+                  selected: {
+                    for (final q in kb.questions) q.axis: q.defaultValue,
+                  },
                 );
                 _initialized = true;
               }
@@ -228,7 +265,10 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                 );
               }
 
-              return Flexible(
+              return ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.sizeOf(context).height * 0.7,
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,8 +293,9 @@ class _FreshCheckSheetState extends ConsumerState<FreshCheckSheet> {
                       if (assessmentState.errorMessage != null) ...[
                         Text(
                           assessmentState.errorMessage!,
-                          style: context.text.bodySmall
-                              ?.copyWith(color: context.colors.error),
+                          style: context.text.bodySmall?.copyWith(
+                            color: context.colors.error,
+                          ),
                         ),
                         Gap.gapSm,
                       ],

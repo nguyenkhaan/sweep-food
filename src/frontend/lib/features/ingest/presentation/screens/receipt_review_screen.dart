@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/utils/extensions/date_time_x.dart';
+import 'package:sweepfood/core/widgets/app_bottom_sheet.dart';
 import 'package:sweepfood/core/widgets/app_snackbar.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
 import 'package:sweepfood/features/ingest/domain/entities/scan_job.dart';
 import 'package:sweepfood/features/ingest/presentation/controllers/receipt_review_controller.dart';
@@ -40,207 +42,237 @@ class ReceiptReviewScreen extends ConsumerWidget {
     final allSelected =
         supportedIdx.isNotEmpty && supportedIdx.every(state.isSelected);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => context.pop(),
-          icon: const Icon(Icons.arrow_back_rounded),
-        ),
-        title: Text(l10n.reviewReceiptTitle(state.items.length)),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xxl * 3),
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: sweep.subtleFill,
-                  borderRadius: Radii.brMd,
-                  border: Border.all(color: sweep.hairline),
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: context.colors.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(
+              title: l10n.reviewReceiptTitle(state.items.length),
+              onBack: () => context.pop(),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  Gap.lg,
+                  Gap.xs,
+                  Gap.lg,
+                  Gap.xxl * 2,
                 ),
-                child: const Icon(
-                  Icons.receipt_long_outlined,
-                  size: 22,
-                  color: BrandPalette.green700,
-                ),
-              ),
-              const SizedBox(width: Gap.md),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    state.purchaseDate != null
-                        ? '${state.storeName} · ${state.purchaseDate!.ddMM}'
-                        : state.storeName,
-                    style: context.text.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  GestureDetector(
-                    onTap: () => context.pop(),
-                    child: Text(
-                      l10n.reviewRetake,
-                      style: context.text.bodySmall?.copyWith(
-                        color: BrandPalette.green700,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Gap.gapMd,
-          if (isEmpty)
-            _EmptyReceiptResult(job: job)
-          else ...[
-            Row(
-              children: [
-                Text.rich(
-                  TextSpan(
+                  Row(
                     children: [
-                      TextSpan(
-                        text: '${state.selectedCount}',
-                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: sweep.subtleFill,
+                          borderRadius: Radii.brMd,
+                          border: Border.all(color: sweep.hairline),
+                        ),
+                        child: Icon(
+                          AppIcons.receipt,
+                          size: 22,
+                          color: context.colors.primary,
+                        ),
                       ),
-                      TextSpan(
-                        text: l10n.reviewSelectedOf(state.items.length),
-                        style: TextStyle(color: sweep.textTertiary),
+                      const SizedBox(width: Gap.md),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            state.purchaseDate != null
+                                ? '${state.storeName} · ${state.purchaseDate!.ddMM}'
+                                : state.storeName,
+                            style: context.text.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          GestureDetector(
+                            onTap: () => context.pop(),
+                            child: Text(
+                              l10n.reviewRetake,
+                              style: context.text.bodySmall?.copyWith(
+                                color: context.colors.primary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  style: context.text.bodySmall,
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: allSelected
-                      ? controller.deselectAll
-                      : controller.selectAll,
-                  child: Text(
-                    allSelected ? l10n.reviewDeselectAll : l10n.reviewSelectAll,
-                    style: context.text.bodySmall?.copyWith(
-                      color: BrandPalette.green700,
-                      fontWeight: FontWeight.w600,
+                  Gap.gapMd,
+                  if (isEmpty)
+                    _EmptyReceiptResult(job: job)
+                  else ...[
+                    Row(
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '${state.selectedCount}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              TextSpan(
+                                text: l10n.reviewSelectedOf(state.items.length),
+                                style: TextStyle(color: sweep.textTertiary),
+                              ),
+                            ],
+                          ),
+                          style: context.text.bodySmall,
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: allSelected
+                              ? controller.deselectAll
+                              : controller.selectAll,
+                          child: Text(
+                            allSelected
+                                ? l10n.reviewDeselectAll
+                                : l10n.reviewSelectAll,
+                            style: context.text.bodySmall?.copyWith(
+                              color: context.colors.primary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-            Gap.gapSm,
-            for (var i = 0; i < state.items.length; i++) ...[
-              ParsedItemRow(
-                item: state.items[i],
-                selected: state.isSelected(i),
-                unsupported: !state.items[i].isSupported,
-                onToggle: () => controller.toggleItem(i),
-                onEdit: () => _editItem(context, i, state.items[i], controller),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(Gap.sm, Gap.xs, Gap.sm, 0),
-                child: ExpiryFreshnessRow(
-                  itemName: state.items[i].name,
-                  storageTier: state.items[i].storageTier,
-                  expiryDate: state.items[i].expiryDate,
-                  freshness: state.items[i].freshness,
-                  masterIngredientId: state.items[i].ingredientId,
-                  onChanged: (expiry, freshness) =>
-                      controller.setItemExpiry(i, expiry, freshness),
-                ),
-              ),
-              const SizedBox(height: Gap.sm),
-            ],
-          ],
-        ],
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(Gap.md),
-          decoration: BoxDecoration(
-            color: context.colors.surface,
-            border: Border(top: BorderSide(color: sweep.hairline)),
-            boxShadow: Shadows.e2,
-          ),
-          child: isEmpty
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () => context.push(
-                        '${Routes.pantry}/${Routes.addIngredient}',
+                    Gap.gapSm,
+                    for (var i = 0; i < state.items.length; i++) ...[
+                      ParsedItemRow(
+                        item: state.items[i],
+                        selected: state.isSelected(i),
+                        unsupported: !state.items[i].isSupported,
+                        onToggle: () => controller.toggleItem(i),
+                        onEdit: () =>
+                            _editItem(context, i, state.items[i], controller),
                       ),
-                      icon: const Icon(Icons.add_rounded),
-                      label: Text(l10n.chooserManual),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: BrandPalette.green700,
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size.fromHeight(50),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          Gap.sm,
+                          Gap.xs,
+                          Gap.sm,
+                          0,
+                        ),
+                        child: ExpiryFreshnessRow(
+                          itemName: state.items[i].name,
+                          storageTier: state.items[i].storageTier,
+                          expiryDate: state.items[i].expiryDate,
+                          freshness: state.items[i].freshness,
+                          masterIngredientId: state.items[i].ingredientId,
+                          onChanged: (expiry, freshness) =>
+                              controller.setItemExpiry(i, expiry, freshness),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: Gap.xs),
-                    TextButton.icon(
-                      onPressed: () => context.pop(),
-                      icon: const Icon(Icons.refresh_rounded),
-                      label: Text(l10n.reviewRetake),
-                    ),
+                      const SizedBox(height: Gap.sm),
+                    ],
                   ],
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (state.hasSelectedUnsupported) ...[
-                      Text(
-                        l10n.scanRemoveUnsupportedHint,
-                        textAlign: TextAlign.center,
-                        style: context.text.bodySmall?.copyWith(
-                          color: context.colors.error,
+                ],
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.all(Gap.md),
+            decoration: BoxDecoration(
+              color: context.colors.surfaceContainerLowest,
+              border: Border(top: BorderSide(color: sweep.hairline)),
+            ),
+            child: isEmpty
+                ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      FilledButton.icon(
+                        onPressed: () => context.push(
+                          '${Routes.pantry}/${Routes.addIngredient}',
+                        ),
+                        icon: const Icon(AppIcons.add, size: 18),
+                        label: Text(l10n.chooserManual),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: sweep.ctaWarm,
+                          foregroundColor: sweep.onCtaWarm,
+                          minimumSize: const Size.fromHeight(50),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: Radii.brMd,
+                          ),
                         ),
                       ),
                       const SizedBox(height: Gap.xs),
+                      TextButton.icon(
+                        onPressed: () => context.pop(),
+                        icon: const Icon(AppIcons.refresh, size: 17),
+                        label: Text(l10n.reviewRetake),
+                      ),
                     ],
-                    ElevatedButton(
-                  onPressed: state.selectedCount == 0 || state.hasSelectedUnsupported
-                      ? null
-                      : () async {
-                    try {
-                      final count = state.selectedCount;
-                      await controller.saveSelectedToPantry();
-                      if (!context.mounted) return;
-                      AppSnack.show(
-                        context,
-                        context.l10n.scanAddedCountToPantry(count),
-                      );
-                      context.go(Routes.pantry);
-                    } on Object catch (e) {
-                      if (!context.mounted) return;
-                      AppSnack.show(context, context.saveErrorMessage(e));
-                    }
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: BrandPalette.green700,
-                    foregroundColor: Colors.white,
-                    disabledBackgroundColor: sweep.subtleFill,
-                    disabledForegroundColor: sweep.textTertiary,
-                    minimumSize: const Size.fromHeight(50),
-                    shape: const RoundedRectangleBorder(borderRadius: Radii.brMd),
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (state.hasSelectedUnsupported) ...[
+                        Text(
+                          l10n.scanRemoveUnsupportedHint,
+                          textAlign: TextAlign.center,
+                          style: context.text.bodySmall?.copyWith(
+                            color: context.colors.error,
+                          ),
+                        ),
+                        const SizedBox(height: Gap.xs),
+                      ],
+                      FilledButton(
+                        onPressed:
+                            state.selectedCount == 0 ||
+                                state.hasSelectedUnsupported
+                            ? null
+                            : () async {
+                                try {
+                                  final count = state.selectedCount;
+                                  await controller.saveSelectedToPantry();
+                                  if (!context.mounted) return;
+                                  AppSnack.show(
+                                    context,
+                                    context.l10n.scanAddedCountToPantry(count),
+                                  );
+                                  context.go(Routes.pantry);
+                                } on Object catch (e) {
+                                  if (!context.mounted) return;
+                                  AppSnack.show(
+                                    context,
+                                    context.saveErrorMessage(e),
+                                  );
+                                }
+                              },
+                        style: FilledButton.styleFrom(
+                          backgroundColor: sweep.ctaWarm,
+                          foregroundColor: sweep.onCtaWarm,
+                          disabledBackgroundColor: sweep.subtleFill,
+                          disabledForegroundColor: sweep.textTertiary,
+                          minimumSize: const Size.fromHeight(50),
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: Radii.brMd,
+                          ),
+                        ),
+                        child: Text(
+                          state.selectedCount > 0
+                              ? l10n.reviewAddCount(state.selectedCount)
+                              : l10n.reviewPickAtLeastOne,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Text(
-                    state.selectedCount > 0
-                        ? l10n.reviewAddCount(state.selectedCount)
-                        : l10n.reviewPickAtLeastOne,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                  ],
-                ),
+          ),
         ),
       ),
     );
@@ -260,110 +292,110 @@ class ReceiptReviewScreen extends ConsumerWidget {
     var selectedUnit = item.unit;
     var selectedTier = item.storageTier;
 
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
+    await showAppBottomSheet<void>(
+      context,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setState) => Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(ctx).bottom,
-            left: Gap.lg,
-            right: Gap.lg,
-            top: Gap.lg,
-          ),
+        builder: (ctx, setState) => SheetBody(
+          icon: AppIcons.edit,
+          title: l10n.reviewEditItem,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                l10n.reviewEditItem,
-                style: context.text.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Gap.gapMd,
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.pantryFieldName,
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-              Gap.gapSm,
-              Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: TextField(
-                      controller: qtyController,
-                      keyboardType: TextInputType.number,
+              SheetGroupCard(
+                padding: const EdgeInsets.all(Gap.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TextField(
+                      controller: nameController,
                       decoration: InputDecoration(
-                        labelText: l10n.pantryStatQuantity,
-                        border: const OutlineInputBorder(),
+                        labelText: l10n.pantryFieldName,
                       ),
                     ),
-                  ),
-                  const SizedBox(width: Gap.sm),
-                  Expanded(
-                    flex: 3,
-                    child: DropdownButtonFormField<MeasurementUnit>(
-                      initialValue: selectedUnit,
+                    Gap.gapSm,
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: qtyController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: l10n.pantryStatQuantity,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: Gap.sm),
+                        Expanded(
+                          flex: 3,
+                          child: DropdownButtonFormField<MeasurementUnit>(
+                            initialValue: selectedUnit,
+                            icon: const Icon(AppIcons.chevronDown, size: 18),
+                            decoration: InputDecoration(
+                              labelText: l10n.reviewUnit,
+                            ),
+                            items: MeasurementUnit.values
+                                .map(
+                                  (u) => DropdownMenuItem(
+                                    value: u,
+                                    child: Text(u.label),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (u) {
+                              if (u != null) setState(() => selectedUnit = u);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Gap.gapSm,
+                    DropdownButtonFormField<StorageTier>(
+                      initialValue: selectedTier,
+                      icon: const Icon(AppIcons.chevronDown, size: 18),
                       decoration: InputDecoration(
-                        labelText: l10n.reviewUnit,
-                        border: const OutlineInputBorder(),
+                        labelText: l10n.reviewStorageTier,
                       ),
-                      items: MeasurementUnit.values
+                      items: StorageTier.values
                           .map(
-                            (u) => DropdownMenuItem(
-                              value: u,
-                              child: Text(u.label),
+                            (t) => DropdownMenuItem(
+                              value: t,
+                              child: Text(t.label(l10n)),
                             ),
                           )
                           .toList(),
-                      onChanged: (u) {
-                        if (u != null) setState(() => selectedUnit = u);
+                      onChanged: (t) {
+                        if (t != null) setState(() => selectedTier = t);
                       },
                     ),
-                  ),
-                ],
-              ),
-              Gap.gapSm,
-              DropdownButtonFormField<StorageTier>(
-                initialValue: selectedTier,
-                decoration: InputDecoration(
-                  labelText: l10n.reviewStorageTier,
-                  border: const OutlineInputBorder(),
+                  ],
                 ),
-                items: StorageTier.values
-                    .map(
-                      (t) => DropdownMenuItem(
-                        value: t,
-                        child: Text(t.label(l10n)),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (t) {
-                  if (t != null) setState(() => selectedTier = t);
-                },
               ),
-              Gap.gapLg,
+              Gap.gapMd,
               Row(
                 children: [
                   Expanded(
-                    child: TextButton(
+                    flex: 4,
+                    child: TextButton.icon(
                       onPressed: () {
                         controller.removeItem(index);
                         ctx.pop();
                       },
                       style: TextButton.styleFrom(
-                        foregroundColor: BrandPalette.brick500,
+                        foregroundColor: context.colors.error,
+                        minimumSize: const Size(0, 48),
                       ),
-                      child: Text(l10n.reviewRemoveItem),
+                      icon: const Icon(AppIcons.trash, size: 16),
+                      label: Text(l10n.reviewRemoveItem),
                     ),
                   ),
+                  const SizedBox(width: Gap.sm),
                   Expanded(
-                    child: ElevatedButton(
+                    flex: 6,
+                    child: SheetWarmButton(
+                      icon: AppIcons.check,
+                      label: l10n.commonSave,
                       onPressed: () {
                         final qty =
                             double.tryParse(qtyController.text.trim()) ??
@@ -381,7 +413,8 @@ class ReceiptReviewScreen extends ConsumerWidget {
                             storageTier: selectedTier,
                             isExpiryWarn: false,
                             ingredientId: renamed ? null : item.ingredientId,
-                            freshness: renamed || selectedTier != item.storageTier
+                            freshness:
+                                renamed || selectedTier != item.storageTier
                                 ? null
                                 : item.freshness,
                           ),
@@ -390,16 +423,10 @@ class ReceiptReviewScreen extends ConsumerWidget {
                         if (renamed) controller.rematchItem(index);
                         ctx.pop();
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: BrandPalette.green700,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: Text(l10n.commonSave),
                     ),
                   ),
                 ],
               ),
-              Gap.gapMd,
             ],
           ),
         ),
@@ -429,10 +456,10 @@ class _EmptyReceiptResult extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.manage_search_rounded,
-            color: BrandPalette.green700,
-            size: 32,
+          Icon(
+            AppIcons.search,
+            color: context.colors.primary,
+            size: 28,
           ),
           Gap.gapSm,
           Text(

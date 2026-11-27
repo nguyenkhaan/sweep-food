@@ -63,25 +63,31 @@ class PantryRemoteDataSource {
     return results;
   }
 
-  /// `PATCH` only covers metadata (note/dates/cost) — quantity and identity
-  /// are immutable, and a storage-tier change needs the dedicated `/move`
-  /// ledger endpoint. Both are issued here since the shared edit form doesn't
-  /// distinguish "edited metadata" from "moved shelf"; moving to the same
-  /// tier is a harmless no-op ledger entry.
-  Future<PantryItemDto> update(String id, PantryItemDraft draft) async {
-    await _api.patch(
-      ApiPaths.inventoryBatch(id),
-      body: {
-        if (draft.packedDate != null)
-          'packaged_at': draft.packedDate!.toUtc().toIso8601String(),
-        if (draft.expiryDate != null)
-          'expires_at': draft.expiryDate!.toUtc().toIso8601String(),
-        if (draft.priceVnd != null) 'unit_cost': draft.priceVnd,
-        'reason': 'Cập nhật từ ứng dụng',
-      },
-      headers: _idempotencyHeaders(),
-    );
-    final json = await _api.post(
+  /// Updates mutable metadata (`PATCH`), moves storage tier (`POST /move`),
+  /// and applies any quantity delta through `POST /adjustments` so the server
+  /// keeps a complete immutable ledger audit.
+  Future<PantryItemDto> update(
+    String id,
+    PantryItemDraft draft, {
+    double? previousQuantity,
+  }) async {
+    final metadataBody = <String, Object?>{
+      if (draft.packedDate != null)
+        'packaged_at': draft.packedDate!.toUtc().toIso8601String(),
+      if (draft.expiryDate != null)
+        'expires_at': draft.expiryDate!.toUtc().toIso8601String(),
+      if (draft.priceVnd != null) 'unit_cost': draft.priceVnd,
+    };
+    Map<String, dynamic>? latestJson;
+    if (metadataBody.isNotEmpty) {
+      final res = await _api.patch(
+        ApiPaths.inventoryBatch(id),
+        body: {...metadataBody, 'reason': 'Cập nhật từ ứng dụng'},
+        headers: _idempotencyHeaders(),
+      );
+      latestJson = res as Map<String, dynamic>;
+    }
+    final moved = await _api.post(
       ApiPaths.inventoryBatchMove(id),
       body: {
         'storage_mode': draft.storageTier.backendWire,
@@ -89,19 +95,48 @@ class PantryRemoteDataSource {
       },
       headers: _idempotencyHeaders(),
     );
+    latestJson = moved as Map<String, dynamic>;
+
+    if (previousQuantity != null) {
+      final delta = draft.quantity - previousQuantity;
+      if (delta.abs() > 1e-6) {
+        return adjustQuantity(
+          id,
+          delta: delta,
+          reason: 'Người dùng chỉnh sửa số lượng',
+        );
+      }
+    }
+    return PantryItemDto.fromJson(latestJson);
+  }
+
+  Future<PantryItemDto> adjustQuantity(
+    String id, {
+    required double delta,
+    String reason = 'Người dùng chỉnh sửa số lượng',
+  }) async {
+    final json = await _api.post(
+      ApiPaths.inventoryBatchAdjustments(id),
+      body: {
+        'event_type': 'MANUAL_ADJUSTMENT',
+        'quantity_delta': delta,
+        'reason': reason,
+      },
+      headers: _idempotencyHeaders(),
+    );
     return PantryItemDto.fromJson(json as Map<String, dynamic>);
   }
 
   Future<void> delete(String id) => _api.delete(
-        ApiPaths.inventoryBatch(id),
-        headers: {
-          'Idempotency-Key': Idempotency.newKey(),
-          // HTTP header values must be ASCII — unlike JSON body fields, this
-          // can't carry Vietnamese text (a non-ASCII header throws at the Dio
-          // layer, surfacing as an unmapped UnknownFailure).
-          'X-Reason': 'User deleted from inventory',
-        },
-      );
+    ApiPaths.inventoryBatch(id),
+    headers: {
+      'Idempotency-Key': Idempotency.newKey(),
+      // HTTP header values must be ASCII — unlike JSON body fields, this
+      // can't carry Vietnamese text (a non-ASCII header throws at the Dio
+      // layer, surfacing as an unmapped UnknownFailure).
+      'X-Reason': 'User deleted from inventory',
+    },
+  );
 
   Future<PantryItemDto> consume(String id, double quantityUsed) async {
     final json = await _api.post(
@@ -133,21 +168,22 @@ class PantryRemoteDataSource {
     return InventoryLedgerListDto.fromJson(json as Map<String, dynamic>);
   }
 
-  Map<String, String> _idempotencyHeaders() =>
-      {'Idempotency-Key': Idempotency.newKey()};
+  Map<String, String> _idempotencyHeaders() => {
+    'Idempotency-Key': Idempotency.newKey(),
+  };
 
   static Map<String, dynamic> draftToBody(PantryItemDraft d) => {
-        if (d.ingredientId != null)
-          'master_ingredient_id': d.ingredientId
-        else
-          'custom_name': d.name.trim(),
-        'quantity': d.quantity,
-        'unit': d.unit.backendWire,
-        'storage_mode': d.storageTier.backendWire,
-        if (d.packedDate != null)
-          'packaged_at': d.packedDate!.toUtc().toIso8601String(),
-        if (d.expiryDate != null)
-          'expires_at': d.expiryDate!.toUtc().toIso8601String(),
-        if (d.priceVnd != null) 'unit_cost': d.priceVnd,
-      };
+    if (d.ingredientId != null)
+      'master_ingredient_id': d.ingredientId
+    else
+      'custom_name': d.name.trim(),
+    'quantity': d.quantity,
+    'unit': d.unit.backendWire,
+    'storage_mode': d.storageTier.backendWire,
+    if (d.packedDate != null)
+      'packaged_at': d.packedDate!.toUtc().toIso8601String(),
+    if (d.expiryDate != null)
+      'expires_at': d.expiryDate!.toUtc().toIso8601String(),
+    if (d.priceVnd != null) 'unit_cost': d.priceVnd,
+  };
 }

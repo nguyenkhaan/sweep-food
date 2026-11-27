@@ -1,4 +1,4 @@
-﻿import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:sweepfood/features/dishes/data/models/dish_dto.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.dart';
 import 'package:sweepfood/features/suggestions/domain/entities/score_breakdown.dart';
@@ -25,13 +25,13 @@ abstract class DishSuggestionDto with _$DishSuggestionDto {
       _$DishSuggestionDtoFromJson(json);
 
   DishSuggestion toEntity() => DishSuggestion(
-        dish: dish.toEntity(),
-        breakdown: (breakdown ?? const ScoreBreakdownDto()).toEntity(),
-        nearExpiryIngredients: nearExpiryIngredients,
-        availabilityRatio: availabilityRatio,
-        toBuyCount: toBuyCount,
-        scoreOverride: score,
-      );
+    dish: dish.toEntity(),
+    breakdown: (breakdown ?? const ScoreBreakdownDto()).toEntity(),
+    nearExpiryIngredients: nearExpiryIngredients,
+    availabilityRatio: availabilityRatio,
+    toBuyCount: toBuyCount,
+    scoreOverride: score,
+  );
 }
 
 @freezed

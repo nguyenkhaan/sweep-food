@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/shared/domain/dietary_preference.dart';
@@ -20,11 +21,11 @@ class DietaryPreferenceSelector extends StatelessWidget {
   final ScrollPhysics? physics;
 
   static const _icons = <DietaryPreference, IconData>{
-    DietaryPreference.balanced: Icons.balance_rounded,
-    DietaryPreference.highProtein: Icons.egg_alt_outlined,
-    DietaryPreference.lowCalorie: Icons.local_fire_department_outlined,
-    DietaryPreference.moreVeg: Icons.eco_outlined,
-    DietaryPreference.vegetarian: Icons.spa_outlined,
+    DietaryPreference.balanced: AppIcons.scale,
+    DietaryPreference.highProtein: AppIcons.egg,
+    DietaryPreference.lowCalorie: AppIcons.flame,
+    DietaryPreference.moreVeg: AppIcons.sprout,
+    DietaryPreference.vegetarian: AppIcons.leaf,
   };
 
   @override
@@ -38,7 +39,7 @@ class DietaryPreferenceSelector extends StatelessWidget {
         final preference = DietaryPreference.values[index];
         return _DietaryOptionCard(
           preference: preference,
-          icon: _icons[preference] ?? Icons.restaurant_outlined,
+          icon: _icons[preference] ?? AppIcons.utensils,
           selected: preference == selected,
           onTap: () => onChanged(preference),
         );
@@ -167,9 +168,8 @@ class _DietaryOptionCard extends StatelessWidget {
                 ),
                 const SizedBox(width: Gap.xs),
                 Icon(
-                  selected
-                      ? Icons.radio_button_checked_rounded
-                      : Icons.radio_button_unchecked_rounded,
+                  selected ? AppIcons.checkCircle : AppIcons.circle,
+                  size: 20,
                   color: selected ? scheme.primary : sweep.textTertiary,
                 ),
               ],

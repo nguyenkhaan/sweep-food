@@ -1,8 +1,9 @@
-﻿// lib/features/ingest/presentation/widgets/parsed_item_row.dart
+// lib/features/ingest/presentation/widgets/parsed_item_row.dart
 // One parsed-item row on the receipt / voice review lists (I-05 / I-07).
 
 import 'package:flutter/material.dart';
-import 'package:sweepfood/app/theme/app_colors.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
+import 'package:sweepfood/app/theme/app_motion.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/features/ingest/domain/entities/parsed_item_draft.dart';
@@ -45,10 +46,15 @@ class ParsedItemRow extends StatelessWidget {
     ].join(' · ');
 
     final card = Material(
-      color: context.colors.surface,
+      color: context.colors.surfaceContainerLowest,
       borderRadius: Radii.brMd,
       child: InkWell(
-        onTap: onToggle,
+        onTap: onToggle == null
+            ? null
+            : () {
+                AppHaptics.selection();
+                onToggle!();
+              },
         borderRadius: Radii.brMd,
         child: Container(
           padding: const EdgeInsets.all(Gap.sm),
@@ -58,7 +64,7 @@ class ParsedItemRow extends StatelessWidget {
               color: unsupported
                   ? context.colors.error
                   : selected
-                  ? BrandPalette.green700
+                  ? context.colors.primary
                   : sweep.hairline,
               width: unsupported || selected ? 1.5 : 1,
             ),
@@ -104,13 +110,14 @@ class ParsedItemRow extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: BrandPalette.warnSoon.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(999),
+                    color: sweep.soon.bg,
+                    borderRadius: BorderRadius.circular(Radii.pill),
                   ),
                   child: Text(
                     context.l10n.scanNeedsCheckShort,
-                    style: const TextStyle(
-                      color: BrandPalette.warnSoon,
+                    style: context.text.labelSmall?.copyWith(
+                      letterSpacing: 0,
+                      color: sweep.soon.fg,
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                     ),
@@ -122,7 +129,7 @@ class ParsedItemRow extends StatelessWidget {
                 IconButton(
                   visualDensity: VisualDensity.compact,
                   icon: Icon(
-                    Icons.edit_outlined,
+                    AppIcons.edit,
                     size: 18,
                     color: sweep.textTertiary,
                   ),
@@ -132,7 +139,7 @@ class ParsedItemRow extends StatelessWidget {
                 IconButton(
                   visualDensity: VisualDensity.compact,
                   icon: Icon(
-                    Icons.close_rounded,
+                    AppIcons.close,
                     size: 18,
                     color: sweep.textTertiary,
                   ),
@@ -170,16 +177,19 @@ class _Checkbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: AppMotion.resolve(context, context.motion.fast),
       width: 22,
       height: 22,
       decoration: BoxDecoration(
-        color: selected ? BrandPalette.green700 : Colors.transparent,
+        color: selected
+            ? context.colors.primary
+            : context.colors.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(6),
         border: selected ? null : Border.all(color: hairline, width: 1.5),
       ),
       child: selected
-          ? const Icon(Icons.check_rounded, size: 16, color: Colors.white)
+          ? Icon(AppIcons.check, size: 16, color: context.colors.onPrimary)
           : null,
     );
   }

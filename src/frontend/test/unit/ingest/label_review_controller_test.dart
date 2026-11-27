@@ -30,22 +30,26 @@ void main() {
   final job = labelScanJob();
 
   group('LabelReviewController', () {
-    test('seeds the draft from the scan job (incl. image path + warn flag)', () {
-      final container = createContainer();
-      final draft = container.read(labelReviewControllerProvider(job));
+    test(
+      'seeds the draft from the scan job (incl. image path + warn flag)',
+      () {
+        final container = createContainer();
+        final draft = container.read(labelReviewControllerProvider(job));
 
-      expect(draft.name, 'Cà chua bi');
-      expect(draft.quantity, 500);
-      expect(draft.unit, MeasurementUnit.gram);
-      expect(draft.storageTier, StorageTier.fridge);
-      expect(draft.imagePath, 'path/to/label.jpg');
-      expect(draft.isExpiryWarn, isTrue);
-    });
+        expect(draft.name, 'Cà chua bi');
+        expect(draft.quantity, 500);
+        expect(draft.unit, MeasurementUnit.gram);
+        expect(draft.storageTier, StorageTier.fridge);
+        expect(draft.imagePath, 'path/to/label.jpg');
+        expect(draft.isExpiryWarn, isTrue);
+      },
+    );
 
     test('updates field values correctly', () {
       final container = createContainer();
-      final notifier =
-          container.read(labelReviewControllerProvider(job).notifier);
+      final notifier = container.read(
+        labelReviewControllerProvider(job).notifier,
+      );
 
       notifier.setName('Dưa leo');
       notifier.setQuantity(300);
@@ -67,12 +71,19 @@ void main() {
 
     test('renaming drops the smart-parser food group along with its match', () {
       final container = createContainer();
-      final notifier =
-          container.read(labelReviewControllerProvider(job).notifier);
-      expect(container.read(labelReviewControllerProvider(job)).category, 'Rau củ');
+      final notifier = container.read(
+        labelReviewControllerProvider(job).notifier,
+      );
+      expect(
+        container.read(labelReviewControllerProvider(job)).category,
+        'Rau củ',
+      );
 
       notifier.setName('Cà chua bi'); // unchanged name keeps the group
-      expect(container.read(labelReviewControllerProvider(job)).category, 'Rau củ');
+      expect(
+        container.read(labelReviewControllerProvider(job)).category,
+        'Rau củ',
+      );
 
       notifier.setName('Thứ gì đó lạ');
       final state = container.read(labelReviewControllerProvider(job));
@@ -80,30 +91,34 @@ void main() {
       expect(state.ingredientId, isNull);
     });
 
-    test('a FreshCheck estimate replaces the date and is dropped on rename or tier change', () {
-      final container = createContainer();
-      final notifier =
-          container.read(labelReviewControllerProvider(job).notifier);
-      final estimate = FreshnessEstimate(
-        answers: const {'appearance': 'fresh'},
-        expiresAt: DateTime(2026, 9, 3),
-      );
+    test(
+      'a FreshCheck estimate replaces the date and is dropped on rename or tier change',
+      () {
+        final container = createContainer();
+        final notifier = container.read(
+          labelReviewControllerProvider(job).notifier,
+        );
+        final estimate = FreshnessEstimate(
+          answers: const {'appearance': 'fresh'},
+          expiresAt: DateTime(2026, 9, 3),
+        );
 
-      notifier.setExpiry(null, estimate);
-      var state = container.read(labelReviewControllerProvider(job));
-      expect(state.expiryDate, isNull);
-      expect(state.freshness, estimate);
+        notifier.setExpiry(null, estimate);
+        var state = container.read(labelReviewControllerProvider(job));
+        expect(state.expiryDate, isNull);
+        expect(state.freshness, estimate);
 
-      notifier.setStorageTier(StorageTier.freezer);
-      state = container.read(labelReviewControllerProvider(job));
-      expect(state.freshness, isNull);
+        notifier.setStorageTier(StorageTier.freezer);
+        state = container.read(labelReviewControllerProvider(job));
+        expect(state.freshness, isNull);
 
-      notifier.setExpiry(null, estimate);
-      notifier.setName('Cà rốt');
-      state = container.read(labelReviewControllerProvider(job));
-      expect(state.freshness, isNull);
-      expect(state.ingredientId, isNull);
-    });
+        notifier.setExpiry(null, estimate);
+        notifier.setName('Cà rốt');
+        state = container.read(labelReviewControllerProvider(job));
+        expect(state.freshness, isNull);
+        expect(state.ingredientId, isNull);
+      },
+    );
 
     test('saveToPantry delegates to the pantry repository', () async {
       final repo = MockPantryRepository();

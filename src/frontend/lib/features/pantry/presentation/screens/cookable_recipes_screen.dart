@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sweepfood/app/router/routes.dart';
+import 'package:sweepfood/app/theme/app_icons.dart';
 import 'package:sweepfood/app/theme/app_spacing.dart';
 import 'package:sweepfood/core/utils/extensions/build_context_x.dart';
 import 'package:sweepfood/core/widgets/async_value_widget.dart';
+import 'package:sweepfood/core/widgets/emerald_split_header.dart';
 import 'package:sweepfood/core/widgets/empty_state.dart';
 import 'package:sweepfood/core/widgets/loading_skeleton.dart';
 import 'package:sweepfood/core/widgets/suggestion_card.dart';
@@ -13,7 +15,7 @@ import 'package:sweepfood/features/suggestions/domain/entities/dish_suggestion.d
 import 'package:sweepfood/features/suggestions/presentation/controllers/suggestion_list_controller.dart';
 import 'package:sweepfood/features/suggestions/presentation/widgets/suggestion_card_chips.dart';
 
-/// Real AI recommendations for the pantry items selected by the user.
+/// Real recommendations for the pantry items selected by the user (Concept B · Format 1).
 class CookableRecipesScreen extends ConsumerWidget {
   const CookableRecipesScreen({
     required this.selectedItems,
@@ -28,15 +30,33 @@ class CookableRecipesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final query = (items: selectedItems, prompt: initialPrompt);
     final suggestions = ref.watch(cookableSuggestionProvider(query));
-    return Scaffold(
-      appBar: AppBar(title: const Text('Công thức có thể nấu')),
-      body: RefreshIndicator(
-        onRefresh: () => ref.refresh(cookableSuggestionProvider(query).future),
-        child: AsyncValueWidget<List<DishSuggestion>>(
-          value: suggestions,
-          loading: const _CookableRecipesSkeleton(),
-          onRetry: () => ref.invalidate(cookableSuggestionProvider(query)),
-          data: (items) => _CookableRecipeList(items: items),
+    final cs = context.colors;
+
+    return EmeraldSystemOverlay(
+      child: Scaffold(
+        backgroundColor: cs.surface,
+        body: Column(
+          children: [
+            EmeraldSplitHeader(
+              title: 'Công thức có thể nấu',
+              subtitle: selectedItems.isNotEmpty
+                  ? 'Từ ${selectedItems.length} nguyên liệu đã chọn'
+                  : null,
+            ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () =>
+                    ref.refresh(cookableSuggestionProvider(query).future),
+                child: AsyncValueWidget<List<DishSuggestion>>(
+                  value: suggestions,
+                  loading: const _CookableRecipesSkeleton(),
+                  onRetry: () =>
+                      ref.invalidate(cookableSuggestionProvider(query)),
+                  data: (items) => _CookableRecipeList(items: items),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -53,12 +73,13 @@ class _CookableRecipeList extends StatelessWidget {
     if (items.isEmpty) {
       return ListView(
         key: const Key('cookable-recipes-empty'),
+        padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xl, Gap.lg, Gap.xxl),
         children: [
-          const SizedBox(height: 80),
           EmptyState(
+            illustrationAsset: 'assets/illustrations/empty_search.svg',
             title: 'Chưa có công thức phù hợp',
             message: 'Hãy thử chọn thêm nguyên liệu hoặc thay đổi yêu cầu.',
-            icon: Icons.restaurant_menu_rounded,
+            icon: AppIcons.utensils,
             actionLabel: 'Quay lại chọn nguyên liệu',
             onAction: () => context.pop(),
           ),
@@ -68,7 +89,12 @@ class _CookableRecipeList extends StatelessWidget {
 
     return ListView.builder(
       key: const Key('cookable-recipes-results'),
-      padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.sm, Gap.lg, Gap.xl),
+      padding: EdgeInsets.fromLTRB(
+        Gap.lg,
+        Gap.xs,
+        Gap.lg,
+        MediaQuery.paddingOf(context).bottom + Gap.xl,
+      ),
       itemCount: items.length,
       itemBuilder: (context, index) {
         final suggestion = items[index];
@@ -82,6 +108,7 @@ class _CookableRecipeList extends StatelessWidget {
             chips: suggestion.cardChips(context.l10n),
             fitReasons: suggestion.fitReasons.take(3).toList(),
             imageUrl: suggestion.dish.imageUrl,
+            heroTag: 'dish-${suggestion.id}',
             onTap: () => context.push(
               '${Routes.suggestions}/dish/${suggestion.id}',
               extra: suggestion,
@@ -102,7 +129,7 @@ class _CookableRecipesSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       key: const Key('cookable-recipes-skeleton'),
-      padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.sm, Gap.lg, Gap.xl),
+      padding: const EdgeInsets.fromLTRB(Gap.lg, Gap.xs, Gap.lg, Gap.xl),
       itemCount: _cardCount,
       separatorBuilder: (_, __) => const SizedBox(height: Gap.md),
       itemBuilder: (_, __) => const _RecipeCardSkeleton(),

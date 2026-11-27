@@ -37,10 +37,9 @@ class LoginController extends _$LoginController {
       formError: null,
     );
     try {
-      await ref.read(sessionControllerProvider.notifier).logIn(
-            phone: normalizePhoneE164(phone),
-            password: password,
-          );
+      await ref
+          .read(sessionControllerProvider.notifier)
+          .logIn(phone: normalizePhoneE164(phone), password: password);
       return true;
     } on Failure catch (f) {
       state = state.copyWith(

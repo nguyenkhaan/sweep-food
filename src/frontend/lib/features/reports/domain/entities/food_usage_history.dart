@@ -16,9 +16,9 @@ enum FoodUsageType {
   }
 
   String get label => switch (this) {
-        FoodUsageType.cooking => 'Nấu ăn',
-        FoodUsageType.manual => 'Dùng trực tiếp',
-      };
+    FoodUsageType.cooking => 'Nấu ăn',
+    FoodUsageType.manual => 'Dùng trực tiếp',
+  };
 }
 
 class FoodUsageEntry {

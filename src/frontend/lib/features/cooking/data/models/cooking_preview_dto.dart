@@ -21,12 +21,12 @@ abstract class ProposedDeductionDto with _$ProposedDeductionDto {
       _$ProposedDeductionDtoFromJson(json);
 
   ProposedDeduction toEntity() => ProposedDeduction(
-        recipeIngredientId: recipeIngredientId,
-        batchId: batchId,
-        quantity: quantity,
-        unit: MeasurementUnit.fromWire(unit),
-        masterIngredientId: masterIngredientId,
-      );
+    recipeIngredientId: recipeIngredientId,
+    batchId: batchId,
+    quantity: quantity,
+    unit: MeasurementUnit.fromWire(unit),
+    masterIngredientId: masterIngredientId,
+  );
 }
 
 @freezed
@@ -44,11 +44,11 @@ abstract class MissingIngredientPreviewDto with _$MissingIngredientPreviewDto {
       _$MissingIngredientPreviewDtoFromJson(json);
 
   MissingIngredientPreview toEntity() => MissingIngredientPreview(
-        recipeIngredientId: recipeIngredientId,
-        ingredientName: ingredientName,
-        missingQuantity: missingQuantity,
-        unit: MeasurementUnit.fromWire(unit),
-      );
+    recipeIngredientId: recipeIngredientId,
+    ingredientName: ingredientName,
+    missingQuantity: missingQuantity,
+    unit: MeasurementUnit.fromWire(unit),
+  );
 }
 
 /// `POST /cooking/preview` response. See `docs/api-contract.md` §6.
@@ -72,15 +72,11 @@ abstract class CookingPreviewResponseDto with _$CookingPreviewResponseDto {
       _$CookingPreviewResponseDtoFromJson(json);
 
   CookingPreview toEntity(String mealPlanItemId) => CookingPreview(
-        mealPlanItemId: mealPlanItemId,
-        recipeId: recipeId,
-        recipeName: recipeName,
-        servings: servings,
-        proposedDeductions: [
-          for (final d in proposedDeductions) d.toEntity(),
-        ],
-        missingIngredients: [
-          for (final m in missingIngredients) m.toEntity(),
-        ],
-      );
+    mealPlanItemId: mealPlanItemId,
+    recipeId: recipeId,
+    recipeName: recipeName,
+    servings: servings,
+    proposedDeductions: [for (final d in proposedDeductions) d.toEntity()],
+    missingIngredients: [for (final m in missingIngredients) m.toEntity()],
+  );
 }

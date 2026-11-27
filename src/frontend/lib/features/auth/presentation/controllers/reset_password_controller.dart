@@ -34,7 +34,9 @@ class ResetPasswordController extends _$ResetPasswordController {
       fieldErrors: const {},
       formError: null,
     );
-    final res = await ref.read(authRepositoryProvider).confirmPasswordReset(
+    final res = await ref
+        .read(authRepositoryProvider)
+        .confirmPasswordReset(
           phone: phone,
           otp: otp.trim(),
           newPassword: newPassword,
