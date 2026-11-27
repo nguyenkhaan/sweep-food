@@ -281,7 +281,9 @@ class NotificationService:
             current = self._parse_preferences(user.preferences)
             patch = request.model_dump(exclude_none=True)
             updated = current.model_copy(update=patch)
-            merged_prefs = dict(user.preferences) if isinstance(user.preferences, dict) else {}
+            merged_prefs = (
+                dict(user.preferences) if isinstance(user.preferences, dict) else {}
+            )
             merged_prefs["notifications"] = updated.model_dump()
             user.preferences = merged_prefs
             await self.db_session.commit()
